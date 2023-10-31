@@ -80,7 +80,7 @@ class ModerateurController extends AbstractController
     public function entreprises(Request $request, EntrepriseProfileRepository $entrepriseProfileRepository): Response
     {
         return $this->render('dashboard/moderateur/entreprises.html.twig', [
-            'sectors' => $entrepriseProfileRepository->findAll(),
+            'entreprises' => $entrepriseProfileRepository->findAll(),
         ]);
     }
 
@@ -88,7 +88,7 @@ class ModerateurController extends AbstractController
     public function candidats(Request $request, CandidateProfileRepository $candidateProfileRepository): Response
     {
         return $this->render('dashboard/moderateur/candidats.html.twig', [
-            'sectors' => $candidateProfileRepository->findAll(),
+            'candicats' => $candidateProfileRepository->findAll(),
         ]);
     }
 
@@ -96,7 +96,7 @@ class ModerateurController extends AbstractController
     public function mettings(Request $request, MettingRepository $mettingRepository): Response
     {
         return $this->render('dashboard/moderateur/mettings.html.twig', [
-            'sectors' => $mettingRepository->findAll(),
+            'mettings' => $mettingRepository->findAll(),
         ]);
     }
 
@@ -104,7 +104,7 @@ class ModerateurController extends AbstractController
     public function notifications(Request $request, NotificationRepository $notificationRepository): Response
     {
         return $this->render('dashboard/moderateur/notifications.html.twig', [
-            'sectors' => $notificationRepository->findAll(),
+            'notifications' => $notificationRepository->findAll(),
         ]);
     }
 }

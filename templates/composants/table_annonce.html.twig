@@ -1,38 +1,41 @@
-<div class="container">
-    <div class="row border-bottom py-3">
-        <!-- Première colonne de taille 5 avec bordure à droite -->
-        <div class="col-4 border-end">
-          <h3 class="card-title h6"><i class="mx-2 h3 bi bi-code-slash"></i> {{ annonce.titre }}</h3>
-          <h6 class="card-subtitle mb-2 text-body-secondary"><span class="badge text-bg-danger">Urgent</span> | 0 vues | {{ annonce.applications|length }} offres</h6>
-        </div>
+<tr>
+  <td>
+    {{ annonce.id }}
+  </td>
+  <td>
+    {{ annonce.entreprise.entreprise.nom }}
+  </td>
+  <td>
+    {{ annonce.titre }}
+  </td>
+  <td>
+    {{ annonce.description|length > 100 ? annonce.description|slice(0, 97) ~ '...' : annonce.description }}
+  </td>
+  <td>
 
-        <!-- Deuxième colonne de taille 5 avec bordure à droite -->
-        <div class="col-6 border-end">
-          <p class="card-text flex-grow-1"><small class="">{{ annonce.description|length > 200 ? annonce.description|slice(0, 197) ~ '...' : annonce.description }}</small></p>
-        </div>
+    <form action="{{ path('ajax_change_status_annonce', {'id': annonce.id}) }}" method="post">
+      <select name="status" class="form-control">
+        <option value="CLOSED" {{ annonce.status == 'CLOSED' ? 'selected' : '' }}>
+          Fermé
+        </option>
+        <option value="OPEN" {{ annonce.status == 'OPEN' ? 'selected' : '' }}>
+          Ouvert
+        </option>
+        <option value="FILLED" {{ annonce.status == 'status' ? 'selected' : '' }}>
+          Pourvu
+        </option>
+      <!-- Ajoutez autant d'options que nécessaire -->
+      </select>
+    </form>
 
-        <!-- Troisième colonne de taille 2 contenant 3 icônes Bootstrap -->
-        <div class="col-2">
-            <div class="row">
-                <div class="col-4">
-                <button title="Envoyer ma candidature" type="button" class="btn btn-link" data-bs-target="#exampleModalToggle{{ annonce.id }}" data-bs-toggle="modal">
-                  <i class="bi mx-1 h4 bi-folder-plus"></i> <!-- Remplacez "people-fill" par le nom de l'icône que vous souhaitez utiliser -->
-                </button>  
-                </div>
-                <div class="col-4">
-                  <button title="Aperçu de l'annonce" type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#exampleModal{{ annonce.id }}">
-                    <i class="bi mx-1 h4 bi-eye"></i> <!-- Remplacez "people-fill" par le nom de l'icône que vous souhaitez utiliser -->
-                  </button>  
-                </div>
-                <div class="col-4">
-                  <button title="Epingler l'annonce" type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#exampleModal{{ annonce.id }}">
-                    <i class="bi mx-1 h4 bi-geo-fill"></i> <!-- Remplacez "people-fill" par le nom de l'icône que vous souhaitez utiliser -->
-                  </button>  
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+  </td>
+  <td style="display:flex;">
+    <button type="button" class="btn btn-primary rounded-circle p-2 mx-1 lh-1" data-bs-target="#exampleModal{{ annonce.id }}" data-bs-toggle="modal">
+      <i class="bi bi-eye"></i>
+    </button>
+  </td>
+<!-- ... Affichez les autres champs de la même manière ... -->
+</tr>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal{{ annonce.id }}" tabindex="-1" aria-labelledby="exampleModal{{ annonce.id }}Label" aria-hidden="true">
@@ -47,9 +50,9 @@
           <div class="row my-3">
             <div class="col-md-4"><span class="badge text-bg-danger">Urgent</span> | 0 vues | {{ annonce.applications|length }} offres</div>
             <div class="col-md-4 ms-auto"> 
-              <p class=""><i class="h5 bi mx-2 bi-building-check"></i></p>
+              <p class=""><i class="h5 bi mx-2 bi-building-check"></i> {{ annonce.entreprise.entreprise.nom }}</p>
               <p class=""><i class="h5 bi mx-2 bi-geo-alt"></i> {{ show_country(annonce.entreprise.localisation) }}</p>
-              <span class="badge text-bg-primary"> secteur </span>
+              {# <span class="badge text-bg-primary"> {{ annonce.sector }} </span> #}
             </div>
           </div>
         </div>
@@ -61,18 +64,3 @@
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalToggle{{ annonce.id }}" tabindex="-1" aria-labelledby="exampleModalToggle{{ annonce.id }}Label" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      Formulaire
-      <div class="modal-header">
-        <h2 class="modal-title fs-5" id="exampleModalToggle{{ annonce.id }}Label"> {{ annonce.titre }}</h2>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      Formulaire
-      </div>
-    </div>
-  </div>
-</div>

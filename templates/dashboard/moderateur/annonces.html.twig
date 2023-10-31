@@ -25,7 +25,7 @@
                 </th>
                 <th>
                     Status
-                    <input type="text" id="filter-titre" data-column="4" class="form-control form-control-sm" placeholder="Filtre">
+                    <input type="text" id="filter-status" data-column="4" class="form-control form-control-sm" placeholder="Filtre">
                 </th>
                 <th>
                 </th>
@@ -34,29 +34,7 @@
         </thead>
         <tbody>
             {% for annonce in annonces %}
-                <tr>
-                    <td>{{ annonce.id }}</td>
-                    <td>{{ annonce.entreprise.entreprise.nom }}</td>
-                    <td>{{ annonce.titre }}</td>
-                    <td>{{ annonce.description|length > 100 ? annonce.description|slice(0, 97) ~ '...' : annonce.description }}</td>
-                    <td>
-                    
-                    <form action="{{ path('chemin_vers_la_route_de_mise_a_jour', {'id': annonce.id}) }}" method="post">
-                        <select name="status" class="form-control" onchange="this.form.submit()">
-                            <option value="CLOSED" {{ annonce.status == 'CLOSED' ? 'selected' : '' }}>Fermé</option>
-                            <option value="OPEN" {{ annonce.status == 'OPEN' ? 'selected' : '' }}>Ouvert</option>
-                            <option value="FILLED" {{ annonce.status == 'status' ? 'selected' : '' }}>Pourvu</option>
-                            <!-- Ajoutez autant d'options que nécessaire -->
-                        </select>
-                    </form>
-
-                    </td>
-                    <td style="display:flex;">
-                        <a href="#" class="btn btn-primary rounded-circle p-2 mx-1 lh-1"><i class="bi bi-eye"></i></a>
-                        <a href="#" class="btn btn-primary rounded-circle p-2 mx-1 lh-1"><i class="bi bi-trash"></i></a>
-                    </td>
-                    <!-- ... Affichez les autres champs de la même manière ... -->
-                </tr>
+                {% include "composants/table_annonce.html.twig" with {annonce: annonce} %}
             {% endfor %}
         </tbody>
     </table>
@@ -64,7 +42,7 @@
 
 {% endblock %}
 
-{% block javascripts %}
+{% block javascript %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const filters = document.querySelectorAll('input[id^="filter-"]');
@@ -84,6 +62,30 @@
             });
         }
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const statusSelect = document.querySelector('select[name="status"]');
+        
+        statusSelect.addEventListener('change', function() {
+            const form = this.closest('form');
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    console.log(data.message);  // Affiche un message de succès
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la mise à jour du statut :', error);
+            });
+        });
+    });    
+
 </script>
 {% endblock %}
 

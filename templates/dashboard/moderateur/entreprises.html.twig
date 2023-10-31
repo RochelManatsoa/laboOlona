@@ -1,4 +1,87 @@
 {% extends 'dashboard/base.html.twig' %}
 
 {% block body %}
+
+<div class="container mt-5">
+<h2>Entreprises</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="col-1">ID <i class="bi bi-filter"></i></th>
+                <th class="col-2">Nom <i class="bi bi-filter"></i></th>
+                <th class="col-2">Annonces <i class="bi bi-filter"></i></th>
+                <th class="col-2">Meetings <i class="bi bi-filter"></i></th>
+                <th class="col-3">Localisation <i class="bi bi-filter"></i></th>
+                <th class="col-2">Secteurs <i class="bi bi-filter"></i></th>
+                <!-- Vous pouvez ajouter d'autres colonnes ici avec leurs icônes -->
+            </tr>
+            <tr class="filter-row" style="display: none;">
+                <!-- Exemple de filtre pour chaque colonne -->
+                <th><input type="text" class="form-control filter-input" placeholder="Filtrer"></th>
+                <th><input type="text" class="form-control filter-input" placeholder="Filtrer"></th>
+                <th><input type="text" class="form-control filter-input" placeholder="Filtrer"></th>
+                <th><input type="text" class="form-control filter-input" placeholder="Filtrer"></th>
+                <th><input type="text" class="form-control filter-input" placeholder="Filtrer"></th>
+                <th><input type="text" class="form-control filter-input" placeholder="Filtrer"></th>
+                <!-- Vous pouvez ajouter d'autres filtres ici -->
+            </tr>
+        </thead>
+    
+        <tbody>
+            {% for company in companies %}
+            <tr>
+                <td>{{ company.id }}</td>
+                <td>{{ company.entreprise.nom }}</td>
+                <td>{{ company.jobListings|length }}</td>
+                <td>{{ company.mettings|length }}</td>
+                <td>{{ show_country(company.localisation) }}</td>
+                <td>{{ company.secteurs|join(', ') }}</td>
+                <!-- Vous pouvez ajouter d'autres colonnes ici -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filters = document.querySelectorAll('.filter-input');
+    const filtersIcones = document.querySelectorAll('.bi-filter');
+
+    filtersIcones.forEach(filter => {
+        filter.addEventListener('click', function() {
+            const filterRow = document.querySelector('.filter-row');
+            if (filterRow.style.display === 'none') {
+                filterRow.style.display = '';
+            } else {
+                filterRow.style.display = 'none';
+            }
+        });
+    });
+
+    filters.forEach(filter => {
+        filter.addEventListener('keyup', function() {
+            const columnIndex = Array.from(filter.parentElement.children).indexOf(filter);
+            const searchTerm = filter.value.toLowerCase();
+            
+            const table = filter.closest('table');
+            const rows = Array.from(table.querySelectorAll('tbody > tr'));
+
+            rows.forEach(row => {
+                const cell = row.children[columnIndex];
+                const cellText = cell.textContent.toLowerCase();
+                
+                if(cellText.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+
+</script>
 {% endblock %}
