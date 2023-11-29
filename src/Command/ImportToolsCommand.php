@@ -74,6 +74,16 @@ class ImportToolsCommand extends Command
         foreach ($products as $product) {
             $slug = $this->sluggerInterface->slug(strtolower($product['name']));
             $description = $this->appExtension->filterContent($this->appExtension->doShortcode($product['description']));
+            $descriptionFr = null;
+            if($input->getOption('option') === "description"){
+                $startTime = new DateTime(); // Heure de début
+                $output->writeln('Début de la mise à jour de ' . $product['name'] . ' à ' . $startTime->format('Y-m-d H:i:s'));
+                $descriptionFr = $this->openAITranslator->trans($description);
+                $endTime = new DateTime(); // Heure de fin
+                $interval = $startTime->diff($endTime); // Calcul de la différence
+                $output->writeln(' ===> Modification terminée pour ' . $product['name'] . ' à ' . $endTime->format('Y-m-d H:i:s'));
+                $output->writeln('     Durée de traitement: ' . $interval->format('%i minutes %s secondes'));
+            }
             $short_description = $this->appExtension->filterContent($this->appExtension->doShortcode($product['short_description']));
             $slogan = $this->appExtension->filterContent($this->appExtension->doShortcode($product['slogan']));
             $affiliateTool = $this->affiliateToolRepository->findOneBy(['slug' => $slug]);
@@ -85,15 +95,12 @@ class ImportToolsCommand extends Command
                 $output->writeln(' -> Création terminée ');
             }
 
-            $startTime = new DateTime(); // Heure de début
-            $output->writeln('Début de la mise à jour de ' . $product['name'] . ' à ' . $startTime->format('Y-m-d H:i:s'));
             $affiliateTool->setNom($product['name']);
             $affiliateTool->setDescription($product['description']);
             $affiliateTool->setDescriptionEn($description);
             $output->writeln('Traduction de la description de '. $product['name']);
             // Vérification et traduction de la description
-            if (empty($affiliateTool->getDescriptionFr()) && $input->getOption('option') === "description") {
-                $descriptionFr = $this->openAITranslator->translate($description, 'en', 'fr');
+            if (empty($affiliateTool->getDescriptionFr())) {
                 $affiliateTool->setDescriptionFr($descriptionFr);
                 $output->writeln(' -> Traduction de la description effectuée ');
             }
@@ -124,10 +131,6 @@ class ImportToolsCommand extends Command
             $affiliateTool->setRelatedIds($product['related_ids']);
 
             $this->em->persist($affiliateTool);
-            $endTime = new DateTime(); // Heure de fin
-            $interval = $startTime->diff($endTime); // Calcul de la différence
-            $output->writeln(' ===> Modification terminée pour ' . $product['name'] . ' à ' . $endTime->format('Y-m-d H:i:s'));
-            $output->writeln('     Durée de traitement: ' . $interval->format('%i minutes %s secondes'));
 
             if (++$counter % 5 == 0) {
                 $this->em->flush(); // Flush par lots de 5
