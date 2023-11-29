@@ -134,4 +134,15 @@ class OpenAITranslator
         return $segments;
     }
 
+    public function trans($text) {
+        $command = "node /home/mast9834/sites/laboOlona/assets/node_app/index.js " . escapeshellarg($text);
+        exec($command, $output, $return_var);
+    
+        if ($return_var === 0) {
+            return implode("\n", $output);
+        } else {
+            return "Erreur lors de l'exécution du script Node.js";
+        }
+    }
+
 }
