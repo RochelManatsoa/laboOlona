@@ -135,7 +135,7 @@ class OpenAITranslator
     }
 
     public function trans($text) {
-        $command = "node /home/rochel/Documents/laboOlona/assets/node_app/index.js " . escapeshellarg($text);
+        $command = "node /home/mast9834/sites/laboOlona/assets/node_app/index.js " . escapeshellarg($text);
         exec($command, $output, $return_var);
     
         if ($return_var === 0) {
