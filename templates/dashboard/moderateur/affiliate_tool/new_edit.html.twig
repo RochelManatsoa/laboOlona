@@ -14,5 +14,11 @@
         </div>
 </div>
 
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#affiliate_tool_descriptionFr' ) )
+    ClassicEditor.create( document.querySelector( '#affiliate_tool_shortDescriptionFr' ) )
+</script>
 {% endblock %}
+
 
