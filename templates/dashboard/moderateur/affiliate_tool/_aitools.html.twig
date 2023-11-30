@@ -42,7 +42,7 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
                     <a href="{{path('app_dashboard_moderateur_view_affiliate_tool', { 'slug': aitool.slug}) }}" class="btn btn-sm btn-secondary"><i class="bi bi-eye"></i></a>
                     {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
                         <a href="{{path('app_dashboard_moderateur_edit_affiliate_tool', { 'slug': aitool.slug}) }}" class="btn btn-sm btn-info"><i class="bi bi-pencil"></i></a>
-                        <a href="{{path('app_dashboard_moderateur_edit_affiliate_tool', { 'slug': aitool.slug}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce type de contrat ?');"><i class="bi bi-trash"></i></a>
+                        <a href="{{path('app_dashboard_moderateur_delete_affiliate_tool', { 'slug': aitool.slug}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');"><i class="bi bi-trash"></i></a>
                     {% endif %}
                 </td>
             </tr>

@@ -145,6 +145,34 @@ class AffiliateToolController extends AbstractController
 
     }
 
+    #[Route('/tool/{slug}/delete', name: 'app_dashboard_moderateur_delete_affiliate_tool')]
+    public function deleteTool(AffiliateTool $tool): Response
+    {
+        $redirection = $this->checkModerateur();
+        if ($redirection !== null) {
+            return $redirection; 
+        }
+
+        /** @var AffiliateTool $tool qui vient de {slug} */
+
+        // Supprimer les relations avec les catégories
+        foreach ($tool->getCategories() as $category) {
+            $tool->removeCategory($category);
+        }
+
+        // Supprimer les relations avec les tags
+        foreach ($tool->getTags() as $tag) {
+            $tool->removeTag($tag);
+        }
+
+        $this->em->remove($tool);
+        $this->em->flush();
+        $this->addFlash('success', 'AI Tools supprimée.');
+
+        return $this->redirectToRoute('app_dashboard_moderateur_affiliate_tool', []);
+
+    }
+
     #[Route('/tool/{slug}/view', name: 'app_dashboard_moderateur_view_affiliate_tool')]
     public function viewTool(Request $request, AffiliateTool $tool): Response
     {
