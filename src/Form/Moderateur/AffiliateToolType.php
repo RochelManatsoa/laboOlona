@@ -3,7 +3,11 @@
 namespace App\Form\Moderateur;
 
 use App\Entity\AffiliateTool;
+use App\Entity\AffiliateTool\Category;
+use App\Entity\AffiliateTool\Tag;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -17,17 +21,25 @@ class AffiliateToolType extends AbstractType
             ->add('nom', TextType::class, [])
             ->add('descriptionFr', TextareaType::class, [])
             ->add('lienAffiliation', TextType::class, [])
-            ->add('commission')
+            ->add('commission', MoneyType::class, [])
             ->add('sloganFr', TextType::class, [])
             ->add('type', TextType::class, [])
             ->add('image', TextType::class, [])
             ->add('customId', TextType::class, [])
             ->add('shortDescriptionFr', TextareaType::class, [])
-            ->add('prix')
+            ->add('prix', MoneyType::class, [])
             ->add('status', TextType::class, [])
             ->add('featured', null, [])
-            ->add('categories')
-            ->add('tags')
+            ->add('categories', EntityType::class, [
+                'class' => Category::class,
+                'multiple' => true,
+                'expanded' => true
+            ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'multiple' => true,
+                'autocomplete' => true
+            ])
         ;
     }
 
