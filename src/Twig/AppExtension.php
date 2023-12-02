@@ -3,17 +3,18 @@
 namespace App\Twig;
 
 use DateTime;
+use DateInterval;
+use App\Entity\User;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use App\Entity\Application;
-use App\Entity\Candidate\Applications;
-use App\Entity\CandidateProfile;
-use App\Entity\Entreprise\JobListing;
-use App\Entity\EntrepriseProfile;
 use App\Entity\Posting;
-use App\Entity\User;
+use App\Entity\Application;
+use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
+use App\Entity\Entreprise\JobListing;
 use App\Repository\AccountRepository;
 use Twig\Extension\AbstractExtension;
+use App\Entity\Candidate\Applications;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -54,6 +55,8 @@ class AppExtension extends AbstractExtension
             new TwigFunction('years_difference', [$this, 'yearsDifference']),
             new TwigFunction('status_label', [$this, 'statusLabel']),
             new TwigFunction('account_label', [$this, 'accountLabel']),
+            new TwigFunction('formatTimeDiff', [$this, 'formatTimeDiff']),
+            new TwigFunction('formatDuration', [$this, 'formatDuration']),
             new TwigFunction('getStatuses', [$this, 'getStatuses']),
             new TwigFunction('getEntrepriseAnnonceByCandidat', [$this, 'getEntrepriseAnnonceByCandidat']),
         ];
@@ -496,5 +499,41 @@ class AppExtension extends AbstractExtension
         $totalTokens = $wordCount + $specialCharactersCount;
     
         return $totalTokens;
+    }
+    
+    function formatDuration(string $duration): string {
+        $interval = new DateInterval($duration);
+    
+        $hours = $interval->h; // Heures
+        $minutes = $interval->i; // Minutes
+        $seconds = $interval->s; // Secondes
+    
+        $formattedDuration = "";
+        if ($hours > 0) {
+            $formattedDuration .= "{$hours} heures ";
+        }
+        if ($minutes > 0) {
+            $formattedDuration .= "{$minutes} minutes ";
+        }
+        if ($seconds > 0 || $formattedDuration === "") {
+            $formattedDuration .= "{$seconds} secondes";
+        }
+    
+        return trim($formattedDuration);
+    }
+
+    public function formatTimeDiff(\DateTime $publishedAt) {
+        $now = new \DateTime();
+        $interval = $publishedAt->diff($now);
+
+        if ($interval->y > 0) {
+            return "Il y a " . $interval->y . " années";
+        } elseif ($interval->m > 0) {
+            return "Il y a " . $interval->m . " mois";
+        } elseif ($interval->d > 0) {
+            return "Il y a " . $interval->d . " jours";
+        } else {
+            return "aujourd'hui";
+        }
     }
 }

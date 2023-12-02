@@ -1,0 +1,26 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Chaîne Olona Talents{% endblock %}
+
+{% block body %}
+<div class="container mt-3">
+    <h1 class="mb-4">Chaîne <i class="h1 bi mx-2 bi-youtube"></i> Olona Talents</h1>
+    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
+    <form method="post" action="{{ path('youtube_playlist') }}">
+        <input type="submit" class="btn btn-info my-3" value="Mettre à jour la Base de Données">
+    </form>
+    <a href="{{ path('app_dashboard_formation')}}" class="btn btn-dark my-3"><i class="h5 bi mx-2 bi-youtube"></i> Formations Olona Talents</a><br>
+    <a href="{{ path('app_dashboard_formation_playlist_new')}}" class="btn btn-secondary my-3"><i class="h5 bi mx-1 bi-plus"></i>Playlist</a>
+    <a href="{{ path('app_dashboard_formation_new')}}" class="btn btn-secondary my-3"><i class="h5 bi mx-1 bi-plus"></i>Vidéo</a>
+    {% endif %}
+    <div class="row">
+
+    <div id="videos-container">
+        {% include 'dashboard/formation/_videos.html.twig' %}
+        {# {% include 'dashboard/formation/_formations.html.twig' %} #}
+    </div>
+
+    </div>
+</br>
+
+{% endblock %}

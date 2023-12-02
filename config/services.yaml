@@ -37,3 +37,14 @@ services:
     App\Service\OpenAITranslator:
         arguments:
             $apiKey: '%env(OPENAI_API_KEY)%' # Assurez-vous que cette variable d'environnement est définie
+
+    App\Controller\YouTubeOAuthController:
+        public: true
+        arguments:
+            $clientId: '%env(YOUTUBE_CLIENT_ID)%'
+            $clientSecret: '%env(YOUTUBE_CLIENT_SECRET)%'
+            $redirectUri: '%env(YOUTUBE_CLIENT_REDIRECT)%'
+
+    App\Service\YouTubeService:
+        arguments:
+            $apiKey: '%env(YOUTUBE_API_KEY)%'

@@ -1,0 +1,24 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Vidéos{% endblock %}
+
+{% block body %}
+<div class="container mt-3">
+    <h1 class="mb-4">Vidéos</h1>
+    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
+    <a href="{{ path('youtube_auth')}}" class="btn btn-dark my-3"><i class="h5 bi mx-2 bi-youtube"></i> Chaîne Olona Talents</a>
+    <a href="{{ path('app_dashboard_formation')}}" class="btn mx-2 btn-primary my-3"><i class="h5 bi mx-1 bi-film"></i>Toutes les formations</a><br>
+    <a href="{{ path('app_dashboard_formation_new')}}" class=" btn btn-secondary my-3"><i class="h5 bi mx-1 bi-plus"></i>Ajouter une vidéo</a>
+    
+    {% endif %}
+    <div class="row">
+
+    <div id="videos-container">
+        {% include 'dashboard/formation/_videos.html.twig' %}
+        {# {% include 'dashboard/formation/_formations.html.twig' %} #}
+    </div>
+
+    </div>
+</br>
+
+{% endblock %}

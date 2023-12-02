@@ -1,0 +1,56 @@
+    
+    <p class="mx-2">
+    {# Votre recherche renvoie <strong>{{ result|length }}</strong> résultats. #}
+    </p>
+{# <div class="navigation">
+{{ knp_pagination_render(videos, 'parts/_pagination.html.twig') }}
+</div> #}
+{% set totalVues = 0 %}
+{% set dureeTotale = 0 %}
+<table class="table table-responsive">
+    <thead>
+        <tr>
+            <th class="col-4">Titre</th>
+            <th class="col-6">Description</th>
+            <th class="col-2"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for playlist in playlists %}
+            <tr>
+                <td>
+                    <figure>
+                        <blockquote class="blockquote">
+                        <p class=""><a href="{{path('app_dashboard_formation_playlist_view', { 'id': playlist.id}) }}"> {{ playlist.titre }} </a></p>
+                        </blockquote>
+                    </figure>                 
+                </td>
+                <td>
+                    <p class="small">
+                        {{ playlist.description|raw }}
+                    </p>
+                </td>
+                <td class="id-column">
+                    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
+                        <form method="post" action="{{ path('app_dashboard_formation_playlist_delete', {'id': playlist.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette formation ?');">
+                            <a href="{{path('app_dashboard_formation_playlist_edit', { 'id': playlist.id}) }}" class="btn btn-sm btn-info"><i class="bi bi-pencil"></i></a>
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ playlist.id) }}">
+                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                        </form>
+                    {% endif %}
+                    {% for video in playlist.videos %}
+                        {% set totalVues = totalVues + video.getNombreVues %}
+                        {% set dureeTotale = dureeTotale + video.getDuree %}
+                    {% endfor %}
+                    
+                    <div class="mt-3">
+                        <p><i class="bi bi-film"></i>  <small class="text-muted">{{ playlist.videos|length }} vidéos</small></p>
+                        <p><i class="bi bi-stopwatch"></i>  <small class="text-muted">Durée totale : {{ dureeTotale|date('H:i:s') }}</small></p>
+                        <p><i class="bi bi-eye"></i>  <small class="text-muted">Vues : {{ totalVues }}</small></p>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
