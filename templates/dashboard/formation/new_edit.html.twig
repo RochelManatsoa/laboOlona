@@ -1,0 +1,23 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Vidéo</h2>
+        <hr>
+        <div class="col-9 mx-auto">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn btn-secondary" type="submit">
+               Sauvegarder
+            </button>
+            {{ form_end(form) }}
+        </div>
+</div>
+
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#video_description' ) )
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,21 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Formations{% endblock %}
+
+{% block body %}
+<div class="container mt-3">
+    <h1 class="mb-4">{{ playlist.titre }}</h1>
+    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
+    <a href="{{ path('app_dashboard_formation_playlist_new')}}" class="btn btn-secondary my-3"><i class="h5 bi mx-1 bi-plus"></i>Playlist</a>
+    <a href="{{ path('app_dashboard_formation_new')}}" class="btn btn-secondary my-3"><i class="h5 bi mx-1 bi-plus"></i>Vidéo</a>
+    {% endif %}
+    <div class="row">
+
+    <div id="videos-container">
+        {% include 'dashboard/formation/_videos.html.twig' with { videos: playlist.videos} %}
+    </div>
+
+    </div>
+</div>
+
+{% endblock %}

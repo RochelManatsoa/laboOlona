@@ -1,0 +1,98 @@
+    
+    <p class="mx-2">
+    {# Votre recherche renvoie <strong>{{ result|length }}</strong> résultats. #}
+    </p>
+{# <div class="navigation">
+{{ knp_pagination_render(videos, 'parts/_pagination.html.twig') }}
+</div> #}
+<table class="table table-responsive">
+    <thead>
+        <tr>
+            <th class="col-4">Nom</th>
+            <th class="col-6">Description</th>
+            <th class="col-1"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for video in videos %}
+            <tr>
+                <td>
+                    <div class="embed-responsive embed-responsive-16by9">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-url="{{ video.url }}" data-title="{{ video.titre }}"> 
+                        <img class="img-fluid img-card-left" alt="{{ video.titre }}" src="{{ video.miniature}}">
+                    </a>
+                    </div>                
+                </td>
+                <td>
+                    <figure>
+                        <blockquote class="blockquote">
+                        <p class="">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-url="{{ video.url }}" data-title="{{ video.titre }}"> 
+                                {{ video.titre }} 
+                            </a>
+                        </p>
+                        </blockquote>
+                    </figure> 
+                    {{ video.description|raw }}
+                </td>
+                <td>
+                    {# <img src="{{ aitool.image }}" class="img-fluid" alt="thumbail"> #}
+                </td>
+                <td class="actions-col">
+                    <a href="#" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-url="{{ video.url }}" data-title="{{ video.titre }}"><i class="bi bi-eye"></i></a>
+                    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
+                        <a href="{{path('app_dashboard_formation_edit', { 'id': video.id}) }}" class="btn btn-sm btn-info"><i class="bi bi-pencil"></i></a>
+                        <a href="{{path('app_dashboard_formation_delete', { 'id': video.id}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');"><i class="bi bi-trash"></i></a>
+                    {% endif %}
+                    <p class="card-text my-3">
+                        <i class="bi bi-stopwatch"></i>  <small class="text-muted">Durée : {{ formatDuration(video.duration) }}</small><br>
+                        <i class="bi bi-eye"></i>  <small class="text-muted"> {{ video.nombreVues }} vues</small><br>
+                        <i class="bi bi-calendar-week"></i>  <small class="text-muted"> Publié {{ formatTimeDiff(video.publieeLe) }}</small><br>
+                    </p>
+
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<!-- Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="videoModalLabel">Titre de la vidéo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Ici, l'iframe de la vidéo sera inséré dynamiquement -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var videoModal = document.getElementById('videoModal');
+
+        videoModal.addEventListener('show.bs.modal', function (event) {
+            console.log('eto');
+            var button = event.relatedTarget; // Bouton qui a déclenché le modal
+            var videoUrl = button.getAttribute('data-video-url'); // Extraction de l'URL de la vidéo
+            var videoTitle = button.getAttribute('data-title'); // Extraction du titre de la vidéo
+
+            // Définition du titre du modal
+            var modalTitle = videoModal.querySelector('.modal-title');
+            modalTitle.textContent = videoTitle;
+
+            var modalBody = videoModal.querySelector('.modal-body');
+            modalBody.innerHTML = '<iframe class="embed-responsive-item w-100" style="height: 600px;" src="' + videoUrl + '" allowfullscreen></iframe>';
+        });
+
+        videoModal.addEventListener('hide.bs.modal', function () {
+            var modalBody = videoModal.querySelector('.modal-body');
+            modalBody.innerHTML = ''; // Nettoie l'iframe à la fermeture
+        });
+    });
+</script>
+
