@@ -25,7 +25,7 @@
 
                         <div class="row mb-4">
                             {{ form_label(form.resume) }}
-                            <div class="col-sm-8">
+                            <div class="col-sm-8 text-black">
                                 {{ form_widget(form.resume, {'attr': {'class': 'rounded' }}
                                 ) }}
                                                     
@@ -332,6 +332,11 @@
     </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#step_two_resume' ) )
+</script>
 
 <script>  
 

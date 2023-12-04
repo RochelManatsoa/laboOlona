@@ -74,4 +74,8 @@
         </div>
     </div>
 </div>
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#annonce_description' ) )
+</script>
 {% endblock %}
