@@ -13,7 +13,7 @@
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{ annonce.titre|upper }}</h5>
                     </div>
-                    <p class="mb-1">{{ annonce.description|length > 400 ? annonce.description|slice(0, 397) ~ '...' : annonce.description }}</p>
+                    <p class="mb-1">{{ annonce.description|length > 500 ? (annonce.description|slice(0, 497) ~ '...')|raw : annonce.description|raw }}</p>
                     <p class="mb-1"><small class="text-muted"><i class="bi bi-eye"></i> Nombre de vues : {{ annonce.annonceVues|length }}</small></p>
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <span><i class="bi bi-file-earmark-text"></i> Type de contrat : <span class="badge bg-secondary">{{ annonce.typeContrat }}</span></span>
