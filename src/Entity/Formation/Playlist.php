@@ -2,11 +2,12 @@
 
 namespace App\Entity\Formation;
 
-use App\Repository\Formation\PlaylistRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use App\Repository\Formation\PlaylistRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: PlaylistRepository::class)]
 class Playlist
@@ -226,5 +227,25 @@ class Playlist
         $this->slug = $slug;
 
         return $this;
+    }
+
+    /**
+     * Calcule le nombre de vidéos visionnées et le nombre total de vidéos pour un utilisateur donné.
+     *
+     * @param User $user L'utilisateur à vérifier.
+     * @return array Retourne un tableau avec le nombre de vidéos visionnées et le nombre total de vidéos.
+     */
+    public function getNombreVideosVisionnees(User $user): array
+    {
+        $nombreVisionnees = 0;
+        $nombreTotal = count($this->videos);
+
+        foreach ($this->videos as $video) {
+            if ($video->estVisionneePar($user)) {
+                $nombreVisionnees++;
+            }
+        }
+
+        return ['visionnees' => $nombreVisionnees, 'total' => $nombreTotal];
     }
 }

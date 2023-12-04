@@ -2,6 +2,7 @@
 
 namespace App\Controller\Dashboard;
 
+use App\Entity\CandidateProfile;
 use App\Entity\Formation\Video;
 use App\Service\YouTubeService;
 use App\Entity\ModerateurProfile;
@@ -9,6 +10,7 @@ use App\Form\Formation\VideoType;
 use App\Manager\FormationManager;
 use App\Service\User\UserService;
 use App\Entity\Formation\Playlist;
+use App\Entity\Vues\VideoVues;
 use App\Form\Formation\PlaylistType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\Formation\VideoRepository;
@@ -16,6 +18,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Formation\PlaylistRepository;
+use App\Repository\Vues\VideoVuesRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/dashboard/formation')]
@@ -25,6 +29,7 @@ class FormationController extends AbstractController
         private UserService $userService,
         private PlaylistRepository $playlistRepository,
         private VideoRepository $videoRepository,
+        private VideoVuesRepository $videoVuesRepository,
         private FormationManager $formationManager,
         private EntityManagerInterface $em,
     ) {
@@ -104,13 +109,38 @@ class FormationController extends AbstractController
         ]);
     }
 
-    #[Route('/view/{id}', name: 'app_dashboard_formation_view')]
-    public function view(Request $request, Video $video): Response
+    #[Route('/view', name: 'app_dashboard_formation_view')]
+    public function view(Request $request): Response
     {
+        $user = $this->userService->getCurrentUser();
+        $videoId = $request->request->get('videoId');
+        $video = $this->em->getRepository(Video::class)->find($videoId);
+        $videoVue = $this->em->getRepository(VideoVues::class)->findByVideoAndUser($videoId, $user->getId());
 
-        return $this->render('dashboard/formation/view.html.twig', [
-            'video' => $video,
-        ]);
+
+        if ($video) {
+            // Ici, vous pouvez incrémenter le nombre de vues
+            // $video->incrementViews();
+            if ($videoVue) {
+                $videoVue->setUpdateAt(new DateTime());
+            }else{
+                $videoVue = new VideoVues();
+                $videoVue->setCreatedAt(new DateTime());
+                $videoVue->setVideo($video);
+                $videoVue->setUser($user);
+            }
+
+            $this->em->persist($videoVue);
+            $this->em->flush();
+            
+            return $this->json([
+                'message' => 'Vue enregistrée'
+            ], 200);
+        }
+
+        return $this->json([
+            'message' => 'Vidéo non trouvée'
+        ], 404);
     }
 
     #[Route('/delete/{id}', name: 'app_dashboard_formation_delete')]
@@ -202,5 +232,52 @@ class FormationController extends AbstractController
         }
 
         return $this->redirectToRoute('app_dashboard_formation');
+    }
+    
+    #[Route('/update-candidate-profile', name: 'app_update_candidate_profile')]
+    public function updateCandidateProfile(EntityManagerInterface $entityManager): Response
+    {
+        /**
+         * @var User $user
+         */
+        $user = $this->userService->getCurrentUser();
+    
+        // Vérifier si l'utilisateur a un CandidateProfile
+        $candidateProfile = $user->getCandidateProfile();
+        if (!$candidateProfile instanceof CandidateProfile) {
+            return $this->json([
+                'message' => 'user '.$user->getType(),
+            ], 200, []);
+        }
+
+        $playlists = $this->playlistRepository->findAll();
+        $allPlaylistsCompleted = true;
+
+        foreach ($playlists as $playlist) {
+            foreach ($playlist->getVideos() as $video) {
+                $videoVue = $this->videoVuesRepository->findOneBy([
+                    'video' => $video,
+                    'user' => $user
+                ]);
+
+                if (!$videoVue) {
+                    $allPlaylistsCompleted = false;
+                    break 2; // Sortir des deux boucles si une vidéo n'a pas été visionnée
+                }
+            }
+        }
+
+        if ($allPlaylistsCompleted) {
+            $candidateProfile->setIsValid(true);
+            $entityManager->flush();
+
+            return $this->json([
+                'message' => 'Utilisateur certifié'
+            ], 200);
+        } else {
+            return $this->json([
+                'message' => 'Toutes les vidéos n\'ont pas été visionnées'
+            ], 400);
+        }
     }
 }
