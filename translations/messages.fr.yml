@@ -906,3 +906,30 @@ app_dashboard_moderateur_new_affiliate_tool:
 app_dashboard_moderateur_view_affiliate_tool:
     title: Outils IA sur Olona Talents
     dashboard_title: Détails sur l'outils IA
+
+youtube_playlist:
+    title: Chaîne Youtube Olona Talents
+    dashboard_title: Chaîne Youtube Olona Talents
+
+app_dashboard_formation:
+    title: Formations Olona Talents
+    dashboard_title: Formations Olona Talents
+
+app_dashboard_formation_playlist_view:
+    title: Playlist de la formation
+    dashboard_title: Détails sur la formation
+
+app_dashboard_formation_playlist_new:
+    title: Ajouter un playlist de formation
+    dashboard_title: Ajouter un playlist de formation
+
+
+app_dashboard_formation_new:
+    title: Ajouter une vidéo de formation
+    dashboard_title: Ajouter une vidéo de formation
+ 
+
+app_dashboard_formation_videos:
+    title: Toutes les vidéos
+    dashboard_title: Toutes les vidéos
+
