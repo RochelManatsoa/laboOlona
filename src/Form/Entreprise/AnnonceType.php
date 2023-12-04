@@ -53,7 +53,7 @@ class AnnonceType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'app_dashboard_entreprise_posting_new.desc_form',
-                'required' => true,
+                'required' => false,
                 'attr' => [
                     'rows' => 8
                 ]

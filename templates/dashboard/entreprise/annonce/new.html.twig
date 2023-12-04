@@ -89,7 +89,7 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label class="custom-tooltip" data-tooltip="Fournissez une description détaillée du poste, incluant les responsabilités et qualifications requises. Une bonne description attire des candidats plus pertinents."><i class="fa fa-align-left" style="color: #333;"></i> {{ form_label(form.description) }}</label>
-                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_widget(form.description) }}
                         </div>
                     </div>
                     <div style="display:none">
@@ -126,7 +126,19 @@
 
 <script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 <script>
-    ClassicEditor.create( document.querySelector( '#annonce_description' ) )
+   
+    document.addEventListener('DOMContentLoaded', function() {
+        ClassicEditor.create(document.querySelector('#annonce_description'))
+            .then(editor => {
+                document.querySelector('form').addEventListener('submit', function() {
+                    document.querySelector('#annonce_description').value = editor.getData();
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+
 </script>
 {% endblock %}
 
