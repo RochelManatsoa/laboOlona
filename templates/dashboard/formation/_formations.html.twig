@@ -23,7 +23,22 @@
                         <blockquote class="blockquote">
                         <p class=""><a href="{{path('app_dashboard_formation_playlist_view', { 'id': playlist.id}) }}"> {{ playlist.titre }} </a></p>
                         </blockquote>
-                    </figure>                 
+                    </figure>
+                    {% set videosVisionnees = playlist.getNombreVideosVisionnees(app.user) %}
+                    <p class="small">
+                        <span class="badge bg-info">
+                            {{ videosVisionnees.visionnees }} / {{ videosVisionnees.total }}
+                        </span>
+                        vidéos visionnées
+                    </p>
+                    {% if videosVisionnees.visionnees == videosVisionnees.total %}
+                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> Certifié</span>
+                    {% else %} 
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ (videosVisionnees.visionnees / videosVisionnees.total) * 100 }}%;" aria-valuenow="{{ videosVisionnees.visionnees }}" aria-valuemin="0" aria-valuemax="{{ videosVisionnees.total }}"></div>
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ (1 - (videosVisionnees.visionnees / videosVisionnees.total)) * 100 }}%;" aria-valuenow="{{ videosVisionnees.total - videosVisionnees.visionnees }}" aria-valuemin="0" aria-valuemax="{{ videosVisionnees.total }}"></div>
+                    </div>
+                    {% endif %}            
                 </td>
                 <td>
                     <p class="small">

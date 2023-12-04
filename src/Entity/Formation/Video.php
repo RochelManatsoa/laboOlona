@@ -2,9 +2,14 @@
 
 namespace App\Entity\Formation;
 
-use App\Repository\Formation\VideoRepository;
+use App\Entity\User;
+use DateTimeInterface;
+use App\Entity\Vues\VideoVues;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use App\Repository\Formation\VideoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 class Video
@@ -61,6 +66,14 @@ class Video
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $duration = null;
+
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoVues::class)]
+    private Collection $videoVues;
+
+    public function __construct()
+    {
+        $this->videoVues = new ArrayCollection();
+    }
 
     public function __toString(){
         return $this->getTitre();
@@ -261,5 +274,74 @@ class Video
         $this->duration = $duration;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, VideoVues>
+     */
+    public function getVideoVues(): Collection
+    {
+        return $this->videoVues;
+    }
+
+    public function addVideoVue(VideoVues $videoVue): static
+    {
+        if (!$this->videoVues->contains($videoVue)) {
+            $this->videoVues->add($videoVue);
+            $videoVue->setVideo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideoVue(VideoVues $videoVue): static
+    {
+        if ($this->videoVues->removeElement($videoVue)) {
+            // set the owning side to null (unless already changed)
+            if ($videoVue->getVideo() === $this) {
+                $videoVue->setVideo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Vérifie si un utilisateur donné a visionné cette vidéo.
+     *
+     * @param User $user L'utilisateur à vérifier.
+     * @return bool Retourne vrai si l'utilisateur a visionné la vidéo, sinon faux.
+     */
+    public function estVisionneePar(User $user): bool
+    {
+        foreach ($this->videoVues as $view) {
+            if ($view->getUser() === $user) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    /**
+     * Retourne la date à laquelle l'utilisateur donné a visionné la vidéo.
+     *
+     * @param User $user L'utilisateur à vérifier.
+     * @return DateTimeInterface|null La date de la vue si l'utilisateur a visionné la vidéo, sinon null.
+     */
+    public function getDateVisionneePar(User $user): ?DateTimeInterface
+    {
+        $dateView = null;
+        foreach ($this->videoVues as $view) {
+            if ($view->getUser() === $user) {
+                if($view->getUpdateAt() !== null){
+                    $dateView = $view->getUpdateAt();
+                }else{
+                    $dateView = $view->getCreatedAt();
+                }
+            }
+        }
+
+        return $dateView;
     }
 }

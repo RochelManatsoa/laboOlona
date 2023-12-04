@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Enum\TypeUser;
+use App\Entity\Vues\VideoVues;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -93,11 +94,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $googleId = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: VideoVues::class)]
+    private Collection $videoVues;
+
     public function __construct()
     {
         $this->envois = new ArrayCollection();
         $this->recus = new ArrayCollection();
         $this->searchHistories = new ArrayCollection();
+        $this->videoVues = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -447,6 +452,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGoogleId(?string $googleId): static
     {
         $this->googleId = $googleId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, VideoVues>
+     */
+    public function getVideoVues(): Collection
+    {
+        return $this->videoVues;
+    }
+
+    public function addVideoVue(VideoVues $videoVue): static
+    {
+        if (!$this->videoVues->contains($videoVue)) {
+            $this->videoVues->add($videoVue);
+            $videoVue->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideoVue(VideoVues $videoVue): static
+    {
+        if ($this->videoVues->removeElement($videoVue)) {
+            // set the owning side to null (unless already changed)
+            if ($videoVue->getUser() === $this) {
+                $videoVue->setUser(null);
+            }
+        }
 
         return $this;
     }

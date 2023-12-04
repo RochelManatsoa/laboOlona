@@ -18,7 +18,7 @@
             <tr>
                 <td>
                     <div class="embed-responsive embed-responsive-16by9">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-url="{{ video.url }}" data-title="{{ video.titre }}"> 
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-url="{{ video.url }}" data-title="{{ video.titre }}" data-video-id="{{ video.id }}"> 
                         <img class="img-fluid img-card-left" alt="{{ video.titre }}" src="{{ video.miniature}}">
                     </a>
                     </div>                
@@ -27,7 +27,7 @@
                     <figure>
                         <blockquote class="blockquote">
                         <p class="">
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-url="{{ video.url }}" data-title="{{ video.titre }}"> 
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-url="{{ video.url }}" data-title="{{ video.titre }}" data-video-id="{{ video.id }}"> 
                                 {{ video.titre }} 
                             </a>
                         </p>
@@ -39,7 +39,7 @@
                     {# <img src="{{ aitool.image }}" class="img-fluid" alt="thumbail"> #}
                 </td>
                 <td class="actions-col">
-                    <a href="#" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-url="{{ video.url }}" data-title="{{ video.titre }}"><i class="bi bi-eye"></i></a>
+                    <a href="#" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-url="{{ video.url }}" data-title="{{ video.titre }}" data-video-id="{{ video.id }}"><i class="bi bi-eye"></i></a>
                     {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
                         <a href="{{path('app_dashboard_formation_edit', { 'id': video.id}) }}" class="btn btn-sm btn-info"><i class="bi bi-pencil"></i></a>
                         <a href="{{path('app_dashboard_formation_delete', { 'id': video.id}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');"><i class="bi bi-trash"></i></a>
@@ -48,6 +48,9 @@
                         <i class="bi bi-stopwatch"></i>  <small class="text-muted">Durée : {{ formatDuration(video.duration) }}</small><br>
                         <i class="bi bi-eye"></i>  <small class="text-muted"> {{ video.nombreVues }} vues</small><br>
                         <i class="bi bi-calendar-week"></i>  <small class="text-muted"> Publié {{ formatTimeDiff(video.publieeLe) }}</small><br>
+                            {% if video.estVisionneePar(app.user) %}
+                                <i class="bi bi-check-circle-fill text-danger"></i> <small class="text-black">Visionnée le {{ video.getDateVisionneePar(app.user)|date('d/m/Y H:i') }}</small>
+                            {% endif %}
                     </p>
 
                 </td>
@@ -76,10 +79,26 @@
         var videoModal = document.getElementById('videoModal');
 
         videoModal.addEventListener('show.bs.modal', function (event) {
-            console.log('eto');
             var button = event.relatedTarget; // Bouton qui a déclenché le modal
+            var videoId = button.getAttribute('data-video-id');
             var videoUrl = button.getAttribute('data-video-url'); // Extraction de l'URL de la vidéo
             var videoTitle = button.getAttribute('data-title'); // Extraction du titre de la vidéo
+            
+            // Envoyer la requête AJAX pour enregistrer la vue
+            $.ajax({
+                url: '{{ path('app_dashboard_formation_view') }}', // Mettez à jour avec la route appropriée
+                type: 'POST',
+                data: {
+                    'videoId': videoId,
+                    // Vous pouvez également envoyer des informations utilisateur si nécessaire
+                },
+                success: function(response) {
+                    console.log(response.message);
+                },
+                error: function() {
+                    console.log('Erreur lors de l’enregistrement de la vue');
+                }
+            });
 
             // Définition du titre du modal
             var modalTitle = videoModal.querySelector('.modal-title');
@@ -91,7 +110,19 @@
 
         videoModal.addEventListener('hide.bs.modal', function () {
             var modalBody = videoModal.querySelector('.modal-body');
-            modalBody.innerHTML = ''; // Nettoie l'iframe à la fermeture
+            modalBody.innerHTML = ''; // Nettoie l'iframe à la 
+            
+            // Envoyer la requête AJAX pour vérifier et mettre à jour le profil de candidat
+            $.ajax({
+                url: '{{ path('app_update_candidate_profile') }}',
+                type: 'POST',
+                success: function(response) {
+                    console.log(response.message);
+                },
+                error: function() {
+                    console.log('Erreur lors de la mise à jour du profil de candidat');
+                }
+            });
         });
     });
 </script>

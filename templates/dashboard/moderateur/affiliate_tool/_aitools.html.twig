@@ -18,6 +18,7 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
     </thead>
     <tbody>
         {% for aitool in aiTools %}
+            {% set description = aitool.shortDescriptionFr ?? aitool.shortDescription %}
             <tr>
                 <td class="id-column">{{ aitool.id }}</td>
                 <td>
@@ -31,7 +32,9 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
                     </figure>                 
                     <a href="{{ aitool.lienAffiliation }}" class="btn btn-sm btn-primary rounded-pill px-3">Visiter le site <i class="bi bi-box-arrow-up-right"></i></a>
                 </td>
-                <td>{{ (aitool.shortDescriptionFr ?? aitool.shortDescription)|raw }}</td>
+                <td>
+                    {{ description|length > 450 ? (description|slice(0, 447) ~ '... <a href="' ~ path('app_dashboard_moderateur_view_affiliate_tool', { 'slug': aitool.slug}) ~ '" class="en-savoir-plus">En savoir plus</a>')|raw : description|raw }}
+                </td>
                 <td class="id-column">
                     {% for category in aitool.categories %}
                     <span class="badge text-bg-info">{{ category.nom }}</span>
