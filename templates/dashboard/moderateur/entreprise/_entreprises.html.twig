@@ -8,7 +8,6 @@
     <table class="table table-responsive">
         <thead>
             <tr>
-                <th class="col-1">ID</th>
                 <th class="col-3">Titre</th>
                 <th class="col-1">Secteurs</th>
                 <th class="col-1">Annonces</th>
@@ -20,7 +19,6 @@
         <tbody>
             {% for entreprise in entreprises %}
                 <tr>
-                    <td class="id-column">{{ entreprise.id }}</td>
                     <td>{{ entreprise.nom }}</td>
                     <td>{{ entreprise.secteurs|length }}</td>
                     <td>

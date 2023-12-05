@@ -8,7 +8,6 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
 <table class="table table-responsive">
     <thead>
         <tr>
-            <th class="col-1">ID</th>
             <th class="col-2">Nom</th>
             <th class="col-4">Description</th>
             <th class="col-2">Catégories</th>
@@ -20,7 +19,6 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
         {% for aitool in aiTools %}
             {% set description = aitool.shortDescriptionFr ?? aitool.shortDescription %}
             <tr>
-                <td class="id-column">{{ aitool.id }}</td>
                 <td>
                     <figure>
                         <blockquote class="blockquote">
