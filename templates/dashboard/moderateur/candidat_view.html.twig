@@ -47,7 +47,7 @@
                     {% for competence in candidat.competences %}
                         <tr>
                             <td>{{ competence.nom }}</td>
-                            <td>{{ competence.description }}</td>
+                            <td>{{ competence.description|raw }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -67,7 +67,7 @@
                     {% for experience in candidat.experiences %}
                         <tr>
                             <td>{{ experience.nom }}</td>
-                            <td>{{ experience.description }}</td>
+                            <td>{{ experience.description|raw }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
