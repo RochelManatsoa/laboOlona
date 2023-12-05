@@ -25,7 +25,7 @@
                     <td>{{ entreprise.taille }}</td>
                     <td>{{ entreprise.localisation }}</td>
                     <td>{{ entreprise.siteWeb }}</td>
-                    <td>{{ entreprise.description|length > 50 ? entreprise.description|slice(0, 50) ~ '...' : entreprise.description }}</td>
+                    <td>{{ entreprise.description|length > 50 ? entreprise.description|slice(0, 50)|raw ~ '...' : entreprise.description|raw }}</td>
                     <td>
                         {% for secteur in entreprise.secteurs %}
                             {{ secteur.nom }},

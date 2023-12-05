@@ -13,7 +13,7 @@
                     <div class="card shadow h-100">
                         <div class="card-body">
                             <h5 class="card-title">{{ annonce.titre }}</h5>
-                            <p class="card-text">{{ annonce.description|length > 300 ? annonce.description|slice(0, 297) ~ '...' : annonce.description }}</p>
+                            <p class="card-text">{{ annonce.description|length > 300 ? annonce.description|slice(0, 297)|raw ~ '...' : annonce.description|raw }}</p>
                             <p class="card-text"><small class="text-muted"><i class="bi bi-eye"></i> Nombre de vues : {{ annonce.annonceVues|length }}</small></p>
                             <p><i class="bi bi-file-earmark-text"></i> Type de contrat : <span class="badge bg-secondary">{{ annonce.typeContrat }}</span></p>
                             <p><i class="bi bi-geo-alt-fill"></i> {{ annonce.lieu }}</p>

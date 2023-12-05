@@ -8,7 +8,7 @@
 
         <!-- Deuxième colonne de taille 5 avec bordure à droite -->
         <div class="col-6 border-end">
-          <p class="card-text flex-grow-1"><small class="">{{ annonce.description|length > 200 ? annonce.description|slice(0, 197) ~ '...' : annonce.description }}</small></p>
+          <p class="card-text flex-grow-1"><small class="">{{ annonce.description|length > 200 ? annonce.description|slice(0, 197)|raw ~ '...' : annonce.description|raw }}</small></p>
         </div>
 
         <!-- Troisième colonne de taille 2 contenant 3 icônes Bootstrap -->

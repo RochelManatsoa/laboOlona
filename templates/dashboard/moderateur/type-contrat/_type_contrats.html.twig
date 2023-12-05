@@ -17,7 +17,7 @@
             {% for type in types_contrat %}
                 <tr>
                     <td>{{ type.nom }}</td>
-                    <td>{{ type.description|length > 50 ? type.description|slice(0, 50) ~ '...' : type.description }}</td>
+                    <td>{{ type.description|length > 50 ? type.description|slice(0, 50)|raw ~ '...' : type.description|raw }}</td>
                     <td class="actions-col">
                         <a href="{{path('app_dashboard_moderateur_edit_type_contrat', { 'slug': type.slug}) }}" class="btn btn-sm btn-info">Modifier</a>
                         <a href="{{path('app_dashboard_moderateur_delete_type_contrat', { 'slug': type.slug}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce type de contrat ?');">Supprimer</a>

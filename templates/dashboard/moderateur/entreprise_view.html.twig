@@ -10,7 +10,7 @@
                 <strong>Taille:</strong> {{ entreprise.taille }}<br>
                 <strong>Localisation:</strong> {{ entreprise.localisation }}<br>
                 <strong>Site Web:</strong> {{ entreprise.siteWeb }}<br>
-                <strong>Description:</strong> {{ entreprise.description }}<br>
+                <strong>Description:</strong> {{ entreprise.description|raw }}<br>
                 <strong>Secteurs:</strong> 
                 {% for secteur in entreprise.secteurs %}
                     {{ secteur.nom }},
