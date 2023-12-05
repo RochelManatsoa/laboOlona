@@ -1,12 +1,11 @@
 <?php
 
 
-namespace App\Form;
+namespace App\Form\Moderateur;
 
 use App\Entity\Moderateur\Metting;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
-use App\Entity\ModerateurProfile;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

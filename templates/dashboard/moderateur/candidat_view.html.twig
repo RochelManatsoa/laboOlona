@@ -25,10 +25,10 @@
                     <h5 class="card-title">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</h5>
                     <p class="card-text">
                         <strong>Email:</strong> {{ candidat.candidat.email }}<br>
-                        <strong>Biographie:</strong> {{ candidat.resume }}<br>
-                        <strong>Nombre de Compétences:</strong> {{ candidat.competences|length }}<br>
-                        <strong>Nombre d'Expériences:</strong> {{ candidat.experiences|length }}<br>
-                        <strong>Nombre d'Applications:</strong> {{ candidat.applications|length }}
+                        <strong>Biographie:</strong> {{ candidat.resume|raw }}<br>
+                        <strong>Nombre de Compétences : </strong> <span class="badge text-bg-info">{{ candidat.competences|length }}</span><br>
+                        <strong>Nombre d'Expériences : </strong> <span class="badge text-bg-info">{{ candidat.experiences|length }}</span><br>
+                        <strong>Nombre d'Applications : </strong> <span class="badge text-bg-info">{{ candidat.applications|length }}</span>
                     </p> 
                 <a href="javascript:history.back()" class="btn btn-secondary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
                 </div>
@@ -39,15 +39,13 @@
             <table class="table" id="competencesTable">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Description</th>
+                        <th class="col-3">Compétence</th>
+                        <th class="col-9">Description</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for competence in candidat.competences %}
                         <tr>
-                            <td>{{ competence.id }}</td>
                             <td>{{ competence.nom }}</td>
                             <td>{{ competence.description }}</td>
                         </tr>
@@ -61,15 +59,13 @@
             <table class="table" id="experiencesTable">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Description</th>
+                        <th class="col-3">Expérience</th>
+                        <th class="col-9">Description</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for experience in candidat.experiences %}
                         <tr>
-                            <td>{{ experience.id }}</td>
                             <td>{{ experience.nom }}</td>
                             <td>{{ experience.description }}</td>
                         </tr>
