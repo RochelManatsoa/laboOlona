@@ -64,7 +64,7 @@
                 <td class="id-column">{{ annonce.id }}</td>
                 <td><a href="{{ path('app_dashboard_candidat_annonce_show', {'jobId': annonce.jobId}) }}">{{ annonce.titre}}</a></td>
                 <td>{{ annonce.typeContrat }}</td>
-                <td>{{ annonce.description|length > 50 ? annonce.description|slice(0, 47) ~ '...' : annonce.description }}</td>
+                <td>{{ annonce.description|length > 50 ? annonce.description|slice(0, 47)|raw ~ '...' : annonce.description|raw }}</td>
                 <td>{{ annonce.lieu }}</td>
                 <td>
                 {% if annonce.competences|length > 0 %}

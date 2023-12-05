@@ -927,6 +927,10 @@ app_dashboard_formation_playlist_new:
 app_dashboard_formation_new:
     title: Ajouter une vidéo de formation
     dashboard_title: Ajouter une vidéo de formation
+
+app_dashboard_entreprise_details_candidat:
+    title: Détails candidat
+    dashboard_title: Détails candidat
  
 
 app_dashboard_formation_videos:

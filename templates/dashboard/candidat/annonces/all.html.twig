@@ -49,7 +49,7 @@
                                     
                                   </td>
                                   <td>
-                                  <small class="">{{ application.annonce.description|length > 150 ? application.annonce.description|slice(0, 147) ~ '...' : application.annonce.description }}</small> <!-- Type de contrat -->
+                                  <small class="">{{ application.annonce.description|length > 150 ? application.annonce.description|slice(0, 147)|raw ~ '...' : application.annonce.description|raw }}</small> <!-- Type de contrat -->
                                   </td>
                           
                                   <!-- Colonne de droite (Informations du Candidat) -->

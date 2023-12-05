@@ -29,7 +29,7 @@
                 <tr>
                     <td>{{ sector.id }}</td>
                     <td>{{ sector.nom }}</td>
-                    <td>{{ sector.description }}</td>
+                    <td>{{ sector.description|raw }}</td>
                     <td>
                     <a href="{{ path('ajax_edit_sector', {'id': sector.id} )}}"><i class="bi bi-pencil"></i></a>
                     {# <a href="{{ path('ajax_remove_sector', {'id': sector.id} )}}"><i class="bi bi-trash"></i></a> #}

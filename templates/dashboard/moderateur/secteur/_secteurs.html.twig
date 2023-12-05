@@ -17,7 +17,7 @@
             {% for secteur in secteurs %}
                 <tr>
                     <td>{{ secteur.nom }}</td>
-                    <td>{{ secteur.description|length > 50 ? secteur.description|slice(0, 50) ~ '...' : secteur.description }}</td>
+                    <td>{{ secteur.description|length > 50 ? secteur.description|slice(0, 50)|raw ~ '...' : secteur.description|raw }}</td>
                     <td class="actions-col">
                         <a href="{{path('app_dashboard_moderateur_edit_secteur', { 'slug': secteur.slug}) }}" class="btn btn-sm btn-info">Modifier</a>
                         <a href="{{path('app_dashboard_moderateur_delete_secteur', { 'slug': secteur.slug}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce type de contrat ?');">Supprimer</a>

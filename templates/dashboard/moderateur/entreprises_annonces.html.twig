@@ -25,7 +25,7 @@
                 <tr>
                     <td class="id-column">{{ annonce.id }}</td>
                     <td>{{ annonce.titre }}</td>
-                    <td>{{ annonce.description|length > 50 ? annonce.description|slice(0, 50) ~ '...' : annonce.description }}</td>
+                    <td>{{ annonce.description|length > 50 ? annonce.description|slice(0, 50)|raw ~ '...' : annonce.description|raw }}</td>
                     <td>
                         <form method="post" action="{{ path('change_status_annonce_entreprise', {'entreprise_id': entreprise.id, 'annonce_id': annonce.id}) }}">
                             <select name="status" class="form-control" onchange="this.form.submit()">

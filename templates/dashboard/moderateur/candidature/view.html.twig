@@ -54,7 +54,7 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">Titre du poste : {{ application.annonce.titre }}</h5>
-                    <p>Description : {{ application.annonce.description }}</p>
+                    <p>Description : {{ application.annonce.description|raw }}</p>
                     <p>Date de création : {{ application.annonce.dateCreation|date('d/m/Y') }}</p>
                     <p>Date d'expiration : {{ application.annonce.dateExpiration|date('d/m/Y') }}</p>
                     <p>Status : {{ application.annonce.status|status_label }}</p>
