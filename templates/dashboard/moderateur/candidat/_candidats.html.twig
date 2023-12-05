@@ -1,7 +1,6 @@
     <table class="table table-responsive">
         <thead>
             <tr>
-                <th class="col-1">ID</th>
                 <th class="col-2">Nom et prénom</th>
                 <th class="col-4">Email</th>
                 <th class="col-2">Titre</th>
@@ -13,7 +12,6 @@
         <tbody>
             {% for candidat in candidats %}
                 <tr>
-                    <td class="id-column">{{ candidat.id }}</td>
                     <td>{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</td>
                     <td>{{ candidat.candidat.email }}</td>
                     <td>{{ candidat.titre }}</td>

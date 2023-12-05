@@ -8,16 +8,14 @@
     <table class="table table-responsive">
         <thead>
             <tr>
-                <th class="col-1">ID</th>
                 <th class="col-4">Titre</th>
-                <th class="col-4">Description</th>
+                <th class="col-5">Description</th>
                 <th class="col-3">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for type in types_contrat %}
                 <tr>
-                    <td class="id-column">{{ type.id }}</td>
                     <td>{{ type.nom }}</td>
                     <td>{{ type.description|length > 50 ? type.description|slice(0, 50) ~ '...' : type.description }}</td>
                     <td class="actions-col">

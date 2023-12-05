@@ -113,4 +113,12 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_dashboard_candidat_annonce_show', ['jobId' => $jobId ]);
         }
     }
+
+    #[Route('/404', name: 'app_error')]
+    public function error404(Request $request): Response
+    {
+        return $this->render('bundles/TwigBundle/Exception/error500.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
 }
