@@ -66,7 +66,17 @@
                 <tbody>
                     {% for experience in candidat.experiences %}
                         <tr>
-                            <td>{{ experience.nom }}</td>
+                            <td>
+                                {{ experience.nom }}<br>
+                                <span class="small">chez <span class="text-muted">{{ experience.entreprise }}</span><br>
+                                    {% if experience.enPoste %}
+                                        Depuis {{ experience.dateDebut|date('M Y')}}
+                                    {% else %}
+                                        {{ experience.dateDebut|date('M Y')}} - 
+                                        {{ experience.dateFin|date('M Y')}}
+                                    {% endif %}
+                                </span>
+                            </td>
                             <td>{{ experience.description|raw }}</td>
                         </tr>
                     {% endfor %}
