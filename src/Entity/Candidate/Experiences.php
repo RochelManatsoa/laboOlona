@@ -2,38 +2,46 @@
 
 namespace App\Entity\Candidate;
 
-use App\Entity\CandidateProfile;
-use App\Repository\Candidate\ExperiencesRepository;
 use Doctrine\DBAL\Types\Types;
+use App\Entity\CandidateProfile;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\Candidate\ExperiencesRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ExperiencesRepository::class)]
 class Experiences
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[Groups(['identity'])]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['identity'])]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
+    #[Groups(['identity'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'experiences')]
     private ?CandidateProfile $profil = null;
 
+    #[Groups(['identity'])]
     #[ORM\Column(length: 255)]
     private ?string $entreprise = null;
 
     #[ORM\Column]
+    #[Groups(['identity'])]
     private ?bool $enPoste = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['identity'])]
     private ?\DateTimeInterface $dateDebut = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['identity'])]
     private ?\DateTimeInterface $dateFin = null;
 
     public function getId(): ?int

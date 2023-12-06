@@ -11,10 +11,16 @@
         {{ form_start(form_one) }}
         <div class="row">
             <div class="col">
-                {{ form_label(form_one.candidat.nom) }}
-                {{ form_widget(form_one.candidat.nom, {'attr': {'class': 'form-control mb-4'}}) }}
+                <div class="row mb-4 align-items-center">
+                    <div class="">
+                    <img src="{{ form_one.vars.data.fileName ? asset('uploads/experts/' ~ form_one.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}" class="rounded-circle profile-img" width="150" height="150" alt="Avatar">
+                    {{ form_widget(form_one.file) }}
+                    </div>
+                </div>
             </div>
             <div class="col">
+                {{ form_label(form_one.candidat.nom) }}
+                {{ form_widget(form_one.candidat.nom, {'attr': {'class': 'form-control mb-4'}}) }}
                 {{ form_label(form_one.candidat.prenom) }}
                 {{ form_widget(form_one.candidat.prenom, {'attr': {'class': 'form-control mb-4'}}) }}
             </div>
@@ -25,14 +31,14 @@
                 {{ form_widget(form_one.candidat.email, {'attr': {'class': 'form-control mb-4'}}) }}
             </div>
             <div class="col">
-                {{ form_label(form_one.candidat.telephone) }}
-                {{ form_widget(form_one.candidat.telephone, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_label(form_one.candidat.adress) }} 
+                {{ form_widget(form_one.candidat.adress, {'attr': {'class': 'form-control mb-4'}}) }}
             </div>
         </div>
         <div class="row">
             <div class="col">
-                {{ form_label(form_one.candidat.adress) }} 
-                {{ form_widget(form_one.candidat.adress, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_label(form_one.candidat.telephone) }}
+                {{ form_widget(form_one.candidat.telephone, {'attr': {'class': 'form-control mb-4'}}) }}
             </div>
             <div class="col">
                 {{ form_label(form_one.localisation) }}
@@ -98,35 +104,11 @@
         </h4>
         {{ form_start(form_three) }}
         <hr class="mb-4">
-        <div class="row">
-            <div class="col">
+        <div class="row my-3">
+            <div class="col-md-4 col-sm-12">
                 <h5 class=""><i class="bi bi-graph-up mx-2 h5"></i> Experiences</h5>
-                {% if experiences|length > 0 %}
-                    {% for experience in experiences %}
-                        <p class="text-dark d-flex justify-content-between align-items-center">
-                            <span>
-                                {{experience.dateDebut|date('M Y')}} à {{experience.dateFin|date('M Y')}} 
-                            </span>
-                        </p>
-                        <p class="text-dark small d-flex justify-content-between align-items-center">
-                            <span>
-                            <strong>{{ experience.nom }}</strong>
-                            chez 
-                            <strong>{{ experience.entreprise }}</strong>
-                            (
-                            {{ date_difference(experience.dateFin, experience.dateDebut) }}
-                            )
-                        </span>
-                        </p>
-                        <hr class="mb-4">
-                    {% endfor %}
-                {% else %}
-                <div class="alert alert-primary" role="alert">
-                    Aucune expérience renseignée.
-                </div>
-                {% endif %}
             </div>
-            <div class="col">
+            <div class="col-md-8 col-sm-12">
             
                 <div class="">
                     <div {{ stimulus_controller('form-collection') }} data-form-collection-index-value="{{ form_three.experiences|length > 0 ? form_three.experiences|last.vars.name + 1 : 0 }}" data-form-collection-prototype-value="{{ form_widget(form_three.experiences.vars.prototype)|e('html_attr') }}">
@@ -147,7 +129,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-light rounded-pill small w-100" data-bs-toggle="modal" data-bs-target="#experience" type="button" {{ stimulus_action('form-collection', 'addCollectionElement') }}>
+                        <button class="btn btn-info rounded-pill small" data-bs-toggle="modal" data-bs-target="#experience" type="button" {{ stimulus_action('form-collection', 'addCollectionElement') }}>
                             <i class="h5 bi mx-1 bi-plus"></i>
                             {{ 'app_identity_expert_step_two.experience.add'|trans }}
                         </button>
@@ -155,35 +137,47 @@
                 </div>
             </div>
         </div>
-        <hr class="mb-4">
         <div class="row">
-            <div class="col">
-                <h5 class=""><i class="bi bi-person-fill-gear mx-2 h5"></i> Competences ({{ competences|length }})</h5>
-                {% if competences|length > 0 %}
-                    {% for competence in competences %}
-                    <p class="text-dark d-flex justify-content-between align-items-center">
-                        {{ competence.nom }}
-                        <span class="d-flex align-items-center">
-                            <span class="mx-4 p-1 lh-1">
-                                {% for i in 1..5 %}
-                                    {% if i <= competence.note %}
-                                        <i class="small bi bi-star-fill text-warning"></i>
-                                    {% else %}
-                                        <i class="small bi bi-star text-dark"></i>
-                                    {% endif %}
-                                {% endfor %}
+            {% if experiences|length > 0 %}
+                {% for experience in experiences %}
+                    <div class="experience">
+                        <p class="text-dark d-flex justify-content-between align-items-center">
+                            {% if experience.enPoste %}
+                                Depuis {{ experience.dateDebut|date('M Y')}}
+                            {% else %}
+                                {{ experience.dateDebut|date('M Y')}} - 
+                                {{ experience.dateFin|date('M Y')}}
+                            {% endif %}
+                        </p>
+                        <p class="text-dark small d-flex justify-content-between align-items-center">
+                            <span>
+                                <strong>{{ experience.nom }}</strong>
+                                chez 
+                                <strong>{{ experience.entreprise }}</strong>
+                                (
+                                {{ date_difference(experience.dateFin, experience.dateDebut) }}
+                                )
                             </span>
-                        </span>            
-                    </p>
-                    {% endfor %}
-        
-                {% else %}
-                <div class="alert alert-primary" role="alert">
-                    Aucune compétence renseignée.
-                </div>
-                {% endif %}
+                            <span class="">
+                                <button class="btn btn-primary btn-sm edit-experience" data-experience-id="{{ experience.id }}">Modifier</button>
+                                <button class="btn btn-danger btn-sm delete-experience" data-experience-id="{{ experience.id }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette expérience ?');">Supprimer</button>
+                            </span>
+                        </p>
+                        <div class=""> {{ experience.description|raw }}</div>
+                        <hr class="my-4">
+                    </div>
+                {% endfor %}
+            {% else %}
+            <div class="alert alert-primary" role="alert">
+                Aucune expérience renseignée.
             </div>
-            <div class="col">
+            {% endif %}
+        </div>
+        <div class="row my-3">
+            <div class="col-md-4 col-sm-12">
+                <h5 class=""><i class="bi bi-person-fill-gear mx-2 h5"></i> Competences ({{ competences|length }})</h5>
+            </div>
+            <div class="col-md-8 col-sm-12">
                 <div class="">
                     <div {{ stimulus_controller('form-collection') }} data-form-collection-index-value="{{ form_three.competences|length > 0 ? form_three.competences|last.vars.name + 1 : 0 }}" data-form-collection-prototype-value="{{ form_widget(form_three.competences.vars.prototype)|e('html_attr') }}">
                         <!-- Modal -->
@@ -202,7 +196,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-light rounded-pill small w-100" data-bs-toggle="modal" data-bs-target="#technicalSkill" type="button" {{ stimulus_action('form-collection', 'addCollectionElement') }}>
+                        <button class="btn btn-info rounded-pill small" data-bs-toggle="modal" data-bs-target="#technicalSkill" type="button" {{ stimulus_action('form-collection', 'addCollectionElement') }}>
                             <i class="h5 bi mx-1 bi-plus"></i>
                             {{ 'app_identity_expert_step_two.skill.add'|trans }}
                         </button>
@@ -211,35 +205,50 @@
             
             </div>
         </div>
-        <hr class="mb-4">
         <div class="row">
-            <div class="col">
-                <h5 class=""><i class="bi bi-globe-europe-africa mx-2 h5"></i> Langues</h5>
-                {% if langages|length > 0 %}
-                    {% for langue in langages %}
-                    <p class="text-dark d-flex justify-content-between align-items-center">
-                        {{ isoToEmoji(langue.langue.code) }} {{ langue.langue.nom }} 
-                        <span class="d-flex align-items-center">
-                            <span class="mx-4 p-1 lh-1">
-                                {% for i in 1..5 %}
-                                    {% if i <= langue.niveau %}
-                                        <i class="small bi bi-star-fill text-warning"></i>
-                                    {% else %}
-                                        <i class="small bi bi-star text-dark"></i>
-                                    {% endif %}
-                                {% endfor %}
-                            </span>
-                        </span>            
-                    </p>
-                    {% endfor %}
-                {% else %}
-                <div class="alert alert-primary" role="alert">
-                    Aucune expérience renseignée.
+            {% if competences|length > 0 %}
+                {% for competence in competences %}
+                <div class="competence">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12">
+                            <p class="text-dark ">
+                                {{ competence.nom }}<br>
+                                <span class="">
+                                    {% for i in 1..5 %}
+                                        {% if i <= competence.note %}
+                                            <i class="small bi bi-star-fill text-warning"></i>
+                                        {% else %}
+                                            <i class="small bi bi-star text-dark"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </span>
+                                <span class="d-flex align-items-center">
+                                </span>            
+                            </p>
+                            <div class="">
+                                <button class="btn btn-primary btn-sm edit-competence" data-competence-id="{{ competence.id }}">Modifier</button>
+                                <button class="btn btn-danger btn-sm delete-competence" data-competence-id="{{ competence.id }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette compétence ?');">Supprimer</button>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-sm-12">
+                            {{ competence.description|raw }}
+                        </div>
+                    </div>
                 </div>
-                {% endif %}
+                <hr class="my-4">
+                {% endfor %}
+    
+            {% else %}
+            <div class="alert alert-primary" role="alert">
+                Aucune compétence renseignée.
             </div>
-            <div class="col">
-            
+            {% endif %}
+        </div>
+        <div class="row my-3">
+            <div class="col-md-4 col-sm-12">
+                <h5 class=""><i class="bi bi-globe-europe-africa mx-2 h5"></i> Langues</h5>
+            </div>
+            <div class="col-md-8 col-sm-12">            
                 <div class="">
                     <div {{ stimulus_controller('form-collection') }} data-form-collection-index-value="{{ form_three.langages|length > 0 ? form_three.langages|last.vars.name + 1 : 0 }}" data-form-collection-prototype-value="{{ form_widget(form_three.langages.vars.prototype)|e('html_attr') }}">
                         <!-- Modal -->
@@ -259,13 +268,37 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-light rounded-pill small w-100" data-bs-toggle="modal" data-bs-target="#langage" type="button" {{ stimulus_action('form-collection', 'addCollectionElement') }}>
+                        <button class="btn btn-info rounded-pill small" data-bs-toggle="modal" data-bs-target="#langage" type="button" {{ stimulus_action('form-collection', 'addCollectionElement') }}>
                             <i class="h5 bi mx-1 bi-plus"></i>
                             Ajouter une langue
                         </button>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
+                {% if langages|length > 0 %}
+                    {% for langue in langages %}
+                    <p class="text-dark">
+                        {{ isoToEmoji(langue.langue.code) }} {{ langue.langue.nom }} 
+                        <span class="d-flex align-items-center">
+                            <span class="p-1 lh-1">
+                                {% for i in 1..5 %}
+                                    {% if i <= langue.niveau %}
+                                        <i class="small bi bi-star-fill text-warning"></i>
+                                    {% else %}
+                                        <i class="small bi bi-star text-dark"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </span>            
+                    </p>
+                    {% endfor %}
+                {% else %}
+                <div class="alert alert-primary" role="alert">
+                    Aucune langues renseignée.
+                </div>
+                {% endif %}
         </div>
     <h5 class=""><i class="mx-2 h5 bi bi-archive"></i> Mes documents</h5>
     <div class="row">
@@ -349,5 +382,121 @@
 <script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 <script>
     ClassicEditor.create( document.querySelector( '#step_two_resume' ) )
+    ClassicEditor.create( document.querySelector( '#experience_description' ) )
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Lorsque vous cliquez sur un bouton de suppression
+        $('.delete-experience').click(function(e) {
+            e.preventDefault()
+            var experienceId = $(this).data('experience-id');
+            console.log(experienceId)
+            // Envoyez une demande AJAX pour supprimer l'expérience
+            $.ajax({
+                url: "{{ path('app_ajax_delete_experience')}}",
+                method: 'POST',
+                data: { experience_id: experienceId },
+                success: function(response) {
+                    console.log(response)
+                    // Si la suppression réussit, supprimez l'expérience du DOM
+                    if (response.success) {
+                        $('[data-experience-id="' + experienceId + '"]').closest('.experience').remove();
+                    }
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la suppression de l\'expérience :', error);
+                }
+            });
+        });
+        $('.edit-experience').click(function(e) {
+            e.preventDefault()
+            var experienceId = $(this).data('experience-id');
+            console.log(experienceId)
+            // Envoyez une demande AJAX pour récupérer le formulaire de modification
+            $.ajax({
+                url: "{{ path('app_ajax_edit_experience')}}",
+                method: 'POST',
+                data: { experience_id: experienceId },
+                success: function(response) {
+                    console.log(response)
+                    // Si la demande réussit, affichez un formulaire de modification
+                    if (response.success) {
+                        // Remplacez le contenu de l'expérience par le formulaire de modification pré-rempli
+                        var experienceContainer = $('[data-experience-id="' + experienceId + '"]').closest('.experience');
+                        experienceContainer.html(response.form); // Assurez-vous que la réponse contient uniquement le formulaire HTML
+                    }
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la récupération des données de l\'expérience :', error);
+                }
+            });
+
+        });
+
+        // Lorsque vous cliquez sur un bouton de suppression
+        $('.delete-competence').click(function(e) {
+            e.preventDefault()
+            var competenceId = $(this).data('competence-id');
+            console.log(competenceId)
+            // Envoyez une demande AJAX pour supprimer l'expérience
+            $.ajax({
+                url: "{{ path('app_ajax_delete_competence')}}",
+                method: 'POST',
+                data: { competence_id: competenceId },
+                success: function(response) {
+                    console.log(response)
+                    // Si la suppression réussit, supprimez l'expérience du DOM
+                    if (response.success) {
+                        $('[data-competence-id="' + competenceId + '"]').closest('.competence').remove();
+                    }
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la suppression de l\'expérience :', error);
+                }
+            });
+        });
+        $('.edit-competence').click(function(e) {
+            e.preventDefault()
+            var competenceId = $(this).data('competence-id');
+            console.log(competenceId)
+            // Envoyez une demande AJAX pour récupérer le formulaire de modification
+            $.ajax({
+                url: "{{ path('app_ajax_edit_competence')}}",
+                method: 'POST',
+                data: { competence_id: competenceId },
+                success: function(response) {
+                    console.log(response)
+                    // Si la demande réussit, affichez un formulaire de modification
+                    if (response.success) {
+                        // Remplacez le contenu de l'expérience par le formulaire de modification pré-rempli
+                        var competenceContainer = $('[data-competence-id="' + competenceId + '"]').closest('.competence');
+                        competenceContainer.html(response.form); // Assurez-vous que la réponse contient uniquement le formulaire HTML
+                    }
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la récupération des données de l\'expérience :', error);
+                }
+            });
+
+        });
+    });
+</script>
+
+<script>
+    document.querySelector('.profile-img').addEventListener('click', function() {
+        document.getElementById('{{ form_one.file.vars.id }}').click();
+    });
+
+    document.getElementById('{{ form_one.file.vars.id }}').addEventListener('change', function(event) {
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.profile-img').src = e.target.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    });
 </script>
 {% endblock %}
