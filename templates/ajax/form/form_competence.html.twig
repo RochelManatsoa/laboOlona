@@ -1,0 +1,28 @@
+<form method="post" action="{{ path('app_ajax_update_competence', {'id': competence.id })}}">
+<div class="row">
+    <div class="mb-3 col">
+        <label for="competence_nom">Nom de la compétence</label>
+        <input type="text" id="competence_nom" name="nom" class="form-control" value="{{ competence.nom ?? '' }}">
+    </div>
+    <div class="mb-3 col">
+        <label for="competence_note">Niveau de compétence</label>
+        <select id="competence_note" name="note" class="form-control">
+            <option value="1" {% if competence.note == 1 %}selected{% endif %}>1</option>
+            <option value="2" {% if competence.note == 2 %}selected{% endif %}>2</option>
+            <option value="3" {% if competence.note == 3 %}selected{% endif %}>3</option>
+            <option value="4" {% if competence.note == 4 %}selected{% endif %}>4</option>
+            <option value="5" {% if competence.note == 5 %}selected{% endif %}>5</option>
+        </select>
+    </div>
+</div>
+<div class="mb-3">
+    <label for="competence_description">Description de la compétence</label>
+    <textarea id="competence_description" name="description" class="form-control ckeditor-textarea" rows="6">{{ competence.description ?? '' }}</textarea>
+</div>
+<button type="submit" class="btn btn-dark rounded-pill">Soumettre</button>
+</form>
+
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+ClassicEditor.create(document.querySelector('#competence_description'));
+</script>
