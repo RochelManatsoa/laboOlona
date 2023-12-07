@@ -66,10 +66,10 @@ class AffiliateTool
     #[ORM\Column(nullable: true)]
     private ?array $relatedIds = null;
 
-    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'affiliateTool')]
+    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'affiliateTool', cascade: ['persist'])]
     private Collection $categories;
 
-    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'affiliateTool')]
+    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'affiliateTool', cascade: ['persist'])]
     private Collection $tags;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

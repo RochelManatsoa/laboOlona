@@ -21,7 +21,7 @@ services:
   database:
     image: mysql:5.7
     environment:
-      MYSQL_DATABASE: laboOlona1
+      MYSQL_DATABASE: laboOlona
       MYSQL_ROOT_PASSWORD: moissons
     ports:
       - "3306:3306"
@@ -31,3 +31,14 @@ services:
     ports:
       - "8025:8025" # Interface web
       - "1025:1025" # Serveur SMTP
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: database
+      PMA_USER: root
+      PMA_PASSWORD: moissons
+    ports:
+      - "8081:80"
+    depends_on:
+      - database
