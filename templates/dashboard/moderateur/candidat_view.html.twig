@@ -22,13 +22,28 @@
         <div class="tab-pane fade show active" id="details">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</h5>
-                    <p class="card-text">
-                        <strong>Email:</strong> {{ candidat.candidat.email }}<br>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="{{vich_uploader_asset(candidat, 'file')}}" class="rounded-circle profile-img" width="180" height="180" alt="{{ candidat.candidat.prenom }}">
+                        </div> 
+                        <div class="col-md-9">
+                            <h5 class="card-title">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</h5>
+                            <p class="card-text">
+                            <span class="text-muted">Email:</span> {{ candidat.candidat.email }}<br>
+                            <span class="text-muted">Compétences : </span> <span class="badge text-bg-info">{{ candidat.competences|length }}</span><br>
+                            <span class="text-muted">Expériences : </span> <span class="badge text-bg-info">{{ candidat.experiences|length }}</span><br>
+                            <span class="text-muted">Applications : </span> <span class="badge text-bg-info">{{ candidat.applications|length }}</span><br>
+                            <span class="text-muted">Secteur d'activité : </span><br> 
+                                <span class="badge text-bg-warning">
+                                    {% for item in candidat.secteurs %}
+                                        {{ item.nom }}
+                                    {% endfor %}
+                                </span>
+                            </p> 
+                        </div> 
+                    </div> 
+                    <p class="card-text mt-3">
                         <strong>Biographie:</strong> {{ candidat.resume|raw }}<br>
-                        <strong>Nombre de Compétences : </strong> <span class="badge text-bg-info">{{ candidat.competences|length }}</span><br>
-                        <strong>Nombre d'Expériences : </strong> <span class="badge text-bg-info">{{ candidat.experiences|length }}</span><br>
-                        <strong>Nombre d'Applications : </strong> <span class="badge text-bg-info">{{ candidat.applications|length }}</span>
                     </p> 
                 <a href="javascript:history.back()" class="btn btn-secondary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
                 </div>
