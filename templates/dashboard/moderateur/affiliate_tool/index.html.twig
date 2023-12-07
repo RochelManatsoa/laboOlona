@@ -1,8 +1,8 @@
 {% extends 'dashboard/base.html.twig' %}
 
 {% block body %}
-<div class="container mt-5">
-    <h2>Outil IA</h2>
+<div class="container mt-3">
+    <h1 class="mb-4">Outil IA</h1>
     {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
     <a href="{{ path('app_dashboard_moderateur_new_affiliate_tool')}}" class="btn btn-secondary my-3">Nouveau</a>
     {% endif %}

@@ -43,7 +43,8 @@ class ExperiencesType extends AbstractType
             'label' => 'app_identity_expert_step_two.experience.description',
             'required' => false,
             'attr' => [
-                'rows' => 6
+                'rows' => 6,
+                'class' => 'ckeditor-textarea'
             ]
         ])
         ->add('submit', SubmitType::class, [

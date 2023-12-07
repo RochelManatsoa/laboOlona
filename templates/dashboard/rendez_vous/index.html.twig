@@ -6,7 +6,20 @@
 {% block body %}
 <div class="container mt-3">
     <h1 class="mb-4">Liste des Rendez-vous</h1>
-    <div class="card shadow">
+        {% if rendezvousList > 0 %}
+        <div class="p-5 text-center bg-body-tertiary rounded-3">
+            <h2 class="text-body-emphasis h3">Vous n'avez actuellement aucun rendez-vous prévu.</h2>
+            <p class="col-lg-8 mx-auto fs-5 text-muted">
+                Débutez votre recherche d'opportunités, consultez la liste des rendez-vous à venir ici.
+            </p>
+            <div class="d-inline-flex gap-2 mb-5">
+                <a class="btn btn-outline-secondary btn-lg px-4 rounded-pill" href="{{ path('app_dashboard_candidat_annonce')}}">
+                    Trouver une mission
+                </a>
+            </div>
+        </div>
+
+        {% else %}
         <table class="table">
             <thead>
                 <tr>
@@ -48,6 +61,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </div>
 </div>
 

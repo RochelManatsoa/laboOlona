@@ -65,28 +65,36 @@
             <div class="col">
                 {{ form_label(form_two.titre) }}
                 {{ form_widget(form_two.titre, {'attr': {'class': 'form-control mb-4'}}) }}
-                    {{ form_label(form_two.social.linkedin) }}
-                    {{ form_widget(form_two.social.linkedin) }}
-
-                    {{ form_label(form_two.social.skype) }}
-                    {{ form_widget(form_two.social.skype) }}
-
-                    {{ form_label(form_two.social.slack) }}
-                    {{ form_widget(form_two.social.slack) }}
-
-                    {{ form_label(form_two.social.facebook) }}
-                    {{ form_widget(form_two.social.facebook) }}
-
-                    {{ form_label(form_two.social.instagram) }}
-                    {{ form_widget(form_two.social.instagram) }}
-
-                    {{ form_label(form_two.social.github) }}
-                    {{ form_widget(form_two.social.github) }}
+                {{ form_label(form_two.secteurs) }}
+                {{ form_widget(form_two.secteurs) }}
             </div>
             <div class="col">
-                {{ form_label(form_two.resume) }}
-                {{ form_widget(form_two.resume) }}
+                <div class="mb-3">
+                {{ form_label(form_two.social.linkedin) }}
+                {{ form_widget(form_two.social.linkedin) }}
+
+                {{ form_label(form_two.social.skype) }}
+                {{ form_widget(form_two.social.skype) }}
+
+                {{ form_label(form_two.social.slack) }}
+                {{ form_widget(form_two.social.slack) }}
+
+                {{ form_label(form_two.social.facebook) }}
+                {{ form_widget(form_two.social.facebook) }}
+
+                {{ form_label(form_two.social.instagram) }}
+                {{ form_widget(form_two.social.instagram) }}
+
+                {{ form_label(form_two.social.github) }}
+                {{ form_widget(form_two.social.github) }}
+                </div>
             </div>
+        </div>
+        <div class="row">
+        <div class="my-3">
+            {{ form_label(form_two.resume) }}
+            {{ form_widget(form_two.resume) }}
+        </div>
         </div>
         <div style="display:none">
             {{ form_widget(form_two) }}
