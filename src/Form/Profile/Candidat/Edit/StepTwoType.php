@@ -66,14 +66,14 @@ class StepTwoType extends AbstractType
             //     'allow_add' => true,
             //     'by_reference' => false,
             // ])
-            // ->add('secteurs', EntityType::class, [
-            //     'class' => Secteur::class,
-            //     'label' => 'app_identity_company.sector_multiple',
-            //     'choice_label' => 'nom',
-            //     'autocomplete' => true,
-            //     'multiple' => true,
-            //     'required' => true,
-            // ])
+            ->add('secteurs', EntityType::class, [
+                'class' => Secteur::class,
+                'label' => 'app_identity_company.sector_multiple',
+                'choice_label' => 'nom',
+                'expanded' => true,
+                'multiple' => true,
+                'required' => true,
+            ])
         ;
     }
 
