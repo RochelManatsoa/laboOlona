@@ -128,11 +128,26 @@ class AffiliateToolController extends AbstractController
         }
 
         /** @var AffiliateTool $tool qui vient de {slug} */
+            // dd($tool);
         $form = $this->createForm(AffiliateToolType::class, $tool);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** Sauvegarder AffiliateTool */
-            $tool = $this->affiliateToolManager->saveForm($form);
+            $tool = $form->getData();
+            foreach ($tool->getCategories() as $category) {
+                $tool->addCategory($category); // Supposant que vous avez une méthode addca$category
+                $category->addAffiliateTool($tool);
+                $this->em->persist($category);
+                $this->em->persist($tool);
+            }
+            foreach ($tool->getTags() as $tag) {
+                $tool->addTag($tag); // Supposant que vous avez une méthode addca$tag
+                $tag->addAffiliateTool($tool);
+                $this->em->persist($tag);
+                $this->em->persist($tool);
+            }
+            $this->em->flush();
+            // $tool = $this->affiliateToolManager->saveForm($form);
             $this->addFlash('success', 'AffiliateTool mis à jour');
 
             return $this->redirectToRoute('app_dashboard_moderateur_affiliate_tool', []);
