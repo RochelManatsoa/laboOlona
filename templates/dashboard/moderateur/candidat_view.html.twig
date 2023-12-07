@@ -24,7 +24,11 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <img src="{{vich_uploader_asset(candidat, 'file')}}" class="rounded-circle profile-img" width="180" height="180" alt="{{ candidat.candidat.prenom }}">
+                        {% if candidat.fileName is not empty %}
+                        <img src="{{vich_uploader_asset(candidat, 'file')}}" class="rounded-circle profile-img" width="180" height="180" alt="{{ candidat.candidat.prenom }}">
+                        {% else %}
+                        <img src="{{ asset('uploads/experts/avatar-default.jpg')}}" class="rounded-circle profile-img" width="180" height="180" alt="{{ candidat.candidat.prenom }}">
+                        {% endif %}
                         </div> 
                         <div class="col-md-9">
                             <h5 class="card-title">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</h5>

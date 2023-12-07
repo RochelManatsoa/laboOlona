@@ -26,7 +26,7 @@ class Category
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: AffiliateTool::class, inversedBy: 'categories')]
+    #[ORM\ManyToMany(targetEntity: AffiliateTool::class, inversedBy: 'categories', cascade: ['persist'])]
     private Collection $affiliateTool;
 
     #[ORM\Column(length: 255, nullable: true)]
