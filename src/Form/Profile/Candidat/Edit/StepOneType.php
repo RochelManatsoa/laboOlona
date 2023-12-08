@@ -6,6 +6,7 @@ use App\Entity\CandidateProfile;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Profile\Candidat\Edit\InfoUserType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -21,6 +22,17 @@ class StepOneType extends AbstractType
                 'required' => false,
                 'label' => 'app_identity_expert_step_one.avatar',
                 'attr' => ['class' => 'd-none'],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/jpg',
+                            'image/bmp',
+                        ],
+                    ])
+                ],
             ])
             ->add('localisation', CountryType::class, [
                 'required' => true,

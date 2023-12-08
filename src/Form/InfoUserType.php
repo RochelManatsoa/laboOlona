@@ -16,18 +16,18 @@ class InfoUserType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
-                'label' => 'app_identity_expert_step_one.user.firstName',
+                'label' => 'Nom *',
             ])
             ->add('prenom', TextType::class, [
                 'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
-                'label' => 'app_identity_expert_step_one.user.lastName',
+                'label' => 'Prénom(s) *',
             ])
             ->add('telephone', TextType::class, [
                 'label' => 'app_identity_company.phone',
                 'required' => true,
             ])
             ->add('adress', TextType::class, [
-                'label' => 'Addresse',
+                'label' => 'Addresse *',
                 'required' => true,
             ])
             ->add('email', EmailType::class, [
