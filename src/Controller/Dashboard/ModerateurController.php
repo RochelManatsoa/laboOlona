@@ -279,8 +279,8 @@ class ModerateurController extends AbstractController
             if ($request->isXmlHttpRequest()) {
                 // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
                 return new JsonResponse([
-                    'content' => $this->renderView('dashboard/moderateur/annonce/_annonces.html.twig', [
-                        'annonces' => $paginatorInterface->paginate(
+                    'content' => $this->renderView('dashboard/moderateur/candidat/_candidats.html.twig', [
+                        'candidats' => $paginatorInterface->paginate(
                             $data,
                             $request->query->getInt('page', 1),
                             10
