@@ -89,7 +89,7 @@
     </dl>  
     <dl>
         <dt>Description</dt>
-        <dd>{{ annonce.description| }}</dd>
+        <dd>{{ annonce.description|raw }}</dd>
     </dl>
     <a href="javascript:history.back()" class="btn btn-secondary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
     <a href="{{ path('app_dashboard_moderateur_annonce_notifier', {'entreprise': annonce.entreprise.id, 'annonce': annonce.id}) }}" class="btn btn-info rounded-pill"><i class="bi bi-send mx-2"></i> Notifier l'entreprise</a>
