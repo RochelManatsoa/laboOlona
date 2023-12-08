@@ -49,11 +49,11 @@
 
                 <div class="col-md-6 offset-md-3">
                     <div class="row mb-4">
-                        <div class="col-md-4 text-center">
+                        <div class="col-md-4 col-12 text-center mb-2 mb-md-0">
                             {{ 'app_identity_expert_step_two.experience.name'|trans }} *
                         </div>
                         
-                        <div class="col-md-5">
+                        <div class="col-md-5 col-12">
                             <div {{ stimulus_controller('form-collection') }} data-form-collection-index-value="{{ form.experiences|length > 0 ? form.experiences|last.vars.name + 1 : 0 }}" data-form-collection-prototype-value="{{ form_widget(form.experiences.vars.prototype)|e('html_attr') }}">
                                 <!-- Modal -->
                                 <div class="modal fade" id="experience" tabindex="-1" aria-labelledby="experienceLabel" aria-hidden="true">
@@ -78,7 +78,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="col-md-3 text-end">
+                        <div class="col-md-3 col-12 text-md-end text-center mt-2 mt-md-0">
                             <button type="button" class="btn btn-light rounded-pill small position-relative" data-bs-toggle="modal" data-bs-target="#experiencesPreview">
                                 Aperçu <i class="h5 bi mx-1 bi-eye"></i>
                                 {% if experiences|length > 0 %}
@@ -96,10 +96,10 @@
 
                 <div class="col-md-6 offset-md-3">
                     <div class="row mb-4">
-                        <div class="col-md-4 text-center">
+                        <div class="col-md-4 col-12 text-center mb-2 mb-md-0">
                             {{ 'app_identity_expert_step_two.skill.name'|trans }} *
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-5 col-12">
                             <div {{ stimulus_controller('form-collection') }} data-form-collection-index-value="{{ form.competences|length > 0 ? form.competences|last.vars.name + 1 : 0 }}" data-form-collection-prototype-value="{{ form_widget(form.competences.vars.prototype)|e('html_attr') }}">
                                 <!-- Modal -->
                                 <div class="modal fade" id="technicalSkill" tabindex="-1" aria-labelledby="technicalSkillLabel" aria-hidden="true">
@@ -123,7 +123,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="col-md-3 text-end">
+                        <div class="col-md-3 col-12 text-md-end text-center mt-2 mt-md-0">
                             <button type="button" class="btn btn-light rounded-pill small position-relative" data-bs-toggle="modal" data-bs-target="#skillsPreview">
                                 Aperçu <i class="h5 bi mx-1 bi-eye"></i>
                                 {% if competences|length > 0 %}
@@ -139,10 +139,10 @@
 
                 <div class="col-md-6 offset-md-3">
                     <div class="row mb-4">
-                        <div class="col-md-4 text-center">
+                        <div class="col-md-4 col-12 text-center mb-2 mb-md-0">
                             {{ 'app_identity_expert_step_two.language.name'|trans }} *
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-5 col-12">
                             <div {{ stimulus_controller('form-collection') }} data-form-collection-index-value="{{ form.langages|length > 0 ? form.langages|last.vars.name + 1 : 0 }}" data-form-collection-prototype-value="{{ form_widget(form.langages.vars.prototype)|e('html_attr') }}">
                                 <!-- Modal -->
                                 <div class="modal fade" id="language" tabindex="-1" aria-labelledby="languageLabel" aria-hidden="true">
@@ -166,7 +166,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="col-md-3 text-end">
+                        <div class="col-md-3 col-12 text-md-end text-center mt-2 mt-md-0">
                             <button type="button" class="btn btn-light rounded-pill small position-relative" data-bs-toggle="modal" data-bs-target="#languagesPreview">
                                 Aperçu <i class="h5 bi mx-1 bi-eye"></i>
                                 {% if langages|length > 0 %}
@@ -187,15 +187,6 @@
                             <div class="col-sm-8">
                                 {{ form_widget(form.cv, {'attr': {'class': 'rounded-pill' }}
                                 ) }}
-                            {# <div class="custom-file">
-                                {{ form_widget(form.expert.cv) }}
-                                <label for="{{ form.expert.cv.vars.id }}" class="custom-file-label">Importer un fichier</label>
-                            </div> #}
-                            {# <div class="custom-file">
-                                {{ form_errors(form.expert.cv) }}
-                                {{ form_widget(form.expert.cv) }}
-                                <label for="{{ form.expert.cv.vars.id }}" class="custom-file-label">Importer un fichier</label>
-                            </div> #}
                         
                             {{ form_errors(form.cv) }}
                             </div>
@@ -207,11 +198,11 @@
                     {{ form_widget(form) }}
                 </div>
                 <hr class="my-4">
-                <div class="d-flex justify-content-center">
-                    <a href="#" id="cancel" class="btn btn-outline-dark rounded-pill mx-2">
+                <div class="d-flex flex-column flex-sm-row justify-content-center">
+                    <a href="{{ path('app_profile_candidate_step_one')}}" id="cancel" class="btn btn-outline-dark rounded-pill mx-2 mb-3">
                         {{ 'app_identity_expert_step_two.cancel'|trans }}
                     </a>
-                    <button type="submit" id="submitForm" class="btn btn-primary rounded-pill mx-2" onclick="submitFormAndRedirect()">
+                    <button type="submit" id="submitForm" class="btn btn-primary rounded-pill mx-2 mb-3" onclick="submitFormAndRedirect()">
                         {{ 'app_identity_expert_step_two.button'|trans }}
                     </button>
                 </div>
