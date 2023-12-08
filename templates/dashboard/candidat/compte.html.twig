@@ -15,34 +15,41 @@
                     <div class="">
                     <img src="{{ form_one.vars.data.fileName ? asset('uploads/experts/' ~ form_one.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}" class="rounded-circle profile-img" width="150" height="150" alt="Avatar">
                     {{ form_widget(form_one.file) }}
+                    {{ form_errors(form_one.file) }}
                     </div>
                 </div>
             </div>
             <div class="col">
                 {{ form_label(form_one.candidat.nom) }}
                 {{ form_widget(form_one.candidat.nom, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(form_one.candidat.nom) }}
                 {{ form_label(form_one.candidat.prenom) }}
                 {{ form_widget(form_one.candidat.prenom, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(form_one.candidat.prenom) }}
             </div>
         </div>
         <div class="row">
             <div class="col">
                 {{ form_label(form_one.candidat.email) }}
                 {{ form_widget(form_one.candidat.email, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(form_one.candidat.email) }}
             </div>
             <div class="col">
                 {{ form_label(form_one.candidat.adress) }} 
                 {{ form_widget(form_one.candidat.adress, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(form_one.candidat.adress) }}
             </div>
         </div>
         <div class="row">
             <div class="col">
                 {{ form_label(form_one.candidat.telephone) }}
                 {{ form_widget(form_one.candidat.telephone, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(form_one.candidat.telephone) }}
             </div>
             <div class="col">
                 {{ form_label(form_one.localisation) }}
                 {{ form_widget(form_one.localisation, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(form_one.localisation) }}
             </div>
         </div>
         <div style="display:none">
@@ -65,8 +72,10 @@
             <div class="col">
                 {{ form_label(form_two.titre) }}
                 {{ form_widget(form_two.titre, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(form_two.titre) }}
                 {{ form_label(form_two.secteurs) }}
                 {{ form_widget(form_two.secteurs) }}
+                {{ form_errors(form_two.secteurs) }}
             </div>
             <div class="col">
                 <div class="mb-3">
@@ -94,6 +103,7 @@
         <div class="my-3">
             {{ form_label(form_two.resume) }}
             {{ form_widget(form_two.resume) }}
+            {{ form_errors(form_two.resume) }}
         </div>
         </div>
         <div style="display:none">

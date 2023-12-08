@@ -21,8 +21,8 @@ class StepTwoType extends AbstractType
     {
         $builder
             ->add('titre', TextType::class, [
-                'required' => false,
-                'label' => 'app_identity_expert.name',
+                'required' => true,
+                'label' => 'Votre titre *',
                 'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
             ])
             ->add('resume', TextareaType::class, [
@@ -46,7 +46,7 @@ class StepTwoType extends AbstractType
                             'application/pdf',
                             'application/x-pdf',
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                        'mimeTypesMessage' => 'Veuillez télécharger un document PDF valide',
                     ])
                 ],
             ])
@@ -70,7 +70,7 @@ class StepTwoType extends AbstractType
             ])
             ->add('secteurs', EntityType::class, [
                 'class' => Secteur::class,
-                'label' => 'app_identity_company.sector_multiple',
+                'label' => 'Secteur d\'expertise *',
                 'choice_label' => 'nom',
                 'autocomplete' => true,
                 'multiple' => true,

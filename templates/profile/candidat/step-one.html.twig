@@ -29,12 +29,12 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-sm-4 text-center ">
                         {{ form_label(form.file) }}
-                        {{ 'app_identity_expert_step_one.avatar_desc'|trans }}
                     </div>
                     <div class="col-sm-8 text-center">
 
                     <img src="{{ form.vars.data.fileName ? asset('uploads/experts/' ~ form.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}" class="rounded-circle profile-img" width="150" height="150" alt="Avatar">
                     {{ form_widget(form.file) }}
+                    {{ form_errors(form.file) }}
                     </div>
                 </div>
                 <hr class="my-2 mb-4">
@@ -101,6 +101,11 @@
                 <button type="submit" id="submit" class="btn btn-primary rounded-pill mx-2">
                     {{ 'app_identity_expert_step_one.button'|trans }}
                 </button>
+            </div>
+            <div class="d-flex justify-content-center">
+                <a href="{{ path('app_dashboard_candidat_compte')}}" id="cancel" class="text-light my-3 small">
+                    <i class="bi bi-info-circle h5"></i>  Vous pouvez toujours modifier les infos dans votre espace personnelles
+                </a>
             </div>
 
             <hr class="my-4">

@@ -772,7 +772,7 @@ app_identity_expert_step_one:
         lastName: Prénom(s)
     title: Qui êtes-vous?
     avatar: Photo / Avatar
-    avatar_desc: Ajouter une photo professionnel de vous
+    avatar_desc: Ajouter une photo professionnelle de vous (max 2Mo)
     message: "Découvrez une sélection rigoureuse d'experts professionnels francophones et malgaches. Collaborez et enrichissez vos projets grâce à l'excellence locale sur Olona-Talents."
     keywords: "freelance, project, talent"
     button: Enregistrer et continuer
