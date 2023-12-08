@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\Candidate\ExperiencesRepository;
+use App\Repository\Candidate\LangagesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CandidatController extends AbstractController
@@ -21,6 +22,7 @@ class CandidatController extends AbstractController
         private EntityManagerInterface $em,
         private ExperiencesRepository $experiencesRepository,
         private CompetencesRepository $competencesRepository,
+        private LangagesRepository $langagesRepository,
     ) {
     }
     
@@ -222,6 +224,81 @@ class CandidatController extends AbstractController
             'success' => $success,
         ], 200, [], []);
 
+    }
+
+    #[Route('/ajax-remove-experience/{experienceId}/{userId}', name: 'app_remove_experience_user')]
+    public function removeExperience(int $experienceId, int $userId)
+    {
+        // Récupérez l'expérience à supprimer
+        $experience = $this->experiencesRepository->find($experienceId);
+
+        if (!$experience) {
+            return $this->json([
+                'message' => 'Expérience non trouvée',
+                'success' => false,
+            ], 200, [], []);
+        }
+
+        // Assurez-vous que l'expérience appartient à l'utilisateur (si nécessaire)
+
+        // Supprimez l'expérience
+        $this->em->remove($experience);
+        $this->em->flush();
+
+        return $this->json([
+            'message' => 'Expérience supprimée avec succès',
+            'success' => true,
+        ], 200, [], []);
+    }
+
+    #[Route('/ajax-remove-competence/{competenceId}/{userId}', name: 'app_remove_competence_user')]
+    public function removeCompetence(int $competenceId, int $userId)
+    {
+        // Récupérez l'expérience à supprimer
+        $competence = $this->competencesRepository->find($competenceId);
+
+        if (!$competence) {
+            return $this->json([
+                'message' => 'Compétence non trouvée',
+                'success' => false,
+            ], 200, [], []);
+        }
+
+        // Assurez-vous que la competence appartient à l'utilisateur (si nécessaire)
+
+        // Supprimez la competence
+        $this->em->remove($competence);
+        $this->em->flush();
+
+        return $this->json([
+            'message' => 'Compétence supprimée avec succès',
+            'success' => true,
+        ], 200, [], []);
+    }
+
+    #[Route('/ajax-remove-language/{languageId}/{userId}', name: 'app_remove_language_user')]
+    public function removeLanguage(int $languageId, int $userId)
+    {
+        // Récupérez l'expérience à supprimer
+        $language = $this->langagesRepository->find($languageId);
+
+        if (!$language) {
+            return $this->json([
+                'message' => 'Langue non trouvée',
+                'success' => false,
+            ], 200, [], []);
+        }
+
+        // Assurez-vous que la language appartient à l'utilisateur (si nécessaire)
+
+        // Supprimez la language
+        $this->em->remove($language);
+        $this->em->flush();
+
+        return $this->json([
+            'message' => 'Langue supprimée avec succès',
+            'success' => true,
+        ], 200, [], []);
     }
 
 }
