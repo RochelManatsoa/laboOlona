@@ -38,11 +38,11 @@
                             <span class="text-muted">Expériences : </span> <span class="badge text-bg-info">{{ candidat.experiences|length }}</span><br>
                             <span class="text-muted">Applications : </span> <span class="badge text-bg-info">{{ candidat.applications|length }}</span><br>
                             <span class="text-muted">Secteur d'activité : </span><br> 
+                                {% for item in candidat.secteurs %}
                                 <span class="badge text-bg-warning">
-                                    {% for item in candidat.secteurs %}
-                                        {{ item.nom }}
-                                    {% endfor %}
+                                    {{ item.nom }}
                                 </span>
+                                {% endfor %}
                             </p> 
                         </div> 
                     </div> 
