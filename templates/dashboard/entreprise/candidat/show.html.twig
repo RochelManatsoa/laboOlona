@@ -12,39 +12,51 @@
             <div class="row mb-4">
                 <div class="col-md-4 justify-content-left align-items-center">
                     <img src="{{vich_uploader_asset(candidat, 'file')}}" class="card-img-top" style="width: 100%; height: auto; border-radius: 10px; object-fit: cover;" alt="avatar">
-                    <p></p>
-                    <p><strong>Statut :</strong> <span class="badge bg-success">{{ candidat.status }}</span></p>
-                    <p><strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-success' : 'bg-danger' }}">{{ candidat.isValid ? 'Oui' : 'Non' }}</span></p>
                 </div>
                 <div class="col-md-8">
-                    <h5 class="card-title">Informations Générales</h5>
+                    <h2 class="card-title">Informations Générales</h2>
                     <p><strong>Date d'inscription :</strong> <span class="text-muted">{{ candidat.createdAt|date('d/m/Y') }}</span></p>
                     <p><strong>Dernière mise à jour du profil :</strong> <span class="text-muted">{{ candidat.updatedAt|date('d/m/Y') }}</span></p>
                     <p><strong>Localisation :</strong> <span class="text-muted">{{ countryName }}</span></p>
                     <p><strong>Âge :</strong> <span class="text-muted">{{ age }}</span></p>
-                    <p><strong>Résumé :</strong> <span class="text-muted">{{ candidat.resume|raw }}</span></p>
                     <p><strong>Titre professionnel :</strong> <span class="text-muted">{{ candidat.titre }}</span></p>
+                    <p></p>
+                    <p><strong>Statut :</strong> <span class="badge bg-success">{{ candidat.status }}</span></p>
+                    <p><strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-success' : 'bg-danger' }}">{{ candidat.isValid ? 'Oui' : 'Non' }}</span></p>
                 </div>
             </div>
+            <p><strong>Résumé :</strong> <span class="text-muted">{{ candidat.resume|raw }}</span></p>
 
-            <h5 class="card-title">Compétences</h5>
+            <h2 class="card-title">Compétences</h2>
             <ul class="list-group list-group-flush mb-4">
                 {% for competence in candidat.competences %}
-                    <li class="list-group-item">{{ competence.nom }} : 
-                        <ul class="list-group list-group-flush mb-4">
-                            <li class="list-group-item"><span>{{ competence.description|raw }} </span></li>
-                        </ul>
+                    <li class="list-group-item">{{ competence.nom }} 
+                            <span class="p-1 lh-1">
+                                {% for i in 1..5 %}
+                                    {% if i <= competence.note %}
+                                        <i class="small bi bi-star-fill text-warning"></i>
+                                    {% else %}
+                                        <i class="small bi bi-star text-dark"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+
+                        {% if competence.description %}
+                            <ul class="list-group list-group-flush mb-4">
+                                <li class="list-group-item"><span>{{ competence.description|raw }} </span></li>
+                            </ul>
+                        {% endif %} 
                     </li>
                 {% endfor %}
             </ul>
 
-            <h5 class="card-title">Expériences</h5>
+            <h2 class="card-title">Expériences</h2>
             <ul class="list-group list-group-flush mb-4">
-                {% for experiences in candidat.experiences %}
-                    <li class="list-group-item"><strong>{{ experiences.nom|upper }} </strong> : 
+                {% for experience in candidat.experiences %}
+                    <li class="list-group-item"><strong>{{ experience.nom|upper }} </strong> : 
                         <ul class="list-group list-group-flush mb-4">
-                            <li class="list-group-item"><span>{{ experiences.dateDebut|date('d/m/Y') }} - {{ experiences.dateFin|date('d/m/Y') }}</span></li>
-                            <li class="list-group-item"><span>{{ experiences|raw }} </span></li>
+                            <li class="list-group-item"><span>{{ experience.dateDebut|date('d/m/Y') }} - {{ experience.dateFin|date('d/m/Y') }}</span></li>
+                            <li class="list-group-item"><span>{{ experience.description|raw }} </span></li>
                         </ul>
                     </li>
                 {% endfor %}

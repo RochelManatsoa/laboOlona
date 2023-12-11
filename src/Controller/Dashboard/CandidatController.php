@@ -4,11 +4,13 @@ namespace App\Controller\Dashboard;
 
 use DateTime;
 use App\Entity\User;
+use App\Service\FileUploader;
 use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
 use App\Entity\Vues\AnnonceVues;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
+use App\Manager\ModerateurManager;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
@@ -21,21 +23,20 @@ use App\Form\Profile\Candidat\StepTwoType;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\Profile\Candidat\StepThreeType;
 use Symfony\Component\HttpFoundation\Request;
-use App\Form\Search\Annonce\CandidatAnnonceSearchType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
+use App\Repository\Candidate\ApplicationsRepository;
 use App\Repository\Moderateur\TypeContratRepository;
+use App\Form\Search\Annonce\CandidatAnnonceSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Profile\Candidat\Edit\StepOneType as EditStepOneType;
 use App\Form\Profile\Candidat\Edit\StepTwoType as EditStepTwoType;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use App\Form\Profile\Candidat\Edit\StepThreeType as EditStepThreeType;
-use App\Manager\ModerateurManager;
-use App\Repository\Candidate\ApplicationsRepository;
-use App\Service\FileUploader;
 
 #[Route('/dashboard/candidat')]
 class CandidatController extends AbstractController
@@ -55,16 +56,17 @@ class CandidatController extends AbstractController
         private UrlGeneratorInterface $urlGenerator,
     ) {
     }
-
+    
     private function checkCandidat()
     {
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
-        if (!$candidat instanceof CandidateProfile){ 
-            return $this->redirectToRoute('app_profile');
+        if (!$candidat instanceof CandidateProfile) {
+            // Si l'utilisateur n'a pas de profil candidat, on lance une exception
+            throw new AccessDeniedException('Désolé, la page que vous souhaitez consulter est réservée aux profils candidats. Si vous possédez un tel profil, veuillez vous assurer que vous êtes connecté avec les identifiants appropriés.');
         }
-
+    
         return null;
     }
 
@@ -153,10 +155,7 @@ class CandidatController extends AbstractController
     #[Route("/profil", name: "profil")]
     public function profil(): Response
     {
-        $redirection = $this->checkCandidat();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkCandidat();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
@@ -169,10 +168,7 @@ class CandidatController extends AbstractController
     #[Route('/annonces', name: 'app_dashboard_candidat_annonce')]
     public function annonces(Request $request, PaginatorInterface $paginatorInterface ): Response
     {
-        $redirection = $this->checkCandidat();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkCandidat();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
@@ -225,10 +221,7 @@ class CandidatController extends AbstractController
     #[Route('/annonce/{jobId}', name: 'app_dashboard_candidat_annonce_show')]
     public function showAnnonce(Request $request, JobListing $annonce): Response
     {
-        $redirection = $this->checkCandidat();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkCandidat();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
@@ -318,10 +311,7 @@ class CandidatController extends AbstractController
     #[Route('/annonce/{jobId}/details', name: 'app_dashboard_candidat_annonce_details')]
     public function detailsAnnonce(Request $request, JobListing $annonce): Response
     {
-        $redirection = $this->checkCandidat();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkCandidat();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
@@ -335,10 +325,7 @@ class CandidatController extends AbstractController
     #[Route('/all/annonces', name: 'app_dashboard_candidat_annonces')]
     public function allAnnonces(Request $request, PaginatorInterface $paginatorInterface): Response
     {
-        $redirection = $this->checkCandidat();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkCandidat();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
@@ -375,10 +362,7 @@ class CandidatController extends AbstractController
     #[Route('/compte', name: 'app_dashboard_candidat_compte')]
     public function compte(Request $request): Response
     {
-        $redirection = $this->checkCandidat();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkCandidat();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
@@ -425,10 +409,7 @@ class CandidatController extends AbstractController
     #[Route('/guides/astuce', name: 'app_dashboard_guides_astuce')]
     public function astuce(): Response
     {
-        $redirection = $this->checkCandidat();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkCandidat();
         
         return $this->render('dashboard/candidat/guides/astuce.html.twig', [
             'controller_name' => 'GuidesController',
@@ -438,10 +419,7 @@ class CandidatController extends AbstractController
     #[Route('/guides/lettre-de-motivation', name: 'app_dashboard_guides_motivation')]
     public function motivation(): Response
     {
-        $redirection = $this->checkCandidat();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkCandidat();
         
         return $this->render('dashboard/candidat/guides/motivation.html.twig', [
             'controller_name' => 'GuidesController',
@@ -451,10 +429,7 @@ class CandidatController extends AbstractController
     #[Route('/guides/cv', name: 'app_dashboard_guides_cv')]
     public function cv(): Response
     {
-        $redirection = $this->checkCandidat();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkCandidat();
         return $this->render('dashboard/candidat/guides/cv.html.twig', [
             'controller_name' => 'GuidesController',
         ]);
@@ -463,10 +438,7 @@ class CandidatController extends AbstractController
     #[Route('/guides/reseautage', name: 'app_dashboard_guides_reseautage')]
     public function reseautage(): Response
     {
-        $redirection = $this->checkCandidat();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkCandidat();
         return $this->render('dashboard/candidat/guides/reseautage.html.twig', [
             'controller_name' => 'GuidesController',
         ]);
