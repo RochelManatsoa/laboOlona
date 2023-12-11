@@ -25,7 +25,7 @@ class InfoUserType extends AbstractType
                 'required' => true,
             ])
             ->add('adress', TextType::class, [
-                'label' => 'Addresse',
+                'label' => 'Adresse',
                 'required' => true,
             ])
             ->add('email', EmailType::class, [

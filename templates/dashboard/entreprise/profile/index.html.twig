@@ -26,17 +26,13 @@
                     <div class="col">
                         {{ form_label(form.siteWeb) }}
                         {{ form_widget(form.siteWeb, {'attr': {'class': 'form-control mb-4'}}) }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
                         {{ form_label(form.secteurs) }}
                         {{ form_widget(form.secteurs) }}
                     </div>
-                    <div class="col">
-                        {{ form_label(form.description) }}
-                        {{ form_widget(form.description, {'attr': {'class': 'form-control mb-4'}}) }}
-                    </div>
+                </div>
+                <div class="row">
+                    {{ form_label(form.description) }}
+                    {{ form_widget(form.description, {'attr': {'class': 'form-control mb-4'}}) }}
                 </div>
             </section>
             <section class="text-dark card shadow p-4 my-3">
@@ -80,4 +76,8 @@
 
         </div>
     </div>
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#edit_entreprise_description' ) )
+</script>
 {% endblock %}
