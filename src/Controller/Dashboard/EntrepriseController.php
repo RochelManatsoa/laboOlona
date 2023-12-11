@@ -13,6 +13,7 @@ use App\Manager\ModerateurManager;
 use App\Form\Entreprise\AnnonceType;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
+use Symfony\Component\Intl\Countries;
 use App\Entity\Candidate\Applications;
 use App\Form\Profile\EditEntrepriseType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,18 +22,18 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Search\Annonce\EntrepriseAnnonceSearchType;
 use App\Repository\Moderateur\MettingRepository;
-use App\Form\Search\Candidat\EntrepriseCandidatSearchType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
 use App\Repository\Candidate\ApplicationsRepository;
 use App\Repository\Moderateur\TypeContratRepository;
+use App\Form\Search\Annonce\EntrepriseAnnonceSearchType;
+use App\Form\Search\Candidat\EntrepriseCandidatSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Form\Search\Candidature\EntrepriseCandidatureSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Intl\Countries;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/dashboard/entreprise')]
 class EntrepriseController extends AbstractController
@@ -51,26 +52,24 @@ class EntrepriseController extends AbstractController
         private UrlGeneratorInterface $urlGenerator,
     ) {
     }
-
-    private function checkEntreprise(): ?Response
+    
+    private function checkEntreprise()
     {
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
-        $entreprise = $user->getEntrepriseProfile();
-        if(!$entreprise instanceof EntrepriseProfile){
-           return $this->redirectToRoute('app_profile');
+        $candidat = $user->getEntrepriseProfile();
+        if (!$candidat instanceof EntrepriseProfile) {
+            // Si l'utilisateur n'a pas de profil candidat, on lance une exception
+            throw new AccessDeniedException('Désolé, la page que vous souhaitez consulter est réservée aux profils entreprise. Si vous possédez un tel profil, veuillez vous assurer que vous êtes connecté avec les identifiants appropriés.');
         }
-
+    
         return null;
     }
 
     #[Route('/', name: 'app_dashboard_entreprise')]
     public function index(JobListingRepository $jobListingRepository, ApplicationsRepository $applicationRepository, MettingRepository $mettingRepository): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
 
         return $this->redirectToRoute('app_dashboard_entreprise_annonces');
 
@@ -88,10 +87,7 @@ class EntrepriseController extends AbstractController
     #[Route('/annonces', name: 'app_dashboard_entreprise_annonces')]
     public function annonces(Request $request, PaginatorInterface $paginatorInterface, JobListingRepository $jobListingRepository): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
 
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
@@ -146,10 +142,7 @@ class EntrepriseController extends AbstractController
     #[Route('/annonce/new', name: 'app_dashboard_entreprise_new_annonce')]
     public function newAnnonce(Request $request): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $entreprise = $user->getEntrepriseProfile();
@@ -201,10 +194,7 @@ class EntrepriseController extends AbstractController
     #[Route('/annonce/{id}/edit', name: 'app_dashboard_entreprise_edit_annonce')]
     public function editAnnonce(Request $request, JobListing $jobListing): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
 
         $form = $this->createForm(AnnonceType::class, $jobListing);
         $form->handleRequest($request);
@@ -239,10 +229,7 @@ class EntrepriseController extends AbstractController
     #[Route('/annonce/{id}/delete', name: 'app_dashboard_entreprise_delete_annonce')]
     public function deleteAnnonce(Request $request, JobListing $jobListing): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
         if ($this->isCsrfTokenValid('delete'.$jobListing->getId(), $request->request->get('_token'))) {
             $this->em->remove($jobListing);
             $this->em->flush();
@@ -255,10 +242,7 @@ class EntrepriseController extends AbstractController
     #[Route('/annonce/{id}/view', name: 'app_dashboard_entreprise_view_annonce')]
     public function viewAnnonce(Request $request, JobListing $jobListing): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
 
@@ -271,10 +255,7 @@ class EntrepriseController extends AbstractController
     #[Route('/recherche-candidats', name: 'app_dashboard_entreprise_recherche_candidats')]
     public function rechercheCandidats(Request $request, CandidateProfileRepository $candidatRepository, PaginatorInterface $paginatorInterface): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
 
         $form = $this->createForm(EntrepriseCandidatSearchType::class);
         $form->handleRequest($request);
@@ -316,10 +297,7 @@ class EntrepriseController extends AbstractController
     #[Route('/details-candidat/{id}', name: 'app_dashboard_entreprise_details_candidat')]
     public function detailsCandidat(Request $request, CandidateProfile $candidateProfile): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $entreprise = $user->getEntrepriseProfile();
@@ -345,10 +323,7 @@ class EntrepriseController extends AbstractController
     #[Route('/candidatures', name: 'app_dashboard_entreprise_candidatures')]
     public function candidatures(Request $request, PaginatorInterface $paginatorInterface): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $entreprise = $user->getEntrepriseProfile();
@@ -394,10 +369,7 @@ class EntrepriseController extends AbstractController
     #[Route('/candidature/{id}/view', name: 'app_dashboard_entreprise_view_candidature')]
     public function candidatureView(Request $request, Applications $applications): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
 
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
@@ -411,10 +383,7 @@ class EntrepriseController extends AbstractController
     #[Route('/rendez-vous', name: 'app_dashboard_entreprise_rendez_vous')]
     public function rendezVous(): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $entreprise = $user->getEntrepriseProfile();
@@ -429,10 +398,7 @@ class EntrepriseController extends AbstractController
     #[Route('/notifications', name: 'app_dashboard_entreprise_notifications')]
     public function notifications(): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $entreprise = $user->getEntrepriseProfile();
@@ -445,10 +411,7 @@ class EntrepriseController extends AbstractController
     #[Route('/profil', name: 'app_dashboard_entreprise_profil')]
     public function profil(Request $request): Response
     {
-        $redirection = $this->checkEntreprise();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->checkEntreprise();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $entreprise = $user->getEntrepriseProfile();
