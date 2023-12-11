@@ -100,6 +100,9 @@ class CandidateProfile
     #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: CV::class, cascade: ['persist', 'remove'])]
     private Collection $cvs;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $emailSent = null;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -566,6 +569,18 @@ class CandidateProfile
                 $cv->setCandidat(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isEmailSent(): ?bool
+    {
+        return $this->emailSent;
+    }
+
+    public function setEmailSent(?bool $emailSent): static
+    {
+        $this->emailSent = $emailSent;
 
         return $this;
     }

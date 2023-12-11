@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Profile\Candidat\StepOneType;
 use App\Form\Profile\Candidat\StepTwoType;
 use App\Form\Profile\Candidat\StepThreeType;
+use App\Manager\ModerateurManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,6 +36,7 @@ class ProfileController extends AbstractController
         private RequestStack $requestStack,
         private UrlGeneratorInterface $urlGenerator,
         private FileUploader $fileUploader,
+        private ModerateurManager $moderateurManager,
     ){
     }
     
@@ -127,6 +129,19 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $candidat = $form->getData();
             $this->em->persist($candidat);
+
+            if($candidat instanceof CandidateProfile && !$candidat->isEmailSent()){
+                $candidat->setEmailSent(true);
+                $this->mailerService->sendMultiple(
+                    $this->moderateurManager->getModerateurEmails(),
+                    "Nouvel inscrit sur Olona Talents",
+                    "moderateur/notification_welcome.html.twig",
+                    [
+                        'user' => $candidat->getCandidat(),
+                        'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    ]
+                );
+            }
             $this->em->flush();
 
             return $this->redirectToRoute('app_profile_candidate_step_two', []);

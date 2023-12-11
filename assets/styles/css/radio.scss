@@ -4,7 +4,7 @@
 
 .custom-control-input {
     position: absolute;
-    top: 30px;
+    top: 80px;
     right: 10px;
     z-index: 1;
     opacity: 0.9; /* Rendre le bouton radio légèrement transparent */
@@ -15,7 +15,9 @@
 .custom-control-input:checked {
     background-color: #007BFF; /* Couleur de fond lorsqu'elle est cochée. Utilisez la couleur que vous souhaitez. */
 }
-
+.custom-control-input {
+    background-color: #808385; /* Couleur de fond lorsqu'elle est cochée. Utilisez la couleur que vous souhaitez. */
+}
 .custom-control-label::before, .custom-control-label::after {
     display: none; /* Cacher le carré par défaut du bouton radio */
 }
