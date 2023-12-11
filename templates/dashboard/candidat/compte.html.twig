@@ -13,7 +13,7 @@
             <div class="col">
                 <div class="row mb-4 align-items-center">
                     <div class="">
-                    <img src="{{ form_one.vars.data.fileName ? asset('uploads/experts/' ~ form_one.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}" class="rounded-circle profile-img" width="150" height="150" alt="Avatar">
+                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form_one.vars.data.fileName ? asset('uploads/experts/' ~ form_one.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
                     {{ form_widget(form_one.file) }}
                     {{ form_errors(form_one.file) }}
                     </div>
@@ -135,9 +135,9 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content text-black">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-2" id="experienceLabel">
+                                        <h2 class="modal-title fs-2" id="experienceLabel">
                                             {{ 'app_identity_expert_step_two.experience.add'|trans }}
-                                        </h1>
+                                        </h2>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -203,9 +203,9 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content text-black">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-2" id="technicalSkillLabel">
+                                        <h2 class="modal-title fs-2" id="technicalSkillLabel">
                                             {{ 'app_identity_expert_step_two.skill.add'|trans }}
-                                        </h1>
+                                        </h2>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -274,9 +274,9 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content text-black">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-2" id="langageLabel">
+                                        <h2 class="modal-title fs-2" id="langageLabel">
                                             Ajouter une langue
-                                        </h1>
+                                        </h2>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -362,7 +362,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 text-dark" id="candidatDocumentsLabel">Mes Documents</h1>
+                    <2 class="modal-title fs-5 text-dark" id="candidatDocumentsLabel">Mes Documents</2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-dark">

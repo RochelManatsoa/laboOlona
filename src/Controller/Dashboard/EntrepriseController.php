@@ -58,7 +58,7 @@ class EntrepriseController extends AbstractController
         $user = $this->userService->getCurrentUser();
         $entreprise = $user->getEntrepriseProfile();
         if(!$entreprise instanceof EntrepriseProfile){
-           return $this->redirectToRoute('app_connect');
+           return $this->redirectToRoute('app_profile');
         }
 
         return null;

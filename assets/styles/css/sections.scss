@@ -183,3 +183,10 @@
     height: 0;
     padding-top: 100%; /* Ceci assure un aspect carré */
 }
+.bg-image-candidat-account {
+    background-size: cover;
+    background-position: center;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* Pour rendre l'élément circulaire */
+}
