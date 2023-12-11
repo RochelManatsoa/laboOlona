@@ -19,9 +19,9 @@ class EntrepriseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('nom', TextType::class, [
-            'label' => 'Nom de votre entreprise'
-        ])
+            ->add('nom', TextType::class, [
+                'label' => 'Nom de votre entreprise'
+            ])
             ->add('taille', ChoiceType::class, [
                 'choices' => EntrepriseProfile::CHOICE_SIZE,
             ])

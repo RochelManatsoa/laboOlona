@@ -126,12 +126,13 @@
 
 <script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 <script>
-   
+    let globalEditorInstance;
     document.addEventListener('DOMContentLoaded', function() {
         ClassicEditor.create(document.querySelector('#annonce_description'))
             .then(editor => {
+                globalEditorInstance = editor;
                 document.querySelector('form').addEventListener('submit', function() {
-                    document.querySelector('#annonce_description').value = editor.getData();
+                    document.querySelector('#annonce_description').value = globalEditorInstance.getData();
                 });
             })
             .catch(error => {

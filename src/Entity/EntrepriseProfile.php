@@ -62,7 +62,7 @@ class EntrepriseProfile
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: Secteur::class, mappedBy: 'entreprise')]
+    #[ORM\ManyToMany(targetEntity: Secteur::class, inversedBy: 'entreprise')]
     private Collection $secteurs;
 
     #[ORM\Column(length: 255)]

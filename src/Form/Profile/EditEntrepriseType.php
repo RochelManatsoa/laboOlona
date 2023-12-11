@@ -35,7 +35,7 @@ class EditEntrepriseType extends AbstractType
                     'class' => Secteur::class,
                     'choice_label' => 'nom',
                     'label' => 'app_identity_company.sector_multiple',
-                    'expanded' => true,
+                    'autocomplete' => true,
                     'multiple' => true,
             ])
             ->add('siteWeb', TextType::class, [
