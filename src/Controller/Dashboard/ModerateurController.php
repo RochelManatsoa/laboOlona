@@ -65,7 +65,7 @@ class ModerateurController extends AbstractController
         $user = $this->userService->getCurrentUser();
         $moderateur = $user->getModerateurProfile();
         if (!$moderateur instanceof ModerateurProfile){ 
-            return $this->redirectToRoute('app_connect');
+            return $this->redirectToRoute('app_profile');
         }
 
         return null;
