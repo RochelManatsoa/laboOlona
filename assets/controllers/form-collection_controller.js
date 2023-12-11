@@ -1,5 +1,4 @@
 // assets/controllers/form-collection_controller.js
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {

@@ -26,7 +26,7 @@ class Secteur
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: EntrepriseProfile::class, inversedBy: 'secteurs')]
+    #[ORM\ManyToMany(targetEntity: EntrepriseProfile::class, mappedBy: 'secteurs')]
     private Collection $entreprise;
 
     #[ORM\ManyToMany(targetEntity: CandidateProfile::class, mappedBy: 'secteurs')]

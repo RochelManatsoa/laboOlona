@@ -15,28 +15,31 @@ import $ from 'jquery';
 
 $(function() {
     $('#experience').on('shown.bs.modal', function () {
-        for (let i = 0; i < 10; i++) {  // Ici, j'utilise 10 comme exemple, ajustez selon le nombre d'éléments que vous avez
-            const $currentlyCheckbox = $(`#step_two_experiences_${i}_enPoste`);
-            const $endDateFieldContainer = $(`#step_two_experiences_${i}_dateFin`).closest('div');
+        // Fonction pour gérer la logique de chaque groupe de champs
+        function handleFieldGroup(baseId) {
+            for (let i = 0; i < 10; i++) {  // Ajustez le nombre selon vos besoins
+                const $currentlyCheckbox = $(`#${baseId}_${i}_enPoste`);
+                const $endDateFieldContainer = $(`#${baseId}_${i}_dateFin`).closest('div');
     
-            if (!$currentlyCheckbox.length) {
-                // Si le checkbox n'existe pas, on sort de la boucle
-                break;
-            }
-    
-            if ($currentlyCheckbox.is(':checked')) {
-                $endDateFieldContainer.parent().hide();
-            }
-    
-            $currentlyCheckbox.off('change').change(function() {
-                if ($(this).is(':checked')) {
-                    $endDateFieldContainer.parent().hide();
-                } else {
-                    $endDateFieldContainer.parent().show();
+                if (!$currentlyCheckbox.length) {
+                    break; // Sortir si le checkbox n'existe pas
                 }
-            });
+    
+                // Afficher ou masquer le conteneur en fonction de l'état du checkbox
+                $endDateFieldContainer.parent().toggle(!$currentlyCheckbox.is(':checked'));
+    
+                // Gérer les changements d'état du checkbox
+                $currentlyCheckbox.off('change').change(function() {
+                    $endDateFieldContainer.parent().toggle(!$(this).is(':checked'));
+                });
+            }
         }
-    });    
+    
+        // Appeler la fonction pour chaque groupe de champs
+        handleFieldGroup('step_two_experiences');
+        handleFieldGroup('step_three_experiences');
+    });
+    
 
     var modalIds = ['experience', 'technicalSkill'];
 
@@ -88,16 +91,17 @@ $(function() {
 
     $('#previewButton').on('click', function(e) {
         e.preventDefault();
+        const typeText = $('select[name="annonce[typeContrat]"] option:selected').text();
+        const sectorText = $('select[name="annonce[secteur]"] option:selected').text();
+        const descriptionContent = globalEditorInstance.getData();
         // Récupérer les données du formulaire
         const formData = {
             titre: $('input[name="annonce[titre]"]').val(),
-            description: $('textarea[name="annonce[description]"]').val(),
+            description: descriptionContent,
             salaire: $('input[name="annonce[salaire]"]').val(),
             nombrePoste: $('input[name="annonce[nombrePoste]"]').val(),
             dateExpiration: $('input[name="annonce[dateExpiration]"]').val(),
         };
-        const typeText = $('select[name="annonce[typeContrat]"] option:selected').text();
-        const sectorText = $('select[name="annonce[secteur]"] option:selected').text();
         // Créer un tableau pour stocker les valeurs
         var values = [];
 
