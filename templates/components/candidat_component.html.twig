@@ -3,7 +3,7 @@
 <a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': this.candidat.id}) }}">
   <div class="col">
       <div class="card">
-          <img src="{{vich_uploader_asset(this.candidat, 'file')}}" class="card-img-top" alt="{{ this.userProfile.prenom }}">
+          <div class="card-img-top bg-image-candidat" style="background-image: url('{{vich_uploader_asset(this.candidat, 'file')}}');" alt="{{ this.userProfile.prenom }}"></div>
           <div class="card-body">
               <p class="card-title h6">{{ this.userProfile.prenom }} {{ this.userProfile.nom|slice(0, 1)|upper }}.</p>
               <small>
