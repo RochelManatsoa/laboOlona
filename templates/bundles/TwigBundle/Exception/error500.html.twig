@@ -1,27 +1,30 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}500 Internal Server Error{% endblock %}
+{% block title %}Erreur Interne du Serveur{% endblock %}
 
 {% block body %}
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="text-center">
         <div class="container">
             <div class="p-5 text-center bg-dark rounded-3">
-                <h1 class="text-light">500</h1>
+                <h1 class="text-light display-1">500</h1>
                 <p class="col-lg-8 mx-auto fs-5 text-light">
-                Désolé, quelque chose s'est mal passé de notre côté.
+                Nous sommes désolés, mais quelque chose semble ne pas fonctionner correctement. Une erreur interne du serveur s'est produite, et nous ne pouvons pas afficher la page que vous recherchez.
                 </p>
-                <div class="d-flex flex-column flex-sm-row gap-2 mb-5">
-                    <a class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill mb-2 mb-sm-0" href="{{ path('app_home')}}">
-                        Retour à l'accueil
-                    </a>
-                    <a class="btn btn-outline-light btn-lg px-4 rounded-pill" href="{{ path('app_home_contact')}}">
-                        Nous contacter
-                    </a>
+                
+                <!-- Centrez les boutons en ajoutant un nouveau div ici -->
+                <div class="d-flex justify-content-center gap-2 my-5">
+                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+                        <a class="btn btn-primary btn-md px-4 rounded-pill mb-2 mb-sm-0" href="{{ path('app_home')}}">
+                            Retour à l'accueil
+                        </a>
+                        <a class="btn btn-outline-light btn-md px-4 rounded-pill" href="{{ path('app_home_contact')}}">
+                            Nous contacter
+                        </a>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

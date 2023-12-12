@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\EventListener;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -8,7 +8,6 @@ use Twig\Environment;
 
 class ExceptionListener
 {
-
     public function __construct(private Environment $twig)
     {        
     }
@@ -16,21 +15,35 @@ class ExceptionListener
     public function __invoke(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
+        $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
 
-        $html = $this->twig->render('bundles/TwigBundle/Exception/error403.html.twig', [
+        if ($exception instanceof HttpExceptionInterface) {
+            $statusCode = $exception->getStatusCode();
+        }
+
+        switch ($statusCode) {
+            case Response::HTTP_NOT_FOUND:
+                $template = 'bundles/TwigBundle/Exception/error404.html.twig';
+                break;
+            case Response::HTTP_FORBIDDEN:
+                $template = 'bundles/TwigBundle/Exception/error403.html.twig';
+                break;
+            case Response::HTTP_INTERNAL_SERVER_ERROR:
+            default:
+                $template = 'bundles/TwigBundle/Exception/error500.html.twig';
+            break;
+        }
+
+        $html = $this->twig->render($template, [
             'message' => $exception->getMessage(),
         ]);
 
-        $response = new Response($html);
+        $response = new Response($html, $statusCode);
 
         if ($exception instanceof HttpExceptionInterface) {
-            $response->setStatusCode($exception->getStatusCode());
             $response->headers->replace($exception->getHeaders());
-        } else {
-            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $event->setResponse($response);
     }
 }
-
