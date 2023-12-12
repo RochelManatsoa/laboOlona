@@ -4,6 +4,7 @@ namespace App\Controller\Dashboard;
 
 use DateTime;
 use App\Entity\User;
+use App\Entity\Langue;
 use App\Service\FileUploader;
 use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
@@ -25,6 +26,7 @@ use App\Form\Profile\Candidat\StepThreeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Candidate\LangagesRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
@@ -49,6 +51,7 @@ class CandidatController extends AbstractController
         private CandidatManager $candidatManager,
         private JobListingRepository $jobListingRepository,
         private ApplicationsRepository $applicationsRepository,
+        private LangagesRepository $langagesRepository,
         private TypeContratRepository $typeContratRepository,
         private RequestStack $requestStack,
         private FileUploader $fileUploader,
@@ -366,10 +369,20 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        $selectedLangues = [];
+        foreach ($this->langagesRepository->findBy(['profile' => $candidat]) as $key => $value) {
+            $selectedLangues[] = $value->getLangue();
+        }
+        $allLangues = $this->em->getRepository(Langue::class)->findAll();
+        $unselectedLangues = array_filter($allLangues, function($langue) use ($selectedLangues) {
+            return !in_array($langue, $selectedLangues);
+        });
 
         $formOne = $this->createForm(EditStepOneType::class, $candidat);
         $formTwo = $this->createForm(EditStepTwoType::class, $candidat);
-        $formThree = $this->createForm(EditStepThreeType::class, $candidat);
+        $formThree = $this->createForm(EditStepThreeType::class, $candidat,[
+            'langues_non_choisies' => $unselectedLangues,
+        ]);
         $formOne->handleRequest($request);
         $formTwo->handleRequest($request);
         $formThree->handleRequest($request);
