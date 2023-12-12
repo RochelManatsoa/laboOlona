@@ -7,11 +7,11 @@
         </h1>
         <div class="col-6 offset-3">
             <p class="my-4 text-white">
-                {{ 'app_email_sending.description'|trans }}
+            Nous avons envoyé un email de confirmation à l'adresse que vous avez fournie lors de l'inscription. Veuillez consulter votre boîte de réception et suivre les instructions pour activer votre compte.
             </p>
             <p class="my-4 text-white">
                 {{ 'app_email_sending.not_received'|trans({
-                    '%resend_confirmation%': path('app_home_terms'),
+                    '%resend_confirmation%': path('app_forgot_password_request'),
                 })|raw }}
             </p>
         </div>
