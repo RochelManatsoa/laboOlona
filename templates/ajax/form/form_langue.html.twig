@@ -1,0 +1,26 @@
+<form method="post" action="{{ path('app_ajax_update_langue', {'id': langue.id })}}">
+    <div class="card shadow p-5 bg-light">
+        <div class="row">
+            <div class="mb-3 col">
+                <label for="langue_nom">Langue</label>
+                <input type="text" id="langue_nom" name="nom" class="form-control" value="{{ langue.langue.nom }}" readonly>
+            </div>
+            <div class="mb-3 col">
+                <label for="langue_niveau">Niveau</label>
+                <select id="langue_niveau" name="niveau" class="form-control">
+                    <option value="1" {% if langue.niveau == 1 %}selected{% endif %}>1</option>
+                    <option value="2" {% if langue.niveau == 2 %}selected{% endif %}>2</option>
+                    <option value="3" {% if langue.niveau == 3 %}selected{% endif %}>3</option>
+                    <option value="4" {% if langue.niveau == 4 %}selected{% endif %}>4</option>
+                    <option value="5" {% if langue.niveau == 5 %}selected{% endif %}>5</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-info rounded-pill btn-sm">Soumettre</button>
+    <button type="button" class="btn btn-outline-dark rounded-pill my-3 btn-sm cancel-langue">Annuler</button>
+</form>
+
+
+<script>
+</script>
