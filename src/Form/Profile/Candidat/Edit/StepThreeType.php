@@ -33,7 +33,10 @@ class StepThreeType extends AbstractType
         ])
         ->add('langages', CollectionType::class, [
             'entry_type' => LangagesType::class,
-            'entry_options' => ['label' => true],
+            'entry_options' => [
+                'label' => false,
+                'langues_non_choisies' => $options['langues_non_choisies'], // Ajouter cette ligne
+            ],
             'allow_add' => true,
             'by_reference' => false,
         ])
@@ -61,6 +64,7 @@ class StepThreeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CandidateProfile::class,
+            'langues_non_choisies' => null, 
         ]);
     }
 }

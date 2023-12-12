@@ -41,7 +41,7 @@ $(function() {
     });
     
 
-    var modalIds = ['experience', 'technicalSkill'];
+    var modalIds = ['experience', 'technicalSkill', 'langage'];
 
     modalIds.forEach(function(modalId) {
         $('#' + modalId).on('hidden.bs.modal', function () {
