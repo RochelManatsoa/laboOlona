@@ -52,3 +52,4 @@ services:
     App\EventListener\ExceptionListener:
         tags: [kernel.event_listener]
         arguments: ['@twig']
+

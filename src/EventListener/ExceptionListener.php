@@ -8,6 +8,7 @@ use Twig\Environment;
 
 class ExceptionListener
 {
+
     public function __construct(private Environment $twig)
     {        
     }
