@@ -447,9 +447,16 @@ class AppExtension extends AbstractExtension
         return $choices[$value] ?? 'N/A';
     }
     
-    public function dateDifference(DateTime $date1, DateTime $date2): string
+    public function dateDifference(?DateTime $date1, DateTime $date2): string
     {
-        $interval = $date1->diff($date2);
+        $dateActuelle = new DateTime(); // Obtenez la date actuelle
+    
+        // Si la date de fin est nulle, cela signifie que l'expérience est en cours
+        if ($date1 === null) {
+            $interval = $date2->diff($dateActuelle);
+        } else {
+            $interval = $date1->diff($date2);
+        }
 
         $result = '';
 
@@ -459,9 +466,6 @@ class AppExtension extends AbstractExtension
         if ($interval->m > 0) {
             $result .= $interval->m . ' mois ';
         }
-        // if ($interval->d > 0) {
-        //     $result .= $interval->d . ' jours';
-        // }
 
         return trim($result);
     }
