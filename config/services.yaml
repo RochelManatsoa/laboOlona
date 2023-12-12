@@ -49,8 +49,6 @@ services:
         arguments:
             $apiKey: '%env(YOUTUBE_API_KEY)%'
             
-    app.exception_listener:
-        class: App\EventListener\ExceptionListener
+    App\EventListener\ExceptionListener:
+        tags: [kernel.event_listener]
         arguments: ['@twig']
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
