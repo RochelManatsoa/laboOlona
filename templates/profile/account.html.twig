@@ -21,7 +21,7 @@
                         {{ form_widget(account, {'attr': {'class': 'custom-control-input'}}) }}
                         <label class="custom-control-label" for="{{ account.vars.id }}">
                             <div class="text-center mt-2"> <!-- margin-top ajouté pour espacer la description de l'image -->
-                                <p class=""><small class="">{{account_label(account.vars.label|upper)}}</small></p>
+                                <p class="h4">{{account_label(account.vars.label|upper)}}</p>
                             </div>
                             <img src="{{ asset('/images/' ~ account.vars.label ~ '.png') }}" class="img-fluid border" alt="{{ account.vars.label }}">
                         </label>
