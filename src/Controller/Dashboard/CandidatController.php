@@ -380,9 +380,7 @@ class CandidatController extends AbstractController
 
         $formOne = $this->createForm(EditStepOneType::class, $candidat);
         $formTwo = $this->createForm(EditStepTwoType::class, $candidat);
-        $formThree = $this->createForm(EditStepThreeType::class, $candidat,[
-            'langues_non_choisies' => $unselectedLangues,
-        ]);
+        $formThree = $this->createForm(EditStepThreeType::class, $candidat);
         $formOne->handleRequest($request);
         $formTwo->handleRequest($request);
         $formThree->handleRequest($request);
