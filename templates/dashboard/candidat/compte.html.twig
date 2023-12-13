@@ -172,9 +172,10 @@
                                 <strong>{{ experience.nom }}</strong>
                                 chez 
                                 <strong>{{ experience.entreprise }}</strong>
-                                (
-                                {{ date_difference(experience.dateFin, experience.dateDebut) }}
-                                )
+                                    {% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
+                                        ({{ date_difference(experience.dateFin, experience.dateDebut) }})
+                                    {% endif %}
+
                             </span>
                             <span class="">
                                 <button class="btn btn-primary btn-sm edit-experience" data-experience-id="{{ experience.id }}">Modifier</button>
