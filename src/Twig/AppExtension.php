@@ -122,9 +122,9 @@ class AppExtension extends AbstractExtension
     {
         switch ($account) {
             case User::ACCOUNT_CANDIDAT :
-                return 'JE CHERCHE UN PROJET';
+                return 'CANDIDAT';
             case User::ACCOUNT_ENTREPRISE :
-                return 'J\'AI DES PROJETS';
+                return 'ENTREPRISE';
             default:
                 return '<i class="h6 bi mx-2 bi-circle-fill small text-warning"></i>';
         }
