@@ -4,7 +4,13 @@
       <div class="card-body d-flex flex-column">
           <h3 class="card-title h4">{{ this.annonce.titre }}</h3>
           <h6 class="card-subtitle mb-2 text-body-secondary"><span class="badge text-bg-danger">Urgent</span> | {{ this.annonce.annonceVues|length }} vues | {{ this.annonce.applications|length }} offres</h6>
-          <p class="card-text flex-grow-1"><small class="">{{ this.annonce.description|length > 250 ? (this.annonce.description|slice(0, 247) ~ '...')|raw : this.annonce.description|raw }}</small></p>
+          <div class="card-text flex-grow-1">
+              <small>
+                  {% set clean_description = this.annonce.description|striptags|replace({'&nbsp;': '. '}) %}
+                  {{ clean_description|length > 250 ? clean_description|slice(0, 247) ~ '...' : clean_description }}
+              </small>
+          </div>
+
           <form action="{{ path('app_home_form') }}" method="POST">
               <input type="hidden" name="annonce_id" value="{{ this.annonce.id }}">
               <input type="hidden" name="job_id" value="{{ this.annonce.jobId }}">

@@ -29,14 +29,13 @@ class ExperiencesType extends AbstractType
         ])
         ->add('dateDebut', DateType::class,  [
             'label' => 'app_identity_expert_step_two.experience.startDate',
-            'years' => range(1950, (new \DateTime('now'))->format("Y")),
+            'years' => range(1960, (new \DateTime('now'))->format("Y")),
             'attr' => ['class' => 'rounded-pill'] 
         ])
         ->add('dateFin', DateType::class,  [
             'label' => 'app_identity_expert_step_two.experience.endDate',
-            'years' => range(1950, 2100),
+            'years' => range(1960, 2100),
             'attr' => ['class' => 'rounded-pill'] ,
-            'data' => new \DateTime('now'),
             'required' => false,
         ])
         ->add('description', TextareaType::class, [
