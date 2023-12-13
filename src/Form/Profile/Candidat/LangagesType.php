@@ -20,7 +20,6 @@ class LangagesType extends AbstractType
             ->add('langue', EntityType::class, [
                 'class' => Langue::class,
                 'label' => 'app_identity_expert_step_two.language.label',
-                'choices' => $options['langues_non_choisies'],
             ])
             ->add('niveau', ChoiceType::class, [
                 'label' => 'app_identity_expert_step_two.skill.level',
