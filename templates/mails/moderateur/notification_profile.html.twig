@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation de Modification du Profil</title>
+    <title>Notification annonce</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* [La même mise en forme que les mails précédents] */
@@ -99,6 +99,9 @@
             margin: 10px 0;
         }
 
+        div.moderateur {
+            text-align:left;
+        }
     </style>
 </head>
 <body>
@@ -107,15 +110,9 @@
             <img src="https://olona-talents.com/images/logo-olona-talents-black.png" alt="Logo Olona-talents">
         </div>
         <div class="content">
-            <p class="greeting">Bonjour {{ user.prenom }},</p>
-            <p>Nous avons le plaisir de vous informer que votre profil a été validé  et desormais certifé par <span class="highlight">Olona-talents.com</span>.</p>
-            <p>Vous pouvez bénéficier de tous les avantages que cela vous procure dans vos recherches de mission</p>
+            <div class="moderateur">{{ contenu|raw }}</div>
+            <a href="{{ dashboard_url|raw }}" style="display: inline-block; padding: 12px 24px; background-color: #0D6EFD; color: #FFFFFF; border-radius: 5px; text-decoration: none; font-weight: 500; margin-bottom: 20px;">Tableau de bord</a>
             
-            
-            <!-- Ajout des boutons -->
-            <a href="https://olona-talents.com/login" class="btn">Se connecter</a>
-            <a href="https://olona-talents.com/forgot-password" class="btn">Réinitialiser le mot de passe</a>
-
             <div class="tips">
                 <strong>Tip du Jour :</strong>
                 <p><span class="bold">🛡️ Sécurité :</span> Ne partagez jamais vos identifiants avec personne, même avec notre équipe. Nous ne demanderons jamais vos informations de connexion.</p>
