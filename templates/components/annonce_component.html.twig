@@ -1,15 +1,28 @@
-
 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-  <div class="card h-100" style="text-align:left!important;">
+  <div class="card-annonce h-100">
+      <div class="card-annonce-header position-relative">
+          <h4 class="card-annonce-title">{{ this.annonce.titre }}</h4>
+        
+      </div>
       <div class="card-body d-flex flex-column">
-          <h3 class="card-title h4">{{ this.annonce.titre }}</h3>
-          <h6 class="card-subtitle mb-2 text-body-secondary"><span class="badge text-bg-danger">Urgent</span> | {{ this.annonce.annonceVues|length }} vues | {{ this.annonce.applications|length }} offres</h6>
-          <p class="card-text flex-grow-1"><small class="">{{ this.annonce.description|length > 250 ? (this.annonce.description|slice(0, 247) ~ '...')|raw : this.annonce.description|raw }}</small></p>
-          <form action="{{ path('app_home_form') }}" method="POST">
-              <input type="hidden" name="annonce_id" value="{{ this.annonce.id }}">
-              <input type="hidden" name="job_id" value="{{ this.annonce.jobId }}">
-              <button type="submit" class="btn btn-dark card-link mt-auto">Postuler</button>
-          </form>
+          <!-- ... Le reste de la carte ... -->
+          <h6 class="card-annonce-subtitle mb-2 text-body-secondary">
+            <span class="badge text-bg-danger badge-urgent">Urgent</span> | {{ this.annonce.annonceVues|length }} vues | {{ this.annonce.applications|length }} offres
+          </h6>
+
+          <p class="card-annonce-text flex-grow-1 mb-2">
+                {# <small>{{ this.annonce.description }}</small> #}
+                <small>{{ this.annonce.description|length > 250 ? (this.annonce.description|slice(0, 247) ~ '...')|raw : this.annonce.description|raw }}</small>
+            </p>
+            
+          <div class="mt-auto d-flex justify-content-center">
+                <form action="{{ path('app_home_form') }}" method="POST" class="w-100 d-flex justify-content-center">
+                    <input type="hidden" name="annonce_id" value="{{ this.annonce.id }}">
+                    <input type="hidden" name="job_id" value="{{ this.annonce.jobId }}">
+                    <button type="submit" class="btn-annonce-postuler">Voir les détails</button>
+                </form>
+            </div>
       </div>
   </div>
 </div>
+

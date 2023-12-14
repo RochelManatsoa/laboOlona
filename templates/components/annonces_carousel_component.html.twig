@@ -1,10 +1,8 @@
-
 {% if this.annonces is not empty %}
 {% set numSlides = this.annonces|length // 6 %}
 {% if this.annonces|length % 6 > 0 %}
 {% set numSlides = numSlides + 1 %}
 {% endif %}
-
 
 <div id="carousel_posting_component" class="carousel slide mb-5" data-bs-ride="carousel">
     <div class="carousel-indicators mb-3">
@@ -17,9 +15,9 @@
         {% for i in 0..numSlides - 1 %}
         <div class="carousel-item {% if loop.first %}active{% endif %}">
             <div class="container-fluid">
-                <div class="row row-cols-1 row-cols-md-5 g-2">
-                    {% for j in 0..5 %}
-                        {% set index = i * 6 + j %}
+                <div class="row row-cols-1 row-cols-md-3=5 g-2"> <!-- Changement ici pour 4 colonnes -->
+                    {% for j in 0..5 %} <!-- Itérer sur 8 annonces par slide -->
+                        {% set index = i * 6 + j %} <!-- Calcul de l'index basé sur 8 annonces par slide -->
                         {% if index < this.annonces|length %}
                             {% set posting = this.annonces[index] %}
                             {{ component('annonce_component', {id: posting.id})}}
