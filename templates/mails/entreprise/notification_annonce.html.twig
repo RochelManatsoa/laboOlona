@@ -113,7 +113,7 @@
             <p><strong>Titre</strong> : {{ details_annonce.titre|raw }}</p>
             <p><strong>Date d'expiration</strong> : {{ details_annonce.dateExpiration|date('d/m/Y') }}</p>
             <p><strong>Secteur</strong> : {{ details_annonce.secteur }}</p>
-            <p><strong>Description</strong> :  {{ details_annonce.description|length > 250 ? details_annonce.description|slice(0, 247)|raw ~ '...' : details_annonce.description|raw }}</p>
+            <p><strong>Description</strong> :  {{ details_annonce.description|raw }}</p>
             <p><strong>Nombre de personnes à rechercher </strong> : {{ details_annonce.nombrePoste }}</p>
             <p><strong>Compétences recherchées</strong> : {% for skill in details_annonce.competences %} {{ skill.nom }} - {% endfor %}</p>
             <p><strong>Budget</strong> : {{ details_annonce.salaire }} €</p>
