@@ -1,0 +1,88 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Comment ça marche ?{% endblock %}
+
+{% block body %}
+    <!-- SECTION 1: Hero -->
+<section class="text-center text-light bg-dark py-5">
+  <div class="container">
+    <h1>Processus OLONA Talents</h1>
+    <p class="lead">Votre Itinéraire vers le Recrutement Réinventé</p>
+    <p class="mb-4">Découvrez une plateforme conçue pour connecter les entreprises aux meilleurs talents, avec un processus qui garantit qualité et compatibilité.</p>
+    <a href="#section2" class="btn btn-primary hover-effect">Publier une annonce</a>
+  </div>
+</section>
+
+<!-- SECTION 2: Pour les Entreprises -->
+<section id="section2" class="container my-5">
+  <div class="row align-items-center">
+    <div class="col-lg-6">
+      <h2 class="accent-primary">Pour les Entreprises</h2>
+      <h4 class="accent-tertiary">Étape 1: Lancement de la Quête de Talents</h4>
+      <p>Lancez votre appel : Publiez votre annonce sur OLONA Talents et ouvrez la porte aux compétences que vous désirez...</p>
+      
+      <h4 class="accent-tertiary">Étape 2: La Rencontre des Aspirations</h4>
+      <p>Catalyseur de connexions : Les candidats, séduits par votre offre, soumettent leur candidature...</p>
+
+      <h4 class="accent-tertiary">Étape 3: Notification et Anticipation</h4>
+      <p>Alerte immédiate : Soyez informé dès l'instant où des candidats potentiels montrent leur intérêt...</p>
+
+      <h4 class="accent-tertiary">Étape 4: Sélection et Engagement</h4>
+      <p>Choix stratégique : Lorsqu'un profil capte votre attention, engagez-vous dans une démarche de recrutement avec nous...</p>
+
+      <a href="{{ path('app_dashboard_entreprise_new_annonce') }}" class="btn btn-secondary">Publier une annonce</a>
+    </div>
+    <div class="col-lg-6 card-body">
+      <img src="{{ asset('images/home/annexe/etape-1.webp')}}" alt="Pour les Entreprises" class="img-fluid">
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: Pour les Candidats -->
+<section id="section3" class="container my-5">
+  <div class="row align-items-center">
+    <div class="col-lg-6">
+      <img src="{{ asset('images/home/annexe/etape-2.webp')}}" alt="Pour les Candidats" class="img-fluid">
+    </div>
+    <div class="col-lg-6">
+      <h2 class="accent-primary">Pour les Candidats</h2>
+      <h4 class="accent-tertiary">Étape 5: Validation du Potentiel</h4>
+      <p>Expertise en action : Nos chasseurs de talents, agissant en tant que modérateurs, évaluent les candidatures...</p>
+
+      <h4 class="accent-tertiary">Étape 6: La Rencontre Programmée</h4>
+      <p>Harmonisation des agendas : OLONA Talents orchestre l'entretien, établissant un pont entre vous et l'entreprise...</p>
+
+      <a href="{{ path('app_dashboard_entreprise_candidatures') }}" class="btn btn-secondary">Voir les candidatures</a>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: Le Choix Final -->
+<section id="section4" class="container my-5">
+  <div class="row align-items-center">
+    <div class="col-lg-6">
+      <h2 class="accent-primary">Le Choix Final</h2>
+      <h4 class="accent-tertiary">Étape 7: Dialogue Tripartite</h4>
+      <p>Union des perspectives : Un rendez-vous tripartite - OLONA, l'entreprise, le candidat...</p>
+
+      <h4 class="accent-tertiary">Étape 8: Collaboration ou Intégration</h4>
+      <p>Flexibilité et Sécurité : L'entreprise a le libre choix...</p>
+
+      <a href="{{ path('rendezvous_index') }}" class="btn btn-secondary">Voir les rendez-vous</a>
+    </div>
+    <div class="col-lg-6">
+      <img src="{{ asset('images/home/annexe/etape-3.webp')}}" alt="Le Choix Final" class="img-fluid">
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: Conclusion -->
+<section id="section5" class="text-center text-light bg-dark py-5">
+  <div class="container">
+    <p>Avec OLONA Talents, transformez chaque étape de recrutement en un parcours fluide et assuré...</p>
+    {# <a href="{{ path('some_route') }}" class="btn btn-primary">Commencer</a> #}
+  </div>
+</section>
+
+ 
+{% endblock %}
