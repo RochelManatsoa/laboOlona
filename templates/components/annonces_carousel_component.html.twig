@@ -16,8 +16,8 @@
         <div class="carousel-item {% if loop.first %}active{% endif %}">
             <div class="container-fluid">
                 <div class="row row-cols-1 row-cols-md-3=5 g-2"> <!-- Changement ici pour 4 colonnes -->
-                    {% for j in 0..5 %} <!-- Itérer sur 8 annonces par slide -->
-                        {% set index = i * 6 + j %} <!-- Calcul de l'index basé sur 8 annonces par slide -->
+                    {% for j in 0..5 %} <!-- Itérer sur 6 annonces par slide -->
+                        {% set index = i * 6 + j %} <!-- Calcul de l'index basé sur 6 annonces par slide -->
                         {% if index < this.annonces|length %}
                             {% set posting = this.annonces[index] %}
                             {{ component('annonce_component', {id: posting.id})}}
