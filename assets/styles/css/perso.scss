@@ -67,7 +67,7 @@
 .card-annonce-text {
     color: #212121; /* Couleur de texte principal pour la description */
     padding: 10px;
-    text-align: justify;
+    text-align: left;
     display: -webkit-box;
     -webkit-line-clamp: 4; /* Limite à deux lignes */
     -webkit-box-orient: vertical;
@@ -97,4 +97,11 @@
 
 .badge .text-bg-danger .badge-urgent span {
     font-size: 2em;
+}
+
+.card-annonce-header {
+    display: flex;
+    align-items: center; /* Ceci centre verticalement le contenu */
+    justify-content: center; /* Ceci centre horizontalement, si nécessaire */
+    min-height: 120px; /* Hauteur minimale pour l'uniformité */
 }
