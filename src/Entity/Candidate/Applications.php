@@ -65,7 +65,7 @@ class Applications
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $status = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $pretentionSalariale = null;
 
     public function getId(): ?int
@@ -150,7 +150,7 @@ class Applications
         return $this->pretentionSalariale;
     }
 
-    public function setPretentionSalariale(string $pretentionSalariale): static
+    public function setPretentionSalariale(?string $pretentionSalariale): static
     {
         $this->pretentionSalariale = $pretentionSalariale;
 

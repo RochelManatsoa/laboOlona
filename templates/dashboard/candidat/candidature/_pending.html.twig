@@ -5,8 +5,8 @@
 <table class="table">
     <thead>
         <tr>
-            <th scope="col" class="col-5"></th>
-            <th scope="col" class="col-5"></th>
+            <th scope="col" class="col-4"></th>
+            <th scope="col" class="col-6"></th>
             <th scope="col" class="col-2"></th>
         </tr>
     </thead>
@@ -15,13 +15,10 @@
             <tr>
                 <!-- Colonne de gauche (Détails de l'offre) -->
                 <td>
-                    <small class="text-white px-2 bg-dark rounded">
-                        {{ application.annonce.typeContrat }}
-                    </small>
                     <!-- Type de contrat -->
-                    <h5>
+                    <h3 class="h6">
                         {{ application.annonce.titre }}
-                    </h5>
+                    </h3>
                     <!-- Titre du job -->
                     <a href="{{ path('app_dashboard_candidat_annonce_details', {'jobId': application.annonce.jobId}) }}" class="btn btn-link">
                         Voir l'offre
@@ -30,14 +27,15 @@
                 </td>
                 <td>
                     <small class="">
-                        {{ application.annonce.description|length > 150 ? application.annonce.description|slice(0, 147)|raw ~ '...' : application.annonce.description|raw }}
-                    </small>
+                        {% set clean_description = application.annonce.description|striptags|replace({'&nbsp;': '. '}) %}
+                        {{ clean_description|length > 250 ? clean_description|slice(0, 247) ~ '...' : clean_description }}
+                    </small> 
                 <!-- Type de contrat -->
                 </td>
 
                 <!-- Colonne de droite (Informations du Candidat) -->
                 <td>
-                    <ul class="list-unstyled">
+                    <ul class="list-unstyled small">
                         <li>
                             <i class="bi bi-geo-alt"></i>
                             {{ application.annonce.lieu }}
@@ -47,11 +45,9 @@
                             <i class="bi bi-calendar-event"></i>
                             {{ application.dateCandidature|date('d/m/Y') }}
                         </li>
-                        <!-- Date de candidature -->
-                        <li>
-                            <i class="bi bi-cash-stack"></i>
-                            {{ application.pretentionSalariale }}
-                        </li>
+                        <small class="text-white px-2 bg-dark rounded">
+                            {{ application.annonce.typeContrat }}
+                        </small>
                     <!-- Prétention salariale -->
                     </ul>
                 </td>

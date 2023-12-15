@@ -17,6 +17,8 @@ use App\Entity\Entreprise\JobListing;
 use App\Repository\SecteurRepository;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
+use App\Entity\Moderateur\EditedCv;
+use App\Form\Moderateur\EditedCvType;
 use App\Form\Moderateur\NotificationProfileType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Moderateur\NotificationType;
@@ -38,8 +40,7 @@ use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
-
-
+use App\Service\FileUploader;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -60,6 +61,7 @@ class ModerateurController extends AbstractController
         private NotificationRepository $notificationRepository,
         private RequestStack $requestStack,
         private UrlGeneratorInterface $urlGenerator,
+        private FileUploader $fileUploader,
     ) {
     }
 
@@ -380,6 +382,20 @@ class ModerateurController extends AbstractController
             return $redirection; 
         }
 
+        $editedCv = new EditedCv();
+        $editedCv->setUploadedAt(new DateTime());
+        $editedCv->setCandidat($candidat);
+
+        $formCv = $this->createForm(EditedCvType::class, $editedCv);
+        $formCv->handleRequest($request);
+        if($formCv->isSubmitted() && $formCv->isValid()){
+            $cvFile = $formCv->get('cvEdit')->getData();
+            if ($cvFile) {
+                $fileName = $this->fileUploader->uploadEditedCv($cvFile);
+                $this->profileManager->saveCVEdited($fileName, $candidat);
+            }
+        }
+
         $notification = new Notification();
         $notification->setDateMessage(new DateTime());
         $notification->setExpediteur($this->userService->getCurrentUser());
@@ -418,6 +434,7 @@ class ModerateurController extends AbstractController
         return $this->render('dashboard/moderateur/candidat_view.html.twig', [
             'candidat' => $candidat,
             'form' => $form->createView(),
+            'formCv' => $formCv->createView(),
         ]);
     }
 

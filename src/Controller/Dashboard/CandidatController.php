@@ -374,14 +374,6 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
-        $selectedLangues = [];
-        foreach ($this->langagesRepository->findBy(['profile' => $candidat]) as $key => $value) {
-            $selectedLangues[] = $value->getLangue();
-        }
-        $allLangues = $this->em->getRepository(Langue::class)->findAll();
-        $unselectedLangues = array_filter($allLangues, function($langue) use ($selectedLangues) {
-            return !in_array($langue, $selectedLangues);
-        });
 
         $formOne = $this->createForm(EditStepOneType::class, $candidat);
         $formTwo = $this->createForm(EditStepTwoType::class, $candidat);
