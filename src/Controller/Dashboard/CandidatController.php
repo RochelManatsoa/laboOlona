@@ -4,6 +4,7 @@ namespace App\Controller\Dashboard;
 
 use DateTime;
 use App\Entity\User;
+use App\Entity\Langue;
 use App\Service\FileUploader;
 use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
@@ -14,6 +15,7 @@ use App\Manager\ModerateurManager;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
+use App\Entity\EntrepriseProfile;
 use App\Entity\Moderateur\TypeContrat;
 use App\Form\Search\AnnonceSearchType;
 use App\Form\Candidat\ApplicationsType;
@@ -25,6 +27,7 @@ use App\Form\Profile\Candidat\StepThreeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Candidate\LangagesRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
@@ -49,6 +52,7 @@ class CandidatController extends AbstractController
         private CandidatManager $candidatManager,
         private JobListingRepository $jobListingRepository,
         private ApplicationsRepository $applicationsRepository,
+        private LangagesRepository $langagesRepository,
         private TypeContratRepository $typeContratRepository,
         private RequestStack $requestStack,
         private FileUploader $fileUploader,
@@ -62,9 +66,13 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
-        if (!$candidat instanceof CandidateProfile) {
+        $entreprise = $user->getEntrepriseProfile();
+        if ($entreprise instanceof EntrepriseProfile) {
             // Si l'utilisateur n'a pas de profil candidat, on lance une exception
             throw new AccessDeniedException('Désolé, la page que vous souhaitez consulter est réservée aux profils candidats. Si vous possédez un tel profil, veuillez vous assurer que vous êtes connecté avec les identifiants appropriés.');
+        }
+        if($candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
         }
     
         return null;
@@ -366,6 +374,14 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        $selectedLangues = [];
+        foreach ($this->langagesRepository->findBy(['profile' => $candidat]) as $key => $value) {
+            $selectedLangues[] = $value->getLangue();
+        }
+        $allLangues = $this->em->getRepository(Langue::class)->findAll();
+        $unselectedLangues = array_filter($allLangues, function($langue) use ($selectedLangues) {
+            return !in_array($langue, $selectedLangues);
+        });
 
         $formOne = $this->createForm(EditStepOneType::class, $candidat);
         $formTwo = $this->createForm(EditStepTwoType::class, $candidat);

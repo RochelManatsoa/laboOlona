@@ -24,7 +24,7 @@ class ApplicationsType extends AbstractType
                     'rows' => 8
                 ]
             ])
-            ->add('pretentionSalariale')
+            // ->add('pretentionSalariale')
         ;
     }
 

@@ -1,37 +1,40 @@
-<form method="post" action="{{ path('app_ajax_update_experience', {'id': experience.id })}}">
+<form method="post" action="{{ path('app_ajax_update_experience', {'id': experience.id })}}" class="">
     <input type="hidden" name="experience_id" value="{{ experience.id }}">
-    <div class="row">
-        <div class="mb-3 col">
-            <label for="experience_nom">Titre de l'expérience</label>
-            <input type="text" id="experience_nom" name="nom" class="form-control" value="{{ experience.nom ?? '' }}">
+    <div class="card shadow p-5 bg-light">
+        <div class="row">
+            <div class="mb-3 col">
+                <label for="experience_nom">Titre de l'expérience</label>
+                <input type="text" id="experience_nom" name="nom" class="form-control" value="{{ experience.nom ?? '' }}">
+            </div>
+            <div class="mb-3 col">
+                <label for="experience_entreprise">Nom de l'entreprise</label>
+                <input type="text" id="experience_entreprise" name="entreprise" class="form-control" value="{{ experience.entreprise ?? '' }}">
+            </div>
         </div>
-        <div class="mb-3 col">
-            <label for="experience_entreprise">Nom de l'entreprise</label>
-            <input type="text" id="experience_entreprise" name="entreprise" class="form-control" value="{{ experience.entreprise ?? '' }}">
+        <div class="mb-3">
+            <label for="experience_enPoste">Actuellement en poste</label>
+            <input type="checkbox" id="experience_enPoste" name="enPoste" class="form-check-input" {% if experience.enPoste %}checked{% endif %}>
+        </div>
+        <div class="row">
+            <div class="mb-3 col">
+                <label for="experience_dateDebut">Date de début</label>
+                <input type="date" id="experience_dateDebut" name="dateDebut" class="form-control" value="{{ experience.dateDebut ? experience.dateDebut|date('Y-m-d') : '' }}">
+            </div>
+            <div class="mb-3 col">
+                <label for="experience_dateFin">Date de fin</label>
+                <input type="date" id="experience_dateFin" name="dateFin" class="form-control" value="{{ experience.dateFin ? experience.dateFin|date('Y-m-d') : '' }}">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="experience_description">Description</label>
+            <textarea id="experience_description" name="description" class="form-control ckeditor-textarea" rows="6">{{ experience.description ?? '' }}</textarea>
         </div>
     </div>
-    <div class="mb-3">
-        <label for="experience_enPoste">Actuellement en poste</label>
-        <input type="checkbox" id="experience_enPoste" name="enPoste" class="form-check-input" {% if experience.enPoste %}checked{% endif %}>
-    </div>
-    <div class="row">
-        <div class="mb-3 col">
-            <label for="experience_dateDebut">Date de début</label>
-            <input type="date" id="experience_dateDebut" name="dateDebut" class="form-control" value="{{ experience.dateDebut ? experience.dateDebut|date('Y-m-d') : '' }}">
-        </div>
-        <div class="mb-3 col">
-            <label for="experience_dateFin">Date de fin</label>
-            <input type="date" id="experience_dateFin" name="dateFin" class="form-control" value="{{ experience.dateFin ? experience.dateFin|date('Y-m-d') : '' }}">
-        </div>
-    </div>
-    <div class="mb-3">
-        <label for="experience_description">Description</label>
-        <textarea id="experience_description" name="description" class="form-control ckeditor-textarea" rows="6">{{ experience.description ?? '' }}</textarea>
-    </div>
-    <button type="submit" class="btn btn-dark rounded-pill">Soumettre</button>
+    <button type="submit" class="btn btn-info rounded-pill my-3 btn-sm">Soumettre</button>
+    <button type="button" class="btn btn-outline-dark rounded-pill my-3 btn-sm cancel-experience">Annuler</button>
 </form>
 
-<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 <script>
     ClassicEditor.create( document.querySelector( '#experience_description' ) )
 </script>
+    

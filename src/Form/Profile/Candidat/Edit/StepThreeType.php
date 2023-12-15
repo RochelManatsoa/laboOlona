@@ -33,7 +33,9 @@ class StepThreeType extends AbstractType
         ])
         ->add('langages', CollectionType::class, [
             'entry_type' => LangagesType::class,
-            'entry_options' => ['label' => true],
+            'entry_options' => [
+                'label' => false,
+            ],
             'allow_add' => true,
             'by_reference' => false,
         ])

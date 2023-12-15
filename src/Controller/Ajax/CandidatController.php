@@ -4,6 +4,7 @@ namespace App\Controller\Ajax;
 
 use App\Entity\Candidate\Competences;
 use App\Entity\Candidate\Experiences;
+use App\Entity\Candidate\Langages;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AffiliateToolRepository;
 use App\Repository\Candidate\CompetencesRepository;
@@ -204,7 +205,6 @@ class CandidatController extends AbstractController
     }
 
 
-
     #[Route('/ajax/competence/delete', name: 'app_ajax_delete_competence')]
     public function deleteCompetence(
         Request $request,
@@ -221,6 +221,85 @@ class CandidatController extends AbstractController
 
         return $this->json([
             'competence_id' => $competenceId,
+            'success' => $success,
+        ], 200, [], []);
+
+    }
+    
+    #[Route('/ajax/langue/edit', name: 'app_ajax_edit_langue')]
+    public function editLangage(
+        Request $request,
+        LangagesRepository $langagesRepository // Injectez le repository des expériences
+    ): JsonResponse
+    {
+        $success = false;
+        $langueId = $request->request->get('langue_id');
+        $langue = $langagesRepository->find($langueId);
+
+        if ($langue) {
+
+            $formHtml = $this->renderView('ajax/form/form_langue.html.twig', [
+                'langue' => $langue,
+            ]);
+
+            $success = true;
+
+            return $this->json([
+                'success' => true,
+                'form' => $formHtml,
+            ]);
+        } else {
+            // Gérer le cas où l'expérience n'est pas trouvée
+            return $this->json([
+                'langage_id' => $langueId,
+                'success' => false,
+                'error' => 'Expérience non trouvée',
+            ]);
+        }
+    }
+
+    #[Route('/ajax/langue/update/{id}', name: 'app_ajax_update_langue')]
+    public function updateLangage(Request $request, LangagesRepository $langagesRepository, $id): Response
+    {
+        $langue = $langagesRepository->find($id);
+        if (!$langue) {
+            return $this->json([
+                'success' => false,
+                'error' => 'Langue non trouvée',
+            ]);
+        }
+
+        // Mettez à jour l'entité Experience avec les nouvelles données
+        $langue->setNiveau($request->request->get('niveau'));
+
+        
+        // Enregistrez les modifications dans la base de données
+        $this->em->persist($langue);
+        $this->em->flush();
+
+        return $this->redirectToRoute('app_dashboard_candidat_compte',[
+            'success' => true,
+        ]);
+    }
+
+
+
+    #[Route('/ajax/langue/delete', name: 'app_ajax_delete_langue')]
+    public function deleteLangage(
+        Request $request,
+    ): Response
+    {
+        $success = false;
+        $langueId = $request->request->get('langue_id');
+        $langue = $this->langagesRepository->find($langueId);
+        if($langue instanceof Langages){
+            $this->em->remove($langue);
+            $this->em->flush();
+            $success = true;
+        }
+
+        return $this->json([
+            'experience_id' => $langueId,
             'success' => $success,
         ], 200, [], []);
 

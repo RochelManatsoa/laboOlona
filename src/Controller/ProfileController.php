@@ -129,6 +129,7 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $candidat = $form->getData();
             $this->em->persist($candidat);
+            $this->em->flush();
 
             if($candidat instanceof CandidateProfile && !$candidat->isEmailSent()){
                 $candidat->setEmailSent(true);
@@ -142,6 +143,7 @@ class ProfileController extends AbstractController
                     ]
                 );
             }
+            $this->em->persist($candidat);
             $this->em->flush();
 
             return $this->redirectToRoute('app_profile_candidate_step_two', []);

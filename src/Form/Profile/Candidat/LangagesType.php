@@ -4,6 +4,7 @@ namespace App\Form\Profile\Candidat;
 
 use App\Entity\Langue;
 use App\Entity\Candidate\Langages;
+use App\Repository\LangueRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -43,6 +44,7 @@ class LangagesType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Langages::class,
+            'langues_non_choisies' => null,
         ]);
     }
 }

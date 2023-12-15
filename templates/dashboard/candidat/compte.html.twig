@@ -56,7 +56,7 @@
             {{ form_widget(form_one) }}
         </div>
         <div class="input-group-append">
-            <button type="submit" class="btn btn-primary">Enregister</button>
+            <button type="submit" class="btn btn-primary">Sauvegarder</button>
         </div>
         {{ form_end(form_one) }}
     </section>
@@ -110,7 +110,7 @@
             {{ form_widget(form_two) }}
         </div>
         <div class="input-group-append">
-            <button type="submit" class="btn btn-primary">Enregister</button>
+            <button type="submit" class="btn btn-primary">Sauvegarder</button>
         </div>
         {{ form_end(form_two) }}
     </section>
@@ -158,7 +158,7 @@
         <div class="row">
             {% if experiences|length > 0 %}
                 {% for experience in experiences %}
-                    <div class="experience">
+                    <div class="experience" data-experience-id="{{ experience.id }}">
                         <p class="text-dark d-flex justify-content-between align-items-center">
                             {% if experience.enPoste %}
                                 Depuis {{ experience.dateDebut|date('M Y')}}
@@ -172,9 +172,10 @@
                                 <strong>{{ experience.nom }}</strong>
                                 chez 
                                 <strong>{{ experience.entreprise }}</strong>
-                                (
-                                {{ date_difference(experience.dateFin, experience.dateDebut) }}
-                                )
+                                    {% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
+                                        ({{ date_difference(experience.dateFin, experience.dateDebut) }})
+                                    {% endif %}
+
                             </span>
                             <span class="">
                                 <button class="btn btn-primary btn-sm edit-experience" data-experience-id="{{ experience.id }}">Modifier</button>
@@ -226,7 +227,7 @@
         <div class="row">
             {% if competences|length > 0 %}
                 {% for competence in competences %}
-                <div class="competence">
+                <div class="competence" data-competence-id="{{ competence.id }}">
                     <div class="row">
                         <div class="col-md-4 col-sm-12">
                             <p class="text-dark ">
@@ -296,28 +297,37 @@
         </div>
         <div class="row">
                 {% if langages|length > 0 %}
+                <div class="row">
                     {% for langue in langages %}
-                    <p class="text-dark">
-                        {{ isoToEmoji(langue.langue.code) }} {{ langue.langue.nom }} 
-                        <span class="d-flex align-items-center">
-                            <span class="p-1 lh-1">
-                                {% for i in 1..5 %}
-                                    {% if i <= langue.niveau %}
-                                        <i class="small bi bi-star-fill text-warning"></i>
-                                    {% else %}
-                                        <i class="small bi bi-star text-dark"></i>
-                                    {% endif %}
-                                {% endfor %}
-                            </span>
-                        </span>            
-                    </p>
+                        <div class="col-lg-6">
+                            <div class="langue" data-langue-id="{{ langue.id }}">
+                                <p class="text-dark">
+                                    {{ isoToEmoji(langue.langue.code) }} {{ langue.langue.nom }} 
+                                    <span class="d-flex align-items-center">
+                                        <span class="p-1 lh-1">
+                                            {% for i in 1..5 %}
+                                                {% if i <= langue.niveau %}
+                                                    <i class="small bi bi-star-fill text-warning"></i>
+                                                {% else %}
+                                                    <i class="small bi bi-star text-dark"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                    </span>
+                                    <button class="btn btn-sm btn-primary edit-langue" data-langue-id="{{ langue.id }}">Modifier</button>
+                                    <button class="btn btn-sm btn-danger delete-langue" data-langue-id="{{ langue.id }}">Supprimer</button>            
+                                </p>
+                            </div>
+                        </div>
                     {% endfor %}
+                </div>
                 {% else %}
                 <div class="alert alert-primary" role="alert">
                     Aucune langues renseignée.
                 </div>
                 {% endif %}
         </div>
+        <hr class="mb-4">
     <h5 class=""><i class="mx-2 h5 bi bi-archive"></i> Mes documents</h5>
     <div class="row">
         <div class="col">
@@ -335,7 +345,7 @@
                     </div>
                 </div>
             </div>
-            {% endfor %}
+        {% endfor %}
         </div>
         <div class="col">
             {{ form_label(form_three.cv) }}
@@ -349,7 +359,7 @@
         </div>
         <hr class="mb-4">
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">Enregister</button>
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
                 </div>
         {{ form_end(form_three) }}
     </section>
@@ -405,7 +415,148 @@
 
 <script>
     $(document).ready(function() {
-        // Lorsque vous cliquez sur un bouton de suppression
+        var originalContent = {}; // Pour sauvegarder le contenu original
+    
+        // Fonction pour sauvegarder le contenu original d'un élément
+        function saveOriginalContent(id, containerSelector) {
+            var container = $(containerSelector);
+            originalContent[id] = container.html();
+        }
+    
+        // Fonction pour restaurer le contenu original
+        function restoreOriginalContent(id, containerSelector) {
+            console.log(id)
+            var container = $(containerSelector);
+            if (originalContent[id]) {
+                container.html(originalContent[id]);
+            }
+        }
+    
+        // Gestionnaire d'événements pour "edit-experience"
+        $('.edit-experience').click(function(e) {
+            e.preventDefault();
+            var experienceId = $(this).data('experience-id');
+            var experienceContainer = $('[data-experience-id="' + experienceId + '"]').closest('.experience');
+            
+            saveOriginalContent(experienceId, experienceContainer); // Sauvegarde du contenu original
+    
+            // Votre code AJAX...
+            $.ajax({
+                url: "{{ path('app_ajax_edit_experience')}}",
+                method: 'POST',
+                data: { experience_id: experienceId },
+                success: function(response) {
+                    console.log(response)
+                    // Si la demande réussit, affichez un formulaire de modification
+                    if (response.success) {
+                        // Remplacez le contenu de l'expérience par le formulaire de modification pré-rempli
+                        var experienceContainer = $('[data-experience-id="' + experienceId + '"]').closest('.experience');
+                        experienceContainer.html(response.form); // Assurez-vous que la réponse contient uniquement le formulaire HTML
+                    }
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la récupération des données de l\'expérience :', error);
+                }
+            });
+        });
+    
+        // Gestionnaire d'événements pour "edit-competence"
+        $('.edit-competence').click(function(e) {
+            e.preventDefault();
+            var competenceId = $(this).data('competence-id');
+            var competenceContainer = $('[data-competence-id="' + competenceId + '"]').closest('.competence');
+            
+            saveOriginalContent(competenceId, competenceContainer); // Sauvegarde du contenu original
+    
+            // Votre code AJAX...
+            $.ajax({
+                url: "{{ path('app_ajax_edit_competence')}}",
+                method: 'POST',
+                data: { competence_id: competenceId },
+                success: function(response) {
+                    console.log(response)
+                    // Si la demande réussit, affichez un formulaire de modification
+                    if (response.success) {
+                        // Remplacez le contenu de l'expérience par le formulaire de modification pré-rempli
+                        var competenceContainer = $('[data-competence-id="' + competenceId + '"]').closest('.competence');
+                        competenceContainer.html(response.form); // Assurez-vous que la réponse contient uniquement le formulaire HTML              
+                    }
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la récupération des données de l\'expérience :', error);
+                }
+            });
+        });
+
+        $('.edit-langue').click(function(e) {
+            e.preventDefault();
+            var langueId = $(this).data('langue-id');
+            var langueContainer = $('[data-langue-id="' + langueId + '"]');
+            
+            saveOriginalContent(langueId, langueContainer);
+
+            // Code AJAX pour éditer la langue...
+            $.ajax({
+                url: "{{ path('app_ajax_edit_langue')}}",
+                method: 'POST',
+                data: { langue_id: langueId },
+                success: function(response) {
+                    console.log(response)
+                    // Si la demande réussit, affichez un formulaire de modification
+                    if (response.success) {
+                        // Remplacez le contenu de l'expérience par le formulaire de modification pré-rempli
+                        var langueContainer = $('[data-langue-id="' + langueId + '"]').closest('.langue');
+                        langueContainer.html(response.form); // Assurez-vous que la réponse contient uniquement le formulaire HTML
+                    }
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la récupération des données de la langue :', error);
+                }
+            });
+        });
+
+        $(document).on('click', '.cancel-experience', function(e) {
+            e.preventDefault();
+
+            var container = $(this).closest('.experience');
+            var id = container.data('experience-id');
+
+            if (id) {
+                restoreOriginalContent(id, container);
+            } else {
+                console.log('ID non trouvé.');
+            }
+        });
+
+        // Gestionnaire d'événements pour le bouton "Annuler" dans les compétences
+        $(document).on('click', '.cancel-competence', function(e) {
+            e.preventDefault();
+
+            var container = $(this).closest('.competence');
+            var id = container.data('competence-id');
+
+            if (id) {
+                restoreOriginalContent(id, container);
+            } else {
+                console.log('ID non trouvé pour compétence.');
+            }
+        });
+
+        // Gestionnaire d'événements pour le bouton "Annuler" dans les compétences
+        $(document).on('click', '.cancel-langue', function(e) {
+            e.preventDefault();
+
+            var container = $(this).closest('.langue');
+            var id = container.data('langue-id');
+
+            if (id) {
+                restoreOriginalContent(id, container);
+            } else {
+                console.log('ID non trouvé pour langue.');
+            }
+        });
+
+
         $('.delete-experience').click(function(e) {
             e.preventDefault()
             var experienceId = $(this).data('experience-id');
@@ -427,32 +578,7 @@
                 }
             });
         });
-        $('.edit-experience').click(function(e) {
-            e.preventDefault()
-            var experienceId = $(this).data('experience-id');
-            console.log(experienceId)
-            // Envoyez une demande AJAX pour récupérer le formulaire de modification
-            $.ajax({
-                url: "{{ path('app_ajax_edit_experience')}}",
-                method: 'POST',
-                data: { experience_id: experienceId },
-                success: function(response) {
-                    console.log(response)
-                    // Si la demande réussit, affichez un formulaire de modification
-                    if (response.success) {
-                        // Remplacez le contenu de l'expérience par le formulaire de modification pré-rempli
-                        var experienceContainer = $('[data-experience-id="' + experienceId + '"]').closest('.experience');
-                        experienceContainer.html(response.form); // Assurez-vous que la réponse contient uniquement le formulaire HTML
-                    }
-                },
-                error: function(error) {
-                    console.error('Erreur lors de la récupération des données de l\'expérience :', error);
-                }
-            });
-
-        });
-
-        // Lorsque vous cliquez sur un bouton de suppression
+    
         $('.delete-competence').click(function(e) {
             e.preventDefault()
             var competenceId = $(this).data('competence-id');
@@ -474,31 +600,28 @@
                 }
             });
         });
-        $('.edit-competence').click(function(e) {
-            e.preventDefault()
-            var competenceId = $(this).data('competence-id');
-            console.log(competenceId)
-            // Envoyez une demande AJAX pour récupérer le formulaire de modification
+
+        $('.delete-langue').click(function(e) {
+            e.preventDefault();
+            var langueId = $(this).data('langue-id');
+
+            // Code AJAX pour supprimer la langue...
             $.ajax({
-                url: "{{ path('app_ajax_edit_competence')}}",
+                url: "{{ path('app_ajax_delete_langue')}}",
                 method: 'POST',
-                data: { competence_id: competenceId },
+                data: { langue_id: langueId },
                 success: function(response) {
-                    console.log(response)
-                    // Si la demande réussit, affichez un formulaire de modification
                     if (response.success) {
-                        // Remplacez le contenu de l'expérience par le formulaire de modification pré-rempli
-                        var competenceContainer = $('[data-competence-id="' + competenceId + '"]').closest('.competence');
-                        competenceContainer.html(response.form); // Assurez-vous que la réponse contient uniquement le formulaire HTML
+                        $('[data-langue-id="' + langueId + '"]').remove();
                     }
                 },
                 error: function(error) {
-                    console.error('Erreur lors de la récupération des données de l\'expérience :', error);
+                    console.error('Erreur lors de la suppression de la langue :', error);
                 }
             });
-
         });
     });
+    
 </script>
 
 <script>

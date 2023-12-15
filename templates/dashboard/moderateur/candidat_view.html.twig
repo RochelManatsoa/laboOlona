@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h2>Détails du Candidat</h2>
+    <h2 class="h3">Détails du Candidat : <span class="text-danger">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</span></h2>
 
     <!-- Onglets -->
     <ul class="nav nav-tabs">
@@ -10,10 +10,19 @@
             <a class="nav-link active" id="details-tab" data-bs-toggle="tab" href="#details">Résumé</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="competences-tab" data-bs-toggle="tab" href="#competences">Compétences</a>
+            <a class="nav-link" id="competences-tab" data-bs-toggle="tab" href="#competences">Compétences ({{ candidat.competences|length }})</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="experiences-tab" data-bs-toggle="tab" href="#experiences">Expériences</a>
+            <a class="nav-link" id="experiences-tab" data-bs-toggle="tab" href="#experiences">Expériences ({{ candidat.experiences|length }})</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="candidatures-tab" data-bs-toggle="tab" href="#candidatures">Candidatures ({{ candidat.applications|length }})</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="cv-tab" data-bs-toggle="tab" href="#cv">CV / Autres infos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="email-tab" data-bs-toggle="tab" href="#email"><i class="bi h5 bi-envelope-at"></i></a>
         </li>
     </ul>
 
@@ -33,10 +42,9 @@
                         <div class="col-md-9">
                             <h5 class="card-title">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</h5>
                             <p class="card-text">
-                            <span class="text-muted">Email:</span> {{ candidat.candidat.email }}<br>
-                            <span class="text-muted">Compétences : </span> <span class="badge text-bg-info">{{ candidat.competences|length }}</span><br>
-                            <span class="text-muted">Expériences : </span> <span class="badge text-bg-info">{{ candidat.experiences|length }}</span><br>
-                            <span class="text-muted">Applications : </span> <span class="badge text-bg-info">{{ candidat.applications|length }}</span><br>
+                            <span class="text-muted">Email :</span> {{ candidat.candidat.email }}<br>
+                            <span class="text-muted">Téléphone : </span> <span class="text-dark">{{ candidat.candidat.telephone }}</span><br>
+                            <span class="text-muted">Adresse : </span> <span class="text-dark">{{ candidat.candidat.adress }} - {{ show_country(candidat.localisation) }}</span><br>
                             <span class="text-muted">Secteur d'activité : </span><br> 
                                 {% for item in candidat.secteurs %}
                                 <span class="badge text-bg-warning">
@@ -49,62 +57,291 @@
                     <p class="card-text mt-3">
                         <strong>Biographie:</strong> {{ candidat.resume|raw }}<br>
                     </p> 
-                <a href="javascript:history.back()" class="btn btn-secondary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
                 </div>
             </div>
         </div>
 
         <div class="tab-pane fade" id="competences">
-            <table class="table" id="competencesTable">
-                <thead>
-                    <tr>
-                        <th class="col-3">Compétence</th>
-                        <th class="col-9">Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for competence in candidat.competences %}
-                        <tr>
-                            <td>{{ competence.nom }}</td>
-                            <td>{{ competence.description|raw }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        <a href="javascript:history.back()" class="btn btn-secondary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+            <div class="card">
+                <div class="card-body">
+                    {% if candidat.competences|length > 0 %}
+                        <table class="table" id="competencesTable">
+                            <thead>
+                                <tr>
+                                    <th class="col-3">Compétence</th>
+                                    <th class="col-9">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for competence in candidat.competences %}
+                                    <tr>
+                                        <td>
+                                            {{ competence.nom }}<br>
+                                                <span class="p-1 lh-1">
+                                                    {% for i in 1..5 %}
+                                                        {% if i <= competence.note %}
+                                                            <i class="small bi bi-star-fill text-warning"></i>
+                                                        {% else %}
+                                                            <i class="small bi bi-star text-dark"></i>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </span>
+                                        </td>
+                                        <td>{{ competence.description|raw }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-md-9 mx-auto">
+                            <div class="container my-5">
+                                <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                <h1 class="text-body-emphasis">Aucunes</h1>
+                                <p class="">
+                                    <i class="bi bi-info-circle"></i> Le candidat n'a encore renseigné aucunes commpétences.
+                                </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
 
         <div class="tab-pane fade" id="experiences">
-            <table class="table" id="experiencesTable">
-                <thead>
-                    <tr>
-                        <th class="col-3">Expérience</th>
-                        <th class="col-9">Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for experience in candidat.experiences %}
-                        <tr>
-                            <td>
-                                {{ experience.nom }}<br>
-                                <span class="small">chez <span class="text-muted">{{ experience.entreprise }}</span><br>
-                                    {% if experience.enPoste %}
-                                        Depuis {{ experience.dateDebut|date('M Y')}}
-                                    {% else %}
-                                        {{ experience.dateDebut|date('M Y')}} - 
-                                        {{ experience.dateFin|date('M Y')}}
-                                    {% endif %}
-                                </span>
-                            </td>
-                            <td>{{ experience.description|raw }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        <a href="javascript:history.back()" class="btn btn-secondary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+            <div class="card">
+                <div class="card-body">
+                    {% if candidat.experiences|length > 0 %}
+                        <table class="table" id="experiencesTable">
+                            <thead>
+                                <tr>
+                                    <th class="col-3">Expérience</th>
+                                    <th class="col-9">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for experience in candidat.experiences %}
+                                    <tr>
+                                        <td>
+                                            {{ experience.nom }}<br>
+                                            <span class="small">chez <span class="text-muted">{{ experience.entreprise }}</span><br>
+                                                {% if experience.enPoste %}
+                                                    Depuis {{ experience.dateDebut|date('M Y')}}
+                                                {% else %}
+                                                    {{ experience.dateDebut|date('M Y')}} - 
+                                                    {{ experience.dateFin|date('M Y')}}
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td>{{ experience.description|raw }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-md-9 mx-auto">
+                            <div class="container my-5">
+                                <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                <h1 class="text-body-emphasis">Aucunes</h1>
+                                <p class="">
+                                    <i class="bi bi-info-circle"></i> Le candidat n'a encore renseigné aucunes expériences.
+                                </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
+
+        <div class="tab-pane fade" id="candidatures">
+            <div class="card">
+                <div class="card-body">
+                    {% if candidat.applications|length > 0 %}
+                        <table class="table" id="candidaturesTable">
+                            <thead>
+                                <tr>
+                                    <th class="col-3">Annonce</th>
+                                    <th class="col-9">Lettre de motivation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for application in candidat.applications %}
+                                    <tr>
+                                        <td>
+                                            {{ application.annonce.titre }}<br>
+                                            <span class="small">Status <span class="text-muted">{{ application.status }}</span><br>
+                                                Le {{ application.dateCandidature|date('d M Y')}}
+                                            </span>
+                                        </td>
+                                        <td>{{ application.lettreMotivation|raw }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-md-9 mx-auto">
+                            <div class="container my-5">
+                                <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                <h1 class="text-body-emphasis">Aucun candidature</h1>
+                                <p class="">
+                                    <i class="bi bi-info-circle"></i> Le candidat n'a encore effectué aucune candidature.
+                                </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="cv">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                    <h3 class="text-center mb-4">CV</h3>
+                        <div class="col-md-9 mx-auto">
+                            {% if candidat.cvs|length > 0 %}
+                                {% for cv in candidat.cvs %}
+                                    <div class="col my-2">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" title="Ouvrir" target="_blank">
+                                                    <!-- Icône agrandie -->
+                                                    <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
+                                                    <p class="card-title small">{{ cv.safeFileName }}.pdf</p>
+                                                    <!-- Lien pour visualiser le CV dans un nouvel onglet -->
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="container my-5">
+                                    <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                    <h1 class="text-body-emphasis">Aucun CV envoyé</h1>
+                                    <p class="">
+                                        <i class="bi bi-info-circle"></i> Veuillez envoyer un e-mail à l'utilisateur pour l'informer de l'envoi de son CV. Cette étape est nécessaire pour la validation de son profil.
+                                    </p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div> 
+                    <h3 class="text-center mb-4">Langues</h3>
+                    <div class="col-md-9 mx-auto">
+                        {% if candidat.langages|length > 0 %}
+                        <div class="row">
+                            {% for langage in candidat.langages %}
+                                <div class="col-3 my-2 flex">
+                                    <div class="card">
+                                        <div class="card-body">
+                                                <!-- Icône agrandie -->
+                                                <span class="h1">{{ isoToEmoji(langage.langue.code) }}</span> <br>{{ langage.langue.nom }} 
+                                                <span class="d-flex align-items-center">
+                                                    <span class="p-1 lh-1">
+                                                        {% for i in 1..5 %}
+                                                            {% if i <= langage.niveau %}
+                                                                <i class="small bi bi-star-fill text-warning"></i>
+                                                            {% else %}
+                                                                <i class="small bi bi-star text-dark"></i>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </span>
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                            <div class="container my-5">
+                                <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                <h1 class="text-body-emphasis">Aucune langues renseignées</h1>
+                                <p class="">
+                                    <i class="bi bi-info-circle"></i> Veuillez envoyer un e-mail à l'utilisateur pour l'informer des langues qu'ils maîtrise. Cette étape est nécessaire pour la validation de son profil.
+                                </p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div> 
+                    <h3 class="text-center mb-4">Réseau sociaux</h3>
+                    <div class="col-md-9 mx-auto text-center">
+                        {% if candidat.social.linkedin is not empty %}
+                            <a title="{{ candidat.social.linkedin }}" href="{{candidat.social.linkedin}}" target=_blank ><i class="bi h2 bi-linkedin"></i></a>
+                        {% endif %}
+                        {% if candidat.social.skype is not empty %}
+                            <a title="{{ candidat.social.skype }}" href="{{candidat.social.skype}}" target=_blank ><i class="bi h2 bi-skype"></i></a>
+                        {% endif %}
+                        {% if candidat.social.slack is not empty %}
+                            <a title="{{ candidat.social.slack }}" href="{{candidat.social.slack}}" target=_blank ><i class="bi h2 bi-slack"></i></a>
+                        {% endif %}
+                        {% if candidat.social.facebook is not empty %}
+                            <a title="{{ candidat.social.facebook }}" href="{{candidat.social.facebook}}" target=_blank ><i class="bi h2 bi-facebook"></i></a>
+                        {% endif %}
+                        {% if candidat.social.instagram is not empty %}
+                            <a title="{{ candidat.social.instagram }}" href="{{candidat.social.instagram}}" target=_blank ><i class="bi h2 bi-instagram"></i></a>
+                        {% endif %}
+                        {% if candidat.social.github is not empty %}
+                            <a title="{{ candidat.social.github }}" href="{{candidat.social.github}}" target=_blank ><i class="bi h2 bi-github"></i></a>
+                        {% endif %}
+                    </div> 
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="email">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="alert alert-info small" role="alert">
+                                <i class="bi bi-info-circle"></i> L'intégralité de ce contenu sera envoyée à l'utilisateur. N'oubliez pas d'ajouter 'Bonjour' suivi du nom de l'utilisateur. La mise en forme que vous appliquez ici sera conservée à l'envoi.
+                            </div>
+                        </div> 
+                        <div class="col-md-9">
+                            {{ form_start(form)}}
+                            {{ form_widget(form)}}
+                            {{ form_errors(form)}}
+                            <div class="input-group-append my-4">
+                                <button type="submit" class="btn btn-primary rounded-pill">Envoyer</button>
+                            </div>
+                            {{ form_end(form)}}
+                        </div> 
+                    </div> 
+                </div>
+            </div>
+        </div>
+        
+
+        <a href="javascript:history.back()" class="btn btn-secondary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
     </div>
 </div>
+
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    let globalEditorInstance;
+    document.addEventListener('DOMContentLoaded', function() {
+        ClassicEditor.create(document.querySelector('#notification_profile_contenu'))
+            .then(editor => {
+                globalEditorInstance = editor;
+                document.querySelector('form').addEventListener('submit', function() {
+                    document.querySelector('#notification_profile_contenu').value = globalEditorInstance.getData();
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+
+</script>
+
 {% endblock %}
 
 {% block javascripts %}
@@ -119,27 +356,3 @@
     </script>
 {% endblock %}
 
-
-
-{# {% extends 'dashboard/base.html.twig' %}
-
-{% block body %}
-<div class="container mt-5">
-    <h2>Détails du Candidat</h2>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</h5>
-            <p class="card-text">
-                <strong>Email:</strong> {{ candidat.candidat.email }}<br>
-                <strong>Résumé:</strong> {{ candidat.resume }}<br>
-                <strong>Nombre de Compétences:</strong> <a href="{{ path('app_dashboard_moderateur_candidat_competences', {'id': candidat.id}) }}">{{ candidat.competences|length }}</a><br>
-                <strong>Nombre d'Expériences:</strong> <a href="{{ path('app_dashboard_moderateur_candidat_experiences', {'id': candidat.id}) }}">{{ candidat.experiences|length }}</a><br>
-                <strong>Nombre d'Applications:</strong> <a href="{{ path('app_dashboard_moderateur_candidat_applications', {'id': candidat.id}) }}">{{ candidat.applications|length }}</a>
-           
-            </p> 
-            <a href="{{ path('app_dashboard_moderateur_candidats') }}" class="btn btn-primary">Retour aux candidats</a>
-        </div>
-    </div>
-</div>
-{% endblock %}
- #}

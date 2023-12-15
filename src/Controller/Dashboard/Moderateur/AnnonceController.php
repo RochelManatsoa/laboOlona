@@ -2,12 +2,14 @@
 
 namespace App\Controller\Dashboard\Moderateur;
 
+use App\Entity\Candidate\Applications;
 use App\Entity\Notification;
 use App\Entity\EntrepriseProfile;
 use App\Entity\ModerateurProfile;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
 use App\Entity\Entreprise\JobListing;
+use App\Entity\Vues\AnnonceVues;
 use App\Service\Mailer\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -191,7 +193,7 @@ class AnnonceController extends AbstractController
         return $this->redirectToRoute('app_dashboard_moderateur_annonces');
     }
 
-    #[Route('/delete/annonce/{id}', name: 'delete_annonce', methods: ['POST'])]
+    #[Route('/delete/annonce/{id}', name: 'delete_annonce')]
     public function deleteAnnonce(JobListing $annonce, EntityManagerInterface $entityManager): Response
     {
         $redirection = $this->checkModerateur();
@@ -199,6 +201,17 @@ class AnnonceController extends AbstractController
             return $redirection; 
         }
 
+        $applicationRepository = $entityManager->getRepository(Applications::class);
+        $applications = $applicationRepository->findBy(['annonce' => $annonce]);
+        
+        foreach ($applications as $application) {
+            $entityManager->remove($application);
+        }
+        
+        $annonceVues = $entityManager->getRepository(AnnonceVues::class)->findBy(['annonce' => $annonce]);
+        foreach ($annonceVues as $vue) {
+            $entityManager->remove($vue);
+        }
         $entityManager->remove($annonce);
         $entityManager->flush();
         $this->addFlash('success', 'Annonce supprimée avec succès.');

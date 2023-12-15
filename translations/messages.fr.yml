@@ -282,7 +282,7 @@ app_home:
             title: Entrez votre nom
             email: Entrez un email valide
             message: Entrez votre message
-            number: Entez numéro de téléphone
+            number: Entrez numéro de téléphone
 
 app_profile_account:
     menu: "Trouver un profil"
@@ -417,7 +417,7 @@ app_identity_account:
     description: "Explorez Olona-talents.com et découvrez une plateforme conçue pour mettre en lumière vos intentions et vos talents. Quelle que soit votre ambition, nous vous offrons l'espace pour vous exprimer, apprendre et grandir au sein d'une communauté dynamique."
     keywords: "freelance, projet, offre"
     button: "Continuer"
-    message: "Choisissez ce que vous souhaitez qu'Olona-talents vous accompagne"
+    message: "Comment souhaiteriez-vous qu'Olona-talents vous accompagne"
 
 app_identity_company:
     title: "Précisez vos besoins en tant qu'entreprise."
@@ -569,7 +569,7 @@ app_dashboard_moderateur_candidature_view:
 
 app_dashboard_moderateur_mettings:
     title: Modération
-    dashboard_title: Tous les rendez-vous
+    dashboard_title: Tout les rendez-vous
 
 app_dashboard_moderateur_notifications:
     title: Modération
@@ -592,7 +592,7 @@ app_dashboard_entreprise:
     get_started: "Lancez votre recherche de talent en quelques clics!"
     talent: "Découvrez les talents qui correspondent à vos besoins !"
     follow_us: "Suivez nos actualités sur les réseaux :"
-    contact_us: "Contactez-nous à contact@olona-talents.com ou +261 XX XX XX XX"
+    contact_us: "Contactez-nous à contact@olona-talents.com"
     more_info: "Besoin d'informations ou de partenariat ?"
     optimize: "Suivez l'état de vos annonces et optimisez-les pour de meilleurs résultats !"
     posting: 
