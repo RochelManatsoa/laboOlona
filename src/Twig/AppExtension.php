@@ -9,12 +9,15 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\Posting;
 use App\Entity\Application;
+use App\Entity\Candidate\CV;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Entreprise\JobListing;
 use App\Repository\AccountRepository;
 use Twig\Extension\AbstractExtension;
 use App\Entity\Candidate\Applications;
+use App\Entity\Moderateur\EditedCv;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -25,6 +28,7 @@ class AppExtension extends AbstractExtension
         private RequestStack $requestStack,
         private TranslatorInterface $translator,
         private Security $security,
+        private EntityManagerInterface $em,
         )
     {
     }
@@ -35,6 +39,7 @@ class AppExtension extends AbstractExtension
             new TwigFilter('status_label', [$this, 'statusLabel']),
             new TwigFilter('posting_status_Label', [$this, 'postingStatusLabel']),
             new TwigFilter('candidature_status_Label', [$this, 'candidatureStatusLabel']),
+            new TwigFilter('time_ago', [$this, 'timeAgo']),
         ];
     }
 
@@ -49,6 +54,8 @@ class AppExtension extends AbstractExtension
             new TwigFunction('filterContent', [$this, 'filterContent']),
             new TwigFunction('doShortcode', [$this, 'doShortcode']),
             new TwigFunction('isoToEmoji', [$this, 'isoToEmoji']),
+            new TwigFunction('getEditedCv', [$this, 'getEditedCv']),
+            new TwigFunction('safeFileName', [$this, 'safeFileName']),
             new TwigFunction('show_country', [$this, 'showCountry']),
             new TwigFunction('experience_text', [$this, 'getExperienceText']),
             new TwigFunction('date_difference', [$this, 'dateDifference']),
@@ -540,4 +547,58 @@ class AppExtension extends AbstractExtension
             return "aujourd'hui";
         }
     }
+
+    public function safeFileName(string $cvName): string
+    {
+        $safeFileName = "";
+        $safeFileName = $this->em->getRepository(CV::class)->findOneByCvLink($cvName);
+
+        return $safeFileName->getSafeFileName();
+    }
+
+    public function getEditedCv(string $cvName)
+    {
+        $safeFileName = "";
+        $safeFileName = $this->em->getRepository(EditedCv::class)->findOneByCvLink($cvName);
+        if($safeFileName instanceof EditedCv){
+            return $safeFileName;
+        }
+        return null;
+
+    }
+    
+    public function timeAgo($datetime)
+    {
+        if (!$datetime instanceof \DateTimeInterface) {
+            return 'Jamais connecté';
+        }
+
+        $now = new \DateTime();
+        $diff = $now->diff($datetime);
+
+        // Calculer les semaines à partir des jours
+        $weeks = floor($diff->d / 7);
+        $days = $diff->d % 7;
+
+        $string = [
+            'y' => ['année', 'années'],
+            'm' => ['mois', 'mois'],
+            'w' => ['semaine', 'semaines'],
+            'd' => ['jour', 'jours'],
+            'h' => ['heure', 'heures'],
+            'i' => ['minute', 'minutes'],
+            's' => ['seconde', 'secondes'],
+        ];
+
+        foreach ($string as $key => $value) {
+            $number = $key === 'w' ? $weeks : $diff->$key;
+            if ($number) {
+                return 'il y a ' . $number . ' ' . ($number > 1 ? $value[1] : $value[0]);
+            }
+        }
+
+        return 'à l\'instant';
+    }
+
+
 }

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Candidate\CV;
 use App\Entity\Candidate\Langages;
 use App\Entity\Candidate\Social;
+use App\Entity\Moderateur\EditedCv;
 use App\Entity\Vues\CandidatVues;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -103,6 +104,9 @@ class CandidateProfile
     #[ORM\Column(nullable: true)]
     private ?bool $emailSent = null;
 
+    #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: EditedCv::class, orphanRemoval: true)]
+    private Collection $editedCvs;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -114,6 +118,7 @@ class CandidateProfile
         $this->langages = new ArrayCollection();
         $this->vues = new ArrayCollection();
         $this->cvs = new ArrayCollection();
+        $this->editedCvs = new ArrayCollection();
     }
 
     public function __toString()
@@ -581,6 +586,36 @@ class CandidateProfile
     public function setEmailSent(?bool $emailSent): static
     {
         $this->emailSent = $emailSent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EditedCv>
+     */
+    public function getEditedCvs(): Collection
+    {
+        return $this->editedCvs;
+    }
+
+    public function addEditedCv(EditedCv $editedCv): static
+    {
+        if (!$this->editedCvs->contains($editedCv)) {
+            $this->editedCvs->add($editedCv);
+            $editedCv->setCandidat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEditedCv(EditedCv $editedCv): static
+    {
+        if ($this->editedCvs->removeElement($editedCv)) {
+            // set the owning side to null (unless already changed)
+            if ($editedCv->getCandidat() === $this) {
+                $editedCv->setCandidat(null);
+            }
+        }
 
         return $this;
     }

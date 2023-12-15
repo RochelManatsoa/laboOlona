@@ -36,7 +36,7 @@
                 <p><strong>Nombre d'Applications:</strong> {{ application.candidat.applications|length }}</p>
                 <p>Lettre de motivation : </p>
                 <p>{{ application.lettreMotivation }}</p>
-                <p>Lien vers le CV : <a href="{{ application.cvLink }}">Voir le CV</a></p>
+                <p>Lien vers le CV : <a href="{{ asset('uploads/cv/' ~ application.candidat.cv) }}" class="btn btn-outline-primary rounded-pill btn-sm" target=_blank >Voir le CV</a></p>
                 <p>Date de candidature : {{ application.dateCandidature|date('d/m/Y') }}</p>
                 <p>Status : {{ application.status|candidature_status_Label }}</p>
                 <p>Prétention salariale : {{ application.pretentionSalariale }}</p>

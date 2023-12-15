@@ -10,6 +10,7 @@ class FileUploader
 {
     public function __construct(
         private string $targetDirectory,
+        private string $targetDirectoryEdited,
         private SluggerInterface $slugger,
     ) {
     }
@@ -29,8 +30,28 @@ class FileUploader
         return [$fileName, $originalFilename];
     }
 
+    public function uploadEditedCv(UploadedFile $file): array
+    {
+        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFilename = $this->slugger->slug($originalFilename);
+        $fileName = $safeFilename.'.'.$file->guessExtension();
+
+        try {
+            $file->move($this->getTargetDirectoryEdited(), $fileName);
+        } catch (FileException $e) {
+            // ... handle exception if something happens during file upload
+        }
+
+        return [$fileName, $originalFilename];
+    }
+
     public function getTargetDirectory(): string
     {
         return $this->targetDirectory;
+    }
+
+    public function getTargetDirectoryEdited(): string
+    {
+        return $this->targetDirectoryEdited;
     }
 }

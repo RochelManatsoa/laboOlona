@@ -45,6 +45,7 @@
                             <span class="text-muted">Email :</span> {{ candidat.candidat.email }}<br>
                             <span class="text-muted">Téléphone : </span> <span class="text-dark">{{ candidat.candidat.telephone }}</span><br>
                             <span class="text-muted">Adresse : </span> <span class="text-dark">{{ candidat.candidat.adress }} - {{ show_country(candidat.localisation) }}</span><br>
+                            <span class="text-muted">Dernière connexion :   {{ candidat.candidat.lastLogin|time_ago }} </span><br> 
                             <span class="text-muted">Secteur d'activité : </span><br> 
                                 {% for item in candidat.secteurs %}
                                 <span class="badge text-bg-warning">
@@ -209,29 +210,79 @@
                         <div class="col-md-9 mx-auto">
                             {% if candidat.cvs|length > 0 %}
                                 {% for cv in candidat.cvs %}
-                                    <div class="col my-2">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" title="Ouvrir" target="_blank">
-                                                    <!-- Icône agrandie -->
-                                                    <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
-                                                    <p class="card-title small">{{ cv.safeFileName }}.pdf</p>
-                                                    <!-- Lien pour visualiser le CV dans un nouvel onglet -->
-                                                </a>
+                                    <div class="row">
+                                        <div class="col-6 my-2">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" title="Ouvrir" target="_blank">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <!-- Icône agrandie -->
+                                                                <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                {{ cv.uploadedAt|date('d/M/Y')}}
+                                                            </div>
+                                                        </div>
+                                                        <p class="card-title small">{{ cv.safeFileName }}.pdf</p>
+                                                        <!-- Lien pour visualiser le CV dans un nouvel onglet -->
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="col-6 my-2">
+                                        {% set editedCv = getEditedCv(cv.cvLink) %}
+                                        {% if editedCv is not null %}
+                                            <div class="card">
+                                                <div class="card-body bg-light text-dark">
+                                                    <a href="{{ asset('uploads/cv/edited/' ~ editedCv.cvLink) }}" title="Ouvrir" target="_blank">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <!-- Icône agrandie -->
+                                                                <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                {{ editedCv.uploadedAt|date('d/M/Y')}}
+                                                            </div>
+                                                        </div>
+                                                        <p class="card-title small">{{ editedCv.safeFileName }}.pdf</p>
+                                                        <!-- Lien pour visualiser le CV dans un nouvel onglet -->
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            {% else %}
+                                            <div class="jumbotron p-4 small text-info">
+                                                <i class="bi bi-info-circle"></i> Téléchargez le CV depuis le lien fourni.
+                                                Modifiez-le en conservant le même format de fichier.
+                                                Envoyez le CV modifié en utilisant le même nom de fichier.
+                                            </div>
+                                        
+                                        {% endif %}
                                     </div>
                                 {% endfor %}
                             {% else %}
                                 <div class="container my-5">
                                     <div class="p-5 text-center bg-body-tertiary rounded-3">
-                                    <h1 class="text-body-emphasis">Aucun CV envoyé</h1>
+                                    <h1 class="text-body-emphasis">Aucun CV envoyé </i></h1>
                                     <p class="">
                                         <i class="bi bi-info-circle"></i> Veuillez envoyer un e-mail à l'utilisateur pour l'informer de l'envoi de son CV. Cette étape est nécessaire pour la validation de son profil.
                                     </p>
                                     </div>
                                 </div>
                             {% endif %}
+                            {{ form_start(formCv) }}
+                            <div class="row my-5">
+                                    <p>Ajouter un cv modifié <i class="bi bi-info-circle text-info"></i></p>
+                                    <div class="col-8">
+                                        {{ form_row(formCv.cvEdit) }}
+                                        {{ form_errors(formCv.cvEdit) }}
+                                    </div>
+                                    <div class="col-4">
+                                        <button type="submit" class="btn btn-outline-primary">Envoyer</button>
+                                    </div>
+                                </div>
+                            {{ form_end(formCv) }}
+
                         </div> 
                     <h3 class="text-center mb-4">Langues</h3>
                     <div class="col-md-9 mx-auto">
