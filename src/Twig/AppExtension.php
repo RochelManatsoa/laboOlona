@@ -570,7 +570,7 @@ class AppExtension extends AbstractExtension
     public function timeAgo($datetime)
     {
         if (!$datetime instanceof \DateTimeInterface) {
-            return 'Jamais connecté';
+            return 'Jamais connecté depuis l\'inscription';
         }
 
         $now = new \DateTime();
