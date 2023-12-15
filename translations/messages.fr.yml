@@ -937,3 +937,6 @@ app_dashboard_formation_videos:
     title: Toutes les vidéos
     dashboard_title: Toutes les vidéos
 
+app_dashboard_entreprise_service : 
+    title : Nos conditions d'utilisations
+    dashboard_title : Bienvenu sur Olona-talents.com

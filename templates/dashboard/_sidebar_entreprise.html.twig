@@ -7,6 +7,13 @@
 
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
+        <a href="{{ path('app_dashboard_entreprise_service')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_entreprise_service' ? 'active' : 'text-white' }}" 
+            {{ current_route == 'app_dashboard_entreprise_service' ? 'aria-current=page' : '' }}>
+            <i class="mx-2 h5 bi bi-lightbulb-fill"></i> Lisez-moi
+            </a>
+      </li>
+      <li class="nav-item">
         <a href="{{ path('app_dashboard_entreprise_new_annonce')}}" 
             class="nav-link {{ current_route == 'app_dashboard_entreprise_new_annonce' ? 'active' : 'text-white' }}" 
             {{ current_route == 'app_dashboard_entreprise_new_annonce' ? 'aria-current=page' : '' }}>

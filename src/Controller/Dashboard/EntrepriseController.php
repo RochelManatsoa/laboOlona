@@ -431,4 +431,12 @@ class EntrepriseController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/service', name: 'app_dashboard_entreprise_service')]
+    public function service(): Response
+    {        
+        return $this->render('dashboard/entreprise/service/service.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
 }
