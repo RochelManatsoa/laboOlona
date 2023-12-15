@@ -97,6 +97,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: VideoVues::class)]
     private Collection $videoVues;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $lastLogin = null;
+
     public function __construct()
     {
         $this->envois = new ArrayCollection();
@@ -482,6 +485,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $videoVue->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLastLogin(): ?\DateTimeInterface
+    {
+        return $this->lastLogin;
+    }
+
+    public function setLastLogin(?\DateTimeInterface $lastLogin): static
+    {
+        $this->lastLogin = $lastLogin;
 
         return $this;
     }

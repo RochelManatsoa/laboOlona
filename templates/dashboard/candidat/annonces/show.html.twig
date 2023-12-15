@@ -11,17 +11,29 @@
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h1>Détail de l'annonce pour le poste : {{ annonce.titre|upper}}</h1>
+                <h1 class="h2">Détail de l'annonce pour le poste : <br><span class="text-secondary">{{ annonce.titre|upper}}</span></h1>
             </div>
         </div>
     <section class="text-dark">
     <div class="container mt-4">
     <div class="card shadow">
         <div class="card-body">
-            <h4 class="text-muted">{{ annonce.typeContrat }}</h4>
-            <p><i class="bi bi-geo-alt-fill"></i> {{ annonce.lieu }}</p>
-            <p><i class="bi bi-calendar"></i> Publiée le : {{ annonce.dateCreation|date('d/m/Y') }}</p>
-            <p><i class="bi bi-calendar"></i> Expire le : {{ annonce.dateExpiration|date('d/m/Y') }}</p>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-8 col-sm-12">
+                        <h4 class="text-muted">{{ annonce.typeContrat }}</h4>
+                        <p><i class="bi bi-geo-alt-fill"></i> {{ annonce.lieu }}</p>
+                        <p><i class="bi bi-calendar"></i> Publiée le : {{ annonce.dateCreation|date('d/m/Y') }}</p>
+                        <p><i class="bi bi-calendar"></i> Expire le : {{ annonce.dateExpiration|date('d/m/Y') }}</p>
+                    </div>
+                    <div class="col-lg-4 col-sm-12">
+                        <form method="post" action="">
+                            <input type="hidden" name="">
+                            <input type="hidden" name="">
+                            <button type="submit" class="btn btn-md btn-primary rounded-pill px-5">Postuler</button>
+                        </form>
+                    </div>
+                </div>
             <hr>
 
             <div class="card-text">
@@ -54,12 +66,31 @@
             <div class="row align-items-md-stretch mt-5">
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                    <h2>Postuler à cette offre</h2>
+                    <h2>Postuler à cette annonce</h2>
                         {{ form_start(form) }}
                         {{ form_widget(form) }}
+                        <hr>
+                            <div class="row">
+                                <div class="col-3">
+                                    CV 
+                                </div>
+                                <div class="col-9">
+                                    {% if candidat.cv is not null %}
+                                    <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target=_blank class="badge badge-sm bg-dark rounded-pill"><i class="bi bi-paperclip"></i> {{ safeFileName(candidat.cv) }}.pdf</a>
+                                    {% else %}
+                                    <div class="alert alert-primary d-flex align-items-center" role="alert">
+                                        <i class="bi bi-info">
+                                        <div>
+                                            Vous n'avez pas encore uploader un CV
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        <hr>
                         <div class="d-flex justify-content-between align-items-center">
-                            <button class="btn btn-primary">Postuler</button>
-                            <button class="btn btn-outline-primary"><i class="bi bi-pin-angle"></i> Epingler l'annonce</button>
+                            <button class="btn btn-md btn-primary rounded-pill px-5">Postuler</button>
+                            <button class="btn btn-outline-primary px-3 rounded-pill"><i class="bi bi-pin-angle"></i> Epingler l'annonce</button>
                         </div>
                         {{ form_end(form) }}
                     </div>
@@ -68,10 +99,10 @@
                     <div class="h-100 p-5 text-bg-dark rounded-3">
                     <h2>Mes candidatures</h2>
                     <p>Retrouvez à tout moment vos candidatures en cours, le suivi de leur statut, ainsi que l’historique des offres auxquelles vous avez postulées. Les candidatures archivées regroupent vos candidatures sur des offres expirées.</p>
-                    <a href="{{ path('app_dashboard_candidat_annonces')}}" class="btn btn-outline-light" type="button">Mes candidatures</a>
+                    <a href="{{ path('app_dashboard_candidat_annonces')}}" class="btn btn-outline-light  rounded-pill px-5" type="button">Mes candidatures</a>
                     <h2 class="mt-5">Mes documents</h2>
-                    <p>Retrouvez à tout moment vos candidatures en cours, le suivi de leur statut, ainsi que l’historique des offres auxquelles vous avez postulées. Les candidatures archivées regroupent vos candidatures sur des offres expirées.</p>
-                    <button class="btn btn-outline-light" type="button" data-bs-toggle="modal" data-bs-target="#candidatDocuments">Uploader un nouveau CV</button>
+                    <p>Le CV transmis lors d’une candidature est celui défini comme partagé.</p>
+                    <button class="btn btn-outline-light rounded-pill px-5" type="button" data-bs-toggle="modal" data-bs-target="#candidatDocuments">Uploader un nouveau CV</button>
                     </div>
                 </div>
             </div>
@@ -81,14 +112,14 @@
                     <div class="h-100 p-5 text-bg-dark rounded-3">
                     <h2>Vous avez déjà postulé à cette offre</h2>
                     <p>Retrouvez à tout moment vos candidatures en cours, le suivi de leur statut, ainsi que l’historique des offres auxquelles vous avez postulées. Les candidatures archivées regroupent vos candidatures sur des offres expirées.</p>
-                    <a href="{{ path('app_dashboard_candidat_annonces')}}" class="btn btn-outline-light" type="button">Mes candidatures</a>
+                    <a href="{{ path('app_dashboard_candidat_annonces')}}" class="btn btn-outline-light rounded-pill px-5" type="button">Mes candidatures</a>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
                     <h2>Add borders</h2>
                     <p>Or, keep it light and add a border for some added definition to the boundaries of your content. Be sure to look under the hood at the source HTML here as we've adjusted the alignment and sizing of both column's content for equal-height.</p>
-                    <button class="btn btn-outline-secondary" type="button">Example button</button>
+                    <button class="btn btn-outline-secondary rounded-pill px-5" type="button">Example button</button>
                     </div>
                 </div>
             </div>
@@ -133,7 +164,7 @@
                 </div>
                 <div class="modal-body text-dark">
                 Le CV transmis lors d’une candidature est celui défini comme partagé.
-                    {% if app.user.candidateProfile %}
+                    {% if candidat.cvs|length > 0 %}
                         <div class="row">
                             {% for cv in app.user.candidateProfile.cvs %}
                             <div class="col-md-6 my-2">
@@ -161,6 +192,5 @@
             </div>
         </div>
     </div>
-
 
 {% endblock %}

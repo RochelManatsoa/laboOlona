@@ -45,6 +45,7 @@
                     </form>
                 </td>
                 <td class="actions-col">
+            <span class="small"> {{ application.dateCandidature|date('d/m/Y')}} </span>
                     <a href="{{ path('app_dashboard_moderateur_candidature_view', {'id': application.id })}}" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a>
                 </td>
             </tr>

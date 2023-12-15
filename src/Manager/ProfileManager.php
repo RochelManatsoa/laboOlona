@@ -8,6 +8,7 @@ use Symfony\Component\Uid\Uuid;
 use App\Entity\CandidateProfile;
 use Symfony\Component\Form\Form;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Moderateur\EditedCv;
 use App\Entity\ModerateurProfile;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -89,6 +90,20 @@ class ProfileManager
     public function saveCV(array $fileName, CandidateProfile $candidat)
     {
         $cv = new CV();
+        $cv
+        ->setCvLink($fileName[0])
+        ->setSafeFileName($fileName[1])
+        ->setUploadedAt(new DateTime())
+        ->setCandidat($candidat)
+        ;
+
+        $this->em->persist($cv);
+        $this->em->flush();
+    }
+
+    public function saveCVEdited(array $fileName, CandidateProfile $candidat)
+    {
+        $cv = new EditedCv();
         $cv
         ->setCvLink($fileName[0])
         ->setSafeFileName($fileName[1])
