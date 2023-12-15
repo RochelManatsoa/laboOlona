@@ -105,3 +105,121 @@
     justify-content: center; /* Ceci centre horizontalement, si nécessaire */
     min-height: 120px; /* Hauteur minimale pour l'uniformité */
 }
+/* service-section.css */
+.service-section {
+    background-color: #f7f7f7; /* Modifier selon la couleur de fond souhaitée */
+    padding: 2rem 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  
+  .service-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem; /* Espace entre les éléments de service */
+  }
+  
+  .service-icon {
+    flex: 0 0 50px; /* Taille de l'icône, ajuster selon la taille réelle */
+    margin-right: 1rem;
+  }
+  
+  .service-icon img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .service-content h3 {
+    margin: 0 0 0.5rem 0;
+    color: #333; /* Modifier selon la couleur de texte souhaitée */
+    font-weight: bold;
+  }
+  
+  .service-content p {
+    margin: 0;
+    color: #666; /* Modifier selon la couleur de texte souhaitée */
+    line-height: 1.5;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .service-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .service-icon {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .accent-primary {
+    color: #1F77F8;
+  }
+  .accent-secondary {
+    color: #F4B400;
+  }
+  .text-secondary {
+    color: #B0B3B8;
+  }
+  .hover-effect:hover {
+    background-color: #333333;
+  }
+  .btn-primary {
+    background-color: #1F77F8;
+    border-color: #1F77F8;
+    color: #FFFFFF;
+  }
+  .btn-secondary {
+    background-color: transparent;
+    border-color: #F4B400;
+    color: #F4B400;
+    ;
+  }
+  .btn:hover {
+    opacity: 0.85;
+  }
+  .card-background {
+    background-color: #1E1E1E;
+  }
+  .border-widget {
+    border-color: #282828;
+  }
+  .navbar, .footer {
+    background-color: #212121;
+  }
+  .form-input {
+    background-color: #1E1E1E;
+    color: #E8EAED;
+    border-color: #333333;
+  }
+  .form-placeholder {
+    color: #B0B3B8;
+  }
+  .alert-success {
+    background-color: #1A7D4C;
+    color: #E8EAED;
+  }
+  .alert-error {
+    background-color: #D32F2F;
+    color: #E8EAED;
+  }
+  
+  .accent-tertiary {
+    color: #A05A2C; /* This is an assumed brownish color from your logo */
+  }
+  
+  .btn-tertiary {
+    background-color: #A05A2C; /* Tertiary color for buttons */
+    border-color: #A05A2C;
+    color: #FFFFFF; /* Assuming white text for contrast */
+  }
+  
+  .btn-tertiary:hover {
+    background-color: #8F4E26; /* Slightly darker shade for hover state */
+    border-color: #8F4E26;
+  }
