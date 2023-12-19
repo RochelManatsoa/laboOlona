@@ -23,10 +23,9 @@
                         <form method="post" action="{{ path('change_status_candidat', {'uid': candidat.uid}) }}">
                             <select name="status" class="form-control" onchange="this.form.submit()">
                                 <option value="PENDING" {{ candidat.status == 'PENDING' ? 'selected' : '' }}>En attente</option>
-                                <option value="BANNISHED" {{ candidat.status == 'BANNISHED' ? 'selected' : '' }}>Banni</option>
                                 <option value="VALID" {{ candidat.status == 'VALID' ? 'selected' : '' }}>Valide</option>
                                 <option value="FEATURED" {{ candidat.status == 'FEATURED' ? 'selected' : '' }}>Mis en avant</option>
-                                <option value="RESERVED" {{ candidat.status == 'RESERVED' ? 'selected' : '' }}>Réservé</option>
+                                <option value="RESERVED" {{ candidat.status == 'RESERVED' ? 'selected' : '' }}>Vivier</option>
                             </select>
                         </form>
                     </td>
