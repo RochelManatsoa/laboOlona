@@ -337,7 +337,8 @@ class ModerateurController extends AbstractController
             $this->addFlash('error', 'Statut invalide.');
         }
 
-        return $this->redirectToRoute('app_dashboard_moderateur_candidats');
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidats');
     }
 
     #[Route('/candidat/{uid}/certification', name: 'change_status_certification_candidat', methods: ['POST'])]

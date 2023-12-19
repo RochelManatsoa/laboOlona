@@ -246,7 +246,6 @@ class CandidatController extends AbstractController
             $data = $this->candidatManager->searchAnnonce($titre, $lieu, $typeContrat, $competences);
             if ($request->isXmlHttpRequest()) {
                 // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
-                dump($data);
                 return new JsonResponse([
                     'content' => $this->renderView('dashboard/candidat/annonces/_annonces.html.twig', [
                         'annonces' => $paginatorInterface->paginate(
