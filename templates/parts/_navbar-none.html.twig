@@ -11,6 +11,12 @@
       {{ title }}
       </div>
       {% if app.user %}
+      <div class="mx-3">
+        <span class="small text-white">{{ app.user.email }}</span><br>
+          {% if app.user.type == 'CANDIDAT' %}
+            <span class="small text-white">{{ checkAvailability(app.user)|raw}}</span>
+          {% endif %}
+      </div>
         <div class="dropdown">
           <button class="dropdown-toggle btn btn-lg btn-dark" type="button" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             {% if app.user.gravatar is not null %}
@@ -21,6 +27,11 @@
           </button>
 
           <ul class="dropdown-menu dropdown-menu-end">
+            {% if app.user.type == 'CANDIDAT' %}
+              <li>
+                <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#candidatAvaillability">Disponibilité</button>
+              </li>
+            {% endif %}
             <li>
               {% if app.user.type == 'MODERATEUR' %}
               <a class="dropdown-item" href="{{ path('app_connect') }}">

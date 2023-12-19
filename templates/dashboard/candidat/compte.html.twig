@@ -52,11 +52,11 @@
                 {{ form_errors(form_one.localisation) }}
             </div>
         </div>
-        <div style="display:none">
-            {{ form_widget(form_one) }}
-        </div>
         <div class="input-group-append">
             <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        </div>
+        <div style="display:none">
+            {{ form_widget(form_one) }}
         </div>
         {{ form_end(form_one) }}
     </section>
@@ -369,13 +369,13 @@
 </div>
 {% endblock %}
 {% block modal %}
-    
+    {{ parent()}}
     <!-- Modal -->
     <div class="modal fade" id="candidatDocuments" tabindex="-1" aria-labelledby="candidatDocumentsLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <2 class="modal-title fs-5 text-dark" id="candidatDocumentsLabel">Mes Documents</2>
+                    <h2 class="modal-title fs-5 text-dark" id="candidatDocumentsLabel">Mes Documents</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-dark">

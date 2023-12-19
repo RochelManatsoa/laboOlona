@@ -71,10 +71,13 @@ a{
 
 .text-strong{
     font-weight: bolder;
-}
+}   
 
+#candidatAvaillability label.form-check-label.required {
+    display: block !important;
+}
 label.form-check-label.required{
-    display: none !important;;
+    display: none !important;
 }
 .custom-min-height {
     min-height: 100vh;  /* 75% de la hauteur de l'écran */

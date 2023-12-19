@@ -9,6 +9,7 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\Posting;
 use App\Entity\Application;
+use App\Entity\Availability;
 use App\Entity\Candidate\CV;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
@@ -66,6 +67,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('formatDuration', [$this, 'formatDuration']),
             new TwigFunction('getStatuses', [$this, 'getStatuses']),
             new TwigFunction('getEntrepriseAnnonceByCandidat', [$this, 'getEntrepriseAnnonceByCandidat']),
+            new TwigFunction('checkAvailability', [$this, 'checkAvailability']),
         ];
     }
 
@@ -600,5 +602,41 @@ class AppExtension extends AbstractExtension
         return 'à l\'instant';
     }
 
+    public function checkAvailability(User $user): string
+    {
+        $status = '<i class="bi bi-exclamation-circle-fill"></i> Disponibilité';
+        if($user->getCandidateProfile() instanceof CandidateProfile){
+            $availability = $user->getCandidateProfile()->getAvailability();
+            if($availability instanceof Availability){
+                switch ($availability->getNom()) {
+                    case 'immediate':
+                        $status = '<i class="bi bi-circle-fill text-danger"></i> Disponible';
+                        break;
+
+                    case 'from-date':
+                        $status = '<i class="bi bi-circle-fill text-warning"></i> A partir du '. $availability->getDateFin()->format('d/m/Y');
+                        break;
+
+                    case 'full-time':
+                        $status = '<i class="bi bi-circle-fill text-danger"></i> Temps plein';
+                        break;
+
+                    case 'part-time':
+                        $status = '<i class="bi bi-circle-fill text-warning"></i> Temps partiel';
+                        break;
+
+                    case 'not-available':
+                        $status = '<i class="bi bi-circle text-secondary"></i> Non disponible';
+                        break;
+                    
+                    default:
+                        $status = '<i class="bi bi-exclamation-circle-fill"></i> Disponibilité';
+                        break;
+                }
+            }
+        }
+
+        return $status;
+    }
 
 }
