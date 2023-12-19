@@ -19,6 +19,7 @@ use App\Entity\EntrepriseProfile;
 use App\Entity\Moderateur\TypeContrat;
 use App\Form\Search\AnnonceSearchType;
 use App\Form\Candidat\ApplicationsType;
+use App\Form\Candidat\AvailabilityType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Profile\Candidat\StepOneType;
 use App\Form\Profile\Candidat\StepTwoType;
@@ -76,6 +77,52 @@ class CandidatController extends AbstractController
         }
     
         return null;
+    }
+
+    public function createAvailabilityForm()
+    {
+        $this->checkCandidat();
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $candidat = $user->getCandidateProfile();
+        $form = $this->createForm(AvailabilityType::class, $this->candidatManager->initAvailability($candidat));
+
+        return $form;
+    }
+
+    public function availabilityFormView()
+    {
+        $form = $this->createAvailabilityForm();
+
+        return $this->render('parts/_availability_form.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/submit-availability', name: 'submit_availability')]
+    public function submitAvailability(Request $request): Response
+    {
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $candidat = $user->getCandidateProfile();
+        $form = $this->createAvailabilityForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $availability = $form->getData();
+            if($availability->getNom() !== "from-date"){
+                $availability->setDateFin(null);
+            }
+
+            // Enregistrer les modifications dans la base de données
+            $this->em->persist($availability);
+            $this->em->flush();
+            $this->candidatManager->sendNotificationEmail($candidat);
+        }
+
+        // Renvoyer l'utilisateur à l'URL d'où il est venu en cas d'échec
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_candidat_compte');
     }
 
     #[Route('/', name: 'app_dashboard_candidat')]
@@ -385,11 +432,13 @@ class CandidatController extends AbstractController
         if ($formOne->isSubmitted() && $formOne->isValid()) {
             $this->em->persist($candidat);
             $this->em->flush();
+            $this->candidatManager->sendNotificationEmail($candidat); 
         }
 
         if ($formTwo->isSubmitted() && $formTwo->isValid()) {
             $this->em->persist($candidat);
             $this->em->flush();
+            $this->candidatManager->sendNotificationEmail($candidat); 
         }
 
         if ($formThree->isSubmitted() && $formThree->isValid()) {
@@ -401,12 +450,14 @@ class CandidatController extends AbstractController
             }
             $this->em->persist($candidat);
             $this->em->flush();
+            $this->candidatManager->sendNotificationEmail($candidat); 
         }
 
         return $this->render('dashboard/candidat/compte.html.twig', [
             'form_one' => $formOne->createView(),
             'form_two' => $formTwo->createView(),
             'form_three' => $formThree->createView(),
+            // 'form_avalaibility' => $formAvalaibility->createView(),
             'candidat' => $candidat,
             'experiences' => $candidat->getExperiences(),
             'competences' => $candidat->getCompetences(),

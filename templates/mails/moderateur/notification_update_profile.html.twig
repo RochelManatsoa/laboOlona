@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail de Bienvenue</title>
+</head>
+<body style="font-family: 'Open Sans', Arial, sans-serif; margin: 0; padding: 20px; background-color: #EDEDED;">
+    <div style="max-width: 550px; margin: 0 auto; background-color: #FFFFFF; padding: 25px; border-radius: 10px; box-shadow: 0 6px 10px rgba(0,0,0,0.05); text-align: center;">
+        <div style="text-align: center;">
+            <img src="https://olona-talents.com/images/logo-light150x150.png" alt="Logo Olona-talents" style="width: 250px;">
+        </div>
+        <div>
+            <p style="font-family: 'Poppins', Arial, sans-serif; font-weight: 700; font-size: 1.2em; margin-bottom: 20px;">Hello Modérateur!</p>
+            <p>Nous vous informons que {{ user.prenom|raw }} a effectué une mise à jour de son profil sur la plateforme <span style="font-weight: 700;">Olona-talents.com</span> ! 🚀</p>
+            <p>Détails du candidat :</p>
+            <p><strong>Nom d'utilisateur</strong> : {{ user.nom|raw }} {{ user.prenom|raw }}</p>
+            <p><strong>Date d'inscription</strong> : {{ user.dateInscription|date('d/m/Y') }}</p>
+            <p><strong>Dernière connexion</strong> : {{ user.lastLogin|date('d/m/Y à H:i') }}</p>
+            <p><strong>Email</strong> : {{ user.email }}</p>
+            <a href="{{ dashboard_url|raw }}" style="display: inline-block; padding: 12px 24px; background-color: #0D6EFD; color: #FFFFFF; border-radius: 5px; text-decoration: none; font-weight: 500; margin-bottom: 20px;">Voir le profil</a>
+            
+            <p>Nous vous prions de bien vouloir vérifier le profil de ce nouvel utilisateur et de procéder aux vérifications nécessaires conformément à nos procédures de modération.</p>
+            
+            <div style="background-color: #FFF3E0; padding: 15px; margin: 20px 0; border-radius: 5px; font-weight: 500;">
+                <strong>Tip du Jour :</strong>
+                <p><span style="font-weight: 700;">🔍 Côté recruteur :</span> N'oubliez pas que les <span style="font-weight: 700;">premières impressions</span> comptent. Assurez-vous que votre annonce d'emploi est claire, concise et attrayante pour attirer les bons candidats.</p>
+                <p><span style="font-weight: 700;">🌟 Côté candidat :</span> Personnalisez toujours votre lettre de motivation pour chaque poste auquel vous postulez. Cela montre que vous avez fait vos recherches et que vous êtes vraiment intéressé.</p>
+            </div>
+            <p>Bonne chance dans vos recherches et n'hésitez pas à <span style="font-weight: 700;">nous contacter</span> si vous avez des questions ou besoin d'aide.</p>
+            <p style="font-size: 12px; color: #777;">Écrivez-nous à <a href="mailto:contact@olona-talents.com" style="text-decoration: none; color: #0D6EFD;">contact@olona-talents.com</a> ou appelez-nous au <a href="tel:+261340123456" style="text-decoration: none; color: #0D6EFD;">+261340123456</a>.</p>
+        </div>
+        <div style="font-family: 'Poppins', Arial, sans-serif; background-color: #F2F2F2; padding: 15px 0; font-size: 12px; color: #666; margin-top: 25px;">
+            <a href="https://olona-talents.com/privacy-policy" style="text-decoration: none; color: #0D6EFD;">Politique de confidentialité</a> | 
+            <a href="https://olona-talents.com/terms-of-service" style="text-decoration: none; color: #0D6EFD;">Conditions d'utilisation</a> | 
+            <a href="https://olona-talents.com/cookie-policy" style="text-decoration: none; color: #0D6EFD;">Politique de cookies</a> | 
+            <a href="https://olona-talents.com/data-request" style="text-decoration: none; color: #0D6EFD;">Demande de données</a>
+        </div>
+    </div>
+</body>
+</html>

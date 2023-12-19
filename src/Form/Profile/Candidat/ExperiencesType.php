@@ -34,6 +34,9 @@ class ExperiencesType extends AbstractType
         ])
         ->add('dateFin', DateType::class,  [
             'label' => 'app_identity_expert_step_two.experience.endDate',
+            'placeholder' => [
+                'year' => 'Année', 'month' => 'Mois', 'day' => 'Jour'
+            ],
             'years' => range(1960, 2100),
             'attr' => ['class' => 'rounded-pill'] ,
             'required' => false,

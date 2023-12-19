@@ -2,19 +2,22 @@
 
 namespace App\Manager;
 
+use App\Entity\Availability;
 use App\Entity\CandidateProfile;
 use App\Service\User\UserService;
-use App\Entity\Entreprise\JobListing;
-use App\Entity\Candidate\Applications;
 use App\Entity\Moderateur\Metting;
+use App\Entity\Entreprise\JobListing;
+use App\Service\Mailer\MailerService;
+use App\Entity\Candidate\Applications;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CandidateProfileRepository;
 use App\Repository\EntrepriseProfileRepository;
+use App\Repository\Moderateur\MettingRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
 use App\Repository\Candidate\ApplicationsRepository;
-use App\Repository\Moderateur\MettingRepository;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CandidatManager
 {
@@ -27,6 +30,9 @@ class CandidatManager
         private JobListingRepository $jobListingRepository,
         private ApplicationsRepository $applicationsRepository,
         private MettingRepository $mettingRepository,
+        private MailerService $mailerService,
+        private ModerateurManager $moderateurManager,
+        private UrlGeneratorInterface $urlGenerator,
         private UserService $userService
     ){}
 
@@ -189,6 +195,29 @@ class CandidatManager
             'candidat' => $candidat,
             'status' => Applications::STATUS_METTING
         ]);
+    }
+
+    public function initAvailability(CandidateProfile $candidat): Availability
+    {
+        $availability = $candidat->getAvailability();
+        if(!$availability instanceof Availability){
+            $availability = new Availability();
+            $availability->addCandidat($candidat);
+        }
+
+        return $availability;
+    }
+    
+    public function sendNotificationEmail($candidat) {
+        $this->mailerService->sendMultiple(
+            $this->moderateurManager->getModerateurEmails(),
+            $candidat->getCandidat()->getPrenom().' a mis à jour son profil sur Olona Talents',
+            "moderateur/notification_update_profile.html.twig",
+            [
+                'user' => $candidat->getCandidat(),
+                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]
+        );
     }
 
 }

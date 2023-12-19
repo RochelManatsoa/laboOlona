@@ -107,6 +107,9 @@ class CandidateProfile
     #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: EditedCv::class, orphanRemoval: true)]
     private Collection $editedCvs;
 
+    #[ORM\ManyToOne(inversedBy: 'candidats', cascade: ['persist', 'remove'])]
+    private ?Availability $availability = null;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -616,6 +619,18 @@ class CandidateProfile
                 $editedCv->setCandidat(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvailability(): ?Availability
+    {
+        return $this->availability;
+    }
+
+    public function setAvailability(?Availability $availability): static
+    {
+        $this->availability = $availability;
 
         return $this;
     }

@@ -5,6 +5,7 @@ namespace App\Controller\Ajax;
 use App\Entity\Candidate\Competences;
 use App\Entity\Candidate\Experiences;
 use App\Entity\Candidate\Langages;
+use App\Manager\CandidatManager;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AffiliateToolRepository;
 use App\Repository\Candidate\CompetencesRepository;
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\Candidate\ExperiencesRepository;
 use App\Repository\Candidate\LangagesRepository;
+use App\Service\User\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CandidatController extends AbstractController
@@ -23,6 +25,8 @@ class CandidatController extends AbstractController
         private EntityManagerInterface $em,
         private ExperiencesRepository $experiencesRepository,
         private CompetencesRepository $competencesRepository,
+        private CandidatManager $candidatManager,
+        private UserService $userService,
         private LangagesRepository $langagesRepository,
     ) {
     }
@@ -116,6 +120,7 @@ class CandidatController extends AbstractController
         // Enregistrez les modifications dans la base de données
         $this->em->persist($experience);
         $this->em->flush();
+        $this->candidatManager->sendNotificationEmail($experience->getProfil());
 
         return $this->redirectToRoute('app_dashboard_candidat_compte',[
             'success' => true,
@@ -193,11 +198,15 @@ class CandidatController extends AbstractController
         $competence->setNom($request->request->get('nom'));
         $competence->setNote($request->request->get('note'));
         $competence->setDescription($request->request->get('description'));
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $candidat = $user->getCandidateProfile();
 
         
         // Enregistrez les modifications dans la base de données
         $this->em->persist($competence);
         $this->em->flush();
+        $this->candidatManager->sendNotificationEmail($candidat);
 
         return $this->redirectToRoute('app_dashboard_candidat_compte',[
             'success' => true,
@@ -276,6 +285,7 @@ class CandidatController extends AbstractController
         // Enregistrez les modifications dans la base de données
         $this->em->persist($langue);
         $this->em->flush();
+        $this->candidatManager->sendNotificationEmail($langue->getProfile());
 
         return $this->redirectToRoute('app_dashboard_candidat_compte',[
             'success' => true,
