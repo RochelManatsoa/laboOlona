@@ -33,11 +33,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                        {% if candidat.fileName is not empty %}
-                        <img src="{{vich_uploader_asset(candidat, 'file')}}" class="rounded-circle profile-img" width="180" height="180" alt="{{ candidat.candidat.prenom }}">
-                        {% else %}
-                        <img src="{{ asset('uploads/experts/avatar-default.jpg')}}" class="rounded-circle profile-img" width="180" height="180" alt="{{ candidat.candidat.prenom }}">
-                        {% endif %}
+                        <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
                         </div> 
                         <div class="col-md-9">
                             <h5 class="card-title">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</h5>
@@ -45,7 +41,14 @@
                             <span class="text-muted">Email :</span> {{ candidat.candidat.email }}<br>
                             <span class="text-muted">Téléphone : </span> <span class="text-dark">{{ candidat.candidat.telephone }}</span><br>
                             <span class="text-muted">Adresse : </span> <span class="text-dark">{{ candidat.candidat.adress }} - {{ show_country(candidat.localisation) }}</span><br>
-                            <span class="text-muted">Dernière connexion :   {{ candidat.candidat.lastLogin|time_ago }} </span><br> 
+                            <span class="text-muted">Dernière connexion : </span> <span class="text-dark">  {{ candidat.candidat.lastLogin|time_ago }} </span><br> 
+                            <span class="text-muted">Disponibilité : </span> <span class="text-dark">
+                            {% if candidat.availability is not null %}
+                                {{ checkAvailability(candidat.candidat)|raw}}
+                            {% else %}
+                                <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                            {% endif %}
+                            </span><br> 
                             <span class="text-muted">Secteur d'activité : </span><br> 
                                 {% for item in candidat.secteurs %}
                                 <span class="badge text-bg-warning">

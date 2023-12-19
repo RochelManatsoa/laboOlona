@@ -8,6 +8,7 @@ use App\Manager\IdentityManager;
 use App\Service\User\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use App\Service\UserPostAuthenticationService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
@@ -34,6 +35,7 @@ class GoogleAuthenticator extends OAuth2Authenticator
         // private IdentityManager $identityManager,
         private TokenGeneratorInterface $tokenGeneratorInterface,
         // private MailerMailerService $mailerService,
+        private UserPostAuthenticationService $userPostAuthenticationService,
         private RequestStack $requestStack,
     )
     {
@@ -68,6 +70,8 @@ class GoogleAuthenticator extends OAuth2Authenticator
                     $existingUser->setDateInscription(new DateTime());
                     // $existingUser->setTokenRegistration($tokenRegistration);
                 }
+
+                $this->userPostAuthenticationService->updateLastLoginDate($existingUser);
                 $existingUser->setGoogleId($googleUser->getId());
                 $existingUser->setPrenom($googleUser->getFirstName());
                 $existingUser->setNom($googleUser->getLastName());

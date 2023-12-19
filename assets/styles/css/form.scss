@@ -1,0 +1,34 @@
+#availability_nom .form-check {
+    margin-top: 1rem!important; /* équivalent à 'my-3' */
+    margin-bottom: 1rem!important; /* équivalent à 'my-3' */
+}
+/* Style pour le label et le champ date côte à côte */
+#availability_nom .form-check-label {
+    display: flex;
+    align-items: center;
+}
+
+/* Style pour le champ date */
+#availability_nom .date-picker {
+    margin-left: 0.5rem; /* Ajustez selon le besoin */
+}
+/* Style pour le label et le champ date côte à côte */
+#availability_nom .form-check-label {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Permet aux éléments de passer à la ligne suivante si nécessaire */
+}
+
+/* Réduire la largeur des sélecteurs de date */
+#availability_nom .date-picker .form-select {
+    width: auto; /* Ajustez cette valeur selon vos besoins */
+    margin-right: 0.2rem; /* Espace entre les sélecteurs */
+}
+
+/* Style pour le conteneur du champ date pour une meilleure alignement */
+#availability_nom .date-picker-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+

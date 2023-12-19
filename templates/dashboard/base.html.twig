@@ -48,6 +48,50 @@
             </div>
         </div>
         {% block footer %} {% include "parts/_footer.html.twig" %} {% endblock %}
-        {% block modal %}{% endblock %}
+        {% block modal %}
+        {% if app.user.type == 'CANDIDAT' %}
+            {{ render(controller('App\\Controller\\Dashboard\\CandidatController::availabilityFormView')) }}
+        {% endif %}
+        {% endblock %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var fromDatePicker = document.querySelector('#availability_nom_1');
+                var datePickerContainer = document.querySelector('.date-picker-container');
+                var labelForFromDate = document.querySelector('label[for="availability_nom_1"]');
+                var formCheck = labelForFromDate.closest('.form-check');
+            
+                // Insérer le datePicker après le label "A partir du" tout en restant à l'intérieur de .form-check
+                formCheck.insertBefore(datePickerContainer, labelForFromDate.nextSibling);
+            
+                // Appliquer les classes Bootstrap pour aligner les éléments
+                formCheck.classList.add('d-flex', 'align-items-center');
+                labelForFromDate.classList.add('flex-grow-1', 'mx-2'); // Assurez-vous que le label prend l'espace nécessaire
+                datePickerContainer.classList.add('flex-shrink-1'); // Empêcher le datePicker de s'étendre trop
+            
+                // Ajouter/Retirer l'attribut required basé sur la sélection
+                var radios = document.querySelectorAll('input[name="availability[nom]"]');
+                radios.forEach(function(radio) {
+                    radio.addEventListener('change', function() {
+                        var isFromDateSelected = fromDatePicker.checked;
+                        setDatePickerRequired(isFromDateSelected);
+                    });
+                });
+            
+                // Fonction pour ajuster l'attribut required du datePicker
+                function setDatePickerRequired(isRequired) {
+                    ['day', 'month', 'year'].forEach(function(part) {
+                        var element = document.querySelector('#availability_dateFin_' + part);
+                        if (element) {
+                            element.required = isRequired;
+                        }
+                    });
+                }
+            
+                // Vérifier l'état initial
+                setDatePickerRequired(fromDatePicker.checked);
+            });
+            </script>
+             
+            
     </body>
 </html>

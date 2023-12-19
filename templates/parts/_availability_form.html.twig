@@ -1,0 +1,41 @@
+
+
+{{ form_start(form, {'action': path('submit_availability')})}}
+<div class="modal fade" id="candidatAvaillability" tabindex="-1" aria-labelledby="candidatAvaillabilityLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5 text-dark" id="candidatAvaillabilityLabel">Votre disponibilité?</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-dark">
+            Renseignez votre réactivité à pouvoir démarrer votre prochain job ! Êtes-vous disponible ?
+                    <div class="row">
+                        <div class="col my-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="disponibilite-form">
+                                
+                                        <div class="radio-options">
+                                            {{ form_widget(form.nom) }}
+                                        </div>
+                                    
+                                        <div class="date-picker-container">
+                                            {{ form_widget(form.dateFin) }}
+                                        </div>
+                                    
+                                    </div>
+                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-dark">Mettre à jour</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{ form_end(form)}}
