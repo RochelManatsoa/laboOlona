@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EntrepriseCandidatSearchType extends AbstractType
 {
@@ -39,6 +40,18 @@ class EntrepriseCandidatSearchType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Langues ...',
                 ]
+            ])
+            ->add('availability', ChoiceType::class, [
+                'choices' => [
+                    'Immediatement' => 'immediate',
+                    'A partir du' => 'from-date',
+                    'Temps plein' => 'full-time',
+                    'Temps partiel' => 'part-time',
+                    'En poste' => 'not-available',
+                ],
+                'required' => false,
+                'label' => false,
+                'placeholder' => 'Disponibilité ...',
             ])
         ;
     }

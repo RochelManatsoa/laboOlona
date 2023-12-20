@@ -5,6 +5,7 @@ namespace App\Controller\Dashboard;
 use DateTime;
 use App\Form\MettingType;
 use App\Entity\Notification;
+use App\Service\FileUploader;
 use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
@@ -13,13 +14,13 @@ use App\Entity\ModerateurProfile;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
 use App\Manager\ModerateurManager;
+use App\Entity\Moderateur\EditedCv;
 use App\Entity\Entreprise\JobListing;
+use App\Form\Moderateur\EditedCvType;
 use App\Repository\SecteurRepository;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
-use App\Entity\Moderateur\EditedCv;
-use App\Form\Moderateur\EditedCvType;
-use App\Form\Moderateur\NotificationProfileType;
+use App\Form\Candidat\AvailabilityType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Moderateur\NotificationType;
 use App\Repository\NotificationRepository;
@@ -29,6 +30,7 @@ use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\EntrepriseProfileRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\Moderateur\NotificationProfileType;
 use App\Repository\Moderateur\MettingRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -40,7 +42,6 @@ use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
-use App\Service\FileUploader;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -281,7 +282,8 @@ class ModerateurController extends AbstractController
             $nom = $form->get('nom')->getData();
             $titre = $form->get('titre')->getData();
             $status = $form->get('status')->getData();
-            $data = $this->moderateurManager->searchCandidat($nom, $titre, $status);
+            $availability = $form->get('availability')->getData();
+            $data = $this->moderateurManager->searchCandidat($nom, $titre, $status, $availability);
             if ($request->isXmlHttpRequest()) {
                 // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
                 return new JsonResponse([
@@ -389,12 +391,28 @@ class ModerateurController extends AbstractController
 
         $formCv = $this->createForm(EditedCvType::class, $editedCv);
         $formCv->handleRequest($request);
+        $formDispo = $this->createForm(AvailabilityType::class, $this->candidatManager->initAvailability($candidat));
+        $formDispo->handleRequest($request);
         if($formCv->isSubmitted() && $formCv->isValid()){
             $cvFile = $formCv->get('cvEdit')->getData();
             if ($cvFile) {
                 $fileName = $this->fileUploader->uploadEditedCv($cvFile);
                 $this->profileManager->saveCVEdited($fileName, $candidat);
             }
+        }
+
+        if ($formDispo->isSubmitted() && $formDispo->isValid()) {
+            $availability = $formDispo->getData();
+            if($availability->getNom() !== "from-date"){
+                $availability->setDateFin(null);
+            }
+
+            // Enregistrer les modifications dans la base de données
+            $this->em->persist($availability);
+            $this->em->flush();
+
+            $referer = $request->headers->get('referer');
+            return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view');
         }
 
         $notification = new Notification();
@@ -435,6 +453,7 @@ class ModerateurController extends AbstractController
         return $this->render('dashboard/moderateur/candidat_view.html.twig', [
             'candidat' => $candidat,
             'form' => $form->createView(),
+            'formDispo' => $formDispo->createView(),
             'formCv' => $formCv->createView(),
         ]);
     }

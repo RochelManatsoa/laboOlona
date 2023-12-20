@@ -266,7 +266,8 @@ class EntrepriseController extends AbstractController
             $nom = $form->get('nom')->getData();
             $competences = $form->get('competences')->getData();
             $langues = $form->get('langues')->getData();
-            $data = $this->entrepriseManager->findAllCandidats($titre, $nom, $competences, $langues);
+            $availability = $form->get('availability')->getData();
+            $data = $this->entrepriseManager->findAllCandidats($titre, $nom, $competences, $langues, $availability);
             if ($request->isXmlHttpRequest()) {
                 // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
                 return new JsonResponse([

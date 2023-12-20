@@ -19,12 +19,13 @@ class ApplicationsType extends AbstractType
             // ])
             ->add('lettreMotivation', TextareaType::class, [
                 'label' =>  'Lettre de motivation',
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'Bonjour,
 je suis intéressé.e par votre offre.
 Je vous remercie d\'avance de considérer ma candidature pour le poste de…',
-                    'rows' => 8
-                ]
+                    'rows' => 8,
+                ],
             ])
             // ->add('pretentionSalariale')
         ;

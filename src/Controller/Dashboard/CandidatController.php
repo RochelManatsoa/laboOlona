@@ -298,6 +298,17 @@ class CandidatController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $action = $request->request->get('action');
+            $application = $form->getData();
+            if ($action === 'quick_apply') {
+                // Logique pour la soumission rapide
+                $application->setLettreMotication(
+                    "Candidature Flash"
+                );
+            } elseif ($action === 'custom_apply') {
+                // Logique pour la soumission personnalisée
+                // Utiliser le CV personnalisé et/ou la lettre de motivation fournis
+            }
             $this->em->persist($application);
             $this->em->flush();
     

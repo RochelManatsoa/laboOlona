@@ -16,58 +16,57 @@
         </div>
     <section class="text-dark">
     <div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-body">
+
+        {% if applied %}{{ form_start(form) }}{% endif %}
+        <div class="card shadow">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-8 col-sm-12">
-                        <h4 class="text-muted">{{ annonce.typeContrat }}</h4>
-                        <p><i class="bi bi-geo-alt-fill"></i> {{ annonce.lieu }}</p>
-                        <p><i class="bi bi-calendar"></i> Publiée le : {{ annonce.dateCreation|date('d/m/Y') }}</p>
-                        <p><i class="bi bi-calendar"></i> Expire le : {{ annonce.dateExpiration|date('d/m/Y') }}</p>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-sm-12">
+                            <h4 class="text-muted">{{ annonce.typeContrat }}</h4>
+                            <p><i class="bi bi-geo-alt-fill"></i> {{ annonce.lieu }}</p>
+                            <p><i class="bi bi-calendar"></i> Publiée le : {{ annonce.dateCreation|date('d/m/Y') }}</p>
+                            <p><i class="bi bi-calendar"></i> Expire le : {{ annonce.dateExpiration|date('d/m/Y') }}</p>
+                        </div>
+                        <div class="col-lg-4 col-sm-12">
+                            {% if applied %}
+                                <button type="submit" name="submitBtn" value="quick_apply" class="btn btn-md btn-primary rounded-pill px-5">Postuler rapidement</button>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="col-lg-4 col-sm-12">
-                        <form method="post" action="">
-                            <input type="hidden" name="">
-                            <input type="hidden" name="">
-                            <button type="submit" class="btn btn-md btn-primary rounded-pill px-5">Postuler</button>
-                        </form>
-                    </div>
+                <hr>
+
+                <div class="card-text">
+                    <h5>Description</h5>
+                    <p>{{ annonce.description|raw }}</p>
                 </div>
-            <hr>
 
-            <div class="card-text">
-                <h5>Description</h5>
-                <p>{{ annonce.description|raw }}</p>
+                <div class="mb-3">
+                    <h5>Compétences requises</h5>
+                    {% if annonce.competences|length > 0 %}
+                        <div class="skills-container">  
+                            {% for skill in annonce.competences %}
+                                <span class="badge bg-secondary">{{ skill.nom }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>Aucune compétence spécifique requise.</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <h5>Nombre de vues</h5>
+                    <p><i class="bi bi-eye"></i> {{ annonce.annonceVues|length }}</p>
+                </div>
+
             </div>
-
-            <div class="mb-3">
-                <h5>Compétences requises</h5>
-                {% if annonce.competences|length > 0 %}
-                    <div class="skills-container">  
-                        {% for skill in annonce.competences %}
-                            <span class="badge bg-secondary">{{ skill.nom }}</span>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p>Aucune compétence spécifique requise.</p>
-                {% endif %}
-            </div>
-
-            <div class="mb-3">
-                <h5>Nombre de vues</h5>
-                <p><i class="bi bi-eye"></i> {{ annonce.annonceVues|length }}</p>
-            </div>
-
         </div>
-    </div>
 
             {% if applied %}
             <div class="row align-items-md-stretch mt-5">
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
                     <h2>Postuler à cette annonce</h2>
-                        {{ form_start(form) }}
                         {{ form_widget(form) }}
                         <hr>
                             <div class="row">
@@ -89,7 +88,7 @@
                             </div>
                         <hr>
                         <div class="d-flex justify-content-between align-items-center">
-                            <button class="btn btn-md btn-primary rounded-pill px-5">Postuler</button>
+                            <button type="submit" name="submitBtn" value="custom_apply" class="btn btn-md btn-primary rounded-pill px-5">Postuler</button>
                             <button class="btn btn-outline-primary px-3 rounded-pill"><i class="bi bi-pin-angle"></i> Epingler l'annonce</button>
                         </div>
                         {{ form_end(form) }}
@@ -117,9 +116,9 @@
                 </div>
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                    <h2>Add borders</h2>
-                    <p>Or, keep it light and add a border for some added definition to the boundaries of your content. Be sure to look under the hood at the source HTML here as we've adjusted the alignment and sizing of both column's content for equal-height.</p>
-                    <button class="btn btn-outline-secondary rounded-pill px-5" type="button">Example button</button>
+                    <h2>Mettez à jour votre Disponibilité </h2>
+                    <p>Prenez un moment dès maintenant pour actualiser votre profil et assurez-vous que vos informations de disponibilité sont à jour. Cela maximisera vos chances de correspondre parfaitement à de nouvelles opportunités passionnantes.</p>
+                    <button class="btn btn-outline-secondary rounded-pill px-5" type="button" data-bs-toggle="modal" data-bs-target="#candidatAvaillability">Disponibilité</button>
                     </div>
                 </div>
             </div>
@@ -153,7 +152,7 @@
 {% endblock %}
 
 {% block modal %}
-    
+    {{ parent() }}
     <!-- Modal -->
     <div class="modal fade" id="candidatDocuments" tabindex="-1" aria-labelledby="candidatDocumentsLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
