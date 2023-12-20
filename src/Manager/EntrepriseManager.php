@@ -81,7 +81,7 @@ class EntrepriseManager
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllCandidats(?string $titre = null, ?string $nom = null, ?string $competences = null, ?string $langues = null): array
+    public function findAllCandidats(?string $titre = null, ?string $nom = null, ?string $competences = null, ?string $langues = null, ?string $availability = null): array
     {
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
@@ -91,7 +91,7 @@ class EntrepriseManager
 
         $conditions = [];
 
-        if($titre == null && $nom == null && $competences == null && $langues == null){
+        if($titre == null && $nom == null && $competences == null && $langues == null && $availability == null){
             return $this->findValidCandidats();
         }
 
@@ -115,10 +115,16 @@ class EntrepriseManager
             $parameters['langues'] = '%' . $langues . '%';
         }
 
+        if (!empty($availability)) {
+            $conditions[] = '(a.nom LIKE :availability )';
+            $parameters['availability'] = '%' . $availability . '%';
+        }
+
         $qb->select('c')
             ->from('App\Entity\CandidateProfile', 'c')
             ->leftJoin('c.competences', 's')
             ->leftJoin('c.langages', 'l')
+            ->leftJoin('c.availability', 'a')
             ->leftJoin('l.langue', 'lg')
             ->leftJoin('c.candidat', 'u')
             ->where(implode(' AND ', $conditions))

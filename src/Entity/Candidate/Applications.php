@@ -53,7 +53,7 @@ class Applications
     #[ORM\ManyToOne(inversedBy: 'applications')]
     private ?JobListing $annonce = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $lettreMotivation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -102,7 +102,7 @@ class Applications
         return $this->lettreMotivation;
     }
 
-    public function setLettreMotivation(string $lettreMotivation): static
+    public function setLettreMotivation(?string $lettreMotivation): static
     {
         $this->lettreMotivation = $lettreMotivation;
 

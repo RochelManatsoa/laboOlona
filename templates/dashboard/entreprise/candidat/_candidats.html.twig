@@ -14,7 +14,15 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">{{ candidat.titre }}</h5>
-                    <p class="card-text">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</p>
+                    {# <p class="card-text">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</p> #}
+                    {% set prenoms = candidat.candidat.prenom|split(' ') %}
+                        <p class="card-text">
+                            {{ prenoms|first }} {# Affiche le premier prénom #}
+                            {% for prenom in prenoms|slice(1) %} {# Passe le premier prénom #}
+                                {{ prenom|slice(0, 1) }}.{# Affiche l'initiale des autres prénoms #}
+                            {% endfor %}
+                            {{ candidat.candidat.nom|slice(0, 1) }}.
+                        </p>
                     <p class="card-text">
                         Missions réalisées: <span class="badge bg-success">{{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }}</span>
                     </p>
@@ -31,6 +39,16 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
                         {% for langue in candidat.langages %}
                             {{ isoToEmoji(langue.langue.code) }}
                         {% endfor %}
+                    </p>
+                    <p class="card-text">
+                        Disponibilité: 
+                        <span class="text-dark">
+                            {% if candidat.availability is not null %}
+                                {{ checkAvailability(candidat.candidat)|raw}}
+                            {% else %}
+                                <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                            {% endif %} 
+                        </span>
                     </p>
                 </div>
                 <div class="card-footer">
@@ -59,6 +77,7 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
                         <th scope="col-1">Titre</th>    
                         <th scope="col-2">Nom</th>
                         <th scope="col-2">Missions réalisées</th>
+                        <th scope="col-2">Disponibilité</th>
                         <th scope="col-3">Compétences</th>
                         <th scope="col-1">Expériences</th>
                         <th scope="col-2">Langues</th>
@@ -68,11 +87,25 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
                 <tbody>
                     {% for candidat in candidats %}
                         <tr>
-                            <td>{{ candidat.titre }}</td>   
-                            <td>{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</td>
+                            <td style="font-weight: 500;">{{ candidat.titre }}</td>  
+                            <td>
+                                {% set prenoms = candidat.candidat.prenom|split(' ') %}
+                                {{ prenoms|first }}{# Affiche le premier prénom #}
+                                {% for prenom in prenoms|slice(1) %}{{ prenom|slice(0, 1) }}.{% endfor %} {# Affiche les initiales des autres prénoms suivies d'un point #}
+                                {{ candidat.candidat.nom|slice(0, 1) }}.{# Affiche l'initiale du nom suivie d'un point #}
+                            </td>
                             <td>
                                 <span class="badge bg-success">
                                     {{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }}
+                                </span>
+                            </td>
+                            <td class="small">
+                                <span class="text-dark">
+                                    {% if candidat.availability is not null %}
+                                        {{ checkAvailability(candidat.candidat)|raw}}
+                                    {% else %}
+                                        <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                                    {% endif %} 
                                 </span>
                             </td>
                             <td>

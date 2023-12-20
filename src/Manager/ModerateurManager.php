@@ -280,14 +280,14 @@ class ModerateurManager
         return $qb->getQuery()->getResult();
     }
 
-    public function searchCandidat(?string $nom = null, ?string $titre = null, ?string $status = null): array
+    public function searchCandidat(?string $nom = null, ?string $titre = null, ?string $status = null, ?string $availability = null): array
     {
         $qb = $this->em->createQueryBuilder();
 
         $parameters = [];
         $conditions = [];
 
-        if($nom == null && $titre == null && $status == null){
+        if($nom == null && $titre == null && $status == null && $availability == null){
             return $this->findAllCandidat();
         }
 
@@ -306,9 +306,15 @@ class ModerateurManager
             $parameters['status'] = '%' . $status . '%';
         }
 
+        if (!empty($availability)) {
+            $conditions[] = '(a.nom LIKE :availability )';
+            $parameters['availability'] = '%' . $availability . '%';
+        }
+
         $qb->select('c')
             ->from('App\Entity\CandidateProfile', 'c')
             ->leftJoin('c.candidat', 'u')
+            ->leftJoin('c.availability', 'a')
             ->where(implode(' AND ', $conditions))
             ->setParameters($parameters);
         
