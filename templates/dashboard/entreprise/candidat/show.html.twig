@@ -23,6 +23,15 @@
                     <p></p>
                     <p><strong>Statut :</strong> <span class="badge bg-success">{{ candidat.status }}</span></p>
                     <p><strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-success' : 'bg-danger' }}">{{ candidat.isValid ? 'Oui' : 'Non' }}</span></p>
+                    <p><strong>Diponibilité :</strong> 
+                        <span class="text-dark">
+                            {% if candidat.availability is not null %}
+                                {{ checkAvailability(candidat.candidat)|raw}}
+                            {% else %}
+                                <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                            {% endif %} 
+                        </span>
+                    </p>
                 </div>
             </div>
             <p><strong>Résumé :</strong> <span class="text-muted">{{ candidat.resume|raw }}</span></p>

@@ -9,7 +9,8 @@
                 <th class="col-4">Email</th>
                 <th class="col-2">Titre</th>
                 <th class="col-2">Statut</th>
-                <th class="col-2">Cértificaiton</th>
+                <th class="col-2">Cértifié</th>
+                <th class="col-2">Dispo.</th>
                 <th class="col-1">Actions</th>
             </tr>
         </thead>
@@ -36,6 +37,13 @@
                                 <option value="NON" {{ candidat.isValid == 'NON' ? 'selected' : '' }}>Non certifié</option>
                             </select>
                         </form>
+                     </td>
+                     <td class="small">
+                        {% if candidat.availability is not null %}
+                            {{ checkAvailabilityModerateur(candidat.candidat)|raw}}
+                        {% else %}
+                            <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                        {% endif %}
                      </td>
                     <td class="actions-col">
                         <a href="{{path('app_dashboard_moderateur_candidat_view', {'id': candidat.id})}}" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a>

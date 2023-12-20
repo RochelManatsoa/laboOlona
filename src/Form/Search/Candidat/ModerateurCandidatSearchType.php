@@ -38,13 +38,24 @@ class ModerateurCandidatSearchType extends AbstractType
                 'choices' => [
                     'Valide' => 'VALID',
                     'En attente' => 'PENDING',
-                    'Banni' => 'BANNISHED',
                     'Mis en avant' => 'FEATURED',
-                    'Réservé' => 'RESERVED',
+                    'Vivier' => 'RESERVED',
                 ],
                 'required' => false,
                 'label' => false,
                 'placeholder' => 'Statut ...',
+            ])
+            ->add('availability', ChoiceType::class, [
+                'choices' => [
+                    'Immediatement' => 'immediate',
+                    'A partir du' => 'from-date',
+                    'Temps plein' => 'full-time',
+                    'Temps partiel' => 'part-time',
+                    'En poste' => 'not-available',
+                ],
+                'required' => false,
+                'label' => false,
+                'placeholder' => 'Disponibilité ...',
             ])
         ;
     }

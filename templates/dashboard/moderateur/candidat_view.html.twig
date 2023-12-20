@@ -48,7 +48,7 @@
                                 {{ checkAvailability(candidat.candidat)|raw}}
                             {% else %}
                                 <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
-                            {% endif %}
+                            {% endif %} <button class="btn btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#candidatAvaillability"><i class="bi bi-pencil-square"></i></button>
                             </span><br> 
                             <span class="text-muted">Secteur d'activité : </span><br> 
                                 {% for item in candidat.secteurs %}
@@ -401,13 +401,55 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    {# <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#competencesTable').DataTable();
             $('#experiencesTable').DataTable();
         });
-    </script>
+    </script> #}
 {% endblock %}
 
+
+{% block modal %}
+    {{ parent() }}
+        <div class="modal fade" id="candidatAvaillability" tabindex="-1" aria-labelledby="candidatAvaillabilityLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5 text-dark" id="candidatAvaillabilityLabel">Changer la disponibilité du candicat</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    {{ form_start(formDispo, {'action': path('app_dashboard_moderateur_candidat_view', {'id': candidat.id} )})}}
+                    <div class="modal-body text-dark">
+                            <div class="row">
+                                <div class="col my-2">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="disponibilite-form">
+                                        
+                                                <div class="radio-options">
+                                                    {{ form_widget(formDispo.nom) }}
+                                                </div>
+                                            
+                                                <div class="date-picker-container">
+                                                    {{ form_widget(formDispo.dateFin) }}
+                                                </div>
+                                            
+                                            </div>
+                                    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-dark">Mettre à jour</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                    {{ form_end(formDispo)}}
+                </div>
+            </div>
+        </div>
+{% endblock %}

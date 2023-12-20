@@ -53,6 +53,8 @@
             {{ render(controller('App\\Controller\\Dashboard\\CandidatController::availabilityFormView')) }}
         {% endif %}
         {% endblock %}
+             
+            
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var fromDatePicker = document.querySelector('#availability_nom_1');
@@ -91,7 +93,5 @@
                 setDatePickerRequired(fromDatePicker.checked);
             });
             </script>
-             
-            
     </body>
 </html>
