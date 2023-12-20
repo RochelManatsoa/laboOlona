@@ -14,7 +14,15 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">{{ candidat.titre }}</h5>
-                    <p class="card-text">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</p>
+                    {# <p class="card-text">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</p> #}
+                    {% set prenoms = candidat.candidat.prenom|split(' ') %}
+                        <p class="card-text">
+                            {{ prenoms|first }} {# Affiche le premier prénom #}
+                            {% for prenom in prenoms|slice(1) %} {# Passe le premier prénom #}
+                                {{ prenom|slice(0, 1) }}.{# Affiche l'initiale des autres prénoms #}
+                            {% endfor %}
+                            {{ candidat.candidat.nom|slice(0, 1) }}.
+                        </p>
                     <p class="card-text">
                         Missions réalisées: <span class="badge bg-success">{{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }}</span>
                     </p>
@@ -68,8 +76,13 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
                 <tbody>
                     {% for candidat in candidats %}
                         <tr>
-                            <td>{{ candidat.titre }}</td>   
-                            <td>{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</td>
+                            <td style="font-weight: 500;">{{ candidat.titre }}</td>  
+                            <td>
+                                {% set prenoms = candidat.candidat.prenom|split(' ') %}
+                                {{ prenoms|first }}{# Affiche le premier prénom #}
+                                {% for prenom in prenoms|slice(1) %}{{ prenom|slice(0, 1) }}.{% endfor %} {# Affiche les initiales des autres prénoms suivies d'un point #}
+                                {{ candidat.candidat.nom|slice(0, 1) }}.{# Affiche l'initiale du nom suivie d'un point #}
+                            </td>
                             <td>
                                 <span class="badge bg-success">
                                     {{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }}
