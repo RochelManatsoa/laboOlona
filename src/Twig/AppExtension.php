@@ -68,6 +68,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getStatuses', [$this, 'getStatuses']),
             new TwigFunction('getEntrepriseAnnonceByCandidat', [$this, 'getEntrepriseAnnonceByCandidat']),
             new TwigFunction('checkAvailability', [$this, 'checkAvailability']),
+            new TwigFunction('getAge', [$this, 'getAge']),
         ];
     }
 
@@ -637,6 +638,18 @@ class AppExtension extends AbstractExtension
         }
 
         return $status;
+    }
+
+    public function getAge(CandidateProfile $candidat):string
+    {
+        // Calcul de l'âge
+        $now = new \DateTime();
+        $age = "Non renseigné";
+        if ($candidat->getBirthday() !== null) {
+            $age = $now->diff($candidat->getBirthday())->y;
+        }
+
+        return $age;
     }
 
 }
