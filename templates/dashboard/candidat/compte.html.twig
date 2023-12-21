@@ -53,7 +53,8 @@
             </div>
         </div>
         <div class="input-group-append">
-            <button type="submit" class="btn btn-primary">Sauvegarder</button>
+    <button type="submit" class="btn btn-primary rounded-pill">Sauvegarder</button>
+    <button type="button" class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#preview">Aperçu</button>
         </div>
         <div style="display:none">
             {{ form_widget(form_one) }}
@@ -110,7 +111,8 @@
             {{ form_widget(form_two) }}
         </div>
         <div class="input-group-append">
-            <button type="submit" class="btn btn-primary">Sauvegarder</button>
+    <button type="submit" class="btn btn-primary rounded-pill">Sauvegarder</button>
+    <button type="button" class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#preview">Aperçu</button>
         </div>
         {{ form_end(form_two) }}
     </section>
@@ -362,7 +364,8 @@
         </div>
         <hr class="mb-4">
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                    <button type="submit" class="btn btn-primary rounded-pill">Sauvegarder</button>
+                    <button type="button" class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#preview">Aperçu</button>
                 </div>
         {{ form_end(form_three) }}
     </section>
@@ -409,6 +412,8 @@
         </div>
     </div>
 
+    {% include "parts/_modal_preview_profile.html.twig" %}
+
 
 <script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 <script>
@@ -418,6 +423,16 @@
 
 <script>
     $(document).ready(function() {
+        $("#submitAll").click(function() {
+            // Soumettre le premier formulaire
+            $("form[name='form_one']").submit();
+
+            // Soumettre le deuxième formulaire
+            $("form[name='form_two']").submit();
+
+            // Soumettre le troisième formulaire
+            $("form[name='form_three']").submit();
+        });
         var originalContent = {}; // Pour sauvegarder le contenu original
     
         // Fonction pour sauvegarder le contenu original d'un élément

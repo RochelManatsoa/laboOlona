@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Profile\Candidat\StepOneType;
 use App\Form\Profile\Candidat\StepTwoType;
 use App\Form\Profile\Candidat\StepThreeType;
+use App\Manager\CandidatManager;
 use App\Manager\ModerateurManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,6 +37,7 @@ class ProfileController extends AbstractController
         private RequestStack $requestStack,
         private UrlGeneratorInterface $urlGenerator,
         private FileUploader $fileUploader,
+        private CandidatManager $candidatManager,
         private ModerateurManager $moderateurManager,
     ){
     }
@@ -200,9 +202,9 @@ class ProfileController extends AbstractController
         return $this->render('profile/candidat/step-two.html.twig', [
             'user' => $this->getUser(),
             'form' => $form->createView(),
-            'competences' => $candidat->getCompetences(),
-            'experiences' => $candidat->getExperiences(),
-            'langages' => $candidat->getLangages(),
+            'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
+            'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
+            'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
         ]);
     }
 
@@ -223,6 +225,10 @@ class ProfileController extends AbstractController
 
         return $this->render('profile/candidat/step-three.html.twig', [
             'user' => $this->getUser(),
+            'candidat' => $candidat,
+            'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
+            'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
+            'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
             'form' => $form->createView(),
         ]);
     }

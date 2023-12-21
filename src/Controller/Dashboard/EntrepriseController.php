@@ -317,6 +317,9 @@ class EntrepriseController extends AbstractController
             'candidat' => $candidateProfile,
             'age' => $age,
             'countryName' => $countryName,
+            'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidateProfile),
+            'competences' => $this->candidatManager->getCompetencesSortedByNote($candidateProfile),
+            'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidateProfile),
             
         ]);
     }

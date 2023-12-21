@@ -14,6 +14,7 @@ import $ from 'jquery';
 
 
 $(function() {
+    $('[data-bs-toggle="tooltip"]').tooltip();
     $('#experience').on('shown.bs.modal', function () {
         // Fonction pour gérer la logique de chaque groupe de champs
         function handleFieldGroup(baseId) {

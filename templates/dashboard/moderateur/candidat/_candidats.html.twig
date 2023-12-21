@@ -40,7 +40,7 @@
                      </td>
                      <td class="small">
                         {% if candidat.availability is not null %}
-                            {{ checkAvailabilityModerateur(candidat.candidat)|raw}}
+                            {{ checkAvailability(candidat.candidat)|raw}}
                         {% else %}
                             <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
                         {% endif %}
