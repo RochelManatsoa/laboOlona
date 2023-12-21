@@ -1,0 +1,201 @@
+
+<div class="modal fade" id="preview" tabindex="-1" aria-labelledby="previewLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl ">
+    <div class="modal-content text-dark">
+      <div class="modal-header">
+        <p class="modal-title h3" id="exampleModalLabel">{{ candidat.titre|upper }}</p>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4 d-flex justify-content-center align-items-center">
+                    <div class="rounded-circle profile-img bg-image-candidat-view" style="background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
+                </div>
+                <div class="col-md-8">
+                    <h2 class="card-title">Informations Générales</h2>
+                    <p>
+                        <strong>Date d'inscription :</strong> <span class="text-muted">{{ candidat.createdAt|date('d/m/Y') }}</span><br>
+                        <strong>Dernière connexion :</strong> <span class="text-muted"> {{ candidat.candidat.lastLogin|time_ago }} </span><br>
+                        <strong>Localisation :</strong> <span class="text-muted">{{ show_country(candidat.localisation) }}</span><br>
+                        <strong>Âge :</strong> <span class="text-muted">{{ getAge(candidat) }}</span><br>
+                        <strong>Titre professionnel :</strong> <span class="text-muted">{{ candidat.titre }}</span><br>
+                        <strong>Statut </strong> 
+                            <i class="bi bi-info-circle-fill text-info" 
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="top"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Votre profil sera validé après modération. Nous vous tiendrons informé dès que votre profil sera approuvé.">
+                            </i> : 
+                            <span class="badge rounded-pill bg-success">{{ candidat.status }}</span> 
+                            <br>
+                        <strong>Profil Certifié :</strong> 
+                            <i class="bi bi-info-circle-fill text-info" 
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="bottom"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Explorez toutes les formations disponibles dans votre espace candidat pour obtenir une certification Olona-Talents.">
+                            </i> : 
+                        <span class="badge rounded-pill {{ candidat.isValid ? 'bg-success' : 'bg-danger' }}">{{ candidat.isValid ? 'Oui' : 'Non' }}</span> 
+                        <br> 
+                        <strong>Diponibilité :</strong> 
+                        <span class="text-dark">
+                            {% if candidat.availability is not null %}
+                                {{ checkAvailability(candidat.candidat)|raw}}
+                            {% else %}
+                                <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                            {% endif %} 
+                        </span><br>
+                        <strong>Secteurs d'expertise :</strong> 
+                        {% for item in candidat.secteurs %}
+                        <span class="badge rounded-pill bg-dark">
+                            {{ item.nom }}
+                        </span>
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <h3 class="h1">A propos de moi</h3>
+                </div>
+                <div class="col-md-8">
+                    <div class="list-group list-group-flush mb-4">
+                        {{ candidat.resume|raw }}
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <h3 class="h1">Experiences</h3>
+                </div>
+                <div class="col-md-8">
+                    <ul class="list-group list-group-flush mb-4">
+                        {% for experience in experiences %}
+                            <li class="list-group-item"><strong>{{ experience.nom|upper }} </strong> : 
+                                <ul class="list-group list-group-flush mb-4">
+                                    <li class="list-group-item"><span>{{ experience.dateDebut|date('d/m/Y') }} - {{ experience.dateFin|date('d/m/Y') }}</span></li>
+                                    <li class="list-group-item"><span>{{ experience.description|raw }} </span></li>
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <h3 class="h1">Compétences</h3>
+                </div>
+                <div class="col-md-8">
+                    <ul class="list-group list-group-flush mb-4">
+                        {% for competence in competences %}
+                            <li class="list-group-item">{{ competence.nom }} 
+                                    <span class="p-1 lh-1">
+                                        {% for i in 1..5 %}
+                                            {% if i <= competence.note %}
+                                                <i class="small bi bi-star-fill text-warning"></i>
+                                            {% else %}
+                                                <i class="small bi bi-star text-dark"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+        
+                                {% if competence.description %}
+                                    <ul class="list-group list-group-flush mb-4">
+                                        <li class="list-group-item"><span>{{ competence.description|raw }} </span></li>
+                                    </ul>
+                                {% endif %} 
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <h3 class="h1">Langues</h3>
+                </div>
+                <div class="col-md-8">
+                {% if langages|length > 0 %}
+                <div class="row">
+                    {% for langage in langages %}
+                        <div class="col-3 my-2 flex">
+                            <div class="card">
+                                <div class="card-body">
+                                        <!-- Icône agrandie -->
+                                        <span class="h1">{{ isoToEmoji(langage.langue.code) }}</span> <br>{{ langage.langue.nom }} 
+                                        <span class="d-flex align-items-center">
+                                            <span class="p-1 lh-1">
+                                                {% for i in 1..5 %}
+                                                    {% if i <= langage.niveau %}
+                                                        <i class="small bi bi-star-fill text-warning"></i>
+                                                    {% else %}
+                                                        <i class="small bi bi-star text-dark"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </span>
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    <div class="container my-5">
+                        <div class="p-5 text-center bg-body-tertiary rounded-3">
+                        <h1 class="text-body-emphasis">Aucune langues renseignées</h1>
+                        <p class="">
+                            <i class="bi bi-info-circle"></i> Veuillez envoyer un e-mail à l'utilisateur pour l'informer des langues qu'ils maîtrise. Cette étape est nécessaire pour la validation de son profil.
+                        </p>
+                        </div>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <h3 class="h1">Contact</h3>
+                </div>
+                <div class="col-md-8">
+                    <div class="list-group list-group-flush mb-4">
+                    <span class="text-muted">Email :</span> {{ candidat.candidat.email }}<br>
+                    <span class="text-muted">Téléphone : </span> <span class="text-dark">{{ candidat.candidat.telephone }}</span><br>
+                    {% if candidat.social.linkedin is not empty %}
+                        <a title="{{ candidat.social.linkedin }}" href="{{candidat.social.linkedin}}" target=_blank ><i class="bi h2 bi-linkedin"></i></a>
+                    {% endif %}
+                    {% if candidat.social.skype is not empty %}
+                        <a title="{{ candidat.social.skype }}" href="{{candidat.social.skype}}" target=_blank ><i class="bi h2 bi-skype"></i></a>
+                    {% endif %}
+                    {% if candidat.social.slack is not empty %}
+                        <a title="{{ candidat.social.slack }}" href="{{candidat.social.slack}}" target=_blank ><i class="bi h2 bi-slack"></i></a>
+                    {% endif %}
+                    {% if candidat.social.facebook is not empty %}
+                        <a title="{{ candidat.social.facebook }}" href="{{candidat.social.facebook}}" target=_blank ><i class="bi h2 bi-facebook"></i></a>
+                    {% endif %}
+                    {% if candidat.social.instagram is not empty %}
+                        <a title="{{ candidat.social.instagram }}" href="{{candidat.social.instagram}}" target=_blank ><i class="bi h2 bi-instagram"></i></a>
+                    {% endif %}
+                    {% if candidat.social.github is not empty %}
+                        <a title="{{ candidat.social.github }}" href="{{candidat.social.github}}" target=_blank ><i class="bi h2 bi-github"></i></a>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3 mx-auto">
+                    <button type="submit" id="submitAll" class="btn btn-primary w-100 rounded-pill" data-bs-dismiss="modal">Sauvegarder</button>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

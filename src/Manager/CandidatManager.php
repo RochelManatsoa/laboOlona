@@ -220,4 +220,57 @@ class CandidatManager
         );
     }
 
+    public function getExperiencesSortedByDate($candidat) {
+        $experiences = $candidat->getExperiences()->toArray(); // Convertir en tableau
+        
+        // Utiliser une fonction anonyme comme callback
+        usort($experiences, function ($experience1, $experience2) {
+            $dateDebut1 = $experience1->getDateDebut();
+            $dateDebut2 = $experience2->getDateDebut();
+            
+            if ($dateDebut1 == $dateDebut2) {
+                return 0;
+            }
+            
+            return ($dateDebut1 < $dateDebut2) ? 1 : -1;
+        });
+        
+        return $experiences;
+    }
+    
+    public function getCompetencesSortedByNote($candidat) {
+        $competences = $candidat->getCompetences()->toArray(); // Convertir en tableau
+        
+        // Utiliser une fonction anonyme comme callback pour trier par note (du plus haut au plus bas)
+        usort($competences, function ($competence1, $competence2) {
+            $note1 = $competence1->getNote();
+            $note2 = $competence2->getNote();
+            
+            if ($note1 == $note2) {
+                return 0;
+            }
+            
+            return ($note1 < $note2) ? 1 : -1;
+        });
+        
+        return $competences;
+    }
+    
+    public function getLangagesSortedByNiveau($candidat) {
+        $langages = $candidat->getLangages()->toArray(); // Convertir en tableau
+        
+        // Utiliser une fonction anonyme comme callback pour trier par niveau (du plus haut au plus bas)
+        usort($langages, function ($langage1, $langage2) {
+            $niveau1 = $langage1->getNiveau();
+            $niveau2 = $langage2->getNiveau();
+            
+            if ($niveau1 == $niveau2) {
+                return 0;
+            }
+            
+            return ($niveau1 < $niveau2) ? 1 : -1;
+        });
+        
+        return $langages;
+    }
 }

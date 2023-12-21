@@ -606,11 +606,9 @@ class ModerateurController extends AbstractController
             throw $this->createNotFoundException('Candidat introuvable');
         }
 
-        $experiences = $candidat->getExperiences();
-
         return $this->render('dashboard/moderateur/candidat_experiences.html.twig', [
             'candidat' => $candidat,
-            'experiences' => $experiences,
+            'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
         ]);
     }
 

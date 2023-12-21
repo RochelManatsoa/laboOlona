@@ -467,11 +467,10 @@ class CandidatController extends AbstractController
             'form_one' => $formOne->createView(),
             'form_two' => $formTwo->createView(),
             'form_three' => $formThree->createView(),
-            // 'form_avalaibility' => $formAvalaibility->createView(),
             'candidat' => $candidat,
-            'experiences' => $candidat->getExperiences(),
-            'competences' => $candidat->getCompetences(),
-            'langages' => $candidat->getLangages(),
+            'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
+            'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
+            'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
         ]);
     }
 
