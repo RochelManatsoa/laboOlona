@@ -270,6 +270,13 @@ class EntrepriseProfile
                 $allApplications[] = $application;
             }
         }
+
+        // Trie les candidatures par date de création décroissante.
+        usort($allApplications, function($a, $b) {
+            // Remplacez 'getCreatedAt' par la méthode ou la propriété appropriée de votre objet 'application'.
+            return $b->getDateCandidature() <=> $a->getDateCandidature();
+        });
+
         return $allApplications;
     }
 }

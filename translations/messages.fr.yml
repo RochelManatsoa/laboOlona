@@ -943,4 +943,9 @@ app_dashboard_entreprise_service :
 
 app_home_service : 
     title : Plateforme Olona Talents
-    dashboard_title : Explorez une nouvelle méthodologie pour le recrutement, spécialement conçue pour aligner les besoins des entreprises avec le potentiel des talents du bassin indien.
+    dashboard_title : Plateforme Olona Talents
+    description : Explorez une nouvelle méthodologie pour le recrutement, spécialement conçue pour aligner les besoins des entreprises avec le potentiel des talents du bassin indien.
+
+app_dashboard_entreprise_view_candidature : 
+    title : Candidature reçu
+    dashboard_title : Candidature reçu
