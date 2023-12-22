@@ -8,7 +8,7 @@
     <div class="container mt-4">
         <div class="card shadow">
             <div class="card-header bg-primary h3 text-white">
-                {{ application.annonce.titre }}
+                Annonce : {{ application.annonce.titre }}
             </div>
             <div class="card-body">
 
@@ -21,8 +21,7 @@
                             <li class="list-group-item">
                                 Candidat : 
                                 <span class="text-success">
-                                    {{ application.candidat.candidat.nom }} 
-                                    {{ application.candidat.candidat.prenom }}
+                                    {{ getPseudo(application.candidat) }}
                                 </span>
                             </li>
                             <li class="list-group-item">
