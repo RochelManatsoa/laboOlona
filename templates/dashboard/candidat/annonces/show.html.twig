@@ -184,9 +184,13 @@
                     {% else %}
                         <p>Aucun document disponible.</p>
                     {% endif %}
+                    {{ form_start(formUpload) }}
+                    {{ form_widget(formUpload) }}
+                    <button class="btn btn-outline-dark rounded-pill px-5" type="submit">Uploader un nouveau CV</button>
+                    {{ form_end(formUpload) }}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-warning rounded-pill px-5" data-bs-dismiss="modal">Fermer</button>
                 </div>
             </div>
         </div>

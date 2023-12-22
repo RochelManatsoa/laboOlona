@@ -20,6 +20,7 @@ use App\Entity\Moderateur\TypeContrat;
 use App\Form\Search\AnnonceSearchType;
 use App\Form\Candidat\ApplicationsType;
 use App\Form\Candidat\AvailabilityType;
+use App\Form\Candidat\UploadCVType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Profile\Candidat\StepOneType;
 use App\Form\Profile\Candidat\StepTwoType;
@@ -296,6 +297,19 @@ class CandidatController extends AbstractController
         }
         $form = $this->createForm(ApplicationsType::class, $application);
         $form->handleRequest($request);
+        $formUpload = $this->createForm(UploadCVType::class, $candidat);
+        $formUpload->handleRequest($request);
+
+        if ($formUpload->isSubmitted() && $formUpload->isValid()) {
+            $cvFile = $formUpload->get('cv')->getData();
+            if ($cvFile) {
+                $fileName = $this->fileUploader->upload($cvFile);
+                $candidat->setCv($fileName[0]);
+                $this->profileManager->saveCV($fileName, $candidat);
+            }
+            $this->em->persist($candidat);
+            $this->em->flush();
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $action = $request->request->get('action');
@@ -370,6 +384,7 @@ class CandidatController extends AbstractController
             'candidat' => $candidat,
             'applied' => $applied,
             'form' => $form->createView(),
+            'formUpload' => $formUpload->createView(),
         ]);
     }
 
