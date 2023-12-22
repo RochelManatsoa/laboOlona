@@ -69,6 +69,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getEntrepriseAnnonceByCandidat', [$this, 'getEntrepriseAnnonceByCandidat']),
             new TwigFunction('checkAvailability', [$this, 'checkAvailability']),
             new TwigFunction('getAge', [$this, 'getAge']),
+            new TwigFunction('getPseudo', [$this, 'getPseudo']),
         ];
     }
 
@@ -650,6 +651,25 @@ class AppExtension extends AbstractExtension
         }
 
         return $age;
+    }
+
+    function getPseudo(CandidateProfile $candidat):string
+    {
+        // Sépare les prénoms par des espaces et stocke-les dans un tableau.
+        $prenoms = explode(' ', $candidat->getCandidat()->getPrenom());
+    
+        // Initialise le pseudo avec le premier prénom.
+        $pseudo = $prenoms[0];
+    
+        // Ajoute les initiales des prénoms suivants suivies d'un point.
+        for ($i = 1; $i < count($prenoms); $i++) {
+            $pseudo .= substr($prenoms[$i], 0, 1) . '.';
+        }
+    
+        // Ajoute l'initiale du nom de famille suivie d'un point.
+        $pseudo .= ' '.substr($candidat->getCandidat()->getNom(), 0, 1) . '.';
+    
+        return $pseudo;
     }
 
 }
