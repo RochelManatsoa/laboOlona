@@ -940,3 +940,7 @@ app_dashboard_formation_videos:
 app_dashboard_entreprise_service : 
     title : Nos conditions d'utilisations
     dashboard_title : Bienvenu sur Olona-talents.com
+
+app_home_service : 
+    title : Plateforme Olona Talents
+    dashboard_title : Explorez une nouvelle méthodologie pour le recrutement, spécialement conçue pour aligner les besoins des entreprises avec le potentiel des talents du bassin indien.
