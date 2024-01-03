@@ -15,6 +15,7 @@
                <div class="row">
                     <div class="col-md-6 d-flex justify-content-left align-items-center">
                         <img src="{{vich_uploader_asset(application.candidat, 'file')}}" class="card-img-top" alt="avatar" style="width: 50%; height: auto; border-radius: 10px; object-fit: cover;">
+                        
                     </div>
                     <div class="col-md-6">
                         <ul class="list-group list-group-flush">
@@ -55,6 +56,9 @@
                     </div>
                     
                     
+                        {% if application.status == 'ACCEPTED'  %}
+                            <button type="button" class="col-md-3 btn btn-dark rounded-pill"> Contacter le candidat</button>
+                        {% endif %}
                 
                 </div>
                 <hr>
