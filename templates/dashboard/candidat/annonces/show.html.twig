@@ -130,10 +130,12 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).on('click', '.select-cv-btn', function() {
-        var cvId = $(this).data('cv-id');
-        var cvLink = $(this).data('cv-link');
+$(document).on('click', '.select-cv-btn', function() {
+    var cvId = $(this).data('cv-id');
+    var cvLink = $(this).data('cv-link');
 
+    // Étape 1: Vérifiez si l'opération a déjà été effectuée
+    if (!localStorage.getItem('cvSelected')) {
         $.ajax({
             url: '{{ path("app_profile_candidate_select_CV", {"id": 0}) }}'.replace('/0/', '/' + cvId + '/'),
             type: 'GET',
@@ -143,6 +145,10 @@
                 console.log(response);
                 // Fermer le modal si nécessaire
                 $('#candidatDocuments').trigger('hide.bs.modal');
+
+                // Étape 2: Définir une valeur dans le stockage local
+                localStorage.setItem('cvSelected', 'true');
+
                 // Actualiser la page
                 location.reload();
             },
@@ -150,7 +156,13 @@
                 console.error('Une erreur est survenue lors de la sélection du CV.');
             }
         });
-    });
+    } else {
+        // Étape 3: Réinitialiser la valeur stockée pour une nouvelle opération
+        localStorage.removeItem('cvSelected');
+        alert('Le CV a déjà été sélectionné. Effectuer une nouvelle opération si nécessaire.');
+    }
+});
+
 </script>
 {% endblock %}
 
