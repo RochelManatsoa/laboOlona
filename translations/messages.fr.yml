@@ -949,3 +949,7 @@ app_home_service :
 app_dashboard_entreprise_view_candidature : 
     title : Candidature reçu
     dashboard_title : Candidature reçu
+
+app_dashboard_moderateur_candidat_applications : 
+    title : Candidature envoyés
+    dashboard_title : Candidature envoyés

@@ -14,7 +14,7 @@
                         <th>Contrat</th>
                         <th>Salaire</th>
                         <th>Commence le</th>
-                        <th>Candidatures</th>
+                        <th>Candidatures / Vues</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -31,7 +31,7 @@
                         <td>{{ annonce.typeContrat }}</td>
                         <td>{{ annonce.salaire }}</td>
                         <td>{{ annonce.dateExpiration|date('d M Y') }}</td>
-                        <td>{{ annonce.applications|length }}</td>
+                        <td>{{ annonce.applications|length }} candidatures <br>{{ annonce.annonceVues|length }} vues</td>
                         <td>
                             <div class="d-flex">
                                 <a class="btn btn-sm btn-warning rounded-pill custom-tooltip" data-tooltip="Voir les détails de l'annonce" href="{{ path('app_dashboard_entreprise_view_annonce', {'id': annonce.id}) }}">

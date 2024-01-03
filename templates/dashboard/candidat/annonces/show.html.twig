@@ -63,10 +63,11 @@
         </div>
 
             {% if applied %}
+            <h2 class="text-center fs-1">Personnaliser ma candidature</h2>
             <div class="row align-items-md-stretch mt-5">
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                    <h2>Postuler à cette annonce</h2>
+                    <h2>Lettre de motivation</h2>
                         {{ form_widget(form) }}
                         <hr>
                             <div class="row">
@@ -142,6 +143,8 @@
                 console.log(response);
                 // Fermer le modal si nécessaire
                 $('#candidatDocuments').trigger('hide.bs.modal');
+                // Actualiser la page
+                location.reload();
             },
             error: function() {
                 console.error('Une erreur est survenue lors de la sélection du CV.');
