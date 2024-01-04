@@ -96,6 +96,12 @@ class ProfileManager
         ->setUploadedAt(new DateTime())
         ->setCandidat($candidat)
         ;
+        
+        // Vérifiez si l'entité CandidateProfile est déjà gérée
+        if (!$this->em->contains($candidat)) {
+            // Si ce n'est pas le cas, persistez l'entité CandidateProfile
+            $this->em->persist($candidat);
+        }
 
         $this->em->persist($cv);
         $this->em->flush();

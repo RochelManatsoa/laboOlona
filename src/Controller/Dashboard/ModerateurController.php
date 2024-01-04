@@ -3,10 +3,11 @@
 namespace App\Controller\Dashboard;
 
 use DateTime;
-use App\Form\MettingType;
+use App\Entity\User;
 use App\Entity\Notification;
 use App\Service\FileUploader;
 use App\Manager\ProfileManager;
+use Symfony\Component\Uid\Uuid;
 use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
@@ -15,7 +16,10 @@ use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
 use App\Manager\ModerateurManager;
 use App\Entity\Moderateur\EditedCv;
+use App\Form\Moderateur\MettingType;
+use App\Form\Profile\EntrepriseType;
 use App\Entity\Entreprise\JobListing;
+use App\Form\Moderateur\CandidatType;
 use App\Form\Moderateur\EditedCvType;
 use App\Repository\SecteurRepository;
 use App\Service\Mailer\MailerService;
@@ -38,6 +42,7 @@ use App\Repository\Entreprise\JobListingRepository;
 use App\Repository\Candidate\ApplicationsRepository;
 use App\Repository\Moderateur\TypeContratRepository;
 use App\Form\Search\Candidat\ModerateurCandidatSearchType;
+use App\Form\Moderateur\EntrepriseType as NewEntrepriseType;
 use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -107,6 +112,24 @@ class ModerateurController extends AbstractController
             return $redirection; 
         }
 
+
+        /** Formulaire nouvelle entreprise */
+        $newEntreprise = new EntrepriseProfile();
+        $formEntreprise = $this->createForm(NewEntrepriseType::class, $newEntreprise);
+        $formEntreprise->handleRequest($request);
+        if($formEntreprise->isSubmitted() && $formEntreprise->isValid()){
+            $entrepriseProfile = $formEntreprise->getData();
+            $user = $entrepriseProfile->getEntreprise();
+            $user->setType(User::ACCOUNT_ENTREPRISE);
+            $user->setDateInscription(new DateTime());
+            $entrepriseProfile->setStatus(EntrepriseProfile::STATUS_PENDING);
+    
+            $this->em->persist($user);
+            $this->em->persist($entrepriseProfile);
+            $this->em->flush();
+
+            $this->addFlash('success', 'Entreprise créé avec succès');
+        }
         /** Formulaire de recherche entreprise */
         $form = $this->createForm(ModerateurEntrepriseSearchType::class);
         $form->handleRequest($request);
@@ -139,6 +162,7 @@ class ModerateurController extends AbstractController
             ),
             'result' => $data,
             'form' => $form->createView(),
+            'formEntreprise' => $formEntreprise->createView(),
         ]);
     }
 
@@ -267,11 +291,41 @@ class ModerateurController extends AbstractController
     }
 
     #[Route('/candidats', name: 'app_dashboard_moderateur_candidats')]
-    public function candidats(Request $request, PaginatorInterface $paginatorInterface, CandidateProfileRepository $candidateProfileRepository): Response
+    public function candidats(
+        Request $request, 
+        PaginatorInterface $paginatorInterface, 
+    ): Response
     {
         $redirection = $this->checkModerateur();
         if ($redirection !== null) {
             return $redirection; 
+        }
+
+        /** Formulaire nouveau candidat */
+        $newCandidate = new CandidateProfile();
+        $formCandidate = $this->createForm(CandidatType::class, $newCandidate);
+        $formCandidate->handleRequest($request);
+        if($formCandidate->isSubmitted() && $formCandidate->isValid()){
+            $candidateProfile = $formCandidate->getData();
+            $user = $candidateProfile->getCandidat();
+            $user->setType(User::ACCOUNT_CANDIDAT);
+            $user->setDateInscription(new DateTime());
+            $candidateProfile->setIsValid(false);
+            $candidateProfile->setStatus(CandidateProfile::STATUS_PENDING);
+            $candidateProfile->setUid(new Uuid(Uuid::v1()));
+
+            $cvFile = $formCandidate->get('cv')->getData();
+            if ($cvFile) {
+                $fileName = $this->fileUploader->upload($cvFile);
+                $candidateProfile->setCv($fileName[0]);
+                $this->profileManager->saveCV($fileName, $candidateProfile);
+            }
+    
+            $this->em->persist($user);
+            $this->em->persist($candidateProfile);
+            $this->em->flush();
+
+            $this->addFlash('success', 'Candidat créé avec succès');
         }
 
         /** Formulaire de recherche candidat */
@@ -306,6 +360,7 @@ class ModerateurController extends AbstractController
                 10
             ),
             'form' => $form->createView(),
+            'formCandidate' => $formCandidate->createView(),
         ]);
     }
 
@@ -677,9 +732,9 @@ class ModerateurController extends AbstractController
             return $this->redirectToRoute('app_dashboard_moderateur_mettings');
         }
 
-        return $this->renderForm('dashboard/moderateur/mettings_edit.html.twig', [
+        return $this->render('dashboard/moderateur/mettings_edit.html.twig', [
             'metting' => $metting,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

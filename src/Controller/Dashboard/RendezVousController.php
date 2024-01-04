@@ -4,7 +4,7 @@ namespace App\Controller\Dashboard;
 
 use DateTime;
 use App\Entity\User;
-use App\Form\MettingType;
+use App\Form\Moderateur\MettingType;
 use App\Entity\Notification;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;

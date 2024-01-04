@@ -164,23 +164,25 @@
                     <div class="list-group list-group-flush mb-4">
                     <span class="text-muted">Email :</span> {{ candidat.candidat.email }}<br>
                     <span class="text-muted">Téléphone : </span> <span class="text-dark">{{ candidat.candidat.telephone }}</span><br>
-                    {% if candidat.social.linkedin is not empty %}
-                        <a title="{{ candidat.social.linkedin }}" href="{{candidat.social.linkedin}}" target=_blank ><i class="bi h2 bi-linkedin"></i></a>
-                    {% endif %}
-                    {% if candidat.social.skype is not empty %}
-                        <a title="{{ candidat.social.skype }}" href="{{candidat.social.skype}}" target=_blank ><i class="bi h2 bi-skype"></i></a>
-                    {% endif %}
-                    {% if candidat.social.slack is not empty %}
-                        <a title="{{ candidat.social.slack }}" href="{{candidat.social.slack}}" target=_blank ><i class="bi h2 bi-slack"></i></a>
-                    {% endif %}
-                    {% if candidat.social.facebook is not empty %}
-                        <a title="{{ candidat.social.facebook }}" href="{{candidat.social.facebook}}" target=_blank ><i class="bi h2 bi-facebook"></i></a>
-                    {% endif %}
-                    {% if candidat.social.instagram is not empty %}
-                        <a title="{{ candidat.social.instagram }}" href="{{candidat.social.instagram}}" target=_blank ><i class="bi h2 bi-instagram"></i></a>
-                    {% endif %}
-                    {% if candidat.social.github is not empty %}
-                        <a title="{{ candidat.social.github }}" href="{{candidat.social.github}}" target=_blank ><i class="bi h2 bi-github"></i></a>
+                    {% if candidat.social is not empty %}
+                        {% if candidat.social.linkedin is not empty %}
+                            <a title="{{ candidat.social.linkedin }}" href="{{candidat.social.linkedin}}" target=_blank ><i class="bi h2 bi-linkedin"></i></a>
+                        {% endif %}
+                        {% if candidat.social.skype is not empty %}
+                            <a title="{{ candidat.social.skype }}" href="{{candidat.social.skype}}" target=_blank ><i class="bi h2 bi-skype"></i></a>
+                        {% endif %}
+                        {% if candidat.social.slack is not empty %}
+                            <a title="{{ candidat.social.slack }}" href="{{candidat.social.slack}}" target=_blank ><i class="bi h2 bi-slack"></i></a>
+                        {% endif %}
+                        {% if candidat.social.facebook is not empty %}
+                            <a title="{{ candidat.social.facebook }}" href="{{candidat.social.facebook}}" target=_blank ><i class="bi h2 bi-facebook"></i></a>
+                        {% endif %}
+                        {% if candidat.social.instagram is not empty %}
+                            <a title="{{ candidat.social.instagram }}" href="{{candidat.social.instagram}}" target=_blank ><i class="bi h2 bi-instagram"></i></a>
+                        {% endif %}
+                        {% if candidat.social.github is not empty %}
+                            <a title="{{ candidat.social.github }}" href="{{candidat.social.github}}" target=_blank ><i class="bi h2 bi-github"></i></a>
+                        {% endif %}
                     {% endif %}
                     </div>
                 </div>

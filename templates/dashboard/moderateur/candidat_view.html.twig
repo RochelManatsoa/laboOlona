@@ -328,6 +328,7 @@
                         </div> 
                         <h3 class="text-center mb-4">Réseau sociaux</h3>
                         <div class="col-md-9 mx-auto text-center">
+                        {% if candidat.social is not empty %}
                             {% if candidat.social.linkedin is not empty %}
                                 <a title="{{ candidat.social.linkedin }}" href="{{candidat.social.linkedin}}" target=_blank ><i class="bi h2 bi-linkedin"></i></a>
                             {% endif %}
@@ -346,6 +347,7 @@
                             {% if candidat.social.github is not empty %}
                                 <a title="{{ candidat.social.github }}" href="{{candidat.social.github}}" target=_blank ><i class="bi h2 bi-github"></i></a>
                             {% endif %}
+                        {% endif %}
                         </div> 
                     </div> 
                 </div>
