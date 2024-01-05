@@ -24,6 +24,7 @@ use App\Form\Moderateur\EditedCvType;
 use App\Repository\SecteurRepository;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
+use App\Entity\Moderateur\Invitation;
 use App\Form\Candidat\AvailabilityType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Moderateur\NotificationType;
@@ -43,10 +44,12 @@ use App\Repository\Candidate\ApplicationsRepository;
 use App\Repository\Moderateur\TypeContratRepository;
 use App\Form\Search\Candidat\ModerateurCandidatSearchType;
 use App\Form\Moderateur\EntrepriseType as NewEntrepriseType;
+use App\Form\Moderateur\InvitationType;
 use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
+use App\Repository\Moderateur\InvitationRepository;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -765,6 +768,54 @@ class ModerateurController extends AbstractController
         
         return $this->render('dashboard/moderateur/notifications.html.twig', [
             'sectors' => $notificationRepository->findAll(),
+        ]);
+    }
+
+
+    #[Route('/invitation', name: 'app_dashboard_moderateur_invitation')]
+    public function invitation(Request $request, InvitationRepository $invitationRepository): Response
+    {
+        $redirection = $this->checkModerateur();
+        if ($redirection !== null) {
+            return $redirection; 
+        }
+
+        $invitation = new Invitation();
+        $invitation->setUuid(new Uuid(Uuid::v4()));
+        $invitation->setCreatedAt(new DateTime());
+        $invitation->setStatus(Invitation::STATUS_PENDING);
+        $form = $this->createForm(InvitationType::class, $invitation);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $invitation = $form->getData();
+            $email = $invitation->getReader()->getEmail();
+            $invitation->setEmail($email);
+
+            $this->em->persist($invitation);
+            $this->em->flush();
+            $this->addFlash('success', 'Invitation envoyée');
+            /** Envoi email de mot de passe */
+            $this->mailerService->send(
+                $email,
+                "Invitation exclusive de Olona Talents : Débloquez votre potentiel dès maintenant !",
+                "invitation.html.twig",
+                [
+                    'user' => $invitation->getReader(),
+                    'dashboard_url' => $this->urlGenerator->generate(
+                        'app_invitation',
+                        [
+                            'uuid' => $invitation->getUuid()
+                        ], 
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
+                ]
+            );
+
+        }
+        
+        return $this->render('dashboard/moderateur/invitation/index.html.twig', [
+            'invitations' => $invitationRepository->findAll(),
+            'form' => $form->createView(),
         ]);
     }
 }
