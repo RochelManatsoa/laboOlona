@@ -1,0 +1,114 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Invitations</h2>
+    <button type="button" data-bs-target="#newInvitation" data-bs-toggle="modal" class="btn btn-outline-dark rounded-pill btn-md my-3 px-5">Nouveau</button>
+
+            <!-- Onglets -->
+            <ul class="nav nav-tabs nav-underline">
+                <li class="nav-item">
+                    <a class="nav-link active" id="invitations-tab" data-bs-toggle="tab" href="#invitations">Tous</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="accepted-tab" data-bs-toggle="tab" href="#accepted">Acceptées</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pending-tab" data-bs-toggle="tab" href="#pending">En attente</a>
+                </li>
+            </ul>
+
+            <!-- Contenu des onglets -->
+            <div class="tab-content mt-3">
+                <div class="tab-pane fade show active" id="invitations">
+                    <div class="card">
+                        <div class="card-body">
+                            {% if invitations|length > 0 %}
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="col-5">Email</th>
+                                    <th scope="col" class="col-2">Profil</th>
+                                    <th scope="col" class="col-2">Envoyé le</th>
+                                    <th scope="col" class="col-3">Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for invitation in invitations %}
+                                    <tr>
+                                    <!-- Colonne de gauche (Détails de l'offre) -->
+                                    <td>
+                                    {{ invitation.email }}<br>
+                                    {{ invitation.uuid }}
+                                    </td>
+                                    <td>
+                                    {{ invitation.reader.type }}
+                                    </td>
+                                    <td>
+                                    {{ invitation.createdAt|date('d/M/Y') }}
+                                    </td>
+                            
+                                    <!-- Colonne de droite (Informations du Candidat) -->
+                                    <td>
+                                    {{ invitation(invitation.status)|raw }}
+                                    {% if invitation.status is same as(constant('App\\Entity\\Moderateur\\Invitation::STATUS_USED'))  %}
+                                    <small> le {{ invitation.usedAt|date('d/M/Y') }} </small>
+                                    {% endif %}
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                          
+                            {% else %}
+                            <div class="text-center col-6 mx-auto">
+                                <i class=" h1 mx-auto my-5 bi bi-archive"></i>
+                                <p class="text-center">Aucune invitation en cours.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="tab-pane fade" id="accepted">
+
+                        {{ dump(invitations) }}
+
+                </div>
+        
+                <div class="tab-pane fade" id="pending">
+
+                        {{ dump(invitations) }}
+                </div>
+            </div>
+</div>
+
+{{ form_start(form)}}
+<div class="modal fade" id="newInvitation" aria-hidden="true" aria-labelledby="newInvitationLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="newInvitationLabel">Entrez le mail du destinataire</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      
+        <div class="row">
+            <div class="col">
+                {{ form_label(form.reader) }}
+                {{ form_widget(form.reader, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(form.reader) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 mx-auto">
+                <button type="submit" class="btn btn-primary rounded-pill px-5">Envoyer</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ form_end(form)}}
+{% endblock %}
+

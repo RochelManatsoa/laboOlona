@@ -953,3 +953,11 @@ app_dashboard_entreprise_view_candidature :
 app_dashboard_moderateur_candidat_applications : 
     title : Candidature envoyés
     dashboard_title : Candidature envoyés
+
+voir_entreprise : 
+    title : Détails de l'entreprise
+    dashboard_title : Détails de l'entreprise
+
+app_dashboard_moderateur_invitation : 
+    title : Incription par invitation
+    dashboard_title : Incription par invitation

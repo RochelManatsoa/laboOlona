@@ -70,6 +70,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('checkAvailability', [$this, 'checkAvailability']),
             new TwigFunction('getAge', [$this, 'getAge']),
             new TwigFunction('getPseudo', [$this, 'getPseudo']),
+            new TwigFunction('invitation', [$this, 'invitation']),
         ];
     }
 
@@ -670,6 +671,23 @@ class AppExtension extends AbstractExtension
         $pseudo .= ' '.substr($candidat->getCandidat()->getNom(), 0, 1) . '.';
     
         return $pseudo;
+    }
+
+
+    function invitation(?string $status):string
+    {
+        $badge = '';
+        switch ($status) {
+            case 'USED':
+                $badge = '<span class="badge bg-dark h2">Utilisé</span>';
+                break;
+            
+            default:
+                $badge = '<span class="badge bg-danger h2"><i class="bi bi-hourglass-split"></i> En attente</span>';
+                break;
+        }
+    
+        return $badge;
     }
 
 }
