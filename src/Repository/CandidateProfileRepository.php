@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\CandidateProfile;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<CandidateProfile>
@@ -16,9 +17,12 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CandidateProfileRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $paginator;
+    
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, CandidateProfile::class);
+        $this->paginator = $paginator;
     }
 
     /**
@@ -65,6 +69,49 @@ class CandidateProfileRepository extends ServiceEntityRepository
              ->getResult();
      }
 
+     public function findBySecteur($secteurId) {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.secteurs', 's')
+            ->where('s.id = :secteurId')
+            ->andWhere('c.fileName <> :defaultAvatar') 
+            ->andWhere('c.status = :statusValid') 
+            ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
+            ->setParameter('defaultAvatar', 'avatar-default.jpg')
+            ->setParameter('secteurId', $secteurId)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllValid() {
+        $query = $this->createQueryBuilder('c')
+             ->andWhere('c.fileName <> :defaultAvatar') 
+             ->andWhere('c.status = :statusValid') 
+             ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
+             ->setParameter('defaultAvatar', 'avatar-default.jpg')
+             ->orderBy('c.id', 'ASC')
+             ->getQuery()
+        ;
+        return $query->getResult();
+
+        // return $this->paginator->paginate(
+        //     $query,
+        //     1,
+        //     8
+        // );
+     }
+     
+    
+    public function findUniqueTitlesBySecteurs($secteurs)
+    {
+        $qb = $this->createQueryBuilder('cp')
+            ->select('DISTINCT cp.titre , cp.id')
+            ->leftJoin('cp.secteurs', 's')
+            ->where('s.id IN (:secteurs)')
+            ->setParameter('secteurs', $secteurs);
+    
+        return $qb->getQuery()->getResult();
+    }
+    
 //    public function findOneBySomeField($value): ?CandidateProfile
 //    {
 //        return $this->createQueryBuilder('c')

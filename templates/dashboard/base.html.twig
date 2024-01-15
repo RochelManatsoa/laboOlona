@@ -8,6 +8,7 @@
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         <meta name="description" content="{{ meta_description() }}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1Ld2PCHjDEQu3HcO8AmYC88Bz9yE7Q6hCtvY5pF9m6ouCp68z5i5T1pFGDhlNq3bP2vTpmTmBsKP4jY1rgumg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
@@ -93,5 +94,6 @@
                 setDatePickerRequired(fromDatePicker.checked);
             });
             </script>
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     </body>
 </html>

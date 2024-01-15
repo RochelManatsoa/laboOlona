@@ -2,45 +2,51 @@
 Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
 </p>
 
-<div class="navigation">
-{{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
-</div> 
-
 <!-- Section pour les candidats recommandés -->
 <div class="row mb-5">
-    <h3 class="col-12 mb-3">Optez pour les candidat(e)s certifié(e)s Olona-talents </h3>
+    <h3 class="col-12 mb-3 h4">Optez pour les candidat(e)s certifié(e)s Olona-talents </h3>
         {% for candidat in candidats %}
-        <div class="col-md-4 mb-4">
+        <div class="col-md-6 mb-6 mb-2 shadow">
             <div class="card h-100">
+                <div class="card-img-top bg-image-candidat" style="background-image: url('{{vich_uploader_asset(candidat, 'file')}}');" alt="{{ candidat.titre }}">
+                    <div class="titre-overlay position-absolute w-100">
+                        <h6 class="card-title m-0 p-2">{{ candidat.titre|upper }}</h6>
+                    </div>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ candidat.titre }}</h5>
-                    {# <p class="card-text">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</p> #}
                     {% set prenoms = candidat.candidat.prenom|split(' ') %}
                         <p class="card-text">
-                            {{ prenoms|first }} {# Affiche le premier prénom #}
-                            {% for prenom in prenoms|slice(1) %} {# Passe le premier prénom #}
-                                {{ prenom|slice(0, 1) }}.{# Affiche l'initiale des autres prénoms #}
+                            {{ generatePseudo(candidat)}}
+                            {# {{ prenoms|first|capitalize }} 
+                            {% for prenom in prenoms|slice(1) %} 
+                                {{ prenom|slice(0, 1)|capitalize }}.
                             {% endfor %}
-                            {{ candidat.candidat.nom|slice(0, 1) }}.
+                            {{ candidat.candidat.nom|slice(0, 1)|capitalize }}. #}
                         </p>
-                    <p class="card-text">
-                        Missions réalisées: <span class="badge bg-success">{{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }}</span>
-                    </p>
-                    <p class="card-text">
-                        {% for skill in candidat.competences %}
+                    <p class="card-text small">
+                    {% set count = 0 %}
+
+                    {% for skill in candidat.competences %}
+                        {% if count < 3 %}
                             <span class="badge bg-info">{{ skill.nom }}</span>
-                        {% endfor %}
-                    </p>
-                    <p class="card-text">
+                            {% set count = count + 1 %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if candidat.competences|length > 4 %}
+                        <span class="badge bg-dark rounded-pill">+{{ candidat.competences|length - 3 }}</span>
+                    {% endif %}
+
+                    <br>
+                        Missions réalisées: <span class="badge bg-success">{{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }}</span>
+                    <br>
                         Expériences: <span class="badge bg-secondary">{{ candidat.experiences|length }}</span>
-                    </p>
-                    <p class="card-text">
+                    <br>
                         Langues: 
                         {% for langue in candidat.langages %}
                             {{ isoToEmoji(langue.langue.code) }}
                         {% endfor %}
-                    </p>
-                    <p class="card-text">
+                    <br>
                         Disponibilité: 
                         <span class="text-dark">
                             {% if candidat.availability is not null %}
@@ -49,6 +55,10 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
                                 <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
                             {% endif %} 
                         </span>
+                    <br>
+                        {% for secteur in candidat.secteurs %}
+                            <span class="badge bg-warning">{{ secteur.nom }}</span>
+                        {% endfor %}
                     </p>
                 </div>
                 <div class="card-footer">
@@ -63,12 +73,16 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
         </div>
     {% endfor %}
 
+    <div class="navigation">
+    {{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
+    </div> 
+
 </div>
 
 <hr>
 
 <!-- Section pour tous les candidats -->
-<div class="row">
+{# <div class="row">
     <h3 class="col-12 mb-3">Voir tous les Candidats</h3>
         <div class="card shadow p-2">
             <table class="table table-responsive" id="candidatsTable">
@@ -84,20 +98,20 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
                         <th scope="col-1">Profil</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% for candidat in candidats %}
-                        <tr>
+                <tbody> #}
+                    {# {% for candidat in candidats %} #}
+                        {# <tr>
                             <td style="font-weight: 500;">{{ candidat.titre }}</td>  
+                            <td> #}
+                                {# {% set prenoms = candidat.candidat.prenom|split(' ') %} #}
+                                {# {{ prenoms|first }}Affiche le premier prénom #}
+                                {# {% for prenom in prenoms|slice(1) %}{{ prenom|slice(0, 1) }}.{% endfor %} Affiche les initiales des autres prénoms suivies d'un point #}
+                                {# {{ candidat.candidat.nom|slice(0, 1) }}.Affiche l'initiale du nom suivie d'un point #}
+                            {# </td>
                             <td>
-                                {% set prenoms = candidat.candidat.prenom|split(' ') %}
-                                {{ prenoms|first }}{# Affiche le premier prénom #}
-                                {% for prenom in prenoms|slice(1) %}{{ prenom|slice(0, 1) }}.{% endfor %} {# Affiche les initiales des autres prénoms suivies d'un point #}
-                                {{ candidat.candidat.nom|slice(0, 1) }}.{# Affiche l'initiale du nom suivie d'un point #}
-                            </td>
-                            <td>
-                                <span class="badge bg-success">
-                                    {{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }}
-                                </span>
+                                <span class="badge bg-success"> #}
+                                    {# {{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }} #}
+                                {# </span>
                             </td>
                             <td class="small">
                                 <span class="text-dark">
@@ -130,5 +144,5 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-</div>
+        </div> #}
+{# </div> #}

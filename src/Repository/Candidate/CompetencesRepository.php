@@ -2,9 +2,10 @@
 
 namespace App\Repository\Candidate;
 
+use App\Entity\CandidateProfile;
 use App\Entity\Candidate\Competences;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Competences>
@@ -21,20 +22,23 @@ class CompetencesRepository extends ServiceEntityRepository
         parent::__construct($registry, Competences::class);
     }
 
-//    /**
-//     * @return Competences[] Returns an array of Competences objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   /**
+     * Trouve des compétences par secteurs.
+     *
+     * @param array $secteurs Un tableau de secteurs
+     * @return Competences[] Une liste de compétences associées aux candidats de ces secteurs
+     */
+    public function findCompetencesBySecteurs($secteurs)
+    {
+        $qb = $this->createQueryBuilder('comp')
+            ->select('DISTINCT comp.nom, comp.id')
+            ->join('comp.profil', 'profile')
+            ->join('profile.secteurs', 'sect')
+            ->andWhere('sect.id IN (:secteurs)')
+            ->setParameter('secteurs', $secteurs);
+
+        return $qb->getQuery()->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?Competences
 //    {

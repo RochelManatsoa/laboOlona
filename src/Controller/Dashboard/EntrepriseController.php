@@ -3,21 +3,27 @@
 namespace App\Controller\Dashboard;
 
 use App\Entity\User;
+use App\Entity\Langue;
+use App\Entity\Secteur;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
+use App\Data\SearchCandidateData;
 use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
 use App\Manager\EntrepriseManager;
 use App\Manager\ModerateurManager;
 use App\Form\Entreprise\AnnonceType;
+use App\Entity\Candidate\Competences;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use Symfony\Component\Intl\Countries;
 use App\Entity\Candidate\Applications;
 use App\Form\Profile\EditEntrepriseType;
+use App\Form\Search\SearchCandidateType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Form\Search\SearchCandidateTypeCopy;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +35,6 @@ use App\Repository\Entreprise\JobListingRepository;
 use App\Repository\Candidate\ApplicationsRepository;
 use App\Repository\Moderateur\TypeContratRepository;
 use App\Form\Search\Annonce\EntrepriseAnnonceSearchType;
-use App\Form\Search\Candidat\EntrepriseCandidatSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Form\Search\Candidature\EntrepriseCandidatureSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -256,39 +261,66 @@ class EntrepriseController extends AbstractController
     public function rechercheCandidats(Request $request, CandidateProfileRepository $candidatRepository, PaginatorInterface $paginatorInterface): Response
     {
         $this->checkEntreprise();
-
-        $form = $this->createForm(EntrepriseCandidatSearchType::class);
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $secteurs = $user->getEntrepriseProfile()->getSecteurs();
+        $searchData = new SearchCandidateData();
+        $searchData->setSecteurs($secteurs->toArray());
+        $form = $this->createForm(SearchCandidateTypeCopy::class, $searchData);
         $form->handleRequest($request);
-        
-        $data = $this->entrepriseManager->findAllCandidats();
+        $data = $this->em->getRepository(CandidateProfile::class)->findAllValid();
         if ($form->isSubmitted() && $form->isValid()) {
+            $secteurs = $form->get('secteurs')->getData();
             $titre = $form->get('titre')->getData();
-            $nom = $form->get('nom')->getData();
             $competences = $form->get('competences')->getData();
-            $langues = $form->get('langues')->getData();
-            $availability = $form->get('availability')->getData();
-            $data = $this->entrepriseManager->findAllCandidats($titre, $nom, $competences, $langues, $availability);
+            $langues = $form->get('langue')->getData();
+            $page = $form->get('page')->getData();
+            // dd($secteurs, $titre, $competences, $langues, $page);
+            $competencesArray = $competences instanceof \Doctrine\Common\Collections\Collection ? $competences->toArray() : $competences;
+            $languesArray = $langues instanceof \Doctrine\Common\Collections\Collection ? $langues->toArray() : $competences;
+            $titreValues = array_map(function ($titreObject) {
+                return $titreObject->getTitre(); // Assurez-vous que getTitre() renvoie la chaîne du titre
+            }, $titre);
+            $data = $this->entrepriseManager->filter($secteurs, $titreValues, $competencesArray, $languesArray);
+            // dd($secteurs, $titre, $competencesArray, $languesArray, $data);
             if ($request->isXmlHttpRequest()) {
-                // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
                 return new JsonResponse([
                     'content' => $this->renderView('dashboard/entreprise/candidat/_candidats.html.twig', [
                         'candidats' => $paginatorInterface->paginate(
                             $data,
                             $request->query->getInt('page', 1),
-                            10
+                            12
                         ),
                         'result' => $data
                     ]),
                 ]);
             }
+        }else {
+            $errors = [];
+            foreach ($form->getErrors(true) as $error) {
+                $errors[] = $error->getMessage();
+            }
+            
+            if (!empty($errors)) {
+                // Si la requête est AJAX mais le formulaire n'est pas valide
+                return new JsonResponse([
+                    'errors' => $errors,
+                ], 400);
+            }
+            
+            if ($request->isXmlHttpRequest()) {
+                // Si la requête est AJAX mais le formulaire n'est pas valide
+                return new JsonResponse([
+                    'error' => 'Formulaire invalide ou données incorrectes.',
+                ], 400);
+            }
         }
-
 
         return $this->render('dashboard/entreprise/candidat/index.html.twig', [
             'candidats' => $paginatorInterface->paginate(
                 $data,
                 $request->query->getInt('page', 1),
-                10
+                12
             ),
             'result' => $data,
             'form' => $form->createView(),
@@ -309,7 +341,6 @@ class EntrepriseController extends AbstractController
         if ($candidateProfile->getBirthday() !== null) {
             $age = $now->diff($candidateProfile->getBirthday())->y;
         }
-
          // Convertir le code ISO en nom de pays
         $countryName = Countries::getName($candidateProfile->getLocalisation());
 
