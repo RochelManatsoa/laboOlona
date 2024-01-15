@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <div class="card shadow">
         <div class="card-header bg-primary text-white">
-        <h1 class="h3">Profil candidat : {{ candidat.titre|upper }}</h1>
+        <h1 class="h3">Profil candidat : {{ candidat.titre|upper }} {{generatePseudo(candidat)}}</h1>
         </div>
         <div class="card-body">
             <div class="row mb-4">
@@ -31,7 +31,12 @@
                                 <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
                             {% endif %} 
                         </span>
-                    </p>
+                    </p><!-- Button trigger modal -->
+                    {% if candidat.editedCvs|length > 0 %}
+                    <button type="button" class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="bi bi-file-earmark-pdf-fill"></i>  Voir son CV 
+                    </button>
+                    {% endif %}
                 </div>
             </div>
             <p><strong>Résumé :</strong> <span class="text-muted">{{ candidat.resume|raw }}</span></p>
@@ -75,4 +80,17 @@
     </div>
     <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 </div>
+
+{% if candidat.editedCvs|length > 0 %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <iframe class="embed-responsive-item w-100" style="height: 600px;" src="{{ asset('uploads/cv/' ~ candidat.editedCvs[0].cvLink) }}" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
 {% endblock %}

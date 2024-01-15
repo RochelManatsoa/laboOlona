@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Uid\Uuid;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CandidateProfileRepository::class)]
 #[Vich\Uploadable]
@@ -34,6 +35,7 @@ class CandidateProfile
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['identity'])]
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'candidateProfile', cascade: ['persist', 'remove'])]
@@ -75,6 +77,7 @@ class CandidateProfile
     private ?\DateTimeInterface $birthday = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['identity'])]
     private ?string $titre = null;
 
     #[ORM\Column(length: 255, nullable: true)]

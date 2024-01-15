@@ -15,42 +15,234 @@
             </div>
         </div>
         {{ form_start(form, {'attr': {'class': 'form-group', 'id':'entreprise-candidat-search-form'}}) }}
-        <div class="row">
             <div class="input-group">
-                    <div class="col">
-                        {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                <div class="row">
+                    <div class="col-5">
+                        <div class="d-flex flex-column flex-shrink-0 p-3 position-sticky top-0">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary rounded-pill mb-3 mx-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Recherche avancée
+                        <span  id="titre-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            0
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                        </button>
+                            {{ form_widget(form.secteurs) }}
+                        </div>
                     </div>
-                    <div class="col">
-                        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                    <div class="col-7 my-2">
+                        <div id="candidats-container">
+                            {% include 'dashboard/entreprise/candidat/_candidats.html.twig' %}
+                        </div>
                     </div>
-                    <div class="col">
-                        {{ form_widget(form.competences, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    <div class="col">
-                        {{ form_widget(form.langues, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    <div class="col">
-                        {{ form_widget(form.availability, {'attr': {'class': 'form-control'}}) }}
-                    </div>
+                    
+                </div>
             </div>
-        </div>
-        {{ form_end(form) }}
 
-        <div id="candidats-container">
-            {% include 'dashboard/entreprise/candidat/_candidats.html.twig' %}
-        </div>
 
         <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
     </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Recherche avancée</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="my-2 mx-1">
+            {{ form_widget(form.titre, {'attr': {'class': 'js-example-basic-multiple-titre p-1 m-1', 'style': 'width: 100%'}}) }}
+        </div>
+        <div class="my-2 mx-1">
+            {{ form_widget(form.competences, {'attr': {'class': 'js-example-basic-multiple-competences p-1 m-1', 'style': 'width: 100%'}}) }}
+        </div>
+        <div class="my-2 mx-1">
+            {{ form_widget(form.langue, {'attr': {'class': 'js-example-basic-multiple-langues p-1 m-1', 'style': 'width: 100%'}}) }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-warning" id="reset-button">Effacer</button>
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </div>
+    </div>
+  </div>
+</div>
+                    <div style="display:none">
+                    {{form_widget(form)}}
+                    </div>
+        {{ form_end(form) }}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
-    function searchAnnonces() {
-        var formData = $('#entreprise-candidat-search-form').serialize();
+document.addEventListener('DOMContentLoaded', function() {
+    
+    function updateTotalBadge() {
+        const titreSelect = document.querySelector('#titre').tomselect;
+        const competencesSelect = document.querySelector('#competences').tomselect;
+        const langueSelect = document.querySelector('#langue').tomselect;
 
+        const titreCount = titreSelect.items.length;
+        const competencesCount = competencesSelect.items.length;
+        const langueCount = langueSelect.items.length;
+        const totalCount = titreCount + competencesCount + langueCount;
+        console.log(titreCount > 0, competencesCount > 0, langueCount > 0)
+
+        const badgeElement = document.getElementById('titre-badge');
+        if (titreCount > 0 || competencesCount > 0 || langueCount > 0) {
+            badgeElement.textContent = totalCount;
+            badgeElement.style.display = 'inline-block'; // Afficher le badge
+        } else {
+            badgeElement.style.display = 'none'; // Masquer le badge
+        }
+    }
+
+    // Mettre à jour le badge lors du chargement de la page
+    updateTotalBadge();
+
+    // Gestionnaire d'événements pour le bouton "Effacer" et les changements sur les champs
+    document.getElementById('reset-button').addEventListener('click', function() {
+        const titreSelect = document.querySelector('#titre').tomselect;
+        const competencesSelect = document.querySelector('#competences').tomselect;
+        const langueSelect = document.querySelector('#langue').tomselect;
+
+        titreSelect.clear(); 
+        competencesSelect.clear();
+        langueSelect.clear();
+
+        updateTotalBadge(); // Mettre à jour le badge après la réinitialisation
+    });
+
+    document.querySelector('#titre').addEventListener('change', updateTotalBadge);
+    document.querySelector('#competences').addEventListener('change', updateTotalBadge);
+    document.querySelector('#langue').addEventListener('change', updateTotalBadge);
+
+
+    document.getElementById('reset-button').addEventListener('click', function() {
+        // Obtenez les instances TomSelect des champs de sélection
+        const titreSelect = document.querySelector('#titre').tomselect;
+        const competencesSelect = document.querySelector('#competences').tomselect;
+        const langueSelect = document.querySelector('#langue').tomselect;
+
+        // Utilisez la méthode `clear` pour vider les sélections
+        titreSelect.clear(); 
+        competencesSelect.clear();
+        langueSelect.clear();
+
+        updateTotalBadge(); // Mettre à jour le badge après la réinitialisation
+    });
+
+    // Sélectionner toutes les cases à cocher du secteur
+    const secteurCheckboxes = document.querySelectorAll('input[name="secteurs[]"]'); // Remplacez "secteurs[]" par le nom correct du champ
+
+    // Ajouter un écouteur d'événements pour chaque case à cocher
+    secteurCheckboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            // Lorsqu'un secteur est sélectionné ou désélectionné
+            const selectedSecteurs = Array.from(secteurCheckboxes)
+                .filter(cb => cb.checked) // Filtrer les cases cochées
+                .map(cb => cb.value); // Récupérer la valeur de chaque case cochée
+
+            // Convertir le tableau en une chaîne de secteurs séparés par des virgules
+            console.log(selectedSecteurs)
+            const secteursString = selectedSecteurs.join(',');
+
+            fetch(`/ajax/get-titre-poste?secteurs=${encodeURIComponent(secteursString)}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Logique pour mettre à jour les autres champs
+                    // Assurez-vous de disposer d'une référence à votre instance TomSelect pour le champ 'titre'
+                    const titreSelect = document.getElementById('titre').tomselect;
+                    const competenceSelect = document.getElementById('competences').tomselect;
+                    console.log(data)
+                    // Effacer les options existantes
+                    titreSelect.clearOptions();
+                    competenceSelect.clearOptions();
+                    console.log(titreSelect)
+
+                    // Ajouter de nouvelles options
+                    data.titres.forEach(titre => {
+                        titreSelect.addOption({value: titre.id, text: titre.nom});
+                    });
+
+                    // Ajouter de nouvelles options
+                    data.competences.forEach(titre => {
+                        competenceSelect.addOption({value: titre.id, text: titre.nom});
+                    });
+
+                    // Si nécessaire, actualisez l'état de TomSelect
+                    titreSelect.refreshOptions();
+                    competenceSelect.refreshOptions();
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des titres:', error);
+                });
+        });
+    });
+});
+
+$(document).ready(function() {
+
+//     // Mise à jour du champ 'titre' en fonction de la sélection des secteurs
+//     $('#secteurs').on('change', function() {
+//         var secteurs = $(this).val(); // Récupérer les valeurs sélectionnées
+//         console.log(secteurs)
+//         $.ajax({
+//             url: '{{ path('get_titres_poste') }}', // Mettez à jour avec le chemin correct
+//             data: { secteurs: secteurs.join(',') },
+//             success: function(data) {
+//                 console.log(data)
+//                 var titreSelect = $('#titre');
+//                 titreSelect.empty();
+//                 console.log(titreSelect)
+
+//                 // Ajouter les nouvelles options
+//                 data.titres.forEach(function(titre) {
+//                     // debugger; 
+//                     titreSelect.append(new Option(titre, titre));
+//                 });
+
+//                 // Mise à jour de Select2 pour refléter les changements
+//                 titreSelect.select2({
+//                     placeholder: 'Titre du poste'
+//                 });
+//             }
+//         });
+//         console.log(secteurs)
+//         $.ajax({
+//             url: '{{ path('get_competences_poste') }}', // Mettez à jour avec le chemin correct
+//             data: { secteurs: secteurs.join(',') },
+//             success: function(data) {
+//                 console.log(data)
+//                 var competenceSelect = $('#competences');
+//                 competenceSelect.empty();
+//                 console.log(competenceSelect)
+
+//                 // Ajouter les nouvelles options
+//                 data.competences.forEach(function(competence) {
+//                     // debugger; 
+//                     competenceSelect.append(new Option(competence, competence));
+//                 });
+
+//                 // Mise à jour de Select2 pour refléter les changements
+//                 titreSelect.select2({
+//                     placeholder: 'Titre du poste'
+//                 });
+//             }
+//         });
+//     });
+
+    // Gérer la recherche et la mise à jour des annonces
+    $('#entreprise-candidat-search-form input, #entreprise-candidat-search-form select').on('keyup change', function() {
+        searchAnnonces();
+    });
+
+    function searchAnnonces() {
+        console.log('search annonces ok');
+        var formData = $('#entreprise-candidat-search-form').serialize();
         $.ajax({
-            url: '{{ path('app_dashboard_entreprise_recherche_candidats') }}',
+            url: '{{ path('app_dashboard_entreprise_recherche_candidats') }}', // Mettez à jour avec le chemin correct
             type: 'GET',
             data: formData,
             success: function(data) {
@@ -58,9 +250,20 @@ $(document).ready(function() {
             }
         });
     }
-    $('#entreprise-candidat-search-form input, #entreprise-candidat-search-form select').on('keyup change', function() {
-        searchAnnonces();
+
+});
+/*
+$(document).ready(function() {
+    $('.js-example-basic-multiple-titre').select2({
+        placeholder: 'Titre du poste'
+    });
+    $('.js-example-basic-multiple-competences').select2({
+        placeholder: 'Compétence'
+    });
+    $('.js-example-basic-multiple-langues').select2({
+        placeholder: 'Langues',
     });
 });
+*/
 </script>
 {% endblock %}

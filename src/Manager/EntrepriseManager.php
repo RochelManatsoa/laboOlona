@@ -2,14 +2,18 @@
 
 namespace App\Manager;
 
+use App\Entity\Candidate\Competences;
+use App\Entity\Secteur;
 use App\Entity\CandidateProfile;
-use App\Entity\Entreprise\JobListing;
-use App\Repository\CandidateProfileRepository;
-use App\Repository\Entreprise\JobListingRepository;
-use App\Repository\EntrepriseProfileRepository;
 use App\Service\User\UserService;
+use App\Entity\Entreprise\JobListing;
+use App\Entity\Langue;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\CandidateProfileRepository;
+use App\Repository\EntrepriseProfileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\RequestStack;
+use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class EntrepriseManager
@@ -81,59 +85,6 @@ class EntrepriseManager
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllCandidats(?string $titre = null, ?string $nom = null, ?string $competences = null, ?string $langues = null, ?string $availability = null): array
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $qb = $this->em->createQueryBuilder();
-
-        $parameters = [];
-
-        $conditions = [];
-
-        if($titre == null && $nom == null && $competences == null && $langues == null && $availability == null){
-            return $this->findValidCandidats();
-        }
-
-        if (!empty($titre)) {
-            $conditions[] = '(c.titre LIKE :titre )';
-            $parameters['titre'] = '%' . $titre . '%';
-        }
-
-        if (!empty($nom) ) {
-            $conditions[] = '(u.nom LIKE :nom OR u.prenom LIKE :nom OR u.email LIKE :nom )';
-            $parameters['nom'] = '%' . $nom . '%';
-        }
-
-        if (!empty($competences)) {
-            $conditions[] = '(s.nom LIKE :competences )';
-            $parameters['competences'] = '%' . $competences . '%';
-        }
-
-        if (!empty($langues)) {
-            $conditions[] = '(lg.nom LIKE :langues )';
-            $parameters['langues'] = '%' . $langues . '%';
-        }
-
-        if (!empty($availability)) {
-            $conditions[] = '(a.nom LIKE :availability )';
-            $parameters['availability'] = '%' . $availability . '%';
-        }
-
-        $qb->select('c')
-            ->from('App\Entity\CandidateProfile', 'c')
-            ->leftJoin('c.competences', 's')
-            ->leftJoin('c.langages', 'l')
-            ->leftJoin('c.availability', 'a')
-            ->leftJoin('l.langue', 'lg')
-            ->leftJoin('c.candidat', 'u')
-            ->where(implode(' AND ', $conditions))
-            ->orderBy('c.id', 'DESC')
-            ->setParameters($parameters);
-        
-        return $qb->getQuery()->getResult();
-    }
-
     public function findAllCandidature(?string $titre = null, ?string $candidat = null, ?string $status = null): array
     {
         /** @var User $user */
@@ -176,4 +127,54 @@ class EntrepriseManager
         
         return $qb->getQuery()->getResult();
     }
+    
+    
+    public function filter(?array $secteurs, ?array $titres, ?array $competences, ?array $langues): array
+    {
+        // Vérifie si tous les tableaux sont vides
+        if (empty($secteurs) && empty($titres) && empty($competences) && empty($langues)) {
+            return $this->candidateProfileRepository->findBy(
+                ['status' => CandidateProfile::STATUS_VALID],
+                ['id' => 'DESC']
+            );
+        }
+        
+        $qb = $this->em->createQueryBuilder();
+
+        // Construction de la requête de base
+        $qb->select('c')
+        ->from('App\Entity\CandidateProfile', 'c')
+        ->leftJoin('c.secteurs', 's')
+        ->leftJoin('c.langages', 'l')
+        ->leftJoin('l.langue', 'lang')
+        ->leftJoin('c.competences', 'skill');
+
+        // Ajout de conditions basées sur les valeurs non null
+        if (!empty($titres)) {
+            $qb->andWhere('c.titre IN (:titres)')
+            ->setParameter('titres', $titres);
+        }
+
+        if (!empty($competences)) {
+            $qb->andWhere('skill.id IN (:competences)')
+            ->setParameter('competences', $competences);
+        }
+
+        if (!empty($langues)) {
+            $qb->andWhere('lang.id IN (:langues)')
+            ->setParameter('langues', $langues);
+        }
+
+        if (!empty($secteurs)) {
+            $qb->andWhere('s.id IN (:secteurs)')
+            ->setParameter('secteurs', $secteurs);
+        }
+
+        // Ajout du tri
+        $qb->orderBy('c.id', 'DESC');
+        
+        return $qb->getQuery()->getResult();
+    }
+
+
 }

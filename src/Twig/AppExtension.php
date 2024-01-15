@@ -71,6 +71,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getAge', [$this, 'getAge']),
             new TwigFunction('getPseudo', [$this, 'getPseudo']),
             new TwigFunction('invitation', [$this, 'invitation']),
+            new TwigFunction('generatePseudo', [$this, 'generatePseudo']),
         ];
     }
 
@@ -690,4 +691,11 @@ class AppExtension extends AbstractExtension
         return $badge;
     }
 
+    public function generatePseudo(CandidateProfile $candidat)
+    {
+        $letters = 'OT';
+        $paddedId = sprintf('%04d', $candidat->getId());
+
+        return $letters . $paddedId;
+    }
 }
