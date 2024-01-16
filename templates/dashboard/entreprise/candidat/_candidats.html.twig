@@ -17,11 +17,6 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
                     {% set prenoms = candidat.candidat.prenom|split(' ') %}
                         <p class="card-text">
                             {{ generatePseudo(candidat)}}
-                            {# {{ prenoms|first|capitalize }} 
-                            {% for prenom in prenoms|slice(1) %} 
-                                {{ prenom|slice(0, 1)|capitalize }}.
-                            {% endfor %}
-                            {{ candidat.candidat.nom|slice(0, 1)|capitalize }}. #}
                         </p>
                     <p class="card-text small">
                     {% set count = 0 %}
