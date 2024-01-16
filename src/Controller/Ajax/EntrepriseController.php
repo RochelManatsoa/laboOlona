@@ -72,7 +72,7 @@ class EntrepriseController extends AbstractController
             
             // Récupérer les competences basés sur les secteurs
             $competences = $this->competencesRepository->findCompetencesBySecteurs($secteurs);
-            dd($competences);
+            // dd($competences);
         }
 
         // Récupérer les competences basés sur les secteurs

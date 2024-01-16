@@ -20,7 +20,7 @@
             {% for application in applications %}
                 <tr>
                     <td>{{ application.annonce.titre }}</td>
-                    <td>{{ application.candidat.candidat.nom }}</td>
+                    <td>{{ generatePseudo(application.candidat) }}</td>
                     <td>
                         <div class="annonce {{ 'status-' ~ application.status|lower }}">                                    
                             <span>{{ (application.status|candidature_status_Label) }}</span>
@@ -31,7 +31,7 @@
                     <td>{{ application.dateCandidature|date('d M Y') }}</td>
                     <td>
                         <div class="d-flex">
-                            <a class="btn btn-sm btn-warning rounded-pill custom-tooltip" data-tooltip="Voir un aperçu du profil du candidat {{ application.candidat.candidat.nom }}" href="{{ path('app_dashboard_entreprise_view_candidature', {'id': application.id}) }}">
+                            <a class="btn btn-sm btn-warning rounded-pill custom-tooltip" data-tooltip="Voir un aperçu du profil du candidat {{ generatePseudo(application.candidat) }}" href="{{ path('app_dashboard_entreprise_view_candidature', {'id': application.id}) }}">
                                 <i class="bi bi-eye"></i>
                             </a>
                         </div>

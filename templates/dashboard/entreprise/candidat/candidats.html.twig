@@ -23,7 +23,7 @@
                 {% for candidat in candidats %}
                     <tr>
                         <td>{{ candidat.id }}</td>
-                        <td>{{ candidat.candidat.prenom }} {{ candidat.candidat.nom|slice(0, 1) }}.</td>
+                        <td>{{ generatePseudo(candidat.candidat) }}.</td>
                         <td><span class="badge bg-primary"><a href="{{ path('app_dashboard_moderateur_candidat_applications', {'id': candidat.id}) }}" class="text-decoration-none text-white">{{ candidat.applications|length }}</a></span></td>
                         <td><span class="badge bg-warning text-dark"><a href="{{ path('app_dashboard_moderateur_candidat_applications_en_attente', {'id': candidat.id}) }}" class="text-decoration-none">{{ candidat.applications|filter(app => app.status == 'PENDING')|length }}</a></span></td>
                         <td><span class="badge bg-success"><a href="{{ path('app_dashboard_moderateur_candidat_applications_acceptees', {'id': candidat.id}) }}" class="text-decoration-none text-white">{{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }}</a></span></td>
