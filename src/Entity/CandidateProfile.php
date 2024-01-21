@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Entity\Candidate\CV;
 use App\Entity\Candidate\Langages;
 use App\Entity\Candidate\Social;
+use App\Entity\Candidate\TarifCandidat;
+use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\EditedCv;
 use App\Entity\Vues\CandidatVues;
 use Doctrine\DBAL\Types\Types;
@@ -113,6 +115,12 @@ class CandidateProfile
     #[ORM\ManyToOne(inversedBy: 'candidats', cascade: ['persist', 'remove'])]
     private ?Availability $availability = null;
 
+    #[ORM\OneToOne(mappedBy: 'candidat', cascade: ['persist', 'remove'])]
+    private ?TarifCandidat $tarifCandidat = null;
+
+    #[ORM\OneToMany(mappedBy: 'profil', targetEntity: Assignation::class, cascade: ['persist', 'remove'])]
+    private Collection $assignations;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -125,6 +133,7 @@ class CandidateProfile
         $this->vues = new ArrayCollection();
         $this->cvs = new ArrayCollection();
         $this->editedCvs = new ArrayCollection();
+        $this->assignations = new ArrayCollection();
     }
 
     public function __toString()
@@ -634,6 +643,58 @@ class CandidateProfile
     public function setAvailability(?Availability $availability): static
     {
         $this->availability = $availability;
+
+        return $this;
+    }
+
+    public function getTarifCandidat(): ?TarifCandidat
+    {
+        return $this->tarifCandidat;
+    }
+
+    public function setTarifCandidat(?TarifCandidat $tarifCandidat): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($tarifCandidat === null && $this->tarifCandidat !== null) {
+            $this->tarifCandidat->setCandidat(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($tarifCandidat !== null && $tarifCandidat->getCandidat() !== $this) {
+            $tarifCandidat->setCandidat($this);
+        }
+
+        $this->tarifCandidat = $tarifCandidat;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Assignation>
+     */
+    public function getAssignations(): Collection
+    {
+        return $this->assignations;
+    }
+
+    public function addAssignation(Assignation $assignation): static
+    {
+        if (!$this->assignations->contains($assignation)) {
+            $this->assignations->add($assignation);
+            $assignation->setProfil($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignation(Assignation $assignation): static
+    {
+        if ($this->assignations->removeElement($assignation)) {
+            // set the owning side to null (unless already changed)
+            if ($assignation->getProfil() === $this) {
+                $assignation->setProfil(null);
+            }
+        }
 
         return $this;
     }

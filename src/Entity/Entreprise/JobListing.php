@@ -6,6 +6,7 @@ use App\Entity\Candidate\Applications;
 use App\Entity\Candidate\Competences;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Langue;
+use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
 use App\Entity\Secteur;
 use App\Entity\Vues\AnnonceVues;
@@ -15,6 +16,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: JobListingRepository::class)]
 class JobListing
@@ -70,6 +72,7 @@ class JobListing
     private ?EntrepriseProfile $entreprise = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['annonce'])]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -114,12 +117,21 @@ class JobListing
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
     private ?TypeContrat $typeContrat = null;
 
+    #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: Assignation::class)]
+    private Collection $assignations;
+
+    public function __toString()
+    {
+        return $this->titre;        
+    }
+
     public function __construct()
     {
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
         $this->annonceVues = new ArrayCollection();
         $this->langues = new ArrayCollection();
+        $this->assignations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -375,6 +387,36 @@ class JobListing
     public function setTypeContrat(?TypeContrat $typeContrat): static
     {
         $this->typeContrat = $typeContrat;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Assignation>
+     */
+    public function getAssignations(): Collection
+    {
+        return $this->assignations;
+    }
+
+    public function addAssignation(Assignation $assignation): static
+    {
+        if (!$this->assignations->contains($assignation)) {
+            $this->assignations->add($assignation);
+            $assignation->setJobListing($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignation(Assignation $assignation): static
+    {
+        if ($this->assignations->removeElement($assignation)) {
+            // set the owning side to null (unless already changed)
+            if ($assignation->getJobListing() === $this) {
+                $assignation->setJobListing(null);
+            }
+        }
 
         return $this;
     }

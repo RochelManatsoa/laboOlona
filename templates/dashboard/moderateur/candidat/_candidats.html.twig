@@ -6,20 +6,32 @@
         <thead>
             <tr>
                 <th class="col-2">Nom et prénom</th>
-                <th class="col-4">Email</th>
-                <th class="col-2">Titre</th>
+                <th class="col-4">Titre</th>
+                <th class="col-2">Assign.</th>
                 <th class="col-2">Statut</th>
                 <th class="col-2">Cértifié</th>
                 <th class="col-2">Dispo.</th>
-                <th class="col-1">Actions</th>
+                <th class="col-1">Voir</th>
             </tr>
         </thead>
         <tbody>
             {% for candidat in candidats %}
                 <tr>
-                    <td>{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</td>
-                    <td>{{ candidat.candidat.email }}</td>
-                    <td>{{ candidat.titre }}</td>
+                    <td>
+                        {{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}<br>
+                        <span class="small text-muted">{{ candidat.candidat.email }}</span>
+                    </td>
+                    <td>
+                        {{ candidat.titre }} <br>
+                        <span class="small text-muted">{{ generatePseudo(candidat) }}</span>
+                    </td>
+                    <td>
+                    {% if candidat.assignations|length > 0 %}
+                    <span class="badge rounded-pill bg-dark h2">{{ candidat.assignations|length }}</span>
+                    {% else %}
+                    <span class="badge rounded-pill bg-warning h2">0</span>
+                    {% endif %}
+                    </td>
                     <td>
                         <form method="post" action="{{ path('change_status_candidat', {'uid': candidat.uid}) }}">
                             <select name="status" class="form-control" onchange="this.form.submit()">

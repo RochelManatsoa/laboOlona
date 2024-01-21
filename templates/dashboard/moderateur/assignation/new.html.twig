@@ -1,0 +1,12 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Nouvelle assignation</h2>
+    <div class="col-8 mx-auto mt-5">
+    {{ form_start(form)}}
+    {{ form_widget(form)}}
+    {{ form_end(form)}}
+    </div>
+</div>
+{% endblock %}

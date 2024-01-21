@@ -4,6 +4,7 @@ namespace App\Form\Profile\Candidat;
 
 use App\Entity\Secteur;
 use App\Entity\CandidateProfile;
+use App\Form\Candidat\TarifCandidatType;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Profile\Candidat\ExperiencesType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,6 +24,11 @@ class StepTwoType extends AbstractType
             ->add('titre', TextType::class, [
                 'required' => true,
                 'label' => 'Votre titre *',
+                'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
+            ])
+            ->add('tarifCandidat', TarifCandidatType::class, [
+                'required' => true,
+                'label' => 'Tarif *',
                 'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
             ])
             ->add('resume', TextareaType::class, [

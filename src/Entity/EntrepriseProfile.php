@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Entreprise\JobListing;
-use App\Entity\Enum\TailleEntreprise;
 use App\Entity\Moderateur\Metting;
 use App\Repository\EntrepriseProfileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
