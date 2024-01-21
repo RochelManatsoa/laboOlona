@@ -10,13 +10,16 @@
             <a class="nav-link active" id="details-tab" data-bs-toggle="tab" href="#details">Résumé</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="competences-tab" data-bs-toggle="tab" href="#competences">Compétences ({{ candidat.competences|length }})</a>
+            <a class="nav-link" id="competences-tab" data-bs-toggle="tab" href="#competences">Comp. ({{ candidat.competences|length }})</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="experiences-tab" data-bs-toggle="tab" href="#experiences">Expériences ({{ candidat.experiences|length }})</a>
+            <a class="nav-link" id="experiences-tab" data-bs-toggle="tab" href="#experiences">Exp. ({{ candidat.experiences|length }})</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="candidatures-tab" data-bs-toggle="tab" href="#candidatures">Candidatures ({{ candidat.applications|length }})</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="assignation-tab" data-bs-toggle="tab" href="#assignation">Assign. ({{ candidat.assignations|length }})</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="cv-tab" data-bs-toggle="tab" href="#cv">CV / Autres infos</a>
@@ -55,7 +58,15 @@
                                 <span class="badge text-bg-warning">
                                     {{ item.nom }}
                                 </span>
-                                {% endfor %}
+                                {% endfor %}<br> 
+                            <span class="text-muted">Prétention salariale :</span> 
+                            {% if candidat.tarifCandidat is not empty %}
+                            <span class="text-dark">
+                                {{ getTarifCandidat(candidat)|raw }}
+                            </span>
+                            {% else %}
+                                <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                            {% endif %}
                             </p> 
                         </div> 
                     </div> 
@@ -196,6 +207,60 @@
                                 <h1 class="text-body-emphasis">Aucune candidature</h1>
                                 <p class="">
                                     <i class="bi bi-info-circle"></i> Le candidat n'a encore effectué aucune candidature.
+                                </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="assignation">
+            <div class="card">
+                <div class="card-body">
+                    {% if candidat.assignations|length > 0%}
+                        <table class="table" id="competencesTable">
+                            <thead>
+                                <tr>
+                                    <th class="col-3">Entreprise</th>
+                                    <th class="col-2">Forfait</th>
+                                    <th class="col-5">Commentaire</th>
+                                    <th class="col-2">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for assignation in candidat.assignations %}
+                                    <tr>
+                                        <td>
+                                        {{ assignation.jobListing.entreprise.nom }}<br>
+                                        <span class="text-muted small">{{ assignation.jobListing.titre}}</span>
+                                        </td>
+                                        <td>
+                                            {{ assignation.forfait }} €<br>
+                                            <span class="text-muted small">{{ assignation.rolePositionVisee }}</span>
+                                        </td>
+                                        <td class="small">
+                                        <span class="text-muted small">{{ assignation.dateAssignation|date('d-m-Y')}}</span><br>
+                                        {{ assignation.commentaire|raw }}
+                                        </td>
+                                        <td>
+                                        <button type="button" class="btn-primary btn btn-sm"><i class="bi bi-pencil-square"></i></button>
+                                        <a href="{{ path('ajax_change_assignation_delete', {'id': assignation.id })}}" class="btn-danger btn btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette assignation ?');"><i class="bi bi-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-md-9 mx-auto">
+                            <div class="container my-5">
+                                <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                <h1 class="text-body-emphasis">Aucune assignations</h1>
+                                <p class="">
+                                    <i class="bi bi-info-circle"></i> Le candidat n'a encore assigné à une entreprise.
                                 </p>
                                 </div>
                             </div>

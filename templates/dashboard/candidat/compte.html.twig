@@ -80,6 +80,13 @@
             </div>
             <div class="col">
                 <div class="mb-3">
+                {{ form_label(form_two.tarifCandidat) }}
+                <div class="d-flex mb-4">
+                    {{ form_widget(form_two.tarifCandidat.typeTarif, {'attr': {'class': '', 'style':'width:40%'}}) }}
+                    {{ form_widget(form_two.tarifCandidat.montant, {'attr': {'class': '', 'style':'width:40%'}}) }}
+                    {{ form_widget(form_two.tarifCandidat.devise, {'attr': {'class': '', 'style':'width:20%'}}) }}
+                </div>
+
                 {{ form_label(form_two.social.linkedin) }}
                 {{ form_widget(form_two.social.linkedin) }}
 

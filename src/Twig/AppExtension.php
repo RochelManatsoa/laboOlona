@@ -17,6 +17,7 @@ use App\Entity\Entreprise\JobListing;
 use App\Repository\AccountRepository;
 use Twig\Extension\AbstractExtension;
 use App\Entity\Candidate\Applications;
+use App\Entity\Candidate\TarifCandidat;
 use App\Entity\Moderateur\EditedCv;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -71,6 +72,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getAge', [$this, 'getAge']),
             new TwigFunction('getPseudo', [$this, 'getPseudo']),
             new TwigFunction('invitation', [$this, 'invitation']),
+            new TwigFunction('getTarifCandidat', [$this, 'getTarifCandidat']),
             new TwigFunction('generatePseudo', [$this, 'generatePseudo']),
         ];
     }
@@ -608,7 +610,7 @@ class AppExtension extends AbstractExtension
 
     public function checkAvailability(User $user): string
     {
-        $status = '<i class="bi bi-exclamation-circle-fill"></i> Disponibilité';
+        $status = '<i class="bi bi-exclamation-circle-fill"></i> Non renseigné';
         if($user->getCandidateProfile() instanceof CandidateProfile){
             $availability = $user->getCandidateProfile()->getAvailability();
             if($availability instanceof Availability){
@@ -634,7 +636,7 @@ class AppExtension extends AbstractExtension
                         break;
                     
                     default:
-                        $status = '<i class="bi bi-exclamation-circle-fill"></i> Disponibilité';
+                        $status = '<i class="bi bi-exclamation-circle-fill"></i> Non renseigné';
                         break;
                 }
             }
@@ -697,5 +699,28 @@ class AppExtension extends AbstractExtension
         $paddedId = sprintf('%04d', $candidat->getId());
 
         return $letters . $paddedId;
+    }
+
+    public function getTarifCandidat(CandidateProfile $candidat)
+    {
+        $tarif = '<i class="bi bi-exclamation-circle-fill"></i> Non renseigné';
+        $tarifCandidat = $candidat->getTarifCandidat();
+        if($tarifCandidat instanceof TarifCandidat){
+            switch ($tarifCandidat->getTypeTarif()) {
+                case TarifCandidat::TYPE_HOURLY :
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.TarifCandidat::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par heure';
+                    break;
+                
+                case TarifCandidat::TYPE_DAILY :
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.TarifCandidat::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par jour';
+                    break;
+
+                case TarifCandidat::TYPE_MONTHLY :
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.TarifCandidat::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par mois';
+                    break;
+            }
+        }
+
+        return $tarif;
     }
 }

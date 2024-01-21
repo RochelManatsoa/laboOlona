@@ -961,3 +961,7 @@ voir_entreprise :
 app_dashboard_moderateur_invitation : 
     title : Incription par invitation
     dashboard_title : Incription par invitation
+
+app_dashboard_moderateur_assignation : 
+    title : Assignation profils
+    dashboard_title : Assignation profils

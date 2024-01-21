@@ -2,3 +2,28 @@ $indigo : #878787;
 $yelow-orange : #efb321;
 $green : #f6872d;
 $gray : #8599c0;
+
+/* Sélectionnez le conteneur parent des éléments mb-3 */
+#assignation_assignationEntreprises > fieldset > div {
+    display: flex; /* Active Flexbox */
+    justify-content: space-between; /* Espacement entre les éléments */
+}
+
+/* Sélectionnez et stylez chaque élément mb-3 */
+#assignation_assignationEntreprises > fieldset > div > .mb-3 {
+    flex-basis: 20%; /* La largeur initiale de chaque élément */
+    margin-bottom: 0!important; /* Annule la marge inférieure */
+}
+
+/* Ajustez la largeur du deuxième élément mb-3 */
+#assignation_assignationEntreprises > fieldset > div > .mb-3:nth-child(1) {
+    flex-basis: 60%;
+    margin-bottom: 0!important; /* Annule la marge inférieure */
+}
+#assignation_assignationEntreprises > fieldset > div > .mb-3:nth-child(3) {
+    display: none!important; /* Annule la marge inférieure */
+}
+ul[data-form-collection-target="collectionContainer"] {
+    list-style-type: none; /* Enlève les puces de la liste */
+    padding-left: 0; /* Enlève le padding à gauche, souvent nécessaire pour les listes */
+}

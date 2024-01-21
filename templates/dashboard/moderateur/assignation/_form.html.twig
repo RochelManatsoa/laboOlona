@@ -1,0 +1,113 @@
+<td>
+	{{ profil.candidat.nom }}<br><span class="text-muted small">{{ generatePseudo(profil) }}</span>
+</td>
+<td>
+	{{ form_start(form, {'action': path('app_assignation', {'profilId': profil.id}), 'attr': {'id': form.vars.id}}
+	) }}
+	<div
+		{{ stimulus_controller('assignation-collection') }} data-assignation-collection-index-value="{{ form.assignations|length > 0 ? form.assignations|last.vars.name + 1 : 0 }}" data-assignation-collection-prototype-value="{{ form_widget(form.assignations.vars.prototype)|e('html_attr') }}">
+		<!-- Modal -->
+		<div class="modal fade" id="assign{{ profil.id }}" tabindex="-1" aria-labelledby="assign{{ profil.id }}Label" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content text-black">
+					<div class="modal-header">
+						<h2 class="modal-title fs-2" id="assign{{ profil.id }}Label">
+							Assigner
+							{{ generatePseudo(profil)}}
+						</h2>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<ul {{ stimulus_target('assignation-collection', 'collectionContainer') }}></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<button class="btn btn-info rounded-pill small" data-bs-toggle="modal" data-bs-target="#assign{{ profil.id }}" type="button" {{ stimulus_action('assignation-collection', 'addCollectionElement') }}>
+			<i class="bi bi-plus"></i>
+		</button>
+	</div>
+</td>
+<td>
+	<div class="accordion accordion-flush" id="accordionFlushExample">
+		<div class="accordion-item">
+			{% if profil.assignations|length > 0 %}
+				{% for assignation in profil.assignations %}
+					<h2 class="accordion-header">
+						<button class="accordion-button collapsed small" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ assignation.id }}" aria-expanded="false" aria-controls="flush-collapse{{ assignation.id }}">
+							{{ assignation.jobListing.entreprise.nom }}
+							-
+							<span class="small text-muted">
+								({{ assignation.jobListing.titre }})</span>
+						</button>
+					</h2>
+					<div id="flush-collapse{{ assignation.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+						<div class="accordion-body">
+
+							<div action="{{ path('ajax_change_assignation_annonce', {'id': assignation.id })}}" method="POST" id="assignations_{{ assignation.id }}">
+                                <div id="assignations_{{ assignation.id }}">
+                                    <div class="mb-3">
+                                        <label for="{{ assignation.id }}_forfait" class="form-label required">Forfait</label>
+                                        <div class="input-group "><input type="text" id="{{ assignation.id }}_forfait" name="{{ assignation.id }}_forfait" required="required" class="form-control" value="{{ assignation.forfait}}"><span class="input-group-text">
+                                                €</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ assignation.id }}_commentaire" class="form-label">Commentaire</label>
+                                        <textarea id="{{ assignation.id }}_commentaire" name="{{ assignation.id }}_commentaire" class="form-control">{{ assignation.commentaire|raw }}</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <button type="submit" id="assignations_{{ assignation.id }}_assigner" name="{{ assignation.id }}[assigner]" class="btn-primary btn" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ assignation.id }}" aria-expanded="false" aria-controls="flush-collapse{{ assignation.id }}">Mettre à jour</button>
+                                        <a href="{{ path('ajax_change_assignation_delete', {'id': assignation.id })}}" id="assignations_{{ assignation.id }}_assigner" class="btn-danger btn" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette assignation ?');">Supprimer</a>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+					</div>
+					<script>
+						document.addEventListener('DOMContentLoaded', function () {
+                            const submitButton = document.getElementById('assignations_{{ assignation.id }}_assigner');
+                            submitButton.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            const forfait = document.getElementById('{{ assignation.id }}_forfait').value;
+                            const commentaire = document.getElementById('{{ assignation.id }}_commentaire').value;
+
+                            const data = {
+                                forfait: forfait,
+                                commentaire: commentaire,
+                                // Ajoutez d'autres champs si nécessaire
+                            };
+
+                            fetch('{{ path('ajax_change_assignation_annonce', {'id': assignation.id }) }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    // Ajoutez d'autres en-têtes si nécessaire
+                                },
+                                body: JSON.stringify(data)
+                                }).then(response => response.json()).then(data => {
+                                    console.log('Success:', data);
+                                    // Gérez la réponse ici
+                                }).catch((error) => {
+                                    console.error('Error:', error);
+                                });
+                            });
+                        });
+					</script>
+				{% endfor %}
+
+			{% else %}
+				<div class="small text-muted">
+					<i class="bi bi-info-circle"></i>
+					Aucune assignation renseignée.
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+
+	<div style="display:none">
+		{{ form_widget(form) }}
+	</div>
+	{{ form_end(form) }}
+</td>

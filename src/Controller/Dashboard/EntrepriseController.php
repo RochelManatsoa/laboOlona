@@ -474,4 +474,51 @@ class EntrepriseController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+    #[Route('/contact/profil/{id}', name: 'app_dashboard_entreprise_contact_profile')]
+    public function contactProfile(CandidateProfile $candidateProfile): Response
+    {        
+        $this->checkEntreprise();
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $entreprise = $user->getEntrepriseProfile();
+        /** Envoi email modérateur */
+        $this->mailerService->sendMultiple(
+            $this->moderateurManager->getModerateurEmails(),
+            "Demande de contact par ".$entreprise->getNom(),
+            "moderateur/mail_demande_contact.html.twig",
+            [
+                'entreprise' => $entreprise,
+                'profil' => $candidateProfile,
+                'dashboard_url' => $this->urlGenerator->generate(
+                    'app_dashboard_moderateur_assignation',
+                    [
+                        'entreprise' => $entreprise,
+                        'profil' => $candidateProfile,
+                    ], 
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+            ]
+        );
+        /** Envoi email entreprise */
+        $this->mailerService->send(
+            $user->getEmail(),
+            "Demande de contact profil Olona-talents",
+            "entreprise/mail_demande_contact.html.twig",
+            [
+                'user' => $user,
+                'profil' => $candidateProfile,
+                'dashboard_url' => $this->urlGenerator->generate(
+                    'app_dashboard_entreprise_recherche_candidats',
+                    [], 
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+            ]
+        );
+        $this->addFlash('success', 'Demande de contact envoyé');
+
+        return $this->redirectToRoute('app_dashboard_entreprise_details_candidat', [
+            'id' => $candidateProfile->getId(),
+        ]);
+    }
 }

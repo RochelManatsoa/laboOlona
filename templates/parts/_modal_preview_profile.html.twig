@@ -20,6 +20,12 @@
                         <strong>Localisation :</strong> <span class="text-muted">{{ show_country(candidat.localisation) }}</span><br>
                         <strong>Âge :</strong> <span class="text-muted">{{ getAge(candidat) }}</span><br>
                         <strong>Titre professionnel :</strong> <span class="text-muted">{{ candidat.titre }}</span><br>
+                        <strong>Secteurs d'expertise :</strong> 
+                        {% for item in candidat.secteurs %}
+                        <span class="badge rounded-pill bg-dark">
+                            {{ item.nom }}
+                        </span>
+                        {% endfor %}<br>
                         <strong>Statut </strong> 
                             <i class="bi bi-info-circle-fill text-info" 
                                 data-bs-toggle="tooltip" 
@@ -29,7 +35,7 @@
                             </i> : 
                             <span class="badge rounded-pill bg-success">{{ candidat.status }}</span> 
                             <br>
-                        <strong>Profil Certifié :</strong> 
+                        <strong>Profil Certifié </strong> 
                             <i class="bi bi-info-circle-fill text-info" 
                                 data-bs-toggle="tooltip" 
                                 data-bs-placement="bottom"
@@ -46,12 +52,14 @@
                                 <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
                             {% endif %} 
                         </span><br>
-                        <strong>Secteurs d'expertise :</strong> 
-                        {% for item in candidat.secteurs %}
-                        <span class="badge rounded-pill bg-dark">
-                            {{ item.nom }}
+                        <strong>Prétention salariale :</strong> 
+                        {% if candidat.tarifCandidat is not empty %}
+                        <span class="text-muted">
+                            {{ getTarifCandidat(candidat)|raw }}
                         </span>
-                        {% endfor %}
+                        {% else %}
+                            <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                        {% endif %}
                     </p>
                 </div>
             </div>

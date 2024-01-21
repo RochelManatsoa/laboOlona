@@ -8,10 +8,9 @@
     <table class="table table-responsive">
         <thead>
             <tr>
-                <th class="col-3">Titre</th>
-                <th class="col-3">Entreprise</th>
+                <th class="col-4">Titre</th>
                 <th class="col-2">Status</th>
-                <th class="col-2">Nb de vue</th>
+                <th class="col-1">Vues</th>
                 <th class="col-2">Candidature</th>
                 <th class="col-3">Actions</th>
             </tr>
@@ -19,8 +18,10 @@
         <tbody>
             {% for annonce in annonces %}
                 <tr>
-                    <td>{{ annonce.titre }}</td>
-                    <td>{{ annonce.entreprise.nom }}</td>
+                    <td>
+                        {{ annonce.titre }}<br>
+                        <span class="small text-muted">{{ annonce.entreprise.nom|upper }} | {{ annonce.dateCreation|time_ago }}</span>
+                    </td>
                     <td>
                         <form method="post" action="{{ path('change_status_annonce', {'id': annonce.id}) }}">
                             <select name="status" class="form-control" onchange="this.form.submit()">

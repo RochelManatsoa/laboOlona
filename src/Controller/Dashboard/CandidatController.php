@@ -16,6 +16,7 @@ use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
 use App\Form\Search\AnnonceSearchType;
 use App\Form\Candidat\ApplicationsType;
@@ -42,6 +43,7 @@ use App\Form\Profile\Candidat\Edit\StepOneType as EditStepOneType;
 use App\Form\Profile\Candidat\Edit\StepTwoType as EditStepTwoType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use App\Form\Profile\Candidat\Edit\StepThreeType as EditStepThreeType;
+use App\Repository\Moderateur\AssignationRepository;
 
 #[Route('/dashboard/candidat')]
 class CandidatController extends AbstractController
@@ -54,6 +56,7 @@ class CandidatController extends AbstractController
         private CandidatManager $candidatManager,
         private JobListingRepository $jobListingRepository,
         private ApplicationsRepository $applicationsRepository,
+        private AssignationRepository $assignationRepository,
         private LangagesRepository $langagesRepository,
         private TypeContratRepository $typeContratRepository,
         private RequestStack $requestStack,
@@ -284,6 +287,23 @@ class CandidatController extends AbstractController
             'candidat' => $candidat,
             'annonce' => $annonce
         ]);
+        $assignation = $this->assignationRepository->findOneBy([
+            'profil' => $candidat,
+            'jobListing' => $annonce
+        ]);
+
+        if(!$assignation instanceof Assignation){
+            $applied = true;
+            $assignation = new Assignation();
+            $assignation->setDateAssignation(new DateTime());
+            $assignation->setJobListing($annonce);
+            $assignation->setRolePositionVisee(Assignation::TYPE_CANDIDAT);
+            $assignation->setProfil($candidat);
+            $assignation->setCommentaire("Candidature spontanée");
+            $assignation->setForfait($candidat->getTarifCandidat()->getMontant());
+            $assignation->setStatus(Assignation::STATUS_PENDING);
+        }
+
         $applied = false;
 
         if(!$application instanceof Applications){
@@ -323,6 +343,7 @@ class CandidatController extends AbstractController
                 // Logique pour la soumission personnalisée
                 // Utiliser le CV personnalisé et/ou la lettre de motivation fournis
             }
+            $this->em->persist($assignation);
             $this->em->persist($application);
             $this->em->flush();
     

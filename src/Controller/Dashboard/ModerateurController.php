@@ -19,17 +19,22 @@ use App\Entity\Moderateur\EditedCv;
 use App\Form\Moderateur\MettingType;
 use App\Form\Profile\EntrepriseType;
 use App\Entity\Entreprise\JobListing;
+use App\Entity\Moderateur\Invitation;
 use App\Form\Moderateur\CandidatType;
 use App\Form\Moderateur\EditedCvType;
 use App\Repository\SecteurRepository;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
-use App\Entity\Moderateur\Invitation;
+use App\Entity\Moderateur\Assignation;
 use App\Form\Candidat\AvailabilityType;
+use App\Form\Moderateur\AssignateProfileFormType;
+use App\Form\Moderateur\InvitationType;
+use App\Form\Moderateur\AssignationType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Moderateur\NotificationType;
 use App\Repository\NotificationRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Form\Moderateur\AssignationFormType;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,16 +45,16 @@ use App\Repository\Moderateur\MettingRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
+use App\Repository\Moderateur\InvitationRepository;
 use App\Repository\Candidate\ApplicationsRepository;
+use App\Repository\Moderateur\AssignationRepository;
 use App\Repository\Moderateur\TypeContratRepository;
 use App\Form\Search\Candidat\ModerateurCandidatSearchType;
 use App\Form\Moderateur\EntrepriseType as NewEntrepriseType;
-use App\Form\Moderateur\InvitationType;
 use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
-use App\Repository\Moderateur\InvitationRepository;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -71,6 +76,8 @@ class ModerateurController extends AbstractController
         private RequestStack $requestStack,
         private UrlGeneratorInterface $urlGenerator,
         private FileUploader $fileUploader,
+        private PaginatorInterface $paginator,
+        private AssignationRepository $assignationRepository,
     ) {
     }
 
@@ -816,6 +823,98 @@ class ModerateurController extends AbstractController
         return $this->render('dashboard/moderateur/invitation/index.html.twig', [
             'invitations' => $invitationRepository->findAll(),
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/assignation', name: 'app_dashboard_moderateur_assignation')]
+    public function assignation(Request $request): Response
+    {
+        $redirection = $this->checkModerateur();
+        if ($redirection !== null) {
+            return $redirection; 
+        }
+    
+        $profils = $this->candidateProfileRepository->findAllValid();
+        $entreprises = $this->entrepriseProfileRepository->findAll();
+        $assignationForms = [];
+    
+        foreach ($profils as $profil) {
+            $formOptions = [
+                'entreprises' => $entreprises,
+            ];
+            $formName = 'assignation_form_' . $profil->getId();
+            $assignationForm = $this->createForm(AssignateProfileFormType::class, $profil,  [
+                'form_id' => $formName
+            ]);
+            $assignationForm->handleRequest($request);
+            // dump($assignationForm);
+            $assignationForms[$profil->getId()] = [
+                'form' => $assignationForm->createView(),
+                'formName' => $formName
+            ];
+        }
+        // dd($assignationForms);
+    
+        return $this->render('dashboard/moderateur/assignation/index.html.twig', [
+            'affectations' => $this->assignationRepository->findAll(),
+            'profils' => $this->paginator->paginate(
+                $profils,
+                $request->query->getInt('page', 1),
+                10
+            ),
+            'assignationForms' => $assignationForms 
+        ]);
+    }
+
+    #[Route('/assignation/{profilId}', name: 'app_assignation')]
+    public function assignate(Request $request, int $profilId): Response
+    {
+        $profil = $this->candidateProfileRepository->find($profilId);
+        // $assignation = $this->assignationRepository->findOneByProfil($profil);
+        // if (!$assignation) {    
+        //     $assignation = new Assignation();
+        //     $assignation->setDateAssignation(new \DateTime());
+        //     $assignation->setStatus(Assignation::STATUS_PENDING);
+        //     $assignation->setRolePositionVisee(Assignation::TYPE_OLONA);
+        //     $assignation->setProfil($profil);
+        // }
+        // dd($assignation);
+
+        $assignationForm = $this->createForm(AssignateProfileFormType::class, $profil);
+        
+        $assignationForm->handleRequest($request);
+
+        if ($assignationForm->isSubmitted() && $assignationForm->isValid()) {
+            // Traitez l'assignation ici
+            $assignation = $assignationForm->getData();
+            // dd($assignation);
+            $this->em->persist($assignation);
+            $this->em->flush();
+
+            // Redirigez ou affichez un message de succès si nécessaire
+        }
+
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_assignation');
+    }
+
+    #[Route('/assignate/new', name: 'app_assignation_new')]
+    public function newAssign(Request $request): Response
+    {
+        $assignation = new Assignation();
+        $form = $this->createForm(AssignationFormType::class, $assignation);
+        
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Traitez l'assignation ici
+            // dd($form->getData());
+            $this->em->persist($assignation);
+            $this->em->flush();
+        }
+
+        return $this->render('dashboard/moderateur/assignation/new.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 }
