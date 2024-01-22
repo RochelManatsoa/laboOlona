@@ -8,30 +8,36 @@
 <table class="table table-responsive">
     <thead>
         <tr>
-            <th class="col-3">Titre</th>
-            <th class="col-3">Entreprise</th>
-            <th class="col-2">Candidat</th>
+            <th class="col-6">Titre</th>
+            <th class="col-3">Candidat</th>
             <th class="col-2">Status</th>
-            <th class="col-3">Actions</th>
+            <th class="col-2">Date</th>
+            <th class="col-1">Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for application in candidatures %}
             <tr>
                 <td>
-                    <a href="{{ path('app_dashboard_moderateur_annonce_view', {'id': application.annonce.id}) }}">
+                    <a href="{{ path('app_dashboard_moderateur_annonce_view', {'id': application.annonce.id}) }}" class="small">
                         {{ application.annonce.titre }}
                     </a>
-                </td>
-                <td>
-                    <a href="{{ path('voir_entreprise', {'id': application.annonce.entreprise.id}) }}">
-                        {{ application.annonce.entreprise.nom }}
-                    </a>
+                    <br>
+                    <span class="small text-muted">
+                        Par
+                        <a href="{{ path('voir_entreprise', {'id': application.annonce.entreprise.id}) }}">
+                            {{ application.annonce.entreprise.nom|upper }}
+                        </a> {{ application.annonce.dateCreation|time_ago }}
+                    </span>
                 </td>
                 <td>
                     <a href="{{ path('app_dashboard_moderateur_candidat_view', {'id': application.candidat.id} ) }}">
                         {{ application.candidat.candidat.nom }} {{ application.candidat.candidat.prenom }}
                     </a>
+                    <br>
+                    <span class="small text-muted">
+                        {{ generatePseudo(application.candidat) }}
+                    </span>
                 </td>
                 <td>
                     <form method="post" action="{{ path('app_dashboard_moderateur_candidature_status', {'id': application.id}) }}">
@@ -45,7 +51,13 @@
                     </form>
                 </td>
                 <td class="actions-col">
-            <span class="small"> {{ application.dateCandidature|date('d/m/Y')}} </span>
+                    <span class="small"> {{ application.dateCandidature|date('d/m/Y')}} </span>
+                    <br>
+                    <span class="small text-muted">
+                        {{ application.dateCandidature|time_ago }}
+                    </span>
+                </td>
+                <td class="actions-col">
                     <a href="{{ path('app_dashboard_moderateur_candidature_view', {'id': application.id })}}" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a>
                 </td>
             </tr>

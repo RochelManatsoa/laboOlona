@@ -220,6 +220,10 @@
         <div class="tab-pane fade" id="assignation">
             <div class="card">
                 <div class="card-body">
+                
+                    <button type="button" class="px-5 btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#assignationModal">
+                        Ajouter
+                    </button>
                     {% if candidat.assignations|length > 0%}
                         <table class="table" id="competencesTable">
                             <thead>
@@ -516,6 +520,27 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                     </div>
                     {{ form_end(formDispo)}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="assignationModal" tabindex="-1" aria-labelledby="assignationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="assignationModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ form_start(formAssignation)}}
+                    {{ form_widget(formAssignation)}}
+                    {{ form_end(formAssignation)}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
                 </div>
             </div>
         </div>
