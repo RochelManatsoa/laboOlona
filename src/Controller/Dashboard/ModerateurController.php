@@ -55,6 +55,7 @@ use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
+use App\Manager\AssignationManager;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -78,6 +79,7 @@ class ModerateurController extends AbstractController
         private FileUploader $fileUploader,
         private PaginatorInterface $paginator,
         private AssignationRepository $assignationRepository,
+        private AssignationManager $assignationManager,
     ) {
     }
 
@@ -450,14 +452,21 @@ class ModerateurController extends AbstractController
             return $redirection; 
         }
 
+        $assignation = $this->assignationManager->init();
+        $assignation->setProfil($candidat);
+        $assignation->setRolePositionVisee(Assignation::TYPE_OLONA);
+        $formAssignation = $this->createForm(AssignationFormType::class, $assignation);
+        $formAssignation->handleRequest($request);
+        if($formAssignation->isSubmitted() && $formAssignation->isValid()){
+            $this->assignationManager->saveForm($formAssignation);
+            $this->addFlash('success', 'Assignation effectuée');
+        }
+
         $editedCv = new EditedCv();
         $editedCv->setUploadedAt(new DateTime());
         $editedCv->setCandidat($candidat);
-
         $formCv = $this->createForm(EditedCvType::class, $editedCv);
         $formCv->handleRequest($request);
-        $formDispo = $this->createForm(AvailabilityType::class, $this->candidatManager->initAvailability($candidat));
-        $formDispo->handleRequest($request);
         if($formCv->isSubmitted() && $formCv->isValid()){
             $cvFile = $formCv->get('cvEdit')->getData();
             if ($cvFile) {
@@ -466,13 +475,13 @@ class ModerateurController extends AbstractController
             }
         }
 
+        $formDispo = $this->createForm(AvailabilityType::class, $this->candidatManager->initAvailability($candidat));
+        $formDispo->handleRequest($request);
         if ($formDispo->isSubmitted() && $formDispo->isValid()) {
             $availability = $formDispo->getData();
             if($availability->getNom() !== "from-date"){
                 $availability->setDateFin(null);
             }
-
-            // Enregistrer les modifications dans la base de données
             $this->em->persist($availability);
             $this->em->flush();
 
@@ -499,7 +508,6 @@ class ModerateurController extends AbstractController
             $notification = $form->getData();
             $this->em->persist($notification);
             $this->em->flush();
-            // dump($notification);
             /** Envoi email à l'utilisateur */
             $this->mailerService->send(
                 $candidat->getCandidat()->getEmail(),
@@ -520,6 +528,7 @@ class ModerateurController extends AbstractController
             'form' => $form->createView(),
             'formDispo' => $formDispo->createView(),
             'formCv' => $formCv->createView(),
+            'formAssignation' => $formAssignation->createView(),
         ]);
     }
 
@@ -826,46 +835,6 @@ class ModerateurController extends AbstractController
         ]);
     }
 
-    #[Route('/assignation', name: 'app_dashboard_moderateur_assignation')]
-    public function assignation(Request $request): Response
-    {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-    
-        $profils = $this->candidateProfileRepository->findAllValid();
-        $entreprises = $this->entrepriseProfileRepository->findAll();
-        $assignationForms = [];
-    
-        foreach ($profils as $profil) {
-            $formOptions = [
-                'entreprises' => $entreprises,
-            ];
-            $formName = 'assignation_form_' . $profil->getId();
-            $assignationForm = $this->createForm(AssignateProfileFormType::class, $profil,  [
-                'form_id' => $formName
-            ]);
-            $assignationForm->handleRequest($request);
-            // dump($assignationForm);
-            $assignationForms[$profil->getId()] = [
-                'form' => $assignationForm->createView(),
-                'formName' => $formName
-            ];
-        }
-        // dd($assignationForms);
-    
-        return $this->render('dashboard/moderateur/assignation/index.html.twig', [
-            'affectations' => $this->assignationRepository->findAll(),
-            'profils' => $this->paginator->paginate(
-                $profils,
-                $request->query->getInt('page', 1),
-                10
-            ),
-            'assignationForms' => $assignationForms 
-        ]);
-    }
-
     #[Route('/assignation/{profilId}', name: 'app_assignation')]
     public function assignate(Request $request, int $profilId): Response
     {
@@ -896,25 +865,5 @@ class ModerateurController extends AbstractController
 
         $referer = $request->headers->get('referer');
         return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_assignation');
-    }
-
-    #[Route('/assignate/new', name: 'app_assignation_new')]
-    public function newAssign(Request $request): Response
-    {
-        $assignation = new Assignation();
-        $form = $this->createForm(AssignationFormType::class, $assignation);
-        
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Traitez l'assignation ici
-            // dd($form->getData());
-            $this->em->persist($assignation);
-            $this->em->flush();
-        }
-
-        return $this->render('dashboard/moderateur/assignation/new.html.twig', [
-            'form' => $form->createView()
-        ]);
     }
 }
