@@ -491,10 +491,9 @@ class EntrepriseController extends AbstractController
                 'entreprise' => $entreprise,
                 'profil' => $candidateProfile,
                 'dashboard_url' => $this->urlGenerator->generate(
-                    'app_dashboard_moderateur_assignation',
+                    'app_dashboard_moderateur_candidat_view',
                     [
-                        'entreprise' => $entreprise,
-                        'profil' => $candidateProfile,
+                        'id' => $candidateProfile->getId(),
                     ], 
                     UrlGeneratorInterface::ABSOLUTE_URL
                 ),
