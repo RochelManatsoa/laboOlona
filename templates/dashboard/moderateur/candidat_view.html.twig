@@ -221,11 +221,42 @@
             <div class="card">
                 <div class="card-body">
                 
-                    <button type="button" class="px-5 btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#assignationModal">
+                    <button type="button" class="px-5 my-3 btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#assignationModal">
                         Ajouter
                     </button>
                     {% if candidat.assignations|length > 0%}
-                        <table class="table" id="competencesTable">
+                        <div class="container-fluid">
+                            <!-- En-têtes -->
+                            <div class="row">
+                                <div class="col-3 font-weight-bold">Entreprise</div>
+                                <div class="col-2 font-weight-bold">Forfait</div>
+                                <div class="col-5 font-weight-bold">Commentaire</div>
+                                <div class="col-2 font-weight-bold">Action</div>
+                            </div>
+
+                            <!-- Lignes et cellules -->
+                            {% for assignation in candidat.assignations %}
+                            <div class="row border-top py-2 assignation" data-assignation-id="{{ assignation.id }}">
+                                <div class="col-3">
+                                    {{ assignation.jobListing.entreprise.nom }}<br>
+                                    <span class="text-muted small">{{ assignation.jobListing.titre }}</span>
+                                </div>
+                                <div class="col-2">
+                                    {{ assignation.forfait }} €<br>
+                                    <span class="text-muted small">{{ assignation.rolePositionVisee }}</span>
+                                </div>
+                                <div class="col-5">
+                                    <span class="text-muted small">{{ assignation.dateAssignation|date('d-m-Y') }}</span><br>
+                                    {{ assignation.commentaire|raw }}
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary btn-sm edit-assignation" data-assignation-id="{{ assignation.id }}"><i class="bi bi-pencil-square"></i></button>
+                                    <a href="{{ path('ajax_change_assignation_delete', {'id': assignation.id })}}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette assignation ?');"><i class="bi bi-trash"></i></a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {# <table class="table" id="competencesTable">
                             <thead>
                                 <tr>
                                     <th class="col-3">Entreprise</th>
@@ -236,7 +267,7 @@
                             </thead>
                             <tbody>
                                 {% for assignation in candidat.assignations %}
-                                    <tr>
+                                    <tr class="assignation" data-assignation-id="{{ assignation.id }}">
                                         <td>
                                         {{ assignation.jobListing.entreprise.nom }}<br>
                                         <span class="text-muted small">{{ assignation.jobListing.titre}}</span>
@@ -250,13 +281,13 @@
                                         {{ assignation.commentaire|raw }}
                                         </td>
                                         <td>
-                                        <button type="button" class="btn-primary btn btn-sm"><i class="bi bi-pencil-square"></i></button>
+                                        <button class="btn-primary btn btn-sm edit-assignation" data-assignation-id="{{ assignation.id }}"><i class="bi bi-pencil-square"></i></button>
                                         <a href="{{ path('ajax_change_assignation_delete', {'id': assignation.id })}}" class="btn-danger btn btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette assignation ?');"><i class="bi bi-trash"></i></a>
                                         </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
-                        </table>
+                        </table> #}
                     {% else %}
                     <div class="row">
                         <div class="col-md-9 mx-auto">
@@ -468,18 +499,115 @@
 
 </script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>    
+        // Gestionnaire d'événements pour "edit-assignation"
+        $(document).on('click', '.edit-assignation', function(e) {
+            console.log('eto')
+            e.preventDefault();
+            var assignationId = $(this).data('assignation-id');
+            var assignationContainer = $('[data-assignation-id="' + assignationId + '"]').closest('.assignation');
+            
+            saveOriginalContent(assignationId, assignationContainer); // Sauvegarde du contenu original
+    
+            // Votre code AJAX...
+            $.ajax({
+                url: "{{ path('app_ajax_edit_assignation')}}",
+                method: 'POST',
+                data: { assignation_id: assignationId },
+                success: function(response) {
+                    console.log(response.assignationId)
+                    // Si la demande réussit, affichez un formulaire de modification
+                    if (response.success) {
+                        // Remplacez le contenu de l'expérience par le formulaire de modification pré-rempli
+                        var assignationContainer = $('[data-assignation-id="' + assignationId + '"]').closest('.assignation');
+                        assignationContainer.html(response.form); // Assurez-vous que la réponse contient uniquement le formulaire HTML           
+                    }
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la récupération des données de l\'expérience :', error);
+                }
+            });
+        });
+        var originalContent = {}; // Pour sauvegarder le contenu original
+        // Fonction pour sauvegarder le contenu original d'un élément
+        function saveOriginalContent(id, containerSelector) {
+            var container = $(containerSelector);
+            originalContent[id] = container.html();
+        }
+
+        $(document).on('click', '.cancel-assignation', function(e) {
+            e.preventDefault();
+
+            var container = $(this).closest('.assignation');
+            var id = container.data('assignation-id');
+
+            if (id) {
+                restoreOriginalContent(id, container);
+            } else {
+                console.log('ID non trouvé.');
+            }
+        });
+        // Fonction pour restaurer le contenu original
+        function restoreOriginalContent(id, containerSelector) {
+            console.log(id)
+            var container = $(containerSelector);
+            if (originalContent[id]) {
+                container.html(originalContent[id]);
+            }
+        }
+        $(document).on('submit', 'form', function(e) {
+        e.preventDefault(); // Empêche le formulaire de soumettre normalement
+
+        var form = $(this);
+        var url = form.attr('action'); // L'URL où le formulaire doit être soumis
+
+        // Utiliser FormData pour gérer les données du formulaire
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            processData: false, // Nécessaire pour FormData
+            contentType: false, // Nécessaire pour FormData
+            success: function(response) {
+                console.log(response);
+                // Si la soumission est un succès, restaurer la vue originale
+                if (response.success) {
+                    var assignationContainer = $('[data-assignation-id="' + response.assignationId + '"]').closest('.assignation');
+                    // Construire le nouveau contenu HTML
+                    var updatedContent = '<div class="col-3">' + 
+                        response.entreprise + '<br>' + 
+                        '<span class="text-muted small">' + response.annonce + '</span>' +
+                        '</div>' +
+                        '<div class="col-2">' + response.forfait + 
+                        '€<br><span class="text-muted small">' + response.rolePositionVisee + 
+                        '</span></div>' + 
+                        '<div class="col-5"><span class="text-muted small">'+ response.date + 
+                        '</span><br>'+ response.commentaire +
+                        '</div>' + 
+                        '<div class="col-2"><button class="btn btn-primary btn-sm edit-assignation" data-assignation-id="'+ response.assignationId +'"><i class="bi bi-pencil-square"></i></button>' +
+                        '<a href="/ajax/assignation/delete/'+ response.assignationId +'" class="btn btn-danger btn-sm" onclick="return confirm("Êtes-vous sûr de vouloir supprimer cette assignation ?");"><i class="bi bi-trash"></i></a>' +
+                        '</div>'
+                        ;   
+                    // Mettre à jour le contenu
+                    assignationContainer.html(updatedContent);
+                } else {
+                    // Gérer le cas où la réponse indique un échec
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Erreur lors de la soumission du formulaire :', error);
+                // Gérer les erreurs ici. Par exemple, afficher un message d'erreur.
+            }
+        });
+    });
+    </script> 
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {# <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#competencesTable').DataTable();
-            $('#experiencesTable').DataTable();
-        });
-    </script> #}
 {% endblock %}
 
 
@@ -536,10 +664,6 @@
                     {{ form_start(formAssignation)}}
                     {{ form_widget(formAssignation)}}
                     {{ form_end(formAssignation)}}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
                 </div>
             </div>
