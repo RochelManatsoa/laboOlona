@@ -460,6 +460,9 @@ class ModerateurController extends AbstractController
         if($formAssignation->isSubmitted() && $formAssignation->isValid()){
             $this->assignationManager->saveForm($formAssignation);
             $this->addFlash('success', 'Assignation effectuée');
+            
+            $referer = $request->headers->get('referer');
+            return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view');
         }
 
         $editedCv = new EditedCv();

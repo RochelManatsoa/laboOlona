@@ -3,6 +3,7 @@
 namespace App\Entity\Moderateur;
 
 use App\Entity\CandidateProfile;
+use App\Entity\Candidate\Applications;
 use App\Entity\Entreprise\JobListing;
 use App\Repository\Moderateur\AssignationRepository;
 use DateTime;
@@ -57,6 +58,9 @@ class Assignation
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
     private ?string $forfait = null;
+
+    #[ORM\OneToOne(inversedBy: 'assignation', cascade: ['persist', 'remove'])]
+    private ?Applications $application = null;
 
     public function __construct()
     {
@@ -160,6 +164,18 @@ class Assignation
     public function setForfait(?string $forfait): static
     {
         $this->forfait = $forfait;
+
+        return $this;
+    }
+
+    public function getApplication(): ?Applications
+    {
+        return $this->application;
+    }
+
+    public function setApplication(?Applications $application): static
+    {
+        $this->application = $application;
 
         return $this;
     }

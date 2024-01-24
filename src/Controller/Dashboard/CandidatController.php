@@ -294,13 +294,14 @@ class CandidatController extends AbstractController
 
         if(!$assignation instanceof Assignation){
             $applied = true;
+            $montant = $candidat->getTarifCandidat() ? $candidat->getTarifCandidat()->getMontant() : 0;
             $assignation = new Assignation();
             $assignation->setDateAssignation(new DateTime());
             $assignation->setJobListing($annonce);
             $assignation->setRolePositionVisee(Assignation::TYPE_CANDIDAT);
             $assignation->setProfil($candidat);
             $assignation->setCommentaire("Candidature spontanée");
-            $assignation->setForfait($candidat->getTarifCandidat()->getMontant());
+            $assignation->setForfait($montant); 
             $assignation->setStatus(Assignation::STATUS_PENDING);
         }
 
@@ -313,6 +314,7 @@ class CandidatController extends AbstractController
             $application->setAnnonce($annonce);
             $application->setCvLink($candidat->getCv());
             $application->setCandidat($candidat);
+            $application->setAssignation($assignation);
             $application->setStatus(Applications::STATUS_PENDING);
         }
         $form = $this->createForm(ApplicationsType::class, $application);

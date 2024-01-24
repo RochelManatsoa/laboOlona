@@ -7,42 +7,46 @@
     <div class="card shadow p-2">
             <table class="table">
             <thead>
-                <tr>
-                    <th>Titre de l'annonce</th>
-                    <th>Candidat</th>
-                    <th>Status</th>
-                    {# <th>Salaire</th> #}
-                    <th>Crée le</th>
-                    <th>Voir le profil</th>
-                </tr>
+    <tr>
+        <th rowspan="2">Titre de l'annonce</th>
+        <th colspan="2" class="text-center">Candidatures</th>
+        <th rowspan="2" class="text-center">Vues</th>
+        <th rowspan="2" class="text-center">Crée le</th>
+    </tr>
+    <tr>
+        <th class="text-center">Suggérées</th>
+        <th class="text-center">Spontanées</th>
+    </tr>
             </thead>
             <tbody>
-            {% for application in applications %}
-                <tr>
-                    <td>{{ application.annonce.titre }}</td>
-                    <td>{{ generatePseudo(application.candidat) }}</td>
-                    <td>
-                        <div class="annonce {{ 'status-' ~ application.status|lower }}">                                    
-                            <span>{{ (application.status|candidature_status_Label) }}</span>
-                            <!-- Autres détails de l'annonce -->
-                        </div>
-                    </td>
-                    {# <td>{{ application.pretentionSalariale }}</td> #}
-                    <td>{{ application.dateCandidature|date('d M Y') }}</td>
-                    <td>
-                        <div class="d-flex">
-                            <a class="btn btn-sm btn-warning rounded-pill custom-tooltip" data-tooltip="Voir un aperçu du profil du candidat {{ generatePseudo(application.candidat) }}" href="{{ path('app_dashboard_entreprise_view_candidature', {'id': application.id}) }}">
-                                <i class="bi bi-eye"></i>
+            {% if applications|length > 0 %}
+                {% for application in applications %}
+                    <tr class="small">
+                        <td>
+                            <a href="{{ path('app_dashboard_moderateur_candidature_annonce_view', {'id': application.annonce.id})}}" class="text-dark">
+                                {{ application.annonce.titre }}
                             </a>
-                        </div>
-                    </td>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ path('app_dashboard_moderateur_candidature_annonce_view_suggest', {'id': application.annonce.id})}}" class="sy">
+                                <span class="badge text-bg-warning">{{ application.assignations|length }}</span>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ path('app_dashboard_moderateur_candidature_annonce_view_default', {'id': application.annonce.id})}}" class="sy">
+                                <span class="badge text-bg-warning">{{ application.candidatures|length }}</span>
+                            </a>
+                        </td>
+                        <td class="text-center">{{ application.annonce.annonceVues|length }} fois</td>
+                        <td class="text-center">{{ application.annonce.dateCreation|date('d M Y') }}</td>
 
-                </tr>
+                    </tr>
+                {% endfor %}
             {% else %}
                 <tr>
                     <td colspan="7">Aucune candidature créé pour le moment</td>
                 </tr>
-            {% endfor %}
+            {% endif %}
             </tbody>
         </table>
     </div>

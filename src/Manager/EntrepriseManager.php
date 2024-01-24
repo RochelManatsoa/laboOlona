@@ -96,11 +96,33 @@ class EntrepriseManager
         ];
 
         $conditions = [];
-
+        
         if($titre == null && $status == null && $candidat == null){
-            return $user->getEntrepriseProfile()->getAllApplications();
+            $annoncesGroupees = [];
+            foreach ($user->getEntrepriseProfile()->getAllApplications() as $candidature) {
+                $annonce = $candidature->getAnnonce();
+                $annonceId = $annonce->getId();
+            
+                if (!array_key_exists($annonceId, $annoncesGroupees)) {
+                    $annoncesGroupees[$annonceId] = [
+                        'annonce' => $annonce,
+                        'candidatures' => [],
+                        'assignations' => [],
+                    ];
+                }
+            
+                $annoncesGroupees[$annonceId]['candidatures'][] = $candidature;
+            
+                foreach ($annonce->getAssignations() as $assignation) {
+                    $annoncesGroupees[$annonceId]['assignations'][$assignation->getId()] = $assignation;
+                }
+            }
+            
+            
+            return $annoncesGroupees;
+            // return $user->getEntrepriseProfile()->getAllApplications();
         }
-
+        
         if (!empty($titre)) {
             $conditions[] = '(j.titre LIKE :titre )';
             $parameters['titre'] = '%' . $titre . '%';
@@ -115,7 +137,6 @@ class EntrepriseManager
             $conditions[] = '(a.status LIKE :status )';
             $parameters['status'] = '%' . $status . '%';
         }
-
         $qb->select('a')
             ->from('App\Entity\Candidate\Applications', 'a')
             ->leftJoin('a.annonce', 'j')
@@ -125,7 +146,22 @@ class EntrepriseManager
             ->orderBy('a.id', 'DESC')
             ->setParameters($parameters);
         
-        return $qb->getQuery()->getResult();
+        // return $qb->getQuery()->getResult();
+        
+        $data = $qb->getQuery()->getResult();
+        $annoncesGroupees = [];
+
+        foreach ($data as $candidature) {
+            $annonceId = $candidature->getAnnonce()->getId();
+            if (!array_key_exists($annonceId, $annoncesGroupees)) {
+                $annoncesGroupees[$annonceId] = [
+                    'annonce' => $candidature->getAnnonce(),
+                    'candidatures' => []
+                ];
+            }
+            $annoncesGroupees[$annonceId]['candidatures'][] = $candidature;
+        }
+        return $annoncesGroupees;
     }
     
     

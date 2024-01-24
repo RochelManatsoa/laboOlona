@@ -355,66 +355,6 @@ class EntrepriseController extends AbstractController
         ]);
     }
 
-    #[Route('/candidatures', name: 'app_dashboard_entreprise_candidatures')]
-    public function candidatures(Request $request, PaginatorInterface $paginatorInterface): Response
-    {
-        $this->checkEntreprise();
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $entreprise = $user->getEntrepriseProfile();
-
-        $form = $this->createForm(EntrepriseCandidatureSearchType::class);
-        $form->handleRequest($request);
-
-        $data = $this->entrepriseManager->findAllCandidature();
-        if ($form->isSubmitted() && $form->isValid()) {
-            $titre = $form->get('titre')->getData();
-            $candidat = $form->get('candidat')->getData();
-            $status = $form->get('status')->getData();
-            $data = $this->entrepriseManager->findAllCandidature($titre, $candidat, $status);
-            if ($request->isXmlHttpRequest()) {
-                // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
-                return new JsonResponse([
-                    'content' => $this->renderView('dashboard/entreprise/candidature/_candidatures.html.twig', [
-                        'applications' => $paginatorInterface->paginate(
-                            $data,
-                            $request->query->getInt('page', 1),
-                            10
-                        ),
-                        'result' => $data,
-                        'meetings' => $this->mettingRepository->findBy(['entreprise' => $entreprise]),
-                    ]),
-                ]);
-            }
-        }
-
-        return $this->render('dashboard/entreprise/candidature/index.html.twig', [
-            'annonces' => $entreprise->getJobListings(),
-            'applications' => $paginatorInterface->paginate(
-                $data,
-                $request->query->getInt('page', 1),
-                10
-            ),
-            'form' => $form->createView(),
-            'meetings' => $this->mettingRepository->findBy(['entreprise' => $entreprise]),
-            'result' => $data
-        ]);
-    }
-
-    #[Route('/candidature/{id}/view', name: 'app_dashboard_entreprise_view_candidature')]
-    public function candidatureView(Request $request, Applications $applications): Response
-    {
-        $this->checkEntreprise();
-
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-
-        return $this->render('dashboard/entreprise/candidature/view.html.twig', [
-            'application' => $applications,
-            'entreprise' => $user->getEntrepriseProfile(),
-        ]);
-    }
-
     #[Route('/rendez-vous', name: 'app_dashboard_entreprise_rendez_vous')]
     public function rendezVous(): Response
     {
