@@ -18,6 +18,7 @@ use App\Repository\AccountRepository;
 use Twig\Extension\AbstractExtension;
 use App\Entity\Candidate\Applications;
 use App\Entity\Candidate\TarifCandidat;
+use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\EditedCv;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -74,6 +75,8 @@ class AppExtension extends AbstractExtension
             new TwigFunction('invitation', [$this, 'invitation']),
             new TwigFunction('getTarifCandidat', [$this, 'getTarifCandidat']),
             new TwigFunction('generatePseudo', [$this, 'generatePseudo']),
+            new TwigFunction('getForfaitAssignation', [$this, 'getForfaitAssignation']),
+            new TwigFunction('getTypeAssignation', [$this, 'getTypeAssignation']),
         ];
     }
 
@@ -722,5 +725,31 @@ class AppExtension extends AbstractExtension
         }
 
         return $tarif;
+    }
+
+    public function getTypeAssignation(Assignation $assignation)
+    {
+        $type = '<strong>OLONA</strong>';
+        switch ($assignation->getRolePositionVisee()) {
+            case Assignation::TYPE_CANDIDAT :
+                $type = '<strong>Candidature spontannée</strong><br><span class="text-muted small">déposée le '.$assignation->getDateAssignation()->format('d/m/Y').'</span>';
+                break;
+            
+            case Assignation::TYPE_OLONA :
+                $type = '<strong>OLONA</strong><br><span class="text-muted small">suggéré le '.$assignation->getDateAssignation()->format('d/m/Y').'</span>';
+                break;
+        }
+
+        return $type;
+    }
+
+    public function getForfaitAssignation(Assignation $assignation)
+    {
+        $forfait = '<strong><i class="bi bi-ban"></i></strong>';
+        if ($assignation->getRolePositionVisee() === Assignation::TYPE_OLONA) {
+            $forfait = '<strong>'.$assignation->getForfait().' €</strong>';
+        }
+
+        return $forfait;
     }
 }

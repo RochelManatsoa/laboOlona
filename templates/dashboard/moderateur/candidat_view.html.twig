@@ -221,7 +221,7 @@
             <div class="card">
                 <div class="card-body">
                 
-                    <button type="button" class="px-5 my-3 btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#assignationModal">
+                    <button type="button" class="px-5 my-3 btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#assignationModalAdd">
                         Ajouter
                     </button>
                     {% if candidat.assignations|length > 0%}
@@ -653,11 +653,11 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="assignationModal" tabindex="-1" aria-labelledby="assignationModalLabel" aria-hidden="true">
+        <div class="modal fade" id="assignationModalAdd" tabindex="-1" aria-labelledby="assignationModalAddLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="assignationModalLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5" id="assignationModalAddLabel">Ajouter une assignation à {{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

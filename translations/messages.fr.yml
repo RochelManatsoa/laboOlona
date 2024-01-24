@@ -965,3 +965,15 @@ app_dashboard_moderateur_invitation :
 app_dashboard_moderateur_assignation : 
     title : Assignation profils
     dashboard_title : Assignation profils
+
+app_dashboard_moderateur_candidature_annonce_view : 
+    title : Candidatures reçus
+    dashboard_title : Candidatures reçus
+
+app_dashboard_moderateur_candidature_annonce_view_suggest : 
+    title : Candidatures suggérées
+    dashboard_title : Candidatures suggérées
+
+app_dashboard_moderateur_candidature_annonce_view_default : 
+    title : Candidatures spontanées
+    dashboard_title : Candidatures spontanées

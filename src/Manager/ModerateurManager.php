@@ -292,7 +292,7 @@ class ModerateurManager
         }
 
         if (!empty($titre)) {
-            $conditions[] = '(j.titre LIKE :titre )';
+            $conditions[] = '(c.titre LIKE :titre )';
             $parameters['titre'] = '%' . $titre . '%';
         }
 
