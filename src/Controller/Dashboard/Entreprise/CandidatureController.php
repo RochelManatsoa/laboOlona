@@ -60,9 +60,8 @@ class CandidatureController extends AbstractController
         // dd($data);
         if ($form->isSubmitted() && $form->isValid()) {
             $titre = $form->get('titre')->getData();
-            $candidat = $form->get('candidat')->getData();
-            $status = $form->get('status')->getData();
-            $data = $this->entrepriseManager->findAllCandidature($titre, $candidat, $status);
+            $data = $this->entrepriseManager->findAllCandidature($titre);
+            // dd($data);
             if ($request->isXmlHttpRequest()) {
                 // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
                 return new JsonResponse([
@@ -73,6 +72,7 @@ class CandidatureController extends AbstractController
                             10
                         ),
                         'result' => $data,
+                        'count' => $this->entrepriseManager->countElements($data),
                         'meetings' => $this->mettingRepository->findBy(['entreprise' => $entreprise]),
                     ]),
                 ]);
@@ -88,7 +88,8 @@ class CandidatureController extends AbstractController
             ),
             'form' => $form->createView(),
             'meetings' => $this->mettingRepository->findBy(['entreprise' => $entreprise]),
-            'result' => $data
+            'result' => $data,
+            'count' => $this->entrepriseManager->countElements($data),
         ]);
     }
 

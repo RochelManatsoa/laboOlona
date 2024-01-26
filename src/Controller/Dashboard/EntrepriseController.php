@@ -19,6 +19,7 @@ use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use Symfony\Component\Intl\Countries;
 use App\Entity\Candidate\Applications;
+use App\Entity\Moderateur\Assignation;
 use App\Form\Profile\EditEntrepriseType;
 use App\Form\Search\SearchCandidateType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -416,7 +417,7 @@ class EntrepriseController extends AbstractController
     }
 
     #[Route('/contact/profil/{id}', name: 'app_dashboard_entreprise_contact_profile')]
-    public function contactProfile(CandidateProfile $candidateProfile): Response
+    public function contactProfile(Request $request, CandidateProfile $candidateProfile): Response
     {        
         $this->checkEntreprise();
         /** @var User $user */
@@ -425,7 +426,7 @@ class EntrepriseController extends AbstractController
         /** Envoi email modérateur */
         $this->mailerService->sendMultiple(
             $this->moderateurManager->getModerateurEmails(),
-            "Demande de contact par ".$entreprise->getNom(),
+            "Demande de devis par ".$entreprise->getNom(),
             "moderateur/mail_demande_contact.html.twig",
             [
                 'entreprise' => $entreprise,
@@ -442,7 +443,7 @@ class EntrepriseController extends AbstractController
         /** Envoi email entreprise */
         $this->mailerService->send(
             $user->getEmail(),
-            "Demande de contact profil Olona-talents",
+            "Demande de devis profil Olona-talents",
             "entreprise/mail_demande_contact.html.twig",
             [
                 'user' => $user,
@@ -454,10 +455,55 @@ class EntrepriseController extends AbstractController
                 ),
             ]
         );
-        $this->addFlash('success', 'Demande de contact envoyé');
+        $this->addFlash('success', 'Demande de devis envoyé');
 
-        return $this->redirectToRoute('app_dashboard_entreprise_details_candidat', [
-            'id' => $candidateProfile->getId(),
-        ]);
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_entreprise_details_candidat');
+    }
+
+    #[Route('/accept/profil/{id}', name: 'app_dashboard_entreprise_accept_profile')]
+    public function acceptProfile(Request $request, Assignation $assignation): Response
+    {        
+        $this->checkEntreprise();
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $entreprise = $user->getEntrepriseProfile();
+        /** Envoi email modérateur */
+        $this->mailerService->sendMultiple(
+            $this->moderateurManager->getModerateurEmails(),
+            "Demande de mise en relation par ".$entreprise->getNom(),
+            "moderateur/mail_demande_rdv.html.twig",
+            [
+                'entreprise' => $entreprise,
+                'profil' => $assignation->getProfil(),
+                'assignation' => $assignation,
+                'dashboard_url' => $this->urlGenerator->generate(
+                    'app_dashboard_moderateur_assignation_view',
+                    [
+                        'id' => $assignation->getId(),
+                    ], 
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+            ]
+        );
+        /** Envoi email entreprise */
+        $this->mailerService->send(
+            $user->getEmail(),
+            "Demande de mise en relation Olona-talents",
+            "entreprise/mail_demande_rdv.html.twig",
+            [
+                'user' => $user,
+                'profil' => $assignation->getProfil(),
+                'dashboard_url' => $this->urlGenerator->generate(
+                    'app_dashboard_entreprise_recherche_candidats',
+                    [], 
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+            ]
+        );
+        $this->addFlash('success', 'Demande de mise en relation envoyée');
+
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_entreprise_details_candidat');
     }
 }

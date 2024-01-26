@@ -85,7 +85,7 @@ class EntrepriseManager
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllCandidature(?string $titre = null, ?string $candidat = null, ?string $status = null): array
+    public function findAllCandidature(?string $titre = null): array
     {
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
@@ -97,7 +97,7 @@ class EntrepriseManager
 
         $conditions = [];
         
-        if($titre == null && $status == null && $candidat == null){
+        if($titre == null){
             $annoncesGroupees = [];
             foreach ($user->getEntrepriseProfile()->getAllApplications() as $candidature) {
                 $annonce = $candidature->getAnnonce();
@@ -108,6 +108,8 @@ class EntrepriseManager
                         'annonce' => $annonce,
                         'candidatures' => [],
                         'assignations' => [],
+                        'suggestions' => [],
+                        'forfait_min' => 0,
                     ];
                 }
             
@@ -115,12 +117,36 @@ class EntrepriseManager
             
                 foreach ($annonce->getAssignations() as $assignation) {
                     $annoncesGroupees[$annonceId]['assignations'][$assignation->getId()] = $assignation;
+                    if($assignation->getApplication() === null){
+                        $annoncesGroupees[$annonceId]['suggestions'][$assignation->getId()] = $assignation;
+                    }
                 }
             }
             
+            foreach ($annoncesGroupees as $annonceId => &$annonceGroupee) {
+                if (!empty($annonceGroupee['suggestions'])) {
+                    // Initialisation avec une valeur très haute pour pouvoir la comparer.
+                    $forfaitMin = PHP_INT_MAX;
+            
+                    foreach ($annonceGroupee['suggestions'] as $assignationId => $assignation) {
+                        // Comparer le forfait de l'assignation actuelle avec le forfait minimum enregistré.
+                        $forfaitActuel = $assignation->getForfait();
+                        if ($forfaitActuel < $forfaitMin) {
+                            $forfaitMin = $forfaitActuel;
+                        }
+                    }
+            
+                    // Mise à jour de forfait_min avec la valeur la plus basse trouvée.
+                    $annonceGroupee['forfait_min'] = $forfaitMin;
+                } else {
+                    // S'il n'y a pas de suggestions, on peut définir forfait_min à 0 ou à une autre valeur par défaut.
+                    $annonceGroupee['forfait_min'] = 0;
+                }
+            }
+            unset($annonceGroupee);
+            
             
             return $annoncesGroupees;
-            // return $user->getEntrepriseProfile()->getAllApplications();
         }
         
         if (!empty($titre)) {
@@ -128,19 +154,9 @@ class EntrepriseManager
             $parameters['titre'] = '%' . $titre . '%';
         }
 
-        if (!empty($candidat)) {
-            $conditions[] = '(c.nom LIKE :candidat OR c.prenom LIKE :candidat OR c.email LIKE :candidat )';
-            $parameters['candidat'] = '%' . $candidat . '%';
-        }
-
-        if (!empty($status)) {
-            $conditions[] = '(a.status LIKE :status )';
-            $parameters['status'] = '%' . $status . '%';
-        }
         $qb->select('a')
             ->from('App\Entity\Candidate\Applications', 'a')
             ->leftJoin('a.annonce', 'j')
-            ->leftJoin('a.candidat', 'c')
             ->where(implode(' AND ', $conditions))
             ->andWhere('j.entreprise = :entreprise')
             ->orderBy('a.id', 'DESC')
@@ -152,16 +168,67 @@ class EntrepriseManager
         $annoncesGroupees = [];
 
         foreach ($data as $candidature) {
+            $annonce = $candidature->getAnnonce();
             $annonceId = $candidature->getAnnonce()->getId();
             if (!array_key_exists($annonceId, $annoncesGroupees)) {
                 $annoncesGroupees[$annonceId] = [
                     'annonce' => $candidature->getAnnonce(),
-                    'candidatures' => []
+                    'candidatures' => [],
+                    'assignations' => [],
+                    'suggestions' => [],
+                    'forfait_min' => 0,
                 ];
             }
             $annoncesGroupees[$annonceId]['candidatures'][] = $candidature;
+            foreach ($annonce->getAssignations() as $assignation) {
+                $annoncesGroupees[$annonceId]['assignations'][$assignation->getId()] = $assignation;
+                if($assignation->getApplication() === null){
+                    $annoncesGroupees[$annonceId]['suggestions'][$assignation->getId()] = $assignation;
+                }
+            }
+            
+            foreach ($annoncesGroupees as $annonceId => &$annonceGroupee) {
+                if (!empty($annonceGroupee['suggestions'])) {
+                    // Initialisation avec une valeur très haute pour pouvoir la comparer.
+                    $forfaitMin = PHP_INT_MAX;
+            
+                    foreach ($annonceGroupee['suggestions'] as $assignationId => $assignation) {
+                        // Comparer le forfait de l'assignation actuelle avec le forfait minimum enregistré.
+                        $forfaitActuel = $assignation->getForfait();
+                        if ($forfaitActuel < $forfaitMin) {
+                            $forfaitMin = $forfaitActuel;
+                        }
+                    }
+            
+                    // Mise à jour de forfait_min avec la valeur la plus basse trouvée.
+                    $annonceGroupee['forfait_min'] = $forfaitMin;
+                } else {
+                    // S'il n'y a pas de suggestions, on peut définir forfait_min à 0 ou à une autre valeur par défaut.
+                    $annonceGroupee['forfait_min'] = 0;
+                }
+            }
+            unset($annonceGroupee);
         }
         return $annoncesGroupees;
+    }
+
+    public function countElements(array $annoncesGroupees): array
+    {
+        $totalCandidatures = 0;
+        $totalSuggestions = 0;
+
+        foreach ($annoncesGroupees as $annonceId => $annonceGroupee) {
+            // Compter le nombre de candidatures pour cette annonce.
+            $totalCandidatures += count($annonceGroupee['candidatures']);
+
+            // Compter le nombre de suggestions pour cette annonce.
+            $totalSuggestions += count($annonceGroupee['suggestions']);
+        }
+
+        return [
+            'candidatures' => $totalCandidatures,
+            'suggestions' => $totalSuggestions,
+        ];
     }
     
     

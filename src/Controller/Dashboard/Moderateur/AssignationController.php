@@ -101,4 +101,24 @@ class AssignationController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    #[Route('/view/{id}', name: 'app_dashboard_moderateur_assignation_view')]
+    public function viewAssign(Request $request, Assignation $assignation): Response
+    {
+        $form = $this->createForm(AssignationFormType::class, $assignation);
+        
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Traitez l'assignation ici
+            // dd($form->getData());
+            $this->em->persist($assignation);
+            $this->em->flush();
+        }
+
+        return $this->render('dashboard/moderateur/assignation/view.html.twig', [
+            'assignation' => $assignation,
+            'form' => $form->createView(),
+        ]);
+    }
 }

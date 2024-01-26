@@ -46,21 +46,19 @@
             <div class="col-md-4">
                 <div class="card shadow text-white bg-success mb-3">
                     <div class="card-body">
-                        <h2 class="card-title">{{ applications|length }}</h2>
+                        <h2 class="card-title">{{ count.candidatures }}</h2>
                         <p class="card-text">Candidatures reçues</p>
                     </div>
                 </div>
             </div>
         
             <div class="col-md-4">
-                <a href="{{ path('app_dashboard_entreprise_rendez_vous') }}" class="text-decoration-none">
                     <div class="card shadow text-white bg-warning mb-3">
                         <div class="card-body">
-                            <h2 class="card-title">{{ meetings|length }}</h2>
-                            <p class="card-text">Rendez-vous programmés</p>
+                            <h2 class="card-title">{{ count.suggestions }}</h2>
+                            <p class="card-text">Suggestions OLONA</p>
                         </div>
                     </div>
-                </a>
             </div>
         </div>
         <div class="row my-4">
@@ -73,15 +71,8 @@
         {{ form_start(form, {'attr': {'class': 'form-group', 'id':'entreprise-candidature-search-form'}}) }}
         <div class="row">
             <div class="input-group">
-                    <div class="col">
+                    <div class="col-6">
                         {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    <div class="col">
-                        {{ form_widget(form.candidat, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    <div class="col
-                    ">
-                        {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
                     </div>
             </div>
         </div>
