@@ -76,6 +76,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getTarifCandidat', [$this, 'getTarifCandidat']),
             new TwigFunction('generatePseudo', [$this, 'generatePseudo']),
             new TwigFunction('getForfaitAssignation', [$this, 'getForfaitAssignation']),
+            new TwigFunction('getStatusAssignation', [$this, 'getStatusAssignation']),
             new TwigFunction('getTypeAssignation', [$this, 'getTypeAssignation']),
         ];
     }
@@ -746,10 +747,20 @@ class AppExtension extends AbstractExtension
     public function getForfaitAssignation(Assignation $assignation)
     {
         $forfait = '<strong><i class="bi bi-ban"></i></strong>';
-        if ($assignation->getRolePositionVisee() === Assignation::TYPE_OLONA) {
+        if ($assignation->getStatus() !== Assignation::STATUS_PENDING) {
             $forfait = '<strong>'.$assignation->getForfait().' €</strong>';
         }
 
         return $forfait;
+    }
+
+    public function getStatusAssignation(Assignation $assignation)
+    {
+        $status = '<span class="badge bg-danger">En attente</span>';
+        if ($assignation->getStatus() !== Assignation::STATUS_PENDING) {
+            $status = '<span class="badge bg-info">Modéré</span>';
+        }
+
+        return $status;
     }
 }

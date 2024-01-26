@@ -243,7 +243,10 @@
                                 </div>
                                 <div class="col-2">
                                     {{ assignation.forfait }} €<br>
-                                    <span class="text-muted small">{{ assignation.rolePositionVisee }}</span>
+                                    <span class="text-muted small">{{ assignation.rolePositionVisee }}</span><br>
+                                    {# <span class="badge bg-danger">{{ assignation.status }}</span> #}
+                                    {{ getStatusAssignation(assignation)|raw }}
+
                                 </div>
                                 <div class="col-5">
                                     <span class="text-muted small">{{ assignation.dateAssignation|date('d-m-Y') }}</span><br>

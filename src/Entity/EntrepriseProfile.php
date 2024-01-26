@@ -79,7 +79,7 @@ class EntrepriseProfile
 
     public function __toString()
     {
-        return $this->getEntreprise()->getNom();
+        return $this->getNom();
     }
 
     public function getId(): ?int

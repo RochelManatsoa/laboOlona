@@ -17,20 +17,32 @@
         {{ form_start(form, {'attr': {'class': 'form-group', 'id':'entreprise-candidat-search-form'}}) }}
             <div class="input-group">
                 <div class="row">
-                    <div class="col-5">
-                        <div class="d-flex flex-column flex-shrink-0 p-3 position-sticky top-0">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary rounded-pill mb-3 mx-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Recherche avancée
-                        <span  id="titre-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            0
-                            <span class="visually-hidden">unread messages</span>
-                        </span>
-                        </button>
-                            {{ form_widget(form.secteurs) }}
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-md-6 text-right">
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary rounded-pill mb-3 mx-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Recherche avancée
+                                <span  id="titre-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    0
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </div>
+                            <div class="col-md-6 text-left">
+                                </button>
+                                <button class="btn btn-primary rounded-pill mb-3 mx-5" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Secteur d'expertise</button>
+
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-7 my-2">
+                        <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvasRightLabel">Secteur d'expertise</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                {{ form_widget(form.secteurs) }}
+                            </div>
+                        </div>
                         <div id="candidats-container">
                             {% include 'dashboard/entreprise/candidat/_candidats.html.twig' %}
                         </div>

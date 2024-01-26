@@ -6,7 +6,7 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
 <div class="row mb-5">
     <h3 class="col-12 mb-3 h4">Optez pour les candidat(e)s certifié(e)s Olona-talents </h3>
         {% for candidat in candidats %}
-        <div class="col-md-6 mb-6 mb-2 shadow">
+        <div class="col-md-4 mb-4 mb-2 shadow">
             <div class="card h-100">
                 <div class="card-img-top bg-image-candidat" style="background-image: url('{{vich_uploader_asset(candidat, 'file')}}');" alt="{{ candidat.titre }}">
                     <div class="titre-overlay position-absolute w-100">

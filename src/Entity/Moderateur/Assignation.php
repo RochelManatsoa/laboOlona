@@ -17,6 +17,7 @@ class Assignation
 {
     const STATUS_PENDING = 'PENDING';
     const STATUS_ACCEPTED = 'ACCEPTED';
+    const STATUS_MODERATED = 'MODERATED';
     const STATUS_REFUSED = 'REFUSED';
 
     const TYPE_OLONA = 'OLONA';
@@ -39,7 +40,7 @@ class Assignation
     private ?\DateTimeInterface $dateAssignation = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $status = self::STATUS_PENDING;
+    private ?string $status = self::STATUS_MODERATED;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaire = null;

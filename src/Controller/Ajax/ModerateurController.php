@@ -119,6 +119,7 @@ class ModerateurController extends AbstractController
             ]);
         }
         // Mettez à jour l'entité Assignation avec les nouvelles données
+        $assignation->setStatus(Assignation::STATUS_MODERATED);
         $assignation->setForfait($request->request->get('forfait'));
         $assignation->setCommentaire($request->request->get('commentaire'));
         

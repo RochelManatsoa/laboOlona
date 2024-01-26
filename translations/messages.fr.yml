@@ -977,3 +977,7 @@ app_dashboard_moderateur_candidature_annonce_view_suggest :
 app_dashboard_moderateur_candidature_annonce_view_default : 
     title : Candidatures spontanées
     dashboard_title : Candidatures spontanées
+
+app_dashboard_moderateur_assignation_view : 
+    title : Détails de l'assignation
+    dashboard_title : Détails de l'assignation
