@@ -7,22 +7,23 @@ use DateInterval;
 use App\Entity\User;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use App\Entity\Posting;
-use App\Entity\Application;
 use App\Entity\Availability;
 use App\Entity\Candidate\CV;
+use App\Entity\Notification;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Moderateur\EditedCv;
 use App\Entity\Entreprise\JobListing;
-use App\Repository\AccountRepository;
 use Twig\Extension\AbstractExtension;
 use App\Entity\Candidate\Applications;
-use App\Entity\Candidate\TarifCandidat;
 use App\Entity\Moderateur\Assignation;
-use App\Entity\Moderateur\EditedCv;
+use App\Entity\Candidate\TarifCandidat;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
+use App\Repository\Entreprise\JobListingRepository;
+use App\Repository\Moderateur\AssignationRepository;
+use App\Repository\NotificationRepository;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AppExtension extends AbstractExtension
@@ -32,6 +33,9 @@ class AppExtension extends AbstractExtension
         private TranslatorInterface $translator,
         private Security $security,
         private EntityManagerInterface $em,
+        private AssignationRepository $assignationRepository,
+        private JobListingRepository $jobListingRepository,
+        private NotificationRepository $notificationRepository,
         )
     {
     }
@@ -78,6 +82,10 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getForfaitAssignation', [$this, 'getForfaitAssignation']),
             new TwigFunction('getStatusAssignation', [$this, 'getStatusAssignation']),
             new TwigFunction('getTypeAssignation', [$this, 'getTypeAssignation']),
+            new TwigFunction('getAssignByEntreprise', [$this, 'getAssignByEntreprise']),
+            new TwigFunction('findValidJobListing', [$this, 'findValidJobListing']),
+            new TwigFunction('findPendingJobListing', [$this, 'findPendingJobListing']),
+            new TwigFunction('countUnReadNotification', [$this, 'countUnReadNotification']),
         ];
     }
 
@@ -762,5 +770,30 @@ class AppExtension extends AbstractExtension
         }
 
         return $status;
+    }
+
+    public function getAssignByEntreprise(EntrepriseProfile $entreprise)
+    {
+        return $this->assignationRepository->findAssignByEntreprise($entreprise);
+    }
+
+    public function findValidJobListing(EntrepriseProfile $entreprise)
+    {
+        return $this->jobListingRepository->findByEntrepriseAndStatus($entreprise, 'PUBLISHED');
+    }
+
+    public function findPendingJobListing(EntrepriseProfile $entreprise)
+    {
+        return $this->jobListingRepository->findByEntrepriseAndStatus($entreprise, 'PENDING');
+    }
+
+    public function countUnReadNotification(User $user)
+    {
+        return count($this->notificationRepository->findByDestinataireAndStatusNot(
+            $user, 
+            ['id' => 'DESC'], 
+            Notification::STATUS_DELETED,
+            0
+        ));
     }
 }

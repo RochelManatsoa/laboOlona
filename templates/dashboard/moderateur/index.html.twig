@@ -31,25 +31,27 @@
     <div class="row">
 
         <div class="col-md-4">
-            <a href="{{ path('app_dashboard_moderateur_annonces') }}" class="text-decoration-none">
                 <div class="card text-white bg-secondary mb-3">
                     <div class="row">
                         <div class="col">
+                        <a href="{{ path('app_dashboard_moderateur_annonces') }}" class="text-decoration-none text-white">
                             <div class="card-body">
                                 <h2 class="card-title">{{ annonces|length }}</h2>
                                 <p class="card-text">Annonces</p>
                             </div>
+                        </a>
                         </div>
                         <div class="col">
                             <div class="card-body">
                             {% if annonces_pending|length > 0 %}
+                            <a href="{{ path('app_dashboard_moderateur_annonces', {'status':'PENDING'}) }}" class="text-decoration-none">
                                 <p class="card-text"> <span class="badge text-bg-dark rounded-pill"><span class="fs-6">{{ annonces_pending|length }}</span> à valider</span></p>
+                            </a>
                             {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
-            </a>
         </div> 
         <div class="col-md-4">
             <a href="{{ path('app_dashboard_moderateur_entreprises') }}" class="text-decoration-none">
@@ -63,25 +65,27 @@
         </div>
 
         <div class="col-md-4">
-            <a href="{{ path('app_dashboard_moderateur_candidats') }}" class="text-decoration-none">
-                <div class="card text-white bg-success mb-3">
-                    <div class="row">
-                        <div class="col">
-                            <div class="card-body">
-                                <h2 class="card-title">{{ candidats|length }}</h2>
-                                <p class="card-text">Candidats</p>
-                            </div>
+            <div class="card text-white bg-success mb-3">
+                <div class="row">
+                    <div class="col">
+                        <div class="card-body">
+                        <a href="{{ path('app_dashboard_moderateur_candidats') }}" class="text-decoration-none text-white">
+                            <h2 class="card-title">{{ candidats|length }}</h2>
+                            <p class="card-text">Candidats</p>
+                        </a>
                         </div>
-                        <div class="col">
-                            <div class="card-body">
-                            {% if candidats_pending|length > 0 %}
-                                <p class="card-text"> <span class="badge text-bg-dark rounded-pill"><span class="fs-6">{{ candidats_pending|length }}</span> à valider</span></p>
-                            {% endif %}
-                            </div>
+                    </div>
+                    <div class="col">
+                        <div class="card-body">
+                        <a href="{{ path('app_dashboard_moderateur_candidats', {'status':'PENDING'}) }}" class="text-decoration-none">
+                        {% if candidats_pending|length > 0 %}
+                            <p class="card-text"> <span class="badge text-bg-dark rounded-pill"><span class="fs-6">{{ candidats_pending|length }}</span> à valider</span></p>
+                        {% endif %}
+                        </a>
                         </div>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>    
     </div>
 
@@ -98,15 +102,88 @@
         </div>
 
         <div class="col-md-4">
-            <a href="{{ path('app_dashboard_moderateur_notifications') }}" class="text-decoration-none">
-                <div class="card text-white bg-secondary mb-3">
+            <div class="card text-white bg-secondary mb-3">
+                <div class="row">
+                    <div class="col">
+                        <div class="card-body">
+                        <a href="{{ path('app_dashboard_notification') }}" class="text-decoration-none text-white">
+                            <h2 class="card-title">{{ notifications|length }}</h2>
+                            <p class="card-text">Notifications</p>
+                        </a>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card-body">
+                        <a href="{{ path('app_dashboard_notification', {'isRead':'0'}) }}" class="text-decoration-none">
+                        {% if notifications_new|length > 0 %}
+                            <p class="card-text"> <span class="badge text-bg-dark rounded-pill">Nouvelles <span class="fs-6">{{ notifications_new|length }}</span></span></p>
+                        {% endif %}
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="row">
+                    <div class="col">
+                        <div class="card-body">
+                        <a href="{{ path('app_dashboard_moderateur_assignation') }}" class="text-decoration-none text-white">
+                            <h2 class="card-title">{{ assignations|length }}</h2>
+                            <p class="card-text">Assignations</p>
+                        </a>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card-body">
+                        <a href="{{ path('app_dashboard_notification', {'status':'PENDING'}) }}" class="text-decoration-none">
+                        {% if assignations_new|length > 0 %}
+                            <p class="card-text"> <span class="badge text-bg-dark rounded-pill">Nouvelles <span class="fs-6">{{ assignations_new|length }}</span></span></p>
+                        {% endif %}
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <a href="{{ path('app_dashboard_moderateur_invitation') }}" class="text-decoration-none">
+                <div class="card text-white bg-success mb-3">
                     <div class="card-body">
-                        <h2 class="card-title">{{ notifications|length }}</h2>
-                        <p class="card-text">Notifications</p>
+                        <h2 class="card-title">{{ invitations|length }}</h2>
+                        <p class="card-text">Invitation</p>
                     </div>
                 </div>
             </a>
-        </div>    
+        </div>  
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="row">
+                    <div class="col">
+                        <div class="card-body">
+                        <a href="{{ path('app_dashboard_moderateur_candidatures') }}" class="text-decoration-none text-white">
+                            <h2 class="card-title">{{ candidatures|length }}</h2>
+                            <p class="card-text">Candidatures</p>
+                        </a>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card-body">
+                        <a href="{{ path('app_dashboard_moderateur_candidatures', {'status':'PENDING'}) }}" class="text-decoration-none">
+                        {% if candidatures_new|length > 0 %}
+                            <p class="card-text"> <span class="badge text-bg-dark rounded-pill">Nouvelles <span class="fs-6">{{ candidatures_new|length }}</span></span></p>
+                        {% endif %}
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
     </div>
 </div>
 

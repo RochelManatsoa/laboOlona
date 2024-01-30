@@ -255,6 +255,7 @@
                                 <div class="col-2">
                                     <button class="btn btn-primary btn-sm edit-assignation" data-assignation-id="{{ assignation.id }}"><i class="bi bi-pencil-square"></i></button>
                                     <a href="{{ path('ajax_change_assignation_delete', {'id': assignation.id })}}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette assignation ?');"><i class="bi bi-trash"></i></a>
+                                    <a href="{{ path('app_dashboard_moderateur_assignation_view', {'id': assignation.id })}}" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
                             {% endfor %}

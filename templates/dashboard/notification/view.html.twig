@@ -1,0 +1,19 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block body %}
+<div class="container mt-3">
+    <h1 class="mb-4 h3">{{ notification.titre }}</h1>
+        <div class="d-flex gap-2 w-100 justify-content-between">
+            <div>
+                <p class="mb-0 opacity-75">{{ notification.contenu|raw }}</p>
+            </div>
+            <small class="opacity-50 text-nowrap">{{ notification.dateMessage|time_ago}}</small>
+        </div>
+        <div class="d-flex justify-content-start">
+            <a href="javascript:history.back()" class="btn btn-info rounded-pill px-4 text-end">Retour</a>
+            <a href="{{ path('app_dashboard_notification_delete', { 'id': notification.id })}}" class="btn btn-danger mx-4 rounded-pill px-4 text-end">Supprimer</a>
+        </div>
+</div>
+{% endblock %}

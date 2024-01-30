@@ -2,8 +2,8 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h2>Annonces [ <span class="text-primary">{{ entreprise.nom }}</span> ]</h2>
-    {{ form_start(form, {'attr': {'class': 'form-group my-3', 'id':'moderateur-entreprise-search-form'}}) }}
+    <h2>Rendez-vous [ <span class="text-primary">{{ entreprise.nom }}</span> ]</h2>
+    {# {{ form_start(form, {'attr': {'class': 'form-group my-3', 'id':'moderateur-entreprise-search-form'}}) }}
     <div class="row">
         <div class="input-group">
                 <div class="col">
@@ -17,9 +17,9 @@
                 </div>
         </div>
     </div>
-    {{ form_end(form) }}
+    {{ form_end(form) }} #}
     <div id="annonces-container">
-        {% include 'dashboard/moderateur/entreprise/_annonces.html.twig' %}
+        {% include 'dashboard/moderateur/metting/_entreprise.html.twig' %}
     </div>
     <div class="navigation">
         {{ knp_pagination_render(annonces, 'parts/_pagination.html.twig') }}

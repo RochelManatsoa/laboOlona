@@ -2,9 +2,10 @@
 
 namespace App\Repository\Entreprise;
 
+use App\Entity\EntrepriseProfile;
 use App\Entity\Entreprise\JobListing;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<JobListing>
@@ -35,6 +36,22 @@ class JobListingRepository extends ServiceEntityRepository
             ->andWhere('j.status = :published') 
             ->setParameter('published', JobListing::STATUS_PUBLISHED)
             ->orderBy('j.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param EntrepriseProfile $entreprise
+     * @param string $status
+     * @return JobListing[]
+     */
+    public function findByEntrepriseAndStatus(EntrepriseProfile $entreprise, string $status): array
+    {
+        return $this->createQueryBuilder('j')
+            ->andWhere('j.entreprise = :entreprise')
+            ->andWhere('j.status = :status')
+            ->setParameter('entreprise', $entreprise)
+            ->setParameter('status', $status)
             ->getQuery()
             ->getResult();
     }

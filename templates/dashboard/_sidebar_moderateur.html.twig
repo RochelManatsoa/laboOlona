@@ -90,13 +90,14 @@
             Formations  
         </a>
       </li>
-      {# <li>
-        <a href="{{ path('app_dashboard_moderateur_notifications')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_notifications' ? 'active' : 'text-white' }}">
+      <li>
+        <a href="{{ path('app_dashboard_notification')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_notification' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-bell"></i>
             Notifications  
+            {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
         </a>
-      </li> #}
+      </li>
       {# <li>
         <a href="{{ path('app_dashboard_entreprise_message')}}" 
             class="nav-link {{ current_route == 'app_dashboard_entreprise_message' ? 'active' : 'text-white' }}">

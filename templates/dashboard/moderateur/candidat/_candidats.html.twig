@@ -1,4 +1,6 @@
-    
+    <p class="mx-2 small">
+    Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
+    </p>
     <div class="navigation">
         {{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
     </div>
@@ -7,7 +9,7 @@
             <tr>
                 <th class="col-2">Nom et prénom</th>
                 <th class="col-4">Titre</th>
-                <th class="col-2">Assign.</th>
+                <th class="col-2 text-center">Assign.</th>
                 <th class="col-2">Statut</th>
                 <th class="col-2">Cértifié</th>
                 <th class="col-2">Dispo.</th>
@@ -25,11 +27,11 @@
                         {{ candidat.titre }} <br>
                         <span class="small text-muted">{{ generatePseudo(candidat) }}</span>
                     </td>
-                    <td>
+                    <td class="text-center">
                     {% if candidat.assignations|length > 0 %}
                     <span class="badge rounded-pill bg-dark h2">{{ candidat.assignations|length }}</span>
                     {% else %}
-                    <span class="badge rounded-pill bg-warning h2">0</span>
+                    -
                     {% endif %}
                     </td>
                     <td>

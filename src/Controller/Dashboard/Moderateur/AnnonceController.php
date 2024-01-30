@@ -54,11 +54,12 @@ class AnnonceController extends AbstractController
         if ($redirection !== null) {
             return $redirection; 
         }
+        $status = $request->query->get('status');
 
         /** Formulaire de recherche annonces */
         $form = $this->createForm(ModerateurAnnonceSearchType::class);
         $form->handleRequest($request);
-        $data = $this->moderateurManager->findAllListingJob();
+        $data = $this->moderateurManager->searchAnnonce(null, null, $status);
         if ($form->isSubmitted() && $form->isValid()) {
             $titre = $form->get('titre')->getData();
             $entreprise = $form->get('entreprise')->getData();
@@ -114,6 +115,20 @@ class AnnonceController extends AbstractController
         return $this->render('dashboard/moderateur/annonce/candidature.html.twig', [
             'annonce' => $annonce,
             'candidatures' => $annonce->getApplications(),
+        ]);
+    }
+
+    #[Route('/annonce/{id}/assignation', name: 'app_dashboard_moderateur_annonce_assignation_view', methods: ['GET'])]
+    public function viewassignationAnnonce(JobListing $annonce): Response
+    {
+        $redirection = $this->checkModerateur();
+        if ($redirection !== null) {
+            return $redirection; 
+        }
+
+        return $this->render('dashboard/moderateur/annonce/assignation.html.twig', [
+            'annonce' => $annonce,
+            'candidatures' => $annonce->getAssignations(),
         ]);
     }
 

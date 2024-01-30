@@ -2,16 +2,21 @@
 
 namespace App\Controller\Ajax;
 
-use App\Entity\EntrepriseProfile;
-use App\Entity\Moderateur\Assignation;
 use App\Entity\Secteur;
-use App\Repository\Entreprise\JobListingRepository;
-use App\Repository\Moderateur\AssignationRepository;
+use App\Twig\AppExtension;
+use App\Entity\Notification;
+use App\Entity\EntrepriseProfile;
+use App\Manager\NotificationManager;
+use App\Entity\Moderateur\Assignation;
+use App\Manager\ModerateurManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
+use App\Repository\Entreprise\JobListingRepository;
+use App\Repository\Moderateur\AssignationRepository;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ModerateurController extends AbstractController
 {
@@ -19,6 +24,10 @@ class ModerateurController extends AbstractController
         private EntityManagerInterface $em,
         private JobListingRepository $jobListingRepository,
         private AssignationRepository $assignationRepository,
+        private NotificationManager $notificationManager,
+        private ModerateurManager $moderateurManager,
+        private UrlGeneratorInterface $urlGenerator,
+        private AppExtension $appExtension,
     )
     {}
     
@@ -126,6 +135,30 @@ class ModerateurController extends AbstractController
         // Enregistrez les modifications dans la base de données
         $this->em->persist($assignation);
         $this->em->flush();
+
+        /** Send Notification */
+        $titre = 'Réponse à votre demande de devis';
+        $titreMod = 'Réponse à la demande de devis de '.$assignation->getJobListing()->getEntreprise()->getNom().' pour '.$this->appExtension->generatePseudo($assignation->getProfil());
+        $contenu = '             
+            <p>Nous vous remercions pour votre demande de devis concernant le candidat '.$this->appExtension->generatePseudo($assignation->getProfil()).'. Nous sommes heureux de vous informer que nous avons préparé une proposition adaptée à vos besoins.</p>
+            <p>Voici les détails de notre offre :</p>
+            <ul>
+                <li>Prix estimatif : '.$assignation->getForfait().' €</li>
+                <li>Conditions spécifiques : '.$assignation->getCommentaire().'</li>
+            </ul>
+            <p>Nous espérons que notre proposition vous conviendra et restons à votre disposition pour toute modification ou précision supplémentaire.</p>
+            <p>Nous sommes impatients de travailler avec vous et de contribuer au succès de votre projet.</p>
+            <p>Cordialement,</p>
+        ';
+        $contenuMod = ' 
+        <p>Voici les détails de l\'offre :</p>
+            <ul>
+                <li>Prix estimatif : '.$assignation->getForfait().' €</li>
+                <li>Conditions spécifiques : '.$assignation->getCommentaire().'</li>
+            </ul>
+        ';
+        $this->notificationManager->notifyModerateurs($assignation->getProfil()->getCandidat(), Notification::TYPE_CONTACT, $titreMod, $contenuMod );
+        $this->notificationManager->createNotification($this->moderateurManager->getModerateurs()[1], $assignation->getJobListing()->getEntreprise()->getEntreprise(), Notification::TYPE_CONTACT, $titre, $contenu );
         // $this->candidatManager->sendNotificationEmail($experience->getProfil());
 
         return $this->json([
