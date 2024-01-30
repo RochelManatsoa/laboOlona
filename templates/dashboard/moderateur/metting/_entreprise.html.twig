@@ -1,0 +1,62 @@
+    
+    <p class="mx-2">
+    Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
+    </p>
+    <div class="navigation">
+    {{ knp_pagination_render(annonces, 'parts/_pagination.html.twig') }}
+    </div>
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th class="col-3">Rendez-vous</th>
+                <th class="col-3 text-center">Candidat</th>
+                <th class="col-2 text-center">Date</th>
+                <th class="col-2 text-center">Lieu</th>
+                <th class="col-1 text-center">Status</th>
+                <th class="col-1 text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for metting in annonces %}
+                <tr>
+                    <td>
+                        <span class="text-dark">
+                            {{ metting.title }}
+                        </span><br>
+                        <span class="small text-muted">
+                            {{ metting.creeLe|time_ago }}
+                        </span><br>
+                        <a href="{{ path('rendezvous_show', {'id': metting.id}) }}" class="text-primary small"><i class="bi bi-eye"></i> Détails</a>
+                    </td>
+                    <td class="text-center">
+                        <span class="text-dark">
+                         {{ metting.candidat.candidat.nom }} 
+                         {{ metting.candidat.candidat.prenom }}
+                        </span><br>
+                        <span class="text-muted small">
+                         {{ generatePseudo(metting.candidat) }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                         {{ metting.dateRendezVous|date('d/m/Y à h:i') }}
+                    </td>
+                    <td class="text-center">                    
+                        <span class="text-dark">
+                        {{ metting.lieu }}
+                        </span><br>                   
+                        <span class="text-muted small">
+                        {{ metting.link }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                    {{ metting.status }}
+                    </td>
+                    <td class="actions-col">
+                        <a href="{{ path('rendezvous_reschedule', {'id': metting.id}) }}" class="btn btn-sm btn-warning" title="Reprogrammer"><i class="bi bi-clock"></i></a>
+                        <a href="{{ path('rendezvous_send_invitation', {'id': metting.id}) }}" class="btn btn-sm btn-success" title="Envoyer une invitation"><i class="bi bi-send"></i></a>
+                        <a href="{{ path('rendezvous_send_reminder', {'id': metting.id}) }}" class="btn btn-sm btn-secondary" title="Envoyer un rappel"><i class="bi bi-bell"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>

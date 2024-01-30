@@ -13,6 +13,8 @@ use App\Manager\ModerateurManager;
 use App\Manager\RendezVousManager;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
+use App\Entity\EntrepriseProfile;
+use App\Entity\Moderateur\Assignation;
 use App\Entity\ModerateurProfile;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +23,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Moderateur\MettingRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Candidate\ApplicationsRepository;
+use App\Repository\Moderateur\AssignationRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -36,9 +40,23 @@ class RendezVousController extends AbstractController
         private RendezVousManager $rendezVousManager,
         private MettingRepository $mettingRepository,
         private ApplicationsRepository $applicationsRepository,
+        private AssignationRepository $assignationRepository,
         private RequestStack $requestStack,
         private UrlGeneratorInterface $urlGenerator,
+        private PaginatorInterface $paginatorInterface,
     ) {
+    }
+
+    private function checkModerateur()
+    {
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $moderateur = $user->getModerateurProfile();
+        if (!$moderateur instanceof ModerateurProfile){ 
+            return $this->redirectToRoute('app_connect');
+        }
+
+        return null;
     }
     
     #[Route('/', name: 'rendezvous_index')]
@@ -60,17 +78,16 @@ class RendezVousController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidature = $this->applicationsRepository->find($request->query->get('candidature', ''));
+        $assignation = $this->assignationRepository->find($request->query->get('assignation', ''));
 
         if($candidature instanceof Applications){
-            $rendezvous = $this->rendezVousManager->createRendezVous($user->getModerateurProfile(), $candidature->getCandidat(), $candidature->getAnnonce()->getEntreprise(), $candidature->getAnnonce());
-        }else{
-            $rendezVous = new Metting();
-            $rendezVous->setModerateur($user->getModerateurProfile());
-            $rendezVous->setCreeLe(new DateTime());
-            $rendezVous->setStatus(Metting::STATUS_PENDING);
+            $rendezVous = $this->rendezVousManager->createRendezVous($user->getModerateurProfile(), $candidature->getCandidat(), $candidature->getAnnonce()->getEntreprise(), $candidature->getAnnonce());
+        }
+        if($assignation instanceof Assignation){
+            $rendezVous = $this->rendezVousManager->createRendezVous($user->getModerateurProfile(), $assignation->getProfil(), $assignation->getJobListing()->getEntreprise(), $assignation->getJobListing());
         }
 
-        $form = $this->createForm(MettingType::class, $rendezvous);
+        $form = $this->createForm(MettingType::class, $rendezVous);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $rendezVous = $form->getData();
@@ -302,6 +319,27 @@ class RendezVousController extends AbstractController
         return $this->render('dashboard/rendez_vous/reschedule.html.twig', [
             'rendezvous' => $rendezvous,
             'form' => $form->createView(),
+        ]);
+    }
+    
+    #[Route('/entreprise/{id}', name: 'rendezvous_entreprise')]
+    public function entreprise(Request $request, EntrepriseProfile $entreprise): Response
+    {
+        $redirection = $this->checkModerateur();
+        if ($redirection !== null) {
+            return $redirection; 
+        }
+        $data = $entreprise->getMettings();
+        
+        return $this->render('dashboard/moderateur/metting/entreprise.html.twig', [
+            'annonces' => $this->paginatorInterface->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            ),
+            'result' => $data,
+            'entreprise' => $entreprise,
+            // 'form' => $form->createView(),
         ]);
     }
 }

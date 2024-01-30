@@ -91,6 +91,16 @@ class ModerateurManager
         return $emails;
     }
 
+    public function getModerateurs(): array
+    {
+        $moderateurs = [];
+        foreach($this->moderateurProfileRepository->findAll() as $value){
+            $moderateurs[] = $value->getModerateur();
+        }
+        
+        return $moderateurs;
+    }
+
     public function initSector(): Secteur
     {
         return new Secteur();
@@ -253,7 +263,7 @@ class ModerateurManager
         $conditions = [];
 
         if($titre == null && $entreprise == null && $status == null){
-            return $this->jobListingRepository->findAllJobListingPublished();
+            return $this->findAllListingJob();
         }
 
         if (!empty($titre)) {

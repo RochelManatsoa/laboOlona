@@ -2,9 +2,10 @@
 
 namespace App\Repository\Moderateur;
 
+use App\Entity\EntrepriseProfile;
 use App\Entity\Moderateur\Assignation;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Assignation>
@@ -19,6 +20,22 @@ class AssignationRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Assignation::class);
+    }
+
+
+    /**
+     * @param EntrepriseProfile $entreprise
+     * @return Assignation[]
+     */
+    public function findAssignByEntreprise(EntrepriseProfile $entreprise): array
+    {
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.jobListing', 'jl')
+            ->innerJoin('jl.entreprise', 'e')
+            ->where('e.id = :entrepriseId')
+            ->setParameter('entrepriseId', $entreprise->getId())
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Notification;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Notification>
@@ -19,6 +20,35 @@ class NotificationRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Notification::class);
+    }
+
+    /**
+     * @param User $user
+     * @param array $orderBy
+     * @param string|null $statusNot
+     * @return Notification[]
+     */
+    public function findByDestinataireAndStatusNot(User $user, array $orderBy, string $statusNot, ?int $isRead)
+    {
+        $qb = $this->createQueryBuilder('n')
+                ->where('n.destinataire = :destinataire')
+                ->setParameter('destinataire', $user);
+
+        if ($statusNot !== null) {
+            $qb->andWhere('n.status != :statusNot')
+            ->setParameter('statusNot', $statusNot);
+        }
+
+        if ($isRead !== null) {
+            $qb->andWhere('n.isRead = :isRead')
+            ->setParameter('isRead', $isRead);
+        }
+
+        foreach ($orderBy as $field => $direction) {
+            $qb->addOrderBy('n.' . $field, $direction);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
 //    /**

@@ -51,10 +51,10 @@ class CandidaturesController extends AbstractController
         if ($redirection !== null) {
             return $redirection; 
         }
-
+        $status = $request->query->get('status');
         $form = $this->createForm(ModerateurCandidatureSearchType::class);
         $form->handleRequest($request);
-        $data = $this->moderateurManager->findAllCandidatures();
+        $data = $this->moderateurManager->findAllCandidatures(null, null, null, $status);
         if ($form->isSubmitted() && $form->isValid()) {
             $titre = $form->get('titre')->getData();
             $entreprise = $form->get('entreprise')->getData();

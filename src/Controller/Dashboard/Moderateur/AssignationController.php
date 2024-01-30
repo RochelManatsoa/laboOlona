@@ -2,6 +2,7 @@
 
 namespace App\Controller\Dashboard\Moderateur;
 
+use App\Entity\EntrepriseProfile;
 use App\Entity\ModerateurProfile;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\Assignation;
@@ -15,6 +16,7 @@ use App\Repository\EntrepriseProfileRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Moderateur\AssignateProfileFormType;
 use App\Repository\Moderateur\AssignationRepository;
+use App\Twig\AppExtension;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/dashboard/moderateur/assignation')]
@@ -27,6 +29,7 @@ class AssignationController extends AbstractController
         private AssignationRepository $assignationRepository,
         private PaginatorInterface $paginatorInterface,
         private UserService $userService,
+        private AppExtension $appExtension,
     )
     {}
 
@@ -119,6 +122,51 @@ class AssignationController extends AbstractController
         return $this->render('dashboard/moderateur/assignation/view.html.twig', [
             'assignation' => $assignation,
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/entreprise/{id}', name: 'app_dashboard_moderateur_assignation_entreprise')]
+    public function entrepriseAssign(Request $request, EntrepriseProfile $entreprise): Response
+    {
+        $redirection = $this->checkModerateur();
+        if ($redirection !== null) {
+            return $redirection; 
+        }
+        $data = $this->appExtension->getAssignByEntreprise($entreprise);
+
+        /** Formulaire de recherche entreprise */
+        // $form = $this->createForm(ModerateurAnnonceEntrepriseSearchType::class);
+        // $form->handleRequest($request);
+        // $data = $this->moderateurManager->findAllAnnonceEntreprise($entreprise, null, null, $status);
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     $nom = $form->get('nom')->getData();
+        //     $status = $form->get('status')->getData();
+        //     $secteur = $form->get('secteur')->getData();
+        //     $data = $this->moderateurManager->findAllAnnonceEntreprise($entreprise, $nom, $secteur, $status);
+        //     if ($request->isXmlHttpRequest()) {
+        //         // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
+        //         return new JsonResponse([
+        //             'content' => $this->renderView('dashboard/moderateur/assignation/_entreprise.html.twig', [
+        //                 'annonces' => $paginatorInterface->paginate(
+        //                     $data,
+        //                     $request->query->getInt('page', 1),
+        //                     10
+        //                 ),
+        //                 'result' => $data
+        //             ])
+        //         ]);
+        //     }
+        // }
+
+        return $this->render('dashboard/moderateur/assignation/entreprise.html.twig', [
+            'annonces' => $this->paginatorInterface->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            ),
+            'result' => $data,
+            'entreprise' => $entreprise,
+            // 'form' => $form->createView(),
         ]);
     }
 }

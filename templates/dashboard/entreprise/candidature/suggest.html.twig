@@ -38,7 +38,8 @@
                                     <span class="text-muted">Forfait : {{ getForfaitAssignation(assignation)|raw }}</span>
                                 </div>
                                 <div class="col-5 small">
-                                    {{ assignation.commentaire|raw }}
+                                    {{ assignation.commentaire|raw }}<br><br>
+                                    <a href="{{ path('app_dashboard_entreprise_accept_profile', {'id':assignation.id})}}" class="btn btn-outline-dark rounded-pill px-3 my-2 btn-sm edit-assignation" >Contacter le profil</a>
                                 </div>
                             </div>
                             {% endif %}

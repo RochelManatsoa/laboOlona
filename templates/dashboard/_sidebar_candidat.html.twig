@@ -44,6 +44,14 @@
             Formations  
         </a>
       </li>
+      {# <li>
+        <a href="{{ path('app_dashboard_notification')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_notification' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-bell"></i>
+            {{ 'app_dashboard_entreprise.notification'|trans }}  
+            {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
+        </a>
+      </li> #}
     {# <li class="nav-item">
             <a href="{{ path('app_dashboard_candidat_formation')}}" 
                 class="nav-link {{ current_route == 'app_dashboard_candidat_formation' ? 'active' : 'text-white' }}" 

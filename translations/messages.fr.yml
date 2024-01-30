@@ -978,6 +978,26 @@ app_dashboard_moderateur_candidature_annonce_view_default :
     title : Candidatures spontanées
     dashboard_title : Candidatures spontanées
 
+app_dashboard_notification : 
+    title : Mes notifications
+    dashboard_title : Mes notifications
+
+app_dashboard_notification_view : 
+    title : Mes notifications
+    dashboard_title : Mes notifications
+
 app_dashboard_moderateur_assignation_view : 
-    title : Détails de l'assignation
-    dashboard_title : Détails de l'assignation
+    title : Détails assignation
+    dashboard_title : Détails assignation
+
+app_dashboard_moderateur_assignation_entreprise : 
+    title : Assignations entreprise
+    dashboard_title : Assignations entreprise
+
+rendezvous_entreprise : 
+    title : Rendez-vous entreprise
+    dashboard_title : Rendez-vous entreprise
+
+app_dashboard_moderateur_annonce_assignation_view : 
+    title : Assignation d'une annonce
+    dashboard_title : Assignation d'une annonce

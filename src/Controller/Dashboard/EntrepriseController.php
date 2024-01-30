@@ -5,6 +5,7 @@ namespace App\Controller\Dashboard;
 use App\Entity\User;
 use App\Entity\Langue;
 use App\Entity\Secteur;
+use App\Entity\Notification;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
@@ -14,6 +15,7 @@ use App\Service\User\UserService;
 use App\Manager\EntrepriseManager;
 use App\Manager\ModerateurManager;
 use App\Form\Entreprise\AnnonceType;
+use App\Manager\NotificationManager;
 use App\Entity\Candidate\Competences;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
@@ -38,6 +40,7 @@ use App\Repository\Moderateur\TypeContratRepository;
 use App\Form\Search\Annonce\EntrepriseAnnonceSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Form\Search\Candidature\EntrepriseCandidatureSearchType;
+use App\Twig\AppExtension;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -56,6 +59,8 @@ class EntrepriseController extends AbstractController
         private TypeContratRepository $typeContratRepository,
         private MettingRepository $mettingRepository,
         private UrlGeneratorInterface $urlGenerator,
+        private NotificationManager $notificationManager,
+        private AppExtension $appExtension,
     ) {
     }
     
@@ -423,6 +428,19 @@ class EntrepriseController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $entreprise = $user->getEntrepriseProfile();
+        $titre = "Demande de devis profil Olona-talents";
+        $titreMod = 'Demande de devis de '.$this->appExtension->generatePseudo($candidateProfile).' pour '.$entreprise->getNom().' Olona-talents';
+        $contenu = '        
+        <p>Votre demande de devis sur le candidat '.$this->appExtension->generatePseudo($candidateProfile).' a été bien prise en compte. Nous sommes ravis de faciliter cette connexion et espérons qu\'elle sera fructueuse pour vos projets futurs.</p>
+        <p>Nous souhaitons vous informer que notre équipe va maintenant procéder à une vérification préliminaire des informations et s\'assurer de la disponibilité du candidat. Nous nous efforçons de maintenir des normes élevées dans la mise en relation de nos clients avec des professionnels qualifiés.</p>
+        <p>Vous pouvez vous attendre à recevoir une mise à jour de notre part dans les prochains jours ouvrables. Pendant ce temps, n\'hésitez pas à consulter le profil détaillé du candidat sur notre plateforme pour mieux préparer votre interaction future.</p>
+        ';
+        $contenuMod = '        
+            <p>Nous souhaitons vous informer que l\'entreprise '.$entreprise->getNom().' souhaite contacter le profil '.$this->appExtension->generatePseudo($candidateProfile).'</p>
+            <p><a href="'.$this->urlGenerator->generate('app_dashboard_moderateur_candidat_view',['id' => $candidateProfile->getId()], UrlGeneratorInterface::ABSOLUTE_URL).'"> Assigner </a></p>
+        ';
+        $this->notificationManager->notifyModerateurs($user, Notification::TYPE_CONTACT, $titreMod, $contenuMod );
+        $this->notificationManager->createNotification($this->moderateurManager->getModerateurs()[1], $user, Notification::TYPE_CONTACT, $titre, $contenu );
         /** Envoi email modérateur */
         $this->mailerService->sendMultiple(
             $this->moderateurManager->getModerateurEmails(),
@@ -468,6 +486,24 @@ class EntrepriseController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $entreprise = $user->getEntrepriseProfile();
+        $titre = 'Demande de contact profil Olona-talents';
+        $titreMod = 'Demande de mise en relation de '.$this->appExtension->generatePseudo($assignation->getProfil()).' pour '.$entreprise->getNom();
+        $contenu = '        
+            <p>Votre demande de mise en relation avec le candidat '.$this->appExtension->generatePseudo($assignation->getProfil()).' a été bien prise en compte. Nous sommes ravis de faciliter cette connexion et espérons qu\'elle sera fructueuse pour vos projets futurs.</p>
+            <p>Nous souhaitons vous informer que notre équipe va maintenant procéder à une vérification préliminaire des informations et s\'assurer de la disponibilité du candidat. Nous nous efforçons de maintenir des normes élevées dans la mise en relation de nos clients avec des professionnels qualifiés.</p>
+            <p>Vous pouvez vous attendre à recevoir une mise à jour de notre part dans les prochains jours ouvrables. Pendant ce temps, n\'hésitez pas à consulter le profil détaillé du candidat sur notre plateforme pour mieux préparer votre interaction future.</p>
+        ';
+        $contenuMod = '  
+            <p>Nous souhaitons vous informer que l\'entreprise '.$entreprise->getNom().' souhaite avoir une mise en relation avec le profil '.$this->appExtension->generatePseudo($assignation->getProfil()).'</p>
+            <p>Voici le détails :</p>
+            <p><strong>Titre de l\'annonce</strong> : <br>'.$assignation->getJobListing()->getTitre().'</p>
+            <p><strong>Date d\'assignation</strong> : <br>'.$assignation->getDateAssignation()->format('d/m/Y').'</p>
+            <p><strong>Candidat</strong> : <br>'.$assignation->getProfil().'</p>
+            <p><strong>Entreprise</strong> : <br>'.$entreprise->getNom().'</p>
+            <p><a href="'.$this->urlGenerator->generate('app_dashboard_moderateur_assignation_view',['id' => $assignation->getId()], UrlGeneratorInterface::ABSOLUTE_URL).'"> Organiser un RDV </a></p>
+        ';
+        $this->notificationManager->notifyModerateurs($user, Notification::TYPE_CONTACT, $titreMod, $contenuMod );
+        $this->notificationManager->createNotification($this->moderateurManager->getModerateurs()[1], $user, Notification::TYPE_CONTACT, $titre, $contenu );
         /** Envoi email modérateur */
         $this->mailerService->sendMultiple(
             $this->moderateurManager->getModerateurEmails(),

@@ -17,7 +17,6 @@ use App\Entity\Moderateur\Metting;
 use App\Manager\ModerateurManager;
 use App\Entity\Moderateur\EditedCv;
 use App\Form\Moderateur\MettingType;
-use App\Form\Profile\EntrepriseType;
 use App\Entity\Entreprise\JobListing;
 use App\Entity\Moderateur\Invitation;
 use App\Form\Moderateur\CandidatType;
@@ -29,9 +28,7 @@ use App\Entity\Moderateur\Assignation;
 use App\Form\Candidat\AvailabilityType;
 use App\Form\Moderateur\AssignateProfileFormType;
 use App\Form\Moderateur\InvitationType;
-use App\Form\Moderateur\AssignationType;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Moderateur\NotificationType;
 use App\Repository\NotificationRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\Moderateur\AssignationFormType;
@@ -56,6 +53,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
 use App\Manager\AssignationManager;
+use App\Manager\NotificationManager;
+use App\Twig\AppExtension;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -67,6 +66,7 @@ class ModerateurController extends AbstractController
         private ModerateurManager $moderateurManager,
         private CandidatManager $candidatManager,
         private ProfileManager $profileManager,
+        private NotificationManager $notificationManager,
         private SecteurRepository $secteurRepository,
         private TypeContratRepository $typeContratRepository,
         private JobListingRepository $jobListingRepository,
@@ -78,8 +78,11 @@ class ModerateurController extends AbstractController
         private UrlGeneratorInterface $urlGenerator,
         private FileUploader $fileUploader,
         private PaginatorInterface $paginator,
+        private ApplicationsRepository $applicationsRepository,
         private AssignationRepository $assignationRepository,
+        private InvitationRepository $invitationRepository,
         private AssignationManager $assignationManager,
+        private AppExtension $appExtension,
     ) {
     }
 
@@ -102,6 +105,8 @@ class ModerateurController extends AbstractController
         if ($redirection !== null) {
             return $redirection; 
         }
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
 
         return $this->render('dashboard/moderateur/index.html.twig', [
             'secteurs' => $this->moderateurManager->findAllOrderDesc($this->secteurRepository),
@@ -112,7 +117,13 @@ class ModerateurController extends AbstractController
             'candidats' => $this->moderateurManager->findAllOrderDesc($this->candidateProfileRepository),
             'candidats_pending' => $this->candidateProfileRepository->findBy(['status' => CandidateProfile::STATUS_PENDING], ['id' => 'DESC']),
             'mettings' => $this->moderateurManager->findAllOrderDesc($this->mettingRepository),
-            'notifications' => $this->moderateurManager->findAllOrderDesc($this->notificationRepository),
+            'notifications_new' => $this->notificationRepository->findBy(['destinataire' => $user, 'isRead' => false],[], ['id' => 'DESC']),
+            'notifications' => $this->notificationRepository->findBy(['destinataire' => $user], ['id' => 'DESC']),
+            'assignations' => $this->moderateurManager->findAllOrderDesc($this->assignationRepository),
+            'assignations_new' => $this->assignationRepository->findBy(['status' => Assignation::STATUS_PENDING], ['id' => 'DESC']),
+            'candidatures' => $this->moderateurManager->findAllOrderDesc($this->applicationsRepository),
+            'candidatures_new' => $this->applicationsRepository->findBy(['status' => Applications::STATUS_PENDING], ['id' => 'DESC']),
+            'invitations' => $this->moderateurManager->findAllOrderDesc($this->invitationRepository),
         ]);
     }
 
@@ -214,11 +225,12 @@ class ModerateurController extends AbstractController
         if ($redirection !== null) {
             return $redirection; 
         }
+        $status = $request->query->get('status');
 
         /** Formulaire de recherche entreprise */
         $form = $this->createForm(ModerateurAnnonceEntrepriseSearchType::class);
         $form->handleRequest($request);
-        $data = $this->moderateurManager->findAllAnnonceByEntreprise($entreprise);
+        $data = $this->moderateurManager->findAllAnnonceEntreprise($entreprise, null, null, $status);
         if ($form->isSubmitted() && $form->isValid()) {
             $nom = $form->get('nom')->getData();
             $status = $form->get('status')->getData();
@@ -312,6 +324,7 @@ class ModerateurController extends AbstractController
         if ($redirection !== null) {
             return $redirection; 
         }
+        $status = $request->query->get('status');
 
         /** Formulaire nouveau candidat */
         $newCandidate = new CandidateProfile();
@@ -343,7 +356,7 @@ class ModerateurController extends AbstractController
         /** Formulaire de recherche candidat */
         $form = $this->createForm(ModerateurCandidatSearchType::class);
         $form->handleRequest($request);
-        $data = $this->moderateurManager->findAllCandidat();
+        $data = $this->moderateurManager->searchCandidat(null, null, $status, null);
         if ($form->isSubmitted() && $form->isValid()) {
             $nom = $form->get('nom')->getData();
             $titre = $form->get('titre')->getData();
@@ -373,6 +386,7 @@ class ModerateurController extends AbstractController
             ),
             'form' => $form->createView(),
             'formCandidate' => $formCandidate->createView(),
+            'result' => $data
         ]);
     }
 
@@ -451,13 +465,41 @@ class ModerateurController extends AbstractController
         if ($redirection !== null) {
             return $redirection; 
         }
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
 
         $assignation = $this->assignationManager->init();
         $assignation->setProfil($candidat);
         $assignation->setRolePositionVisee(Assignation::TYPE_OLONA);
+        $assignation->setStatus(Assignation::STATUS_MODERATED);
         $formAssignation = $this->createForm(AssignationFormType::class, $assignation);
         $formAssignation->handleRequest($request);
         if($formAssignation->isSubmitted() && $formAssignation->isValid()){
+
+            /** Send Notification */
+            $titre = 'Réponse à votre demande de devis';
+            $titreMod = 'Réponse à la demande de devis de '.$assignation->getJobListing()->getEntreprise()->getNom().' pour '.$this->appExtension->generatePseudo($assignation->getProfil());
+            $contenu = '             
+                <p>Nous vous remercions pour votre demande de devis concernant le candidat '.$this->appExtension->generatePseudo($assignation->getProfil()).'. Nous sommes heureux de vous informer que nous avons préparé une proposition adaptée à vos besoins.</p>
+                <p>Voici les détails de notre offre :</p>
+                <ul>
+                    <li>Prix estimatif : '.$assignation->getForfait().' €</li>
+                    <li>Conditions spécifiques : '.$assignation->getCommentaire().'</li>
+                </ul>
+                <p>Nous espérons que notre proposition vous conviendra et restons à votre disposition pour toute modification ou précision supplémentaire.</p>
+                <p>Nous sommes impatients de travailler avec vous et de contribuer au succès de votre projet.</p>
+                <p>Cordialement,</p>
+            ';
+            $contenuMod = ' 
+            <p>Voici les détails de l\'offre :</p>
+                <ul>
+                    <li>Prix estimatif : '.$assignation->getForfait().' €</li>
+                    <li>Conditions spécifiques : '.$assignation->getCommentaire().'</li>
+                </ul>
+            ';
+            $this->notificationManager->notifyModerateurs($assignation->getProfil()->getCandidat(), Notification::TYPE_CONTACT, $titreMod, $contenuMod );
+            $this->notificationManager->createNotification($this->moderateurManager->getModerateurs()[1], $assignation->getJobListing()->getEntreprise()->getEntreprise(), Notification::TYPE_CONTACT, $titre, $contenu );
+            $assignation = $formAssignation->getData();
             $this->assignationManager->saveForm($formAssignation);
             $this->addFlash('success', 'Assignation effectuée');
             
