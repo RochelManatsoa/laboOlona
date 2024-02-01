@@ -2,12 +2,10 @@
 
 namespace App\Service\User;
 
-use App\Entity\ProfilCandidat;
-use App\Entity\ProfilEntreprise;
+use App\Entity\{CandidateProfile, EntrepriseProfile, ModerateurProfile, User};
+use App\Repository\{CandidateProfileRepository, EntrepriseProfileRepository, UserRepository};
 use DateTime;
-use App\Entity\User;
 use Symfony\Component\Form\Form;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -29,6 +27,31 @@ class UserService
         return $this->security->getUser();
     }
 
+    public function checkProfile()
+    {
+        /** @var User $user */
+        $user = $this->getCurrentUser();
+        switch ($user->getType()) {
+            case User::ACCOUNT_CANDIDAT :
+                $profile = $user->getCandidateProfile();
+                break;
+
+            case User::ACCOUNT_ENTREPRISE :
+                $profile = $user->getEntrepriseProfile();
+                break;
+
+            case User::ACCOUNT_MODERATEUR :
+                $profile = $user->getModerateurProfile();
+                break;
+            
+            default:
+                $profile = null;
+                break;
+        }
+
+        return $profile;
+    }
+
     public function init()
     {
         $user = new User();
@@ -39,16 +62,16 @@ class UserService
 
     public function initEntreprise(User $user)
     {
-        $profilEntreprise = new ProfilEntreprise();
-        $profilEntreprise->setEntrepriseId($user);
+        $profilEntreprise = new EntrepriseProfile();
+        $profilEntreprise->setEntreprise($user);
         
         return $profilEntreprise;
     }
 
     public function initCandidat(User $user)
     {
-        $profilCandidat = new ProfilCandidat();
-        $profilCandidat->setCandidatId($user);
+        $profilCandidat = new CandidateProfile();
+        $profilCandidat->setCandidat($user);
         
         return $profilCandidat;
     }
@@ -59,13 +82,13 @@ class UserService
         $this->em->flush();
     }
 
-    public function saveEntreprise(ProfilEntreprise $profilEntreprise)
+    public function saveEntreprise(EntrepriseProfile $profilEntreprise)
     {
 		$this->em->persist($profilEntreprise);
         $this->em->flush();
     }
 
-    public function saveCandidat(ProfilCandidat $profilCandidat)
+    public function saveCandidat(CandidateProfile $profilCandidat)
     {
 		$this->em->persist($profilCandidat);
         $this->em->flush();

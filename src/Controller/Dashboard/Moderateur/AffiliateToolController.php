@@ -4,11 +4,12 @@ namespace App\Controller\Dashboard\Moderateur;
 
 use DateTime;
 use App\Data\ImportData;
+use App\Twig\AppExtension;
 use App\Service\WooCommerce;
 use App\Entity\AffiliateTool;
 use App\Form\Import\ImportType;
 use App\Entity\AffiliateTool\Tag;
-use App\Entity\ModerateurProfile;
+use App\Service\OpenAITranslator;
 use App\Service\User\UserService;
 use App\Manager\AffiliateToolManager;
 use App\Entity\AffiliateTool\Category;
@@ -23,8 +24,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Search\AffiliateTool\ToolSearchType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\AffiliateTool\CategoryRepository;
-use App\Service\OpenAITranslator;
-use App\Twig\AppExtension;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -41,20 +40,7 @@ class AffiliateToolController extends AbstractController
         private SluggerInterface $sluggerInterface,
         private AppExtension $appExtension,
         private OpenAITranslator $openAITranslator,
-    ) {
-    }
-
-    private function checkModerateur()
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $moderateur = $user->getModerateurProfile();
-        if (!$moderateur instanceof ModerateurProfile){ 
-            return $this->redirectToRoute('app_connect');
-        }
-
-        return null;
-    }
+    ) {}
 
     #[Route('/tools', name: 'app_dashboard_moderateur_affiliate_tool')]
     public function index(Request $request, PaginatorInterface $paginatorInterface): Response
@@ -95,11 +81,7 @@ class AffiliateToolController extends AbstractController
     #[Route('/tool/new', name: 'app_dashboard_moderateur_new_affiliate_tool')]
     public function newTool(Request $request): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** Initialiser une instance de AffiliateTool */
         $tool = $this->affiliateToolManager->init();
         $form = $this->createForm(AffiliateToolType::class, $tool);
@@ -122,13 +104,8 @@ class AffiliateToolController extends AbstractController
     #[Route('/tool/{slug}/edit', name: 'app_dashboard_moderateur_edit_affiliate_tool')]
     public function editTool(Request $request, AffiliateTool $tool): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** @var AffiliateTool $tool qui vient de {slug} */
-            // dd($tool);
         $form = $this->createForm(AffiliateToolType::class, $tool);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -163,12 +140,7 @@ class AffiliateToolController extends AbstractController
     #[Route('/tool/{slug}/delete', name: 'app_dashboard_moderateur_delete_affiliate_tool')]
     public function deleteTool(AffiliateTool $tool): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
-        /** @var AffiliateTool $tool qui vient de {slug} */
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
 
         // Supprimer les relations avec les catégories
         foreach ($tool->getCategories() as $category) {
@@ -208,6 +180,7 @@ class AffiliateToolController extends AbstractController
         WooCommerce $woocommerce, 
     )
     {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $importType = new ImportData();
         $formImport = $this->createForm(ImportType::class, $importType);
         $formImport->handleRequest($request);

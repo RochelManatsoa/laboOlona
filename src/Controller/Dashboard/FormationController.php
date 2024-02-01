@@ -4,8 +4,6 @@ namespace App\Controller\Dashboard;
 
 use App\Entity\CandidateProfile;
 use App\Entity\Formation\Video;
-use App\Service\YouTubeService;
-use App\Entity\ModerateurProfile;
 use App\Form\Formation\VideoType;
 use App\Manager\FormationManager;
 use App\Service\User\UserService;
@@ -32,20 +30,7 @@ class FormationController extends AbstractController
         private VideoVuesRepository $videoVuesRepository,
         private FormationManager $formationManager,
         private EntityManagerInterface $em,
-    ) {
-    }
-
-    private function checkModerateur()
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $moderateur = $user->getModerateurProfile();
-        if (!$moderateur instanceof ModerateurProfile){ 
-            return $this->redirectToRoute('app_connect');
-        }
-
-        return null;
-    }
+    ) {}
 
     #[Route('/', name: 'app_dashboard_formation')]
     public function index(): Response
@@ -68,11 +53,7 @@ class FormationController extends AbstractController
     #[Route('/new', name: 'app_dashboard_formation_new')]
     public function new(Request $request): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** Initialiser une instance de Video */
         $video = $this->formationManager->init();
         $form = $this->createForm(VideoType::class, $video);
@@ -93,6 +74,7 @@ class FormationController extends AbstractController
     #[Route('/edit/{id}', name: 'app_dashboard_formation_edit')]
     public function edit(Request $request, Video $video): Response
     {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $form = $this->createForm(VideoType::class, $video);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -146,11 +128,7 @@ class FormationController extends AbstractController
     #[Route('/delete/{id}', name: 'app_dashboard_formation_delete')]
     public function delete(Request $request, Video $video): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         if ($this->isCsrfTokenValid('delete' . $video->getId(), $request->request->get('_token'))) {
             $this->em->remove($video);
             $this->em->flush();
@@ -162,11 +140,7 @@ class FormationController extends AbstractController
     #[Route('/playlist/new', name: 'app_dashboard_formation_playlist_new')]
     public function newPlaylist(Request $request): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** Initialiser une instance de Playlist */
         $playlist = $this->formationManager->initPlaylist();
         $form = $this->createForm(PlaylistType::class, $playlist);
@@ -187,6 +161,7 @@ class FormationController extends AbstractController
     #[Route('/playlist/edit/{id}', name: 'app_dashboard_formation_playlist_edit')]
     public function editPlaylist(Request $request, Playlist $playlist): Response
     {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $form = $this->createForm(PlaylistType::class, $playlist);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -221,11 +196,7 @@ class FormationController extends AbstractController
     #[Route('/playlist/delete/{id}', name: 'app_dashboard_formation_playlist_delete')]
     public function deletePlaylist(Request $request, Playlist $playlist): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         if ($this->isCsrfTokenValid('delete' . $playlist->getId(), $request->request->get('_token'))) {
             $this->em->remove($playlist);
             $this->em->flush();
@@ -237,9 +208,8 @@ class FormationController extends AbstractController
     #[Route('/update-candidate-profile', name: 'app_update_candidate_profile')]
     public function updateCandidateProfile(EntityManagerInterface $entityManager): Response
     {
-        /**
-         * @var User $user
-         */
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        /** @var User $user */
         $user = $this->userService->getCurrentUser();
     
         // Vérifier si l'utilisateur a un CandidateProfile

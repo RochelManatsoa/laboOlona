@@ -10,7 +10,7 @@
                 <div class="card text-white bg-primary mb-3">
                     <div class="card-body">
                         <h2 class="card-title">{{ secteurs|length }}</h2>
-                        <p class="card-text">Secteur d'activité</p>
+                        <p class="card-text small">Secteur d'activité</p>
                     </div>
                 </div>
             </a>
@@ -21,7 +21,7 @@
                 <div class="card text-white bg-success mb-3">
                     <div class="card-body">
                         <h2 class="card-title">{{ typeContrats|length }}</h2>
-                        <p class="card-text">Type de contrat</p>
+                        <p class="card-text small">Type de contrat</p>
                     </div>
                 </div>
             </a>
@@ -37,7 +37,7 @@
                         <a href="{{ path('app_dashboard_moderateur_annonces') }}" class="text-decoration-none text-white">
                             <div class="card-body">
                                 <h2 class="card-title">{{ annonces|length }}</h2>
-                                <p class="card-text">Annonces</p>
+                                <p class="card-text small">Annonces</p>
                             </div>
                         </a>
                         </div>
@@ -58,7 +58,7 @@
                 <div class="card text-white bg-primary mb-3">
                     <div class="card-body">
                         <h2 class="card-title">{{ entreprises|length }}</h2>
-                        <p class="card-text">Entreprises</p>
+                        <p class="card-text small">Entreprises</p>
                     </div>
                 </div>
             </a>
@@ -71,7 +71,7 @@
                         <div class="card-body">
                         <a href="{{ path('app_dashboard_moderateur_candidats') }}" class="text-decoration-none text-white">
                             <h2 class="card-title">{{ candidats|length }}</h2>
-                            <p class="card-text">Candidats</p>
+                            <p class="card-text small">Candidats</p>
                         </a>
                         </div>
                     </div>
@@ -95,7 +95,7 @@
                 <div class="card text-white bg-warning mb-3">
                     <div class="card-body">
                         <h2 class="card-title">{{ mettings|length }}</h2>
-                        <p class="card-text">Rendez-vous</p>
+                        <p class="card-text small">Rendez-vous</p>
                     </div>
                 </div>
             </a>
@@ -108,7 +108,7 @@
                         <div class="card-body">
                         <a href="{{ path('app_dashboard_notification') }}" class="text-decoration-none text-white">
                             <h2 class="card-title">{{ notifications|length }}</h2>
-                            <p class="card-text">Notifications</p>
+                            <p class="card-text small">Notifications</p>
                         </a>
                         </div>
                     </div>
@@ -132,13 +132,13 @@
                         <div class="card-body">
                         <a href="{{ path('app_dashboard_moderateur_assignation') }}" class="text-decoration-none text-white">
                             <h2 class="card-title">{{ assignations|length }}</h2>
-                            <p class="card-text">Assignations</p>
+                            <p class="card-text small">Assignations</p>
                         </a>
                         </div>
                     </div>
                     <div class="col">
                         <div class="card-body">
-                        <a href="{{ path('app_dashboard_notification', {'status':'PENDING'}) }}" class="text-decoration-none">
+                        <a href="{{ path('app_dashboard_moderateur_assignation', {'status':'PENDING'}) }}" class="text-decoration-none">
                         {% if assignations_new|length > 0 %}
                             <p class="card-text"> <span class="badge text-bg-dark rounded-pill">Nouvelles <span class="fs-6">{{ assignations_new|length }}</span></span></p>
                         {% endif %}
@@ -156,7 +156,7 @@
                 <div class="card text-white bg-success mb-3">
                     <div class="card-body">
                         <h2 class="card-title">{{ invitations|length }}</h2>
-                        <p class="card-text">Invitation</p>
+                        <p class="card-text small">Invitation</p>
                     </div>
                 </div>
             </a>
@@ -168,7 +168,7 @@
                         <div class="card-body">
                         <a href="{{ path('app_dashboard_moderateur_candidatures') }}" class="text-decoration-none text-white">
                             <h2 class="card-title">{{ candidatures|length }}</h2>
-                            <p class="card-text">Candidatures</p>
+                            <p class="card-text small">Candidatures</p>
                         </a>
                         </div>
                     </div>

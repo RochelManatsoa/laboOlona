@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
 use App\Repository\Moderateur\TypeContratRepository;
 use App\Repository\ModerateurProfileRepository;
+use App\Security\Voter\ModerateurVoter;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ModerateurManager

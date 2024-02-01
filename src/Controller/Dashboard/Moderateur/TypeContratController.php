@@ -2,7 +2,6 @@
 
 namespace App\Controller\Dashboard\Moderateur;
 
-use App\Entity\ModerateurProfile;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
 use App\Service\Mailer\MailerService;
@@ -26,29 +25,12 @@ class TypeContratController extends AbstractController
         private EntityManagerInterface $em,
         private MailerService $mailerService,
         private ModerateurManager $moderateurManager,
-    ) {
-    }
-
-    private function checkModerateur()
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $moderateur = $user->getModerateurProfile();
-        if (!$moderateur instanceof ModerateurProfile){ 
-            return $this->redirectToRoute('app_connect');
-        }
-
-        return null;
-    }
+    ) {}
     
     #[Route('/type-contrat', name: 'app_dashboard_moderateur_type_contrat')]
     public function typeContrat(Request $request, TypeContratRepository $typeContratRepository, PaginatorInterface $paginatorInterface): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** Formulaire de recherche type de contrat */
         $form = $this->createForm(TypeContratSearchType::class);
         $form->handleRequest($request);
@@ -85,11 +67,7 @@ class TypeContratController extends AbstractController
     #[Route('/type-contrat/new', name: 'app_dashboard_moderateur_new_type_contrat')]
     public function newTypeContrat(Request $request): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** Initialiser une instance de TypeContrat */
         $typeContrat = $this->moderateurManager->initTypeContrat();
         $form = $this->createForm(TypeContratType::class, $typeContrat);
@@ -111,11 +89,7 @@ class TypeContratController extends AbstractController
     #[Route('/type-contrat/{slug}/edit', name: 'app_dashboard_moderateur_edit_type_contrat')]
     public function editTypeContrat(Request $request, TypeContrat $typeContrat): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** @var TypeContrat $typeContrat qui vient de {slug} */
         $form = $this->createForm(TypeContratType::class, $typeContrat);
         $form->handleRequest($request);
@@ -136,11 +110,7 @@ class TypeContratController extends AbstractController
     #[Route('/type-contrat/supprimer/{slug}', name: 'app_dashboard_moderateur_delete_type_contrat')]
     public function deleteTypeContrat(TypeContrat $typeContrat): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** Supprimer le TypeContrat */
         $this->moderateurManager->deleteTypeContrat($typeContrat);
         $this->addFlash('success', 'Type contrat supprimé avec succès.');
