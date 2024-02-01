@@ -2,10 +2,8 @@
 
 namespace App\Controller\Dashboard;
 
-use DateTime;
 use App\Entity\User;
 use App\Form\Moderateur\MettingType;
-use App\Entity\Notification;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
@@ -44,20 +42,7 @@ class RendezVousController extends AbstractController
         private RequestStack $requestStack,
         private UrlGeneratorInterface $urlGenerator,
         private PaginatorInterface $paginatorInterface,
-    ) {
-    }
-
-    private function checkModerateur()
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $moderateur = $user->getModerateurProfile();
-        if (!$moderateur instanceof ModerateurProfile){ 
-            return $this->redirectToRoute('app_connect');
-        }
-
-        return null;
-    }
+    ) {}
     
     #[Route('/', name: 'rendezvous_index')]
     public function index(): Response
@@ -325,10 +310,7 @@ class RendezVousController extends AbstractController
     #[Route('/entreprise/{id}', name: 'rendezvous_entreprise')]
     public function entreprise(Request $request, EntrepriseProfile $entreprise): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $data = $entreprise->getMettings();
         
         return $this->render('dashboard/moderateur/metting/entreprise.html.twig', [

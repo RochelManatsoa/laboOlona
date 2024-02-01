@@ -6,7 +6,6 @@ use DateTime;
 use App\Entity\Notification;
 use App\Entity\Vues\AnnonceVues;
 use App\Entity\EntrepriseProfile;
-use App\Entity\ModerateurProfile;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
 use App\Entity\Entreprise\JobListing;
@@ -32,28 +31,12 @@ class AnnonceController extends AbstractController
         private MailerService $mailerService,
         private ModerateurManager $moderateurManager,
         private UrlGeneratorInterface $urlGenerator,
-    ) {
-    }
-
-    private function checkModerateur()
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $moderateur = $user->getModerateurProfile();
-        if (!$moderateur instanceof ModerateurProfile){ 
-            return $this->redirectToRoute('app_connect');
-        }
-
-        return null;
-    }
+    ) {}
     
     #[Route('/annonces', name: 'app_dashboard_moderateur_annonces')]
     public function annonces(Request $request, PaginatorInterface $paginatorInterface): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $status = $request->query->get('status');
 
         /** Formulaire de recherche annonces */
@@ -94,10 +77,7 @@ class AnnonceController extends AbstractController
     #[Route('/annonce/{id}', name: 'app_dashboard_moderateur_annonce_view', methods: ['GET'])]
     public function viewAnnonce(JobListing $annonce): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
 
         return $this->render('dashboard/moderateur/annonce/view.html.twig', [
             'annonce' => $annonce,
@@ -107,10 +87,7 @@ class AnnonceController extends AbstractController
     #[Route('/annonce/{id}/candidature', name: 'app_dashboard_moderateur_annonce_candidature_view', methods: ['GET'])]
     public function viewCandidatureAnnonce(JobListing $annonce): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
 
         return $this->render('dashboard/moderateur/annonce/candidature.html.twig', [
             'annonce' => $annonce,
@@ -121,10 +98,7 @@ class AnnonceController extends AbstractController
     #[Route('/annonce/{id}/assignation', name: 'app_dashboard_moderateur_annonce_assignation_view', methods: ['GET'])]
     public function viewassignationAnnonce(JobListing $annonce): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
 
         return $this->render('dashboard/moderateur/annonce/assignation.html.twig', [
             'annonce' => $annonce,
@@ -135,11 +109,7 @@ class AnnonceController extends AbstractController
     #[Route('/notifier/{annonce}/entreprise/{entreprise}', name: 'app_dashboard_moderateur_annonce_notifier')]
     public function notifierAnnonce(Request $request, JobListing $annonce, EntrepriseProfile $entreprise): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $notification = new Notification();
         $notification->setDateMessage(new DateTime());
         $notification->setExpediteur($this->userService->getCurrentUser());
@@ -180,11 +150,7 @@ class AnnonceController extends AbstractController
     #[Route('/status/annonce/{id}', name: 'change_status_annonce')]
     public function changeAnnonceStatus(Request $request, EntityManagerInterface $entityManager, JobListing $annonce): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $status = $request->request->get('status');
         if ($status && in_array($status, JobListing::getArrayStatuses())) {
             $annonce->setStatus($status);
@@ -213,11 +179,7 @@ class AnnonceController extends AbstractController
     #[Route('/delete/annonce/{id}', name: 'delete_annonce')]
     public function deleteAnnonce(JobListing $annonce, EntityManagerInterface $entityManager): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $applicationRepository = $entityManager->getRepository(Applications::class);
         $applications = $applicationRepository->findBy(['annonce' => $annonce]);
         
@@ -239,11 +201,7 @@ class AnnonceController extends AbstractController
     #[Route('/details/annonce/{id}', name: 'details_annonce', methods: ['GET'])]
     public function detailsAnnonce(JobListing $annonce): JsonResponse
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $annonceDetails = [
             'titre' => $annonce->getTitre(),
             'description' => $annonce->getDescription(),

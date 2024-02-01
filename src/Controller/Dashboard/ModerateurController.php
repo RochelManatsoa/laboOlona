@@ -83,28 +83,12 @@ class ModerateurController extends AbstractController
         private InvitationRepository $invitationRepository,
         private AssignationManager $assignationManager,
         private AppExtension $appExtension,
-    ) {
-    }
-
-    private function checkModerateur()
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $moderateur = $user->getModerateurProfile();
-        if (!$moderateur instanceof ModerateurProfile){ 
-            return $this->redirectToRoute('app_profile');
-        }
-
-        return null;
-    }
+    ) {}
 
     #[Route('/', name: 'app_dashboard_moderateur')]
     public function index(): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
 
@@ -130,12 +114,7 @@ class ModerateurController extends AbstractController
     #[Route('/entreprises', name: 'app_dashboard_moderateur_entreprises')]
     public function entreprises(Request $request, PaginatorInterface $paginatorInterface): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** Formulaire nouvelle entreprise */
         $newEntreprise = new EntrepriseProfile();
         $formEntreprise = $this->createForm(NewEntrepriseType::class, $newEntreprise);
@@ -192,10 +171,7 @@ class ModerateurController extends AbstractController
     #[Route('/entreprise/{id}', name: 'voir_entreprise')]
     public function voirEntreprise(EntrepriseProfile $entreprise): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
 
         return $this->render('dashboard/moderateur/entreprise_view.html.twig', [
             'entreprise' => $entreprise,
@@ -205,10 +181,7 @@ class ModerateurController extends AbstractController
     #[Route('/supprimer/entreprise/{id}', name: 'supprimer_entreprise', methods: ['POST'])]
     public function supprimerEntreprise(Request $request, EntityManagerInterface $entityManager, EntrepriseProfile $entreprise): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
 
         if ($this->isCsrfTokenValid('delete' . $entreprise->getId(), $request->request->get('_token'))) {
             $entityManager->remove($entreprise);
@@ -221,10 +194,7 @@ class ModerateurController extends AbstractController
     #[Route('/entreprises/{id}/annonces', name: 'app_dashboard_moderateur_entreprises_annonces')]
     public function entreprisesAnnonces(Request $request, PaginatorInterface $paginatorInterface, EntrepriseProfile $entreprise, JobListingRepository $jobListingRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $status = $request->query->get('status');
 
         /** Formulaire de recherche entreprise */
@@ -268,11 +238,7 @@ class ModerateurController extends AbstractController
     #[Route('/entreprise/{entreprise_id}/annonce/{annonce_id}/status', name: 'change_status_annonce_entreprise', methods: ['POST'])]
     public function changeEntrepriseAnnonceStatus(Request $request, EntityManagerInterface $entityManager, int $entreprise_id, int $annonce_id, JobListingRepository $jobListingRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $status = $request->request->get('status');
         $entreprise = $entityManager->getRepository(EntrepriseProfile::class)->find($entreprise_id);
         $annonce = $jobListingRepository->findOneBy(['id' => $annonce_id, 'entreprise' => $entreprise]);
@@ -296,11 +262,7 @@ class ModerateurController extends AbstractController
     #[Route('/entreprises/{entreprise_id}/annonces/{annonce_id}/view', name: 'app_dashboard_moderateur_entreprises_annonces_view')]
     public function entreprisesAnnoncesView(int $entreprise_id, int $annonce_id, EntrepriseProfileRepository $entrepriseProfileRepository, JobListingRepository $jobListingRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $entreprise = $entrepriseProfileRepository->find($entreprise_id);
         $annonce = $jobListingRepository->findOneBy(['id' => $annonce_id, 'entreprise' => $entreprise]);
 
@@ -320,10 +282,7 @@ class ModerateurController extends AbstractController
         PaginatorInterface $paginatorInterface, 
     ): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $status = $request->query->get('status');
 
         /** Formulaire nouveau candidat */
@@ -393,11 +352,7 @@ class ModerateurController extends AbstractController
     #[Route('/candidat/{uid}/status', name: 'change_status_candidat', methods: ['POST'])]
     public function changeCandidatStatus(Request $request, EntityManagerInterface $entityManager, CandidateProfile $candidateProfile): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $status = $request->request->get('status');
         if ($status && in_array($status, ['PENDING', 'BANNISHED', 'VALID', 'FEATURED', 'RESERVED'])) {
             $candidateProfile->setStatus($status);
@@ -427,11 +382,7 @@ class ModerateurController extends AbstractController
     #[Route('/candidat/{uid}/certification', name: 'change_status_certification_candidat', methods: ['POST'])]
     public function changeCertificationCandidatStatus(Request $request, EntityManagerInterface $entityManager, CandidateProfile $candidateProfile): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $status = $request->request->get('status');
         if ($status && in_array($status, ['OUI', 'NON'])) {
             $candidateProfile->setStatus($status);
@@ -461,10 +412,7 @@ class ModerateurController extends AbstractController
     #[Route('/candidats/{id}', name: 'app_dashboard_moderateur_candidat_view')]
     public function viewCandidat(Request $request, CandidateProfile $candidat): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
 
@@ -580,11 +528,7 @@ class ModerateurController extends AbstractController
     #[Route('/candidats/{id}/applications', name: 'app_dashboard_moderateur_candidat_applications')]
     public function candidatApplications(int $id, ApplicationsRepository $applicationsRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $applications = $applicationsRepository->findBy(['candidat' => $id]);
 
         return $this->render('dashboard/moderateur/candidat_applications.html.twig', [
@@ -595,11 +539,7 @@ class ModerateurController extends AbstractController
     #[Route('/status/application/{id}', name: 'change_status_application', methods: ['POST'])]
     public function changeApplicationStatus(Request $request, EntityManagerInterface $entityManager, Applications $application): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $status = $request->request->get('status');
         if ($status && in_array($status, Applications::getArrayStatuses())) {
             $application->setStatus($status);
@@ -652,11 +592,7 @@ class ModerateurController extends AbstractController
     #[Route('/candidats/{id}/applications/en-attente', name: 'app_dashboard_moderateur_candidat_applications_en_attente')]
     public function candidatApplicationsEnAttente(int $id, ApplicationsRepository $applicationsRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $applications = $applicationsRepository->findBy(['candidat' => $id, 'status' => 'PENDING']);
 
         return $this->render('dashboard/moderateur/candidat_applications_en_attente.html.twig', [
@@ -667,11 +603,7 @@ class ModerateurController extends AbstractController
     #[Route('/candidats/{id}/applications/acceptees', name: 'app_dashboard_moderateur_candidat_applications_acceptees')]
     public function candidatApplicationsAcceptees(int $id, ApplicationsRepository $applicationsRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $applications = $applicationsRepository->findBy(['candidat' => $id, 'status' => 'ACCEPTED']);
 
         return $this->render('dashboard/moderateur/candidat_applications_acceptees.html.twig', [
@@ -682,11 +614,7 @@ class ModerateurController extends AbstractController
     #[Route('/candidats/{id}/applications/refusees', name: 'app_dashboard_moderateur_candidat_applications_refusees')]
     public function candidatApplicationsRefusees(int $id, ApplicationsRepository $applicationsRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $applications = $applicationsRepository->findBy(['candidat' => $id, 'status' => 'REFUSED']);
 
         return $this->render('dashboard/moderateur/candidat_applications_refusees.html.twig', [
@@ -697,11 +625,7 @@ class ModerateurController extends AbstractController
     #[Route('/candidats/{id}/competences', name: 'app_dashboard_moderateur_candidat_competences')]
     public function candidatCompetences(int $id, CandidateProfileRepository $candidateProfileRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $candidat = $candidateProfileRepository->find($id);
         if (!$candidat) {
             throw $this->createNotFoundException('Candidat introuvable');
@@ -715,11 +639,7 @@ class ModerateurController extends AbstractController
     #[Route('/candidats/{id}/experiences', name: 'app_dashboard_moderateur_candidat_experiences')]
     public function candidatExperiences(int $id, CandidateProfileRepository $candidateProfileRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $candidat = $candidateProfileRepository->find($id);
         if (!$candidat) {
             throw $this->createNotFoundException('Candidat introuvable');
@@ -734,22 +654,16 @@ class ModerateurController extends AbstractController
     #[Route('/mettings', name: 'app_dashboard_moderateur_mettings')]
     public function mettings(MettingRepository $mettingRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $mettings = $mettingRepository->findAll();
+
         return $this->render('dashboard/moderateur/mettings.html.twig', compact('mettings'));
     }
 
     #[Route('/metting/show/{id}', name: 'app_dashboard_moderateur_metting_show', methods: ['GET'])]
     public function show(Metting $metting): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
 
         return $this->render('dashboard/moderateur/mettings_show.html.twig', compact('metting'));
     }
@@ -757,11 +671,7 @@ class ModerateurController extends AbstractController
     #[Route('/metting/new', name: 'app_dashboard_moderateur_metting_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $metting = new Metting();
         $form = $this->createForm(MettingType::class, $metting);
         $form->handleRequest($request);
@@ -782,11 +692,7 @@ class ModerateurController extends AbstractController
     #[Route('/metting/{id}/edit', name: 'app_dashboard_moderateur_metting_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Metting $metting, EntityManagerInterface $entityManager): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $form = $this->createForm(MettingType::class, $metting);
         $form->handleRequest($request);
 
@@ -805,11 +711,7 @@ class ModerateurController extends AbstractController
     #[Route('/metting/{id}', name: 'app_dashboard_moderateur_metting_delete', methods: ['POST'])]
     public function delete(Request $request, Metting $metting, EntityManagerInterface $entityManager): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         if ($this->isCsrfTokenValid('delete' . $metting->getId(), $request->request->get('_token'))) {
             $entityManager->remove($metting);
             $entityManager->flush();
@@ -822,10 +724,7 @@ class ModerateurController extends AbstractController
     #[Route('/notifications', name: 'app_dashboard_moderateur_notifications')]
     public function notifications(Request $request, NotificationRepository $notificationRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         
         return $this->render('dashboard/moderateur/notifications.html.twig', [
             'sectors' => $notificationRepository->findAll(),
@@ -836,11 +735,7 @@ class ModerateurController extends AbstractController
     #[Route('/invitation', name: 'app_dashboard_moderateur_invitation')]
     public function invitation(Request $request, InvitationRepository $invitationRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $invitation = new Invitation();
         $invitation->setUuid(new Uuid(Uuid::v4()));
         $invitation->setCreatedAt(new DateTime());
@@ -883,17 +778,8 @@ class ModerateurController extends AbstractController
     #[Route('/assignation/{profilId}', name: 'app_assignation')]
     public function assignate(Request $request, int $profilId): Response
     {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $profil = $this->candidateProfileRepository->find($profilId);
-        // $assignation = $this->assignationRepository->findOneByProfil($profil);
-        // if (!$assignation) {    
-        //     $assignation = new Assignation();
-        //     $assignation->setDateAssignation(new \DateTime());
-        //     $assignation->setStatus(Assignation::STATUS_PENDING);
-        //     $assignation->setRolePositionVisee(Assignation::TYPE_OLONA);
-        //     $assignation->setProfil($profil);
-        // }
-        // dd($assignation);
-
         $assignationForm = $this->createForm(AssignateProfileFormType::class, $profil);
         
         $assignationForm->handleRequest($request);
@@ -901,11 +787,8 @@ class ModerateurController extends AbstractController
         if ($assignationForm->isSubmitted() && $assignationForm->isValid()) {
             // Traitez l'assignation ici
             $assignation = $assignationForm->getData();
-            // dd($assignation);
             $this->em->persist($assignation);
             $this->em->flush();
-
-            // Redirigez ou affichez un message de succès si nécessaire
         }
 
         $referer = $request->headers->get('referer');

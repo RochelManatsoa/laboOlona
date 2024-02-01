@@ -2,7 +2,6 @@
 
 namespace App\Controller\Dashboard\Moderateur;
 
-use App\Entity\ModerateurProfile;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
 use App\Service\Mailer\MailerService;
@@ -14,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Repository\Candidate\ApplicationsRepository;
 use App\Form\Search\Candidature\ModerateurCandidatureSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -26,20 +24,7 @@ class CandidaturesController extends AbstractController
         private EntityManagerInterface $em,
         private MailerService $mailerService,
         private ModerateurManager $moderateurManager,
-    ) {
-    }
-
-    private function checkModerateur()
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $moderateur = $user->getModerateurProfile();
-        if (!$moderateur instanceof ModerateurProfile){ 
-            return $this->redirectToRoute('app_connect');
-        }
-
-        return null;
-    }
+    ) {}
     
     #[Route('/candidatures', name: 'app_dashboard_moderateur_candidatures')]
     public function candidatures(
@@ -47,10 +32,7 @@ class CandidaturesController extends AbstractController
         PaginatorInterface $paginatorInterface, 
     ): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $status = $request->query->get('status');
         $form = $this->createForm(ModerateurCandidatureSearchType::class);
         $form->handleRequest($request);
@@ -90,10 +72,7 @@ class CandidaturesController extends AbstractController
     #[Route('/candidature/{id}', name: 'app_dashboard_moderateur_candidature_view')]
     public function candidature(Request $request, Applications $applications): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         
         return $this->render('dashboard/moderateur/candidature/view.html.twig', [
             'application' => $applications,
@@ -103,11 +82,7 @@ class CandidaturesController extends AbstractController
     #[Route('/candidature/{id}/status', name: 'app_dashboard_moderateur_candidature_status')]
     public function statusCandidature(Request $request, Applications $applications, NotificationRepository $notificationRepository): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $status = $request->request->get('status');
         if ($status && in_array($status, Applications::getArrayStatuses())) {
             $applications->setStatus($status);
@@ -120,10 +95,7 @@ class CandidaturesController extends AbstractController
             $this->addFlash('error', 'Statut invalide.');
         }
 
-        return $this->redirectToRoute('app_dashboard_moderateur_candidat_applications', ['id' => $applications->getCandidat()->getId()]);
-        
-        return $this->render('dashboard/moderateur/notifications.html.twig', [
-            'sectors' => $notificationRepository->findAll(),
-        ]);
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_assignation');
     }
 }

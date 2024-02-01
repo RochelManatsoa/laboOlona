@@ -1001,3 +1001,7 @@ rendezvous_entreprise :
 app_dashboard_moderateur_annonce_assignation_view : 
     title : Assignation d'une annonce
     dashboard_title : Assignation d'une annonce
+    
+app_dashboard_moderateur_metting_new : 
+    title : Créer un rendez-vous
+    dashboard_title : Créer un rendez-vous

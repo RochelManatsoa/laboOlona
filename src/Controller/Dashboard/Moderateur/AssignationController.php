@@ -3,7 +3,6 @@
 namespace App\Controller\Dashboard\Moderateur;
 
 use App\Entity\EntrepriseProfile;
-use App\Entity\ModerateurProfile;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\Assignation;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,29 +29,12 @@ class AssignationController extends AbstractController
         private PaginatorInterface $paginatorInterface,
         private UserService $userService,
         private AppExtension $appExtension,
-    )
-    {}
-
-    private function checkModerateur()
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $moderateur = $user->getModerateurProfile();
-        if (!$moderateur instanceof ModerateurProfile){ 
-            return $this->redirectToRoute('app_connect');
-        }
-
-        return null;
-    }
+    ) {}
 
     #[Route('/', name: 'app_dashboard_moderateur_assignation')]
     public function index(Request $request): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-    
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $profils = $this->candidateProfileRepository->findAllValid();
         $entreprises = $this->entrepriseProfileRepository->findAll();
         $assignationForms = [];
@@ -88,6 +70,7 @@ class AssignationController extends AbstractController
     #[Route('/new', name: 'app_dashboard_moderateur_assignation_new')]
     public function newAssign(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $assignation = new Assignation();
         $form = $this->createForm(AssignationFormType::class, $assignation);
         
@@ -108,6 +91,7 @@ class AssignationController extends AbstractController
     #[Route('/view/{id}', name: 'app_dashboard_moderateur_assignation_view')]
     public function viewAssign(Request $request, Assignation $assignation): Response
     {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $form = $this->createForm(AssignationFormType::class, $assignation);
         
         $form->handleRequest($request);
@@ -127,11 +111,8 @@ class AssignationController extends AbstractController
 
     #[Route('/entreprise/{id}', name: 'app_dashboard_moderateur_assignation_entreprise')]
     public function entrepriseAssign(Request $request, EntrepriseProfile $entreprise): Response
-    {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+    {        
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $data = $this->appExtension->getAssignByEntreprise($entreprise);
 
         /** Formulaire de recherche entreprise */
