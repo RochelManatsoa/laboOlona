@@ -1004,4 +1004,64 @@ app_dashboard_moderateur_annonce_assignation_view :
     
 app_dashboard_moderateur_metting_new : 
     title : Créer un rendez-vous
-    dashboard_title : Créer un rendez-vous
+    dashboard_title : Créer un rendez-vous    
+
+app_dashboard_referrer : 
+    title : Tableau de bord Coopteur
+    dashboard_title : Tableau de bord Coopteur
+
+app_dashboard_referrer_annonces : 
+    title : Toutes les annonces
+    dashboard_title : Toutes les annonces
+
+app_dashboard_referrer_annonce_view : 
+    title : Détails de l'annonce
+    dashboard_title : Détails de l'annonce
+
+app_dashboard_referrer_stats : 
+    title : Mes statistiques
+    dashboard_title : Mes statistiques
+
+app_dashboard_referrer_rewards : 
+    title : Mes récompences
+    dashboard_title : Mes récompences
+    
+app_dashboard_referrer_references : 
+    title : Mes références
+    dashboard_title : Mes références
+    
+app_dashboard_referrer_info : 
+    title : Mes infos Coopteur
+    dashboard_title : Mes infos Coopteur
+    
+app_dashboard_referrer_cooptation : 
+    title : Recommander un profil
+    dashboard_title : Recommander un profil
+     
+app_dashboard_referrer_cooptation_references : 
+    title : Références pour une annonce
+    dashboard_title : Références pour une annonce
+     
+app_dashboard_referrer_become : 
+    title : Devenir Coopteur
+    dashboard_title : Devenir Coopteur
+     
+app_dashboard_moderateur_cooptation : 
+    title : Gestion des cooptations
+    dashboard_title : Gestion des cooptations
+     
+app_dashboard_moderateur_cooptation_view : 
+    title : Cooptation
+    dashboard_title : Cooptation
+     
+app_dashboard_moderateur_cooptation_annonce : 
+    title : Cooptation d'une annonce
+    dashboard_title : Cooptation d'une annonce
+     
+app_dashboard_moderateur_cooptation_annonce_referrer : 
+    title : Cooptation d'un référant
+    dashboard_title : Cooptation d'un référant
+     
+app_dashboard_moderateur_coopteur_view : 
+    title : Détails coopteur
+    dashboard_title : Détails coopteur

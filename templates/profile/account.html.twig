@@ -10,13 +10,13 @@
         <div class="row text-white">
             {{ form_start(form, {'attr': {'id': 'account_identity'}})}}
             {{ form_errors(form)}}
-            <div class="col-md-6 offset-md-3 text-center">
+            <div class="col-md-8 offset-md-2 text-center">
                 {{ 'app_identity_account.message'|trans }}
                 <hr class="my-4">
                 <div class="row">
                 {% for account in form.type %}
                 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="custom-control custom-radio image-checkbox photo-gris">
                         {{ form_widget(account, {'attr': {'class': 'custom-control-input'}}) }}
                         <label class="custom-control-label" for="{{ account.vars.id }}">

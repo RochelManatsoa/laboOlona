@@ -1,0 +1,102 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="annonce-list p-2">
+            <div class="annonce-item shadow p-5 m-4">
+                <h1 class="card-title h5 mb-3">{{ annonce.titre }}</h1>
+                <p class="text-muted small">
+                    <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ annonce.status }} 
+                        <span class="small text-center mx-3">|</span>
+                    {{ annonce.typeContrat }} 
+                        <span class="small text-center mx-3">|</span>
+                    <i class="bi bi-geo-alt-fill"></i> {{ annonce.lieu }} 
+                        <span class="small text-center mx-3">|</span>
+                    <i class="bi bi-hourglass-split"></i> Expire le {{ annonce.dateExpiration|date('d/m/Y') }}
+                        <span class="small text-center mx-3">|</span>
+                    <i class="bi bi-eye"></i> {{ annonce.annonceVues|length }} vues
+                </p>
+
+                <div class="mt-3 small text-muted">
+                    <i class="bi bi-gear mx-3"></i>
+                    Compétences requises : 
+                    {% if annonce.competences|length > 0 %}
+                        {% for skill in annonce.competences %}
+                            <span class="badge bg-dark">{{ skill.nom }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <p>Aucune compétence spécifique requise.</p>
+                    {% endif %}
+                </div>
+
+                <div class="small text-muted">
+                    <i class="bi bi-calendar mx-3"></i>
+                    Publication : 
+                    <span class="text-strong">{{ annonce.dateCreation|time_ago }}</span>
+                </div>
+
+                <div class="small text-muted">
+                    <i class="bi bi-cash-stack mx-3"></i>
+                    Budget indicatif : 
+                    <span class="text-strong">{{ annonce.salaire }} €</span>
+                </div>
+                <hr>
+
+                <div class="container">
+                    <div class="row text-strong">
+                        <div class="col-sm-3">Coopteur</div>
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-5 text-center">Nombre</div>
+                                <div class="col-sm-6 col-md-2 text-center">Status</div>
+                                <div class="col-sm-6 col-md-2 text-center">Prime</div>
+                                <div class="col-sm-6 col-md-3 text-center">Gain</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+                    <hr>
+                    {% for referrerId, referrals in referralsByReferrer %}
+                    {% set referrer = getReferrerById(referrerId) %}
+                        <div class="row text-muted">
+                            <div class="col-sm-3 small">
+                                {# <a href="{{ path('app_dashboard_moderateur_cooptation_annonce', {'jobId' : item.annonce.jobId })}}" class=""> #}
+                                    {{ referrer.referrer.nom }} 
+                                    {{ referrer.referrer.prenom }}<br>
+                                {# </a> #}
+                                <span class="text-dark">
+                                    {{ generateCoopteurPseudo(referrer) }}
+                                </span>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-5 text-center">
+                                        <a href="{{ path('app_dashboard_moderateur_cooptation_annonce', {'jobId': annonce.jobId})}}" class="badge bg-success">
+                                            <span class="">{{ referrals|length }}</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-6 col-md-2 small text-center">{{ referrer.status }}</div>
+                                    <div class="col-sm-6 col-md-2 small text-center">{{ referrer.pendingRewards }} €</div>
+                                    <div class="col-sm-6 col-md-3 text-center">{{referrer.totalRewards}} €</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1 small">
+                                <a href="{{ path('app_dashboard_moderateur_coopteur_view', {'customId': referrer.customId})}}" class="btn btn-sm btn-info">
+                                <i class="bi bi-eye"></i>
+                                </a>
+                            </div>
+                        </div>                    
+                        <hr>                    
+                    {% endfor %}
+                <!-- Plus de lignes et colonnes ici -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+
+    </section>
+</div>
+{% endblock %}

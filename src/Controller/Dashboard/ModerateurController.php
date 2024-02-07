@@ -4,6 +4,7 @@ namespace App\Controller\Dashboard;
 
 use DateTime;
 use App\Entity\User;
+use App\Twig\AppExtension;
 use App\Entity\Notification;
 use App\Service\FileUploader;
 use App\Manager\ProfileManager;
@@ -16,7 +17,9 @@ use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
 use App\Manager\ModerateurManager;
 use App\Entity\Moderateur\EditedCv;
+use App\Manager\AssignationManager;
 use App\Form\Moderateur\MettingType;
+use App\Manager\NotificationManager;
 use App\Entity\Entreprise\JobListing;
 use App\Entity\Moderateur\Invitation;
 use App\Form\Moderateur\CandidatType;
@@ -26,9 +29,9 @@ use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
 use App\Entity\Moderateur\Assignation;
 use App\Form\Candidat\AvailabilityType;
-use App\Form\Moderateur\AssignateProfileFormType;
 use App\Form\Moderateur\InvitationType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Manager\Referrer\ReferenceManager;
 use App\Repository\NotificationRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\Moderateur\AssignationFormType;
@@ -36,9 +39,11 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\EntrepriseProfileRepository;
+use App\Repository\Referrer\ReferralRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Moderateur\NotificationProfileType;
 use App\Repository\Moderateur\MettingRepository;
+use App\Form\Moderateur\AssignateProfileFormType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
@@ -52,9 +57,7 @@ use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
-use App\Manager\AssignationManager;
-use App\Manager\NotificationManager;
-use App\Twig\AppExtension;
+use App\Repository\ReferrerProfileRepository;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -83,6 +86,7 @@ class ModerateurController extends AbstractController
         private InvitationRepository $invitationRepository,
         private AssignationManager $assignationManager,
         private AppExtension $appExtension,
+        private ReferenceManager $referenceManager,
     ) {}
 
     #[Route('/', name: 'app_dashboard_moderateur')]
@@ -793,5 +797,39 @@ class ModerateurController extends AbstractController
 
         $referer = $request->headers->get('referer');
         return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_assignation');
+    }
+
+    #[Route('/cooptation', name: 'app_dashboard_moderateur_cooptation')]
+    public function cooptation(Request $request, ReferralRepository $referralRepository): Response
+    {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $data = $this->referenceManager->getReferenceAnnonce($referralRepository->findAll([
+            'id' => 'DESC'
+        ]));
+        
+        return $this->render('dashboard/moderateur/cooptation/index.html.twig', [
+            'cooptations' => $this->paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            ),
+        ]);
+    }
+
+    #[Route('/coopteurs', name: 'app_dashboard_moderateur_coopteurs')]
+    public function coopteurs(Request $request, ReferrerProfileRepository $referrerProfileRepository): Response
+    {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $data = $referrerProfileRepository->findAll([
+            'id' => 'DESC'
+        ]);
+        
+        return $this->render('dashboard/moderateur/coopteur/index.html.twig', [
+            'coopteurs' => $this->paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            ),
+        ]);
     }
 }

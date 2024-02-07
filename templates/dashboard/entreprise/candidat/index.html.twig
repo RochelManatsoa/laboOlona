@@ -196,55 +196,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 $(document).ready(function() {
 
-//     // Mise à jour du champ 'titre' en fonction de la sélection des secteurs
-//     $('#secteurs').on('change', function() {
-//         var secteurs = $(this).val(); // Récupérer les valeurs sélectionnées
-//         console.log(secteurs)
-//         $.ajax({
-//             url: '{{ path('get_titres_poste') }}', // Mettez à jour avec le chemin correct
-//             data: { secteurs: secteurs.join(',') },
-//             success: function(data) {
-//                 console.log(data)
-//                 var titreSelect = $('#titre');
-//                 titreSelect.empty();
-//                 console.log(titreSelect)
-
-//                 // Ajouter les nouvelles options
-//                 data.titres.forEach(function(titre) {
-//                     // debugger; 
-//                     titreSelect.append(new Option(titre, titre));
-//                 });
-
-//                 // Mise à jour de Select2 pour refléter les changements
-//                 titreSelect.select2({
-//                     placeholder: 'Titre du poste'
-//                 });
-//             }
-//         });
-//         console.log(secteurs)
-//         $.ajax({
-//             url: '{{ path('get_competences_poste') }}', // Mettez à jour avec le chemin correct
-//             data: { secteurs: secteurs.join(',') },
-//             success: function(data) {
-//                 console.log(data)
-//                 var competenceSelect = $('#competences');
-//                 competenceSelect.empty();
-//                 console.log(competenceSelect)
-
-//                 // Ajouter les nouvelles options
-//                 data.competences.forEach(function(competence) {
-//                     // debugger; 
-//                     competenceSelect.append(new Option(competence, competence));
-//                 });
-
-//                 // Mise à jour de Select2 pour refléter les changements
-//                 titreSelect.select2({
-//                     placeholder: 'Titre du poste'
-//                 });
-//             }
-//         });
-//     });
-
     // Gérer la recherche et la mise à jour des annonces
     $('#entreprise-candidat-search-form input, #entreprise-candidat-search-form select').on('keyup change', function() {
         searchAnnonces();
@@ -264,18 +215,5 @@ $(document).ready(function() {
     }
 
 });
-/*
-$(document).ready(function() {
-    $('.js-example-basic-multiple-titre').select2({
-        placeholder: 'Titre du poste'
-    });
-    $('.js-example-basic-multiple-competences').select2({
-        placeholder: 'Compétence'
-    });
-    $('.js-example-basic-multiple-langues').select2({
-        placeholder: 'Langues',
-    });
-});
-*/
 </script>
 {% endblock %}

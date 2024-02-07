@@ -19,9 +19,16 @@
                     </p>
                     <hr class="my-4">
                         <div class="d-flex justify-content-center">
+
+                        {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_REFERRER')) %}
+                            <a href="{{ path('app_dashboard_referrer') }}" class="btn btn-primary">
+                                {{ 'app_identity_confirmation.button'|trans }}
+                            </a>
+                        {% else %}
                             <a href="{{ path('app_connect') }}" class="btn btn-primary">
                                 {{ 'app_identity_confirmation.button'|trans }}
                             </a>
+                        {% endif %}
                         </div>
                     </div>
                 </div>

@@ -2,21 +2,22 @@
 
 namespace App\Controller\Ajax;
 
+use App\Entity\Candidate\CV;
+use App\Manager\CandidatManager;
+use App\Service\User\UserService;
+use App\Entity\Candidate\Langages;
 use App\Entity\Candidate\Competences;
 use App\Entity\Candidate\Experiences;
-use App\Entity\Candidate\Langages;
-use App\Manager\CandidatManager;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AffiliateToolRepository;
-use App\Repository\Candidate\CompetencesRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Repository\Candidate\ExperiencesRepository;
 use App\Repository\Candidate\LangagesRepository;
-use App\Service\User\UserService;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\Candidate\CompetencesRepository;
+use App\Repository\Candidate\ExperiencesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CandidatController extends AbstractController
@@ -390,4 +391,22 @@ class CandidatController extends AbstractController
         ], 200, [], []);
     }
 
+    #[Route('/profile/cv/{id}/select', name: 'app_profile_candidate_select_CV')]
+    public function candidateSelectCV(CV $cv)
+    {
+        /** @var $user User */
+        $user = $this->userService->getCurrentUser();
+        $candidat = $user->getCandidateProfile();
+        if ($cv instanceof CV) {
+            $candidat->setCv($cv->getCvLink());
+            $this->em->flush();
+            $message = "ok";
+        }else{
+            $message = "error: CV not found";
+        }
+
+        return $this->json([
+            'message' => $message
+        ], 200);
+    }
 }
