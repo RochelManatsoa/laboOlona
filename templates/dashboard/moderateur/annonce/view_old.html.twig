@@ -1,0 +1,119 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container">
+        <div class="annonce-list p-2">
+            <div class="annonce-item shadow p-5 m-4">
+        {{ form_start(form)}}
+            <h2>{{ annonce.titre }} </h2>
+                <span class="badge text-bg-info rounded-pill">{{ annonce.typeContrat}}</span>
+                <span class="small">Publiée le {{ annonce.dateCreation|date('d/m/Y')}}</span>
+                <div class="row mt-4">
+                    <div class="col">
+                        <dl>
+                            <dt>Entreprise</dt>
+                            <dd><a href="{{ path('voir_entreprise', {'id': annonce.entreprise.id }) }}"><i class="bi bi-building mx-2"></i>{{ annonce.entreprise.nom }}</a></dd>
+                        </dl>            
+                    </div>
+                    <div class="col">
+                        <dl>
+                            <dt>Statut</dt>
+                            <dd>                
+                            <form method="post" action="{{ path('change_status_annonce', {'id': annonce.id}) }}">
+                                <select name="status" class="form-control" onchange="this.form.submit()">
+                                    <option value="PUBLISHED" {{ annonce.status == 'PUBLISHED' ? 'selected' : '' }}>Publiée</option>
+                                    <option value="PENDING" {{ annonce.status == 'PENDING' ? 'selected' : '' }}>En attente</option>
+                                    <option value="REJECTED" {{ annonce.status == 'REJECTED' ? 'selected' : '' }}>Rejetée</option>
+                                    <option value="EXPIRED" {{ annonce.status == 'EXPIRED' ? 'selected' : '' }}>Expirée</option>
+                                    <option value="FEATURED" {{ annonce.status == 'FEATURED' ? 'selected' : '' }}>Mis en avant</option>
+                                    <option value="ARCHIVED" {{ annonce.status == 'ARCHIVED' ? 'selected' : '' }}>Archivée</option>
+                                    <option value="DELETED" {{ annonce.status == 'DELETED' ? 'selected' : '' }}>Effacée</option>
+                                </select>
+                            </form>
+                            </dd>
+                        </dl>   
+                    </div>
+                    <div class="col">
+                        <dl>
+                            <dt>Compétences</dt>
+                            <dd>{{ annonce.competences|length }} </dd>
+                        </dl>   
+                    </div>
+                    <div class="col">
+                        <dl>
+                            <dt>Vues</dt>
+                            <dd>{{ annonce.annonceVues|length }} </dd>
+                        </dl>   
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <dl>
+                            <dt>Date début</dt>
+                            <dd><i class="bi bi-calendar mx-2"></i> {{ annonce.dateExpiration|date('d/m/Y')}}</dd>
+                        </dl>            
+                    </div>
+                    <div class="col">
+                        <dl>
+                            <dt>Salaire</dt>
+                            <dd>{{ form_row(form.salaire)}}</dd>
+                        </dl>   
+                    </div>
+                    <div class="col">
+                        <dl>
+                            <dt>Secteur</dt>
+                            <dd>{{ form_row(form.secteur)}} </dd>
+                        </dl>   
+                    </div>
+                    <div class="col">
+                        <dl>
+                            <dt>Candidatures</dt>
+                            <dd>{{ annonce.applications|length }} </dd>
+                        </dl>   
+                    </div>
+                </div>
+            <dl>
+                <dt>Compétences requises</dt>
+                <dd>
+                {{ form_row(form.competences)}}
+                </dd>
+            </dl>
+            <dl>
+                <div class="row">
+                    <div class="col">
+                        <dl>
+                            <dt>Nombre de personne</dt>
+                            <dd>{{ form_row(form.nombrePoste)}}</dd>
+                        </dl>            
+                    </div>
+                    <div class="col">
+                        <dl>
+                            <dt>Prime par personne</dt>
+                            <dd>{{ form_row(form.prime)}}</dd>
+                        </dl>   
+                    </div>
+                    <div class="col">
+
+                    </div>
+                    <div class="col">
+
+                    </div>
+                </div>
+            </dl>  
+            <dl>
+                <dt>Description</dt>
+                <dd>{{ form_row(form.description)}}</dd>
+            </dl>
+            <button type="submit" class="btn btn-danger rounded-pill px-5">Mettre à jour</button>
+            <div style="display:none;">{{ form_widget(form)}}</div>
+            <a href="{{ path('app_dashboard_moderateur_annonce_notifier', {'entreprise': annonce.entreprise.id, 'annonce': annonce.id}) }}" class="btn btn-info rounded-pill"><i class="bi bi-send mx-2"></i> Notifier l'entreprise</a>
+            {{ form_end(form)}}
+        </div>
+    </div>
+    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+</div>
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#job_listing_description' ) )
+</script>
+{% endblock %}

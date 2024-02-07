@@ -8,6 +8,7 @@ use App\Entity\EntrepriseProfile;
 use App\Entity\Langue;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
+use App\Entity\Referrer\Referral;
 use App\Entity\Secteur;
 use App\Entity\Vues\AnnonceVues;
 use App\Repository\Entreprise\JobListingRepository;
@@ -120,6 +121,12 @@ class JobListing
     #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: Assignation::class)]
     private Collection $assignations;
 
+    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Referral::class)]
+    private Collection $referrals;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
+    private ?string $prime = null;
+
     public function __toString()
     {
         return $this->titre;        
@@ -132,6 +139,7 @@ class JobListing
         $this->annonceVues = new ArrayCollection();
         $this->langues = new ArrayCollection();
         $this->assignations = new ArrayCollection();
+        $this->referrals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -417,6 +425,48 @@ class JobListing
                 $assignation->setJobListing(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Referral>
+     */
+    public function getReferrals(): Collection
+    {
+        return $this->referrals;
+    }
+
+    public function addReferral(Referral $referral): static
+    {
+        if (!$this->referrals->contains($referral)) {
+            $this->referrals->add($referral);
+            $referral->setAnnonce($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferral(Referral $referral): static
+    {
+        if ($this->referrals->removeElement($referral)) {
+            // set the owning side to null (unless already changed)
+            if ($referral->getAnnonce() === $this) {
+                $referral->setAnnonce(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPrime(): ?string
+    {
+        return $this->prime;
+    }
+
+    public function setPrime(?string $prime): static
+    {
+        $this->prime = $prime;
 
         return $this;
     }

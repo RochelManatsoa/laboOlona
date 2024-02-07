@@ -32,6 +32,10 @@ class UserService
         /** @var User $user */
         $user = $this->getCurrentUser();
         switch ($user->getType()) {
+            case User::ACCOUNT_REFERRER :
+                $profile = $user->getReferrerProfile();
+                break;
+
             case User::ACCOUNT_CANDIDAT :
                 $profile = $user->getCandidateProfile();
                 break;
@@ -50,6 +54,14 @@ class UserService
         }
 
         return $profile;
+    }
+
+    public function getReferrer()
+    {
+        /** @var User $user */
+        $user = $this->getCurrentUser();
+        
+        return $user->getReferrerProfile();
     }
 
     public function init()

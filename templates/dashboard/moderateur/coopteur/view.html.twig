@@ -1,0 +1,98 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="annonce-list p-2">
+            <div class="annonce-item shadow p-5 m-4">
+                <h1 class="card-title h5 mb-3"># Coopteur {{ generateCoopteurPseudo(coopteur) }}</h1>
+
+            <!-- Onglets -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" id="details-tab" data-bs-toggle="tab" href="#details">Résumé</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="cooptations-tab" data-bs-toggle="tab" href="#cooptations">Cooptations ({{ coopteur.referrals|length }})</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="rewards-tab" data-bs-toggle="tab" href="#rewards">Récompences</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="email-tab" data-bs-toggle="tab" href="#email"><i class="bi h5 bi-envelope-at"></i></a>
+                </li>
+            </ul>
+
+            <!-- Contenu des onglets -->
+            <div class="tab-content mt-3">
+
+                <div class="tab-pane fade show active" id="details">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                </div> 
+                                <div class="col-md-9">
+                                    <h5 class="card-title">{{ coopteur.referrer.nom }} {{ coopteur.referrer.prenom }}</h5>
+                                    <p class="card-text">
+                                    <span class="text-muted">Email :</span> {{ coopteur.referrer.email }}<br>
+                                    <span class="text-muted">Téléphone : </span> <span class="text-dark">{{ coopteur.telephonePro }}</span><br>
+                                    <span class="text-muted">Adresse : </span> <span class="text-dark">{{ coopteur.adressePro }}</span><br>
+                                    </p> 
+                                </div> 
+                            </div> 
+                            <p class="card-text mt-3">
+                                {# <strong>Biographie:</strong> {{ candidat.resume|raw }}<br> #}
+                            </p> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="cooptations">
+                    <div class="card">
+                        <div class="card-body">
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="rewards">
+                    <div class="card">
+                        <div class="card-body">
+                        
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="email">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="alert alert-info small" role="alert">
+                                        <i class="bi bi-info-circle"></i> L'intégralité de ce contenu sera envoyée à l'utilisateur. N'oubliez pas d'ajouter 'Bonjour' suivi du nom de l'utilisateur. La mise en forme que vous appliquez ici sera conservée à l'envoi.
+                                    </div>
+                                </div> 
+                                <div class="col-md-9">
+                                    {# {{ form_start(form)}}
+                                    {{ form_widget(form)}}
+                                    {{ form_errors(form)}}
+                                    <div class="input-group-append my-4">
+                                        <button type="submit" class="btn btn-primary rounded-pill">Envoyer</button>
+                                    </div>
+                                    {{ form_end(form)}} #}
+                                </div> 
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            </div>
+        </div>
+    </div>
+
+<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+
+    </section>
+</div>
+{% endblock %}

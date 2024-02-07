@@ -42,6 +42,7 @@ class CandidateProfile
 
     #[ORM\OneToOne(inversedBy: 'candidateProfile', cascade: ['persist', 'remove'])]
     private ?User $candidat = null;
+    
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 

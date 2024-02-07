@@ -46,7 +46,7 @@ class SecurityController extends AbstractController
     {
         /** @var User|null $user */
         $user = $this->getUser();
-
+        
         if (!$user instanceof User) {
             return $this->redirectToRoute('app_profile');
         }
@@ -62,6 +62,10 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_dashboard_candidat');
         }
 
+        if ($user->getType() === User::ACCOUNT_REFERRER) {
+            return $this->redirectToRoute('app_dashboard_referrer');
+        }
+        // dd($user->getType());
     
         return $this->redirectToRoute('app_profile');
     }

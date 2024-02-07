@@ -3,27 +3,27 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Candidate\CV;
-use App\Entity\Enum\TypeUser;
+use App\Manager\MailManager;
 use App\Service\FileUploader;
+use App\Entity\ReferrerProfile;
 use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
+use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
-use App\Entity\ModerateurProfile;
 use App\Form\Profile\AccountType;
 use App\Service\User\UserService;
+use App\Manager\ModerateurManager;
 use App\Form\Profile\EntrepriseType;
-use App\Service\Mailer\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Profile\Candidat\StepOneType;
 use App\Form\Profile\Candidat\StepTwoType;
 use App\Form\Profile\Candidat\StepThreeType;
-use App\Manager\CandidatManager;
-use App\Manager\ModerateurManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
+use App\Form\Profile\Referrer\StepOneType as ReferrerStepOne;
+use App\Form\Profile\Referrer\StepTwoType as ReferrerStepTwo;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -32,14 +32,34 @@ class ProfileController extends AbstractController
     public function __construct(
         private UserService $userService,
         private EntityManagerInterface $em,
-        private MailerService $mailerService,
+        private MailManager $mailManager,
         private ProfileManager $profileManager,
         private RequestStack $requestStack,
         private UrlGeneratorInterface $urlGenerator,
         private FileUploader $fileUploader,
         private CandidatManager $candidatManager,
         private ModerateurManager $moderateurManager,
-    ){
+    ) {}
+
+    private function redirectAction(?string $type)
+    {
+        switch ($type) {
+            case User::ACCOUNT_CANDIDAT :
+                return $this->redirectToRoute('app_profile_candidate_step_one', []);
+                break;
+
+            case User::ACCOUNT_ENTREPRISE :
+                return $this->redirectToRoute('app_profile_entreprise', []);
+                break;
+
+            case User::ACCOUNT_REFERRER :
+                return $this->redirectToRoute('app_profile_referrer_step_one', []);
+                break;
+            
+            default:
+                return $this->redirectToRoute('app_profile_account', []);
+                break;
+        }
     }
     
     #[Route('/profile', name: 'app_profile')]
@@ -47,42 +67,29 @@ class ProfileController extends AbstractController
     {
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
-        if (null === $user || $user->getType() === User::ACCOUNT_CANDIDAT) {
-            return $this->redirectToRoute('app_profile_candidate_step_one');
-        }
-        if (null === $user || $user->getType() === User::ACCOUNT_ENTREPRISE) {
-            return $this->redirectToRoute('app_profile_entreprise');
-        }
-        if (null === $user || $user->getType() === User::ACCOUNT_MODERATEUR) {
-            return $this->redirectToRoute('app_profile_moderateur');
-        }
         
-        return $this->redirectToRoute('app_profile_account', []);
+        return $this->redirectAction($user->getType());
     }
     
     #[Route('/profile/account', name: 'app_profile_account')]
     public function account(Request $request): Response
     {
+        /** @var User $user */
         $user = $this->userService->getCurrentUser();
+        if(null !== $user->getType()){
+            return $this->redirectAction($user->getType());
+        }
+        
         $form = $this->createForm(AccountType::class, $user,[]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
             $this->em->persist($user);
             $this->em->flush();
-            $this->mailerService->send(
-                $user->getEmail(),
-                "Bienvenue sur Olona Talents",
-                "welcome.html.twig",
-                [
-                    'user' => $user,
-                    'dashboard_url' => $this->urlGenerator->generate('app_connect', [], UrlGeneratorInterface::ABSOLUTE_URL),
-                ]
-            );
+            /** welcome mail */
+            $this->mailManager->welcome($user);
 
-            if($user->getType() !== User::ACCOUNT_CANDIDAT ) return $this->redirectToRoute('app_profile_entreprise', []);
-            
-            return $this->redirectToRoute('app_profile_candidate_step_one', []);
+            return $this->redirectAction($user->getType());
         }
 
         return $this->render('profile/account.html.twig', [
@@ -135,18 +142,9 @@ class ProfileController extends AbstractController
 
             if($candidat instanceof CandidateProfile && !$candidat->isEmailSent()){
                 $candidat->setEmailSent(true);
-                $this->mailerService->sendMultiple(
-                    $this->moderateurManager->getModerateurEmails(),
-                    "Nouvel inscrit sur Olona Talents",
-                    "moderateur/notification_welcome.html.twig",
-                    [
-                        'user' => $candidat->getCandidat(),
-                        'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-                    ]
-                );
+                /** notify moderateurs */
+                $this->mailManager->newUser($candidat->getCandidat());
             }
-            $this->em->persist($candidat);
-            $this->em->flush();
 
             return $this->redirectToRoute('app_profile_candidate_step_two', []);
         }
@@ -209,7 +207,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/profile/candidate/step-three', name: 'app_profile_candidate_step_three')]
-    public function stepThree(Request $request): Response
+    public function candidateStepThree(Request $request): Response
     {
         /** @var $user User */
         $user = $this->userService->getCurrentUser();
@@ -233,71 +231,68 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/profile/cv/{id}/select', name: 'app_profile_candidate_select_CV')]
-    public function candidateSelectCV(Request $request, CV $cv)
+    #[Route('/profile/referrer/step-one', name: 'app_profile_referrer_step_one')]
+    public function referrerStepOne(Request $request): Response
     {
         /** @var $user User */
         $user = $this->userService->getCurrentUser();
-        $candidat = $user->getCandidateProfile();
-        if ($cv instanceof CV) {
-            $candidat->setCv($cv->getCvLink());
-            $this->em->flush();
-            $message = "ok";
-        }else{
-            $message = "error: CV not found";
+        $referrer = $user->getReferrerProfile();
+
+        if (!$referrer instanceof ReferrerProfile) {
+            $referrer = $this->profileManager->createReferrer($user);
         }
 
-        return $this->json([
-            'message' => $message
-        ], 200);
+        $form = $this->createForm(ReferrerStepOne::class, $referrer, []);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $referrer = $form->getData();
+            $this->em->persist($referrer);
+            $this->em->flush();
+
+            /** notify moderateurs here */
+
+            return $this->redirectToRoute('app_profile_referrer_step_two', []);
+        }
+        
+        return $this->render('profile/referrer/step-one.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
     }
 
-    #[Route('/profile/moderateur', name: 'app_profile_moderateur')]
-    public function moderateur(): Response
+    #[Route('/profile/referrer/step-two', name: 'app_profile_referrer_step_two')]
+    public function referrerStepTwo(Request $request): Response
     {
         /** @var $user User */
         $user = $this->userService->getCurrentUser();
-        $moderateur = $user->getModerateurProfile();
+        $referrer = $user->getReferrerProfile();
 
-        if (!$moderateur instanceof ModerateurProfile) {
-            $moderateur = $this->profileManager->createModerateur($user);
+        if (!$referrer instanceof ReferrerProfile) {
+            $referrer = $this->redirectToRoute('app_profile_referrer_step_one');
         }
-        return $this->render('profile/confirmation.html.twig', [
-            'controller_name' => 'profileController',
+
+        $form = $this->createForm(ReferrerStepTwo::class, $referrer, []);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $referrer = $form->getData();
+            $this->em->persist($referrer);
+            $this->em->flush();
+
+            /** notify moderateurs here */
+
+            return $this->redirectToRoute('app_profile_confirmation', []);
+        }
+        
+        return $this->render('profile/referrer/step-two.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/profile/confirmation', name: 'app_profile_confirmation')]
     public function confirmation(): Response
     {
-        return $this->render('profile/confirmation.html.twig', [
-            'controller_name' => 'profileController',
-        ]);
-    }
 
-    private function userType()
-    {
-        /** @var $user User */
-        $user = $this->userService->getCurrentUser();
-        
-        switch ($user->getType()) {
-            case TypeUser::Candidat:
-                $profile = $user->getCandidateProfile();
-                break;
-            
-            case TypeUser::Entreprise:
-                $profile = $user->getEntrepriseProfile();
-                break;
-
-            case TypeUser::Moderateur:
-                $profile = $user->getModerateurProfile();
-                break;
-
-            default:
-                $profile = null;
-                break;
-        }
-
-        return $profile;
+        return $this->render('profile/confirmation.html.twig', []);
     }
 }

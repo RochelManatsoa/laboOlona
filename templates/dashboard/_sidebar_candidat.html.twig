@@ -1,15 +1,51 @@
 {% set current_route = app.request.attributes.get('_route') %}
 <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark position-sticky top-0" style="width: 280px;">
     <ul class="nav nav-pills flex-column mb-auto">
-    {# <li class="nav-item">
-      <a href="{{ path('app_dashboard_candidat')}}" 
-          class="nav-link {{ current_route == 'app_dashboard_candidat' ? 'active' : 'text-white' }}" 
-          {{ current_route == 'app_dashboard_candidat' ? 'aria-current=page' : '' }}>
-          <i class="mx-2 h5 bi bi-house-door"></i>
-          Tableau de bord  
-      </a>
-    </li>
-    <hr> #}
+    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_REFERRER')) %}
+      <li class="nav-item">
+        <a href="{{ path('app_dashboard_referrer')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_referrer' ? 'active' : 'text-white' }}" 
+            {{ current_route == 'app_dashboard_referrer' ? 'aria-current=page' : '' }}>
+            <i class="mx-2 h5 bi bi-house-door"></i>
+            Tableau de bord  
+        </a>
+      </li>
+      <hr>
+      <li>
+        <a href="{{ path('app_dashboard_referrer_annonces') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_annonces' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-megaphone"></i>
+          Toutes les annonces
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_referrer_stats') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_stats' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-bar-chart"></i>
+          Statistiques
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_referrer_rewards') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_rewards' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-currency-exchange"></i>
+          Récompenses
+        </a>
+
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_referrer_references')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_referrer_references' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-info-circle"></i>
+            Mes cooptés
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_referrer_become')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_referrer_become' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-person-vcard"></i>
+            Mes infos
+        </a>
+      </li>
+    {% endif %}
+    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
       <li>
         <a href="{{ path('app_dashboard_candidat_annonce') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_annonce' ? 'active' : 'text-white' }}">
           <i class="mx-2 h5 bi bi-search"></i>
@@ -21,7 +57,6 @@
           <i class="mx-2 h5 bi bi-megaphone"></i>
           Mes candidatures
         </a>
-
       </li>
       <li>
         <a href="{{ path('rendezvous_index')}}" 
@@ -30,6 +65,7 @@
             {{ 'app_dashboard_entreprise.metting'|trans }} 
         </a>
       </li>
+    {% endif %}
       <li>
         <a href="{{ path('app_dashboard_moderateur_affiliate_tool')}}" 
             class="nav-link {{ current_route == 'app_dashboard_moderateur_affiliate_tool' ? 'active' : 'text-white' }}">
@@ -52,39 +88,76 @@
             {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
         </a>
       </li> #}
-    {# <li class="nav-item">
-            <a href="{{ path('app_dashboard_candidat_formation')}}" 
-                class="nav-link {{ current_route == 'app_dashboard_candidat_formation' ? 'active' : 'text-white' }}" 
-                {{ current_route == 'app_dashboard_candidat_formation' ? 'aria-current=page' : '' }}>
-                <i class="mx-2 h5 bi bi-archive"></i>
-                {{ 'app_dashboard_candidat_formation.menu'|trans }}   
+    </ul>
+      {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+        {% if app.user.referrerProfile is not null %}
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li class="nav-item bg-light text-dark rounded">
+            <button class="nav-link text-dark collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+              <i class="mx-2 h5 bi bi-person-plus-fill"></i> Coopteur
+            </button>
+            <div class="collapse  text-dark " id="dashboard-collapse" style="">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li>
+                  <a href="{{ path('app_dashboard_referrer_annonces') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_annonces' ? 'active' : 'text-dark' }}">
+                    <i class="mx-2 h5 bi bi-megaphone"></i>
+                    Toutes les annonces
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ path('app_dashboard_referrer_stats') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_stats' ? 'active' : 'text-dark' }}">
+                    <i class="mx-2 h5 bi bi-bar-chart"></i>
+                    Statistiques
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ path('app_dashboard_referrer_rewards') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_rewards' ? 'active' : 'text-dark' }}">
+                    <i class="mx-2 h5 bi bi-currency-exchange"></i>
+                    Récompenses
+                  </a>
+
+                </li>
+                <li>
+                  <a href="{{ path('app_dashboard_referrer_references')}}" 
+                      class="nav-link {{ current_route == 'app_dashboard_referrer_references' ? 'active' : 'text-dark' }}">
+                      <i class="mx-2 h5 bi bi-info-circle"></i>
+                      Mes cooptés
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ path('app_dashboard_referrer_become')}}" 
+                      class="nav-link {{ current_route == 'app_dashboard_referrer_become' ? 'active' : 'text-dark' }}">
+                      <i class="mx-2 h5 bi bi-person-vcard"></i>
+                      Mes infos
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        {% else %}
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li class="nav-item bg-danger rounded">
+            <a href="{{ path('app_dashboard_referrer_become') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_become' ? 'active' : 'text-white' }}">
+              <i class="mx-2 h5 bi bi-person-plus-fill"></i>
+              Devenir Coopteur
             </a>
           </li>
-          <li>
-            <a href="{{ path('app_dashboard_candidat_tools')}}" 
-                class="nav-link {{ current_route == 'app_dashboard_candidat_tools' ? 'active' : 'text-white' }}">
-                <i class="mx-2 h5 bi bi-tools"></i>
-                {{ 'app_dashboard_candidat_tools.menu'|trans }}  
-            </a>
-          </li> #}
-    </ul>
+        </ul>
+        {% endif %}
+      {% endif %}
 
     <hr>
       <ul class="nav nav-pills flex-column mb-auto">
+      {% if app.user.candidateProfile is not null %}
         <li class="nav-item">
           <a href="{{ path('app_dashboard_candidat_compte') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_compte' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-person-circle"></i>
             {{ 'app_dashboard_candidat_compte.menu'|trans }}
           </a>
         </li>
-        {# <li class="nav-item">
-            <button type="button" data-bs-toggle="modal" data-bs-target="#candidatDocuments"
-                class="nav-link text-white" >
-                <i class="mx-2 h5 bi bi-archive"></i>
-                Mes Documents   
-            </button>
-          </li>
-        <li> #}
+      {% endif %}
+        <li class="nav-item">
           <a href="{{ path('app_logout') }}" class="nav-link text-white">
             <i class="mx-2 h5 bi bi-box-arrow-right"></i>
             {{ 'app_dashboard_entreprise.logout'|trans }}

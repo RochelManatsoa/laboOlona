@@ -21,11 +21,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     const ACCOUNT_CANDIDAT = 'CANDIDAT';
     const ACCOUNT_ENTREPRISE = 'ENTREPRISE';
     const ACCOUNT_MODERATEUR = 'MODERATEUR';
+    const ACCOUNT_REFERRER = 'REFERRER';
    
     public static function getChoices() {
         return [
             'Candidat' => self::ACCOUNT_CANDIDAT ,
             'Entreprise' => self::ACCOUNT_ENTREPRISE ,
+            'Coopteur' => self::ACCOUNT_REFERRER ,
         ];
     }
 
@@ -99,6 +101,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastLogin = null;
+
+    #[ORM\OneToOne(mappedBy: 'referrer', cascade: ['persist', 'remove'])]
+    private ?ReferrerProfile $referrerProfile = null;
 
     public function __construct()
     {
@@ -497,6 +502,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastLogin(?\DateTimeInterface $lastLogin): static
     {
         $this->lastLogin = $lastLogin;
+
+        return $this;
+    }
+
+    public function getReferrerProfile(): ?ReferrerProfile
+    {
+        return $this->referrerProfile;
+    }
+
+    public function setReferrerProfile(?ReferrerProfile $referrerProfile): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($referrerProfile === null && $this->referrerProfile !== null) {
+            $this->referrerProfile->setReferrer(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($referrerProfile !== null && $referrerProfile->getReferrer() !== $this) {
+            $referrerProfile->setReferrer($this);
+        }
+
+        $this->referrerProfile = $referrerProfile;
 
         return $this;
     }

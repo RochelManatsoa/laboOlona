@@ -10,6 +10,7 @@ use Symfony\Component\Form\Form;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Moderateur\EditedCv;
 use App\Entity\ModerateurProfile;
+use App\Entity\ReferrerProfile;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -54,6 +55,17 @@ class ProfileManager
         $this->saveModerateur($moderateur);
 
         return $moderateur;
+    }
+
+    public function createReferrer($user)
+    {
+        $referrer = new ReferrerProfile();
+        $referrer->setReferrer($user);
+        $referrer->setCreatedAt(new DateTime());
+        $referrer->setStatus(ReferrerProfile::STATUS_PENDING);
+        $referrer->setCustomId(new Uuid(Uuid::v1()));
+
+        return $referrer;
     }
 
     public function saveCandidate(CandidateProfile $candidate)

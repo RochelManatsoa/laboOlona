@@ -73,7 +73,7 @@ class CompetencesTransformer implements DataTransformerInterface
                 $competencesCollection->add($competence);
             }
         }
-        dump($competencesCollection);
+        // dump($competencesCollection);
 
         return $competencesCollection;
     }

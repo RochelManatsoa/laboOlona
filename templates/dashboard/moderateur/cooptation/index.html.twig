@@ -1,0 +1,59 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="annonce-list p-2">
+        <div class="annonce-item shadow p-md-5 m-md-4">
+            <h1 class="card-title mb-4 h2">Gestion des cooptations</h1>
+            {% if cooptations|length > 0 %}
+            <div class="container">
+                <div class="row text-strong">
+                    <div class="col-sm-5">Annonce</div>
+                    <div class="col-sm-7">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-4 text-center">Nombre</div>
+                            <div class="col-sm-6 col-md-4"></div>
+                            <div class="col-sm-6 col-md-4">Expire le</div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                {% for item in cooptations %}
+                    <div class="row text-muted">
+                        <div class="col-sm-5 small">
+                            <a href="{{ path('app_dashboard_moderateur_cooptation_annonce', {'jobId' : item.annonce.jobId })}}" class="">
+                                {{ item.annonce.titre}}
+                            </a>
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-4 text-center">
+                                    <a href="{{ path('app_dashboard_moderateur_cooptation_annonce', {'jobId' : item.annonce.jobId })}}" class="">
+                                        <span class="badge text-bg-warning">{{ item.referrals|length }}</span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-6 col-md-4 small">{{ item.annonce.dateCreation|time_ago }}</div>
+                                <div class="col-sm-6 col-md-4">{{ item.annonce.dateExpiration|date('d/m/Y') }}</div>
+                            </div>
+                        </div>
+                    </div>                    
+                    <hr>                    
+                {% endfor %}
+            <!-- Plus de lignes et colonnes ici -->
+            </div>
+            <div class="navigation mt-5">
+                {{ knp_pagination_render(cooptations, 'parts/_pagination.html.twig') }}
+            </div>
+            {% else %}
+            <div class="container p-5 mx-auto text-center">
+                Aucunes cooptations effectuées jusqu'à présent <br>
+                <a href="{{path('app_dashboard_moderateur_coopteurs')}}" class="btn btn-primary px-5 rounded-pill my-4">Liste des Coopteurs</a>
+            </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+

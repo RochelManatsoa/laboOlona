@@ -153,7 +153,7 @@ class AppExtension extends AbstractExtension
             case User::ACCOUNT_ENTREPRISE :
                 return 'ENTREPRISE';
             default:
-                return '<i class="h6 bi mx-2 bi-circle-fill small text-warning"></i>';
+                return 'COOPTEUR';
         }
     }
 

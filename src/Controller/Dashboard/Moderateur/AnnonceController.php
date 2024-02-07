@@ -11,6 +11,7 @@ use App\Manager\ModerateurManager;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
+use App\Form\Entreprise\JobListingType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Moderateur\NotificationType;
 use Knp\Component\Pager\PaginatorInterface;
@@ -74,13 +75,23 @@ class AnnonceController extends AbstractController
         ]);
     }
 
-    #[Route('/annonce/{id}', name: 'app_dashboard_moderateur_annonce_view', methods: ['GET'])]
-    public function viewAnnonce(JobListing $annonce): Response
+    #[Route('/annonce/{id}', name: 'app_dashboard_moderateur_annonce_view', methods: ['GET', 'POST'])]
+    public function viewAnnonce(Request $request, JobListing $annonce): Response
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $form = $this->createForm(JobListingType::class, $annonce);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $this->em->persist($form->getData());
+            $this->em->flush();
+            $this->addFlash('success', 'Annonce mise à jour avec succès');
+
+            return $this->redirectToRoute('app_dashboard_moderateur_annonce_view', [ 'id' => $form->getData()->getId()]);
+        }
 
         return $this->render('dashboard/moderateur/annonce/view.html.twig', [
             'annonce' => $annonce,
+            'form' => $form->createView(),
         ]);
     }
 

@@ -54,7 +54,7 @@ class SearchCandidateType extends AbstractType
                 $data = new SearchCandidateData();
             }
             $secteur = $data->getSecteurs() ?? [];
-            dump("PRE_SET_DATA", $secteur);
+            // dump("PRE_SET_DATA", $secteur);
             $this->addTitreField($form, $secteur);
 
         });
@@ -63,7 +63,7 @@ class SearchCandidateType extends AbstractType
             $form = $event->getForm();
             $data = $event->getData();
             $secteur = isset($data['secteurs']) ? $data['secteurs'] : [];
-            dump("PRE_SUBMIT", $secteur);
+            // dump("PRE_SUBMIT", $secteur);
             // Si le secteur est défini, utilisez-le pour mettre à jour le champ "titre"
             if (!empty($secteur)) {
                 $this->updateTitreChoices($form, $secteur);
@@ -89,14 +89,13 @@ class SearchCandidateType extends AbstractType
                 return $value;
             },
             'attr' => [
-                'class' => 'js-example-basic-multiple', // Ajoutez la classe Select2
                 'placeholder' => 'Titre du poste default',
             ],
             'multiple' => true,
             'autocomplete' => true,
             'required' => false, // Vous pouvez rendre ce champ facultatif
         ]);
-        dump(array_combine($titres, $titres));
+        // dump(array_combine($titres, $titres));
 
         $form->add('competences', ChoiceType::class, [
             'choices' => $secteur ? $this->competencesRepository->findCompetencesBySecteurs($secteur) : [],
@@ -138,14 +137,13 @@ class SearchCandidateType extends AbstractType
             },
             'placeholder' => 'Titre du poste updated',
             'attr' => [
-                'class' => 'js-example-basic-multiple', // Ajoutez la classe Select2
             ],
             'multiple' => true,
             // 'autocomplete' => true,
             'required' => false,
             // 'auto_initialize' => false, 
         ]);
-        dump(array_combine($titres, $titres));
+        // dump(array_combine($titres, $titres));
         // ...
     }
 
