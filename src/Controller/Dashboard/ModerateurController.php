@@ -13,6 +13,7 @@ use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
 use App\Entity\ModerateurProfile;
+use App\Entity\Referrer\Referral;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
 use App\Manager\ModerateurManager;
@@ -35,6 +36,7 @@ use App\Manager\Referrer\ReferenceManager;
 use App\Repository\NotificationRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\Moderateur\AssignationFormType;
+use App\Repository\ReferrerProfileRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,7 +59,6 @@ use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
-use App\Repository\ReferrerProfileRepository;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -372,6 +373,12 @@ class ModerateurController extends AbstractController
                         'dashboard_url' => $this->urlGenerator->generate('app_connect', [], UrlGeneratorInterface::ABSOLUTE_URL),
                     ]
                 );
+                $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $candidateProfile->getCandidat()->getEmail()]);
+                if($refered instanceof Referral){
+                    $refered->setStep(3);
+                    $this->em->persist($refered);
+                    $this->em->flush();
+                }
 
             }
             $this->addFlash('success', 'Le statut a été mis à jour avec succès.');

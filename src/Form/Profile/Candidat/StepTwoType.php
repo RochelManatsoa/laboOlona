@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class StepTwoType extends AbstractType
 {
@@ -22,12 +23,14 @@ class StepTwoType extends AbstractType
     {
         $builder
             ->add('titre', TextType::class, [
-                'required' => true,
+                'required' => false,
+                'constraints' => new NotBlank(['message' => 'Vous devez remplir ce champ.']),
                 'label' => 'Votre titre *',
                 'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
             ])
             ->add('tarifCandidat', TarifCandidatType::class, [
-                'required' => true,
+                'required' => false,
+                'constraints' => new NotBlank(['message' => 'Vous devez remplir ce champ.']),
                 'label' => 'Tarif *',
                 'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
             ])

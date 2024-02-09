@@ -3,18 +3,29 @@
 namespace App\Controller;
 
 use DateTime;
+use App\Entity\User;
+use App\Security\EmailVerifier;
+use App\Entity\Referrer\Referral;
 use App\Form\NewPasswordFormType;
+use App\Form\RegistrationFormType;
+use App\Entity\Entreprise\JobListing;
 use App\Entity\Moderateur\Invitation;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Exception\InvitationUsedException;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Mime\Address;
 use App\Repository\Moderateur\InvitationRepository;
+use App\Security\AppAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security\UserAuthenticator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class InvitationController extends AbstractController
 {
@@ -22,6 +33,10 @@ class InvitationController extends AbstractController
         private EntityManagerInterface $em,
         private InvitationRepository $repository,
         private TokenStorageInterface $tokenStorage,
+        private RequestStack $requestStack,
+        private EmailVerifier $emailVerifier,
+        private UserAuthenticatorInterface $userAuthenticator,
+        private AppAuthenticator $appAuthenticator,
         private UserPasswordHasherInterface $userPasswordHasher
     )
     {}
@@ -55,10 +70,75 @@ class InvitationController extends AbstractController
             $this->tokenStorage->setToken($token);
 
 
+            $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $user->getEmail()]);
+            if($refered instanceof Referral){
+                $refered->setStep(2);
+                $this->em->persist($refered);
+                $this->em->flush();
+            }
             return $this->redirectToRoute('app_connect');
         }
 
         return $this->render('invitation/index.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/invitation/referral/{referralCode}', name: 'app_invitation_referral')]
+    public function referral(Request $request, Referral $cooptation): Response
+    {
+        $annonce = $cooptation->getAnnonce();
+        $referrer = $cooptation->getReferredBy();
+        $this->requestStack->getSession()->set('referralCode', $cooptation->getReferralCode());
+        $this->requestStack->getSession()->set('referredEmail', $cooptation->getReferredEmail());
+        $user = (new User())->setEmail($cooptation->getReferredEmail());
+        $user->setDateInscription(new DateTime());
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // encode the plain password
+            $user->setPassword(
+                $this->userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+            // generate a signed url and email it to the user
+            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                (new TemplatedEmail())
+                    ->from(new Address('support@olona-talents.com', 'Olona Talents'))
+                    ->to($user->getEmail())
+                    ->subject('Veuillez confirmer votre inscription sur olona-talents.com')
+                    ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->context(['user' => $user])
+            );
+            // do anything else you need here, like send an email
+
+            $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $user->getEmail()]);
+            if($refered instanceof Referral){
+                $refered->setStep(2);
+                $this->em->persist($refered);
+                $this->em->flush();
+            }
+
+            return $this->userAuthenticator->authenticateUser(
+                $user,
+                $this->appAuthenticator,
+                $request
+            );
+        }
+
+
+        //     return $this->redirectToRoute('app_connect');
+        // }
+
+        return $this->render('invitation/cooptation.html.twig', [
+            'annonce' => $annonce,
             'form' => $form->createView(),
         ]);
     }

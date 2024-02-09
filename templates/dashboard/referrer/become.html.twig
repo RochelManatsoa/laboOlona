@@ -7,6 +7,7 @@
     <div class="annonce-list p-2">
         <div class="annonce-item shadow p-md-5 m-md-4">
             <h1 class="card-title mb-4">Mes infos Coopteur</h1>
+            {{ form_start(form)}}
             <div class="row">
                 <div class="col-md-6 col-sm-12">
                     {{ form_row(form.raisonSocial)}}
@@ -36,7 +37,6 @@
                     {{ form_row(form.adressePro)}}
                 </div>
             </div>
-            {{ form_start(form)}}
             <div style="display:none;">
             {{ form_widget(form)}}
             </div>

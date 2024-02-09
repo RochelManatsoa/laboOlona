@@ -27,7 +27,8 @@
                         Par
                         <a href="{{ path('voir_entreprise', {'id': application.annonce.entreprise.id}) }}">
                             {{ application.annonce.entreprise.nom|upper }}
-                        </a> {{ application.annonce.dateCreation|time_ago }}
+                        </a> {{ application.annonce.dateCreation|time_ago }} 
+                        {{ getReferrerByEmail(application.candidat.candidat.email)|raw}}
                     </span>
                 </td>
                 <td>

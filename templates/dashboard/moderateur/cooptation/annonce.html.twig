@@ -4,7 +4,13 @@
     <div class="container">
         <div class="annonce-list p-2">
             <div class="annonce-item shadow p-5 m-4">
-                <h1 class="card-title h5 mb-3">{{ annonce.titre }}</h1>
+                <h1 class="card-title h5 mb-3">
+                    {{ annonce.titre }}
+                    <a href="{{ path('app_dashboard_moderateur_annonce_view', {'id' : annonce.id})}}" target=_blank class="text-dark">
+                        <i class="bi bi-box-arrow-up-right small" style="font-size:10px;"></i>
+                    </a>
+                </h1>
+                
                 <p class="text-muted small">
                     <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ annonce.status }} 
                         <span class="small text-center mx-3">|</span>
@@ -40,8 +46,19 @@
                     Budget indicatif : 
                     <span class="text-strong">{{ annonce.salaire }} €</span>
                 </div>
-                <hr>
 
+                <div class="small text-muted">
+                    <i class="bi bi-piggy-bank-fill mx-3"></i>
+                    Prime : 
+                    <span class="text-strong">{{ getPrimeByAnnonce(annonce) * annonce.nombrePoste }} €</span>
+                </div>
+
+                <div class="small text-muted">
+                    <i class="bi bi bi-people-fill mx-3"></i>
+                    Nombre de postes : 
+                    <span class="text-strong">{{ annonce.nombrePoste }} </span>
+                </div>
+                <hr>
                 <div class="container">
                     <div class="row text-strong">
                         <div class="col-sm-3">Coopteur</div>
@@ -60,10 +77,10 @@
                     {% set referrer = getReferrerById(referrerId) %}
                         <div class="row text-muted">
                             <div class="col-sm-3 small">
-                                {# <a href="{{ path('app_dashboard_moderateur_cooptation_annonce', {'jobId' : item.annonce.jobId })}}" class=""> #}
+                                <a href="{{ path('app_dashboard_moderateur_coopteur_view', {'customId': referrer.customId})}}" class="" target=_blank>
                                     {{ referrer.referrer.nom }} 
                                     {{ referrer.referrer.prenom }}<br>
-                                {# </a> #}
+                                </a>
                                 <span class="text-dark">
                                     {{ generateCoopteurPseudo(referrer) }}
                                 </span>
@@ -76,12 +93,12 @@
                                         </a>
                                     </div>
                                     <div class="col-sm-6 col-md-2 small text-center">{{ referrer.status }}</div>
-                                    <div class="col-sm-6 col-md-2 small text-center">{{ getPrimeByAnnonce(annonce) * referrals|length}} €</div>
+                                    <div class="col-sm-6 col-md-2 small text-center">{{ getTotalePrime(referrals)}} €</div>
                                     <div class="col-sm-6 col-md-3 text-center">{{referrer.totalRewards}} €</div>
                                 </div>
                             </div>
                             <div class="col-sm-1 small">
-                                <a href="{{ path('app_dashboard_moderateur_coopteur_view', {'customId': referrer.customId})}}" class="btn btn-sm btn-info">
+                                <a href="{{ path('app_dashboard_moderateur_cooptation_annonce_referrer', {'jobId': annonce.jobId, 'customId': referrer.customId })}}" class="btn btn-sm btn-info">
                                 <i class="bi bi-eye"></i>
                                 </a>
                             </div>

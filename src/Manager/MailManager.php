@@ -49,12 +49,12 @@ class MailManager
     {
         return $this->mailerService->send(
             $referral->getReferredEmail(),
-            'Opportunité de carrière chez Olona Talants - Recommandé par '.$referral->getReferredBy()->getReferrer()->getNom().' '.$referral->getReferredBy()->getReferrer()->getNom(),
+            'Opportunité de carrière chez Olona Talents - Recommandé par '.$referral->getReferredBy()->getReferrer()->getNom().' '.$referral->getReferredBy()->getReferrer()->getPrenom(),
             'referrer/cooptation.html.twig',
             [
                 'user' => $referral->getReferredBy()->getReferrer(),
                 'annonce' => $referral->getAnnonce(),
-                'url' => $this->urlGenerator->generate('app_home', ['referrer' => $referral->getReferredBy()->getCustomId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                'url' => $this->urlGenerator->generate('app_invitation_referral', ['referralCode' => $referral->getReferralCode()], UrlGeneratorInterface::ABSOLUTE_URL),
             ]
         );
     }

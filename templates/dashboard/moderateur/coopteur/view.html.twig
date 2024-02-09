@@ -28,21 +28,92 @@
                 <div class="tab-pane fade show active" id="details">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row align-items-center">
                                 <div class="col-md-3">
+                                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ asset('images/Coopteur.png') }}');" alt="Avatar"></div>
                                 </div> 
                                 <div class="col-md-9">
                                     <h5 class="card-title">{{ coopteur.referrer.nom }} {{ coopteur.referrer.prenom }}</h5>
                                     <p class="card-text">
-                                    <span class="text-muted">Email :</span> {{ coopteur.referrer.email }}<br>
-                                    <span class="text-muted">Téléphone : </span> <span class="text-dark">{{ coopteur.telephonePro }}</span><br>
-                                    <span class="text-muted">Adresse : </span> <span class="text-dark">{{ coopteur.adressePro }}</span><br>
+                                        <span class="text-muted">Email :</span> {{ coopteur.referrer.email }}<br>
+                                        <span class="text-muted">Téléphone : </span> <span class="text-dark">{{ coopteur.telephonePro }}</span><br>
+                                        <span class="text-muted">Adresse : </span> <span class="text-dark">{{ coopteur.adressePro }}</span><br>
                                     </p> 
                                 </div> 
                             </div> 
-                            <p class="card-text mt-3">
-                                {# <strong>Biographie:</strong> {{ candidat.resume|raw }}<br> #}
-                            </p> 
+                            <div class="row align-items-center mt-5">
+                                <div class="col-md-5 text-right">
+                                    <span class="text-muted">Raison social </span>
+                                </div> 
+                                <div class="col-md-6">
+                                    <p class="card-text">
+                                    {{ coopteur.raisonSocial }}
+                                    </p> 
+                                </div> 
+                            </div> 
+                            <div class="row align-items-center">
+                                <div class="col-md-5 text-right">
+                                    <span class="text-muted">Statut juridique </span>
+                                </div> 
+                                <div class="col-md-6">
+                                    <p class="card-text">
+                                    {{ coopteur.statutJuridique }}
+                                    </p> 
+                                </div> 
+                            </div> 
+                            <div class="row align-items-center">
+                                <div class="col-md-5 text-right">
+                                    <span class="text-muted">Statut juridique </span>
+                                </div> 
+                                <div class="col-md-6">
+                                    <p class="card-text">
+                                    {{ coopteur.statutJuridique }}
+                                    </p> 
+                                </div> 
+                            </div> 
+                            {% if coopteur.creation is not null %}
+                            <div class="row align-items-center">
+                                <div class="col-md-5 text-right">
+                                    <span class="text-muted">Création de l'entreprise </span>
+                                </div> 
+                                <div class="col-md-6">
+                                    <p class="card-text">
+                                    {{ coopteur.creation|date('d/m/Y') }}
+                                    </p> 
+                                </div> 
+                            </div> 
+                            {% endif %}
+                            <div class="row align-items-center">
+                                <div class="col-md-5 text-right">
+                                    <span class="text-muted">Adresse email professionnel </span>
+                                </div> 
+                                <div class="col-md-6">
+                                    <p class="card-text">
+                                    {{ coopteur.emailPro }}
+                                    </p> 
+                                </div> 
+                            </div> 
+                            <div class="row align-items-center">
+                                <div class="col-md-5 text-right">
+                                    <span class="text-muted">Téléphone professionnel</span>
+                                </div> 
+                                <div class="col-md-6">
+                                    <p class="card-text">
+                                    {{ coopteur.telephonePro }}
+                                    </p> 
+                                </div> 
+                            </div> 
+                            <div class="row align-items-center">
+                                <div class="col-md-5 text-right">
+                                    <span class="text-muted">Adresse professionnel</span>
+                                </div> 
+                                <div class="col-md-6">
+                                    <p class="card-text">
+                                    {{ coopteur.adressePro }}
+                                    </p> 
+                                </div> 
+                            </div> 
+                            
                         </div>
                     </div>
                 </div>
@@ -50,7 +121,51 @@
                 <div class="tab-pane fade" id="cooptations">
                     <div class="card">
                         <div class="card-body">
+                            {% if coopteur.referrals|length > 0 %}
+
+                                <div class="row text-strong">
+                                    <div class="col-sm-5">Candidat</div>
+                                    <div class="col-sm-7">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-4 text-center">Étape</div>
+                                            <div class="col-sm-6 col-md-4">Création</div>
+                                            <div class="col-sm-6 col-md-4">Statut</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                {% for item in coopteur.referrals %}
+                                <div class="row text-muted small">
+                                    <div class="col-sm-5">
+                                        <a href="{{ path('app_dashboard_moderateur_cooptation_view', {'referralCode': item.referralCode})}}" class="">
+                                            {{ item.referredEmail}}
+                                        </a>
+                                        {{ checkEmailCandidat(item.referredEmail)|raw}}
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-4 text-center">
+                                                <a href="#" class="">
+                                                    {{ stepCooptation(item.step)|raw }}
+                                                </a>
+                                            </div>
+                                            <div class="col-sm-6 col-md-4">{{ item.createdAt|time_ago }}</div>
+                                            <div class="col-sm-6 col-md-4">{{ item.status }}</div>
+                                        </div>
+                                    </div>
+                                </div>                    
+                                <hr>      
+                                
+                                {% endfor %}
+                            {% else %}
                             
+                            <div class="container p-5 mx-auto text-center">
+                                Aucunes cooptations effectuées <br>
+                                <a href="{{path('app_dashboard_referrer_annonces')}}" class="btn btn-primary px-5 rounded-pill my-4">Toutes les annonces</a>
+                            </div>
+
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -58,6 +173,50 @@
                 <div class="tab-pane fade" id="rewards">
                     <div class="card">
                         <div class="card-body">
+                            {% if coopteur.referrals|length > 0 %}
+
+                                <div class="row text-strong">
+                                    <div class="col-sm-6">Annonces</div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-4 text-center">Nombre</div>
+                                            <div class="col-sm-6 col-md-4">Prime</div>
+                                            <div class="col-sm-6 col-md-4">Total</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                {% for item in references %}
+                                <div class="row text-muted small">
+                                    <div class="col-sm-6">
+                                        <a href="#" class="">
+                                            {{ item.annonce.titre}}<br>
+                                            <span class="text-muted">{{ item.annonce.nombrePoste }} personnes à charcher</span> <span class="small text-center mx-2">|</span> <span class="text-muted">{{ getPrimeByAnnonce(item.annonce) * item.annonce.nombrePoste }} € de prime</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-4 text-center">
+                                                <a href="#" class="">
+                                                    {{ item.referrals|length }}
+                                                </a>
+                                            </div>
+                                            <div class="col-sm-6 col-md-4">{{ getPrimeByAnnonce(item.annonce) }} €</div>
+                                            <div class="col-sm-6 col-md-4">{{ getPrimeByAnnonce(item.annonce) * item.referrals|length }} €</div>
+                                        </div>
+                                    </div>
+                                </div>                    
+                                <hr>      
+                                
+                                {% endfor %}
+                            {% else %}
+                            
+                            <div class="container p-5 mx-auto text-center">
+                                Aucunes cooptations effectuées <br>
+                                <a href="{{path('app_dashboard_referrer_annonces')}}" class="btn btn-primary px-5 rounded-pill my-4">Toutes les annonces</a>
+                            </div>
+
+                            {% endif %}
                         
                         </div>
                     </div>
@@ -73,13 +232,13 @@
                                     </div>
                                 </div> 
                                 <div class="col-md-9">
-                                    {# {{ form_start(form)}}
+                                    {{ form_start(form)}}
                                     {{ form_widget(form)}}
                                     {{ form_errors(form)}}
                                     <div class="input-group-append my-4">
                                         <button type="submit" class="btn btn-primary rounded-pill">Envoyer</button>
                                     </div>
-                                    {{ form_end(form)}} #}
+                                    {{ form_end(form)}}
                                 </div> 
                             </div> 
                         </div>
@@ -95,4 +254,22 @@
 
     </section>
 </div>
+
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    let globalEditorInstance;
+    document.addEventListener('DOMContentLoaded', function() {
+        ClassicEditor.create(document.querySelector('#notification_profile_contenu'))
+            .then(editor => {
+                globalEditorInstance = editor;
+                document.querySelector('form').addEventListener('submit', function() {
+                    document.querySelector('#notification_profile_contenu').value = globalEditorInstance.getData();
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+
+</script>
 {% endblock %}

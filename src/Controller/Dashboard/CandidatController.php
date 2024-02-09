@@ -10,18 +10,19 @@ use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
 use App\Entity\Vues\AnnonceVues;
 use App\Manager\CandidatManager;
+use App\Entity\EntrepriseProfile;
+use App\Entity\Referrer\Referral;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
+use App\Form\Candidat\UploadCVType;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
-use App\Entity\EntrepriseProfile;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
 use App\Form\Search\AnnonceSearchType;
 use App\Form\Candidat\ApplicationsType;
 use App\Form\Candidat\AvailabilityType;
-use App\Form\Candidat\UploadCVType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Profile\Candidat\StepOneType;
 use App\Form\Profile\Candidat\StepTwoType;
@@ -35,6 +36,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
 use App\Repository\Candidate\ApplicationsRepository;
+use App\Repository\Moderateur\AssignationRepository;
 use App\Repository\Moderateur\TypeContratRepository;
 use App\Form\Search\Annonce\CandidatAnnonceSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -43,7 +45,6 @@ use App\Form\Profile\Candidat\Edit\StepOneType as EditStepOneType;
 use App\Form\Profile\Candidat\Edit\StepTwoType as EditStepTwoType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use App\Form\Profile\Candidat\Edit\StepThreeType as EditStepThreeType;
-use App\Repository\Moderateur\AssignationRepository;
 
 #[Route('/dashboard/candidat')]
 class CandidatController extends AbstractController
@@ -344,6 +345,11 @@ class CandidatController extends AbstractController
             } elseif ($action === 'custom_apply') {
                 // Logique pour la soumission personnalisée
                 // Utiliser le CV personnalisé et/ou la lettre de motivation fournis
+            }
+            $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $user->getEmail()]);
+            if($refered instanceof Referral){
+                $refered->setStep(4);
+                $this->em->persist($refered);
             }
             $this->em->persist($assignation);
             $this->em->persist($application);

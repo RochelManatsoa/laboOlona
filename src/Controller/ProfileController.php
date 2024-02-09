@@ -10,6 +10,7 @@ use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Referrer\Referral;
 use App\Form\Profile\AccountType;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
@@ -137,14 +138,14 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $candidat = $form->getData();
+            // if($candidat instanceof CandidateProfile && !$candidat->isEmailSent()){
+            //     $candidat->setEmailSent(true);
+            //     /** notify moderateurs */
+            //     $this->mailManager->newUser($candidat->getCandidat());
+            // }
             $this->em->persist($candidat);
             $this->em->flush();
-
-            if($candidat instanceof CandidateProfile && !$candidat->isEmailSent()){
-                $candidat->setEmailSent(true);
-                /** notify moderateurs */
-                $this->mailManager->newUser($candidat->getCandidat());
-            }
+            
 
             return $this->redirectToRoute('app_profile_candidate_step_two', []);
         }
@@ -292,6 +293,12 @@ class ProfileController extends AbstractController
     #[Route('/profile/confirmation', name: 'app_profile_confirmation')]
     public function confirmation(): Response
     {
+        $referralCode = $this->requestStack->getSession()->get('referralCode');
+        
+        $refered = $this->em->getRepository(Referral::class)->findOneBy(['referralCode' => $referralCode]);
+        if($refered instanceof Referral && $this->userService->checkProfile() instanceof CandidateProfile){
+            return $this->redirectToRoute('app_dashboard_candidat_annonce_show', ['jobId' => $refered->getAnnonce()->getJobId()]);
+        }
 
         return $this->render('profile/confirmation.html.twig', []);
     }
