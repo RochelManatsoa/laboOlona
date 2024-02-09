@@ -4,10 +4,11 @@ namespace App\Form\Candidat;
 
 use App\Entity\Candidate\TarifCandidat;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TarifCandidatType extends AbstractType
 {
@@ -15,6 +16,8 @@ class TarifCandidatType extends AbstractType
     {
         $builder
             ->add('montant', IntegerType::class, [
+                'required' => false,
+                'constraints' => new NotBlank(['message' => 'Vous devez remplir ce champ.']),
                 'label' => false,
             ])
             ->add('devise', ChoiceType::class, [

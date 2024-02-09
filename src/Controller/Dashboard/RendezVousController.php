@@ -3,18 +3,20 @@
 namespace App\Controller\Dashboard;
 
 use App\Entity\User;
-use App\Form\Moderateur\MettingType;
 use App\Manager\CandidatManager;
+use App\Entity\EntrepriseProfile;
+use App\Entity\ModerateurProfile;
+use App\Entity\Referrer\Referral;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
 use App\Manager\ModerateurManager;
 use App\Manager\RendezVousManager;
+use App\Form\Moderateur\MettingType;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
-use App\Entity\EntrepriseProfile;
 use App\Entity\Moderateur\Assignation;
-use App\Entity\ModerateurProfile;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +24,6 @@ use App\Repository\Moderateur\MettingRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Candidate\ApplicationsRepository;
 use App\Repository\Moderateur\AssignationRepository;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -76,6 +77,12 @@ class RendezVousController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $rendezVous = $form->getData();
+            $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $rendezVous->getCandidat()->getCandidat()->getEmail()]);
+
+            if($refered instanceof Referral){
+                $refered->setStep(5);
+                $this->em->persist($refered);
+            }
             $this->em->persist($rendezVous);
             $this->em->flush();
 

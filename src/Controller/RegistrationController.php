@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Referrer\Referral;
 use DateTime;
 use App\Entity\User;
 use App\Security\EmailVerifier;
@@ -24,12 +25,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class RegistrationController extends AbstractController
 {
-    private EmailVerifier $emailVerifier;
 
-    public function __construct(EmailVerifier $emailVerifier)
-    {
-        $this->emailVerifier = $emailVerifier;
-    }
+    public function __construct(
+        private EmailVerifier $emailVerifier,
+        private EntityManagerInterface $em,
+    ) {}
 
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
@@ -106,6 +106,12 @@ class RegistrationController extends AbstractController
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Votre adresse email a été bien vérifiée.');
+        $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $user->getEmail()]);
+        if($refered instanceof Referral){
+            $refered->setStep(2);
+            $this->em->persist($refered);
+            $this->em->flush();
+        }
         
         return $this->redirectToRoute('app_connect');
     }

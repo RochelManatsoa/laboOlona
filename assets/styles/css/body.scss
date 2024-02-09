@@ -198,3 +198,7 @@ td .status-rejetee { background-color: #f44336!important; }
     white-space: normal; /* Permet au texte de passer à la ligne */
     max-width: 300px; /* Largeur maximale */
 }
+a[target="_blank"] .bi {
+    margin-left: -2px; /* Ajoute un peu d'espace entre le texte et l'icône */
+    color: #007bff; /* Couleur de l'icône, vous pouvez l'ajuster selon vos besoins */
+}

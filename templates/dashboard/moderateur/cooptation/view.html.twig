@@ -6,11 +6,19 @@
             <div class="annonce-item shadow p-5 m-4">
                 <h1 class="card-title h5 mb-3"># Cooptation {{ cooptation.id }}</h1>
                 <p class="text-muted small">
-                    <span class="text-dark">{{ cooptation.annonce.titre }} </span>
+                    <span class="text-dark">
+                        <a href="{{ path('app_dashboard_moderateur_annonce_view', {'id' : cooptation.annonce.id})}}" target=_blank class="text-dark">
+                            {{ cooptation.annonce.titre }} 
+                            <i class="bi bi-box-arrow-up-right small" style="font-size:10px;"></i>
+                        </a>
+                    </span>
                          par
                     <span class="text-dark">
-                        {{ cooptation.referredBy.referrer.nom }} 
-                        {{ cooptation.referredBy.referrer.prenom }} 
+                        <a href="{{ path('app_dashboard_moderateur_coopteur_view', {'customId': cooptation.referredBy.customId})}}" target=_blank class="text-dark">
+                            {{ cooptation.referredBy.referrer.nom }} 
+                            {{ cooptation.referredBy.referrer.prenom }} 
+                            <i class="bi bi-box-arrow-up-right small" style="font-size:10px;"></i>
+                        </a>
                     </span> 
                     <span class="small text-center text-dark mx-3">|</span>
                     {{ generateCoopteurPseudo(cooptation.referredBy)}}
@@ -44,7 +52,6 @@
                             <div class="col">
                             </div>
                         </div>
-                        {{ form_row(form.description)}}
                         <div style="display:none;">{{ form_widget(form)}}</div>
                         <button type="submit" class="btn btn-primary rounded-pill px-5">Mettre à jour</button>
                         {{ form_end(form)}}

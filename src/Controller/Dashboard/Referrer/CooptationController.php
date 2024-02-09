@@ -9,6 +9,7 @@ use App\Manager\MailManager;
 use App\Manager\Referrer\ReferenceManager;
 use App\Repository\Referrer\ReferralRepository;
 use App\Service\User\UserService;
+use App\Twig\ReferrerExtension;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,13 +27,14 @@ class CooptationController extends AbstractController
         private ReferenceManager $referenceManager,
         private ReferralRepository $referralRepository,
         private PaginatorInterface $paginatorInterface,
+        private ReferrerExtension $referrerExtension,
     ) {}
     
     #[Route('/{jobId}', name: 'app_dashboard_referrer_cooptation')]
     public function index(Request $request, JobListing $annonce): Response
     {
         $referrer = $this->userService->getReferrer();
-        $referral = (new Referral())->setReferredBy($referrer)->setStep(1)->setAnnonce($annonce)->setRewards($annonce->getSalaire() * 0.1);
+        $referral = (new Referral())->setReferredBy($referrer)->setStep(1)->setAnnonce($annonce)->setRewards($this->referrerExtension->getPrimeByAnnonce($annonce));
         $form = $this->createForm(ReferralType::class, $referral);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){

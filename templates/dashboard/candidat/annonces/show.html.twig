@@ -16,8 +16,17 @@
                         <span class="small text-center mx-3">|</span>
                     <i class="bi bi-eye"></i> {{ annonce.annonceVues|length }} vues
                 </p>
-                {% if applied %}
-                    <button type="submit" name="submitBtn" value="quick_apply" class="btn btn-md btn-outline-primary rounded-pill px-5">Postuler rapidement</button>
+                {% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) %}
+                    {% if applied %}
+                        <button type="submit" name="submitBtn" value="quick_apply" class="btn btn-md btn-outline-primary rounded-pill px-5">Postuler rapidement</button>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-info d-flex align-items-center" role="alert">
+                        <i class="bi bi-info-circle-fill mx-3"></i>
+                        <div>
+                            Vous profil doit être validé par un moderateur avant de pouvoir postuler à cette annonce.<br> Veuillez vérifier régulièrement votre mail
+                        </div>
+                    </div>
                 {% endif %}
 
                 {% if app.user.referrerProfile is not null %}
@@ -81,7 +90,7 @@
                                     <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target=_blank class="badge badge-sm bg-dark rounded-pill"><i class="bi bi-paperclip"></i> {{ safeFileName(candidat.cv) }}.pdf</a>
                                     {% else %}
                                     <div class="alert alert-primary d-flex align-items-center" role="alert">
-                                        <i class="bi bi-info">
+                                        <i class="bi bi-info-circle-fill mx-3"></i>
                                         <div>
                                             Vous n'avez pas encore uploader un CV
                                         </div>
@@ -91,7 +100,11 @@
                             </div>
                         <hr>
                         <div class="d-flex justify-content-between align-items-center">
+                        {% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) %}
                             <button type="submit" name="submitBtn" value="custom_apply" class="btn btn-md btn-primary rounded-pill px-5">Postuler</button>
+                        {% else %}
+                            <button type="button" class="btn btn-md btn-outline-primary rounded-pill px-5">Postuler</button>
+                        {% endif %}
                         </div>
                         {{ form_end(form) }}
                     </div>

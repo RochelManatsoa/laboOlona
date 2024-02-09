@@ -29,7 +29,7 @@
                         </a>
                     </td> #}
                     {# <td>{{ annonce.mettings|length }}</td> #}
-                    <td>{{ annonce.status|status_label }}</td>
+                    <td>{{ annonce.status }}</td>
                     <td class="actions-col">
                         <a href="{{path('app_dashboard_moderateur_annonce_view', { 'id': annonce.id}) }}" class="btn btn-sm btn-info rounded-pill"><i class="bi mx-1 bi-eye"></i></a>
                         <a href="{{path('delete_annonce', { 'id': annonce.id}) }}" class="btn btn-sm btn-danger rounded-pill" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce type de contrat ?');"><i class="bi mx-1 bi-trash"></i></a>

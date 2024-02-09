@@ -38,7 +38,7 @@
                     <td class="text-center">
                         <!-- Remplacer avec la logique pour le nombre d'annonces en attente -->
                         {% if findPendingJobListing(entreprise)|length > 0 %}
-                        <a href="{{path('app_dashboard_moderateur_entreprises_annonces', { 'id': entreprise.id, 'status':'PUBLISHED'}) }}" class="btn btn-sm btn-primary">
+                        <a href="{{path('app_dashboard_moderateur_entreprises_annonces', { 'id': entreprise.id, 'status':'PENDING'}) }}" class="btn btn-sm btn-primary">
                         {{ findPendingJobListing(entreprise)|length }}
                         </a>
                         {% else %}
