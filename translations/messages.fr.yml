@@ -517,7 +517,11 @@ app_dashboard_moderateur_secteur:
 
 app_dashboard_moderateur_edit_secteur:
     title: Modération
-    dashboard_title: Modifier un secteurs d'activité
+    dashboard_title: Modifier un secteur d'activité
+
+app_dashboard_moderateur_new_secteur:
+    title: Modération
+    dashboard_title: Ajouter un secteur d'activité
 
 app_dashboard_moderateur_type_contrat:
     title: Modération
@@ -525,7 +529,11 @@ app_dashboard_moderateur_type_contrat:
 
 app_dashboard_moderateur_edit_type_contrat:
     title: Modération
-    dashboard_title: Modifier untype de contrat
+    dashboard_title: Modifier un type de contrat
+
+app_dashboard_moderateur_new_type_contrat:
+    title: Modération
+    dashboard_title: Ajouter un type de contrat
 
 app_dashboard_moderateur_annonces:
     title: Modération
@@ -1065,3 +1073,35 @@ app_dashboard_moderateur_cooptation_annonce_referrer :
 app_dashboard_moderateur_coopteur_view : 
     title : Détails coopteur
     dashboard_title : Détails coopteur
+
+app_dashboard_employes_simulation_view : 
+    title : Détails simulation
+    dashboard_title : Détails simulation
+
+app_dashboard_moderateur_devise : 
+    title : Gestion de devises
+    dashboard_title : Gestion de devises
+
+app_dashboard_moderateur_new_devise : 
+    title : Ajout de devises
+    dashboard_title : Ajout de devises
+
+app_dashboard_moderateur_edit_devise : 
+    title : Modification de devises
+    dashboard_title : Modification de devises
+
+app_dashboard_employes_simulations : 
+    title : Mes simulations
+    dashboard_title : Mes simulations
+
+app_dashboard_employes_infos : 
+    title : Mes informmations
+    dashboard_title : Mes informmations
+
+app_dashboard_employes_contrats : 
+    title : Mes contrats
+    dashboard_title : Mes contrats
+
+app_home_simulateur_portage : 
+    title : Simulateur portage salarial
+    dashboard_title : Simulateur portage salarial

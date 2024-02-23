@@ -32,7 +32,7 @@ class ReferrerExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('status_label', [$this, 'statusLabel']),
+            new TwigFilter('reffererStatusLabel', [$this, 'reffererStatusLabel']),
         ];
     }
 

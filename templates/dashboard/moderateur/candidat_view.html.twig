@@ -612,6 +612,21 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+    $(document).ready(function() {
+        $('#formAssignation').on('submit', function(e) {
+            // Optionnellement, empêcher la soumission par défaut si vous avez besoin de faire une validation ou autre traitement côté client
+            // e.preventDefault();
+
+            // Fermer le modal Bootstrap
+            $('#assignationModalAdd').modal('hide');
+            
+            // Pas besoin d'appeler explicitement la fonction pour recharger la page, 
+            // car cela sera géré par la redirection du serveur après la soumission du formulaire
+        });
+    });
+</script>
+
 {% endblock %}
 
 
@@ -667,6 +682,7 @@
                 <div class="modal-body">
                     {{ form_start(formAssignation)}}
                     {{ form_widget(formAssignation)}}
+                    <button type="submit" class="btn-primary btn rounded-pill">Assigner</button>
                     {{ form_end(formAssignation)}}
                 </div>
                 </div>

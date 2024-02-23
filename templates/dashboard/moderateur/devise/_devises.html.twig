@@ -1,0 +1,30 @@
+    
+    <p class="mx-2">
+    Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
+    </p>
+    <div class="navigation">
+    {{ knp_pagination_render(devises, 'parts/_pagination.html.twig') }}
+    </div>
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th class="col-3">Titre</th>
+                <th class="col-3">Symbole</th>
+                <th class="col-3">Taux</th>
+                <th class="col-3">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for devise in devises %}
+                <tr>
+                    <td>{{ devise.nom }}</td>
+                    <td>{{ devise.symbole|raw }}</td>
+                    <td>{{ devise.taux }} Ar</td>
+                    <td class="actions-col">
+                        <a href="{{ path('app_dashboard_moderateur_edit_devise', {'id':devise.id})}}" class="btn btn-sm btn-info">Modifier</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+

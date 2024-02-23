@@ -85,8 +85,19 @@ class InvitationController extends AbstractController
     }
 
     #[Route('/invitation/referral/{referralCode}', name: 'app_invitation_referral')]
-    public function referral(Request $request, Referral $cooptation): Response
-    {
+    public function referral(Request $request, string $referralCode): Response
+    {        
+        // dd($referralCode);
+        if (!preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[4][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/', $referralCode)) {
+            throw new InvitationUsedException('Le format du code de parrainage est invalide.');
+        }
+        $cooptation = $this->em->getRepository(Referral::class)->findOneBy(['referralCode' => $referralCode]);
+        if(!$cooptation){
+            throw new InvitationUsedException('Le jeton d\'annonce est introuvable dans la session.');
+        }
+        if($cooptation->getAnnonce()->getStatus() !== JobListing::STATUS_PUBLISHED){
+            throw new InvitationUsedException('L\'annonce a été déjà archivée ');
+        }
         $annonce = $cooptation->getAnnonce();
         $referrer = $cooptation->getReferredBy();
         $this->requestStack->getSession()->set('referralCode', $cooptation->getReferralCode());

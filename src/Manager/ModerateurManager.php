@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\EntrepriseProfile;
+use App\Entity\Finance\Devise;
 use DateTime;
 use App\Entity\Langue;
 use App\Entity\Secteur;
@@ -120,6 +121,27 @@ class ModerateurManager
         $this->saveSector($secteur);
 
         return $secteur;
+
+    }
+
+    public function initDevise(): Devise
+    {
+        return new Devise();
+    }
+
+    public function saveDevise(Devise $devise): void
+    {
+		$this->em->persist($devise);
+        $this->em->flush();
+    }
+
+    public function saveDeviseForm(Form $form)
+    {
+        $devise = $form->getData();
+        $devise->setSlug($this->sluggerInterface->slug(strtolower($devise->getNom())));
+        $this->saveDevise($devise);
+
+        return $devise;
 
     }
 
@@ -250,6 +272,31 @@ class ModerateurManager
 
         $qb->select('t')
             ->from('App\Entity\Moderateur\TypeContrat', 't')
+            ->where(implode(' OR ', $conditions))
+            ->setParameters($parameters);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function searchDevise(string $query = null): array
+    {
+        if (empty($query)) {
+            return $this->em->getRepository(Devise::class)->findAll();
+        }
+
+        $qb = $this->em->createQueryBuilder();
+
+        $keywords = array_filter(explode(' ', $query));
+        $parameters = [];
+        $conditions = [];
+
+        foreach ($keywords as $key => $keyword) {
+            $conditions[] = '(d.nom LIKE :query' . $key .')';
+            $parameters['query' . $key] = '%' . $keyword . '%';
+        }
+
+        $qb->select('d')
+            ->from('App\Entity\Finance\Devise', 'd')
             ->where(implode(' OR ', $conditions))
             ->setParameters($parameters);
 

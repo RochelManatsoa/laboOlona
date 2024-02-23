@@ -27,6 +27,14 @@
 
       </li>
       <li>
+        <a href="{{ path('app_dashboard_moderateur_devise')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_devise' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-currency-exchange"></i>
+            Devises  
+        </a>
+
+      </li>
+      <li>
         <a href="{{ path('app_dashboard_moderateur_annonces')}}" 
             class="nav-link {{ current_route == 'app_dashboard_moderateur_annonces' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-megaphone"></i>
