@@ -434,6 +434,10 @@ class ModerateurController extends AbstractController
         $formAssignation = $this->createForm(AssignationFormType::class, $assignation);
         $formAssignation->handleRequest($request);
         if($formAssignation->isSubmitted() && $formAssignation->isValid()){
+            if($assignation->getJobListing()->getStatus() !== JobListing::STATUS_PUBLISHED){
+                $this->addFlash('danger', 'Vous devez publier l\'annonce avant de faire une assignation');                
+                return $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()]);
+            }
 
             /** Send Notification */
             $titre = 'Réponse à votre demande de devis';
@@ -461,9 +465,8 @@ class ModerateurController extends AbstractController
             $assignation = $formAssignation->getData();
             $this->assignationManager->saveForm($formAssignation);
             $this->addFlash('success', 'Assignation effectuée');
-            
-            $referer = $request->headers->get('referer');
-            return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view');
+                
+            return $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()]);
         }
 
         $editedCv = new EditedCv();

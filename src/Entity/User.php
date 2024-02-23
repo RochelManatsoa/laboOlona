@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Enum\TypeUser;
+use App\Entity\Finance\Employe;
 use App\Entity\Vues\VideoVues;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,6 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     const ACCOUNT_ENTREPRISE = 'ENTREPRISE';
     const ACCOUNT_MODERATEUR = 'MODERATEUR';
     const ACCOUNT_REFERRER = 'REFERRER';
+    const ACCOUNT_EMPLOYE = 'EMPLOYE';
    
     public static function getChoices() {
         return [
@@ -104,6 +105,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(mappedBy: 'referrer', cascade: ['persist', 'remove'])]
     private ?ReferrerProfile $referrerProfile = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Employe $employe = null;
 
     public function __construct()
     {
@@ -524,6 +528,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->referrerProfile = $referrerProfile;
+
+        return $this;
+    }
+
+    public function getEmploye(): ?Employe
+    {
+        return $this->employe;
+    }
+
+    public function setEmploye(?Employe $employe): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($employe === null && $this->employe !== null) {
+            $this->employe->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($employe !== null && $employe->getUser() !== $this) {
+            $employe->setUser($this);
+        }
+
+        $this->employe = $employe;
 
         return $this;
     }

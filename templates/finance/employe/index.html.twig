@@ -1,0 +1,73 @@
+{% extends 'finance/base.html.twig' %}
+
+{% block title %}Employés{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="annonce-list p-2">
+            <div class="annonce-item shadow p-5 m-4">
+                <h1 class="card-title h2 mb-3">Liste des employés</h1>
+                    <a href="{{ path('app_finance_employe_new')}}" class="btn rounded-pill px-5 btn-success my-4">
+                        Nouvel employé
+                    </a>
+                    {% if employes|length > 0 %}
+                    <div class="container">
+                        <div class="row text-strong">
+                            <div class="col-sm-5">Employé</div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-4 text-center">Entreprise</div>
+                                    <div class="col-sm-6 col-md-4">Date d'embauche</div>
+                                    <div class="col-sm-6 col-md-4">Expire le</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1"></div>
+                        </div>
+                        <hr>
+                        {% for item in employes %}
+                            <div class="row text-muted">
+                                <div class="col-sm-5 small">
+                                    <a href="{{ path('app_finance_employe_view', {'id' : item.id })}}" class="">
+                                        {{ item.user.nom}} 
+                                        {{ item.user.prenom}}
+                                    </a>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-4 text-center">
+                                            {# <a href="{{ path('app_dashboard_moderateur_cooptation_annonce', {'jobId' : item.annonce.jobId })}}" class="">
+                                                <span class="badge text-bg-warning">{{ item.referrals|length }}</span>
+                                            </a> #}
+                                        </div>
+                                        <div class="col-sm-6 col-md-4 small">
+                                        {{ item.dateEmbauche|date('d/m/Y') }}
+                                        </div>
+                                        <div class="col-sm-6 col-md-4">
+                                        {# {{ item.annonce.dateExpiration|date('d/m/Y') }} #}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1 small">
+                                    <a href="{{ path('app_finance_employe_view', {'id' : item.id })}}" class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </div>
+                            </div>                    
+                            <hr>                    
+                        {% endfor %}
+                    <!-- Plus de lignes et colonnes ici -->
+                    </div>
+                    <div class="navigation mt-5">
+                        {{ knp_pagination_render(employes, 'parts/_pagination.html.twig') }}
+                    </div>
+                    {% else %}
+                    <div class="container p-5 mx-auto text-center">
+                        Aucunes cooptations effectuées jusqu'à présent <br>
+                        <a href="{{path('app_dashboard_moderateur_coopteurs')}}" class="btn btn-primary px-5 rounded-pill my-4">Liste des Coopteurs</a>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

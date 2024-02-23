@@ -43,7 +43,18 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile/, roles: ROLE_USER }
         - { path: ^/dashboard/, roles: ROLE_USER }
+        - { path: ^/finance, roles: ROLE_FINANCE }
+        - { path: ^/employes-hub, roles: ROLE_EMPLOYE }
         - { path: ^/youtube/playlist, roles: ROLE_USER }
+
+    
+    role_hierarchy:
+        ROLE_FINANCE: [ROLE_CANDIDAT]
+        ROLE_COOPTEUR: [ROLE_CANDIDAT]
+        ROLE_EMPLOYE: [ROLE_CANDIDAT]
+        # Les rôles moderateur et entreprise n'ont pas de rôles enfants
+        ROLE_MODERATEUR: []
+        ROLE_ENTREPRISE: []       []
 
 when@test:
     security:

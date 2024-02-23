@@ -1,0 +1,166 @@
+{% extends 'finance/base.html.twig' %}
+
+{% block title %}Employés{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="annonce-list p-2">
+            <div class="annonce-item shadow p-5 m-4">
+                <h1 class="card-title mb-3">Nouvel Employé</h1>
+                {{form_start(form)}}
+                <hr>
+
+                <h2>Informations générales</h2>
+
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.user.nom)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.user.prenom)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.user.email)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.user.telephone)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.user.adress)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.matricule)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.sexe)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.cnaps)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.cin)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.dateNaissance)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.categorie)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.fonction)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.dateEmbauche)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.nombreEnfants)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.salaireBase)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.congePris)}}
+                    </div>
+                </div>
+                <hr>
+
+                <h2>Avantages</h2>
+
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.avantage.absence)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.avantage.hn)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.avantage.hs30)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.avantage.hs40)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.avantage.hs50)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.avantage.congePaye)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.avantage.congePris)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.avantage.primeFonction)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.avantage.primeConnexion)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.avantage.repas)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.avantage.rappel)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.avantage.deplacement)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.avantage.allocationConge)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.avantage.primeAvance15)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.avantage.avanceSpeciale)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.avantage.salaireBrut)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.avantage.preavis)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.avantage.moySur12)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.avantage.freelance)}}
+                    </div>
+                </div>
+                <div style="display:none;">
+                {{form_widget(form)}}
+                </div>
+                <button type="submmit" class="btn btn-primary rounded-pill px-5">Enregistrer</button>
+                {{form_end(form)}}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -53,6 +53,10 @@ class SecurityController extends AbstractController
         if ($user->getType() === User::ACCOUNT_MODERATEUR) {
             return $this->redirectToRoute('app_dashboard_moderateur');
         }
+
+        if ($user->getType() === User::ACCOUNT_EMPLOYE) {
+            return $this->redirectToRoute('app_dashboard_employes_simulations');
+        }
     
         if ($user->getType() === User::ACCOUNT_ENTREPRISE) {
             return $this->redirectToRoute('app_dashboard_entreprise');

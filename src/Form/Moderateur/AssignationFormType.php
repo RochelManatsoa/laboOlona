@@ -29,7 +29,6 @@ class AssignationFormType extends AbstractType
             ->add('jobListing')
             ->add('forfait', MoneyType::class, [])
             ->add('commentaire')
-            ->add('assigner', SubmitType::class, ['label' => 'Assigner'])
         ;
     }
 

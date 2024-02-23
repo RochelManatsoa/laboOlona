@@ -66,6 +66,27 @@
         </a>
       </li>
     {% endif %}
+    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_EMPLOYE')) or is_granted('ROLE_EMPLOYE') %}
+      <li>
+        <a href="{{ path('app_dashboard_employes_simulations') }}" class="nav-link {{ current_route == 'app_dashboard_employes_simulations' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-aspect-ratio"></i>
+          Mes simulations
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_employes_contrats') }}" class="nav-link {{ current_route == 'app_dashboard_employes_contrats' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-folder2-open"></i>
+          Mes contrats
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_employes_infos')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_employes_infos' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-person-vcard"></i>
+            Mes infos
+        </a>
+      </li>
+    {% endif %}
       <li>
         <a href="{{ path('app_dashboard_moderateur_affiliate_tool')}}" 
             class="nav-link {{ current_route == 'app_dashboard_moderateur_affiliate_tool' ? 'active' : 'text-white' }}">

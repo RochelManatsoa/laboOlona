@@ -1,0 +1,160 @@
+{% extends 'dashboard/base.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+	<link href="{{asset('assets/css/jquery.steps.css')}}" rel="stylesheet">
+{% endblock %}
+{% block header %} {% include "parts/_navbar.html.twig" %} {% endblock %}
+{% block sidebar %} 
+{% if app.user %}
+{{ parent() }}
+{% else %}
+<div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="px-3">
+        <h3 class="h4 text-center">Bienvenue sur notre Simulateur de Portage Salarial</h3>
+        <p class="text-center pt-5">Vous êtes un freelancer résidant à Madagascar et travaillez avec des clients internationaux ? Notre simulateur de portage salarial est conçu spécialement pour vous. Ce puissant outil vous aidera à calculer facilement le montant à facturer à vos clients pour garantir le salaire net souhaité après déduction des frais de portage salarial.</p>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="annonce-list p-2">
+        <div class="annonce-item shadow p-5 m-4">
+            <h1 class="card-title mb-3">Ma situation</h3>
+            <div class="">
+                {{form_start(form, {'attr': {'id': 'example-basic'}}) }}
+                <!-- Début du formulaire avec l'ID "example-basic" -->
+                <h3 class="card-title mb-3">Devise</h3>
+                <section style="position: relative;width: 100%;">
+                    <!-- Explication du champ "Taux de change" -->
+                    <legend class="h2">{{ form_label(form.devise) }}</legend>
+                    <div class="row">
+                        <div class="col-6">
+                            {{ form_widget(form.devise)}}
+                        </div>
+                        <div class="col-6">
+                            {{ form_widget(form.taux)}}
+                        </div>
+                    </div>
+                    <p class="mt-4">Le taux de change correspond au taux utilisé pour convertir le montant de votre paiement dans la devise de votre client.</p>
+                </section>
+
+                <h3 class="card-title mb-3">Salaire Net</h3>
+                <section  class="text-grey" style="position: relative;width: 100%;">
+                    <!-- Explication du champ "Salaire Net" -->
+                    <legend class="h2">{{ form_label(form.salaireNet) }}</legend>
+                    <div class="">
+                        {{ form_widget(form.salaireNet)}}
+                    </div>
+                    <p class="mt-4">Le salaire net représente le montant que vous souhaitez percevoir après déduction des impôts et des cotisations sociales.</p>
+                </section>
+
+                <h3 class="card-title mb-3">Avantages</h3>
+                <section  class="text-grey" style="position: relative;width: 100%;">
+                    <!-- Explication du champ "Charge" -->
+                    <legend class="h2">{{ form_label(form.nombreEnfant) }}</legend>
+                    <div class="">
+                        {{ form_widget(form.nombreEnfant)}}
+                    </div>
+                    <p class="mt-4">Indiquez le nombre d'enfants à votre charge pour calculer les avantages fiscaux et les allocations familiales.</p>
+                    <legend class="h2">{{ form_label(form.avantage.primeConnexion) }}</legend>
+                    <div class="">
+                        {{ form_widget(form.avantage.primeConnexion)}}
+                    </div>
+                    <p class="mt-4">Cochez cette case si vous bénéficiez d'une prime de connexion ou d'autres avantages similaires.</p>
+                </section>
+
+                <h3 class="card-title mb-3">Résumé</h3>
+                <section  class="text-grey" style="position: relative;width: 100%;">
+                    <!-- Explication du champ "Prime" -->
+                    <div id="resum"></div>
+                    <div style="display:none;">
+                    <button type="button" id="popup" data-bs-toggle="modal" data-bs-target="#connexionModal"></button>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        </div>
+    </div>
+<!-- Modal -->
+<div class="modal fade" id="connexionModal" tabindex="-1" aria-labelledby="connexionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="connexionModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.employe.user.nom) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.employe.user.prenom) }}
+            </div>
+        </div>
+        {{ form_row(form.employe.user.email) }}
+        <div class="row">
+            <div class="col-md-6">
+            {{ form_row(form.employe.user.plainPassword.first) }}
+            </div>
+            <div class="col-md-6">
+            {{ form_row(form.employe.user.plainPassword.second) }}
+            </div>
+        </div>
+        <div class="form-check form-check-inline">
+            <div class="row">
+                <div class="col-1 m-0 p-0">
+                    <div class="form-check form-check-inline">
+                        {{ form_widget(form.employe.user.agreeTerms) }}
+                    </div>
+                </div>
+                <div class="col-11 m-0 pl-0">
+                    <label class="form-check-label fs-6" for="{{ form.employe.user.agreeTerms.vars.id }}">
+                        {{ attribute(form.employe.user.agreeTerms.vars.attr, 'label')|trans({
+                            '%terms_url%': path('app_home_terms'),
+                            '%privacy_url%': path('app_home_privacy')
+                        })|raw }}
+                    </label>
+                </div>
+            </div>
+
+        </div>
+        <div class="text-center">
+            <button class="btn rounded-pill px-5 btn-dark" type="submit" id="register-submit">
+                {{ 'app_register.menu'|trans }}                
+            </button>
+        </div>
+        <div style="display:none;">
+        {{ form_widget(form)}}
+        </div>
+        {{ form_end(form) }}
+      </div>
+    </div>
+  </div>
+</div>
+{% block modal %} 
+{% endblock %}
+	<script src="{{asset('assets/js/jquery.min.js')}}"></script>
+	<script src="{{asset('assets/js/jquery.steps.min.js')}}"></script>
+	<script src="{{asset('assets/js/jqueryValidate.js')}}"></script>
+	<script src="{{asset('assets/main.js')}}"></script>
+    <script>
+        $(function () {
+            initFormStep(
+                $("#example-basic"),
+                "h3",
+                "section",
+                "fade",
+                utilisateurEstConnecte()
+            );
+        })
+        function utilisateurEstConnecte() {
+            const session = {{ app.session.all|json_encode()|raw }};;
+            return session.utilisateurEstConnecte
+        }
+    </script>
+{% endblock %}

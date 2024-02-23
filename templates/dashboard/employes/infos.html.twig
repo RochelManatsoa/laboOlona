@@ -1,0 +1,86 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Mes informations
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="annonce-list p-2">
+			<div class="annonce-item shadow p-md-5 m-md-4">
+				<h1 class="h2">Mes informations</h1>
+				<hr>
+				<div class="container">
+					{{ form_start(form)}}
+
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.user.nom)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.user.prenom)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.user.email)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.user.telephone)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.user.adress)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.salaireBase)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.sexe)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.cnaps)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.cin)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.dateNaissance)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.categorie)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.fonction)}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    {{form_row(form.dateEmbauche)}}
+                    </div>
+                    <div class="col">
+                    {{form_row(form.nombreEnfants)}}
+                    </div>
+                </div>
+                <hr>
+                <div style="display:none;">
+                {{form_widget(form)}}
+                </div>
+                <button type="submmit" class="btn btn-primary rounded-pill px-5">Mettre à jour</button>
+                {{form_end(form)}}
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block inner_footer %}
+	{% include "dashboard/_inner_footer.html.twig" %}
+{% endblock %}

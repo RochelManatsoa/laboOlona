@@ -6,6 +6,7 @@ use App\Entity\Secteur;
 use App\Twig\AppExtension;
 use App\Entity\Notification;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Finance\Devise;
 use App\Manager\NotificationManager;
 use App\Entity\Moderateur\Assignation;
 use App\Manager\ModerateurManager;
@@ -85,6 +86,14 @@ class ModerateurController extends AbstractController
         }, $jobListings);
 
         return $this->json($annonces);
+    }   
+
+    #[Route('/ajax/devise/select/{id}', name: 'ajax_select_devise')]
+    public function selectDevise(Request $request, int $id): Response
+    {        
+        $devise = $this->em->getRepository(Devise::class)->find((int) $id);
+        
+        return $this->json($devise, 200, [], ['groups' => 'devise']);
     }   
 
     #[Route('/ajax/edit/assignation', name: 'app_ajax_edit_assignation')]

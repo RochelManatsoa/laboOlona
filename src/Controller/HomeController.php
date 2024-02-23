@@ -2,25 +2,36 @@
 
 namespace App\Controller;
 
-use App\Entity\AffiliateTool;
-use App\Entity\Entreprise\JobListing;
-use App\Entity\Moderateur\ContactForm;
+use DateTime;
+use App\Entity\User;
+use Twig\Environment;
 use App\Form\JobListingType;
-use App\Form\Moderateur\ContactFormType;
-use App\Repository\AffiliateToolRepository;
+use App\Entity\AffiliateTool;
 use App\Service\User\UserService;
+use App\Entity\Finance\Simulateur;
+use App\Form\RegisterFormType;
+use App\Security\AppAuthenticator;
+use App\Form\Finance\SimulateurType;
+use App\Entity\Entreprise\JobListing;
+use App\Entity\Finance\Employe;
 use App\Repository\SecteurRepository;
+use App\Service\Mailer\MailerService;
+use App\Entity\Moderateur\ContactForm;
+use App\Form\Finance\SimuType;
+use App\Manager\Finance\EmployeManager;
+use App\Service\Annonce\AnnonceService;
+use App\Form\Moderateur\ContactFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\EntrepriseProfileRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
-use App\Service\Annonce\AnnonceService;
-use App\Service\Mailer\MailerService;
-use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class HomeController extends AbstractController
 {
@@ -33,9 +44,12 @@ class HomeController extends AbstractController
         private EntityManagerInterface $em,
         private MailerService $mailerService,
         private AnnonceService $annonceService,
-    ){
+        private EmployeManager $employeManager,
+        private RequestStack $requestStack,
+        private Environment $twig
+    ) {
     }
-    
+
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
@@ -78,7 +92,7 @@ class HomeController extends AbstractController
 
     #[Route('/service', name: 'app_home_service')]
     public function service(): Response
-    {        
+    {
         return $this->render('home/service.html.twig', [
             'controller_name' => 'HomeController',
         ]);
@@ -86,7 +100,7 @@ class HomeController extends AbstractController
 
     #[Route('/legal-mentions', name: 'app_home_legal')]
     public function legal(): Response
-    {        
+    {
         return $this->render('home/legal.html.twig', [
             'controller_name' => 'HomeController',
         ]);
@@ -115,10 +129,76 @@ class HomeController extends AbstractController
             $annonceId = $request->request->get('annonce_id');
             $jobId = $request->request->get('job_id');
             $this->annonceService->add($annonceId);
-            if (!$this->getUser()) { 
-                return $this->redirectToRoute('app_login'); 
+            if (!$this->getUser()) {
+                return $this->redirectToRoute('app_login');
             }
-            return $this->redirectToRoute('app_dashboard_candidat_annonce_show', ['jobId' => $jobId ]);
+            return $this->redirectToRoute('app_dashboard_candidat_annonce_show', ['jobId' => $jobId]);
         }
+    }
+
+    #[Route('/simulateur-portage-salarial', name: 'app_home_simulateur_portage')]
+    public function simulateur(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UserAuthenticatorInterface $userAuthenticator,
+        AppAuthenticator $authenticator,
+    ): Response {
+        $session = $this->requestStack->getSession();
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $simulateur = (new Simulateur())->setCreatedAt(new DateTime());
+        $connected = false;
+        if ($user) {
+            $connected = true;
+            $employe = $user->getEmploye();
+            if(!$employe instanceof Employe){
+                $employe = new Employe();
+                $employe->setUser($user);
+            }
+            $simulateur->setEmploye($employe);
+        }
+        $session->set('utilisateurEstConnecte', $connected);
+        $form = $this->createForm(SimulateurType::class, $simulateur);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $result = $this->employeManager->simulate($simulateur);
+            $simulateur = $form->getData();
+            $employe = $simulateur->getEmploye();
+            $user = $simulateur->getEmploye()->getUser();
+            $employe->setNombreEnfants($form->get('nombreEnfant')->getData());
+            $employe->setSalaireBase($result['salaire_de_base_ariary']);
+
+            if (!$connected) {
+                $user->setDateInscription(new DateTime());
+                $user->setType(User::ACCOUNT_EMPLOYE);
+                $user->setRoles(['ROLE_EMPLOYE']);
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('employe')->get('user')->get('plainPassword')->getData()
+                    )
+                );
+            }
+            $this->em->persist($employe);
+            $this->em->persist($user);
+            $this->em->persist($simulateur);
+            $this->em->flush();
+            $session->set('simulation', [$simulateur->getId() => $result]);
+
+            if (!$connected) {
+                return $userAuthenticator->authenticateUser(
+                    $user,
+                    $authenticator,
+                    $request
+                );
+            }
+
+            return $this->redirectToRoute('app_dashboard_employes_simulation_view', ['id' => $simulateur->getId()]);
+        }
+
+        return $this->render('home/simulateur-portage-salarial.html.twig', [
+            'form' => $form->createView(),
+            'connected' => $connected,
+        ]);
     }
 }
