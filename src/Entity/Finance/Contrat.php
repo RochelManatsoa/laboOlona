@@ -9,6 +9,42 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ContratRepository::class)]
 class Contrat
 {
+    const STATUS_PENDING = 'PENDING';
+    const STATUS_ACTIVE = 'ACTIVE';
+    const STATUS_EXPIRED = 'EXPIRED';
+    const STATUS_ARCHIVED = 'ARCHIVED';
+    const STATUS_SUSPENDED = 'SUSPENDED';
+    const STATUS_RENEWED = 'RENEWED';
+    const STATUS_APPROVED = 'APPROVED';
+    const STATUS_UNFULFILLED = 'UNFULFILLED';
+
+
+    public static function getStatuses() {
+        return [
+            'En attente' => self::STATUS_PENDING ,
+            'Actif' => self::STATUS_ACTIVE ,
+            'Expiré' => self::STATUS_EXPIRED ,
+            'Resilié' => self::STATUS_ARCHIVED ,
+            'Suspendu' => self::STATUS_SUSPENDED ,
+            'Renouvelé' => self::STATUS_RENEWED ,
+            'Approuvé' => self::STATUS_APPROVED ,
+            'Non exécuté' => self::STATUS_UNFULFILLED ,
+        ];
+    }
+
+    public static function getArrayStatuses() {
+        return [
+             self::STATUS_PENDING ,
+             self::STATUS_ACTIVE ,
+             self::STATUS_EXPIRED ,
+             self::STATUS_ARCHIVED ,
+             self::STATUS_SUSPENDED ,
+             self::STATUS_RENEWED ,
+             self::STATUS_APPROVED ,
+             self::STATUS_UNFULFILLED ,
+        ];
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -20,7 +56,7 @@ class Contrat
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $type = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateDebut = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -29,6 +65,17 @@ class Contrat
     #[ORM\Column]
     private ?float $salaireBase = null;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Simulateur $simulateur = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $status = null;
+
+    public function __construct()
+    {
+        $this->status = self::STATUS_PENDING;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -63,7 +110,7 @@ class Contrat
         return $this->dateDebut;
     }
 
-    public function setDateDebut(\DateTimeInterface $dateDebut): static
+    public function setDateDebut(?\DateTimeInterface $dateDebut): static
     {
         $this->dateDebut = $dateDebut;
 
@@ -90,6 +137,30 @@ class Contrat
     public function setSalaireBase(float $salaireBase): static
     {
         $this->salaireBase = $salaireBase;
+
+        return $this;
+    }
+
+    public function getSimulateur(): ?Simulateur
+    {
+        return $this->simulateur;
+    }
+
+    public function setSimulateur(?Simulateur $simulateur): static
+    {
+        $this->simulateur = $simulateur;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

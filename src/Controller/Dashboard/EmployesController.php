@@ -2,10 +2,13 @@
 
 namespace App\Controller\Dashboard;
 
+use App\Entity\Finance\Contrat;
 use App\Entity\Finance\Simulateur;
+use App\Form\Finance\ContratHiddenType;
 use App\Form\Finance\EmployeType;
 use App\Service\User\UserService;
 use App\Manager\Finance\EmployeManager;
+use App\Manager\MailManager;
 use App\Repository\Finance\SimulateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +24,7 @@ class EmployesController extends AbstractController
         private EmployeManager $employeManager,
         private RequestStack $requestStack,
         private UserService $userService,
+        private MailManager $mailManager,
         private EntityManagerInterface $em,
         private SimulateurRepository $simulateurRepository,
     ){}
@@ -47,11 +51,32 @@ class EmployesController extends AbstractController
     }
 
     #[Route('/simulation/view/{id}', name: 'app_dashboard_employes_simulation_view')]
-    public function view(Simulateur $simulateur): Response
+    public function view(Request $request, Simulateur $simulateur): Response
     {
+        $results = $this->employeManager->simulate($simulateur);
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $employe = $user->getEmploye();
+        $contrat = new Contrat();
+        $contrat->setSimulateur($simulateur);
+        $contrat->setEmploye($employe);
+        $contrat->setSalaireBase($results['salaire_de_base_euro']);
+        $contrat->setStatus(Contrat::STATUS_PENDING);
+        $form = $this->createForm(ContratHiddenType::class, $contrat);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $contrat = $form->getData();
+            $this->em->persist($contrat);
+            $this->em->flush();
+            /** Envoi mail */
+            $this->mailManager->newPortage($contrat->getEmploye()->getUser(), $contrat);
+            $this->addFlash('success', 'Demande d\'information envoyée, vous allez être rappeleé dans les prochains jour');
+        }
+
         return $this->render('dashboard/employes/view.html.twig', [
+            'form' => $form->createView(),
             'simulateur' => $simulateur,
-            'results' => $this->employeManager->simulate($simulateur),
+            'results' => $results,
         ]);
     }
 

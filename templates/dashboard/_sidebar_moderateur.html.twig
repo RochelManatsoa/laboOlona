@@ -35,6 +35,14 @@
 
       </li>
       <li>
+        <a href="{{ path('app_dashboard_moderateur_portage')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_portage' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-building-fill-up"></i>
+            Portage  
+        </a>
+
+      </li>
+      <li>
         <a href="{{ path('app_dashboard_moderateur_annonces')}}" 
             class="nav-link {{ current_route == 'app_dashboard_moderateur_annonces' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-megaphone"></i>

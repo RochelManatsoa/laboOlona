@@ -1,0 +1,37 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Portages salariales</h2>
+    {# {{ form_start(form, {'attr': {'class': 'form-group mb-2 col-6', 'id':'moderateur-secteur-search-form'}}) }}
+    <div class="input-group">
+        {{ form_widget(form.secteur, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    {{ form_end(form) }} #}
+    <div id="secteurs-container">
+        {% include 'dashboard/moderateur/portage/_portages.html.twig' %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    function searchAnnonces() {
+        var formData = $('#moderateur-secteur-search-form').serialize();
+
+        $.ajax({
+            url: '{{ path('app_dashboard_moderateur_secteur') }}',
+            type: 'GET',
+            data: formData,
+            success: function(data) {
+                $('#secteurs-container').html(data.content);
+            }
+        });
+    }
+    $('#moderateur-secteur-search-form input, #moderateur-secteur-search-form select').on('keyup change', function() {
+        searchAnnonces();
+    });
+});
+</script>
+{% endblock %}
+
