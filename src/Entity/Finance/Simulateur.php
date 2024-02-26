@@ -2,6 +2,7 @@
 
 namespace App\Entity\Finance;
 
+use App\Entity\Finance\Contrat;
 use App\Repository\Finance\SimulateurRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,6 +26,9 @@ class Simulateur
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Avantage $avantage = null;
+
+    #[ORM\OneToOne(mappedBy: 'simulateur', cascade: ['persist', 'remove'])]
+    private ?Contrat $contrat = null;
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $type = null;
@@ -165,6 +169,28 @@ class Simulateur
     public function setEmploye(?Employe $employe): static
     {
         $this->employe = $employe;
+
+        return $this;
+    }
+
+    public function getContrat(): ?Contrat
+    {
+        return $this->contrat;
+    }
+
+    public function setContrat(?Contrat $contrat): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($contrat === null && $this->contrat !== null) {
+            $this->contrat->setCandidat(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($contrat !== null && $contrat->getCandidat() !== $this) {
+            $contrat->setCandidat($this);
+        }
+
+        $this->contrat = $contrat;
 
         return $this;
     }

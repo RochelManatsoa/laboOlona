@@ -2,8 +2,11 @@
 
 namespace App\Manager;
 
+use App\Entity\Finance\Contrat;
+use App\Entity\Finance\Simulateur;
 use App\Entity\Referrer\Referral;
 use App\Entity\User;
+use App\Manager\Finance\EmployeManager;
 use Twig\Environment as Twig;
 use App\Service\Mailer\MailerService;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -16,6 +19,7 @@ class MailManager
         private RequestStack $requestStack,
         private MailerService $mailerService,
         private UrlGeneratorInterface $urlGenerator,
+        private EmployeManager $employeManager,
         private ModerateurManager $moderateurManager
     ) {}
 
@@ -55,6 +59,21 @@ class MailManager
                 'user' => $referral->getReferredBy()->getReferrer(),
                 'annonce' => $referral->getAnnonce(),
                 'url' => $this->urlGenerator->generate('app_invitation_referral', ['referralCode' => $referral->getReferralCode()], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]
+        );
+    }
+
+    public function newPortage(User $user, Contrat $contrat)
+    {
+        return $this->mailerService->sendMultiple(
+            $this->moderateurManager->getModerateurEmails(),
+            'Portage Salariale : '.$user->getNom().' '.$user->getPrenom().' souhaite en savoir plus',
+            "moderateur/notification_portage.html.twig",
+            [
+                'user' => $user,
+                'simulateur' => $contrat->getSimulateur(),
+                'details' => $this->employeManager->simulate($contrat->getSimulateur()),
+                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_view_portage', ['id' => $contrat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
             ]
         );
     }

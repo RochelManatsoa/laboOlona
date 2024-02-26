@@ -20,13 +20,20 @@ class RegisterFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'app_register.email',
+                'label' => 'Adresse éléctronique *',
+                'required' => true
+            ])
+            ->add('telephone', null, [
+                'label' => 'Téléphone *',
+                'required' => true
             ])
             ->add('nom', null, [
                 'label' => 'app_register.first_name',
+                'required' => true
             ])
             ->add('prenom', null, [
                 'label' => 'app_register.last_name',
+                'required' => true
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
@@ -47,6 +54,7 @@ class RegisterFormType extends AbstractType
                 'first_options'  => [ 'label' => 'app_register.password', 'attr' => []],
                 'second_options' => [ 'label' => 'app_register.repeat_password', 'attr' => []],
                 'mapped' => false,
+                'required' => true,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([

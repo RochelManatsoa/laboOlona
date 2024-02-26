@@ -20,7 +20,7 @@ class SimulateurType extends AbstractType
     {
         $builder
             ->add('devise', EntityType::class, [
-                'label' => 'Indiquez votre devise',
+                'label' => 'Devise',
                 'mapped' => true,
                 'class' => Devise::class,
                 'attr' => [
@@ -36,10 +36,10 @@ class SimulateurType extends AbstractType
                     ]
                 ])
             ->add('salaireNet', TextType::class, [
-                'label' => 'Indiquez votre salaire Net souhaité'
+                'label' => 'Salaire Net souhaité'
             ])
             ->add('nombreEnfant', IntegerType::class, [
-                'label' => 'Nombre d\'enfant à charge',
+                'label' => 'Nombre d\'enfant',
                 'required' => false,
                 'data' => 0, // Valeur par défaut
             ])

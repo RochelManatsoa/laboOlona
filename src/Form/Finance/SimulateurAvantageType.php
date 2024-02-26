@@ -26,7 +26,7 @@ class SimulateurAvantageType extends AbstractType
                 'required' => false,
             ])
             ->add('primeFonction', TextType::class, [
-                'label' => 'Frais professionnel par mois',
+                'label' => 'Autres frais',
                 'required' => false,
             ])
         ;

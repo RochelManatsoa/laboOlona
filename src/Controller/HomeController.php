@@ -160,7 +160,7 @@ class HomeController extends AbstractController
         $session->set('utilisateurEstConnecte', $connected);
         $form = $this->createForm(SimulateurType::class, $simulateur);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $result = $this->employeManager->simulate($simulateur);
             $simulateur = $form->getData();
             $employe = $simulateur->getEmploye();
@@ -169,18 +169,47 @@ class HomeController extends AbstractController
             $employe->setSalaireBase($result['salaire_de_base_ariary']);
 
             if (!$connected) {
-                $user->setDateInscription(new DateTime());
-                $user->setType(User::ACCOUNT_EMPLOYE);
-                $user->setRoles(['ROLE_EMPLOYE']);
-                $user->setPassword(
-                    $userPasswordHasher->hashPassword(
-                        $user,
-                        $form->get('employe')->get('user')->get('plainPassword')->getData()
-                    )
-                );
+                $existingUser = $this->em->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
+                if($existingUser instanceof User){
+                    $currentRoles = $existingUser->getRoles();
+                    if (!in_array('ROLE_EMPLOYE', $currentRoles)) {
+                        $currentRoles[] = 'ROLE_EMPLOYE'; 
+                    }
+                    $existingEmploye = $user->getEmploye();
+                    if(!$existingEmploye instanceof Employe){
+                        $existingEmploye = new Employe();
+                        $existingEmploye->setUser($existingUser);
+                    }
+                    $existingUser->setRoles($currentRoles);
+                    $existingEmploye->setUser($existingUser);
+                    $existingEmploye->setNombreEnfants($form->get('nombreEnfant')->getData());
+                    $existingEmploye->setSalaireBase($result['salaire_de_base_ariary']);
+                    $simulateur->setEmploye($existingEmploye);
+                    $this->em->persist($existingEmploye);
+                    $this->em->persist($simulateur);
+                    $this->em->flush();
+                    $this->addFlash('success', 'Vous avez déjà un compte Olona Talents, veuillez vous connecté pour pour voir le resultats des simulations');
+
+                    return $this->redirectToRoute('app_home_simulateur_portage');
+                }else{
+                    $currentRoles = $user->getRoles();
+                    if (!in_array('ROLE_EMPLOYE', $currentRoles)) {
+                        $currentRoles[] = 'ROLE_EMPLOYE'; 
+                    }
+                    $user->setRoles($currentRoles);
+                    $user->setDateInscription(new DateTime());
+                    $user->setType(User::ACCOUNT_EMPLOYE);
+                    $user->setRoles(['ROLE_EMPLOYE']);
+                    $user->setPassword(
+                        $userPasswordHasher->hashPassword(
+                            $user,
+                            $form->get('employe')->get('user')->get('plainPassword')->getData()
+                        )
+                    );
+                    $this->em->persist($user);
+                }
             }
             $this->em->persist($employe);
-            $this->em->persist($user);
             $this->em->persist($simulateur);
             $this->em->flush();
             $session->set('simulation', [$simulateur->getId() => $result]);

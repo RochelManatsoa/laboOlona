@@ -11,6 +11,7 @@ use Twig\TwigFunction;
 use App\Entity\ReferrerProfile;
 use App\Entity\Referrer\Referral;
 use App\Entity\Entreprise\JobListing;
+use App\Entity\Finance\Contrat;
 use App\Entity\Finance\Employe;
 use App\Entity\Finance\Simulateur;
 use App\Manager\Finance\EmployeManager;
@@ -39,7 +40,8 @@ class FinanceExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('financeStatusLabel', [$this, 'financeStatusLabel']),
+            new TwigFilter('contratStatusBadge', [$this, 'contratStatusBadge']),
+            new TwigFilter('contratStatus', [$this, 'contratStatus']),
         ];
     }
 
@@ -67,6 +69,88 @@ class FinanceExtension extends AbstractExtension
             new TwigFunction('convertToDevise', [$this, 'convertToDevise']),
             new TwigFunction('convertToAriary', [$this, 'convertToAriary']),
         ];
+    }
+
+    public function contratStatus(Contrat $contrat):string
+    {
+        $button = "";
+        $status = $contrat->getStatus();
+        switch ($status) {
+            case 'APPROVED':
+                $button = '<button type="button" class="btn btn-outline-primary rounded-pill px-5" disabled><i class="bi bi-check2-circle"></i> Approuvé</button>';
+                break;
+
+            case 'ACTIVE':
+                $button = '<button type="button" class="btn btn-outline-success rounded-pill px-5" disabled><i class="bi bi-check2-circle"></i> Actif</button>';
+                break;
+                
+            case 'EXPIRED':
+                $button = '<span class="badge rounded-pill text-bg-primary">Actif</span>Expiré</button>';
+                break;
+                
+            case 'ARCHIVED':
+                $button = '<button type="button" class="btn btn-outline-info" disabled rounded-pill px-5><i class="bi bi-info-circle-fill"></i> Resilié</button>';
+                break;
+                
+            case 'SUSPENDED':
+                $button = '<button type="button" class="btn btn-outline-info" disabled rounded-pill px-5><i class="bi bi-info-circle-fill"></i> Suspendu</button>';
+                break;
+                
+            case 'UNFULFILLED':
+                $button = '<button type="button" class="btn btn-outline-info" disabled rounded-pill px-5><i class="bi bi-info-circle-fill"></i> Non exécuté</button>';
+                break;
+                
+            case 'RENEWED':
+                $button = '<button type="button" class="btn btn-outline-info" disabled rounded-pill px-5><i class="bi bi-info-circle-fill"></i> Renouvelé</button>';
+                break;
+            
+            default:
+                $button = '<button type="button" class="btn btn-outline-success rounded-pill px-5" disabled><i class="bi bi-hourglass-split"></i> En attente de réponse</button>';
+                break;
+        }
+
+        return $button;
+    }
+
+    public function contratStatusBadge(Contrat $contrat):string
+    {
+        $button = "";
+        $status = $contrat->getStatus();
+        switch ($status) {
+            case 'APPROVED':
+                $button = '<span class="badge rounded-pill text-bg-primary">Primary</span>';
+                break;
+
+            case 'ACTIVE':
+                $button = '<span class="badge rounded-pill text-bg-primary">Actif</span>';
+                break;
+                
+            case 'EXPIRED':
+                $button = '<span class="badge rounded-pill text-bg-primary">Expiré</span>';
+                break;
+                
+            case 'ARCHIVED':
+                $button = '<span class="badge rounded-pill text-bg-primary">Resilié</span>';
+                break;
+                
+            case 'SUSPENDED':
+                $button = '<span class="badge rounded-pill text-bg-primary">Suspendu</span>';
+                break;
+                
+            case 'UNFULFILLED':
+                $button = '<span class="badge rounded-pill text-bg-primary">Non exécuté</span>';
+                break;
+                
+            case 'RENEWED':
+                $button = '<span class="badge rounded-pill text-bg-primary">Renouvelé</span>';
+                break;
+            
+            default:
+                $button = '<span class="badge rounded-pill text-bg-primary">En attente</span>';
+                break;
+        }
+
+        return $button;
     }
 
     private function getCoeffIrsa(float $salaireBrutOstisCnaps, int $nbrEnfant = 0) : float

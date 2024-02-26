@@ -1105,3 +1105,11 @@ app_dashboard_employes_contrats :
 app_home_simulateur_portage : 
     title : Simulateur portage salarial
     dashboard_title : Simulateur portage salarial
+
+app_dashboard_moderateur_portage : 
+    title : Contrats portage salarial
+    dashboard_title : Contrats portage salarial
+
+app_dashboard_moderateur_view_portage : 
+    title : Détails portage salarial
+    dashboard_title : Détails portage salarial
