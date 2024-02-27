@@ -73,7 +73,7 @@
 						<div class="row align-items-center">
 							<div class="col-4">
 								<label class="col-form-label mt-3">{{ form_label(form.avantage.primeConnexion) }}
-									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Pour calculer les avantages fiscaux et les allocations familiales.">
+									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Si vous faites du télétravail.">
 										<i class="bi bi-info-circle-fill"></i>
 									</span>
 								</label>
@@ -143,7 +143,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-
+				{% if not connected %}
 					<div class="row">
 						<div class="col-md-6">
 							{{ form_row(form.employe.user.nom) }}
@@ -155,6 +155,7 @@
 					<div class="row">
 						<div class="col-md-6">
 							{{ form_row(form.employe.user.email) }}
+							<div id="email-error-message" class="invalid-feedback d-block" style="display:none;"></div>
 						</div>
 						<div class="col-md-6">
 							{{ form_row(form.employe.user.telephone) }}
@@ -191,6 +192,8 @@
 							{{ 'app_register.menu'|trans }}
 						</button>
 					</div>
+				
+				{% endif %}
 					<div style="display:none;">
 						{{ form_widget(form)}}
 					</div>
@@ -206,11 +209,41 @@
 	<script src="{{asset('assets/main.js')}}"></script>
 	<script>
 		$(function () {
-initFormStep($("#example-basic"), "h3", "section", "fade", utilisateurEstConnecte());
-})
-function utilisateurEstConnecte() {
-const session = {{ app.session.all|json_encode()|raw }};;
-return session.utilisateurEstConnecte
-}
+			initFormStep($("#example-basic"), "h3", "section", "fade", utilisateurEstConnecte());
+			
+			$('#simulateur_employe_user_email').blur(function() {
+				var email = $(this).val();
+				// Vérifiez si l'e-mail est vide
+				if (email !== '') {
+					// Vérifiez la disponibilité de l'e-mail
+					console.log(email)
+					checkEmailAvailability(email);
+				}
+    		});
+		})
+		function checkEmailAvailability(email) {
+			$.ajax({
+				type: 'POST',
+				url: '{{path('ajax_home_check_email')}}', // Remplacez cela par le chemin de votre script PHP de vérification
+				data: {
+					email: email
+				},
+				success: function(response) {
+					// Afficher le message de réponse
+					console.log(response)
+					if(response.user !== null){
+						$('#email-error-message').html('Il existe déjà un compte avec cette adresse e-mail.').show();
+						$('#simulateur_employe_user_email').addClass(' is-invalid')// Interceptez l'événement de fermeture du modal
+
+						// Changer le type du bouton en "button"
+						$('#register-submit').prop('type', 'button');
+					}
+				}
+			});
+		}
+		function utilisateurEstConnecte() {
+			const session = {{ app.session.all|json_encode()|raw }};;
+			return session.utilisateurEstConnecte
+		}
 	</script>
 {% endblock %}

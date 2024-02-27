@@ -75,7 +75,7 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
                   'simulateur[devise]': 'Devise choisie',
                   'simulateur[taux]': 'Taux de change',
                   'simulateur[salaireNet]': 'Salaire net souhaité',
-                  'simulateur[nombreEnfant]': 'Nombre d\'enfant à charge',
+                  'simulateur[nombreEnfant]': 'Nombre d\'enfant',
                   'simulateur[type]': 'Ma situation',
                   'simulateur[avantage][repas]': 'Repas journalier',
                   'simulateur[avantage][deplacement]': 'Déplacement journalier',
@@ -90,7 +90,7 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
                   'simulateur[nombreEnfant]',
                   'simulateur[type]',
                   'simulateur[avantage][repas]',
-                  'simulateur[avantage][depacement]',
+                  'simulateur[avantage][deplacement]',
                   'simulateur[avantage][primeConnexion]',
                   'simulateur[avantage][primeFonction]',
                 ]

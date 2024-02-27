@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Entreprise\JobListingRepository;
 use App\Repository\Finance\DeviseRepository;
 use App\Repository\Moderateur\AssignationRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -22,6 +23,7 @@ class HomeController extends AbstractController
         private EntityManagerInterface $em,
         private JobListingRepository $jobListingRepository,
         private AssignationRepository $assignationRepository,
+        private UserRepository $userRepository,
         private NotificationManager $notificationManager,
         private ModerateurManager $moderateurManager,
         private UrlGeneratorInterface $urlGenerator,
@@ -50,6 +52,16 @@ class HomeController extends AbstractController
         return $this->json([
             'devise' => $this->deviseRepository->find($id),
         ], 200, [], ['groups' => 'devise']);
+    }
+
+    #[Route('/ajax/check/email', name: 'ajax_home_check_email')]
+    public function checkEmail(Request $request): Response
+    {
+        $email = $request->request->get('email');
+
+        return $this->json([
+            'user' => $this->userRepository->findOneBy(['email' => $email]),
+        ], 200, [], ['groups' => 'user']);
     }
 
 }

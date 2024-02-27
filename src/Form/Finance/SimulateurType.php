@@ -53,10 +53,12 @@ class SimulateurType extends AbstractType
             ->add('avantage', SimulateurAvantageType::class, [
                 'label' => false
             ])
-            ->add('employe', EmployeFormType::class, [
-                'label' => false
-            ])
         ;
+        if ($options['connected']) {
+            $builder->add('employe', EmployeFormType::class, [
+                'label' => false
+            ]);
+        }
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
             $devise = $form->get('devise')->getData();
@@ -77,6 +79,7 @@ class SimulateurType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Simulateur::class,
+            'connected' => null, 
         ]);
     }
 }
