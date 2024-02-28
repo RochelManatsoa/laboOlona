@@ -45,6 +45,7 @@ class RegisterFormType extends AbstractType
                 'attr' => [
                     'label' => 'app_register.agree_terms',
                 ],
+                'data' => true, 
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,

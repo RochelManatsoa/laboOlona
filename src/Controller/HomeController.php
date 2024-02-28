@@ -7,17 +7,18 @@ use App\Entity\User;
 use Twig\Environment;
 use App\Form\JobListingType;
 use App\Entity\AffiliateTool;
+use App\Entity\Finance\Devise;
+use App\Form\Finance\SimuType;
+use App\Form\RegisterFormType;
+use App\Entity\Finance\Employe;
 use App\Service\User\UserService;
 use App\Entity\Finance\Simulateur;
-use App\Form\RegisterFormType;
 use App\Security\AppAuthenticator;
 use App\Form\Finance\SimulateurType;
 use App\Entity\Entreprise\JobListing;
-use App\Entity\Finance\Employe;
 use App\Repository\SecteurRepository;
 use App\Service\Mailer\MailerService;
 use App\Entity\Moderateur\ContactForm;
-use App\Form\Finance\SimuType;
 use App\Manager\Finance\EmployeManager;
 use App\Service\Annonce\AnnonceService;
 use App\Form\Moderateur\ContactFormType;
@@ -158,7 +159,8 @@ class HomeController extends AbstractController
             $simulateur->setEmploye($employe);
         }
         $session->set('utilisateurEstConnecte', $connected);
-        $form = $this->createForm(SimulateurType::class, $simulateur, ['connected' => !$connected]);
+        $defaultDevise = $this->em->getRepository(Devise::class)->findOneBy(['slug' => 'euro']);
+        $form = $this->createForm(SimulateurType::class, $simulateur, ['connected' => !$connected, 'default_devise' => $defaultDevise]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $result = $this->employeManager->simulate($simulateur);
@@ -173,7 +175,6 @@ class HomeController extends AbstractController
                 }
                 $existingUser->setRoles($currentRoles);
                 $this->em->persist($existingUser);
-                $this->addFlash('success', 'Vous avez déjà un compte Olona Talents, veuillez vous connecté pour pour voir le resultats des simulations');
             }else{
                 $currentRoles = $user->getRoles();
                 if (!in_array('ROLE_EMPLOYE', $currentRoles)) {

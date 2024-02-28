@@ -72,49 +72,35 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
                 let value = getElementValue(element);
 
                 let label = {
-                  'simulateur[devise]': 'Devise choisie',
+                  'simulateur[deviseSymbole]': 'Devise choisie',
                   'simulateur[taux]': 'Taux de change',
                   'simulateur[salaireNet]': 'Salaire net souhaité',
                   'simulateur[nombreEnfant]': 'Nombre d\'enfant',
                   'simulateur[type]': 'Ma situation',
-                  'simulateur[avantage][repas]': 'Repas journalier',
-                  'simulateur[avantage][deplacement]': 'Déplacement journalier',
+                  'simulateur[prixRepas]': 'Prix repas journalier',
+                  'simulateur[jourRepas]': 'Nombre de jour (Repas)',
+                  'simulateur[prixDeplacement]': 'Prix deplacement journalier',
+                  'simulateur[jourDeplacement]': 'Nombre de jour (Déplacement)',
                   'simulateur[avantage][primeConnexion]': 'Connexion Internet',
                   'simulateur[avantage][primeFonction]': 'Autres',
                 }
 
                 let field = [
-                  'simulateur[devise]',
+                  'simulateur[deviseSymbole]',
                   'simulateur[taux]',
                   'simulateur[salaireNet]',
                   'simulateur[nombreEnfant]',
                   'simulateur[type]',
-                  'simulateur[avantage][repas]',
-                  'simulateur[avantage][deplacement]',
+                  'simulateur[jourRepas]',
+                  'simulateur[prixRepas]',
+                  'simulateur[jourDeplacement]',
+                  'simulateur[prixDeplacement]',
                   'simulateur[avantage][primeConnexion]',
                   'simulateur[avantage][primeFonction]',
                 ]
                 
                 if (0 <= $.inArray(name, field)) {
                   // Si la valeur est une promesse, attendez qu'elle soit résolue avant de traiter
-                  if (value instanceof Promise) {
-                    value.then((resolvedValue) => {
-                      html = html.concat(
-                        '<div class="container"><div class="row border"><div class="col-md-6 text-right text-white bg-success">' +
-                          '<strong class="">' +
-                          label[name] +
-                          ' </strong></div><div class="col-md-6 text-white bg-info"">' +
-                          ' <span class=""> ' +
-                          resolvedValue +
-                          '</span></div>' +
-                          '</div></div></div>',
-                      );
-                      // Mettre à jour le résumé après avoir traité l'élément
-                      resum.html(html);
-                    }).catch((error) => {
-                      console.error('Une erreur est survenue lors de la récupération de la devise:', error);
-                    });
-                  } else {
                     html = html.concat(
                       '<div class="container"><div class="row border"><div class="col-md-6 text-right text-white bg-success">' +
                         '<strong class="">' +
@@ -125,21 +111,20 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
                         '</span></div>' +
                         '</div></div></div>',
                     );
-                  }
                 }
+                resum.html(
+                  html.concat(
+                    "<div></div>",
+                  ),
+                )
               });
 
               function getElementValue(element) {
-                if (element.name === 'simulateur[devise]') {
-                  // Retourner une promesse pour les valeurs de devise
-                  return new Promise((resolve, reject) => {
-                    getDevise(element.value, function(nom, symbole, taux) {
-                      // Utiliser le symbole de la devise comme valeur résolue
-                      resolve(symbole);
-                    });
-                  });
+                if (element.name === 'simulateur[taux]') {
+                    // Retourner une promesse pour les valeurs de devise
+                    return element.value + ' Ar';
                 }
-                return element.value;
+                return element.value !== "" ? element.value : '-';
               }
 
           }
@@ -151,7 +136,6 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
         onFinished: function (event, currentIndex) {
           if (!connected) {
             // Si connected est faux, affichez un popup
-            // alert("Vous devez être connecté pour soumettre ce formulaire.");
             $('#popup').click();
             return false; // Empêche la soumission du formulaire
           }
@@ -159,8 +143,16 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
         },
       })
       .validate({
-        errorPlacement: function errorPlacement(error, element) {
-          element.after(error)
+        errorPlacement: function(error, element) {
+            // Créer un élément div pour le message d'erreur
+            var errorDiv = document.createElement('div');
+            errorDiv.classList.add('invalid-feedback', 'd-block');
+        
+            // Ajouter le message d'erreur à cet élément div
+            errorDiv.appendChild(error[0]);
+        
+            // Insérer l'élément div avec le message d'erreur après l'élément parent du champ de formulaire
+            element.closest('.input-group').append(errorDiv);
         },
         rules: {
           'simulateur[taux]': {
@@ -183,6 +175,14 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
           'simulateur[avantage][deplacement]': {
             number: true,
           },
+          'simulateur[prixRepas]': {
+            required: false,
+            number: true,
+          },
+          'simulateur[prixDeplacement]': {
+            required: false,
+            number: true,
+          },
         },
         messages: {
           'simulateur[taux]': {
@@ -203,6 +203,12 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
             number: 'Le montant doit être un nombre décimal',
           },
           'simulateur[avantage][deplacement]': {
+            number: 'Le montant doit être un nombre décimal',
+          },
+          'simulateur[prixRepas]': {
+            number: 'Le montant doit être un nombre décimal',
+          },
+          'simulateur[prixDeplacement]': {
             number: 'Le montant doit être un nombre décimal',
           },
         },

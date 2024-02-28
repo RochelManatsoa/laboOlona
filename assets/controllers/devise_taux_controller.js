@@ -14,6 +14,8 @@ export default class extends Controller {
     onDeviseChange(event) {
         const devise = event.target.value;
         const tauxElement = document.getElementById('simulateur_taux');
+        const symbole = document.getElementById('simulateur_deviseSymbole');
+        var spans = document.querySelectorAll('span.change-devise');
     
         // Votre code pour récupérer le taux de change de la devise
         fetch('/ajax/devise/select/' + devise)
@@ -21,6 +23,10 @@ export default class extends Controller {
         .then(data => {
             console.log(data)    
             tauxElement.value = data.taux;
+            symbole.value = data.symbole;
+            spans.forEach(function(span) {
+                span.textContent = data.symbole; // Vous pouvez également utiliser span.innerHTML = 'Nouveau contenu'; si vous avez du contenu HTML à insérer
+            });
         });
     }
 }
