@@ -9,6 +9,7 @@ use App\Form\Finance\EmployeType;
 use App\Service\User\UserService;
 use App\Manager\Finance\EmployeManager;
 use App\Manager\MailManager;
+use App\Repository\Finance\ContratRepository;
 use App\Repository\Finance\SimulateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,7 @@ class EmployesController extends AbstractController
         private MailManager $mailManager,
         private EntityManagerInterface $em,
         private SimulateurRepository $simulateurRepository,
+        private ContratRepository $contratRepository,
     ){}
 
     #[Route('/', name: 'app_dashboard_employes')]
@@ -84,9 +86,11 @@ class EmployesController extends AbstractController
     public function contrats(): Response
     {
         $session = $this->requestStack->getSession();
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
 
         return $this->render('dashboard/employes/contrats.html.twig', [
-            'contrats' => [],
+            'contrats' => $this->contratRepository->findBy(['employe' => $user->getEmploye()]),
         ]);
     }
 

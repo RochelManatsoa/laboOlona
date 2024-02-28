@@ -23,9 +23,10 @@
 	<div class="container">
 		<div class="annonce-list p-2">
 			<div class="annonce-item shadow p-5 m-4">
-				<h1 class="card-title mb-3">Ma situation</h3>
+				<h1 class="card-title mb-3">Simulateur de salaire</h3>
 				<div class="">
 					{{form_start(form, {'attr': {'id': 'example-basic'}}) }}
+					{{ form_widget(form.deviseSymbole)}}
 					<!-- Début du formulaire avec l'ID "example-basic" -->
 					<h3 class="card-title mb-3">Devise</h3>
 					<section
@@ -37,10 +38,17 @@
 								{{ form_widget(form.devise)}}
 							</div>
 							<div class="col-6">
-								{{ form_widget(form.taux)}}
+								<div class="input-group">
+									{{ form_widget(form.taux)}}
+									<span class="input-group-text">Ar</span>
+								</div>
 							</div>
 						</div>
 						<p class="mt-4">Le taux de change correspond au taux utilisé pour convertir le montant de votre paiement dans la devise de votre client.</p>
+						<legend class="h2">{{ form_label(form.type) }}</legend>
+						<div class="">
+							{{ form_widget(form.type)}}
+						</div>
 					</section>
 
 					<h3 class="card-title mb-3">Salaire Net</h3>
@@ -48,8 +56,11 @@
 						class="text-grey" style="position: relative;width: 100%;">
 						<!-- Explication du champ "Salaire Net" -->
 						<legend class="h2">{{ form_label(form.salaireNet) }}</legend>
-						<div class="">
-							{{ form_widget(form.salaireNet)}}
+						<div class="col-lg-6 col-sm-12">
+							<div class="input-group">
+								{{ form_widget(form.salaireNet)}}
+								<span class="input-group-text change-devise">€</span>
+							</div>
 						</div>
 						<p class="mt-4">Le salaire net représente le montant que vous souhaitez percevoir après déduction des impôts et des cotisations sociales.</p>
 					</section>
@@ -67,55 +78,71 @@
 								</label>
 							</div>
 							<div class="col-3">
-								{{ form_widget(form.nombreEnfant)}}
+								<div class="input-group">
+									{{ form_widget(form.nombreEnfant)}}
+								</div>
 							</div>
 						</div>
-						<div class="row align-items-center">
+						<div class="row align-items-center" id="freelance">
 							<div class="col-4">
 								<label class="col-form-label mt-3">{{ form_label(form.avantage.primeConnexion) }}
-									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Si vous faites du télétravail.">
+									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Forfait mensuel souhaité.">
 										<i class="bi bi-info-circle-fill"></i>
 									</span>
 								</label>
 							</div>
 							<div class="col-3">
-								{{ form_widget(form.avantage.primeConnexion)}}
+								<div class="input-group">
+									{{ form_widget(form.avantage.primeConnexion)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
 							</div>
 						</div>
 						<div class="row align-items-center">
 							<div class="col-4">
-								<label class="col-form-label mt-3">{{ form_label(form.avantage.repas) }}
-									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Endamnité de repas journalier">
-										<i class="bi bi-info-circle-fill"></i>
-									</span>
-								</label>
+								<label class="col-form-label mt-3">Indemnités repas</label>
 							</div>
-							<div class="col-3">
-								{{ form_widget(form.avantage.repas)}}
+							<div class="col-6">
+								<div class="input-group">
+									{{ form_widget(form.jourRepas)}}
+									{{ form_widget(form.prixRepas)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+								<div class="row small">
+									<div class="col-5 form-text">Nombre de jour</div>
+									<div class="col-7 form-text">Prix journalier</div>
+								</div>
 							</div>
 						</div>
-						<div class="row align-items-center">
+						<div class="row align-items-center" id="employe" style="display: none;">
 							<div class="col-4">
-								<label class="col-form-label mt-3">{{ form_label(form.avantage.deplacement) }}
-									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Endamnité de deplacement journalier">
-										<i class="bi bi-info-circle-fill"></i>
-									</span>
-								</label>
+								<label class="col-form-label mt-3">Indemnités deplacement</label>
 							</div>
-							<div class="col-3">
-								{{ form_widget(form.avantage.deplacement)}}
+							<div class="col-6">
+								<div class="input-group">
+									{{ form_widget(form.jourDeplacement)}}
+									{{ form_widget(form.prixDeplacement)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+								<div class="row small">
+									<div class="col-5 form-text">Nombre de jour</div>
+									<div class="col-7 form-text">Prix journalier</div>
+								</div>
 							</div>
 						</div>
 						<div class="row align-items-center">
 							<div class="col-4">
 								<label class="col-form-label mt-3">{{ form_label(form.avantage.primeFonction) }}
-									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Frais professionnels (par mois)">
+									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Frais professionnels">
 										<i class="bi bi-info-circle-fill"></i>
 									</span>
 								</label>
 							</div>
 							<div class="col-3">
-								{{ form_widget(form.avantage.primeFonction)}}
+								<div class="input-group">
+									{{ form_widget(form.avantage.primeFonction)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
 							</div>
 						</div>
 					</section>
@@ -159,11 +186,13 @@
 						</div>
 						<div class="col-md-6">
 							{{ form_row(form.employe.user.telephone) }}
+							<div id="telephone-error-message" class="invalid-feedback d-block" style="display:none;"></div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-6">
 							{{ form_row(form.employe.user.plainPassword.first) }}
+							<div id="password-error-message" class="invalid-feedback d-block" style="display:none;"></div>
 						</div>
 						<div class="col-md-6">
 							{{ form_row(form.employe.user.plainPassword.second) }}
@@ -213,14 +242,99 @@
 			
 			$('#simulateur_employe_user_email').blur(function() {
 				var email = $(this).val();
-				// Vérifiez si l'e-mail est vide
 				if (email !== '') {
 					// Vérifiez la disponibilité de l'e-mail
-					console.log(email)
 					checkEmailAvailability(email);
 				}
     		});
+
+			$('#simulateur_employe_user_plainPassword_first').blur(function() {
+				var password = $(this).val();
+				if (password !== '') {
+					if(password.length < 5){
+						$('#password-error-message').html('Le mot de passe doit comporter au moins 6 caractères.').show();
+						$('#simulateur_employe_user_plainPassword_first').addClass(' is-invalid')
+						$('#register-submit').prop('type', 'button');
+					}else{
+						$('#password-error-message').html('').hide();
+    					$('#simulateur_employe_user_plainPassword_first').removeClass('is-invalid');
+						$('#register-submit').prop('type', 'submit');
+					}
+				}else{
+					$('#password-error-message').html('Veuillez entrer un mot de passe.').show();
+					$('#simulateur_employe_user_plainPassword_first').addClass(' is-invalid')
+					$('#register-submit').prop('type', 'button');
+				}
+    		});
+
+			$('#simulateur_employe_user_telephone').blur(function() {
+				var telephone = $(this).val();
+				if (telephone !== '') {
+					if(telephone.length < 9){
+						$('#telephone-error-message').html('Veuillez entrer un numéro valide.').show();
+						$('#simulateur_employe_user_telephone').addClass(' is-invalid')
+						$('#register-submit').prop('type', 'button');
+					}else{
+						$('#telephone-error-message').html('').hide();
+    					$('#simulateur_employe_user_telephone').removeClass('is-invalid');
+						$('#register-submit').prop('type', 'submit');
+					}
+				}else{
+					$('#telephone-error-message').html('Veuillez entrer votre numéro de téléphone.').show();
+					$('#simulateur_employe_user_telephone').addClass(' is-invalid')
+					$('#register-submit').prop('type', 'button');
+				}
+    		});
+
+			if (checkFields()) {
+				// Si l'un des champs est vide, désactivez le bouton submit
+				$('#register-submit').prop('disabled', true);
+				$('#register-submit').prop('type', 'button');
+			} else {
+				// Sinon, activez le bouton submit
+				$('#register-submit').prop('disabled', false);
+				$('#register-submit').prop('type', 'submit');
+			}
+
+			// Écouteur d'événement sur les champs pour vérifier lorsqu'ils changent
+			$('input[id^="simulateur_employe_user_"]').on('input', function() {
+				// Vérifiez si l'un des champs est vide
+				if (checkFields()) {
+					// Si l'un des champs est vide, désactivez le bouton submit
+					$('#register-submit').prop('disabled', true);
+					$('#register-submit').prop('type', 'button');
+				} else {
+					// Sinon, activez le bouton submit
+					$('#register-submit').prop('disabled', false);
+					$('#register-submit').prop('type', 'submit');
+				}
+			});
+
+			// Sélectionner le champ select
+			var selectType = $('#simulateur_type');
+
+			// Sélectionner les divs à afficher ou cacher
+			var divEmploye = $('#employe');
+			var divFreelance = $('#freelance');
+
+			// Ajouter un gestionnaire d'événement pour le changement de valeur dans le champ select
+			selectType.on('change', function() {
+				console.log($(this).val())
+				// Vérifier la valeur sélectionnée
+				if ($(this).val() === 'EMPLOYER') {
+					// Afficher la div pour Employé et cacher la div pour Freelance
+					console.log("hide frelance")
+					divEmploye.show();
+					divFreelance.hide();
+				} else if ($(this).val() === 'FREELANCE') {
+					// Afficher la div pour Freelance et cacher la div pour Employé
+					console.log("hide employe")
+					divEmploye.hide();
+					divFreelance.show();
+				}
+			});
 		})
+
 		function checkEmailAvailability(email) {
 			$.ajax({
 				type: 'POST',
@@ -233,17 +347,33 @@
 					console.log(response)
 					if(response.user !== null){
 						$('#email-error-message').html('Il existe déjà un compte avec cette adresse e-mail.').show();
-						$('#simulateur_employe_user_email').addClass(' is-invalid')// Interceptez l'événement de fermeture du modal
-
-						// Changer le type du bouton en "button"
+						$('#simulateur_employe_user_email').addClass(' is-invalid')
 						$('#register-submit').prop('type', 'button');
+					}else{
+						$('#email-error-message').html('').hide();
+    					$('#simulateur_employe_user_email').removeClass('is-invalid');
+						$('#register-submit').prop('type', 'submit');
 					}
 				}
 			});
 		}
+
 		function utilisateurEstConnecte() {
 			const session = {{ app.session.all|json_encode()|raw }};;
 			return session.utilisateurEstConnecte
 		}
+
+		// Fonction pour vérifier si l'un des champs est vide
+		function checkFields() {
+			var isEmpty = false;
+			$('input[id^="simulateur_employe_user_"]').each(function() {
+				if ($(this).val() === '') {
+					isEmpty = true;
+					return false; // Sortir de la boucle si un champ est vide
+				}
+			});
+			return isEmpty;
+		}
+
 	</script>
 {% endblock %}

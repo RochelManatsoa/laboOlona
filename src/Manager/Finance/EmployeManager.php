@@ -29,8 +29,8 @@ class EmployeManager
     public function simulate(Simulateur $simulateur): array
     {
         $montantEuro = $this->convertEuroToAriary($simulateur->getSalaireNet(), $simulateur->getTaux());
-        $repasEuro = $this->convertEuroToAriary($simulateur->getAvantage()->getRepas(), $simulateur->getTaux());
-        $deplacementEuro = $this->convertEuroToAriary($simulateur->getAvantage()->getDeplacement(), $simulateur->getTaux());
+        $repasEuro = $this->convertEuroToAriary($simulateur->getPrixRepas(), $simulateur->getTaux());
+        $deplacementEuro = $this->convertEuroToAriary($simulateur->getPrixDeplacement(), $simulateur->getTaux());
         $connexionEuro = $this->convertEuroToAriary($simulateur->getAvantage()->getPrimeConnexion(), $simulateur->getTaux());
         $fraisProEuro = $this->convertEuroToAriary($simulateur->getAvantage()->getPrimeFonction(), $simulateur->getTaux());
 
@@ -38,8 +38,8 @@ class EmployeManager
             $montantEuro, 
             $simulateur->getNombreEnfant(), 
             $simulateur->getTaux(),
-            $repasEuro * 20,
-            $deplacementEuro * 20,
+            $repasEuro * $simulateur->getJourRepas(),
+            $deplacementEuro * $simulateur->getJourDeplacement(),
             $connexionEuro,
             $fraisProEuro,
         );

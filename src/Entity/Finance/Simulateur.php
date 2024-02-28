@@ -48,6 +48,21 @@ class Simulateur
     #[ORM\ManyToOne(inversedBy: 'simulateurs', cascade: ['persist', 'remove'])]
     private ?Employe $employe = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $jourRepas = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $jourDeplacement = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $prixRepas = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $prixDeplacement = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $deviseSymbole = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -191,6 +206,66 @@ class Simulateur
         }
 
         $this->contrat = $contrat;
+
+        return $this;
+    }
+
+    public function getJourRepas(): ?int
+    {
+        return $this->jourRepas;
+    }
+
+    public function setJourRepas(?int $jourRepas): static
+    {
+        $this->jourRepas = $jourRepas;
+
+        return $this;
+    }
+
+    public function getJourDeplacement(): ?int
+    {
+        return $this->jourDeplacement;
+    }
+
+    public function setJourDeplacement(?int $jourDeplacement): static
+    {
+        $this->jourDeplacement = $jourDeplacement;
+
+        return $this;
+    }
+
+    public function getPrixRepas(): ?float
+    {
+        return $this->prixRepas;
+    }
+
+    public function setPrixRepas(?float $prixRepas): static
+    {
+        $this->prixRepas = $prixRepas;
+
+        return $this;
+    }
+
+    public function getPrixDeplacement(): ?float
+    {
+        return $this->prixDeplacement;
+    }
+
+    public function setPrixDeplacement(?float $prixDeplacement): static
+    {
+        $this->prixDeplacement = $prixDeplacement;
+
+        return $this;
+    }
+
+    public function getDeviseSymbole(): ?string
+    {
+        return $this->deviseSymbole;
+    }
+
+    public function setDeviseSymbole(?string $deviseSymbole): static
+    {
+        $this->deviseSymbole = $deviseSymbole;
 
         return $this;
     }

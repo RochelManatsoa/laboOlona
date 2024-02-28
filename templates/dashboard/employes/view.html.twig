@@ -15,19 +15,16 @@
         </div>
 
         <hr>
-                    
 				<div class="container">
-
 					<div class="row " style="line-height: 2;">
-
 						<div class="col-sm-6">
 								<div class="row py-4 bg-danger ">
 									<div class="col-sm-6 text-strong">Devise:</div>
-									<div class="col-sm-6 text-center">{{ simulateur.devise }}</div>
+									<div class="col-sm-6 text-center text-strong">{{ simulateur.devise }}</div>
 								</div>
 								<div class="row py-2 bg-dark text-white">
 									<div class="col-sm-6 text-strong">Salaire net souhaité:</div>
-									<div class="col-sm-6 text-right">{{ results.salaire_net_calcule_euro|number_format(2, '.', '') }} {{ simulateur.devise.symbole }}</div>
+									<div class="col-sm-6 text-right text-strong">{{ results.salaire_net_euro|number_format(2, '.', '') }} {{ simulateur.devise.symbole }}</div>
 								</div>
 
 							<div class="row">
@@ -56,8 +53,8 @@
 								<div class="col-sm-6 text-strong">Repas :</div>
 								<div class="col-sm-6">
 									<div class="row">
-										<div class="col-sm-6 text-center">20</div>
-										<div class="col-sm-6 text-right">{{ (convertToDevise(results.fraisRepas, simulateur) * 20)|number_format(2, '.', '') }}</div>
+										<div class="col-sm-4 text-center">{{ simulateur.jourRepas}}</div>
+										<div class="col-sm-8 text-right">{{ (convertToDevise(results.fraisRepas, simulateur))|number_format(2, '.', '') }}</div>
 									</div>
 								</div>
 							</div>
@@ -65,8 +62,8 @@
 								<div class="col-sm-6 text-strong">Déplacement :</div>
 								<div class="col-sm-6">
 									<div class="row">
-										<div class="col-sm-6 text-center">20</div>
-										<div class="col-sm-6 text-right">{{ (convertToDevise(results.fraisDeplacement, simulateur) * 20)|number_format(2, '.', '') }}</div>
+										<div class="col-sm-4 text-center">{{ simulateur.jourDeplacement}}</div>
+										<div class="col-sm-8 text-right">{{ (convertToDevise(results.fraisDeplacement, simulateur) )|number_format(2, '.', '') }}</div>
 									</div>
 								</div>
 							</div>
@@ -150,8 +147,8 @@
 					{% if simulateur.contrat is defined and simulateur.contrat is not null %}
 					{{ simulateur.contrat|contratStatus|raw}}
 					{% else %}
-                    <button type="submit" class="btn btn-primary rounded-pill my-3 px-5">
-                        <i class="bi bi-telephone"></i> Appelez moi
+                    <button type="submit" class="btn btn-lg shadow btn-outline-success rounded-pill my-3 px-5">
+                        <i class="mx-2 bi bi-telephone"></i> Appelez moi
                     </button>
 					{% endif %}
 					{{ form_end(form)}}

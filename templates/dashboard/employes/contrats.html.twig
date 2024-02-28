@@ -16,7 +16,7 @@
 							<div class="col-sm-5">Salaire Net souhaité</div>
 							<div class="col-sm-6">
 								<div class="row">
-									<div class="col-sm-6 col-md-4 text-center"></div>
+									<div class="col-sm-6 col-md-4 text-center">Statut</div>
 									<div class="col-sm-6 col-md-4">Date</div>
 									<div class="col-sm-6 col-md-4"></div>
 								</div>
@@ -28,19 +28,17 @@
 							<div class="row text-muted">
 								<div class="col-sm-5 small">
 									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.id })}}" class="">
-										{{ item.salaireNet}}
-										{{ item.devise.symbole}}
+										{{ item.simulateur.salaireNet}}
+										{{ item.simulateur.devise.symbole}}
 									</a>
 								</div>
 								<div class="col-sm-6">
 									<div class="row">
-										<div
-											class="col-sm-6 col-md-4 text-center">{# <a href="{{ path('app_dashboard_moderateur_cooptation_annonce', {'jobId' : item.annonce.jobId })}}" class="">
-												                                                <span class="badge text-bg-warning">{{ item.referrals|length }}</span>
-												                                            </a> #}
+										<div class="col-sm-6 col-md-4 text-center">
+											{{ item|contratStatusBadge|raw }}
 										</div>
 										<div class="col-sm-6 col-md-4 small">
-											{{ item.createdAt|date('d/m/Y') }}
+											{{ item.simulateur.createdAt|date('d/m/Y') }}
 										</div>
 										<div
 											class="col-sm-6 col-md-4">{# {{ item.annonce.dateExpiration|date('d/m/Y') }} #}
@@ -48,7 +46,7 @@
 									</div>
 								</div>
 								<div class="col-sm-1 small">
-									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.id })}}" class="btn btn-sm btn-info">
+									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.simulateur.id })}}" class="btn btn-sm btn-info">
 										<i class="bi bi-eye"></i>
 									</a>
 								</div>
