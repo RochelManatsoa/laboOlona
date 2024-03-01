@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ContratRepository::class)]
 class Contrat
 {
+    const TYPE_FREELANCE = 'FREELANCE';
+    const TYPE_EMPLOYE = 'EMPLOYE';
+
     const STATUS_PENDING = 'PENDING';
     const STATUS_ACTIVE = 'ACTIVE';
     const STATUS_EXPIRED = 'EXPIRED';
@@ -18,6 +21,12 @@ class Contrat
     const STATUS_APPROVED = 'APPROVED';
     const STATUS_UNFULFILLED = 'UNFULFILLED';
 
+    public static function getTypeContrat() {
+        return [
+            'Freelance' => self::TYPE_FREELANCE ,
+            'Employé' => self::TYPE_EMPLOYE ,
+        ];
+    }
 
     public static function getStatuses() {
         return [
@@ -70,6 +79,15 @@ class Contrat
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $status = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $commentaire = null;
 
     public function __construct()
     {
@@ -161,6 +179,42 @@ class Contrat
     public function setStatus(?string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCommentaire(): ?string
+    {
+        return $this->commentaire;
+    }
+
+    public function setCommentaire(?string $commentaire): static
+    {
+        $this->commentaire = $commentaire;
 
         return $this;
     }
