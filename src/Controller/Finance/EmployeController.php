@@ -33,7 +33,9 @@ class EmployeController extends AbstractController
     {
         return $this->render('finance/employe/index.html.twig', [
             'employes' => $this->paginatorInterface->paginate(
-                $this->employeRepository->findAll(),
+                $this->employeRepository->findAll([
+                    'id' => 'DESC'
+                ]),
                 $request->query->getInt('page', 1),
                 10
             ),

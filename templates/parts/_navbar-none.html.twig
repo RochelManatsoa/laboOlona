@@ -52,6 +52,13 @@
                 Mon compte
               </a>
             </li>
+            {% if 'ROLE_FINANCE' in app.user.roles %}
+              <li>
+                <a class="dropdown-item" href="{{ path('app_finance_dashboard') }}">
+                  Finance
+                </a>
+              </li>
+            {% endif %}
             <li>
               <a class="dropdown-item" href="{{ path('app_logout') }}">
                 {{ 'app_logout.menu'|trans }}

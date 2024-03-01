@@ -68,6 +68,7 @@ class FinanceExtension extends AbstractExtension
             new TwigFunction('getSalaireNetRounded', [$this, 'getSalaireNetRounded']),
             new TwigFunction('convertToDevise', [$this, 'convertToDevise']),
             new TwigFunction('convertToAriary', [$this, 'convertToAriary']),
+            new TwigFunction('getFraisPortage', [$this, 'getFraisPortage']),
         ];
     }
 
@@ -77,35 +78,35 @@ class FinanceExtension extends AbstractExtension
         $status = $contrat->getStatus();
         switch ($status) {
             case 'APPROVED':
-                $button = '<button type="button" class="btn btn-outline-primary rounded-pill px-5" disabled><i class="bi bi-check2-circle"></i> Approuvé</button>';
+                $button = '<button type="button" class="btn btn-primary rounded-pill px-5" disabled><i class="bi bi-check2-circle"></i> Approuvé</button>';
                 break;
 
             case 'ACTIVE':
-                $button = '<button type="button" class="btn btn-outline-success rounded-pill px-5" disabled><i class="bi bi-check2-circle"></i> Actif</button>';
+                $button = '<button type="button" class="btn btn-success rounded-pill px-5" disabled><i class="bi bi-check2-circle"></i> Actif</button>';
                 break;
                 
             case 'EXPIRED':
-                $button = '<span class="badge rounded-pill text-bg-primary">Actif</span>Expiré</button>';
+                $button = '<button type="button" class="btn btn-outline-dark disabled rounded-pill px-5"><i class="bi bi-hourglass-bottom mx-2"></i>Expiré</button>';
                 break;
                 
             case 'ARCHIVED':
-                $button = '<button type="button" class="btn btn-outline-info" disabled rounded-pill px-5><i class="bi bi-info-circle-fill"></i> Resilié</button>';
+                $button = '<button type="button" class="btn btn-info disabled rounded-pill px-5"><i class="bi bi-info-circle-fill"></i> Resilié</button>';
                 break;
                 
             case 'SUSPENDED':
-                $button = '<button type="button" class="btn btn-outline-info" disabled rounded-pill px-5><i class="bi bi-info-circle-fill"></i> Suspendu</button>';
+                $button = '<button type="button" class="btn btn-danger disabled rounded-pill px-5"><i class="bi bi-info-circle-fill"></i> Suspendu</button>';
                 break;
                 
             case 'UNFULFILLED':
-                $button = '<button type="button" class="btn btn-outline-info" disabled rounded-pill px-5><i class="bi bi-info-circle-fill"></i> Non exécuté</button>';
+                $button = '<button type="button" class="btn btn-dark disabled rounded-pill px-5"><i class="bi bi-info-circle-fill"></i> Non exécuté</button>';
                 break;
                 
             case 'RENEWED':
-                $button = '<button type="button" class="btn btn-outline-info" disabled rounded-pill px-5><i class="bi bi-info-circle-fill"></i> Renouvelé</button>';
+                $button = '<button type="button" class="btn btn-success disabled rounded-pill px-5"><i class="bi bi-info-circle-fill"></i> Renouvelé</button>';
                 break;
             
             default:
-                $button = '<button type="button" class="btn btn-outline-success rounded-pill px-5" disabled><i class="bi bi-hourglass-split"></i> En attente de réponse</button>';
+                $button = '<button type="button" class="btn btn-outline-success rounded-pill px-5 disabled"><i class="bi bi-hourglass-split"></i> En attente de réponse</button>';
                 break;
         }
 
@@ -118,35 +119,35 @@ class FinanceExtension extends AbstractExtension
         $status = $contrat->getStatus();
         switch ($status) {
             case 'APPROVED':
-                $button = '<span class="badge rounded-pill text-bg-primary">Primary</span>';
+                $button = '<span class="badge rounded-pill text-bg-success">Approuvé</span>';
                 break;
 
             case 'ACTIVE':
-                $button = '<span class="badge rounded-pill text-bg-primary">Actif</span>';
+                $button = '<span class="badge rounded-pill text-bg-success">Actif</span>';
                 break;
                 
             case 'EXPIRED':
-                $button = '<span class="badge rounded-pill text-bg-primary">Expiré</span>';
+                $button = '<span class="badge rounded-pill text-bg-info">Expiré</span>';
                 break;
                 
             case 'ARCHIVED':
-                $button = '<span class="badge rounded-pill text-bg-primary">Resilié</span>';
+                $button = '<span class="badge rounded-pill text-bg-info">Resilié</span>';
                 break;
                 
             case 'SUSPENDED':
-                $button = '<span class="badge rounded-pill text-bg-primary">Suspendu</span>';
+                $button = '<span class="badge rounded-pill text-bg-danger">Suspendu</span>';
                 break;
                 
             case 'UNFULFILLED':
-                $button = '<span class="badge rounded-pill text-bg-primary">Non exécuté</span>';
+                $button = '<span class="badge rounded-pill text-bg-danger">Non exécuté</span>';
                 break;
                 
             case 'RENEWED':
-                $button = '<span class="badge rounded-pill text-bg-primary">Renouvelé</span>';
+                $button = '<span class="badge rounded-pill text-bg-warning">Renouvelé</span>';
                 break;
             
             default:
-                $button = '<span class="badge rounded-pill text-bg-primary">En attente</span>';
+                $button = '<span class="badge rounded-pill text-bg-dark">En attente</span>';
                 break;
         }
 
@@ -190,8 +191,11 @@ class FinanceExtension extends AbstractExtension
         return $formatter->format(new DateTime());
     }
 
-    public function getConge(DateTimeInterface $dateEmbauche): float
+    public function getConge(?DateTimeInterface $dateEmbauche = null): float
     {
+        if($dateEmbauche == null){
+            return 0;
+        }
         $firstDayOfCurrentMonth = new DateTime('first day of this month');
         $firstDayOfLastMonth = $firstDayOfCurrentMonth->modify('-1 month');
         $diff = $dateEmbauche->diff($firstDayOfLastMonth);
@@ -339,6 +343,13 @@ class FinanceExtension extends AbstractExtension
     public function convertToAriary(float $amount, Simulateur $simulateur):float
     {
         return round($this->employeManager->convertEuroToAriary($amount, $simulateur->getTaux())) ;
+    }
+
+    public function getFraisPortage(Simulateur $simulateur):float
+    {
+        $results = $this->employeManager->simulate($simulateur);
+
+        return round($results['frais_de_portage_euro']) ;
     }
 
 }
