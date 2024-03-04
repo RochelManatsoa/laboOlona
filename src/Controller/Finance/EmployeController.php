@@ -2,6 +2,7 @@
 
 namespace App\Controller\Finance;
 
+use App\Entity\Finance\Avantage;
 use App\Entity\Finance\Employe;
 use App\Entity\User;
 use App\Form\Finance\EmployeType;
@@ -107,6 +108,12 @@ class EmployeController extends AbstractController
     #[Route('/view/{id}', name: 'app_finance_employe_view')]
     public function view(Request $request, Employe $employe): Response
     {
+        if(!$employe->getAvantage() instanceof Avantage){
+            $employe->setAvantage(new Avantage());
+            $this->em->persist($employe);
+            $this->em->flush();
+        }
+        
         return $this->render('finance/employe/view.html.twig', [
             'employe' => $employe,
         ]);

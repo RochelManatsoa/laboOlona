@@ -1095,8 +1095,8 @@ app_dashboard_employes_simulations :
     dashboard_title : Mes simulations
 
 app_dashboard_employes_infos : 
-    title : Mes informmations
-    dashboard_title : Mes informmations
+    title : Mes informations
+    dashboard_title : Mes informations
 
 app_dashboard_employes_contrats : 
     title : Mes contrats
@@ -1113,3 +1113,11 @@ app_dashboard_moderateur_portage :
 app_dashboard_moderateur_view_portage : 
     title : Détails portage salarial
     dashboard_title : Détails portage salarial
+
+app_dashboard_employes_annonces : 
+    title : Toutes les annonces Olona Talents
+    dashboard_title : Toutes les annonces Olona Talents
+
+app_dashboard_employes_annonce_view : 
+    title : Détails annonce
+    dashboard_title : Détails annonce
