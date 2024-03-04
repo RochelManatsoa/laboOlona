@@ -1,0 +1,49 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Toutes les annonces{% endblock %}
+
+{% block body %}
+<div id="annonces-container">
+    <div class="container mt-4">
+        {% if annonces|length > 0 %}
+            <div class="annonce-list p-2">
+                {% for annonce in annonces %}
+                    <div class="annonce-item shadow p-4 m-4">
+                        <div class="row">
+                            <div class="col-1">
+                            </div>
+                            <div class="col-11">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <a href="{{ path('app_dashboard_employes_annonce_view', {'jobId': annonce.jobId}) }}" class="text-dark">
+                                        <h5 class="mb-1">{{ annonce.titre|upper }}</h5>
+                                    </a>
+                                </div>
+                                <p class="mb-1">                    
+                                    {% set clean_description = annonce.description|striptags|replace({'&nbsp;': '. '}) %}
+                                    {{ clean_description|length > 250 ? clean_description|slice(0, 247) ~ '...' : clean_description }}
+                                </p>
+                                <p class="mb-1"><small class="text-muted"><i class="bi bi-eye"></i> Nombre de vues : {{ annonce.annonceVues|length }}</small></p>
+                                <div class="d-flex w-100 justify-content-between align-items-center text-muted">
+                                    <span><i class="bi bi-file-earmark-text"></i> <span class="small">Contrat :</span> <span class="badge bg-secondary">{{ annonce.typeContrat }}</span></span>
+                                    <span class="small"> {{ annonce.dateCreation|time_ago|capitalize }}</span>
+                                    <span class="small"> {{ annonce.annonceVues|length }} vues</span>
+                                    <a href="{{ path('app_dashboard_employes_annonce_view', {'jobId': annonce.jobId}) }}" class="btn btn-primary">Voir l'annonce</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                Aucune annonces trouvées.
+            </div>
+        {% endif %}
+        <div class="navigation">
+            {{ knp_pagination_render(annonces, 'parts/_pagination.html.twig') }}
+        </div>
+    </div>
+    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+</div>
+
+{% endblock %}

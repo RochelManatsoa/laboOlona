@@ -36,7 +36,7 @@
           </button>
 
           <ul class="dropdown-menu dropdown-menu-end">
-            {% if app.user.type == 'CANDIDAT' %}
+            {% if app.user.type == 'CANDIDAT' or is_granted('ROLE_CANDIDAT') %}
               <li>
                 <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#candidatAvaillability">Disponibilité</button>
               </li>
@@ -46,6 +46,12 @@
               <a class="dropdown-item" href="{{ path('app_connect') }}">
               {% elseif app.user.type == 'ENTREPRISE' %}
               <a class="dropdown-item" href="{{ path('app_dashboard_entreprise_profil') }}">
+              {% elseif app.user.type == 'EMPLOYE' %}
+              {% if is_granted('ROLE_CANDIDAT') %}
+              <a class="dropdown-item" href="{{ path('app_dashboard_candidat_compte') }}">
+              {% else %}
+              <a class="dropdown-item" href="{{ path('app_dashboard_employes_infos') }}">
+              {% endif %}
               {% else %}
               <a class="dropdown-item" href="{{ path('app_dashboard_candidat_compte') }}">
               {% endif %}

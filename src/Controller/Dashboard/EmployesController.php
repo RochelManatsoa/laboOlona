@@ -2,21 +2,24 @@
 
 namespace App\Controller\Dashboard;
 
+use App\Manager\MailManager;
 use App\Entity\Finance\Contrat;
-use App\Entity\Finance\Simulateur;
-use App\Form\Finance\ContratHiddenType;
 use App\Form\Finance\EmployeType;
 use App\Service\User\UserService;
+use App\Entity\Finance\Simulateur;
+use App\Entity\Entreprise\JobListing;
+use App\Form\Finance\ContratHiddenType;
 use App\Manager\Finance\EmployeManager;
-use App\Manager\MailManager;
-use App\Repository\Finance\ContratRepository;
-use App\Repository\Finance\SimulateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\Finance\ContratRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Finance\SimulateurRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
+use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 
 #[Route('/employes-hub')]
 class EmployesController extends AbstractController
@@ -27,8 +30,10 @@ class EmployesController extends AbstractController
         private UserService $userService,
         private MailManager $mailManager,
         private EntityManagerInterface $em,
+        private PaginatorInterface $paginatorInterface,
         private SimulateurRepository $simulateurRepository,
         private ContratRepository $contratRepository,
+        private JobListingRepository $jobListingRepository,
     ){}
 
     #[Route('/', name: 'app_dashboard_employes')]
@@ -72,12 +77,12 @@ class EmployesController extends AbstractController
             $this->em->flush();
             /** Envoi mail */
             $this->mailManager->newPortage($contrat->getEmploye()->getUser(), $contrat);
-            $this->addFlash('success', 'Demande d\'information envoyée, vous allez être rappeleé dans les prochains jour');
+            $this->addFlash('success', 'Demande d\'information envoyée, vous allez être rappelé dans les prochains jours.');
         }
 
         return $this->render('dashboard/employes/view.html.twig', [
             'form' => $form->createView(),
-            'simulateur' => $simulateur,
+            'simulateur' => $simulateur,    
             'results' => $results,
         ]);
     }
@@ -91,6 +96,28 @@ class EmployesController extends AbstractController
 
         return $this->render('dashboard/employes/contrats.html.twig', [
             'contrats' => $this->contratRepository->findBy(['employe' => $user->getEmploye()]),
+        ]);
+    }
+
+    #[Route('/annonces', name: 'app_dashboard_employes_annonces')]
+    public function annonces(Request $request): Response
+    {
+        $data = $this->jobListingRepository->findAllJobListingPublished();
+
+        return $this->render('dashboard/employes/annonces.html.twig', [
+            'annonces' => $this->paginatorInterface->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            ),
+        ]);
+    }
+    
+    #[Route('/annonce/{jobId}', name: 'app_dashboard_employes_annonce_view')]
+    public function annonce(Request $request, JobListing $annonce): Response
+    {
+        return $this->render('dashboard/employes/annonce/view.html.twig', [
+            'annonce' => $annonce,
         ]);
     }
 
