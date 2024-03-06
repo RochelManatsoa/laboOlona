@@ -68,9 +68,10 @@ class RendezVousController extends AbstractController
 
         if($candidature instanceof Applications){
             $rendezVous = $this->rendezVousManager->createRendezVous($user->getModerateurProfile(), $candidature->getCandidat(), $candidature->getAnnonce()->getEntreprise(), $candidature->getAnnonce());
-        }
-        if($assignation instanceof Assignation){
+        }else if($assignation instanceof Assignation){
             $rendezVous = $this->rendezVousManager->createRendezVous($user->getModerateurProfile(), $assignation->getProfil(), $assignation->getJobListing()->getEntreprise(), $assignation->getJobListing());
+        }else{
+            $rendezVous = new Metting();
         }
 
         $form = $this->createForm(MettingType::class, $rendezVous);
@@ -225,30 +226,62 @@ class RendezVousController extends AbstractController
     #[Route('/{id}/send-reminder', name: 'rendezvous_send_reminder')]
     public function sendReminder(Request $request, Metting $rendezVous): Response
     {
-        /** Envoi mail candidat & entrepise */
-        $this->mailerService->send(
-            $rendezVous->getEntreprise()->getEntreprise()->getEmail(),
-            "Rappel de votre Entretien",
-            "entreprise/rappel_rendezvous.html.twig",
-            [
-                'user' => $rendezVous->getEntreprise()->getEntreprise(),
-                'rendezvous' => $rendezVous,
-                'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]
-        );
-        $this->mailerService->send(
-            $rendezVous->getCandidat()->getCandidat()->getEmail(),
-            "Rappel de votre Entretien",
-            "candidat/rappel_rendezvous.html.twig",
-            [
-                'user' => $rendezVous->getCandidat()->getCandidat(),
-                'rendezvous' => $rendezVous,
-                'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]
-        );
+        $to = $request->query->get('to', null);
+        if($to !== null){
+            if($to === 'entreprise'){
+                /** Envoi mail entrepise */
+                $this->mailerService->send(
+                    $rendezVous->getEntreprise()->getEntreprise()->getEmail(),
+                    "Rappel de votre Entretien",
+                    "entreprise/rappel_rendezvous.html.twig",
+                    [
+                        'user' => $rendezVous->getEntreprise()->getEntreprise(),
+                        'rendezvous' => $rendezVous,
+                        'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    ]
+                );
+            }else{
+                /** Envoi mail candidat */
+                $this->mailerService->send(
+                    $rendezVous->getCandidat()->getCandidat()->getEmail(),
+                    "Rappel de votre Entretien",
+                    "candidat/rappel_rendezvous.html.twig",
+                    [
+                        'user' => $rendezVous->getCandidat()->getCandidat(),
+                        'rendezvous' => $rendezVous,
+                        'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    ]
+                );
+            }
+        }else{
+            /** Envoi mail candidat & entrepise */
+            $this->mailerService->send(
+                $rendezVous->getEntreprise()->getEntreprise()->getEmail(),
+                "Rappel de votre Entretien",
+                "entreprise/rappel_rendezvous.html.twig",
+                [
+                    'user' => $rendezVous->getEntreprise()->getEntreprise(),
+                    'rendezvous' => $rendezVous,
+                    'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
+            $this->mailerService->send(
+                $rendezVous->getCandidat()->getCandidat()->getEmail(),
+                "Rappel de votre Entretien",
+                "candidat/rappel_rendezvous.html.twig",
+                [
+                    'user' => $rendezVous->getCandidat()->getCandidat(),
+                    'rendezvous' => $rendezVous,
+                    'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
+
+        }
 
         $this->addFlash('success', 'Un emal de rappel a été envoyé');
-        return  $this->redirectToRoute('rendezvous_index', []);
+        $referer = $request->headers->get('referer');
+        
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('rendezvous_index');
     }
     
     #[Route('/{id}/reschedule', name: 'rendezvous_reschedule')]

@@ -577,7 +577,7 @@ app_dashboard_moderateur_candidature_view:
 
 app_dashboard_moderateur_mettings:
     title: Modération
-    dashboard_title: Tout les rendez-vous
+    dashboard_title: Tous les rendez-vous
 
 app_dashboard_moderateur_notifications:
     title: Modération
@@ -1121,3 +1121,19 @@ app_dashboard_employes_annonces :
 app_dashboard_employes_annonce_view : 
     title : Détails annonce
     dashboard_title : Détails annonce
+
+app_dashboard_conference : 
+    title : Conférence Olona Talents
+    dashboard_title : Conférence Olona Talents
+
+app_dashboard_moderateur_metting_edit : 
+    title : Modifier un rendez-vous
+    dashboard_title : Modifier un rendez-vous
+
+app_dashboard_moderateur_metting_show : 
+    title : Détails d'un rendez-vous
+    dashboard_title : Détails d'un rendez-vous
+
+app_dashboard_candidat_annonce_details : 
+    title : Détails de l'annonce
+    dashboard_title : Détails de l'annonce

@@ -666,12 +666,20 @@ class ModerateurController extends AbstractController
     }
 
     #[Route('/mettings', name: 'app_dashboard_moderateur_mettings')]
-    public function mettings(MettingRepository $mettingRepository): Response
+    public function mettings(Request $request, MettingRepository $mettingRepository): Response
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
-        $mettings = $mettingRepository->findAll();
+        $data = $mettingRepository->findAll([
+            'id' => 'DESC'
+        ]);
 
-        return $this->render('dashboard/moderateur/mettings.html.twig', compact('mettings'));
+        return $this->render('dashboard/moderateur/conference/index.html.twig', [
+            'mettings' => $this->paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            ),
+        ]);
     }
 
     #[Route('/metting/show/{id}', name: 'app_dashboard_moderateur_metting_show', methods: ['GET'])]
@@ -679,7 +687,7 @@ class ModerateurController extends AbstractController
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
 
-        return $this->render('dashboard/moderateur/mettings_show.html.twig', compact('metting'));
+        return $this->render('dashboard/moderateur/conference/show.html.twig', compact('metting'));
     }
 
     #[Route('/metting/new', name: 'app_dashboard_moderateur_metting_new', methods: ['GET', 'POST'])]
@@ -687,6 +695,15 @@ class ModerateurController extends AbstractController
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $metting = new Metting();
+        $customId = new Uuid(Uuid::v4());
+        $metting->setCustomId($customId);
+        $metting->setLink($this->urlGenerator->generate(
+            'app_dashboard_conference',
+            [
+                'uuid' => $customId
+            ], 
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ));
         $form = $this->createForm(MettingType::class, $metting);
         $form->handleRequest($request);
 
@@ -697,7 +714,7 @@ class ModerateurController extends AbstractController
             return $this->redirectToRoute('app_dashboard_moderateur_mettings');
         }
 
-        return $this->render('dashboard/moderateur/mettings_new.html.twig', [
+        return $this->render('dashboard/moderateur/conference/new.html.twig', [
             'metting' => $metting,
             'form' => $form->createView(),
         ]);
@@ -716,7 +733,7 @@ class ModerateurController extends AbstractController
             return $this->redirectToRoute('app_dashboard_moderateur_mettings');
         }
 
-        return $this->render('dashboard/moderateur/mettings_edit.html.twig', [
+        return $this->render('dashboard/moderateur/conference/edit.html.twig', [
             'metting' => $metting,
             'form' => $form->createView(),
         ]);

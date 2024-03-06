@@ -113,7 +113,9 @@
                     <p><strong>Date et Heure :</strong> {{ rendezvous.dateRendezVous|date('d/m/Y H:i') }}</p>
                     <p><strong>Lieu :</strong> {{ rendezvous.lieu }}</p>
                     {% if rendezvous.link %}
-                    <p><strong>Lien de l'entretien virtuel :</strong> <a href="{{ rendezvous.link }}">{{ rendezvous.link }}</a></p>
+                    <p><strong>Lien de l'entretien virtuel :</strong> <a href="{{ rendezvous.link }}">Lien</a></p>
+                    <p class="info">Si le lien ne marche pas. Copiez et collez cet url dans la barre d'adresse de votre navigateur <br>
+                    {{ rendezvous.link }}</p>
                     {% endif %}
                 
             <p>Veuillez vous assurer d'être disponible et prêt quelques minutes avant l'heure prévue.</p>

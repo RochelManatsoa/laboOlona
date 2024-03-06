@@ -4,46 +4,43 @@
 {% block title %}Créer un rendez-vous {% endblock %}
 
 {% block body %}
-<div class="container mt-3 col-md-6">
+<div class="container mt-5">
 <h1 class="mb-4 h2">Créer un rendez-vous</h1>
     <hr>
-        {{ form_start(form) }}
-            <div class="form-group">
-                {{ form_label(form.title) }}
-                {{ form_widget(form.title) }}
-                {{ form_errors(form.title) }}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.title)}}
+        </div>
+        <div class="col">
+            {{ form_row(form.dateRendezVous)}}
+        </div>
+    </div>
+
+    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.candidat)}}
             </div>
-            <div class="form-group">
-                {{ form_label(form.dateRendezVous) }}
-                {{ form_widget(form.dateRendezVous) }}
-                {{ form_errors(form.dateRendezVous) }}
+            <div class="col">
+                {{ form_row(form.entreprise)}}
             </div>
-            {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
-                <div class="form-group">
-                    {{ form_label(form.candidat) }}
-                    {{ form_widget(form.candidat) }}
-                    {{ form_errors(form.candidat) }}
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.entreprise) }}
-                    {{ form_widget(form.entreprise) }}
-                    {{ form_errors(form.entreprise) }}
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.link) }}
-                    {{ form_widget(form.link) }}
-                    {{ form_errors(form.link) }}
-                </div>
-            {% endif %}
+        </div>
+        <div class="row">
+            {{ form_label(form.link) }}
+            {{ form_widget(form.link) }}
+            {{ form_errors(form.link) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.commentaire) }}
+            {{ form_widget(form.commentaire) }}
+            {{ form_errors(form.commentaire) }}
+        </div>
+    {% endif %}
             <div class="form-group">
                 {{ form_label(form.lieu) }}
                 {{ form_widget(form.lieu) }}
                 {{ form_errors(form.lieu) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.commentaire) }}
-                {{ form_widget(form.commentaire) }}
-                {{ form_errors(form.commentaire) }}
             </div>
             <div style="display:none;">
                 {{ form_label(form) }}
@@ -52,12 +49,17 @@
             </div>
         
             <div class="form-group my-3">
-                <button type="submit" class="btn btn-primary">Enregistrer les Modifications</button>
-                <a href="{{ path('rendezvous_index') }}" class="btn btn-secondary">Annuler</a>
+                <button type="submit" class="btn btn-primary rounded-pill px-5">Enregistrer</button>
+                <a href="{{ path('rendezvous_index') }}" class="btn btn-warning rounded-pill px-5">Annuler</a>
             </div>
         {{ form_end(form) }}
     
 </div>
 
 <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#metting_commentaire' ) )
+</script>
 {% endblock %}

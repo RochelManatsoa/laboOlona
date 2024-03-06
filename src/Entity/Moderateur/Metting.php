@@ -9,6 +9,7 @@ use App\Entity\ModerateurProfile;
 use App\Repository\Moderateur\MettingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: MettingRepository::class)]
 class Metting
@@ -79,6 +80,9 @@ class Metting
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $creeLe = null;
+
+    #[ORM\Column(type: 'uuid', nullable: true)]
+    private ?Uuid $customId = null;
 
     public function getId(): ?int
     {
@@ -201,6 +205,18 @@ class Metting
     public function setCreeLe(\DateTimeInterface $creeLe): static
     {
         $this->creeLe = $creeLe;
+
+        return $this;
+    }
+
+    public function getCustomId(): ?Uuid
+    {
+        return $this->customId;
+    }
+
+    public function setCustomId(?Uuid $customId): static
+    {
+        $this->customId = $customId;
 
         return $this;
     }

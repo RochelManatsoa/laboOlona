@@ -26,7 +26,10 @@ class MettingType extends AbstractType
             ])
             ->add('link', TextType::class, [
                 'label' => 'Lien',
-                'required' => false 
+                'required' => false ,
+                'attr' => [
+                    'readonly' => true,
+                ],
             ])
             ->add('entreprise', EntityType::class, [
                 'class' => EntrepriseProfile::class,
