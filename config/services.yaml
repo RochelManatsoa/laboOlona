@@ -53,4 +53,8 @@ services:
     # App\EventListener\ExceptionListener:
     #     tags: [kernel.event_listener]
     #     arguments: ['@twig']
+    
+    App\Service\JitsiMeetService:
+        arguments:
+            $domain: 'meet.jit.si'
 

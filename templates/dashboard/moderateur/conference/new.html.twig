@@ -1,0 +1,16 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Créer un nouveau rendez-vous{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="annonce-list p-2">
+			<div class="annonce-item shadow p-md-5 m-md-4">
+                <h1 class="h2">Créer un nouveau rendez-vous</h1>
+				<hr>    
+                {{ include('dashboard/moderateur/conference/_form.html.twig', {'form': form}) }}
+            </div>
+        </div>
+    </div>
+<a href="javascript:history.back()" class="btn btn-primary rounded-pill px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+{% endblock %}
