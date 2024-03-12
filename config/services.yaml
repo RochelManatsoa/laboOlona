@@ -56,5 +56,5 @@ services:
     
     App\Service\JitsiMeetService:
         arguments:
-            $domain: 'meet.jit.si'
+            $domain: 'meet.olona-talents.com'
 

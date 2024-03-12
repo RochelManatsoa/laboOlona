@@ -59,6 +59,7 @@ use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
+use App\Repository\Finance\SimulateurRepository;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -85,6 +86,7 @@ class ModerateurController extends AbstractController
         private ApplicationsRepository $applicationsRepository,
         private AssignationRepository $assignationRepository,
         private InvitationRepository $invitationRepository,
+        private SimulateurRepository $simulateurRepository,
         private AssignationManager $assignationManager,
         private AppExtension $appExtension,
         private ReferenceManager $referenceManager,
@@ -99,6 +101,7 @@ class ModerateurController extends AbstractController
 
         return $this->render('dashboard/moderateur/index.html.twig', [
             'secteurs' => $this->moderateurManager->findAllOrderDesc($this->secteurRepository),
+            'simulations' => $this->moderateurManager->findAllOrderDesc($this->simulateurRepository),
             'typeContrats' => $this->moderateurManager->findAllOrderDesc($this->typeContratRepository),
             'annonces' => $this->moderateurManager->findAllOrderDesc($this->jobListingRepository),
             'annonces_pending' => $this->jobListingRepository->findBy(['status' => JobListing::STATUS_PENDING], ['id' => 'DESC']),
@@ -669,7 +672,7 @@ class ModerateurController extends AbstractController
     public function mettings(Request $request, MettingRepository $mettingRepository): Response
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
-        $data = $mettingRepository->findAll([
+        $data = $mettingRepository->findBy([], [
             'id' => 'DESC'
         ]);
 

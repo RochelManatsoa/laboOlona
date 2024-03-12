@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\UuidType;
 
 class MettingType extends AbstractType
 {
@@ -24,8 +25,8 @@ class MettingType extends AbstractType
                 'label' => 'Titre',
                 'required' => false 
             ])
-            ->add('link', TextType::class, [
-                'label' => 'Lien',
+            ->add('customId', UuidType::class, [
+                'label' => 'ID de la conférence',
                 'required' => false ,
                 'attr' => [
                     'readonly' => true,

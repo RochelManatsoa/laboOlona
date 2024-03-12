@@ -1,0 +1,42 @@
+    
+    <p class="mx-2">
+    {# Votre recherche renvoie <strong>{{ result|length }}</strong> résultats. #}
+    </p>
+    <div class="navigation">
+    {# {{ knp_pagination_render(secteurs, 'parts/_pagination.html.twig') }} #}
+    </div>
+    {% if simulations|length > 0 %}
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th class="col-4">Utilisateur</th>
+                <th class="col-2 text-center">Simulations</th>
+                <th class="col-2 text-center">Inscrit le</th>
+                <th class="col-2 text-center">Dernière connexion</th>
+                <th class="col-2 text-center"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for groupe in groupes %}
+                <tr>
+                    <td>
+                        {{ groupe.employe.user.nom }} {{ groupe.employe.user.prenom }}<br>
+                        <span class="text-muted small">{{ groupe.employe.user.email }}</span> 
+                    </td>
+                    <td class="text-center">
+                        {{ groupe.simulations|length }}
+                    </td>
+                    <td class="text-center">{{ groupe.employe.user.dateInscription|date('d/m/Y') }}</td>
+                    <td class="text-center">
+                        {{ groupe.employe.user.lastLogin|time_ago }}
+                    </td>
+                    <td class="actions-col">
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    Aucun contrats pour le moment
+    {% endif %}
+
