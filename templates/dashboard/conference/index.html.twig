@@ -10,8 +10,18 @@
 document.addEventListener("DOMContentLoaded", function() {
     const options = {{ jitsiConfig|json_encode|raw }};
     options.parentNode = document.querySelector('#jitsi-container');
+    options.interfaceConfigOverwrite = {
+        APP_NAME: 'Olona Talents',
+    }
+    console.log(options)
     
     const api = new JitsiMeetExternalAPI("{{ jitsiDomain }}", options);
+    // Écouter l'événement onConferenceEnded
+    api.addEventListeners({
+        videoConferenceEnded: (event) => {
+            console.log('La conférence est terminée');
+        }
+    });
 });
 </script>
 {% endblock %}
