@@ -1,0 +1,211 @@
+<section id="postings" class="" style="background-color: white;position:relative">
+    <div class="container d-flex flex-column justify-content-center">
+			<h2 class="text-black text-center my-5 w-100 display-2 text-strong">SIMULATEUR DE SALAIRE</h2>
+			<div class="annonce-item shadow p-5 m-4" style="background-color: black;position:relative">
+				<div class="">
+					{{form_start(form, {'attr': {'id': 'example-basic'}}) }}
+					{{ form_widget(form.deviseSymbole)}}
+					<!-- Début du formulaire avec l'ID "example-basic" -->
+					<h3 class="card-title mb-3">Devise</h3>
+					<section class="bg-dark"
+						style="position: relative;width: 100%;">
+						<!-- Explication du champ "Taux de change" -->
+						<legend class="h2">{{ form_label(form.devise) }}</legend>
+						<div class="row">
+							<div class="col-6">
+								{{ form_widget(form.devise)}}
+							</div>
+							<div class="col-6">
+								<div class="input-group">
+									{{ form_widget(form.taux)}}
+									<span class="input-group-text">Ar</span>
+								</div>
+							</div>
+						</div>
+						<p class="mt-4">Le taux de change correspond au taux utilisé pour convertir le montant de votre paiement dans la devise de votre client.</p>
+						<legend class="h2">{{ form_label(form.type) }}</legend>
+						<div class="">
+							{{ form_widget(form.type)}}
+						</div>
+					</section>
+
+					<h3 class="card-title mb-3">Salaire Net</h3>
+					<section
+						class="text-grey bg-dark" style="position: relative;width: 100%;">
+						<!-- Explication du champ "Salaire Net" -->
+						<legend class="h2">{{ form_label(form.salaireNet) }}</legend>
+						<div class="col-lg-6 col-sm-12">
+							<div class="input-group">
+								{{ form_widget(form.salaireNet)}}
+								<span class="input-group-text change-devise">€</span>
+							</div>
+						</div>
+						<p class="mt-4">Le salaire net représente le montant que vous souhaitez percevoir après déduction des impôts et des cotisations sociales.</p>
+					</section>
+
+					<h3 class="card-title mb-3">Avantages</h3>
+					<section
+						class="text-grey bg-dark" style="position: relative;width: 100%;">
+						<!-- Explication du champ "Charge" -->
+						<div class="row align-items-center">
+							<div class="col-4">
+								<label class="col-form-label mt-3">{{ form_label(form.nombreEnfant) }}
+									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Pour calculer les avantages fiscaux et les allocations familiales.">
+										<i class="bi bi-info-circle-fill"></i>
+									</span>
+								</label>
+							</div>
+							<div class="col-3">
+								<div class="input-group">
+									{{ form_widget(form.nombreEnfant)}}
+								</div>
+							</div>
+						</div>
+						<div class="row align-items-center" id="freelance">
+							<div class="col-4">
+								<label class="col-form-label mt-3">{{ form_label(form.avantage.primeConnexion) }}
+									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Forfait mensuel souhaité.">
+										<i class="bi bi-info-circle-fill"></i>
+									</span>
+								</label>
+							</div>
+							<div class="col-3">
+								<div class="input-group">
+									{{ form_widget(form.avantage.primeConnexion)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+							</div>
+						</div>
+						<div class="row align-items-center">
+							<div class="col-4">
+								<label class="col-form-label mt-3">Indemnités repas</label>
+							</div>
+							<div class="col-6">
+								<div class="input-group">
+									{{ form_widget(form.jourRepas)}}
+									{{ form_widget(form.prixRepas)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+								<div class="row small">
+									<div class="col-5 form-text text-light">Nombre de jour</div>
+									<div class="col-7 form-text text-light">Prix journalier</div>
+								</div>
+							</div>
+						</div>
+						<div class="row align-items-center" id="employe" style="display: none;">
+							<div class="col-4">
+								<label class="col-form-label mt-3">Indemnités deplacement</label>
+							</div>
+							<div class="col-6">
+								<div class="input-group">
+									{{ form_widget(form.jourDeplacement)}}
+									{{ form_widget(form.prixDeplacement)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+								<div class="row small">
+									<div class="col-5 form-text text-light">Nombre de jour</div>
+									<div class="col-7 form-text text-light">Prix journalier</div>
+								</div>
+							</div>
+						</div>
+						<div class="row align-items-center">
+							<div class="col-4">
+								<label class="col-form-label mt-3">{{ form_label(form.avantage.primeFonction) }}
+									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Frais professionnels">
+										<i class="bi bi-info-circle-fill"></i>
+									</span>
+								</label>
+							</div>
+							<div class="col-3">
+								<div class="input-group">
+									{{ form_widget(form.avantage.primeFonction)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<h3 class="card-title mb-3">Résumé</h3>
+					<section
+						class="text-grey" style="position: relative;width: 100%;">
+						<!-- Explication du champ "Prime" -->
+						<div id="resum"></div>
+						<div style="display:none;">
+							<button type="button" id="popup" data-bs-toggle="modal" data-bs-target="#connexionModal"></button>
+						</div>
+					</section>
+				</div>
+			</div>
+    </div>
+</section>
+
+	<!-- Modal -->
+	<div class="modal fade" id="connexionModal" tabindex="-1" aria-labelledby="connexionModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg ">
+			<div class="modal-content bg-dark">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="connexionModalLabel">Vous devez vous inscrire</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+				{% if not connected %}
+					<div class="row">
+						<div class="col-md-6">
+							{{ form_row(form.employe.user.nom) }}
+						</div>
+						<div class="col-md-6">
+							{{ form_row(form.employe.user.prenom) }}
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							{{ form_row(form.employe.user.email) }}
+							<div id="email-error-message" class="invalid-feedback d-block" style="display:none;"></div>
+						</div>
+						<div class="col-md-6">
+							{{ form_row(form.employe.user.telephone) }}
+							<div id="telephone-error-message" class="invalid-feedback d-block" style="display:none;"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							{{ form_row(form.employe.user.plainPassword.first) }}
+							<div id="password-error-message" class="invalid-feedback d-block" style="display:none;"></div>
+						</div>
+						<div class="col-md-6">
+							{{ form_row(form.employe.user.plainPassword.second) }}
+						</div>
+					</div>
+					<div class="form-check form-check-inline">
+						<div class="row">
+							<div class="col-1 m-0 p-0">
+								<div class="form-check form-check-inline">
+									{{ form_widget(form.employe.user.agreeTerms) }}
+								</div>
+							</div>
+							<div class="col-11 m-0 pl-0">
+								<label class="form-check-label fs-6" for="{{ form.employe.user.agreeTerms.vars.id }}">
+									{{ attribute(form.employe.user.agreeTerms.vars.attr, 'label')|trans({
+                            '%terms_url%': path('app_home_terms'),
+                            '%privacy_url%': path('app_home_privacy')
+                        })|raw }}
+								</label>
+							</div>
+						</div>
+
+					</div>
+					<div class="text-center">
+						<button class="btn rounded-pill px-5 btn-dark" type="submit" id="register-submit">
+							{{ 'app_register.menu'|trans }}
+						</button>
+					</div>
+				
+				{% endif %}
+					<div style="display:none;">
+						{{ form_widget(form)}}
+					</div>
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>

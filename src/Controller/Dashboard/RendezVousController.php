@@ -3,6 +3,7 @@
 namespace App\Controller\Dashboard;
 
 use App\Entity\User;
+use Symfony\Component\Uid\Uuid;
 use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
 use App\Entity\ModerateurProfile;
@@ -26,6 +27,7 @@ use App\Repository\Candidate\ApplicationsRepository;
 use App\Repository\Moderateur\AssignationRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 #[Route('/dashboard/rendez-vous')]
 class RendezVousController extends AbstractController
@@ -72,6 +74,9 @@ class RendezVousController extends AbstractController
             $rendezVous = $this->rendezVousManager->createRendezVous($user->getModerateurProfile(), $assignation->getProfil(), $assignation->getJobListing()->getEntreprise(), $assignation->getJobListing());
         }else{
             $rendezVous = new Metting();
+            $rendezVous->setStatus(Metting::STATUS_PENDING);
+            $rendezVous->setCustomId(new Uuid(Uuid::v4()));
+            $rendezVous->setLieu('meet.olona-talents.com');
         }
 
         $form = $this->createForm(MettingType::class, $rendezVous);
@@ -79,6 +84,14 @@ class RendezVousController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $rendezVous = $form->getData();
             $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $rendezVous->getCandidat()->getCandidat()->getEmail()]);
+            $customId = $rendezVous->getCustomId();
+            $rendezVous->setLink($this->urlGenerator->generate(
+                'app_dashboard_conference', 
+                [
+                    'uuid' => $customId
+                ], 
+                UrlGenerator::ABSOLUTE_URL
+                ));
 
             if($refered instanceof Referral){
                 $refered->setStep(5);
@@ -113,7 +126,7 @@ class RendezVousController extends AbstractController
 
             $this->addFlash('success', 'Rendez-vous sauvegarder');
 
-            return  $this->redirectToRoute('rendezvous_index', []);
+            return  $this->redirectToRoute('app_dashboard_moderateur_mettings', []);
         }
 
         return $this->render('dashboard/rendez_vous/create.html.twig', [
@@ -280,7 +293,7 @@ class RendezVousController extends AbstractController
 
         $this->addFlash('success', 'Un emal de rappel a été envoyé');
         $referer = $request->headers->get('referer');
-        
+
         return $referer ? $this->redirect($referer) : $this->redirectToRoute('rendezvous_index');
     }
     

@@ -1137,3 +1137,7 @@ app_dashboard_moderateur_metting_show :
 app_dashboard_candidat_annonce_details : 
     title : Détails de l'annonce
     dashboard_title : Détails de l'annonce
+
+app_dashboard_moderateur_simulateur : 
+    title : Simulations salaire
+    dashboard_title : Simulations salaire

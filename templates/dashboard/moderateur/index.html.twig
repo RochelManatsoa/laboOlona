@@ -6,6 +6,19 @@
 
     <div class="row">
         <div class="col-md-4">
+            <a href="{{ path('app_dashboard_moderateur_simulateur') }}" class="text-decoration-none">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h2 class="card-title">{{ simulations|length }}</h2>
+                        <p class="card-text small">Simulations</p>
+                    </div>
+                </div>
+            </a>
+        </div>  
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
             <a href="{{ path('app_dashboard_moderateur_secteur') }}" class="text-decoration-none">
                 <div class="card text-white bg-primary mb-3">
                     <div class="card-body">
