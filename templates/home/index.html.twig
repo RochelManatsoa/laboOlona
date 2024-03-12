@@ -6,7 +6,9 @@
 {% block fluid %}<div class="container-fluid m-0">{% endblock %} 
 {% block body %}
 {% include "home/section/section-hero.html.twig" %}
+<div class="d-none d-sm-block">
 {% include "home/section/section-portage.html.twig" %}
+</div>
 {% include "home/section/section-annonces.html.twig" %}
 {% include "home/section/section-candidats.html.twig" with {'candidats': candidats} %}
 

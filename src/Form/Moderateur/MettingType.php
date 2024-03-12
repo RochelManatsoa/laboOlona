@@ -39,6 +39,7 @@ class MettingType extends AbstractType
             ])
             ->add('candidat', EntityType::class, [
                 'class' => CandidateProfile::class,
+                // 'choiceLabel' => CandidateProfile::c,
                 'label' => 'Candidat',
                 'required' => false // Le candidat peut être nul
             ])
@@ -48,6 +49,10 @@ class MettingType extends AbstractType
                 'attr' => [
                     'class' => 'form-control datetime-picker'
                 ]
+            ])
+            ->add('link', TextType::class, [
+                'label' => 'Lieu',
+                'required' => false // Le lieu peut être nul
             ])
             ->add('lieu', TextType::class, [
                 'label' => 'Lieu',
