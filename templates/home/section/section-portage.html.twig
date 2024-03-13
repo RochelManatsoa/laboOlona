@@ -1,21 +1,21 @@
 <section id="postings" class="" style="background-color: white;position:relative">
     <div class="container d-flex flex-column justify-content-center">
 			<h2 class="text-black text-center my-5 w-100 display-2 text-strong">SIMULATEUR DE SALAIRE</h2>
-			<div class="annonce-item shadow p-5 m-4" style="background-color: black;position:relative">
+			<div class="annonce-list shadow p-3 p-sm-5 m-2 m-sm-5" style="background-color: black;position:relative">
 				<div class="">
 					{{form_start(form, {'attr': {'id': 'example-basic'}}) }}
 					{{ form_widget(form.deviseSymbole)}}
 					<!-- Début du formulaire avec l'ID "example-basic" -->
-					<h3 class="card-title mb-3">Devise</h3>
+					<h3 class="card-title mb-3">Taux de change</h3>
 					<section class="bg-dark"
 						style="position: relative;width: 100%;">
 						<!-- Explication du champ "Taux de change" -->
 						<legend class="h2">{{ form_label(form.devise) }}</legend>
 						<div class="row">
-							<div class="col-6">
+							<div class="col-lg-6">
 								{{ form_widget(form.devise)}}
 							</div>
-							<div class="col-6">
+							<div class="col-lg-6">
 								<div class="input-group">
 									{{ form_widget(form.taux)}}
 									<span class="input-group-text">Ar</span>
@@ -48,28 +48,28 @@
 						class="text-grey bg-dark" style="position: relative;width: 100%;">
 						<!-- Explication du champ "Charge" -->
 						<div class="row align-items-center">
-							<div class="col-4">
+							<div class="col-lg-4 col-sm-6">
 								<label class="col-form-label mt-3">{{ form_label(form.nombreEnfant) }}
 									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Pour calculer les avantages fiscaux et les allocations familiales.">
 										<i class="bi bi-info-circle-fill"></i>
 									</span>
 								</label>
 							</div>
-							<div class="col-3">
+							<div class="col-lg-3 col-sm-6">
 								<div class="input-group">
 									{{ form_widget(form.nombreEnfant)}}
 								</div>
 							</div>
 						</div>
 						<div class="row align-items-center" id="freelance">
-							<div class="col-4">
+							<div class="col-lg-4 col-sm-6">
 								<label class="col-form-label mt-3">{{ form_label(form.avantage.primeConnexion) }}
 									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Forfait mensuel souhaité.">
 										<i class="bi bi-info-circle-fill"></i>
 									</span>
 								</label>
 							</div>
-							<div class="col-3">
+							<div class="col-lg-3 col-sm-6">
 								<div class="input-group">
 									{{ form_widget(form.avantage.primeConnexion)}}
 									<span class="input-group-text change-devise">€</span>
@@ -77,10 +77,10 @@
 							</div>
 						</div>
 						<div class="row align-items-center">
-							<div class="col-4">
+							<div class="col-lg-4 col-sm-6">
 								<label class="col-form-label mt-3">Indemnités repas</label>
 							</div>
-							<div class="col-6">
+							<div class="col-lg-6 col-sm-6">
 								<div class="input-group">
 									{{ form_widget(form.jourRepas)}}
 									{{ form_widget(form.prixRepas)}}
@@ -88,15 +88,15 @@
 								</div>
 								<div class="row small">
 									<div class="col-5 form-text text-light">Nombre de jour</div>
-									<div class="col-7 form-text text-light">Prix journalier</div>
+									<div class="col-6 form-text text-light">Prix journalier</div>
 								</div>
 							</div>
 						</div>
 						<div class="row align-items-center" id="employe" style="display: none;">
-							<div class="col-4">
+							<div class="col-lg-4 col-sm-6">
 								<label class="col-form-label mt-3">Indemnités deplacement</label>
 							</div>
-							<div class="col-6">
+							<div class="col-lg-6 col-sm-6">
 								<div class="input-group">
 									{{ form_widget(form.jourDeplacement)}}
 									{{ form_widget(form.prixDeplacement)}}
@@ -104,19 +104,19 @@
 								</div>
 								<div class="row small">
 									<div class="col-5 form-text text-light">Nombre de jour</div>
-									<div class="col-7 form-text text-light">Prix journalier</div>
+									<div class="col-6 form-text text-light">Prix journalier</div>
 								</div>
 							</div>
 						</div>
 						<div class="row align-items-center">
-							<div class="col-4">
+							<div class="col-lg-4 col-sm-6">
 								<label class="col-form-label mt-3">{{ form_label(form.avantage.primeFonction) }}
 									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Frais professionnels">
 										<i class="bi bi-info-circle-fill"></i>
 									</span>
 								</label>
 							</div>
-							<div class="col-3">
+							<div class="col-lg-3 col-sm-6">
 								<div class="input-group">
 									{{ form_widget(form.avantage.primeFonction)}}
 									<span class="input-group-text change-devise">€</span>
