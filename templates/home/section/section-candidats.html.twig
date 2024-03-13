@@ -1,14 +1,16 @@
 <section id="candidates" class="" style="background-color: white;">
     <div class="container">
-        <div class="row">
+        <div class="row mb-3 mb-sm-5">
             <h2 class="text-black text-center my-5 w-100 display-2 text-strong">{{ 'app_home.section.candidates.h2'|trans }}</h2>
             
             <div class="container-fluid">
                 {{ component('candidat_carousel_top') }}
             </div>
             <hr class="my-5">
-            <div class="row row-cols-1 row-cols-md-5 g-2 expert-item">
-                {{ component('scroll_candidat_component', { candidats: candidats} ) }}
+            <div class="container my-4">
+                <div class="row row-cols-1 row-cols-md-5 g-4 expert-item">
+                    {{ component('scroll_candidat_component', { candidats: candidats} ) }}
+                </div>
             </div>
         </div>
         <p class="d-flex flex-column flex-sm-row justify-content-center cta-group">  

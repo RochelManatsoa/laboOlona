@@ -380,3 +380,69 @@
 {
     display: list-item;
 }
+.right{
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    h1.card-title, #resum, .right{
+        text-align: center;
+    }
+    /* Ajustements pour le layout vertical */
+    .wizard.vertical > .steps, .tabcontrol.vertical > .steps {
+        width: 100%;
+    }
+
+    /* Assure que tous les éléments de liste prennent toute la largeur et annulent le float */
+    .wizard > .steps > ul > li, 
+    .tabcontrol > .steps > ul > li,
+    .wizard.vertical > .steps > ul > li, 
+    .tabcontrol.vertical > .steps > ul > li {
+        width: 100%;
+        float: none;
+    }
+
+    /* Ajustements pour le contenu */
+    .wizard > .content, 
+    .tabcontrol > .content {
+        margin: 0.5em 0;
+        width: 100%;
+    }
+
+    /* Configuration des boutons d'actions pour qu'ils soient flexibles et en ligne */
+    .wizard > .actions > ul {
+        display: flex;
+        flex-wrap: wrap; /* Permet le passage à la ligne si nécessaire */
+        justify-content: center; /* Centre les boutons dans leur conteneur */
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .wizard > .actions > ul > li {
+        flex: 1; /* Permet aux éléments de s'étendre de manière égale */
+        margin: 0.5em; /* Ajoute de l'espace autour des boutons */
+        display: flex; /* Transforme les éléments de liste en conteneurs flex */
+    }
+
+    /* Ajustements spécifiques pour les liens/boutons */
+    .wizard > .actions a {
+        flex-grow: 1; /* Les boutons remplissent le conteneur LI */
+        text-align: center; /* Centre le texte à l'intérieur des boutons */
+        margin: 0;
+        padding: 0.5em; /* Ajoute un peu de padding pour un meilleur aspect */
+    }
+
+    /* Vous pouvez ajouter ici d'autres règles spécifiques aux petits écrans si nécessaire */
+    
+    /* Masque tous les éléments avec le rôle 'tablist' */
+    /* Masque tous les éléments <li> sous un élément avec le rôle 'tablist' */
+    ul[role="tablist"] > li {
+        display: none;
+    }
+
+    /* Affiche seulement l'élément <li> avec la classe 'current' */
+    ul[role="tablist"] > li.current {
+        display: block;
+    }
+}
+

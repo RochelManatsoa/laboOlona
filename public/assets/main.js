@@ -10,7 +10,7 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
         labels: {
           current: 'current step:',
           pagination: 'Pagination',
-          finish: 'Voir le résultat',
+          finish: 'Résultat',
           next: 'Suivant',
           previous: 'Précédent',
           loading: 'Chargement ...',
@@ -102,7 +102,7 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
                 if (0 <= $.inArray(name, field)) {
                   // Si la valeur est une promesse, attendez qu'elle soit résolue avant de traiter
                     html = html.concat(
-                      '<div class="container"><div class="row border"><div class="col-md-6 text-right text-white bg-success">' +
+                      '<div class="container"><div class="row border"><div class="col-md-6 right text-white bg-success">' +
                         '<strong class="">' +
                         label[name] +
                         ' </strong></div><div class="col-md-6 text-white bg-info"">' +
