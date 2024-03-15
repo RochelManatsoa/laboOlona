@@ -1,33 +1,33 @@
 menu:
     legal: "Mentions légales"
 status:
-    DRAFT: L'annonce a été créée mais n'est pas encore visible par le public.
-    PUBLISHED: L'annonce est actuellement active et visible par le public.
-    PENDING: L'annonce est soumise pour examen ou approbation par un modérateur/administrateur.
-    REJECTED: L'annonce a été examinée et n'a pas été approuvée pour la publication.
-    EXPIRED: La durée de vie de l'annonce est terminée. Elle n'est plus active ni visible par le public.
-    ARCHIVED: L'annonce n'est plus active, mais est conservée à des fins d'enregistrement ou d'historique.
-    UNPUBLISHED: L'annonce a été manuellement désactivée et n'est pas visible par le public, mais peut être réactivée plus tard.
-    DELETED: L'annonce a été supprimée
-    FEATURED: L'annonce est mise en évidence ou priorisée par rapport à d'autres annonces.
-    RESERVED: L'annonce a été "réservée" ou "retenue" par un utilisateur ou un acheteur potentiel.
+    DRAFT: Préparez votre annonce à la perfection; elle reste privée jusqu'à ce que vous soyez prêt à briller.
+    PUBLISHED: Votre annonce est en ligne ! Elle attire désormais l'attention du monde entier.
+    PENDING: Votre annonce est en cours de révision. Patience, le succès est à portée de main !
+    REJECTED: Votre annonce nécessite quelques ajustements. Saisissez l'opportunité de la perfectionner.
+    EXPIRED: Le temps imparti est écoulé, mais chaque fin est un nouveau départ. Renouvelez ou actualisez votre annonce !
+    ARCHIVED: Votre annonce a fait son temps mais reste gravée dans nos archives pour référence future.
+    UNPUBLISHED: Vous avez mis votre annonce en pause. Réactivez-la à tout moment pour retrouver les projecteurs.
+    DELETED: Vous avez choisi de retirer votre annonce. L'innovation commence souvent par un espace vierge.
+    FEATURED: Votre annonce brille sous les projecteurs, captant l'attention et suscitant l'intérêt.
+    RESERVED: Votre annonce a capté l'intérêt ! Elle est maintenant en attente d'une décision finale de la part d'un acheteur potentiel.
 
 
 app_home:
-    title: "Top 1 Plateforme d'Emploi et Freelance Francophone & Malagache"
+    title: "Plateforme N°1 d'Emploi et Freelance Francophone & Malgache"
     menu: "Accueil"
-    description: "Trouvez des projets, postulez à des offres d'emploi et collaborez avec les meilleurs professionnels de Madagascar et francophones. Rejoignez-nous dès maintenant."
-    keywords: "freelance, projet, offre"
+    description: "Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent."
+    keywords: "freelance, projet, offre, portage salarial, cooptation, recrutement"
     section: 
         hero:
             h1: DÉCOUVREZ
-            h2: LES PROFESSIONNELS 
+            h2: LES TALENTS 
             h3: DE MADAGASCAR, D'AFRIQUE ET DE L'OCEAN INDIEN.
-            p: Collaborez avec des experts, explorez des opportunités inégalées et propulsez votre carrière vers de nouveaux sommets
+            p: Forgez des partenariats enrichissants et élevez votre business à des niveaux jamais atteints auparavant.
         postings:
-            h2: LES DERNIÈRES OFFRES D'EMPLOIS
-            h3: PROFESSIONNEL FRANCOPHONE ET MALGACHE.
-            p: Collaborez avec des experts, explorez des opportunités inégalées et propulsez votre carrière vers de nouveaux sommets.
+            h2: Explorez les dernières Offres d'Emploi
+            h3: LES OFFRES D'EMPLOI ACTUELLES pour professionnels francophones et malgaches.
+            p: Saisissez des opportunités uniques pour collaborer avec des experts et stimuler votre croissance professionnelle.
         about:
             h2: "COMMENT ÇA MARCHE (HOW IT WORKS) :"
             step: Étape
@@ -51,6 +51,9 @@ app_home:
             h2: NOS DERNIERS CANDIDATS
             p1: Êtes-vous un professionnel créatif cherchant à mettre en avant vos talents dans un environnement inspirant ? Ne cherchez pas plus loin que Studio Agatho, une agence qui conçoit le futur.
             p2: Rejoignez notre équipe et libérez votre art dans un lieu de travail collaboratif et dynamique.
+        simulator :
+            h2 : Être à son propre compte avec tous les avantages d’un salarié !
+            p1 : Calculez votre revenu à rejoignez dès maintenant notre service de Portage Salarial
         contact:
             h2: PRÊT À TRANSFORMER VOTRE CARRIÈRE OU VOTRE ENTREPRISE ?
             p1: Êtes-vous un professionnel créatif cherchant à mettre en avant vos talents dans un environnement inspirant ? Ne cherchez pas plus loin que Studio Agatho, une agence qui conçoit le futur.
@@ -717,7 +720,7 @@ app_dashboard_candidat:
     curriculum: Assurez-vous que votre CV est clair, concis et à jour. Les employeurs passent en moyenne 6 secondes sur un CV. Faites en sorte que chaque seconde compte.
     olona_formation: Voir nos formations et obtenir votre certification OLONA TALENTS!!
     investigate: Investissez toujours dans votre apprentissage et votre developpement. Les compétences et connaissances supplémentaire peuvent ouvrir des nouvelles portes
-    get_started: Trouvez des offres par mot-clé, titre de mission, entreprise etc.
+    get_started: Trouvez le projet idéal, parcourez par mot-clé, titre ou entreprise.
     logout: "Sortir"
     profile_view: Votre profil a été consulté <strong>%views%</strong> fois cette semaine. Continuez à améliorer pour attirer plus d'employeurs
     history: Vous avez <strong>%demandes%</strong> demande en attente de réponse. Restez à l'écoute et preparez-vous pour vos futurs entretiens!
