@@ -4,10 +4,10 @@
 {% block body %}
     <div class="container mt-3 px-auto">
         <section class="text-dark">
-            <h4 class="mt-3">
-                <i class="bi bi-search mx-2"></i>
+            <h2 class="text-black text-center mt-3 fs-3">
+               <i class="bi bi-search"></i>
                 {{ 'app_dashboard_candidat.get_started'|trans }}
-            </h4>
+            </h2>
             {{ form_start(form, {'attr': {'class': 'form-group my-5 px-5', 'action': path('app_dashboard_candidat_annonce')}}) }}
 
             <div class="row">
