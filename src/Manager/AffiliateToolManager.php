@@ -7,6 +7,7 @@ use Twig\Environment as Twig;
 use Symfony\Component\Form\Form;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AffiliateToolRepository;
+use DateTime;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -24,6 +25,8 @@ class AffiliateToolManager
     public function init(): AffiliateTool
     {
         $tool = new AffiliateTool();
+        $tool->setCreeLe(new DateTime());
+        $tool->setDescription("Nouvelle IA ajouté sur Olona Talents");
 
         return $tool;
     }
