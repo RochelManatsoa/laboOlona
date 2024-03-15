@@ -122,6 +122,16 @@
 								<div class="col-sm-6 text-right text-strong">{{ results.frais_de_portage_euro|number_format(2, '.', '')}}</div>
 							</div>
                             <hr>
+							{% if simulateur.type is same as('EMPLOYER')  %}
+							<div class="row">
+								<div class="col text-danger h5">Espace Co Working Olona</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-6 text-strong">Espace Co Working :</div>
+								<div class="col-sm-6 text-right text-strong">{{ results.coworking|number_format(2, '.', '')}}</div>
+							</div>
+                            <hr>
+							{% endif %}
 							{# <div class="row ">
 								<div class="col-sm-6 text-strong">Total :</div>
 								<div class="col-sm-6 text-right text-strong">{{ (results.facture_total_a_envoyer_euro - results.salaire_net_euro - results.charge_salariale_euro)|number_format(2, '.', '') }} {{ simulateur.devise.symbole }}</div>

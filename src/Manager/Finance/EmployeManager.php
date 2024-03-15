@@ -35,6 +35,7 @@ class EmployeManager
         $fraisProEuro = $this->convertEuroToAriary($simulateur->getAvantage()->getPrimeFonction(), $simulateur->getTaux());
 
         return $this->estimationSalaireBrute(
+            $simulateur,
             $montantEuro, 
             $simulateur->getNombreEnfant(), 
             $simulateur->getTaux(),
@@ -42,10 +43,12 @@ class EmployeManager
             $deplacementEuro * $simulateur->getJourDeplacement(),
             $connexionEuro,
             $fraisProEuro,
+            $simulateur->getType(), 
         );
     }
 
     public function estimationSalaireBrute(
+        Simulateur $simulateur, 
         float $salaire_net, 
         int $nbrEnfant, 
         float $tauxDeChange,
@@ -53,11 +56,13 @@ class EmployeManager
         float $fraisDeplacement,
         float $fraisConnexion,
         float $fraisProfessionnels,
+        string $type,
     )
     {
         $seuil = 1; // Seuil de précision de la différence de salaire net
         $max_iterations = 100; // Prévenir la boucle infinie
         $iteration = 1;
+        $coworking = 0;
         $ajustement = 100; // Valeur initiale d'ajustement
 
         $totalFraisSupplementaires = $fraisRepas + $fraisDeplacement + $fraisConnexion + $fraisProfessionnels;
@@ -77,6 +82,9 @@ class EmployeManager
             }
 
             $iteration++;
+        }
+        if($type === 'EMPLOYER'){
+            $coworking = $this->convertEuroToAriary(150, 4800);
         }
         // Supposons que vous ayez le salaire brut estimé à la fin de vos calculs itératifs
         $salaire_brut_final = $salaire_brut_estime; // Résultat de votre boucle itérative
@@ -105,7 +113,7 @@ class EmployeManager
             'charges_patronales_ariary' => $this->getChargesPatronales($salaire_brut_estime),
             'cout_avant_portage_ariary' => $this->getChargesPatronales($salaire_brut_estime) + $salaire_brut_estime,
             'frais_de_portage_ariary' => $this->getFraisPortage($salaire_brut_estime),
-            'facture_total_a_envoyer_ariary' => $this->getFactureTotal($salaire_brut_estime),
+            'facture_total_a_envoyer_ariary' => $this->getFactureTotal($salaire_brut_estime, $simulateur),
             'ajustement_ariary' => $salaire_net - $salaire_net_calcule,
             'euro' => "------------",
             'irsa_euro' => $this->convertAriaryToEuro($irsa, $tauxDeChange),
@@ -119,8 +127,9 @@ class EmployeManager
             'charges_patronales_euro' => $this->convertAriaryToEuro($this->getChargesPatronales($salaire_brut_estime), $tauxDeChange),
             'cout_avant_portage_euro' => $this->convertAriaryToEuro(($this->getChargesPatronales($salaire_brut_estime) + $salaire_brut_estime), $tauxDeChange),
             'frais_de_portage_euro' => $this->convertAriaryToEuro($this->getFraisPortage($salaire_brut_estime), $tauxDeChange),
-            'facture_total_a_envoyer_euro' => $this->convertAriaryToEuro($this->getFactureTotal($salaire_brut_estime), $tauxDeChange),
+            'facture_total_a_envoyer_euro' => $this->convertAriaryToEuro($this->getFactureTotal($salaire_brut_estime, $simulateur), $tauxDeChange),
             'ajustement_euro' => $this->convertAriaryToEuro($salaire_net - $salaire_net_calcule, $tauxDeChange),
+            'coworking' => $this->convertAriaryToEuro($coworking, $tauxDeChange),
         ];
 
     }
@@ -214,8 +223,18 @@ class EmployeManager
         return $this->getChargesPatronales($salaire_brut) + $salaire_brut;
     }
 
-    private function getFactureTotal(float $salaire_brut):float
+    private function getCoworking(Simulateur $simulateur):float
     {
-        return $salaire_brut + $this->getChargesPatronales($salaire_brut) + $this->getFraisPortage($salaire_brut);
+        $coworking = 0;
+        if($simulateur->getType() === "EMPLOYER"){
+            $coworking = $this->convertEuroToAriary(150, 4800); 
+        }
+        return $coworking;
+    }
+
+    private function getFactureTotal(float $salaire_brut, Simulateur $simulateur):float
+    {
+
+        return $salaire_brut + $this->getChargesPatronales($salaire_brut) + $this->getFraisPortage($salaire_brut) + $this->getCoworking($simulateur);
     }
 }

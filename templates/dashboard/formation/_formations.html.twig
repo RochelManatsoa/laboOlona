@@ -11,7 +11,7 @@
     {% for playlist in playlists %}
         <div class="row mb-3">
             <!-- Colonne Titre -->
-            <div class="col-4">
+            <div class="col-lg-4 col-sm-12">
                 <div class="d-flex flex-column">
                     <a href="{{ path('app_dashboard_formation_playlist_view', {'id': playlist.id}) }}" class="mb-2">{{ playlist.titre }}</a>
                     {% set videosVisionnees = playlist.getNombreVideosVisionnees(app.user) %}
@@ -29,12 +29,12 @@
             </div>
 
             <!-- Colonne Description -->
-            <div class="col-6">
+            <div class="col-lg-6 col-sm-12">
                 <p class="small">{{ playlist.description|raw }}</p>
             </div>
 
             <!-- Colonne Actions -->
-            <div class="col-2">
+            <div class="col-lg-2 col-sm-12">
                 {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
                     <form method="post" action="{{ path('app_dashboard_formation_playlist_delete', {'id': playlist.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette formation ?');" class="d-flex flex-column">
                         <a href="{{ path('app_dashboard_formation_playlist_edit', {'id': playlist.id}) }}" class="btn btn-sm btn-info mb-2"><i class="bi bi-pencil"></i></a>
