@@ -2,56 +2,42 @@
 <div class="navigation">
 {{ knp_pagination_render(pendings, 'parts/_pagination.html.twig') }}
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col" class="col-4"></th>
-            <th scope="col" class="col-6"></th>
-            <th scope="col" class="col-2"></th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for application in pendings %}
-            <tr>
-                <!-- Colonne de gauche (Détails de l'offre) -->
-                <td>
-                    <!-- Type de contrat -->
-                    <h3 class="h6">
-                        {{ application.annonce.titre }}
-                    </h3>
-                    <!-- Titre du job -->
-                    <a href="{{ path('app_dashboard_candidat_annonce_details', {'jobId': application.annonce.jobId}) }}" class="btn btn-link">
-                        Voir l'offre
-                    </a>
+<div class="responsive-table">
+    {% for application in pendings %}
+    <div class="d-flex flex-wrap justify-content-between mb-3 border-bottom pb-2">
+        <!-- Détails de l'offre -->
+        <div class="p-2 flex-fill">
+            <span class="h5">
+                {{ application.annonce.titre }}
+            </span>
+            <a href="{{ path('app_dashboard_candidat_annonce_details', {'jobId': application.annonce.jobId}) }}" class="btn btn-link small">
+                Voir l'offre
+            </a>
+            <small class="d-none d-sm-block">
+                {% set clean_description = application.annonce.description|striptags|replace({'&nbsp;': '. '}) %}
+                {{ clean_description|length > 250 ? clean_description|slice(0, 247) ~ '...' : clean_description }}
+            </small>
+        </div>
+        
+        <!-- Informations du Candidat -->
+        <div class="px-2">
+            <ul class="list-unstyled small">
+                <li>
+                    <span class="text-muted">Déposé {{ application.dateCandidature|time_ago }}</span>
+                    <br>
+                    <i class="bi bi-calendar-event"></i>
+                    {{ application.dateCandidature|date('d/m/Y à H:i') }}
+                </li>
+                <li>
+                    <i class="bi bi-geo-alt"></i>
+                    {{ application.annonce.lieu }}
+                </li>
+                <div class="text-white bg-dark rounded">
+                    {{ application.annonce.typeContrat }}
+                </div>
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 
-                </td>
-                <td>
-                    <small class="">
-                        {% set clean_description = application.annonce.description|striptags|replace({'&nbsp;': '. '}) %}
-                        {{ clean_description|length > 250 ? clean_description|slice(0, 247) ~ '...' : clean_description }}
-                    </small> 
-                <!-- Type de contrat -->
-                </td>
-
-                <!-- Colonne de droite (Informations du Candidat) -->
-                <td>
-                    <ul class="list-unstyled small">
-                        <li>
-                            <i class="bi bi-geo-alt"></i>
-                            {{ application.annonce.lieu }}
-                        </li>
-                        <!-- Nom du candidat -->
-                        <li>
-                            <i class="bi bi-calendar-event"></i>
-                            {{ application.dateCandidature|date('d/m/Y') }}
-                        </li>
-                        <small class="text-white px-2 bg-dark rounded">
-                            {{ application.annonce.typeContrat }}
-                        </small>
-                    <!-- Prétention salariale -->
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>

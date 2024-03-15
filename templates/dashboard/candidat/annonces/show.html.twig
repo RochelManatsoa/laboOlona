@@ -1,24 +1,24 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block body %}
     <div class="container">
-        <div class="annonce-list p-2">
-            <div class="annonce-item shadow p-5 m-4">
+        <div class="annonce-list p-0 p-sm-2">
+            <div class="annonce-item shadow p-2 p-sm-5 m-1 m-sm-4">
                 <h1 class="card-title h2">{{ annonce.titre }}</h1>
                 <p class="text-muted small">
                     <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ annonce.status }} 
-                        <span class="small text-center mx-3">|</span>
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
                     {{ annonce.typeContrat }} 
-                        <span class="small text-center mx-3">|</span>
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
                     <i class="bi bi-geo-alt-fill"></i> {{ annonce.lieu }} 
-                        <span class="small text-center mx-3">|</span>
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
                     <i class="bi bi-hourglass-split"></i> Expire le {{ annonce.dateExpiration|date('d/m/Y') }}
-                        <span class="small text-center mx-3">|</span>
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
                     <i class="bi bi-eye"></i> {{ annonce.annonceVues|length }} vues
                 </p>
                 {% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) %}
                     {% if applied %}
-                        <button type="submit" name="submitBtn" value="quick_apply" class="btn btn-md btn-outline-primary rounded-pill px-5">Postuler rapidement</button>
+                        <button type="submit" name="submitBtn" value="quick_apply" class="btn btn-md btn-outline-primary rounded-pill px-2 px-sm-5 my-2">Postuler rapidement</button>
                     {% endif %}
                 {% else %}
                     <div class="alert alert-info d-flex align-items-center" role="alert">
@@ -30,9 +30,9 @@
                 {% endif %}
 
                 {% if app.user.referrerProfile is not null %}
-                <a href="{{ path('app_dashboard_referrer_cooptation', {'jobId':annonce.jobId}) }}" class="btn btn-primary rounded-pill mx-3 px-5">Recommander un ami</a>
+                <a href="{{ path('app_dashboard_referrer_cooptation', {'jobId':annonce.jobId}) }}" class="btn btn-primary rounded-pill mx-3 px-2 px-sm-5">Recommander un ami</a>
                 {% else %}
-                <button type="button" class="btn btn-primary rounded-pill mx-3 px-5" data-bs-toggle="modal" data-bs-target="#cooption">Recommander un ami</button>
+                <button type="button" class="btn btn-primary rounded-pill mx-3 px-2 px-sm-5" data-bs-toggle="modal" data-bs-target="#cooption">Recommander un ami</button>
                 {% endif %}
 
                 <hr>
@@ -77,15 +77,15 @@
             <h2 class="text-center fs-1">Personnaliser ma candidature</h2>
             <div class="row align-items-md-stretch mt-5">
                 <div class="mb-3">
-                    <div class="h-100 p-5 bg-body-tertiary border rounded-3">
+                    <div class="h-100 p-2 p-sm-5 bg-body-tertiary border rounded-3">
                     <h2>Lettre de motivation</h2>
                         {{ form_widget(form) }}
                         <hr>
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-lg-3 col-sm-12">
                                     CV 
                                 </div>
-                                <div class="col-9">
+                                <div class="col-lg-9 col-sm-12">
                                     {% if candidat.cv is not null %}
                                     <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target=_blank class="badge badge-sm bg-dark rounded-pill"><i class="bi bi-paperclip"></i> {{ safeFileName(candidat.cv) }}.pdf</a>
                                     {% else %}
@@ -123,17 +123,17 @@
             {% else %}
             <div class="row align-items-md-stretch mt-5">
                 <div class="mb-3">
-                    <div class="h-100 p-5 text-bg-dark rounded-3">
+                    <div class="h-100 p-3 p-sm-5 text-bg-dark rounded-3">
                     <h2>Vous avez déjà postulé à cette offre</h2>
                     <p>Retrouvez à tout moment vos candidatures en cours, le suivi de leur statut, ainsi que l’historique des offres auxquelles vous avez postulées. Les candidatures archivées regroupent vos candidatures sur des offres expirées.</p>
-                    <a href="{{ path('app_dashboard_candidat_annonces')}}" class="btn btn-outline-light rounded-pill px-5" type="button">Mes candidatures</a>
+                    <a href="{{ path('app_dashboard_candidat_annonces')}}" class="btn btn-outline-light rounded-pill px-3 px-sm-5" type="button">Mes candidatures</a>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <div class="h-100 p-5 bg-body-tertiary border rounded-3">
+                    <div class="h-100 p-3 p-sm-5 bg-body-tertiary border rounded-3">
                     <h2>Mettez à jour votre Disponibilité </h2>
                     <p>Prenez un moment dès maintenant pour actualiser votre profil et assurez-vous que vos informations de disponibilité sont à jour. Cela maximisera vos chances de correspondre parfaitement à de nouvelles opportunités passionnantes.</p>
-                    <button class="btn btn-outline-secondary rounded-pill px-5" type="button" data-bs-toggle="modal" data-bs-target="#candidatAvaillability">Disponibilité</button>
+                    <button class="btn btn-outline-secondary rounded-pill px-3 px-sm-5" type="button" data-bs-toggle="modal" data-bs-target="#candidatAvaillability">Disponibilité</button>
                     </div>
                 </div>
             </div>

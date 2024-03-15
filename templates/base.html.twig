@@ -26,8 +26,13 @@
         {% endblock %}
     </head>
     <body style="background:black;" class="container-fluid">
-        {% block header %} {% include "parts/_navbar.html.twig" %} {% endblock %}
-        <div class="bg-black text-white mt-auto mb-auto">
+        {% set current_route = app.request.attributes.get('_route') %}
+        {% if app.user %}
+        {% include "parts/_nav_user.html.twig" %}
+        {% else %}
+        {% include "parts/_nav_default.html.twig" %}
+        {% endif %}
+        <div class="bg-black text-white mt-auto mb-auto pt-5">
             {% block fluid %}<div class="container">{% endblock %}            
                 {% block body %}{% endblock %}
             </div>
