@@ -18,8 +18,9 @@
         {% endblock %}
     </head>
     <body>
+        {% set include_nav = app.user ? 'parts/_nav_user.html.twig' : 'parts/_nav_default.html.twig' %}
 
-        {% include "parts/_nav_user.html.twig" %}
+        {% include include_nav %}
 
         <div class="bg-dark text-white pt-5">
             <div class="container-fluid">

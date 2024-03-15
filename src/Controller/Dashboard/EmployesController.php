@@ -40,7 +40,7 @@ class EmployesController extends AbstractController
     public function index(): Response
     {
         $session = $this->requestStack->getSession();
-        dump($session);
+        
         return $this->render('dashboard/employes/index.html.twig', [
             'simulateurs' => $this->simulateurRepository->findAll(),
         ]);
@@ -53,7 +53,7 @@ class EmployesController extends AbstractController
         $user = $this->userService->getCurrentUser();
 
         return $this->render('dashboard/employes/simulations.html.twig', [
-            'simulateurs' => $this->simulateurRepository->findBy(['employe' => $user->getEmploye()]),
+            'simulateurs' => $this->simulateurRepository->findSimulateursNotDeletedForEmploye($user->getEmploye()),
         ]);
     }
 
@@ -85,6 +85,18 @@ class EmployesController extends AbstractController
             'simulateur' => $simulateur,    
             'results' => $results,
         ]);
+    }
+
+    #[Route('/simulation/delete/{id}', name: 'app_dashboard_employes_simulation_delete')]
+    public function delete(Request $request, Simulateur $simulateur): Response
+    {
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $simulateur->setStatus(Simulateur::STATUS_DELETED);
+        $this->em->persist($simulateur);
+        $this->em->flush($simulateur);
+
+        return $this->redirectToRoute('app_dashboard_employes_simulations', []);
     }
 
     #[Route('/contrats', name: 'app_dashboard_employes_contrats')]

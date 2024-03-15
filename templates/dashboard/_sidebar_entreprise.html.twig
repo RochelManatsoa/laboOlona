@@ -1,9 +1,5 @@
 {% set current_route = app.request.attributes.get('_route') %}
-<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark position-sticky top-0" style="width: 280px;">
-    {# <a href="{{ path('app_dashboard_entreprise')}}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-      <span class="fs-4">{{ 'app_dashboard_entreprise.title'|trans }}   </span>
-    </a>
-    <hr> #}
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark position-sticky" style="width: 280px;top: 5rem;">
 
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
@@ -29,11 +25,17 @@
             {{ 'app_dashboard_entreprise.find'|trans }}  
         </a>
       </li>
+      <li>
+        <a href="{{ path('app_home_simulateur_portage') }}" class="nav-link {{ current_route == 'app_home_simulateur_portage' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-aspect-ratio"></i>
+          Simulateur salaire
+        </a>
+      </li>
     {% if is_granted('ROLE_EMPLOYE') %}
       <li>
         <a href="{{ path('app_dashboard_employes_simulations') }}" class="nav-link {{ current_route == 'app_dashboard_employes_simulations' ? 'active' : 'text-white' }}">
           <i class="mx-2 h5 bi bi-aspect-ratio"></i>
-          Simulations salaire
+          Mes simulations
         </a>
       </li>
     {% endif %}

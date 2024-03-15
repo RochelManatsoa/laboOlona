@@ -2,6 +2,7 @@
 
 namespace App\Repository\Finance;
 
+use App\Entity\Finance\Employe;
 use App\Entity\Finance\Simulateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,6 +21,22 @@ class SimulateurRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Simulateur::class);
     }
+
+    public function findSimulateursNotDeletedForEmploye(Employe $employe)
+    {
+        $qb = $this->createQueryBuilder('s'); // 's' est un alias pour votre entité Simulateur
+        $qb->where('s.employe = :employe')
+        ->andWhere($qb->expr()->orX(
+            $qb->expr()->isNull('s.status'),
+            $qb->expr()->eq('s.status', ':statusValid')
+        ))
+        ->setParameter('employe', $employe)
+        ->setParameter('statusValid', Simulateur::STATUS_VALID)
+        ->orderBy('s.id', 'DESC');
+
+        return $qb->getQuery()->getResult();
+    }
+
 
 //    /**
 //     * @return Simulateur[] Returns an array of Simulateur objects

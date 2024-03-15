@@ -1,5 +1,7 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 {% block stylesheets %}
+	<meta property="og:url" content="{{ app.request.uri }}">
+	<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
 	{{parent()}}
 	<link href="{{asset('assets/css/jquery.steps.css')}}" rel="stylesheet">
 {% endblock %}
@@ -22,8 +24,14 @@
 {% block body %}
 	<div class="container">
 		<div class="annonce-list p-2 p-sm-0">
-			<div class="annonce-item shadow p-3 p-sm-0 m-md-4 m-sm-1">
-				<h1 class="card-title mb-3">Simulateur de salaire</h3>
+				<h1 class="card-title mb-3">Simulateur de salaire</h1>
+				<div class="d-block d-sm-none">
+					<div class="px-3">
+						<h3 class="h4 text-center">Bienvenue sur notre Simulateur de Portage Salarial</h3>
+						<p class="text-center pt-5">Vous êtes un freelancer résidant à Madagascar et travaillez avec des clients internationaux ? Notre simulateur de portage salarial est conçu spécialement pour vous. Ce puissant outil vous aidera à calculer facilement le montant à facturer à vos clients pour garantir le salaire net souhaité après déduction des frais de portage salarial.</p>
+					</div>
+				</div>
+			<div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
 				<div class="">
 					{{form_start(form, {'attr': {'id': 'example-basic'}}) }}
 					{{ form_widget(form.deviseSymbole)}}
