@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block title %}Mes informations
 {% endblock %}
@@ -6,68 +6,70 @@
 {% block body %}
 	<div class="container">
 		<div class="annonce-list p-2">
-			<div class="annonce-item shadow p-md-5 m-md-4">
+			<div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
 				<h1 class="h2">Mes informations</h1>
 				<hr>
 				<div class="container">
 					{{ form_start(form)}}
 
                 <div class="row">
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.user.nom)}}
                     </div>
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.user.prenom)}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.user.email)}}
                     </div>
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.user.telephone)}}
                     </div>
                 </div>
+                {% if user.adress is defined and user.adress is not null %}
                 <div class="row">
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.user.adress)}}
                     </div>
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.salaireBase)}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.sexe)}}
                     </div>
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.cnaps)}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.cin)}}
                     </div>
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.dateNaissance)}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.categorie)}}
                     </div>
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.fonction)}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.dateEmbauche)}}
                     </div>
-                    <div class="col">
+                    <div class="col-lg-6 col-sm-12">
                     {{form_row(form.nombreEnfants)}}
                     </div>
                 </div>
+                {% endif %}
                 <hr>
                 <div style="display:none;">
                 {{form_widget(form)}}

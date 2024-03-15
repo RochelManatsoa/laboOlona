@@ -1,51 +1,38 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
-{% block title %}Mes contrats
-{% endblock %}
+{% block title %}Mes contrats{% endblock %}
 
 {% block body %}
 	<div class="container">
 		<div class="annonce-list p-2">
-			<div class="annonce-item shadow p-md-5 m-md-4">
+			<div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
 				<h1 class="h2">Mes contrats</h1>
 				<hr>
 
 				{% if contrats|length > 0 %}
 					<div class="container">
 						<div class="row text-strong">
-							<div class="col-sm-5">Salaire Net souhaité</div>
-							<div class="col-sm-6">
-								<div class="row">
-									<div class="col-sm-6 col-md-4 text-center">Statut</div>
-									<div class="col-sm-6 col-md-4">Date</div>
-									<div class="col-sm-6 col-md-4"></div>
-								</div>
-							</div>
-							<div class="col-sm-1"></div>
+							<div class="col-3">Salaire Net</div>
+							<div class="col-4 text-center">Statut</div>
+							<div class="col-3 text-center">Date</div>
+							<div class="col-2 text-center"></div>
 						</div>
 						<hr>
 						{% for item in contrats %}
 							<div class="row text-muted">
-								<div class="col-sm-5 small">
+								<div class="col-3 small">
 									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.id })}}" class="">
 										{{ item.simulateur.salaireNet}}
 										{{ item.simulateur.devise.symbole}}
 									</a>
 								</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 col-md-4 text-center">
-											{{ item|contratStatusBadge|raw }}
-										</div>
-										<div class="col-sm-6 col-md-4 small">
-											{{ item.simulateur.createdAt|date('d/m/Y') }}
-										</div>
-										<div
-											class="col-sm-6 col-md-4">{# {{ item.annonce.dateExpiration|date('d/m/Y') }} #}
-										</div>
-									</div>
+								<div class="col-4 text-center">
+									{{ item|contratStatusBadge|raw }}
 								</div>
-								<div class="col-sm-1 small">
+								<div class="col-3 small text-center">
+									{{ item.simulateur.createdAt|date('d/m/Y') }}
+								</div>
+								<div class="col-2 small text-center">
 									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.simulateur.id })}}" class="btn btn-sm btn-info">
 										<i class="bi bi-eye"></i>
 									</a>

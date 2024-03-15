@@ -1,5 +1,5 @@
 {% set current_route = app.request.attributes.get('_route') %}
-<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark position-sticky top-0" style="width: 280px;">
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark position-sticky" style="width: 280px;top: 5rem;">
     <ul class="nav nav-pills flex-column mb-auto">
     {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_REFERRER')) %}
       <li class="nav-item">
@@ -109,14 +109,6 @@
             Formations  
         </a>
       </li>
-      {# <li>
-        <a href="{{ path('app_dashboard_notification')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_notification' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-bell"></i>
-            {{ 'app_dashboard_entreprise.notification'|trans }}  
-            {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
-        </a>
-      </li> #}
     </ul>
       {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
         {% if app.user.referrerProfile is not null %}

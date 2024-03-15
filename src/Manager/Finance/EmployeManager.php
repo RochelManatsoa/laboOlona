@@ -4,6 +4,7 @@ namespace App\Manager\Finance;
 
 use App\Entity\Finance\Employe;
 use App\Entity\Finance\Simulateur;
+use App\Repository\Finance\DeviseRepository;
 use Twig\Environment as Twig;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -15,6 +16,7 @@ class EmployeManager
         private EntityManagerInterface $em,
         private Twig $twig,
         private RequestStack $requestStack,
+        private DeviseRepository $deviseRepository,
         private Security $security
     ){        
     }
@@ -83,9 +85,6 @@ class EmployeManager
 
             $iteration++;
         }
-        if($type === 'EMPLOYER'){
-            $coworking = $this->convertEuroToAriary(150, 4800);
-        }
         // Supposons que vous ayez le salaire brut estimé à la fin de vos calculs itératifs
         $salaire_brut_final = $salaire_brut_estime; // Résultat de votre boucle itérative
 
@@ -129,7 +128,7 @@ class EmployeManager
             'frais_de_portage_euro' => $this->convertAriaryToEuro($this->getFraisPortage($salaire_brut_estime), $tauxDeChange),
             'facture_total_a_envoyer_euro' => $this->convertAriaryToEuro($this->getFactureTotal($salaire_brut_estime, $simulateur), $tauxDeChange),
             'ajustement_euro' => $this->convertAriaryToEuro($salaire_net - $salaire_net_calcule, $tauxDeChange),
-            'coworking' => $this->convertAriaryToEuro($coworking, $tauxDeChange),
+            'coworking' => $this->convertAriaryToEuro($this->getCoworking($simulateur), $tauxDeChange),
         ];
 
     }
@@ -226,8 +225,9 @@ class EmployeManager
     private function getCoworking(Simulateur $simulateur):float
     {
         $coworking = 0;
+        $euro = $this->deviseRepository->findOneBy(['slug' => 'euro']);
         if($simulateur->getType() === "EMPLOYER"){
-            $coworking = $this->convertEuroToAriary(150, 4800); 
+            $coworking = $this->convertEuroToAriary(150, $euro->getTaux()); 
         }
         return $coworking;
     }

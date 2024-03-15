@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: SimulateurRepository::class)]
 class Simulateur
 {    
+    const STATUS_VALID = 'VALID';
+    const STATUS_DELETED = 'DELETED';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -63,6 +66,14 @@ class Simulateur
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $deviseSymbole = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $status = null;
+
+    public function __construct()
+    {
+        $this->status = self::STATUS_VALID;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -266,6 +277,18 @@ class Simulateur
     public function setDeviseSymbole(?string $deviseSymbole): static
     {
         $this->deviseSymbole = $deviseSymbole;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
