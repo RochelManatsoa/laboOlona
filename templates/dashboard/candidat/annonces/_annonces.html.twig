@@ -1,40 +1,57 @@
 <div class="container mt-4">
-    <p class="mx-2">
-        Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
-    </p>
-    <div class="navigation">
-        {{ knp_pagination_render(annonces, 'parts/_pagination.html.twig') }}
-    </div>
+	<p class="mx-2">
+		Votre recherche renvoie
+		<strong>{{ result|length }}</strong>
+		résultats.
+	</p>
+	<div class="navigation">
+		{{ knp_pagination_render(annonces, 'parts/_pagination.html.twig') }}
+	</div>
 
-    {% if annonces|length > 0 %}
-        <div class="annonce-list">
-            {% for annonce in annonces %}
-                <div class="annonce-item shadow">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ annonce.titre|upper }}</h5>
-                    </div>
-                    <p class="mb-1">                    
-                        {% set clean_description = annonce.description|striptags|replace({'&nbsp;': '. '}) %}
-                        {{ clean_description|length > 250 ? clean_description|slice(0, 247) ~ '...' : clean_description }}
-                    </p>
-                    <p class="mb-1"><small class="text-muted"><i class="bi bi-eye"></i> Nombre de vues : {{ annonce.annonceVues|length }}</small></p>
-                    <div class="d-flex w-100 justify-content-between align-items-center">
-                        <span><i class="bi bi-file-earmark-text"></i> Type de contrat : <span class="badge bg-secondary">{{ annonce.typeContrat }}</span></span>
-                        <span><i class="bi bi-geo-alt-fill"></i> {{ annonce.lieu }}</span>
-                        <span><i class="bi bi-calendar-check-fill"></i> Publiée le : {{ annonce.dateCreation|date('d/m/Y') }}</span>
-                        <span><i class="bi bi-calendar-x-fill"></i> Expire le : {{ annonce.dateExpiration|date('d/m/Y') }}</span>
-                        <a href="{{ path('app_dashboard_candidat_annonce_show', {'jobId': annonce.jobId}) }}" class="btn btn-primary">Voir l'annonce</a>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="alert alert-warning" role="alert">
-            Aucune annonces trouvées.
-        </div>
-    {% endif %}
-    <div class="navigation">
-        {{ knp_pagination_render(annonces, 'parts/_pagination.html.twig') }}
-    </div>
-    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+	{% if annonces|length > 0 %}
+		<div class="annonce-list">
+			{% for annonce in annonces %}
+				<div class="shadow rounded">
+					<div class="d-flex w-100 justify-content-between bg-dark text-white p-3">
+						<h5 class="mb-1">{{ annonce.titre|upper }}</h5>
+					</div>
+					<p class="mb-1 p-3">
+						{% set clean_description = annonce.description|striptags|replace({'&nbsp;': '. '}) %}
+						{{ clean_description|length > 250 ? clean_description|slice(0, 247) ~ '...' : clean_description }}
+					</p>
+					<div class="p-3 small d-flex flex-column flex-md-row w-100 justify-content-between align-items-center">
+						<span class="mb-2 mb-md-0">
+							<span class="badge bg-secondary">{{ annonce.typeContrat }}</span>
+						</span>
+						<span class="mb-2 mb-md-0">
+							<i class="bi bi-geo-alt-fill"></i>
+							{{ annonce.lieu }}</span>
+						<span class="mb-2 mb-md-0">
+							<i class="bi bi-calendar-check-fill"></i>
+							Publiée le :
+							{{ annonce.dateCreation|date('d/m/Y') }}</span>
+						<span class="mb-2 mb-md-0">
+							<i class="bi bi-calendar-x-fill"></i>
+							Expire le :
+							{{ annonce.dateExpiration|date('d/m/Y') }}</span>
+						<small class="text-muted">
+							<i class="bi bi-eye"></i>
+							Nombre de vues :
+							{{ annonce.annonceVues|length }}</small>
+						<a href="{{ path('app_dashboard_candidat_annonce_show', {'jobId': annonce.jobId}) }}" class="btn btn-info px-5 mt-2 mt-md-0">Voir l'annonce</a>
+					</div>
+
+				</div>
+			{% endfor %}
+		</div>
+	{% else %}
+		<div class="alert alert-warning" role="alert">
+			Aucune annonces trouvées.
+		</div>
+	{% endif %}
+	<div class="navigation">
+		{{ knp_pagination_render(annonces, 'parts/_pagination.html.twig') }}
+	</div>
+	<a href="javascript:history.back()" class="btn btn-outline-primary px-5 rounded-pill my-3">
+		<i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 </div>

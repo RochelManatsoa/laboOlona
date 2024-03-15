@@ -1,16 +1,16 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block body %}
-<div class="container mt-3 px-auto">
-    <section class="text-dark card p-4 my-3">
-        <h4 class="">
-            <i class="bi bi-person-circle mx-2"></i>
+<div class="container px-auto">
+    <section class="text-dark p-2 p-sm-4 m-0 m-sm-3">
+        <h4 class="fs-6 fs-md-4">
+            <i class="bi bi-person-circle"></i>
             Informations personnelles
         </h4>
         <hr class="mb-4">
         {{ form_start(form_one) }}
         <div class="row">
-            <div class="col">
+            <div class="col col-sm-6">
                 <div class="row mb-4 align-items-center">
                     <div class="">
                     <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form_one.vars.data.fileName ? asset('uploads/experts/' ~ form_one.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
@@ -19,7 +19,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="col col-sm-6">
                 {{ form_label(form_one.candidat.nom) }}
                 {{ form_widget(form_one.candidat.nom, {'attr': {'class': 'form-control mb-4'}}) }}
                 {{ form_errors(form_one.candidat.nom) }}
@@ -29,32 +29,32 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col-md-6 col-sm-12">
                 {{ form_label(form_one.candidat.email) }}
                 {{ form_widget(form_one.candidat.email, {'attr': {'class': 'form-control mb-4'}}) }}
                 {{ form_errors(form_one.candidat.email) }}
             </div>
-            <div class="col">
+            <div class="col-md-6 col-sm-12">
                 {{ form_label(form_one.candidat.adress) }} 
                 {{ form_widget(form_one.candidat.adress, {'attr': {'class': 'form-control mb-4'}}) }}
                 {{ form_errors(form_one.candidat.adress) }}
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col-md-6 col-sm-12">
                 {{ form_label(form_one.candidat.telephone) }}
                 {{ form_widget(form_one.candidat.telephone, {'attr': {'class': 'form-control mb-4'}}) }}
                 {{ form_errors(form_one.candidat.telephone) }}
             </div>
-            <div class="col">
+            <div class="col-md-6 col-sm-12">
                 {{ form_label(form_one.localisation) }}
                 {{ form_widget(form_one.localisation, {'attr': {'class': 'form-control mb-4'}}) }}
                 {{ form_errors(form_one.localisation) }}
             </div>
         </div>
         <div class="input-group-append">
-    <button type="submit" class="btn btn-primary rounded-pill">Sauvegarder</button>
-    <button type="button" class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#preview">Aperçu</button>
+        <button type="submit" class="btn btn-primary rounded-pill">Sauvegarder</button>
+        <button type="button" class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#preview">Aperçu</button>
         </div>
         <div style="display:none">
             {{ form_widget(form_one) }}
@@ -62,9 +62,9 @@
         {{ form_end(form_one) }}
     </section>
 
-    <section class="text-dark card p-4 my-3">
-        <h4 class="">
-            <i class="bi bi-person-badge mx-2"></i>
+    <section class="text-dark p-2 p-sm-4 m-0 m-sm-3">
+        <h4 class="fs-6 fs-md-4">
+            <i class="bi bi-person-badge"></i>
             Informations professionnelle
         </h4>
         <hr class="mb-4">
@@ -118,22 +118,22 @@
             {{ form_widget(form_two) }}
         </div>
         <div class="input-group-append">
-    <button type="submit" class="btn btn-primary rounded-pill">Sauvegarder</button>
-    <button type="button" class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#preview">Aperçu</button>
+        <button type="submit" class="btn btn-primary rounded-pill">Sauvegarder</button>
+        <button type="button" class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#preview">Aperçu</button>
         </div>
         {{ form_end(form_two) }}
     </section>
 
-    <section class="text-dark card p-4 my-3">
-        <h4 class="">
-            <i class="bi bi-suitcase-lg mx-2"></i>
+    <section class="text-dark p-2 p-sm-4 m-0 m-sm-3">
+        <h4 class="fs-6 fs-md-4">
+            <i class="bi bi-suitcase-lg"></i>
             Informations liées à votre CV
         </h4>
         {{ form_start(form_three) }}
         <hr class="mb-4">
         <div class="row my-3">
             <div class="col-md-4 col-sm-12">
-                <h5 class=""><i class="bi bi-graph-up mx-2 h5"></i> Experiences</h5>
+                <h5 class="fs-5 fs-md-3"><i class="bi bi-graph-up"></i> Experiences</h5>
             </div>
             <div class="col-md-8 col-sm-12">
             
@@ -340,31 +340,31 @@
                 {% endif %}
         </div>
         <hr class="mb-4">
-    <h5 class=""><i class="mx-2 h5 bi bi-archive"></i> Mes documents</h5>
-    <div class="row">
-        <div class="col">
-        {% for cv in app.user.candidateProfile.cvs %}
-            <div class="col-md-6 my-2">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Icône agrandie -->
-                        <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
-                        <p class="card-title small">{{ cv.safeFileName }}.pdf</p>
-                        <!-- Lien pour visualiser le CV dans un nouvel onglet -->
-                        <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" class="btn btn-sm rounded-pill btn-primary" title="Ouvrir" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
-                        <a href="javascript:void(0);" data-cv-link="{{ cv.cvLink }}" data-cv-id="{{ cv.id }}" class="select-cv-btn btn btn-sm rounded-pill btn-danger" title="Sélectionner"><i class="bi bi-check2-square"></i></a>
+        <h5 class=""><i class="mx-2 h5 bi bi-archive"></i> Mes documents</h5>
+        <div class="row">
+            <div class="col">
+            {% for cv in app.user.candidateProfile.cvs %}
+                <div class="col-md-6 my-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Icône agrandie -->
+                            <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
+                            <p class="card-title small">{{ cv.safeFileName }}.pdf</p>
+                            <!-- Lien pour visualiser le CV dans un nouvel onglet -->
+                            <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" class="btn btn-sm rounded-pill btn-primary" title="Ouvrir" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
+                            <a href="javascript:void(0);" data-cv-link="{{ cv.cvLink }}" data-cv-id="{{ cv.id }}" class="select-cv-btn btn btn-sm rounded-pill btn-danger" title="Sélectionner"><i class="bi bi-check2-square"></i></a>
 
+                        </div>
                     </div>
                 </div>
+            {% endfor %}
             </div>
-        {% endfor %}
+            <div class="col">
+                {{ form_label(form_three.cv) }}
+                {{ form_widget(form_three.cv) }}
+                {{ form_errors(form_three.cv) }}
+            </div>
         </div>
-        <div class="col">
-            {{ form_label(form_three.cv) }}
-            {{ form_widget(form_three.cv) }}
-            {{ form_errors(form_three.cv) }}
-        </div>
-    </div>
         
         <div style="display:none">
             {{ form_widget(form_three) }}
@@ -376,6 +376,7 @@
                 </div>
         {{ form_end(form_three) }}
     </section>
+
 </div>
 {% endblock %}
 {% block modal %}
