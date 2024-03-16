@@ -6,80 +6,72 @@
 {% block body %}
 <div class="container mt-3">
     <h1 class="mb-4">Liste des Rendez-vous</h1>
-        {% if rendezvousList|length > 0 %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Titre de l'annonce</th>
-                    <th>Date et Heure</th>
-                    {% if app.user.type is not same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
-                    <th>Entreprise</th>
-                    {% endif %}
-                    {% if app.user.type is not same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
-                    <th>Candidat</th>
-                    {% endif %}
-                    <th>Lieu</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for rendezvous in rendezvousList %}
-                <tr>
-                    <td>{{ rendezvous.title }}</td>
-                    <td>{{ rendezvous.dateRendezVous|date('d/m/Y H:i') }}</td>
-                    {% if app.user.type is not same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
-                    <td>{{ rendezvous.entreprise.entreprise.nom }}</td>
-                    {% endif %}
-                    {% if app.user.type is not same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
-                    <td>{{ rendezvous.candidat.candidat.nom }}</td>
-                    {% endif %}
-                    <td>{{ rendezvous.lieu }}</td>
-                    <td>
-                        <a href="{{ path('rendezvous_show', {'id': rendezvous.id}) }}" class="btn btn-info">Détails</a>
-                        {# <a href="{{ path('rendezvous_edit', {'id': rendezvous.id}) }}" class="btn btn-primary">Modifier</a> #}
-                        {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
-                            <a href="{{ path('rendezvous_reschedule', {'id': rendezvous.id}) }}" class="btn btn-warning">Reprogrammer</a>
-                            <a href="{{ path('rendezvous_send_invitation', {'id': rendezvous.id}) }}" class="btn btn-success">Envoyer Invitation</a>
-                            <a href="{{ path('rendezvous_send_reminder', {'id': rendezvous.id}) }}" class="btn btn-secondary">Envoyer Rappel</a>
-                            {# <a href="{{ path('rendezvous_sync_calendar', {'id': rendezvous.id}) }}" class="btn btn-dark">Synchroniser Calendrier</a> #}
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        {% else %}
-        <div class="p-5 text-center bg-body-tertiary rounded-3">
-            <h2 class="text-body-emphasis h3">Vous n'avez actuellement aucun rendez-vous prévu.</h2>
-
-                {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
-                <p class="col-lg-8 mx-auto fs-5 text-muted">
-                    Débutez votre recherche d'opportunités, consultez la liste des rendez-vous à venir ici.
+        <div class="row my-4">
+            <div class="col-md-12">
+                <p class="text-muted">
+                    <i class="bi bi-info-circle"></i> Information importante pour vos rendez-vous : Tous nos rendez-vous se déroulent exclusivement sur la plateforme <span class="text-strong">meet.olona-talents.com</span>
                 </p>
-                <div class="d-inline-flex gap-2 mb-5">
-                    <a class="btn btn-outline-secondary btn-lg px-4 rounded-pill" href="{{ path('app_dashboard_candidat_annonce')}}">
-                        Trouver une mission
-                    </a>
-                </div>
-                {% endif %}
-                {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
-                <p class="col-lg-8 mx-auto fs-5 text-muted">
-                    Débutez votre recherche de candidats, consultez la liste des rendez-vous à venir ici.
-                </p>
-                <div class="d-inline-flex gap-2 mb-5">
-                    <a class="btn btn-outline-secondary btn-lg px-4 rounded-pill" href="{{ path('app_dashboard_entreprise_recherche_candidats')}}">
-                        Trouver un profil
-                    </a>
-                    <a class="btn btn-outline-primary btn-lg px-4 rounded-pill" href="{{ path('app_dashboard_entreprise_new_annonce')}}">
-                        Deposer une annonce
-                    </a>
-                </div>
-                {% endif %}
-                
+            </div>
         </div>
+        {% if rendezvousList|length > 0 %}
+            <div class="container mt-3">
+                {% for rendezvous in rendezvousList %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ rendezvous.title }}</h5>
+                        <p class="card-text">
+                            <strong>Date et Heure:</strong> {{ rendezvous.dateRendezVous|date('d/m/Y H:i') }}<br>
+                            {% if app.user.type is not same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+                            <strong>Entreprise:</strong> {{ rendezvous.entreprise.entreprise.nom }}<br>
+                            {% endif %}
+                            {% if app.user.type is not same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+                            <strong>Candidat:</strong> {{ rendezvous.candidat.candidat.nom }}<br>
+                            {% endif %}
+                            <strong>Lieu:</strong> {{ rendezvous.lieu }}
+                        </p>
+                        <div class="d-flex flex-wrap">
+                            <a href="{{ path('rendezvous_show', {'id': rendezvous.id}) }}" class="btn btn-info m-1 rounded-pill px-5">Détails</a>
+                            {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
+                                <a href="{{ path('rendezvous_reschedule', {'id': rendezvous.id}) }}" class="btn btn-warning m-1">Reprogrammer</a>
+                                <a href="{{ path('rendezvous_send_invitation', {'id': rendezvous.id}) }}" class="btn btn-success m-1">Envoyer Invitation</a>
+                                <a href="{{ path('rendezvous_send_reminder', {'id': rendezvous.id}) }}" class="btn btn-secondary m-1">Envoyer Rappel</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="p-5 text-center bg-body-tertiary rounded-3">
+                <h2 class="text-body-emphasis h3">Vous n'avez actuellement aucun rendez-vous prévu.</h2>
+
+                    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+                    <p class="col-lg-8 mx-auto fs-5 text-muted">
+                        Débutez votre recherche d'opportunités, consultez la liste des rendez-vous à venir ici.
+                    </p>
+                    <div class="d-inline-flex gap-2 mb-5">
+                        <a class="btn btn-outline-secondary btn-lg px-4 rounded-pill" href="{{ path('app_dashboard_candidat_annonce')}}">
+                            Trouver une mission
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+                    <p class="col-lg-8 mx-auto fs-5 text-muted">
+                        Débutez votre recherche de candidats, consultez la liste des rendez-vous à venir ici.
+                    </p>
+                    <div class="d-inline-flex gap-2 mb-5">
+                        <a class="btn btn-outline-secondary btn-lg px-4 rounded-pill" href="{{ path('app_dashboard_entreprise_recherche_candidats')}}">
+                            Trouver un profil
+                        </a>
+                        <a class="btn btn-outline-primary btn-lg px-4 rounded-pill" href="{{ path('app_dashboard_entreprise_new_annonce')}}">
+                            Deposer une annonce
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+            </div>
         {% endif %}
     </div>
+<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 </div>
-
 {% endblock %}

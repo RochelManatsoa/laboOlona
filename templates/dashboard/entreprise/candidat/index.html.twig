@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block title %}Chercher un profil{% endblock %}
 
@@ -10,16 +10,15 @@
         <div class="row my-4">
             <div class="col-md-12">
                 <p class="text-muted">
-                    <i class="fa fa-search"></i> Utilisez ce tableau pour trouver des profils candidats correspondant à vos besoins. Cliquez sur "Voir profil" pour plus de détails ou pour entrer en contact avec le candidat.
+                    <i class="bi bi-search"></i> Utilisez ce tableau pour trouver des profils candidats correspondant à vos besoins. Cliquez sur "Voir profil" pour plus de détails ou pour entrer en contact avec le candidat.
                 </p>
             </div>
         </div>
         {{ form_start(form, {'attr': {'class': 'form-group', 'id':'entreprise-candidat-search-form'}}) }}
-            <div class="input-group">
                 <div class="row">
                     <div class="col">
                         <div class="row">
-                            <div class="col-md-6 text-right">
+                            <div class="col-12 col-lg-6 text-center">
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-primary rounded-pill mb-3 mx-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 Recherche avancée
@@ -28,7 +27,7 @@
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </div>
-                            <div class="col-md-6 text-left">
+                            <div class="col-12 col-lg-6 text-center">
                                 </button>
                                 <button class="btn btn-primary rounded-pill mb-3 mx-5" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Secteur d'expertise</button>
 
@@ -49,10 +48,9 @@
                     </div>
                     
                 </div>
-            </div>
 
 
-        <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+        <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
     </div>
 
 

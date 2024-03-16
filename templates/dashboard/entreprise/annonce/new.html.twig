@@ -1,145 +1,161 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
-{% block title %}Tableau de bord{% endblock %}
-
-{% block body %}
-<style>
-    .custom-tooltip {
-        position: relative;
-        cursor: help;
-    }
-
-    .custom-tooltip[data-tooltip]:hover::after {
-        content: attr(data-tooltip);
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #333; /* Couleur de fond */
-        color: white; /* Couleur du texte */
-        text-align: left;
-        border-radius: 4px;
-        padding: 5px 10px;
-        font-size: 12px;
-        z-index: 1;
-        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-        width: 200px; /* Largeur fixe */
-        white-space: normal; /* Permet au texte de passer à la ligne */
-        max-width: 300px; /* Largeur maximale */
-    }
-</style>
-
-
-<div class="container mt-5">
-    <h1 class="mb-4">Créer une annonce</h1>
-
-    <div class="col-md-12">
-                <p class="text-muted">
-                    <i class="fa fa-lightbulb-o"></i> Utilisez ce formulaire pour créer une annonce d'emploi qui attire les candidats idéaux. Décrivez le poste, les compétences requises, et les avantages offerts. Une fois publiée, votre annonce sera visible pour des candidats qualifiés. Cliquez sur "<strong>Publier l'annonce</strong>" une fois que vous avez terminé de remplir les détails.
-                </p>
-            </div>
-
-    <div class="row">
-        <div class="col">
-            <div class="card shadow mb-3">
-                <div class="card-body">
-                    {{ form_start(form) }}
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label class="custom-tooltip" data-tooltip="Indiquez le titre de l'annonce. Ce sera la première chose vue par les candidats."><i class="fa fa-heading" style="color: #333;"></i> {{ form_label(form.titre) }}</label>
-                                {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
-                            </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label class="custom-tooltip" data-tooltip="Choisissez le secteur d'activité correspondant à l'offre d'emploi. Cela aide les candidats à identifier rapidement le domaine concerné."><i class="fa fa-industry" style="color: #333;"></i> {{ form_label(form.secteur) }}</label>
-                            {{ form_widget(form.secteur, {'attr': {'class': 'form-select'}}) }}
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label class="custom-tooltip" data-tooltip="Sélectionnez le type de contrat pour cette offre (ex : CDI, CDD, Freelance). Cela clarifie les attentes en termes de durée et de nature de l'engagement."><i class="fa fa-file-contract" style="color: #333;"></i> {{ form_label(form.typeContrat) }}</label>
-                            {{ form_widget(form.typeContrat, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                        <div class="col">
-                            <label class="custom-tooltip" data-tooltip="Indiquez le lieu de travail. Cela peut être un facteur décisif pour les candidats en fonction de leur situation géographique."><i class="fa fa-map-marker-alt" style="color: #333;"></i> {{ form_label(form.lieu) }}</label>
-                            {{ form_widget(form.lieu, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label class="custom-tooltip" data-tooltip="Définissez la date limite pour postuler à cette offre. Cela encourage les candidats à postuler dans les temps."><i class="fa fa-calendar-alt" style="color: #333;"></i> {{ form_label(form.dateExpiration) }}</label>
-                            {{ form_widget(form.dateExpiration, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                        <div class="col">
-                            <label class="custom-tooltip" data-tooltip="Précisez le salaire ou la fourchette salariale. Cela offre une transparence essentielle et attire des candidats en adéquation avec vos attentes."><i class="fa fa-dollar-sign" style="color: #333;"></i> {{ form_label(form.salaire) }}</label>
-                            {{ form_widget(form.salaire, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label class="custom-tooltip" data-tooltip="Indiquez le nombre de postes disponibles. Cela donne une idée de l'ampleur de recrutement pour ce poste."><i class="fa fa-users" style="color: #333;"></i> {{ form_label(form.nombrePoste) }}</label>
-                            {{ form_widget(form.nombrePoste, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                        <div class="col">
-                            <label class="custom-tooltip" data-tooltip="Listez les compétences clés requises pour ce poste. Cela aide les candidats à évaluer s'ils correspondent aux critères demandés."><i class="fa fa-chart-bar" style="color: #333;"></i> {{ form_label(form.competences) }}</label>
-                            {{ form_widget(form.competences, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label class="custom-tooltip" data-tooltip="Fournissez une description détaillée du poste, incluant les responsabilités et qualifications requises. Une bonne description attire des candidats plus pertinents."><i class="fa fa-align-left" style="color: #333;"></i> {{ form_label(form.description) }}</label>
-                            {{ form_widget(form.description) }}
-                        </div>
-                    </div>
-                    <div style="display:none">
-                        {{ form_widget(form) }}
-                    </div>
-                    <div class="text-end">
-                        <button type="button" data-bs-toggle="modal" id="previewButton" data-bs-target="#previewModal" class="btn btn-outline-dark rounded-pill">Prévisualiser</button>
-                        <button type="submit" class="btn btn-primary rounded-pill">Publier l'annonce</button>
-                        <button type="reset" class="btn btn-outline-dark rounded-pill">Annuler</button>
-                    </div>
-                    <!-- Modal -->
-                    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h2 class="modal-title fs-2" id="previewModalLabel">Prévisualisation de votre annonce</h2>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Contenu de la prévisualisation -->
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary rounded-pill">Publier l'annonce</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {{ form_end(form) }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
-<script>
-    let globalEditorInstance;
-    document.addEventListener('DOMContentLoaded', function() {
-        ClassicEditor.create(document.querySelector('#annonce_description'))
-            .then(editor => {
-                globalEditorInstance = editor;
-                document.querySelector('form').addEventListener('submit', function() {
-                    document.querySelector('#annonce_description').value = globalEditorInstance.getData();
-                });
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    });
-
-</script>
+{% block title %}Tableau de bord
 {% endblock %}
 
+{% block body %}
+	<style>
+		.custom-tooltip {
+			position: relative;
+			cursor: help;
+		}
+
+		.custom-tooltip[data-tooltip]:hover::after {
+			content: attr(data-tooltip);
+			position: absolute;
+			bottom: 100%;
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: #333; /* Couleur de fond */
+			color: white; /* Couleur du texte */
+			text-align: left;
+			border-radius: 4px;
+			padding: 5px 10px;
+			font-size: 12px;
+			z-index: 1;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			width: 200px; /* Largeur fixe */
+			white-space: normal; /* Permet au texte de passer à la ligne */
+			max-width: 300px; /* Largeur maximale */
+		}
+	</style>
+
+
+	<div class="container mt-3">
+		<h1 class="mb-4">Créer une annonce</h1>
+
+		<div class="col-md-12">
+			<p class="text-muted">
+				<i class="text-primary h5 bi bi-lightbulb"></i>
+				Utilisez ce formulaire pour créer une annonce d'emploi qui attire les candidats idéaux. Décrivez le poste, les compétences requises, et les avantages offerts. Une fois publiée, votre annonce sera visible pour des candidats qualifiés. Cliquez sur "<strong>Publier l'annonce</strong>" une fois que vous avez terminé de remplir les détails.
+			</p>
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<div class="card shadow mb-3">
+					<div class="card-body">
+						{{ form_start(form) }}
+						<div class="row mb-3">
+							<div class="col">
+								<label class="text-strong custom-tooltip" data-tooltip="Indiquez le titre de l'annonce. Ce sera la première chose vue par les candidats.">
+									<i class="text-primary h5 bi bi-type"></i>
+									{{ form_label(form.titre) }}</label>
+								{{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col">
+								<label class="text-strong custom-tooltip" data-tooltip="Choisissez le secteur d'activité correspondant à l'offre d'emploi. Cela aide les candidats à identifier rapidement le domaine concerné.">
+									<i class="text-primary h5 bi bi-building"></i>
+									{{ form_label(form.secteur) }}</label>
+								{{ form_widget(form.secteur, {'attr': {'class': 'form-select'}}) }}
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-12 col-lg-6">
+								<label class="text-strong custom-tooltip" data-tooltip="Sélectionnez le type de contrat pour cette offre (ex : CDI, CDD, Freelance). Cela clarifie les attentes en termes de durée et de nature de l'engagement.">
+									<i class="text-primary h5 bi bi-file-earmark-text"></i>
+									{{ form_label(form.typeContrat) }}</label>
+								{{ form_widget(form.typeContrat, {'attr': {'class': 'form-control'}}) }}
+							</div>
+							<div class="col-12 col-lg-6">
+								<label class="text-strong custom-tooltip" data-tooltip="Indiquez le lieu de travail. Cela peut être un facteur décisif pour les candidats en fonction de leur situation géographique.">
+									<i class="text-primary h5 bi bi-geo-alt"></i>
+									{{ form_label(form.lieu) }}</label>
+								{{ form_widget(form.lieu, {'attr': {'class': 'form-control'}}) }}
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-12 col-lg-6">
+								<label class="text-strong custom-tooltip" data-tooltip="Définissez la date limite pour postuler à cette offre. Cela encourage les candidats à postuler dans les temps.">
+									<i class="text-primary h5 bi bi-calendar3"></i>
+									{{ form_label(form.dateExpiration) }}</label>
+								{{ form_widget(form.dateExpiration, {'attr': {'class': 'form-control'}}) }}
+							</div>
+							<div class="col-12 col-lg-6">
+								<label class="text-strong custom-tooltip" data-tooltip="Précisez le salaire ou la fourchette salariale. Cela offre une transparence essentielle et attire des candidats en adéquation avec vos attentes.">
+									<i class="text-primary h5 bi bi-currency-dollar"></i>
+									{{ form_label(form.salaire) }}</label>
+								{{ form_widget(form.salaire, {'attr': {'class': 'form-control'}}) }}
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-12 col-lg-6">
+								<label class="text-strong custom-tooltip" data-tooltip="Indiquez le nombre de postes disponibles. Cela donne une idée de l'ampleur de recrutement pour ce poste.">
+									<i class="text-primary h5 bi bi-people"></i>
+									{{ form_label(form.nombrePoste) }}</label>
+								{{ form_widget(form.nombrePoste, {'attr': {'class': 'form-control'}}) }}
+							</div>
+							<div class="col-12 col-lg-6">
+								<label class="text-strong custom-tooltip" data-tooltip="Listez les compétences clés requises pour ce poste. Cela aide les candidats à évaluer s'ils correspondent aux critères demandés.">
+									<i class="text-primary h5 bi bi-bar-chart"></i>
+									{{ form_label(form.competences) }}</label>
+								{{ form_widget(form.competences, {'attr': {'class': 'form-control'}}) }}
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col">
+								<label class="text-strong custom-tooltip" data-tooltip="Fournissez une description détaillée du poste, incluant les responsabilités et qualifications requises. Une bonne description attire des candidats plus pertinents.">
+									<i class="text-primary h5 bi bi-text-left"></i>
+									{{ form_label(form.description) }}</label>
+								{{ form_widget(form.description) }}
+							</div>
+						</div>
+						<div style="display:none">
+							{{ form_widget(form) }}
+						</div>
+						<div class="text-end">
+							<button type="button" data-bs-toggle="modal" id="previewButton" data-bs-target="#previewModal" class="btn btn-dark rounded-pill">Prévisualiser</button>
+							<button type="submit" class="btn btn-primary rounded-pill">Publier l'annonce</button>
+							<button type="reset" class="btn btn-outline-dark rounded-pill">Annuler</button>
+						</div>
+						<!-- Modal -->
+						<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-lg">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h2 class="modal-title fs-2" id="previewModalLabel">Prévisualisation de votre annonce</h2>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div
+										class="modal-body"><!-- Contenu de la prévisualisation -->
+									</div>
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-primary rounded-pill">Publier l'annonce</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						{{ form_end(form) }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+	<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+	<script>
+		let globalEditorInstance;
+document.addEventListener('DOMContentLoaded', function () {
+ClassicEditor.create(document.querySelector('#annonce_description')).then(editor => {
+globalEditorInstance = editor;
+document.querySelector('form').addEventListener('submit', function () {
+document.querySelector('#annonce_description').value = globalEditorInstance.getData();
+});
+}).catch(error => {
+console.error(error);
+});
+});
+	</script>
+{% endblock %}

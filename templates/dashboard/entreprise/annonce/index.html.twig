@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block title %}Mes annonces{% endblock %}
 
@@ -66,32 +66,35 @@
                 <div class="row my-4">
                     <div class="col-md-12">
                         <p class="text-muted">
-                            <i class="fa fa-info-circle"></i> Astuce : Utilisez les filtres ci-dessous pour affiner les résultats de vos annonces. Cela peut vous aider à gérer plus efficacement vos offres d'emploi et les réponses reçues.
+                            <i class="bi bi-lightbulb"></i> Astuce : Utilisez les filtres ci-dessous pour affiner les résultats de vos annonces. Cela peut vous aider à gérer plus efficacement vos offres d'emploi et les réponses reçues.
                         </p>
                     </div>
                 </div>
                 {{ form_start(form, {'attr': {'class': 'form-group', 'id':'entreprise-annonce-search-form'}}) }}
+                
                 <div class="row">
                     <div class="input-group">
-                            <div class="col">
-                                {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
-                            </div>
-                            <div class="col">
-                                {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
-                            </div>
-                            <div class="col">
-                                {{ form_widget(form.typeContrat, {'attr': {'class': 'form-control'}}) }}
-                            </div>
-                            <div class="col">
-                                {{ form_widget(form.salaire, {'attr': {'class': 'form-control'}}) }}
-                            </div>
+                        <div class="col-12 col-md-6 col-lg-3 mb-2">
+                            {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3 mb-2">
+                            {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3 mb-2">
+                            {{ form_widget(form.typeContrat, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3 mb-2">
+                            {{ form_widget(form.salaire, {'attr': {'class': 'form-control'}}) }}
+                        </div>
                     </div>
                 </div>
+
                 {{ form_end(form) }}
 
             <div id="annonces-container">
                 {% include 'dashboard/entreprise/annonce/_annonces.html.twig' %}
             </div>
+            <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
         </div>
     </div>
 

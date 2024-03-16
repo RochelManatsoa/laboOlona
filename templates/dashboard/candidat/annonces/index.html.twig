@@ -46,37 +46,6 @@
             </form>
         </div>
         
-         <!-- Filter Buttons -->
-{# <div class="filter-buttons mt-2"> #}
-
-<!-- Filter by Title -->
-{# <input type="text" placeholder="Titre" name="title" id="titleFilter"> #}
-
-<!-- Filter by Mission Type -->
-{# <button class="mission-filter" data-mission-type="MONTEUR_VIDEO">Monteur vidéo</button> #}
-{# <button class="mission-filter" data-mission-type="CORRECTEUR">Correcteur</button> #}
-<!-- ... ajoutez des boutons pour d'autres types de missions ... -->
-
-<!-- Filter by Activity Sector -->
-{# <button class="activity-filter" data-activity="SECTOR_1">Secteur 1</button> #}
-{# <button class="activity-filter" data-activity="SECTOR_2">Secteur 2</button> #}
-<!-- ... ajoutez des boutons pour d'autres secteurs d'activité ... -->
-
-<!-- Filter by Mission Description -->
-{# <input type="text" placeholder="Description de la mission" name="mission_description" id="descriptionFilter"> #}
-
-<!-- Filter by Mission Rate -->
-{# <input type="number" placeholder="Tarif pour la mission" name="mission_rate" id="rateFilter"> #}
-
-<!-- Filter by Mission Number -->
-{# <input type="text" placeholder="Numéro associé à la mission" name="mission_number" id="numberFilter"> #}
-
-<!-- Filter by Mission Date -->
-{# <input type="date" placeholder="Date prévue pour la mission" name="mission_date" id="dateFilter">
-
-<button class="reset-filter">Réinitialiser</button>
-</div> #}
-
         <!-- End of filter section -->
 
         <hr>
@@ -86,6 +55,7 @@
         {% endfor %}
     </div>
 </div>
+    <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

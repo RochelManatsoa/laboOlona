@@ -48,10 +48,16 @@ class EntrepriseManager
         $conditions = [];
 
         if($titre == null && $status == null && $typeContrat == null && $salaire == null){
-            return $this->jobListingRepository->findBy(
-                ['entreprise' => $user->getEntrepriseProfile()],
-                ['id' => 'DESC']
-            );
+            $qb = $this->jobListingRepository->createQueryBuilder('j');
+            $qb
+                ->where('j.entreprise = :entreprise')
+                ->andWhere('j.status NOT IN (:statusExcluded)')
+                ->setParameter('entreprise', $user->getEntrepriseProfile())
+                ->setParameter('statusExcluded', ['DELETED', 'EXPIRED', 'RESERVED', 'UNPUBLISHED'])
+                ->orderBy('j.id', 'DESC')
+            ;
+
+            return $qb->getQuery()->getResult();
         }
 
         if (!empty($titre)) {
