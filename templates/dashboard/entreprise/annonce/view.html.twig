@@ -1,49 +1,66 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
-{% block title %}Tableau de bord{% endblock %}
+{% block title %}Tableau de bord
+{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <a class="my-3 btn btn-sm btn-warning rounded-pill" href="{{ path('app_dashboard_entreprise_edit_annonce', {'id': annonce.id}) }}"><i class="bi bi-pencil"></i> Editer</a>  
-    <div class="card border-primary">
-        <div class="card-header bg-primary h3 text-white">
-            {{ annonce.titre }}
-        </div>
-                <div class="card-body">
-        
-        
-                       
-            <h5 class="card-title text-secondary">Resumé de l'annonce</h5>
-            <div class="row">
-                <div class="col-md-6">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">ID: {{ annonce.id }}</li>
-                        <li class="list-group-item">Entreprise: {{ annonce.entreprise.nom }}</li>
-                        <li class="list-group-item">Salaire: <span class="text-success">{{ annonce.salaire }}</span></li>
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Lieu: <span class="text-info">{{ annonce.lieu }}</span></li>
-                        <li class="list-group-item">Type de contrat: <span class="badge bg-warning text-dark">{{ annonce.typeContrat }}</span></li>
-                        <li class="list-group-item">Date de création: <span class="text-muted">{{ annonce.dateCreation|date('d/m/Y') }}</span></li>
-                    </ul>
-                </div>
-                <div class="col-md-12">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Date d'expiration: <span class="text-danger">{{ annonce.dateExpiration|date('d/m/Y') }}</span></li>
-                        <li class="list-group-item">Statut: <span class="badge bg-success">{{ annonce.status|status_label }}</span></li>
-                        <li class="list-group-item">Nombre de postes: {{ annonce.nombrePoste ?: 'Non spécifié' }}</li>
-                    </ul>
-                </div>
-            </div>
-            <hr>
-        <h5 class="card-title text-secondary">Contenu de l'annonce </h5>
-        <p class="card-text">{{ annonce.description|raw }}</p>
-        </div>
-    </div>
-    <hr>
-    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-</div>
+	<div class="container mt-4">
+		<a class="my-3 btn btn-sm btn-warning rounded-pill px-5" href="{{ path('app_dashboard_entreprise_edit_annonce', {'id': annonce.id}) }}">
+			<i class="bi bi-pencil"></i>
+			Modifier</a>
+		<div class="card border-primary">
+			<div class="card-header bg-primary h4 py-4 text-white">
+				{{ annonce.titre }}
+			</div>
+			<div class="card-body">
+
+
+				<h5 class="card-title text-secondary">Resumé de l'annonce</h5>
+				<div class="row">
+					<div class="col-md-6">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">ID:
+								{{ annonce.id }}</li>
+							<li class="list-group-item">Entreprise:
+								{{ annonce.entreprise.nom }}</li>
+							<li class="list-group-item">Salaire:
+								<span class="text-success">{{ annonce.salaire }} €</span>
+							</li>
+						</ul>
+					</div>
+					<div class="col-md-6">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">Lieu:
+								<span class="text-info">{{ annonce.lieu }}</span>
+							</li>
+							<li class="list-group-item">Type de contrat:
+								<span class="badge bg-info text-dark">{{ annonce.typeContrat }}</span>
+							</li>
+							<li class="list-group-item">Date de création:
+								<span class="text-muted">{{ annonce.dateCreation|date('d/m/Y') }}</span>
+							</li>
+						</ul>
+					</div>
+					<div class="col-md-12">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">Date d'expiration:
+								<span class="text-danger">{{ annonce.dateExpiration|date('d/m/Y') }}</span>
+							</li>
+							<li class="list-group-item">Statut:
+								<span class="badge bg-dark">{{ annonce.status|status_label }}</span>
+							</li>
+							<li class="list-group-item">Nombre de postes:
+								{{ annonce.nombrePoste ?: 'Non spécifié' }}</li>
+						</ul>
+					</div>
+				</div>
+				<hr>
+				<h5 class="card-title text-secondary">Contenu de l'annonce
+				</h5>
+				<p class="card-text">{{ annonce.description|raw }}</p>
+			</div>
+		</div>
+		<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+	</div>
 
 {% endblock %}

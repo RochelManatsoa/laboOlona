@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block title %}Chercher un profil{% endblock %}
 
@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <div class="card shadow">
         <div class="card-header bg-primary text-white">
-        <h1 class="h3">Profil candidat : {{ candidat.titre|upper }} {{generatePseudo(candidat)}}</h1>
+        <h1 class="h3 mt-3 text-center"> {{generatePseudo(candidat)}} - {{ candidat.titre|upper }}</h1>
         </div>
         <div class="card-body">
             <div class="row mb-4">
@@ -14,15 +14,15 @@
                     <div class="rounded-circle profile-img bg-image-candidat-view" style="background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
                 </div>
                 <div class="col-md-8">
-                    <h2 class="card-title">Informations Générales</h2>
+                    <h2 class="card-title h3">Informations Générales</h2>
                     <p><strong>Date d'inscription :</strong> <span class="text-muted">{{ candidat.createdAt|date('d/m/Y') }}</span></p>
                     <p><strong>Dernière mise à jour du profil :</strong> <span class="text-muted">{{ candidat.updatedAt|date('d/m/Y') }}</span></p>
                     <p><strong>Localisation :</strong> <span class="text-muted">{{ countryName }}</span></p>
                     <p><strong>Âge :</strong> <span class="text-muted">{{ age }}</span></p>
                     <p><strong>Titre professionnel :</strong> <span class="text-muted">{{ candidat.titre }}</span></p>
                     <p></p>
-                    <p><strong>Statut :</strong> <span class="badge bg-success">{{ candidat.status }}</span></p>
-                    <p><strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-success' : 'bg-danger' }}">{{ candidat.isValid ? 'Oui' : 'Non' }}</span></p>
+                    <p><strong>Statut :</strong> <span class="badge bg-info">{{ candidat.status }}</span></p>
+                    <p><strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-dark' : 'bg-danger' }}">{{ candidat.isValid ? 'Oui' : 'Non' }}</span></p>
                     <p><strong>Diponibilité :</strong> 
                         <span class="text-dark">
                             {% if candidat.availability is not null %}
@@ -81,7 +81,7 @@
 
         </div>
     </div>
-    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+    <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 </div>
 
 {% if candidat.editedCvs|length > 0 %}

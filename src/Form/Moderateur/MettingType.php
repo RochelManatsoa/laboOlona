@@ -39,7 +39,6 @@ class MettingType extends AbstractType
             ])
             ->add('candidat', EntityType::class, [
                 'class' => CandidateProfile::class,
-                // 'choiceLabel' => CandidateProfile::c,
                 'label' => 'Candidat',
                 'required' => false // Le candidat peut être nul
             ])
@@ -59,11 +58,7 @@ class MettingType extends AbstractType
                 'required' => false // Le lieu peut être nul
             ])
             ->add('status', ChoiceType::class, [
-                'choices' => [
-                    'En Attente' => 'EN_ATTENTE',
-                    'Confirmé' => 'CONFIRME',
-                    'Annulé' => 'ANNULE',
-                ],
+                'choices' => Metting::getStatuses(),
                 'label' => 'Statut',
                 'required' => false // Le statut peut être nul
             ])

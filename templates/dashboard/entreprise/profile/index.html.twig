@@ -1,63 +1,80 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block title %}Mon compte{% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
+    <div class="container mt-3">
         <h1 class="mb-4">Mon compte</h1>
 
         <div class="row">
-            <hr class="my-4">
             {{ form_start(form) }}
             <section class="text-dark card shadow p-4 my-3">
-                <h4 class="">
+                <h2 class="h4">
                     <i class="bi bi-building-check mx-2"></i>
                     Entreprise
-                </h4>
+                </h2>
                 <hr class="mb-4">
                 
                 <div class="row">
-                    <div class="col">
+                    <div class="col-12 col-lg-6">
+                        <div class="text-dark text-strong">
                         {{ form_label(form.nom) }}
+                        </div>
                         {{ form_widget(form.nom, {'attr': {'class': 'form-control mb-4'}}) }}
+                        <div class="text-dark text-strong">
                         {{ form_label(form.taille) }}
+                        </div>
                         {{ form_widget(form.taille, {'attr': {'class': 'form-control mb-4'}}) }}
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-lg-6">
+                        <div class="text-dark text-strong">
                         {{ form_label(form.siteWeb) }}
+                        </div>
                         {{ form_widget(form.siteWeb, {'attr': {'class': 'form-control mb-4'}}) }}
+                        <div class="text-dark text-strong">
                         {{ form_label(form.secteurs) }}
+                        </div>
                         {{ form_widget(form.secteurs) }}
                     </div>
                 </div>
                 <div class="row">
+                    <div class="text-dark text-strong">
                     {{ form_label(form.description) }}
+                    </div>
                     {{ form_widget(form.description, {'attr': {'class': 'form-control mb-4'}}) }}
                 </div>
             </section>
             <section class="text-dark card shadow p-4 my-3">
-                <h4 class="">
+                <h2 class="h4">
                     <i class="bi bi-envelope-check mx-2"></i>
                     Contact
-                </h4>
+                </h2>
                 <hr class="mb-4">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-12 col-lg-6">
+                        <div class="text-dark text-strong">
                         {{ form_label(form.entreprise.email) }}
+                        </div>
                         {{ form_widget(form.entreprise.email, {'attr': {'class': 'form-control mb-4'}}) }}
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-lg-6">
+                        <div class="text-dark text-strong">
                         {{ form_label(form.entreprise.telephone) }}
+                        </div>
                         {{ form_widget(form.entreprise.telephone, {'attr': {'class': 'form-control mb-4'}}) }}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-12 col-lg-6">
+                        <div class="text-dark text-strong">
                         {{ form_label(form.entreprise.adress) }}
+                        </div>
                         {{ form_widget(form.entreprise.adress, {'attr': {'class': 'form-control mb-4'}}) }}
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-lg-6">
+                        <div class="text-dark text-strong">
                         {{ form_label(form.localisation) }}
+                        </div>
                         {{ form_widget(form.localisation, {'attr': {'class': 'form-control mb-4'}}) }}
                     </div>
                 </div>
@@ -66,7 +83,7 @@
                 {{ form_widget(form) }}
             </div>
             <div class="d-flex justify-content-center mb-5 mt-4">
-                <button type="submit" id="get_started" class="btn btn-primary">
+                <button type="submit" id="get_started" class="btn btn-outline-primary rounded-pill px-5">
                     Enregister
                 </button>
             </div>

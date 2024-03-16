@@ -57,11 +57,9 @@ class CandidatureController extends AbstractController
         $form->handleRequest($request);
 
         $data = $this->entrepriseManager->findAllCandidature();
-        // dd($data);
         if ($form->isSubmitted() && $form->isValid()) {
             $titre = $form->get('titre')->getData();
             $data = $this->entrepriseManager->findAllCandidature($titre);
-            // dd($data);
             if ($request->isXmlHttpRequest()) {
                 // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
                 return new JsonResponse([

@@ -81,6 +81,57 @@
 				{% set current_route = app.request.attributes.get('_route') %}
 				<div class="d-flex flex-column flex-shrink-0 px-2 text-white bg-dark position-sticky top-0 small">
 					<ul class="nav nav-pills flex-column mb-auto">
+						{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+							<li>
+								<a href="{{ path('app_dashboard_candidat_annonce') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_annonce' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-search"></i>
+									{{ 'app_dashboard_candidat.find'|trans }}
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_candidat_annonces') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_annonces' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-megaphone"></i>
+									Mes candidatures
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('rendezvous_index')}}" class="nav-link {{ current_route == 'rendezvous_index' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-calendar3"></i>
+									{{ 'app_dashboard_entreprise.metting'|trans }}
+								</a>
+							</li>
+						{% endif %}
+						{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+							<li class="nav-item">
+								<a href="{{ path('app_dashboard_entreprise_new_annonce')}}" 
+									class="nav-link {{ current_route == 'app_dashboard_entreprise_new_annonce' ? 'active' : 'text-white' }}" 
+									{{ current_route == 'app_dashboard_entreprise_new_annonce' ? 'aria-current=page' : '' }}>
+									<i class="mx-2 h5 bi bi-plus-lg"></i>
+									{{ 'app_dashboard_entreprise.publish'|trans }}   
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_entreprise_annonces')}}" 
+									class="nav-link {{ current_route == 'app_dashboard_entreprise_annonces' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-megaphone"></i>
+									{{ 'app_dashboard_entreprise.my_posting'|trans }}   
+								</a>
+
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_entreprise_recherche_candidats')}}" 
+									class="nav-link {{ current_route == 'app_dashboard_entreprise_recherche_candidats' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-search"></i>
+									{{ 'app_dashboard_entreprise.find'|trans }}  
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_home_simulateur_portage') }}" class="nav-link {{ current_route == 'app_home_simulateur_portage' ? 'active' : 'text-white' }}">
+								<i class="mx-2 h5 bi bi-currency-exchange"></i>
+								Simulateur salaire
+								</a>
+							</li>
+						{% endif %}
 						{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_REFERRER')) %}
 							<li class="nav-item">
 								<a href="{{ path('app_dashboard_referrer')}}" class="nav-link {{ current_route == 'app_dashboard_referrer' ? 'active' : 'text-white' }}" {{ current_route == 'app_dashboard_referrer' ? 'aria-current=page' : '' }}>
@@ -118,26 +169,6 @@
 								<a href="{{ path('app_dashboard_referrer_become')}}" class="nav-link {{ current_route == 'app_dashboard_referrer_become' ? 'active' : 'text-white' }}">
 									<i class="mx-2 h5 bi bi-person-vcard"></i>
 									Mes infos
-								</a>
-							</li>
-						{% endif %}
-						{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
-							<li>
-								<a href="{{ path('app_dashboard_candidat_annonce') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_annonce' ? 'active' : 'text-white' }}">
-									<i class="mx-2 h5 bi bi-search"></i>
-									{{ 'app_dashboard_candidat.find'|trans }}
-								</a>
-							</li>
-							<li>
-								<a href="{{ path('app_dashboard_candidat_annonces') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_annonces' ? 'active' : 'text-white' }}">
-									<i class="mx-2 h5 bi bi-megaphone"></i>
-									Mes candidatures
-								</a>
-							</li>
-							<li>
-								<a href="{{ path('rendezvous_index')}}" class="nav-link {{ current_route == 'rendezvous_index' ? 'active' : 'text-white' }}">
-									<i class="mx-2 h5 bi bi-calendar3"></i>
-									{{ 'app_dashboard_entreprise.metting'|trans }}
 								</a>
 							</li>
 						{% endif %}

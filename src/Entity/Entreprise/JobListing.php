@@ -33,6 +33,16 @@ class JobListing
     const STATUS_FEATURED = 'FEATURED';
     const STATUS_RESERVED = 'RESERVED';
 
+    public static function getCompanyStatuses() {
+        return [
+            'En attente' => self::STATUS_PENDING ,
+            'Bruillon' => self::STATUS_DRAFT ,
+            'Publiée' => self::STATUS_PUBLISHED ,
+            'Rejetée' => self::STATUS_REJECTED ,
+            'Archivée' => self::STATUS_ARCHIVED ,
+            'Mis en avant' => self::STATUS_FEATURED ,
+        ];
+    }
 
     public static function getStatuses() {
         return [

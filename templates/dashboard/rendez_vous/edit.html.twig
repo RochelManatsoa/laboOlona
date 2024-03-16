@@ -1,65 +1,98 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 
 {% block title %}Modifier un rendez-vous {% endblock %}
 
 {% block body %}
-<div class="container mt-3 col-md-6">
+<div class="container mt-3">
     <h1 class="mb-4 h2">Modifier un rendez-vous</h1>
-   
-    <div class="card shadow p-3">
+    <div class="row">
+        <div class="col-12 col-lg-6">
+        
+            <div class="card shadow p-3">
 
-        {{ form_start(form) }}
-                <div class="form-group mb-2">
-                    {{ form_label(form.title) }}
-                    {{ form_widget(form.title) }}
-                    {{ form_errors(form.title) }}
-                </div>
-                <div class="form-group mb-2">
-                    {{ form_label(form.dateRendezVous) }}
-                    {{ form_widget(form.dateRendezVous) }}
-                    {{ form_errors(form.dateRendezVous) }}
-                </div>
-                {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
-                    <div class="form-group mb-2">
-                        {{ form_label(form.candidat) }}
-                        {{ form_widget(form.candidat) }}
-                        {{ form_errors(form.candidat) }}
-                    </div>
-                    <div class="form-group mb-2">
-                        {{ form_label(form.entreprise) }}
-                        {{ form_widget(form.entreprise) }}
-                        {{ form_errors(form.entreprise) }}
-                    </div>
-                    <div class="form-group mb-2">
-                        {{ form_label(form.link) }}
-                        {{ form_widget(form.link) }}
-                        {{ form_errors(form.link) }}
-                    </div>
-                {% endif %}
-                <div class="form-group mb-2">
-                    {{ form_label(form.lieu) }}
-                    {{ form_widget(form.lieu) }}
-                    {{ form_errors(form.lieu) }}
-                </div>
-                <div class="form-group mb-2">
-                    {{ form_label(form.commentaire) }}
-                    {{ form_widget(form.commentaire) }}
-                    {{ form_errors(form.commentaire) }}
-                </div>
-                <div style="display:none;">
-                    {{ form_label(form) }}
-                    {{ form_widget(form) }}
-                    {{ form_errors(form) }}
-                </div>
-            
-                <div class="form-group my-3">
-                    <button type="submit" class="btn btn-primary">Envoyer la demande de modification du rendez-vous</button>
-                    <a href="{{ path('rendezvous_index') }}" class="btn btn-secondary">Annuler</a>
-                </div>
-        {{ form_end(form) }}
+                {{ form_start(form) }}
+                        <div class="form-group mb-2">
+                            <div class="text-strong">
+                            {{ form_label(form.title) }}
+                            </div>
+                            {{ form_widget(form.title, {'attr': {'readonly': true}}) }}
+                            {{ form_errors(form.title) }}
+                        </div>
+                        <div class="form-group mb-2">
+                            <div class="text-strong">
+                            {{ form_label(form.lieu) }}
+                            </div>
+                            {{ form_widget(form.lieu, {'attr': {'readonly': true}}) }}
+                            {{ form_errors(form.lieu) }}
+                        </div>
+                        <div class="form-group mb-2">
+                            <div class="text-strong">
+                            {{ form_label(form.dateRendezVous) }}
+                            </div>
+                            {{ form_widget(form.dateRendezVous) }}
+                            {{ form_errors(form.dateRendezVous) }}
+                        </div>
+                        {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
+                            <div class="form-group mb-2">
+                                <div class="text-strong">
+                                {{ form_label(form.candidat) }}
+                                </div>
+                                {{ form_widget(form.candidat) }}
+                                {{ form_errors(form.candidat) }}
+                            </div>
+                            <div class="form-group mb-2">
+                                <div class="text-strong">
+                                {{ form_label(form.entreprise) }}
+                                </div>
+                                {{ form_widget(form.entreprise) }}
+                                {{ form_errors(form.entreprise) }}
+                            </div>
+                            <div class="form-group mb-2">
+                                <div class="text-strong">
+                                {{ form_label(form.link) }}
+                                </div>
+                                {{ form_widget(form.link) }}
+                                {{ form_errors(form.link) }}
+                            </div>
+                        {% endif %}
+                        <div class="form-group mb-2">
+                            <div class="text-strong">
+                            {{ form_label(form.commentaire) }}
+                            </div>
+                            {{ form_widget(form.commentaire) }}
+                            {{ form_errors(form.commentaire) }}
+                        </div>
+                        <div style="display:none;">
+                            <div class="text-strong">
+                            {{ form_label(form) }}
+                            </div>
+                            {{ form_widget(form) }}
+                            {{ form_errors(form) }}
+                        </div>
+                    
+                        <div class="form-group my-3">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">Demander</button>
+                            <a href="{{ path('rendezvous_index') }}" class="btn btn-warning rounded-pill px-4">Annuler</a>
+                        </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="p-3 p-sm-5 text-center bg-body-tertiary rounded-3">
+                <h2 class="fs-7">Modification de la date de rendez-vous</h2>
+                <p class="fs-7">
+                    Si vous souhaitez demander une modification de la date de votre entretien, veuillez remplir le formulaire de modification à côté. Votre demande sera envoyée aux modérateurs qui se chargeront d'organiser un nouveau rendez-vous avec le client ou le candidat selon votre besoin. Il est important de communiquer les raisons de cette modification pour faciliter la reprogrammation. Nous vous remercions de votre compréhension et de votre coopération.
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 
-<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+
+	<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+	<script>
+		ClassicEditor.create(document.querySelector('#metting_commentaire'))
+	</script>
 {% endblock %}

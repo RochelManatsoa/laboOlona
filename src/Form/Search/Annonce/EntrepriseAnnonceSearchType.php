@@ -22,7 +22,7 @@ class EntrepriseAnnonceSearchType extends AbstractType
                 ]
             ])
             ->add('status', ChoiceType::class, [
-                'choices' => JobListing::getStatuses(),
+                'choices' => JobListing::getCompanyStatuses(),
                 'required' => false,
                 'label' => false,
                 'placeholder' => 'Status ...',

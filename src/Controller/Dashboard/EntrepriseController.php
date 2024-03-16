@@ -3,8 +3,6 @@
 namespace App\Controller\Dashboard;
 
 use App\Entity\User;
-use App\Entity\Langue;
-use App\Entity\Secteur;
 use App\Entity\Notification;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\CandidateProfile;
@@ -16,14 +14,11 @@ use App\Manager\EntrepriseManager;
 use App\Manager\ModerateurManager;
 use App\Form\Entreprise\AnnonceType;
 use App\Manager\NotificationManager;
-use App\Entity\Candidate\Competences;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use Symfony\Component\Intl\Countries;
-use App\Entity\Candidate\Applications;
 use App\Entity\Moderateur\Assignation;
 use App\Form\Profile\EditEntrepriseType;
-use App\Form\Search\SearchCandidateType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\Search\SearchCandidateTypeCopy;
@@ -39,7 +34,6 @@ use App\Repository\Candidate\ApplicationsRepository;
 use App\Repository\Moderateur\TypeContratRepository;
 use App\Form\Search\Annonce\EntrepriseAnnonceSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use App\Form\Search\Candidature\EntrepriseCandidatureSearchType;
 use App\Twig\AppExtension;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -126,9 +120,6 @@ class EntrepriseController extends AbstractController
                             $request->query->getInt('page', 1),
                             10
                         ),
-                        'job_listings' => $jobListingRepository->findBy(['entreprise' => $entreprise]),
-                        'applications' => $this->applicationRepository->findBy(['jobListing' => $entreprise]),
-                        'meetings' => $this->mettingRepository->findBy(['entreprise' => $entreprise]),
                         'result' => $data
                     ])
                 ]);
