@@ -5,6 +5,7 @@ namespace App\Form\Entreprise;
 use App\Entity\Candidate\Competences;
 use App\Entity\Secteur;
 use App\Entity\Entreprise\JobListing;
+use App\Entity\EntrepriseProfile;
 use App\Entity\Moderateur\TypeContrat;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -45,6 +46,11 @@ class AnnonceType extends AbstractType
                 'label' => 'app_dashboard_entreprise_posting_new.planned_date',
                 'widget' => 'single_text',  
                 'format' => 'yyyy-MM-dd',   
+            ])
+            ->add('entreprise', EntityType::class, [
+                'class' => EntrepriseProfile::class,
+                'label' => 'Selectionnez une entreprise',
+                'attr' => []
             ])
             ->add('typeContrat', EntityType::class, [
                 'class' => TypeContrat::class,

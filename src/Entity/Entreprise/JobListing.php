@@ -104,7 +104,7 @@ class JobListing
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lieu = null;
 
-    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Applications::class)]
+    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Applications::class, cascade: ['remove'])]
     private Collection $applications;
 
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
@@ -113,7 +113,7 @@ class JobListing
     #[ORM\ManyToMany(targetEntity: Competences::class, inversedBy: 'jobListings')]
     private Collection $competences;
 
-    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: AnnonceVues::class)]
+    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: AnnonceVues::class, cascade: ['remove'])]
     private Collection $annonceVues;
 
     #[ORM\ManyToMany(targetEntity: Langue::class, inversedBy: 'jobListings')]
@@ -128,7 +128,7 @@ class JobListing
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
     private ?TypeContrat $typeContrat = null;
 
-    #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: Assignation::class)]
+    #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: Assignation::class, cascade: ['remove'])]
     private Collection $assignations;
 
     #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Referral::class)]

@@ -4,10 +4,12 @@ namespace App\Controller\Dashboard\Moderateur;
 
 use DateTime;
 use App\Entity\Notification;
+use Symfony\Component\Uid\Uuid;
 use App\Entity\Vues\AnnonceVues;
 use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
+use App\Form\Entreprise\AnnonceType;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
@@ -207,6 +209,32 @@ class AnnonceController extends AbstractController
         $this->addFlash('success', 'Annonce supprimée avec succès.');
 
         return $this->redirectToRoute('app_dashboard_moderateur_annonces');
+    }
+
+    #[Route('/new/annonce', name: 'new_annonce_moderateur')]
+    public function newAnnonce(Request $request)
+    {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+
+        $jobListing = new JobListing();
+        $jobListing->setDateCreation(new \DateTime());
+        $jobListing->setJobId(new Uuid(Uuid::v1()));
+        $jobListing->setStatus(JobListing::STATUS_PENDING);
+
+        $form = $this->createForm(AnnonceType::class, $jobListing);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->persist($jobListing);
+            $this->em->flush();
+            $this->addFlash('success', 'Annonce créée pour '.$jobListing->getEntreprise()->getNom());
+
+            return $this->redirectToRoute('app_dashboard_moderateur_annonces');
+        }
+
+        return $this->render('dashboard/moderateur/annonce/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/details/annonce/{id}', name: 'details_annonce', methods: ['GET'])]
