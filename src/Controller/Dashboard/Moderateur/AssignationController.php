@@ -48,13 +48,11 @@ class AssignationController extends AbstractController
                 'form_id' => $formName
             ]);
             $assignationForm->handleRequest($request);
-            // dump($assignationForm);
             $assignationForms[$profil->getId()] = [
                 'form' => $assignationForm->createView(),
                 'formName' => $formName
             ];
         }
-        // dd($assignationForms);
     
         return $this->render('dashboard/moderateur/assignation/index.html.twig', [
             'affectations' => $this->assignationRepository->findAll(),
@@ -77,8 +75,6 @@ class AssignationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Traitez l'assignation ici
-            // dd($form->getData());
             $this->em->persist($assignation);
             $this->em->flush();
         }
@@ -98,7 +94,6 @@ class AssignationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Traitez l'assignation ici
-            // dd($form->getData());
             $this->em->persist($assignation);
             $this->em->flush();
         }

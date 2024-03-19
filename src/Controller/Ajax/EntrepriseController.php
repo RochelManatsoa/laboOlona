@@ -33,14 +33,12 @@ class EntrepriseController extends AbstractController
             
             // Vous pouvez également supprimer les espaces autour de chaque secteur
             $secteurs = array_map('trim', $secteurs);
-            // dd($secteurs);
         
             // Maintenant, $secteurs est un tableau contenant les secteurs
             
             // Récupérer les titres basés sur les secteurs
             $titres = $this->candidateProfileRepository->findUniqueTitlesBySecteurs($secteurs);
             $competences = $this->competencesRepository->findCompetencesBySecteurs($secteurs);
-            // dd($titres);
             // Récupérer les titres basés sur les secteurs
     
             // Renvoyer les options de titre sous forme de réponse JSON
@@ -66,13 +64,11 @@ class EntrepriseController extends AbstractController
             
             // Vous pouvez également supprimer les espaces autour de chaque secteur
             $secteurs = array_map('trim', $secteurs);
-            // dd($secteurs);
         
             // Maintenant, $secteurs est un tableau contenant les secteurs
             
             // Récupérer les competences basés sur les secteurs
             $competences = $this->competencesRepository->findCompetencesBySecteurs($secteurs);
-            // dd($competences);
         }
 
         // Récupérer les competences basés sur les secteurs

@@ -695,12 +695,14 @@ class ModerateurController extends AbstractController
 
         if ($this->isCsrfTokenValid('delete' . $candidat->getId(), $request->request->get('_token'))) {
             $employe = $entityManager->getRepository(Employe::class)->findOneBy(['user' => $candidat->getCandidat()]);
-            $simulateurs = $entityManager->getRepository(Simulateur::class)->findBy(['employe' => $employe]);
-            foreach ($simulateurs as $simulateur) {
-                $employe->removeSimulateur($simulateur);
+            if($employe instanceof Employe){
+                $simulateurs = $entityManager->getRepository(Simulateur::class)->findBy(['employe' => $employe]);
+                foreach ($simulateurs as $simulateur) {
+                    $employe->removeSimulateur($simulateur);
+                }
+                $entityManager->remove($employe);
+                $entityManager->flush();
             }
-            $entityManager->remove($employe);
-            $entityManager->flush();
             $invitations = $entityManager->getRepository(Invitation::class)->findBy(['reader' => $candidat->getCandidat()->getId()]);
             foreach ($invitations as $invitation) {
                 $invitation->setReader(null);

@@ -61,7 +61,6 @@ class WooCommerce
         $values = [];
         $resp = [];
 
-        // dd($responses);
         foreach ($responses as $key => $response) {
             $resp['id'] = $response->id;
             $resp['name'] = $response->name;

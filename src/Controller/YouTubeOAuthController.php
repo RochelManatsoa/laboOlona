@@ -88,7 +88,6 @@ class YouTubeOAuthController extends AbstractController
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Récupérer les vidéos de la playlist
             $videosChannel = $youtubeService->getPlaylistVideos('PLV5Z9YWBGhPxh4FPyXsU-VLY7PsCOpcpn');
-            // dd($videosChannel);
             $videos = [];
 
             foreach ($videosChannel as $key => $video) {
@@ -115,7 +114,6 @@ class YouTubeOAuthController extends AbstractController
 
         }
 
-        // dd($videos);
         // Rendre une vue avec les vidéos
         return $this->render('dashboard/formation/youtube.html.twig', [
             'videos' => $videos,

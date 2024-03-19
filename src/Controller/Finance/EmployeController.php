@@ -86,7 +86,6 @@ class EmployeController extends AbstractController
         $form = $this->createForm(EmployeType::class, $employe);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            // dd($form->getData()->getUser());
             $user = $form->getData()->getUser();
             $currentRoles = $user->getRoles();
             if (!in_array('ROLE_EMPLOYE', $currentRoles)) {

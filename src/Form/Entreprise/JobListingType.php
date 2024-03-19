@@ -93,7 +93,6 @@ class JobListingType extends AbstractType
         
             // récupérer la valeur du champ "aicores" depuis le formulaire
             $competencesDataValue = $form->get('competences')->getNormData();
-            dump($competencesDataValue);
             
             // diviser la chaîne en tableau
             $skillValues = explode(',', $competencesDataValue);

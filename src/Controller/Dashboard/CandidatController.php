@@ -242,7 +242,6 @@ class CandidatController extends AbstractController
         $data = $this->jobListingRepository->findAllJobListingPublished();
         // $annonces = $this->candidatManager->annoncesCandidatDefaut($candidat);
         if ($form->isSubmitted() && $form->isValid()) {
-            // dd($form->getData());
             $titre = $form->get('titre')->getData();
             $typeContratObjet = $form->get('typeContrat')->getData();
             $typeContrat = $typeContratObjet ? $typeContratObjet->getNom() : null; 
