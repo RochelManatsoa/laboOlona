@@ -3,7 +3,7 @@
 {% block body %}
 <div class="container mt-5">
     <h2>Gestion des rendez-vous</h2>
-    <a href="{{ path('app_dashboard_moderateur_new_secteur')}}" class="btn btn-secondary my-3">Nouveau</a>
+    <a href="{{ path('app_dashboard_moderateur_new_secteur')}}" class="btn btn-warning my-3 rounded-pill px-5">Nouveau</a>
     {{ form_start(form, {'attr': {'class': 'form-group mb-2 col-6'}}) }}
     <div class="input-group">
         {{ form_widget(form.secteur, {'attr': {'class': 'form-control'}}) }}
