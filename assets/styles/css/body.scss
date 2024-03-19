@@ -20,6 +20,10 @@ h1, h2, h3, a, button {
 a{
     text-decoration: none!important;
 }
+.pt-sans a{
+    font-family: 'PT Sans', sans-serif;
+    color:#0e6efd!important;
+}
 .content-padded {
     flex: 1;
     padding-top: 200px; /* Ajustez cette valeur en fonction de la hauteur de votre navbar. */

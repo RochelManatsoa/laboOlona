@@ -5,6 +5,7 @@ namespace App\Controller\Dashboard\Moderateur;
 use DateTime;
 use App\Entity\Notification;
 use Symfony\Component\Uid\Uuid;
+use App\Entity\CandidateProfile;
 use App\Entity\Vues\AnnonceVues;
 use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
@@ -88,7 +89,7 @@ class AnnonceController extends AbstractController
             $this->em->flush();
             $this->addFlash('success', 'Annonce mise à jour avec succès');
 
-            return $this->redirectToRoute('app_dashboard_moderateur_annonce_view', [ 'id' => $form->getData()->getId()]);
+            return $this->redirectToRoute('app_dashboard_moderateur_annonces', [ 'id' => $form->getData()->getId()]);
         }
 
         return $this->render('dashboard/moderateur/annonce/view.html.twig', [
@@ -170,6 +171,25 @@ class AnnonceController extends AbstractController
             $entityManager->flush();
             /** Envoi email à l'entreprise si validée*/
             if($annonce->getStatus() === JobListing::STATUS_PUBLISHED || $annonce->getStatus() === JobListing::STATUS_FEATURED ){
+                $secteurAnnonce = $annonce->getSecteur();
+                $candidats = $entityManager->getRepository(CandidateProfile::class)->findBySecteur($secteurAnnonce);
+
+                foreach ($candidats as $candidat) {
+                    if ($candidat->getCandidat() && $candidat->getCandidat()->getEmail()) {
+                        // Envoi de l'email au candidat
+                        $this->mailerService->send(
+                            $candidat->getCandidat()->getEmail(),
+                            "Nouvelle opportunité dans votre secteur d'activité",
+                            "candidat/nouvelle_opportunite.html.twig",
+                            [
+                                'user' => $candidat->getCandidat(),
+                                'details_annonce' => $annonce,
+                                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_candidat_annonce_show', ['jobId' => $annonce->getJobId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                            ]
+                        );
+                    }
+                }
+                
                 $this->mailerService->send(
                     $annonce->getEntreprise()->getEntreprise()->getEmail(),
                     "Statut de votre annonce sur Olona Talents",
