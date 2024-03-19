@@ -54,7 +54,6 @@ class SearchCandidateType extends AbstractType
                 $data = new SearchCandidateData();
             }
             $secteur = $data->getSecteurs() ?? [];
-            // dump("PRE_SET_DATA", $secteur);
             $this->addTitreField($form, $secteur);
 
         });
@@ -63,7 +62,6 @@ class SearchCandidateType extends AbstractType
             $form = $event->getForm();
             $data = $event->getData();
             $secteur = isset($data['secteurs']) ? $data['secteurs'] : [];
-            // dump("PRE_SUBMIT", $secteur);
             // Si le secteur est défini, utilisez-le pour mettre à jour le champ "titre"
             if (!empty($secteur)) {
                 $this->updateTitreChoices($form, $secteur);
@@ -95,7 +93,6 @@ class SearchCandidateType extends AbstractType
             'autocomplete' => true,
             'required' => false, // Vous pouvez rendre ce champ facultatif
         ]);
-        // dump(array_combine($titres, $titres));
 
         $form->add('competences', ChoiceType::class, [
             'choices' => $secteur ? $this->competencesRepository->findCompetencesBySecteurs($secteur) : [],
@@ -120,15 +117,12 @@ class SearchCandidateType extends AbstractType
     private function updateTitreChoices(FormInterface $form, $secteur)
     {
         $titres = $this->candidateProfileRepository->findUniqueTitlesBySecteurs($secteur);
-        // dump(array_combine($titres, $titres));
 
         // Supprimer le champ "titre" existant
         if ($form->has('titre')) {
             $form->remove('titre');
-            // dd("titre removed");
         }
 
-        // dd($titres);
         // Recréer le champ "titre" avec les nouvelles options
         $form->add('titre', ChoiceType::class, [
             'choices' => array_combine($titres, $titres),
@@ -143,8 +137,6 @@ class SearchCandidateType extends AbstractType
             'required' => false,
             // 'auto_initialize' => false, 
         ]);
-        // dump(array_combine($titres, $titres));
-        // ...
     }
 
     public function configureOptions(OptionsResolver $resolver): void

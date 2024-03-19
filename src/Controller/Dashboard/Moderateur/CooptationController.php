@@ -68,7 +68,7 @@ class CooptationController extends AbstractController
     public function referrer(JobListing $annonce, ReferrerProfile $referrerProfile, ReferralRepository $referralRepository): Response
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
-        // dd($annonce, $referrerProfile);
+        
         return $this->render('dashboard/moderateur/cooptation/referrer.html.twig', [
             'annonce' => $annonce,
             'coopteur' => $referrerProfile,

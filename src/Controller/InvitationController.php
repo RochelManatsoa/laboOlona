@@ -87,7 +87,6 @@ class InvitationController extends AbstractController
     #[Route('/invitation/referral/{referralCode}', name: 'app_invitation_referral')]
     public function referral(Request $request, string $referralCode): Response
     {        
-        // dd($referralCode);
         if (!preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[4][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/', $referralCode)) {
             throw new InvitationUsedException('Le format du code de parrainage est invalide.');
         }

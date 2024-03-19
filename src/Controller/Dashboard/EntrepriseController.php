@@ -272,14 +272,12 @@ class EntrepriseController extends AbstractController
             $competences = $form->get('competences')->getData();
             $langues = $form->get('langue')->getData();
             $page = $form->get('page')->getData();
-            // dd($secteurs, $titre, $competences, $langues, $page);
             $competencesArray = $competences instanceof \Doctrine\Common\Collections\Collection ? $competences->toArray() : $competences;
             $languesArray = $langues instanceof \Doctrine\Common\Collections\Collection ? $langues->toArray() : $competences;
             $titreValues = array_map(function ($titreObject) {
                 return $titreObject->getTitre(); // Assurez-vous que getTitre() renvoie la chaîne du titre
             }, $titre);
             $data = $this->entrepriseManager->filter($secteurs, $titreValues, $competencesArray, $languesArray);
-            // dd($secteurs, $titre, $competencesArray, $languesArray, $data);
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'content' => $this->renderView('dashboard/entreprise/candidat/_candidats.html.twig', [

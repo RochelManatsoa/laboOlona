@@ -70,7 +70,6 @@ class YouTubeService
         }
 
         // Retourne les informations de la chaîne
-        // dd($channelResponse['items'][0]);
         return $channelResponse['items'][0];
     }
 

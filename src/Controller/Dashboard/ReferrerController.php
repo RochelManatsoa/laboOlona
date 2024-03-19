@@ -90,8 +90,6 @@ class ReferrerController extends AbstractController
         $values = array_values($formattedResults);
 
 
-        // dd($formattedResults, $d, $k);
-
         $chart->setData([
             'labels' => $labels,
             'datasets' => [
