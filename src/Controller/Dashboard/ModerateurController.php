@@ -15,6 +15,7 @@ use App\Entity\EntrepriseProfile;
 use App\Entity\ModerateurProfile;
 use App\Entity\Referrer\Referral;
 use App\Service\User\UserService;
+use App\Entity\Finance\Simulateur;
 use App\Entity\Moderateur\Metting;
 use App\Manager\ModerateurManager;
 use App\Entity\Moderateur\EditedCv;
@@ -28,6 +29,7 @@ use App\Form\Moderateur\EditedCvType;
 use App\Repository\SecteurRepository;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
+use App\Entity\Finance\Employe;
 use App\Entity\Moderateur\Assignation;
 use App\Form\Candidat\AvailabilityType;
 use App\Form\Moderateur\InvitationType;
@@ -44,6 +46,7 @@ use App\Repository\EntrepriseProfileRepository;
 use App\Repository\Referrer\ReferralRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Moderateur\NotificationProfileType;
+use App\Repository\Finance\SimulateurRepository;
 use App\Repository\Moderateur\MettingRepository;
 use App\Form\Moderateur\AssignateProfileFormType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -59,7 +62,6 @@ use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
-use App\Repository\Finance\SimulateurRepository;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -192,6 +194,23 @@ class ModerateurController extends AbstractController
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
 
         if ($this->isCsrfTokenValid('delete' . $entreprise->getId(), $request->request->get('_token'))) {
+            $employe = $entityManager->getRepository(Employe::class)->findOneBy(['user' => $entreprise->getEntreprise()]);
+            $simulateurs = $entityManager->getRepository(Simulateur::class)->findBy(['employe' => $employe]);
+            foreach ($simulateurs as $simulateur) {
+                $employe->removeSimulateur($simulateur);
+            }
+            $invitations = $entityManager->getRepository(Invitation::class)->findBy(['reader' => $entreprise->getEntreprise()->getId()]);
+            foreach ($invitations as $invitation) {
+                $invitation->setReader(null);
+                $entityManager->persist($invitation);
+            }
+            $entityManager->flush();
+            $jobListings = $entityManager->getRepository(JobListing::class)->findBy(['entreprise' => $entreprise->getId()]);
+            foreach ($jobListings as $jobListing) {
+                $entityManager->remove($jobListing);
+            }
+            $entityManager->flush();
+            // Ensuite, supprimer l'entreprise
             $entityManager->remove($entreprise);
             $entityManager->flush();
         }
@@ -666,6 +685,39 @@ class ModerateurController extends AbstractController
             'candidat' => $candidat,
             'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
         ]);
+    }
+
+
+    #[Route('/supprimer/candidat/{id}', name: 'supprimer_candidat', methods: ['POST'])]
+    public function supprimerCandidat(Request $request, EntityManagerInterface $entityManager, CandidateProfile $candidat): Response
+    {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+
+        if ($this->isCsrfTokenValid('delete' . $candidat->getId(), $request->request->get('_token'))) {
+            $employe = $entityManager->getRepository(Employe::class)->findOneBy(['user' => $candidat->getCandidat()]);
+            $simulateurs = $entityManager->getRepository(Simulateur::class)->findBy(['employe' => $employe]);
+            foreach ($simulateurs as $simulateur) {
+                $employe->removeSimulateur($simulateur);
+            }
+            $entityManager->remove($employe);
+            $entityManager->flush();
+            $invitations = $entityManager->getRepository(Invitation::class)->findBy(['reader' => $candidat->getCandidat()->getId()]);
+            foreach ($invitations as $invitation) {
+                $invitation->setReader(null);
+                $entityManager->persist($invitation);
+            }
+            $entityManager->flush();
+            // $jobListings = $entityManager->getRepository(JobListing::class)->findBy(['entreprise' => $entreprise->getId()]);
+            // foreach ($jobListings as $jobListing) {
+            //     $entityManager->remove($jobListing);
+            // }
+            // $entityManager->flush();
+            // Ensuite, supprimer l'entreprise
+            $entityManager->remove($candidat);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_dashboard_moderateur_candidats');
     }
 
     #[Route('/mettings', name: 'app_dashboard_moderateur_mettings')]

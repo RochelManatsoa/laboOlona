@@ -52,10 +52,10 @@ class EntrepriseProfile
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $siteWeb = null;
 
-    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: JobListing::class)]
+    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: JobListing::class, cascade: ['remove'])]
     private Collection $jobListings;
 
-    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Metting::class)]
+    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Metting::class, cascade: ['remove'])]
     private Collection $mettings;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

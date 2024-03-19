@@ -98,7 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'destinataire', targetEntity: Notification::class, orphanRemoval: true)]
     private Collection $recus;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: SearchHistory::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: SearchHistory::class, cascade: ['remove'])]
     private Collection $searchHistories;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -107,7 +107,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $googleId = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: VideoVues::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: VideoVues::class, cascade: ['remove'])]
     private Collection $videoVues;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
