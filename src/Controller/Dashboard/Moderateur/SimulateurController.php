@@ -2,6 +2,7 @@
 
 namespace App\Controller\Dashboard\Moderateur;
 
+use App\Entity\Finance\Employe;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
 use App\Repository\Finance\SimulateurRepository;
@@ -29,16 +30,19 @@ class SimulateurController extends AbstractController
         $groupedByEmployee = [];
 
         foreach ($simulations as $simulation) {
-            $employeId = $simulation->getEmploye()->getId();
+            if($simulation->getEmploye() instanceof Employe){
 
-            if (!array_key_exists($employeId, $groupedByEmployee)) {
-                $groupedByEmployee[$employeId] = [
-                    'employe' => $simulation->getEmploye(),
-                    'simulations' => [],
-                ];
+                $employeId = $simulation->getEmploye()->getId();
+    
+                if (!array_key_exists($employeId, $groupedByEmployee)) {
+                    $groupedByEmployee[$employeId] = [
+                        'employe' => $simulation->getEmploye(),
+                        'simulations' => [],
+                    ];
+                }
+    
+                $groupedByEmployee[$employeId]['simulations'][] = $simulation;
             }
-
-            $groupedByEmployee[$employeId]['simulations'][] = $simulation;
         }
 
         return $this->render('dashboard/moderateur/simulateur/index.html.twig', [
