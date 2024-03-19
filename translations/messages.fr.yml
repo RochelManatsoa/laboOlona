@@ -369,14 +369,14 @@ app_register:
     menu: Créer mon compte
     title: "Inscription à Olona-talents.com"
     description: "Créez votre compte professionnel et accédez à une plateforme dédiée aux talents francophones et malgaches."
-    already_member: Déjà membre ? <a href=%login_url%>Connectez-vous ici</a>
+    already_member: Déjà membre ? <a style="font-family:'PT Sans',sans-serif;color:#0e6efd!important;" href=%login_url%>Connectez-vous ici</a>
     keywords: "freelance, project, talent"
     email: "Adresse éléctronique"
     first_name: "Nom *"
     last_name: "Prénom(s) *"
     password: "Mot de passe"
     repeat_password: "Repeter le mot de passe"
-    agree_terms: "<small>En vous inscrivant, vous acceptez nos <a href=\"%terms_url%\">Conditions Générales d'Utilisation</a> et notre <a href=\"%privacy_url%\">Politique de Confidentialité</a>.</small>"
+    agree_terms: "<small class='ml-3 pt-sans'>En vous inscrivant, vous acceptez nos <a href=\"%terms_url%\">Conditions Générales d'Utilisation</a> et notre <a href=\"%privacy_url%\">Politique de Confidentialité</a>.</small>"
     continue: "Continuer avec "
 
 app_email_sending:

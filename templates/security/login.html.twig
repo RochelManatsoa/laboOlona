@@ -1,24 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-  <section id="login" class="" style="background-color: black;">
-    <div class="container d-flex justify-content-center align-items-center ">
+  <section id="login" class="pt-5 " style="background-color: black;">
+    <div class="container d-flex justify-content-center align-items-center">
       <div class="row w-100">
-        <div class="col-md-6 text-center mx-auto">
+        <div class="col-md-6 text-center mx-auto d-none d-sm-block">
           <img src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" class="img-fluid" alt="login olona talents" />
         </div>
         <div class="col-md-6 text-white">
-          <h1 class="fs-2 mb-3 font-weight-normal">
+          <h1 class="fs-3 mb-3 font-weight-normal">
             {{ meta_title() }}
           </h1>
-          {# <p class="text-light fs-5">
-            <small>
-              {{ meta_description() }}
-            </small>
-          </p> #}
           <p class="my-4 text-white">
           {{ 'app_login.not_member'|trans }}
-          <a href="{{ path('app_register') }}" style="color:#0e6efd!important;" class="text-primary transition ">
+          <a href="{{ path('app_register') }}" style="font-family: 'PT Sans', sans-serif;color:#0e6efd!important;" class="text-primary transition ">
             {{ 'app_login.register'|trans }}
           </a>
           {{ 'app_login.join'|trans }}
@@ -30,14 +25,10 @@
               </div>
             {% endif %}
             <div class="mx-auto text-dark " id="button-text">
-              <a href="{{ path('connect_google_start') }}" class="btn btn-light">
+              <a href="{{ path('connect_google_start') }}" class="btn btn-light rounded-pill px-5 ">
                 {{ 'app_register.continue'|trans }}
                 <i class="bi bi-google h5 mx-2 "></i>
               </a>
-              {# <button type="button" class="btn btn-outline-secondary">
-                {{ 'app_register.continue'|trans }}
-                <i class="bi bi-linkedin h5 mx-2"></i>
-              </button> #}
             </div>
             <hr>
 
@@ -45,8 +36,7 @@
                 <div class="mb-3">
                   You are logged in as  {{ app.user.userIdentifier }},                                     
                   <a href="{{ path('app_logout') }}">
-                    Logout
-                                      
+                    Logout                                      
                   </a>
                 </div>
               {% endif %}
@@ -69,7 +59,7 @@
                         </div>
                         <div class="col-6 text-right">
                           <!--Forgot password link-->
-                          <a href="{{ path('app_forgot_password_request')}}" class="">
+                          <a href="{{ path('app_forgot_password_request')}}" class="" style="font-family: 'PT Sans', sans-serif;color:#0e6efd!important;">
                             {{ 'app_forgot_password_request.link'|trans }}
                           </a>
                         </div>
@@ -78,7 +68,7 @@
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                      <button class="btn btn-lg btn-primary" type="submit">
+                      <button class="btn rounded-pill btn-lg px-5 btn-primary" type="submit">
                         {{ "app_login.button"|trans }}
                       </button>
                     </form>
