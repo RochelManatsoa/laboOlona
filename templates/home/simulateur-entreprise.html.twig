@@ -24,7 +24,7 @@
 {% block body %}
 	<div class="container">
 		<div class="annonce-list p-2 p-sm-0">
-				<h1 class="card-title mb-3">Simulateur de salaire</h1>
+				<h1 class="card-title mb-3">Simulateur de salaire pour entreprise</h1>
 				<div class="d-block d-sm-none">
 					<div class="px-3">
 						<h3 class="h4 text-center">Bienvenue sur notre Simulateur de Salaire pour Entreprises</h3>
@@ -57,6 +57,17 @@
 						<div class="">
 							{{ form_widget(form.type)}}
 						</div>
+					</section>
+
+					<h3 class="card-title mb-3">Statut</h3>
+					<section
+						style="position: relative;width: 100%;">
+						<!-- Explication du champ "Taux de change" -->
+						<legend class="h2">{{ form_label(form.status) }}</legend>
+						<div class="row">
+							{{ form_widget(form.status)}}
+						</div>
+						<p id="status-explanation" class="mt-4">Le taux de change est le taux appliqué pour convertir les coûts salariaux estimés dans la devise de votre entreprise à partir de celle du pays de résidence de l'employé potentiel.</p>
 					</section>
 
 					<h3 class="card-title mb-3">Salaire Net</h3>
@@ -149,6 +160,21 @@
 							<div class="col-lg-3 ">
 								<div class="input-group">
 									{{ form_widget(form.avantage.primeFonction)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+							</div>
+						</div>
+						<div class="row align-items-center">
+							<div class="col-lg-4 ">
+								<label class="col-form-label mt-3">{{ form_label(form.primeNet) }}
+									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Prime après déductions, en plus du salaire net.">
+										<i class="bi bi-info-circle-fill"></i>
+									</span>
+								</label>
+							</div>
+							<div class="col-lg-3 ">
+								<div class="input-group">
+									{{ form_widget(form.primeNet)}}
 									<span class="input-group-text change-devise">€</span>
 								</div>
 							</div>
@@ -248,7 +274,7 @@
 		$(function () {
 			initEntrepriseFormStep($("#example-basic"), "h3", "section", "fade", utilisateurEstConnecte());
 			
-			$('#simulateur_employe_user_email').blur(function() {
+			$('#simulateur_entreprise_employe_user_email').blur(function() {
 				var email = $(this).val();
 				if (email !== '') {
 					// Vérifiez la disponibilité de l'e-mail
@@ -256,7 +282,7 @@
 				}
     		});
 
-			$('#simulateur_employe_user_plainPassword_first').blur(function() {
+			$('#simulateur_entreprise_employe_user_plainPassword_first').blur(function() {
 				var password = $(this).val();
 				if (password !== '') {
 					if(password.length < 5){
@@ -275,7 +301,7 @@
 				}
     		});
 
-			$('#simulateur_employe_user_telephone').blur(function() {
+			$('#simulateur_entreprise_employe_user_telephone').blur(function() {
 				var telephone = $(this).val();
 				if (telephone !== '') {
 					if(telephone.length < 9){
@@ -305,7 +331,7 @@
 			}
 
 			// Écouteur d'événement sur les champs pour vérifier lorsqu'ils changent
-			$('input[id^="simulateur_employe_user_"]').on('input', function() {
+			$('input[id^="simulateur_entreprise_employe_user_"]').on('input', function() {
 				// Vérifiez si l'un des champs est vide
 				if (checkFields()) {
 					// Si l'un des champs est vide, désactivez le bouton submit
@@ -319,7 +345,7 @@
 			});
 
 			// Sélectionner le champ select
-			var selectType = $('#simulateur_type');
+			var selectType = $('#simulateur_entreprise_type');
 
 			// Sélectionner les divs à afficher ou cacher
 			var divEmploye = $('#employe');
@@ -329,19 +355,37 @@
 			selectType.on('change', function() {
 				console.log($(this).val())
 				// Vérifier la valeur sélectionnée
-				if ($(this).val() === 'EMPLOYER') {
+				if ($(this).val() === 'OLONA') {
 					// Afficher la div pour Employé et cacher la div pour Freelance
 					console.log("hide frelance")
 					divEmploye.show();
 					divFreelance.hide();
-				} else if ($(this).val() === 'FREELANCE') {
+				} else if ($(this).val() === 'TELETRAVAIL') {
 					// Afficher la div pour Freelance et cacher la div pour Employé
 					console.log("hide employe")
 					divEmploye.hide();
 					divFreelance.show();
 				}
 			});
+
+			// Écoute des changements sur les boutons radio et mise à jour de l'explication
+			$('input[name="simulateur_entreprise[status]"]').change(function() {
+				updateExplanation(this.value);
+			});
+
+			// Mise à jour initiale pour la sélection par défaut
+			updateExplanation($('input[name="simulateur_entreprise[status]"]:checked').val());
 		})
+
+		function updateExplanation(value) {
+			var explanation = '';
+			if(value === 'PORTAGE') {
+				explanation = '<i class="mx-2 h5 bi bi-info-circle text-primary"></i> En choisissant le Portage salarial, vous bénéficiez de la couverture sociale d\'un salarié avec les charges salariales et patronales correspondantes, tout en conservant une certaine flexibilité dans la gestion de vos missions.';
+			} else if(value === 'FREELANCE') {
+				explanation = '<i class="mx-2 h5 bi bi-info-circle text-primary"></i> Opter pour le statut Freelance implique une charge de 5% sur vos revenus, offrant une plus grande autonomie dans la gestion de vos activités sans les charges salariales et patronales typiques d\'un salarié.';
+			}
+			$('#status-explanation').html(explanation);
+		}
 
 		function checkEmailAvailability(email) {
 			$.ajax({
@@ -374,7 +418,7 @@
 		// Fonction pour vérifier si l'un des champs est vide
 		function checkFields() {
 			var isEmpty = false;
-			$('input[id^="simulateur_employe_user_"]').each(function() {
+			$('input[id^="simulateur_entreprise_employe_user_"]').each(function() {
 				if ($(this).val() === '') {
 					isEmpty = true;
 					return false; // Sortir de la boucle si un champ est vide

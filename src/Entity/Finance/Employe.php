@@ -63,7 +63,7 @@ class Employe
     #[ORM\OneToOne(mappedBy: 'employe', cascade: ['persist', 'remove'])]
     private ?Avantage $avantage = null;
 
-    #[ORM\OneToMany(mappedBy: 'employe', targetEntity: Simulateur::class, cascade: ['remove'])]
+    #[ORM\OneToMany(mappedBy: 'employe', targetEntity: Simulateur::class, cascade: ['persist','remove'])]
     private Collection $simulateurs;
 
     public function __construct()

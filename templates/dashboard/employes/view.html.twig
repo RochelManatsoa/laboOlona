@@ -73,6 +73,7 @@
 							<div class="row">
 								<div class="col text-danger h5">Charge salariale</div>
 							</div>
+							{% if simulateur.status is defined and simulateur.status is not same as('FREELANCE') %}
 							<div class="row">
 								<div class="col-6 text-strong">CNAPS 1% :</div>
 								<div class="col-6 text-right">{{results.cnaps_euro|number_format(2, '.', '')}}</div>
@@ -81,6 +82,7 @@
 								<div class="col-6 text-strong">OSTIE 1% :</div>
 								<div class="col-6 text-right">{{results.ostie_euro|number_format(2, '.', '')}}</div>
 							</div>
+							{% endif %}
 							<div class="row">
 								<div class="col-6 text-strong">IRSA :</div>
 								<div class="col-6 text-right  border-bottom">{{ results.irsa_euro|number_format(2, '.', '')}}</div>
@@ -99,6 +101,7 @@
 						</div>
 						<div class="col-sm-6">
 							<hr class="d-block d-sm-none">
+							{% if simulateur.status is defined and simulateur.status is not same as('FREELANCE') %}
 							<div class="row">
 								<div class="col text-danger h5">Charge patronnale</div>
 							</div>
@@ -119,6 +122,7 @@
 								<div class="col-6 text-right text-strong">{{ results.charges_patronales_euro|number_format(2, '.', '')}}</div>
 							</div>
 							<hr>
+							{% endif %}
 							<div class="row">
 								<div class="col text-danger h5">Frais de portage</div>
 							</div>
@@ -127,7 +131,7 @@
 								<div class="col-6 text-right text-strong">{{ results.frais_de_portage_euro|number_format(2, '.', '')}}</div>
 							</div>
 							<hr>
-							{% if simulateur.type is same as('EMPLOYER')  %}
+							{% if simulateur.type is same as('OLONA')  %}
 								<div class="row">
 									<div class="col text-danger h5">Espace Co Working Olona</div>
 								</div>

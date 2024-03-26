@@ -69,6 +69,12 @@ class Simulateur
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $status = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $primeNet = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isDeleted = null;
+
     public function __construct()
     {
         $this->status = self::STATUS_VALID;
@@ -289,6 +295,30 @@ class Simulateur
     public function setStatus(?string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPrimeNet(): ?float
+    {
+        return $this->primeNet;
+    }
+
+    public function setPrimeNet(?float $primeNet): static
+    {
+        $this->primeNet = $primeNet;
+
+        return $this;
+    }
+
+    public function isIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(?bool $isDeleted): static
+    {
+        $this->isDeleted = $isDeleted;
 
         return $this;
     }

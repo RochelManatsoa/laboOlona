@@ -83,6 +83,9 @@ a{
 label.form-check-label.required{
     display: none !important;
 }
+#simulateur_entreprise_status .form-check-label.required, #simulateur_status .form-check-label.required {
+    display: block !important;
+}
 .custom-min-height {
     min-height: 100vh;  /* 75% de la hauteur de l'écran */
 }

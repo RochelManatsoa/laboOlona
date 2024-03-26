@@ -1111,6 +1111,12 @@ app_home_simulateur_portage :
     description: Vous êtes un freelancer résidant à Madagascar et travaillez avec des clients internationaux ? Notre simulateur de portage salarial est conçu spécialement pour vous. 
     keywords: portage, madagascar, freelance
 
+app_home_simulateur_entreprise : 
+    title : Simulateur de salaire pour entreprise
+    dashboard_title : Simulateur de salaire
+    description: Cet outil pratique vous permettra de calculer facilement le coût total d'embauche en prenant en compte les charges sociales, les taxes et tout autre frais associé, pour vous assurer d'offrir un salaire net attractif tout en maîtrisant vos coûts.
+    keywords: portage, madagascar, entreprise, salaire
+
 app_dashboard_moderateur_portage : 
     title : Contrats portage salarial
     dashboard_title : Contrats portage salarial

@@ -36,7 +36,7 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
         },
         onStepChanged: function (event, currentIndex, priorIndex) {
           // Used to skip the "Warning" step if the user is old enough.
-          if (currentIndex === 3) {
+          if (currentIndex === 4) {
             let data = $('#example-basic').serializeArray().map(function(item) {
               item.label = $(`[name="${item.name}"]`).attr('data-unit');
               return item;
@@ -79,6 +79,7 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
                   'simulateur[type]': 'Ma situation',
                   'simulateur[prixRepas]': 'Prix repas journalier',
                   'simulateur[jourRepas]': 'Nombre de jour (Repas)',
+                  'simulateur[status]': 'Mon statut',
                   'simulateur[prixDeplacement]': 'Prix deplacement journalier',
                   'simulateur[jourDeplacement]': 'Nombre de jour (Déplacement)',
                   'simulateur[avantage][primeConnexion]': 'Connexion Internet',
@@ -95,6 +96,7 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
                   'simulateur[prixRepas]',
                   'simulateur[jourDeplacement]',
                   'simulateur[prixDeplacement]',
+                  'simulateur[status]',
                   'simulateur[avantage][primeConnexion]',
                   'simulateur[avantage][primeFonction]',
                 ]
@@ -253,7 +255,7 @@ function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connecte
       },
       onStepChanged: function (event, currentIndex, priorIndex) {
         // Used to skip the "Warning" step if the user is old enough.
-        if (currentIndex === 3) {
+        if (currentIndex === 4) {
           let data = $('#example-basic').serializeArray().map(function(item) {
             item.label = $(`[name="${item.name}"]`).attr('data-unit');
             return item;
@@ -298,6 +300,8 @@ function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connecte
                 'simulateur_entreprise[jourRepas]': 'Nombre de jour (Repas)',
                 'simulateur_entreprise[prixDeplacement]': 'Prix deplacement journalier',
                 'simulateur_entreprise[jourDeplacement]': 'Nombre de jour (Déplacement)',
+                'simulateur_entreprise[primeNet]': 'Commission nette (après deduction)',
+                'simulateur_entreprise[status]': 'Statut du colaborateur',
                 'simulateur_entreprise[avantage][primeConnexion]': 'Connexion Internet',
                 'simulateur_entreprise[avantage][primeFonction]': 'Autres',
               }
@@ -312,6 +316,8 @@ function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connecte
                 'simulateur_entreprise[prixRepas]',
                 'simulateur_entreprise[jourDeplacement]',
                 'simulateur_entreprise[prixDeplacement]',
+                'simulateur_entreprise[primeNet]',
+                'simulateur_entreprise[status]',
                 'simulateur_entreprise[avantage][primeConnexion]',
                 'simulateur_entreprise[avantage][primeFonction]',
               ]
@@ -401,6 +407,10 @@ function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connecte
           required: false,
           number: true,
         },
+        'simulateur_entreprise[primeNet]': {
+          required: false,
+          number: true,
+        },
       },
       messages: {
         'simulateur_entreprise[taux]': {
@@ -427,6 +437,9 @@ function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connecte
           number: 'Le montant doit être un nombre décimal',
         },
         'simulateur_entreprise[prixDeplacement]': {
+          number: 'Le montant doit être un nombre décimal',
+        },
+        'simulateur_entreprise[primeNet]': {
           number: 'Le montant doit être un nombre décimal',
         },
       },

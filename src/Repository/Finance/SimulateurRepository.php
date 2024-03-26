@@ -24,7 +24,7 @@ class SimulateurRepository extends ServiceEntityRepository
 
     public function findSimulateursNotDeletedForEmploye(Employe $employe)
     {
-        $qb = $this->createQueryBuilder('s'); // 's' est un alias pour votre entité Simulateur
+        $qb = $this->createQueryBuilder('s'); 
         $qb->where('s.employe = :employe')
         ->andWhere($qb->expr()->orX(
             $qb->expr()->isNull('s.status'),

@@ -41,6 +41,15 @@ class SimulateurType extends AbstractType
             ->add('deviseSymbole', HiddenType::class, [
                 'data' => "€", 
             ])
+            ->add('status', ChoiceType::class, [
+                'choices' => [
+                    'Portage salarial' => 'PORTAGE' ,
+                    'Freelance' => 'FREELANCE' ,
+                ],
+                'label' => 'Mon statut',
+                'expanded' => true,
+                'data' => 'PORTAGE',
+            ])
             ->add('salaireNet', TextType::class, [
                 'label' => 'Salaire Net souhaité'
             ])
@@ -67,8 +76,8 @@ class SimulateurType extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [
-                    'Je travaille de chez moi' => 'FREELANCE' ,
-                    'Je souhaite avoir un bureau chez OLONA' => 'EMPLOYER',
+                    'Je travaille de chez moi' => 'TELETRAVAIL' ,
+                    'Je souhaite avoir un bureau chez OLONA' => 'OLONA',
                 ],
                 'label' => 'Ma situation'
             ])

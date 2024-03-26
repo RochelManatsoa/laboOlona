@@ -59,6 +59,17 @@
 						</div>
 					</section>
 
+					<h3 class="card-title mb-3">Statut</h3>
+					<section
+						style="position: relative;width: 100%;">
+						<!-- Explication du champ "Taux de change" -->
+						<legend class="h2">{{ form_label(form.status) }}</legend>
+						<div class="row">
+							{{ form_widget(form.status)}}
+						</div>
+						<p id="status-explanation" class="mt-4">Le taux de change est le taux appliqué pour convertir les coûts salariaux estimés dans la devise de votre entreprise à partir de celle du pays de résidence de l'employé potentiel.</p>
+					</section>
+
 					<h3 class="card-title mb-3">Salaire Net</h3>
 					<section
 						class="text-grey" style="position: relative;width: 100%;">
@@ -329,19 +340,38 @@
 			selectType.on('change', function() {
 				console.log($(this).val())
 				// Vérifier la valeur sélectionnée
-				if ($(this).val() === 'EMPLOYER') {
+				if ($(this).val() === 'OLONA') {
 					// Afficher la div pour Employé et cacher la div pour Freelance
 					console.log("hide frelance")
 					divEmploye.show();
 					divFreelance.hide();
-				} else if ($(this).val() === 'FREELANCE') {
+				} else if ($(this).val() === 'TELETRAVAIL') {
 					// Afficher la div pour Freelance et cacher la div pour Employé
 					console.log("hide employe")
 					divEmploye.hide();
 					divFreelance.show();
 				}
 			});
+
+
+			// Écoute des changements sur les boutons radio et mise à jour de l'explication
+			$('input[name="simulateur[status]"]').change(function() {
+				updateExplanation(this.value);
+			});
+
+			// Mise à jour initiale pour la sélection par défaut
+			updateExplanation($('input[name="simulateur[status]"]:checked').val());
 		})
+
+		function updateExplanation(value) {
+			var explanation = '';
+			if(value === 'PORTAGE') {
+				explanation = '<i class="mx-2 h5 bi bi-info-circle text-primary"></i> En choisissant le Portage salarial, vous bénéficiez de la couverture sociale d\'un salarié avec les charges salariales et patronales correspondantes, tout en conservant une certaine flexibilité dans la gestion de vos missions.';
+			} else if(value === 'FREELANCE') {
+				explanation = '<i class="mx-2 h5 bi bi-info-circle text-primary"></i> Opter pour le statut Freelance implique une charge de 5% sur vos revenus, offrant une plus grande autonomie dans la gestion de vos activités sans les charges salariales et patronales typiques d\'un salarié.';
+			}
+			$('#status-explanation').html(explanation);
+		}
 
 		function checkEmailAvailability(email) {
 			$.ajax({

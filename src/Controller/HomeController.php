@@ -262,7 +262,6 @@ class HomeController extends AbstractController
                 $this->em->persist($user);
             }
             $employe->setNombreEnfants($form->get('nombreEnfant')->getData());
-            $employe->setSalaireBase($result['salaire_de_base_ariary']);
 
             if (!$connected) {
                 $user->setDateInscription(new DateTime());
@@ -342,10 +341,12 @@ class HomeController extends AbstractController
                     $currentRoles[] = 'ROLE_EMPLOYE'; 
                 }
                 $user->setRoles($currentRoles);
+                $this->em->persist($employe);
                 $this->em->persist($user);
             }
             $employe->setNombreEnfants($form->get('nombreEnfant')->getData());
             $employe->setSalaireBase($result['salaire_de_base_ariary']);
+            $employe->addSimulateur($simulateur);
 
             if (!$connected) {
                 $user->setDateInscription(new DateTime());
@@ -357,6 +358,7 @@ class HomeController extends AbstractController
                         $form->get('employe')->get('user')->get('plainPassword')->getData()
                     )
                 );
+                $user->setEmploye($employe);
                 $this->em->persist($user);
             }
             $this->em->persist($employe);

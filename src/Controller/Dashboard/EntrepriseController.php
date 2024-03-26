@@ -451,9 +451,13 @@ class EntrepriseController extends AbstractController
     {
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
+        $simulateurs = $this->simulateurRepository->findBy([
+            'employe' => $user->getEmploye(),
+            'isDeleted' => null
+        ],['id' => 'DESC']);
 
         return $this->render('dashboard/entreprise/simulation/simulations.html.twig', [
-            'simulateurs' => $this->simulateurRepository->findSimulateursNotDeletedForEmploye($user->getEmploye()),
+            'simulateurs' => $simulateurs,
         ]);
     }
 

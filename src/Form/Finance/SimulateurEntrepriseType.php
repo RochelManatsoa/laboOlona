@@ -44,6 +44,18 @@ class SimulateurEntrepriseType extends AbstractType
             ->add('salaireNet', TextType::class, [
                 'label' => 'Salaire Net proposé'
             ])
+            ->add('primeNet', TextType::class, [
+                'label' => 'Commission nette'
+            ])
+            ->add('status', ChoiceType::class, [
+                'choices' => [
+                    'Portage salarial' => 'PORTAGE' ,
+                    'Freelance' => 'FREELANCE' ,
+                ],
+                'label' => 'Statut du colaborateur',
+                'expanded' => true,
+                'data' => 'PORTAGE',
+            ])
             ->add('nombreEnfant', IntegerType::class, [
                 'label' => 'Nombre d\'enfant',
                 'required' => false,

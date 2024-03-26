@@ -35,10 +35,24 @@ class EmployeManager
         $deplacementEuro = $this->convertEuroToAriary($simulateur->getPrixDeplacement(), $simulateur->getTaux());
         $connexionEuro = $this->convertEuroToAriary($simulateur->getAvantage()->getPrimeConnexion(), $simulateur->getTaux());
         $fraisProEuro = $this->convertEuroToAriary($simulateur->getAvantage()->getPrimeFonction(), $simulateur->getTaux());
+        if($simulateur->getStatus() !== "FREELANCE"){
 
-        return $this->estimationSalaireBrute(
+            return $this->estimationSalaireBrute(
+                $simulateur,
+                $montantEuro, 
+                $simulateur->getNombreEnfant(), 
+                $simulateur->getTaux(),
+                $repasEuro * $simulateur->getJourRepas(),
+                $deplacementEuro * $simulateur->getJourDeplacement(),
+                $connexionEuro,
+                $fraisProEuro,
+                $simulateur->getType(), 
+            );
+        }
+
+        return $this->estimationSalaireBruteFreelance(
             $simulateur,
-            $montantEuro, 
+            $montantEuro,
             $simulateur->getNombreEnfant(), 
             $simulateur->getTaux(),
             $repasEuro * $simulateur->getJourRepas(),
@@ -47,6 +61,41 @@ class EmployeManager
             $fraisProEuro,
             $simulateur->getType(), 
         );
+
+    }
+
+    public function estimationSalaireBruteFreelance(
+        Simulateur $simulateur, 
+        float $salaire_net, 
+        int $nbrEnfant, 
+        float $tauxDeChange,
+        float $fraisRepas,
+        float $fraisDeplacement,
+        float $fraisConnexion,
+        float $fraisProfessionnels,
+        string $type
+    )
+    {
+        $salaire_brut_estime_euro = (($salaire_net) / (1 - 0.05));
+        $salaire_de_base_euro = ( $salaire_brut_estime_euro );
+        $charge = $salaire_brut_estime_euro - ($salaire_net) ;
+
+        return [
+            'fraisRepas' => $fraisRepas,
+            'fraisDeplacement' => $fraisDeplacement,
+            'fraisConnexion' => $fraisConnexion,
+            'fraisProfessionnels' => $fraisProfessionnels,
+            'irsa_euro' => $this->convertAriaryToEuro($charge, $tauxDeChange),
+            'nbrEnfant' => $nbrEnfant,
+            'salaire_de_base_euro' => $this->convertAriaryToEuro($salaire_de_base_euro, $tauxDeChange),
+            'salaire_brut_estime_euro' => $this->convertAriaryToEuro($salaire_de_base_euro, $tauxDeChange),
+            'charge_salariale_euro' => $this->convertAriaryToEuro($charge, $tauxDeChange),
+            'salaire_net_euro' => $this->convertAriaryToEuro($salaire_net, $tauxDeChange),
+            'facture_total_a_envoyer_euro' => $this->convertAriaryToEuro($this->getFactureTotal($salaire_brut_estime_euro, $simulateur), $tauxDeChange),
+            'cout_avant_portage_euro' => $this->convertAriaryToEuro(($salaire_brut_estime_euro), $tauxDeChange),
+            'frais_de_portage_euro' => $this->convertAriaryToEuro($this->getFraisPortage($salaire_brut_estime_euro), $tauxDeChange),
+            'coworking' => $this->convertAriaryToEuro($this->getCoworking($simulateur), $tauxDeChange),
+        ];
     }
 
     public function estimationSalaireBrute(
@@ -226,7 +275,7 @@ class EmployeManager
     {
         $coworking = 0;
         $euro = $this->deviseRepository->findOneBy(['slug' => 'euro']);
-        if($simulateur->getType() === "EMPLOYER"){
+        if($simulateur->getType() === "OLONA"){
             $coworking = $this->convertEuroToAriary(150, $euro->getTaux()); 
         }
         return $coworking;
