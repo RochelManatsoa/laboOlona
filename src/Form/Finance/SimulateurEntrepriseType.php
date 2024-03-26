@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
-class SimulateurType extends AbstractType
+class SimulateurEntrepriseType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -42,7 +42,7 @@ class SimulateurType extends AbstractType
                 'data' => "€", 
             ])
             ->add('salaireNet', TextType::class, [
-                'label' => 'Salaire Net souhaité'
+                'label' => 'Salaire Net proposé'
             ])
             ->add('nombreEnfant', IntegerType::class, [
                 'label' => 'Nombre d\'enfant',
@@ -67,10 +67,11 @@ class SimulateurType extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [
-                    'Je travaille de chez moi' => 'FREELANCE' ,
-                    'Je souhaite avoir un bureau chez OLONA' => 'EMPLOYER',
+                    'Télétravail' => 'TELETRAVAIL' ,
+                    'Bureau de l\'entreprise' => 'ENTREPRISE',
+                    'Espace co-working Chez Olona' => 'OLONA' ,
                 ],
-                'label' => 'Ma situation'
+                'label' => 'Lieu de travail'
             ])
             ->add('avantage', SimulateurAvantageType::class, [
                 'label' => false

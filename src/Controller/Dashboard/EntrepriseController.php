@@ -3,6 +3,7 @@
 namespace App\Controller\Dashboard;
 
 use App\Entity\User;
+use App\Twig\AppExtension;
 use App\Entity\Notification;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\CandidateProfile;
@@ -10,6 +11,7 @@ use App\Manager\CandidatManager;
 use App\Data\SearchCandidateData;
 use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
+use App\Entity\Finance\Simulateur;
 use App\Manager\EntrepriseManager;
 use App\Manager\ModerateurManager;
 use App\Form\Entreprise\AnnonceType;
@@ -26,6 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Entreprise\FavorisRepository;
 use App\Repository\Moderateur\MettingRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,8 +36,9 @@ use App\Repository\Entreprise\JobListingRepository;
 use App\Repository\Candidate\ApplicationsRepository;
 use App\Repository\Moderateur\TypeContratRepository;
 use App\Form\Search\Annonce\EntrepriseAnnonceSearchType;
+use App\Manager\SimulateurEntrepriseManager;
+use App\Repository\Finance\SimulateurRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use App\Twig\AppExtension;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -55,6 +59,9 @@ class EntrepriseController extends AbstractController
         private UrlGeneratorInterface $urlGenerator,
         private NotificationManager $notificationManager,
         private AppExtension $appExtension,
+        private FavorisRepository $favorisRepository,
+        private SimulateurRepository $simulateurRepository,
+        private SimulateurEntrepriseManager $simulateurEntrepriseManager,
     ) {
     }
     
@@ -266,6 +273,9 @@ class EntrepriseController extends AbstractController
         $form = $this->createForm(SearchCandidateTypeCopy::class, $searchData);
         $form->handleRequest($request);
         $data = $this->em->getRepository(CandidateProfile::class)->findAllValid();
+        $favoris = $this->favorisRepository->findBy([
+            'entreprise' => $user->getEntrepriseProfile(),
+        ]);
         if ($form->isSubmitted() && $form->isValid()) {
             $secteurs = $form->get('secteurs')->getData();
             $titre = $form->get('titre')->getData();
@@ -317,6 +327,7 @@ class EntrepriseController extends AbstractController
                 $request->query->getInt('page', 1),
                 12
             ),
+            'favoris' => $favoris,
             'result' => $data,
             'form' => $form->createView(),
         ]);
@@ -329,6 +340,14 @@ class EntrepriseController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $entreprise = $user->getEntrepriseProfile();
+        $favori = false;
+        $like = $this->favorisRepository->findOneBy([
+            'entreprise' => $entreprise,
+            'candidat' => $candidateProfile
+        ]);
+        if($like){
+            $favori = true;
+        }
 
         // Calcul de l'âge
         $now = new \DateTime();
@@ -342,6 +361,7 @@ class EntrepriseController extends AbstractController
         return $this->render('dashboard/entreprise/candidat/show.html.twig', [
             'candidat' => $candidateProfile,
             'age' => $age,
+            'favori' => $favori,
             'countryName' => $countryName,
             'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidateProfile),
             'competences' => $this->candidatManager->getCompetencesSortedByNote($candidateProfile),
@@ -399,6 +419,71 @@ class EntrepriseController extends AbstractController
 
         return $this->render('dashboard/entreprise/profile/index.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/simulateur', name: 'app_dashboard_entreprise_profil')]
+    public function simulateur(Request $request): Response
+    {
+        $this->checkEntreprise();
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $entreprise = $user->getEntrepriseProfile();
+
+        $form = $this->createForm(EditEntrepriseType::class, $entreprise);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->persist($entreprise);
+            $this->em->flush();
+            $this->addFlash('success', 'Profil modifié avec succès.');
+
+            return $this->redirectToRoute('app_dashboard_entreprise_profil');
+        }
+
+        return $this->render('dashboard/entreprise/profile/index.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/simulations', name: 'app_dashboard_entreprise_simulations')]
+    public function simulations(): Response
+    {
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+
+        return $this->render('dashboard/entreprise/simulation/simulations.html.twig', [
+            'simulateurs' => $this->simulateurRepository->findSimulateursNotDeletedForEmploye($user->getEmploye()),
+        ]);
+    }
+
+    #[Route('/simulation/view/{id}', name: 'app_dashboard_entreprise_simulation_view')]
+    public function viewSimulateur(Request $request, Simulateur $simulateur): Response
+    {
+        $results = $this->simulateurEntrepriseManager->simulate($simulateur);
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $employe = $user->getEmploye();
+        // $contrat = new Contrat();
+        // $contrat->setSimulateur($simulateur);
+        // $contrat->setEmploye($employe);
+        // $contrat->setSalaireBase($results['salaire_de_base_euro']);
+        // $contrat->setStatus(Contrat::STATUS_PENDING);
+        // $form = $this->createForm(ContratHiddenType::class, $contrat);
+        // $form->handleRequest($request);
+        // if($form->isSubmitted() && $form->isValid()){
+        //     $contrat = $form->getData();
+        //     $this->em->persist($contrat);
+        //     $this->em->flush();
+        //     /** Envoi mail */
+        //     $this->mailManager->newPortage($contrat->getEmploye()->getUser(), $contrat);
+        //     $this->addFlash('success', 'Demande d\'information envoyée, vous allez être rappelé dans les prochains jours.');
+        // }
+
+        return $this->render('dashboard/entreprise/simulation/view.html.twig', [
+            // 'form' => $form->createView(),
+            'simulateur' => $simulateur,    
+            'results' => $results,
         ]);
     }
 

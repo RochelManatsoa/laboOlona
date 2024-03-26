@@ -19,6 +19,7 @@ use App\Entity\Entreprise\JobListing;
 use App\Repository\SecteurRepository;
 use App\Service\Mailer\MailerService;
 use App\Entity\Moderateur\ContactForm;
+use App\Form\Finance\SimulateurEntrepriseType;
 use App\Manager\Finance\EmployeManager;
 use App\Service\Annonce\AnnonceService;
 use App\Form\Moderateur\ContactFormType;
@@ -292,6 +293,89 @@ class HomeController extends AbstractController
         }
 
         return $this->render('home/simulateur-portage-salarial.html.twig', [
+            'form' => $form->createView(),
+            'connected' => $connected,
+        ]);
+    }
+
+    #[Route('/simulateur-entreprise', name: 'app_home_simulateur_entreprise')]
+    public function simulateurEntreprise(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UserAuthenticatorInterface $userAuthenticator,
+        AppAuthenticator $authenticator,
+    ): Response {
+        $session = $this->requestStack->getSession();
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $simulateur = (new Simulateur())->setCreatedAt(new DateTime());
+        $connected = false;
+        if ($user) {
+            $connected = true;
+            $employe = $user->getEmploye();
+            if(!$employe instanceof Employe){
+                $employe = new Employe();
+                $employe->setUser($user);
+            }
+            $simulateur->setEmploye($employe);
+        }
+        $session->set('utilisateurEstConnecte', $connected);
+        $defaultDevise = $this->em->getRepository(Devise::class)->findOneBy(['slug' => 'euro']);
+        $form = $this->createForm(SimulateurEntrepriseType::class, $simulateur, ['connected' => !$connected, 'default_devise' => $defaultDevise]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $result = $this->employeManager->simulate($simulateur);
+            $simulateur = $form->getData();
+            $employe = $simulateur->getEmploye();
+            $user = $simulateur->getEmploye()->getUser();
+            $existingUser = $this->em->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
+            if($existingUser instanceof User){
+                $currentRoles = $existingUser->getRoles();
+                if (!in_array('ROLE_EMPLOYE', $currentRoles)) {
+                    $currentRoles[] = 'ROLE_EMPLOYE'; 
+                }
+                $existingUser->setRoles($currentRoles);
+                $this->em->persist($existingUser);
+            }else{
+                $currentRoles = $user->getRoles();
+                if (!in_array('ROLE_EMPLOYE', $currentRoles)) {
+                    $currentRoles[] = 'ROLE_EMPLOYE'; 
+                }
+                $user->setRoles($currentRoles);
+                $this->em->persist($user);
+            }
+            $employe->setNombreEnfants($form->get('nombreEnfant')->getData());
+            $employe->setSalaireBase($result['salaire_de_base_ariary']);
+
+            if (!$connected) {
+                $user->setDateInscription(new DateTime());
+                $user->setType(User::ACCOUNT_ENTREPRISE);
+                $user->setRoles(['ROLE_EMPLOYE']);
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('employe')->get('user')->get('plainPassword')->getData()
+                    )
+                );
+                $this->em->persist($user);
+            }
+            $this->em->persist($employe);
+            $this->em->persist($simulateur);
+            $this->em->flush();
+            $session->set('simulation', [$simulateur->getId() => $result]);
+
+            if (!$connected) {
+                return $userAuthenticator->authenticateUser(
+                    $user,
+                    $authenticator,
+                    $request
+                );
+            }
+
+            return $this->redirectToRoute('app_dashboard_entreprise_simulation_view', ['id' => $simulateur->getId()]);
+        }
+
+        return $this->render('home/simulateur-entreprise.html.twig', [
             'form' => $form->createView(),
             'connected' => $connected,
         ]);

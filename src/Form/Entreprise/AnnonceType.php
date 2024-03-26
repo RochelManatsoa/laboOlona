@@ -21,6 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
@@ -64,7 +65,8 @@ class AnnonceType extends AbstractType
                     'rows' => 8
                 ]
             ])
-            ->add('salaire', MoneyType::class, ['label' => 'app_dashboard_entreprise_posting_new.tarif'])
+            ->add('salaire', HiddenType::class, [])
+            ->add('budgetAnnonce', BudgetAnnonceType::class, ['label' => 'Lieu',])
             ->add('lieu', TextType::class, ['label' => 'Lieu',])
             ->add('nombrePoste', null, ['label' => 'Nombre de personne à chercher',])
             ->add('competences', TextType::class, [

@@ -87,7 +87,14 @@
 								<label class="text-strong custom-tooltip" data-tooltip="Précisez le salaire ou la fourchette salariale. Cela offre une transparence essentielle et attire des candidats en adéquation avec vos attentes.">
 									<i class="text-primary h5 bi bi-currency-dollar"></i>
 									{{ form_label(form.salaire) }}</label>
-								{{ form_widget(form.salaire, {'attr': {'class': 'form-control'}}) }}
+									<div class="row mb-3">
+										<div class="col-12 col-lg-6">
+											{{ form_widget(form.budgetAnnonce.typeBudget, {'attr': {'class': 'form-control'}}) }}
+										</div>
+										<div class="col-12 col-lg-6">
+											{{ form_widget(form.budgetAnnonce.montant, {'attr': {'class': 'form-control'}}) }}
+										</div>
+									</div>
 							</div>
 						</div>
 						<div class="row mb-3">
@@ -112,6 +119,7 @@
 								{{ form_widget(form.description) }}
 							</div>
 						</div>
+						{{ form_widget(form.salaire) }}
 						<div style="display:none">
 							{{ form_widget(form) }}
 						</div>
@@ -147,15 +155,21 @@
 	<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 	<script>
 		let globalEditorInstance;
-document.addEventListener('DOMContentLoaded', function () {
-ClassicEditor.create(document.querySelector('#annonce_description')).then(editor => {
-globalEditorInstance = editor;
-document.querySelector('form').addEventListener('submit', function () {
-document.querySelector('#annonce_description').value = globalEditorInstance.getData();
-});
-}).catch(error => {
-console.error(error);
-});
-});
+		document.addEventListener('DOMContentLoaded', function () {
+			ClassicEditor.create(document.querySelector('#annonce_description')).then(editor => {
+				globalEditorInstance = editor;
+				document.querySelector('form').addEventListener('submit', function () {
+				document.querySelector('#annonce_description').value = globalEditorInstance.getData();
+			});
+			}).catch(error => {
+				console.error(error);
+			});
+			var montantField = document.getElementById('annonce_budgetAnnonce_montant');
+
+			montantField.addEventListener('blur', function() {
+				var montant = montantField.value;
+				document.getElementById('annonce_salaire').value = montant;
+			});
+		});
 	</script>
 {% endblock %}

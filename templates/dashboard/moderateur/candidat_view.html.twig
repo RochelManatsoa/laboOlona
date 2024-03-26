@@ -485,6 +485,7 @@
     <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 <script>
     let globalEditorInstance;
@@ -503,8 +504,9 @@
 
 </script>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>    
+
+	$(function () {
         // Gestionnaire d'événements pour "edit-assignation"
         $(document).on('click', '.edit-assignation', function(e) {
             console.log('eto')
@@ -561,59 +563,52 @@
             }
         }
         $(document).on('submit', 'form', function(e) {
-        e.preventDefault(); // Empêche le formulaire de soumettre normalement
+            e.preventDefault(); // Empêche le formulaire de soumettre normalement
 
-        var form = $(this);
-        var url = form.attr('action'); // L'URL où le formulaire doit être soumis
+            var form = $(this);
+            var url = form.attr('action'); // L'URL où le formulaire doit être soumis
 
-        // Utiliser FormData pour gérer les données du formulaire
-        var formData = new FormData(this);
+            // Utiliser FormData pour gérer les données du formulaire
+            var formData = new FormData(this);
 
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: formData,
-            processData: false, // Nécessaire pour FormData
-            contentType: false, // Nécessaire pour FormData
-            success: function(response) {
-                console.log(response);
-                // Si la soumission est un succès, restaurer la vue originale
-                if (response.success) {
-                    var assignationContainer = $('[data-assignation-id="' + response.assignationId + '"]').closest('.assignation');
-                    // Construire le nouveau contenu HTML
-                    var updatedContent = '<div class="col-3">' + 
-                        response.entreprise + '<br>' + 
-                        '<span class="text-muted small">' + response.annonce + '</span>' +
-                        '</div>' +
-                        '<div class="col-2">' + response.forfait + 
-                        '€<br><span class="text-muted small">' + response.rolePositionVisee + 
-                        '</span></div>' + 
-                        '<div class="col-5"><span class="text-muted small">'+ response.date + 
-                        '</span><br>'+ response.commentaire +
-                        '</div>' + 
-                        '<div class="col-2"><button class="btn btn-primary btn-sm edit-assignation" data-assignation-id="'+ response.assignationId +'"><i class="bi bi-pencil-square"></i></button>' +
-                        '<a href="/ajax/assignation/delete/'+ response.assignationId +'" class="btn btn-danger btn-sm" onclick="return confirm("Êtes-vous sûr de vouloir supprimer cette assignation ?");"><i class="bi bi-trash"></i></a>' +
-                        '</div>'
-                        ;   
-                    // Mettre à jour le contenu
-                    assignationContainer.html(updatedContent);
-                } else {
-                    // Gérer le cas où la réponse indique un échec
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false, // Nécessaire pour FormData
+                contentType: false, // Nécessaire pour FormData
+                success: function(response) {
+                    // Si la soumission est un succès, restaurer la vue originale
+                    if (response.success) {
+                        var assignationContainer = $('[data-assignation-id="' + response.assignationId + '"]').closest('.assignation');
+                        // Construire le nouveau contenu HTML
+                        var updatedContent = '<div class="col-3">' + 
+                            response.entreprise + '<br>' + 
+                            '<span class="text-muted small">' + response.annonce + '</span>' +
+                            '</div>' +
+                            '<div class="col-2">' + response.forfait + 
+                            '€<br><span class="text-muted small">' + response.rolePositionVisee + 
+                            '</span></div>' + 
+                            '<div class="col-5"><span class="text-muted small">'+ response.date + 
+                            '</span><br>'+ response.commentaire +
+                            '</div>' + 
+                            '<div class="col-2"><button class="btn btn-primary btn-sm edit-assignation" data-assignation-id="'+ response.assignationId +'"><i class="bi bi-pencil-square"></i></button>' +
+                            '<a href="/ajax/assignation/delete/'+ response.assignationId +'" class="btn btn-danger btn-sm" onclick="return confirm("Êtes-vous sûr de vouloir supprimer cette assignation ?");"><i class="bi bi-trash"></i></a>' +
+                            '</div>'
+                            ;   
+                        // Mettre à jour le contenu
+                        assignationContainer.html(updatedContent);
+                    } else {
+                        // Gérer le cas où la réponse indique un échec
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Erreur lors de la soumission du formulaire :', error);
+                    // Gérer les erreurs ici. Par exemple, afficher un message d'erreur.
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Erreur lors de la soumission du formulaire :', error);
-                // Gérer les erreurs ici. Par exemple, afficher un message d'erreur.
-            }
+            });
         });
-    });
-    </script> 
-{% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-    $(document).ready(function() {
         $('#formAssignation').on('submit', function(e) {
             // Optionnellement, empêcher la soumission par défaut si vous avez besoin de faire une validation ou autre traitement côté client
             // e.preventDefault();
@@ -624,9 +619,8 @@
             // Pas besoin d'appeler explicitement la fonction pour recharger la page, 
             // car cela sera géré par la redirection du serveur après la soumission du formulaire
         });
-    });
-</script>
-
+    })
+    </script> 
 {% endblock %}
 
 

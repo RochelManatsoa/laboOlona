@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Entreprise\Favoris;
 use App\Entity\Entreprise\JobListing;
 use App\Entity\Moderateur\Metting;
 use App\Repository\EntrepriseProfileRepository;
@@ -70,11 +71,15 @@ class EntrepriseProfile
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $status = null;
 
+    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Favoris::class)]
+    private Collection $favoris;
+
     public function __construct()
     {
         $this->jobListings = new ArrayCollection();
         $this->mettings = new ArrayCollection();
         $this->secteurs = new ArrayCollection();
+        $this->favoris = new ArrayCollection();
     }
 
     public function __toString()
@@ -277,5 +282,35 @@ class EntrepriseProfile
         });
 
         return $allApplications;
+    }
+
+    /**
+     * @return Collection<int, Favoris>
+     */
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Favoris $favori): static
+    {
+        if (!$this->favoris->contains($favori)) {
+            $this->favoris->add($favori);
+            $favori->setEntreprise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(Favoris $favori): static
+    {
+        if ($this->favoris->removeElement($favori)) {
+            // set the owning side to null (unless already changed)
+            if ($favori->getEntreprise() === $this) {
+                $favori->setEntreprise(null);
+            }
+        }
+
+        return $this;
     }
 }

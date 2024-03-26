@@ -2,6 +2,9 @@
 
 namespace App\Controller\Ajax;
 
+use App\Entity\CandidateProfile;
+use App\Entity\Entreprise\Favoris;
+use App\Entity\EntrepriseProfile;
 use App\Entity\Secteur;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LangueRepository;
@@ -11,6 +14,8 @@ use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Candidate\CompetencesRepository;
+use App\Repository\Entreprise\FavorisRepository;
+use App\Service\User\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EntrepriseController extends AbstractController
@@ -20,6 +25,8 @@ class EntrepriseController extends AbstractController
         private CandidateProfileRepository $candidateProfileRepository,
         private CompetencesRepository $competencesRepository,
         private LangueRepository $langueRepository,
+        private FavorisRepository $favorisRepository,
+        private UserService $userService,
     ) {
     }
     
@@ -77,6 +84,60 @@ class EntrepriseController extends AbstractController
         return $this->json([
             'competences' => $competences
         ], 200, [], ['groups' => 'identity']);
+    }
+    
+    #[Route('/favori/ajouter/{id}', name: 'ajouter_favori')]
+    public function ajouterFavori(Request $request, CandidateProfile $candidat)
+    {
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $entreprise = $user->getEntrepriseProfile();
+        if(!$entreprise instanceof EntrepriseProfile){
+            return $this->json(['error' => 'Profil entreprise non trouvé'], Response::HTTP_FORBIDDEN);
+        }
+        $favoris = $this->favorisRepository->findOneBy([
+            'entreprise' => $entreprise,
+            'candidat' => $candidat
+        ]);
+        if($favoris){
+            return $this->json(['message' => 'Ce candidat est déjà dans vos favoris'], Response::HTTP_OK);
+        }
+
+        $favori = new Favoris();
+        $favori->setEntreprise($entreprise);
+        $favori->setCandidat($candidat);
+    
+        // Persiste le nouveau favori dans la base de données
+        $this->em->persist($favori);
+        $this->em->flush();
+    
+        // Renvoie une réponse de succès
+        return $this->json([
+            'message' => 'Candidat ajouté aux favoris avec succès'
+        ], Response::HTTP_CREATED);
+    }
+    
+    #[Route('/favori/supprimer/{id}', name: 'supprimer_favori')]
+    public function supprimerFavori(Request $request, CandidateProfile $candidat, EntityManagerInterface $em)
+    {
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $entreprise = $user->getEntrepriseProfile();
+        if (!$entreprise instanceof EntrepriseProfile) {
+            return $this->json(['error' => 'Profil entreprise non trouvé'], Response::HTTP_FORBIDDEN);
+        }
+
+        $favori = $this->favorisRepository->findOneBy([
+            'entreprise' => $entreprise,
+            'candidat' => $candidat
+        ]);
+
+        $em->remove($favori);
+        $em->flush();
+
+        return $this->json([
+            'message' => 'Candidat retiré des favoris avec succès'
+        ], Response::HTTP_OK);
     }
 
 }

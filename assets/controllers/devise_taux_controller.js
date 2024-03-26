@@ -13,8 +13,8 @@ export default class extends Controller {
 
     onDeviseChange(event) {
         const devise = event.target.value;
-        const tauxElement = document.getElementById('simulateur_taux');
-        const symbole = document.getElementById('simulateur_deviseSymbole');
+        const tauxElement = document.querySelector('[data-id="simulateur_taux"]');
+        const symbole = document.querySelector('[data-id="simulateur_deviseSymbole"]');
         var spans = document.querySelectorAll('span.change-devise');
     
         // Votre code pour récupérer le taux de change de la devise

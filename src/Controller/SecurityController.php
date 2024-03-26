@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\EntrepriseProfile;
 use App\Entity\User;
 use App\Service\YouTubeService;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,6 +56,9 @@ class SecurityController extends AbstractController
         }
     
         if ($user->getType() === User::ACCOUNT_ENTREPRISE) {
+            if(!$user->getEntrepriseProfile() instanceof EntrepriseProfile){
+                return $this->redirectToRoute('app_profile_entreprise');
+            }
             return $this->redirectToRoute('app_dashboard_entreprise');
         }
     

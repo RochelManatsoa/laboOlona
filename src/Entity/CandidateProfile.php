@@ -6,6 +6,7 @@ use App\Entity\Candidate\CV;
 use App\Entity\Candidate\Langages;
 use App\Entity\Candidate\Social;
 use App\Entity\Candidate\TarifCandidat;
+use App\Entity\Entreprise\Favoris;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\EditedCv;
 use App\Entity\Vues\CandidatVues;
@@ -122,6 +123,9 @@ class CandidateProfile
     #[ORM\OneToMany(mappedBy: 'profil', targetEntity: Assignation::class, cascade: ['persist', 'remove'])]
     private Collection $assignations;
 
+    #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: Favoris::class)]
+    private Collection $favoris;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -135,6 +139,7 @@ class CandidateProfile
         $this->cvs = new ArrayCollection();
         $this->editedCvs = new ArrayCollection();
         $this->assignations = new ArrayCollection();
+        $this->favoris = new ArrayCollection();
     }
 
     public function __toString()
@@ -694,6 +699,36 @@ class CandidateProfile
             // set the owning side to null (unless already changed)
             if ($assignation->getProfil() === $this) {
                 $assignation->setProfil(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Favoris>
+     */
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Favoris $favori): static
+    {
+        if (!$this->favoris->contains($favori)) {
+            $this->favoris->add($favori);
+            $favori->setCandidat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(Favoris $favori): static
+    {
+        if ($this->favoris->removeElement($favori)) {
+            // set the owning side to null (unless already changed)
+            if ($favori->getCandidat() === $this) {
+                $favori->setCandidat(null);
             }
         }
 

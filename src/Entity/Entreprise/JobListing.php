@@ -137,6 +137,9 @@ class JobListing
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
     private ?string $prime = null;
 
+    #[ORM\ManyToOne(inversedBy: 'annonce', cascade: ['persist'])]
+    private ?BudgetAnnonce $budgetAnnonce = null;
+
     public function __toString()
     {
         return $this->titre;        
@@ -477,6 +480,18 @@ class JobListing
     public function setPrime(?string $prime): static
     {
         $this->prime = $prime;
+
+        return $this;
+    }
+
+    public function getBudgetAnnonce(): ?BudgetAnnonce
+    {
+        return $this->budgetAnnonce;
+    }
+
+    public function setBudgetAnnonce(?BudgetAnnonce $budgetAnnonce): static
+    {
+        $this->budgetAnnonce = $budgetAnnonce;
 
         return $this;
     }

@@ -40,7 +40,7 @@ class JobListingType extends AbstractType
                 'attr' => []
             ])
             ->add('dateExpiration', DateType::class, [
-                'label' => 'Expire le',
+                'label' => false,
                 'widget' => 'single_text',  
                 'format' => 'yyyy-MM-dd',   
             ])

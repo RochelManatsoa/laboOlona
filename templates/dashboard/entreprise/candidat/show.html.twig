@@ -37,9 +37,18 @@
                     <i class="bi bi-file-earmark-pdf-fill"></i>  Voir son CV 
                     </button>
                     {% endif %}
-                    <a href="{{ path('app_dashboard_entreprise_contact_profile', {'id':candidat.id})}}" class="btn btn-outline-primary rounded-pill">
-                      Demander un devis
+                    <a href="{{ path('app_dashboard_entreprise_contact_profile', {'id':candidat.id})}}" class="btn btn-outline-primary rounded-pill px-5">
+                      Avoir plus d'information
                     </a>
+                    {% if favori %}
+                    <button data-id="{{ candidat.id }}" class="btn btn-outline-success rounded-pill px-5 remove-from-favorites">
+                    <i class="bi bi-star-fill"></i> Effacer des favoris
+                    </button>
+                    {% else %}
+                    <button data-id="{{ candidat.id }}" class="btn btn-success rounded-pill px-5 add-to-favorites">
+                    <i class="bi bi-star"></i> Ajouter comme favoris
+                    </button>
+                    {% endif %}
                 </div>
             </div>
             <p><strong>Résumé :</strong> <span class="text-muted">{{ candidat.resume|raw }}</span></p>
@@ -96,4 +105,52 @@
   </div>
 </div>
 {% endif %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  // Gestionnaire pour l'ajout
+  $(document).on('click', '.add-to-favorites', function(e) {
+    e.preventDefault();
+    var candidatId = $(this).data('id');
+    var button = $(this); 
+    var url = `/favori/ajouter/${candidatId}`;
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      success: function(response) {
+        console.log(response);
+        button.html('<i class="bi bi-star-fill"></i> Effacer des favoris');
+        button.removeClass('add-to-favorites btn-success').addClass('remove-from-favorites btn-outline-success');
+        // Mettre à jour les attributs/data si nécessaire
+      },
+      error: function(xhr, status, error) {
+        alert('Erreur lors de l\'ajout aux favoris');
+      }
+    });
+  });
+
+  // Gestionnaire pour la suppression
+  $(document).on('click', '.remove-from-favorites', function(e) {
+    e.preventDefault();
+    var candidatId = $(this).data('id');
+    var button = $(this); 
+    var url = `/favori/supprimer/${candidatId}`;
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      success: function(response) {
+        console.log(response);
+        button.html('<i class="bi bi-star"></i> Ajouter comme favoris');
+        button.removeClass('remove-from-favorites btn-outline-success').addClass('add-to-favorites btn-success');
+        // Mettre à jour les attributs/data si nécessaire
+      },
+      error: function(xhr, status, error) {
+        alert('Erreur lors de la suppression des favoris');
+      }
+    });
+  });
+});
+</script>
 {% endblock %}

@@ -25,7 +25,7 @@
                     </td>
                     <td>
                         {{ candidat.titre }} <br>
-                        <span class="small text-muted">{{ generatePseudo(candidat) }}</span>
+                        <span class="small text-dark text-strong">{{ generatePseudo(candidat) }}</span> <span class="small text-muted">inscrit le</span> <span class="small text-dark">{{candidat.candidat.dateInscription|date('d/m/Y')}}</span>
                     </td>
                     <td class="text-center">
                     {% if candidat.assignations|length > 0 %}

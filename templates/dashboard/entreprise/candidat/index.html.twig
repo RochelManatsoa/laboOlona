@@ -18,19 +18,21 @@
                 <div class="row">
                     <div class="col">
                         <div class="row">
-                            <div class="col-12 col-lg-6 text-center">
+                            <div class="col-12 col-lg-4 text-center">
                                 <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary rounded-pill mb-3 mx-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                Recherche avancée
-                                <span  id="titre-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    0
-                                    <span class="visually-hidden">unread messages</span>
-                                </span>
-                            </div>
-                            <div class="col-12 col-lg-6 text-center">
+                                <button type="button" class="btn btn-primary px-5 rounded-pill mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Recherche avancée
+                                    <span  id="titre-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        0
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
                                 </button>
-                                <button class="btn btn-primary rounded-pill mb-3 mx-5" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Secteur d'expertise</button>
-
+                            </div>
+                            <div class="col-12 col-lg-4 text-center">
+                                <button class="btn btn-outline-dark px-5 rounded-pill mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightFavorite" aria-controls="offcanvasRightFavorite"><i class="bi bi-star"></i> Mes favoris</button>
+                            </div>
+                            <div class="col-12 col-lg-4 text-center">
+                                <button class="btn btn-primary px-5 rounded-pill mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Secteur d'expertise</button>
                             </div>
                         </div>
                         <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
@@ -40,6 +42,40 @@
                             </div>
                             <div class="offcanvas-body">
                                 {{ form_widget(form.secteurs) }}
+                            </div>
+                        </div>
+                        <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRightFavorite" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvasRightLabel"><i class="bi bi-star"></i> Mes favoris</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                {% if favoris|length > 0 %}
+                                <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary" style="width: 350px;">
+                                    <div class="list-group list-group-flush border-bottom scrollarea">
+                                    {% for favori in favoris %}
+                                    <a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': favori.candidat.id}) }}" class="list-group-item list-group-item-action py-3 lh-sm favori-link" aria-current="true" data-favori-id="{{ favori.candidat.id }}">
+                                        <div class="d-flex w-100 align-items-center justify-content-between">
+                                            <!-- Avatar container -->
+                                            <div class="">
+                                                <img src="{{ favori.candidat.fileName ? asset('uploads/experts/' ~ favori.candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
+                                            </div>
+                                            <!-- Text content -->
+                                            <div class="flex-grow-1 ms-3">
+                                                <strong class="mb-1">{{ generatePseudo(favori.candidat) }} </strong>
+                                                <div class="col-10 mb-1 small">{{ favori.candidat.titre|upper }}</div>
+                                            </div>
+                                            <!-- Date or any other information -->
+                                            <span class="delete-favori" data-id="{{ favori.candidat.id }}"><i class="bi bi-trash"></i></span>
+                                        </div>
+                                    </a>
+
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                                {% else %}
+                                Aucun
+                                {% endif %}
                             </div>
                         </div>
                         <div id="candidats-container">
@@ -193,6 +229,27 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(document).ready(function() {
+    // Gestionnaire de clic pour l'icône de suppression
+    $(document).on('click', '.delete-favori', function(e) {
+        e.preventDefault(); // Empêche la navigation par défaut
+        var candidatId = $(this).data('id');
+        var linkSelector = `.favori-link[data-favori-id='${candidatId}']`;
+        var url = `/favori/supprimer/${candidatId}`; // Modifiez avec votre URL de suppression
+
+        if(confirm('Êtes-vous sûr de vouloir supprimer ce favori ?')) {
+            $.ajax({
+                url: url,
+                type: 'POST', // Ou 'DELETE' selon votre API
+                success: function(response) {
+                    $(linkSelector).remove();
+                },
+                error: function(xhr, status, error) {
+                    // Traitement en cas d'erreur
+                    alert('Erreur lors de la suppression du favori.');
+                }
+            });
+        }
+    });
 
     // Gérer la recherche et la mise à jour des annonces
     $('#entreprise-candidat-search-form input, #entreprise-candidat-search-form select').on('keyup change', function() {
@@ -213,5 +270,6 @@ $(document).ready(function() {
     }
 
 });
+
 </script>
 {% endblock %}

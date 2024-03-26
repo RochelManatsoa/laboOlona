@@ -16,14 +16,11 @@ class ContactType extends AbstractType
         $builder
             ->add('email', EmailType::class, [
                 'label' => 'Adresse éléctronique',
-                // 'label_attr' => ['class' => 'text-light'],
             ])
             ->add('telephone', TextType::class, [
-                // 'label_attr' => ['class' => 'text-light'],
                 'label' => 'Téléphone'
             ])
             ->add('adress', TextType::class, [
-                // 'label_attr' => ['class' => 'text-light'],
                 'label' => 'Adresse'
             ])
         ;

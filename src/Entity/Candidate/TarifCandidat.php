@@ -11,8 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 class TarifCandidat
 {
     const TYPE_HOURLY = 'HOURLY';
-    const TYPE_DAILY = 'REJECTED';
-    const TYPE_MONTHLY = 'ARCHIVED';
+    const TYPE_DAILY = 'DAILY';
+    const TYPE_MONTHLY = 'MONTHLY';
     const DEVISE_EUR = 'EUR';
     const DEVISE_USD = 'USD';
     const DEVISE_AR = 'AR';

@@ -14,8 +14,8 @@
 	{% else %}
 		<div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh;">
 			<div class="px-3">
-				<h3 class="h4 text-center">Bienvenue sur notre Simulateur de Portage Salarial</h3>
-				<p class="text-center pt-5">Vous êtes un freelancer résidant à Madagascar et travaillez avec des clients internationaux ? Notre simulateur de portage salarial est conçu spécialement pour vous. Ce puissant outil vous aidera à calculer facilement le montant à facturer à vos clients pour garantir le salaire net souhaité après déduction des frais de portage salarial.</p>
+				<h3 class="h4 text-center">Bienvenue sur notre Simulateur de Salaire pour Entreprises</h3>
+				<p class="text-center pt-5">Vous gérez une entreprise et envisagez d'embaucher de nouveaux talents ? Notre simulateur de salaire est conçu spécialement pour aider les entreprises à estimer les coûts salariaux. Cet outil pratique vous permettra de calculer facilement le coût total d'embauche en prenant en compte les charges sociales, les taxes et tout autre frais associé, pour vous assurer d'offrir un salaire net attractif tout en maîtrisant vos coûts.</p>
 			</div>
 		</div>
 	{% endif %}
@@ -27,8 +27,8 @@
 				<h1 class="card-title mb-3">Simulateur de salaire</h1>
 				<div class="d-block d-sm-none">
 					<div class="px-3">
-						<h3 class="h4 text-center">Bienvenue sur notre Simulateur de Portage Salarial</h3>
-						<p class="text-center pt-5">Vous êtes un freelancer résidant à Madagascar et travaillez avec des clients internationaux ? Notre simulateur de portage salarial est conçu spécialement pour vous. Ce puissant outil vous aidera à calculer facilement le montant à facturer à vos clients pour garantir le salaire net souhaité après déduction des frais de portage salarial.</p>
+						<h3 class="h4 text-center">Bienvenue sur notre Simulateur de Salaire pour Entreprises</h3>
+						<p class="text-center pt-5">Vous gérez une entreprise et envisagez d'embaucher de nouveaux talents ? Notre simulateur de salaire est conçu spécialement pour aider les entreprises à estimer les coûts salariaux. Cet outil pratique vous permettra de calculer facilement le coût total d'embauche en prenant en compte les charges sociales, les taxes et tout autre frais associé, pour vous assurer d'offrir un salaire net attractif tout en maîtrisant vos coûts.</p>
 					</div>
 				</div>
 			<div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
@@ -52,7 +52,7 @@
 								</div>
 							</div>
 						</div>
-						<p class="mt-4">Le taux de change correspond au taux utilisé pour convertir le montant de votre paiement dans la devise de votre client.</p>
+						<p class="mt-4">Le taux de change est le taux appliqué pour convertir les coûts salariaux estimés dans la devise de votre entreprise à partir de celle du pays de résidence de l'employé potentiel.</p>
 						<legend class="h2">{{ form_label(form.type) }}</legend>
 						<div class="">
 							{{ form_widget(form.type)}}
@@ -70,7 +70,7 @@
 								<span class="input-group-text change-devise">€</span>
 							</div>
 						</div>
-						<p class="mt-4">Le salaire net représente le montant que vous souhaitez percevoir après déduction des impôts et des cotisations sociales.</p>
+						<p class="mt-4">Le salaire net proposé représente le montant que l'employé recevra après déduction des impôts et des cotisations sociales.</p>
 					</section>
 
 					<h3 class="card-title mb-3">Avantages</h3>
@@ -246,7 +246,7 @@
 	<script src="{{asset('assets/main.js')}}"></script>
 	<script>
 		$(function () {
-			initFormStep($("#example-basic"), "h3", "section", "fade", utilisateurEstConnecte());
+			initEntrepriseFormStep($("#example-basic"), "h3", "section", "fade", utilisateurEstConnecte());
 			
 			$('#simulateur_employe_user_email').blur(function() {
 				var email = $(this).val();
