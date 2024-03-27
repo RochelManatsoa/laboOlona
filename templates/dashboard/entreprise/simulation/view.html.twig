@@ -76,11 +76,27 @@
 									</div>
 								</div>
 							</div>
+							{% if simulateur.status is defined and simulateur.status is same as('FREELANCE') %}
+							<hr>
+							<div class="row">
+								<div class="col text-danger h5">Impôt Synthétique Intermittent (ISI)</div>
+							</div>
+							<div class="row">
+								<div class="col-6 text-strong">ISI 5% :</div>
+								<div class="col-6 text-right">{{results.irsa_euro|number_format(2, '.', '')}}</div>
+							</div>
+							<hr>
+							<div class="row bg-info">
+								<div class="col-6 text-strong">Préstation totale :</div>
+								<div class="col-6 text-right text-strong">
+									{{ results.salaire_brut_estime_euro|number_format(2, '.', '') }} {{ simulateur.devise.symbole }}
+								</div>
+							</div>
+							{% else %}
 							<hr>
 							<div class="row">
 								<div class="col text-danger h5">Charge salariale</div>
 							</div>
-							{% if simulateur.status is defined and simulateur.status is same as('PORTAGE') %}
 							<div class="row">
 								<div class="col-6 text-strong">CNAPS 1% :</div>
 								<div class="col-6 text-right">{{results.cnaps_euro|number_format(2, '.', '')}}</div>
@@ -89,7 +105,6 @@
 								<div class="col-6 text-strong">OSTIE 1% :</div>
 								<div class="col-6 text-right">{{results.ostie_euro|number_format(2, '.', '')}}</div>
 							</div>
-							{% endif %}
 							<div class="row">
 								<div class="col-6 text-strong">IRSA :</div>
 								<div class="col-6 text-right  border-bottom">{{ results.irsa_euro|number_format(2, '.', '')}}</div>
@@ -107,6 +122,7 @@
 									{{ results.salaire_brut_estime_euro|number_format(2, '.', '') }} {{ simulateur.devise.symbole }}
 								</div>
 							</div>
+							{% endif %}
 						</div>
 
 						<div class="col-sm-6">

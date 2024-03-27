@@ -262,6 +262,7 @@ class HomeController extends AbstractController
                 $this->em->persist($user);
             }
             $employe->setNombreEnfants($form->get('nombreEnfant')->getData());
+            $employe->setSalaireBase($result['salaire_de_base_ariary']);
 
             if (!$connected) {
                 $user->setDateInscription(new DateTime());

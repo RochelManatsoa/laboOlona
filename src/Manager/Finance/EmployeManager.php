@@ -87,6 +87,7 @@ class EmployeManager
             'fraisProfessionnels' => $fraisProfessionnels,
             'irsa_euro' => $this->convertAriaryToEuro($charge, $tauxDeChange),
             'nbrEnfant' => $nbrEnfant,
+            'salaire_de_base_ariary' => $salaire_de_base_euro,
             'salaire_de_base_euro' => $this->convertAriaryToEuro($salaire_de_base_euro, $tauxDeChange),
             'salaire_brut_estime_euro' => $this->convertAriaryToEuro($salaire_de_base_euro, $tauxDeChange),
             'charge_salariale_euro' => $this->convertAriaryToEuro($charge, $tauxDeChange),
