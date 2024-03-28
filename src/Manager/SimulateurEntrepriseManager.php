@@ -70,9 +70,9 @@ class SimulateurEntrepriseManager
         string $type
     )
     {
-        $salaire_brut_estime_euro = (($salaire_net + $prime_net) / (1 - 0.05) - $prime_net);
+        $salaire_brut_estime_euro = (($salaire_net + $prime_net) / (1 - 0.05));
         $salaire_de_base_euro = ( $salaire_brut_estime_euro );
-        $charge = $salaire_brut_estime_euro - ($salaire_net) ;
+        $charge = $salaire_brut_estime_euro - ($salaire_net + $prime_net) ;
 
         return [
             'fraisRepas' => $fraisRepas,
@@ -88,7 +88,7 @@ class SimulateurEntrepriseManager
             'prime_net_euro' => $this->convertAriaryToDevise($prime_net, $tauxDeChange),
             'facture_total_a_envoyer_euro' => $this->convertAriaryToDevise($this->getFactureTotalFreelance($salaire_brut_estime_euro, $simulateur), $tauxDeChange),
             'cout_avant_portage_euro' => $this->convertAriaryToDevise(($salaire_brut_estime_euro), $tauxDeChange),
-            'frais_de_portage_euro' => $this->convertAriaryToDevise($this->getFraisPortage($salaire_brut_estime_euro), $tauxDeChange),
+            'frais_de_portage_euro' => $this->convertAriaryToDevise($this->getFraisPortage($salaire_brut_estime_euro, $simulateur), $tauxDeChange),
             'coworking' => $this->convertAriaryToDevise($this->getCoworking($simulateur), $tauxDeChange),
             'option_after_6_month' => $this->convertAriaryToDevise($this->getCoutOptionApres6Mois($salaire_brut_estime_euro), $tauxDeChange),
         ];
@@ -109,20 +109,21 @@ class SimulateurEntrepriseManager
     {
         $seuil = 1; 
         $max_iterations = 100; 
+        $max_iterations_base = 100; 
         $iteration = 1;
+        $iteration_base = 1;
         $coworking = 0;
         $ajustement = 100; 
 
         $totalFraisSupplementaires = $fraisRepas + $fraisDeplacement + $fraisConnexion + $fraisProfessionnels;
         $salaire_brut_estime = ($salaire_net + $prime_net + $totalFraisSupplementaires) / (1 - 0.30); // Estimation initiale
-
         while ($iteration < $max_iterations) {
             $cnaps = $this->getCnaps($salaire_brut_estime);
             $ostie = $this->getOstie($salaire_brut_estime);
             $irsa = $this->getIrsa($salaire_brut_estime, $nbrEnfant, $cnaps, $ostie);
-            $salaire_net_calcule = $salaire_brut_estime - ($cnaps + $ostie + $irsa);
+            $salaire_net_calcule = $salaire_brut_estime - ($cnaps + $ostie + $irsa + $prime_net);
 
-            if (abs($salaire_net_calcule - $salaire_net) < $seuil) {
+            if (abs($salaire_net_calcule - $salaire_net) < 1) {
                 break; // Proche du résultat souhaité
             } else {
                 $salaire_brut_estime += ($salaire_net - $salaire_net_calcule) / 2;
@@ -130,9 +131,27 @@ class SimulateurEntrepriseManager
 
             $iteration++;
         }
+        
         $salaire_brut_final = $salaire_brut_estime; // Résultat de votre boucle itérative
-        $salaire_de_base = $salaire_brut_final - ($fraisRepas + $fraisDeplacement + $fraisConnexion + $fraisProfessionnels);
+        
+        $real_salaire_brut_estime = ($salaire_net + $prime_net + $totalFraisSupplementaires) / (1 - 0.30); // Estimation initiale
+        while ($iteration_base < $max_iterations_base) {
+            $cnaps1 = $this->getCnaps($real_salaire_brut_estime);
+            $ostie1 = $this->getOstie($real_salaire_brut_estime);
+            $irsa1 = $this->getIrsa($real_salaire_brut_estime, $nbrEnfant, $cnaps1, $ostie1);
+            $real_salaire_net_calcule = $real_salaire_brut_estime - ($cnaps1 + $ostie1 + $irsa1);
 
+            if (abs($real_salaire_net_calcule - $salaire_net) < $seuil) {
+                break; // Proche du résultat souhaité
+            } else {
+                $real_salaire_brut_estime += ($salaire_net - $real_salaire_net_calcule) / 2;
+            }
+
+            $iteration_base++;
+        }
+        
+        $salaire_de_base = $real_salaire_brut_estime - ($fraisRepas + $fraisDeplacement + $fraisConnexion + $fraisProfessionnels);
+        
         return [
             'tauxDeChange' => $tauxDeChange,
             'fraisRepas' => $fraisRepas,
@@ -147,13 +166,13 @@ class SimulateurEntrepriseManager
             'salaire_de_base_ariary' => $salaire_de_base,
             'salaire_net_ariary' => $salaire_net,
             'prime_net_ariary' => $prime_net,
-            'salaire_brut_estime_ariary' => $salaire_brut_estime,
+            'salaire_brut_estime_ariary' => $salaire_brut_final,
             'salaire_net_calcule_ariary' => $salaire_net_calcule,
-            'charge_salariale_ariary' => $this->getChargesSalarial($salaire_brut_estime, $nbrEnfant),
-            'charges_patronales_ariary' => $this->getChargesPatronales($salaire_brut_estime),
-            'cout_avant_portage_ariary' => $this->getChargesPatronales($salaire_brut_estime) + $salaire_brut_estime,
-            'frais_de_portage_ariary' => $this->getFraisPortage($salaire_brut_estime),
-            'facture_total_a_envoyer_ariary' => $this->getFactureTotal($salaire_brut_estime, $simulateur),
+            'charge_salariale_ariary' => $this->getChargesSalarial($salaire_brut_final, $nbrEnfant),
+            'charges_patronales_ariary' => $this->getChargesPatronales($salaire_brut_final),
+            'cout_avant_portage_ariary' => $this->getChargesPatronales($salaire_brut_final) + $salaire_brut_final,
+            'frais_de_portage_ariary' => $this->getFraisPortage($salaire_brut_final, $simulateur),
+            'facture_total_a_envoyer_ariary' => $this->getFactureTotal($salaire_brut_final, $simulateur),
             'ajustement_ariary' => $salaire_net - $salaire_net_calcule,
             'euro' => "------------",
             'irsa_euro' => $this->convertAriaryToDevise($irsa, $tauxDeChange),
@@ -163,15 +182,15 @@ class SimulateurEntrepriseManager
             'salaire_net_euro' => $this->convertAriaryToDevise($salaire_net, $tauxDeChange),
             'prime_net_euro' => $this->convertAriaryToDevise($prime_net, $tauxDeChange),
             'salaire_net_calcule_euro' => $this->convertAriaryToDevise($salaire_net_calcule, $tauxDeChange),
-            'salaire_brut_estime_euro' => $this->convertAriaryToDevise($salaire_brut_estime, $tauxDeChange),
-            'charge_salariale_euro' => $this->convertAriaryToDevise($this->getChargesSalarial($salaire_brut_estime, $nbrEnfant), $tauxDeChange),
-            'charges_patronales_euro' => $this->convertAriaryToDevise($this->getChargesPatronales($salaire_brut_estime), $tauxDeChange),
-            'cout_avant_portage_euro' => $this->convertAriaryToDevise(($this->getChargesPatronales($salaire_brut_estime) + $salaire_brut_estime), $tauxDeChange),
-            'frais_de_portage_euro' => $this->convertAriaryToDevise($this->getFraisPortage($salaire_brut_estime), $tauxDeChange),
-            'facture_total_a_envoyer_euro' => $this->convertAriaryToDevise($this->getFactureTotal($salaire_brut_estime, $simulateur), $tauxDeChange),
+            'salaire_brut_estime_euro' => $this->convertAriaryToDevise($salaire_brut_final, $tauxDeChange),
+            'charge_salariale_euro' => $this->convertAriaryToDevise($this->getChargesSalarial($salaire_brut_final, $nbrEnfant), $tauxDeChange),
+            'charges_patronales_euro' => $this->convertAriaryToDevise($this->getChargesPatronales($salaire_brut_final), $tauxDeChange),
+            'cout_avant_portage_euro' => $this->convertAriaryToDevise(($this->getChargesPatronales($salaire_brut_final) + $salaire_brut_final), $tauxDeChange),
+            'frais_de_portage_euro' => $this->convertAriaryToDevise($this->getFraisPortage($salaire_brut_final, $simulateur), $tauxDeChange),
+            'facture_total_a_envoyer_euro' => $this->convertAriaryToDevise($this->getFactureTotal($salaire_brut_final, $simulateur), $tauxDeChange),
             'ajustement_euro' => $this->convertAriaryToDevise($salaire_net - $salaire_net_calcule, $tauxDeChange),
             'coworking' => $this->convertAriaryToDevise($this->getCoworking($simulateur), $tauxDeChange),
-            'option_after_6_month' => $this->convertAriaryToDevise($this->getCoutOptionApres6Mois($salaire_brut_estime), $tauxDeChange),
+            'option_after_6_month' => $this->convertAriaryToDevise($this->getCoutOptionApres6Mois($salaire_brut_final), $tauxDeChange),
         ];
 
     }
@@ -223,8 +242,19 @@ class SimulateurEntrepriseManager
         return $irsa;
     }
 
-    private function getFraisPortage(float $salaire_brut):float
+    private function getFraisPortage(float $salaire_brut, Simulateur $simulateur):float
     {
+        if($simulateur->getStatus() === "FREELANCE"){
+            if($salaire_brut < 1500000 ){
+                return $salaire_brut * 20 / 100;
+            }elseif (1500001 < $salaire_brut and $salaire_brut < 3000000) {
+                return $salaire_brut * 15 / 100;
+            }elseif (3000001 < $salaire_brut and $salaire_brut < 6000000) {
+                return $salaire_brut * 8 / 100;
+            }elseif (6000001 < $salaire_brut) {
+                return $salaire_brut * 8 / 100;
+            }
+        }
         if($salaire_brut < 1500000 ){
             return $this->getCoutAvantPortage($salaire_brut) * 20 / 100;
         }elseif (1500001 < $salaire_brut and $salaire_brut < 3000000) {
@@ -285,11 +315,11 @@ class SimulateurEntrepriseManager
 
     private function getFactureTotal(float $salaire_brut, Simulateur $simulateur):float
     {
-        return $salaire_brut + $this->getPrimeNet($simulateur) + $this->getChargesPatronales($salaire_brut) + $this->getFraisPortage($salaire_brut) + $this->getCoworking($simulateur);
+        return $salaire_brut + $this->getChargesPatronales($salaire_brut) + $this->getFraisPortage($salaire_brut, $simulateur) + $this->getCoworking($simulateur);
     }
 
     private function getFactureTotalFreelance(float $salaire_brut, Simulateur $simulateur):float
     {
-        return $salaire_brut + $this->getPrimeNet($simulateur) + $this->getFraisPortage($salaire_brut) + $this->getCoworking($simulateur);
+        return $salaire_brut + $this->getFraisPortage($salaire_brut, $simulateur) + $this->getCoworking($simulateur);
     }
 }

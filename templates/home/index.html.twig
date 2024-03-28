@@ -17,8 +17,21 @@
 	<script src="{{asset('assets/main.js')}}"></script>
 	<script>
 		$(function () {
+			initEntrepriseFormStep($("#example-company"), "h3", "section", "fade", utilisateurEstConnecte());
 			initFormStep($("#example-basic"), "h3", "section", "fade", utilisateurEstConnecte());
 			
+			// Gestionnaire d'événements pour le changement d'état du switch
+			$('#customSwitch').change(function() {
+				if ($(this).is(':checked')) {
+					// Si le switch est activé, affichez le simulateur d'entreprise et masquez le simulateur de candidat
+					$('#simulateur-entreprise').show();
+					$('#simulateur-candidat').hide();
+				} else {
+					// Si le switch est désactivé, affichez le simulateur de candidat et masquez le simulateur d'entreprise
+					$('#simulateur-candidat').show();
+					$('#simulateur-entreprise').hide();
+				}
+			});
 			$('#simulateur_employe_user_email').blur(function() {
 				var email = $(this).val();
 				if (email !== '') {

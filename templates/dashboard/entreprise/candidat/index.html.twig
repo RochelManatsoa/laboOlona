@@ -29,7 +29,7 @@
                                 </button>
                             </div>
                             <div class="col-12 col-lg-4 text-center">
-                                <button class="btn btn-outline-dark px-5 rounded-pill mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightFavorite" aria-controls="offcanvasRightFavorite"><i class="bi bi-star"></i> Mes favoris</button>
+                                <button class="btn btn-outline-dark px-5 rounded-pill mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightFavorite" aria-controls="offcanvasRightFavorite"><i class="bi bi-star-fill text-warning"></i> Mes favoris</button>
                             </div>
                             <div class="col-12 col-lg-4 text-center">
                                 <button class="btn btn-primary px-5 rounded-pill mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Secteur d'expertise</button>
@@ -46,7 +46,7 @@
                         </div>
                         <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRightFavorite" aria-labelledby="offcanvasRightLabel">
                             <div class="offcanvas-header">
-                                <h5 class="offcanvas-title" id="offcanvasRightLabel"><i class="bi bi-star"></i> Mes favoris</h5>
+                                <h5 class="offcanvas-title" id="offcanvasRightLabel"><i class="bi bi-star-fill text-warning"></i> Mes favoris</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
@@ -229,6 +229,47 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(document).ready(function() {
+  $(document).on('click', '.add-to-favorites', function(e) {
+    e.preventDefault();
+    var candidatId = $(this).data('id');
+    var button = $(this); 
+    var url = `/favori/ajouter/${candidatId}`;
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      success: function(response) {
+        console.log(response);
+        button.html('<i class="bi bi-star text-warning"></i> Effacer');
+        button.removeClass('add-to-favorites btn-success').addClass('remove-from-favorites btn-outline-success');
+        // Mettre à jour les attributs/data si nécessaire
+      },
+      error: function(xhr, status, error) {
+        alert('Erreur lors de l\'ajout aux favoris');
+      }
+    });
+  });
+  
+  $(document).on('click', '.remove-from-favorites', function(e) {
+    e.preventDefault();
+    var candidatId = $(this).data('id');
+    var button = $(this); 
+    var url = `/favori/supprimer/${candidatId}`;
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      success: function(response) {
+        console.log(response);
+        button.html('<i class="bi bi-star-fill text-warning"></i> Ajouter');
+        button.removeClass('remove-from-favorites btn-outline-light').addClass('add-to-favorites btn-light');
+        // Mettre à jour les attributs/data si nécessaire
+      },
+      error: function(xhr, status, error) {
+        alert('Erreur lors de la suppression des favoris');
+      }
+    });
+  });
     // Gestionnaire de clic pour l'icône de suppression
     $(document).on('click', '.delete-favori', function(e) {
         e.preventDefault(); // Empêche la navigation par défaut

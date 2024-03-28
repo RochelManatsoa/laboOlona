@@ -38,15 +38,15 @@
                     </button>
                     {% endif %}
                     <a href="{{ path('app_dashboard_entreprise_contact_profile', {'id':candidat.id})}}" class="btn btn-outline-primary rounded-pill px-5">
-                      Avoir plus d'information
+                      Avoir plus d'informations
                     </a>
                     {% if favori %}
                     <button data-id="{{ candidat.id }}" class="btn btn-outline-success rounded-pill px-5 remove-from-favorites">
-                    <i class="bi bi-star-fill"></i> Effacer des favoris
+                    <i class="bi bi-star text-warning"></i> Effacer des favoris
                     </button>
                     {% else %}
                     <button data-id="{{ candidat.id }}" class="btn btn-success rounded-pill px-5 add-to-favorites">
-                    <i class="bi bi-star"></i> Ajouter comme favoris
+                    <i class="bi bi-star-fill text-warning"></i> Ajouter comme favoris
                     </button>
                     {% endif %}
                 </div>
@@ -120,7 +120,7 @@ $(document).ready(function() {
       type: 'POST',
       success: function(response) {
         console.log(response);
-        button.html('<i class="bi bi-star-fill"></i> Effacer des favoris');
+        button.html('<i class="bi bi-star text-warning"></i> Effacer des favoris');
         button.removeClass('add-to-favorites btn-success').addClass('remove-from-favorites btn-outline-success');
         // Mettre à jour les attributs/data si nécessaire
       },
@@ -142,7 +142,7 @@ $(document).ready(function() {
       type: 'POST',
       success: function(response) {
         console.log(response);
-        button.html('<i class="bi bi-star"></i> Ajouter comme favoris');
+        button.html('<i class="bi bi-star-fill text-warning"></i> Ajouter comme favoris');
         button.removeClass('remove-from-favorites btn-outline-success').addClass('add-to-favorites btn-success');
         // Mettre à jour les attributs/data si nécessaire
       },

@@ -3,13 +3,23 @@
 			<h2 class="text-black text-center mt-5 mb-2 w-100 display-2">{{ 'app_home.section.simulator.h2'|trans }}</h2>
 			<p class="text-black text-center mt-2 mb-5 w-100 fs-5"> {{ 'app_home.section.simulator.p1'|trans }} </p>
 
+<div class="text-center mx-auto">
+	<label class="form-switch">
+	<input type="checkbox" id="customSwitch">
+	<span class="switch-slider">
+		<span class="switch-label switch-label-on">Entreprise</span>
+		<span class="switch-label switch-label-off">Candidat</span>
+	</span>
+	</div>
+</label>
+
 			<div class="annonce-list shadow rounded p-3 p-sm-5 m-2 m-sm-5" style="background-color: black;position:relative">
-				<div class="">
+				<div id="simulateur-candidat">
 					{{form_start(form, {'attr': {'id': 'example-basic'}}) }}
-					{{ form_widget(form.deviseSymbole)}}
+					{{ form_widget(form.deviseSymbole, {'attr': {'data-id': 'simulateur_deviseSymbole'}})}}
 					<!-- Début du formulaire avec l'ID "example-basic" -->
-					<h3 class="card-title mb-3">Taux de change</h3>
-					<section class="bg-dark"
+					<h3 class="card-title mb-3">Devise</h3>
+					<section class="text-grey bg-dark"
 						style="position: relative;width: 100%;">
 						<!-- Explication du champ "Taux de change" -->
 						<legend class="h2">{{ form_label(form.devise) }}</legend>
@@ -31,9 +41,20 @@
 						</div>
 					</section>
 
+					<h3 class="card-title mb-3">Statut</h3>
+					<section class="text-grey bg-dark"
+						style="position: relative;width: 100%;">
+						<!-- Explication du champ "Taux de change" -->
+						<legend class="h2">{{ form_label(form.status) }}</legend>
+						<div class="row">
+							{{ form_widget(form.status)}}
+						</div>
+						<p id="status-explanation" class="mt-4">Le taux de change est le taux appliqué pour convertir les coûts salariaux estimés dans la devise de votre entreprise à partir de celle du pays de résidence de l'employé potentiel.</p>
+					</section>
+
 					<h3 class="card-title mb-3">Salaire Net</h3>
-					<section
-						class="text-grey bg-dark" style="position: relative;width: 100%;">
+					<section class="text-grey bg-dark"
+						style="position: relative;width: 100%;">
 						<!-- Explication du champ "Salaire Net" -->
 						<legend class="h2">{{ form_label(form.salaireNet) }}</legend>
 						<div class="col-lg-6 col-sm-12">
@@ -89,8 +110,8 @@
 									<span class="input-group-text change-devise">€</span>
 								</div>
 								<div class="row small">
-									<div class="col-5 form-text text-light">Nombre de jour</div>
-									<div class="col-6 form-text text-light">Prix journalier</div>
+									<div class="col-5 form-text">Nombre de jour</div>
+									<div class="col-7 form-text">Prix journalier</div>
 								</div>
 							</div>
 						</div>
@@ -105,20 +126,20 @@
 									<span class="input-group-text change-devise">€</span>
 								</div>
 								<div class="row small">
-									<div class="col-5 form-text text-light">Nombre de jour</div>
-									<div class="col-6 form-text text-light">Prix journalier</div>
+									<div class="col-5 form-text">Nombre de jour</div>
+									<div class="col-7 form-text">Prix journalier</div>
 								</div>
 							</div>
 						</div>
 						<div class="row align-items-center">
-							<div class="col-lg-4 col-sm-6">
+							<div class="col-lg-4 ">
 								<label class="col-form-label mt-3">{{ form_label(form.avantage.primeFonction) }}
 									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Frais professionnels">
 										<i class="bi bi-info-circle-fill"></i>
 									</span>
 								</label>
 							</div>
-							<div class="col-lg-3 col-sm-6">
+							<div class="col-lg-3 ">
 								<div class="input-group">
 									{{ form_widget(form.avantage.primeFonction)}}
 									<span class="input-group-text change-devise">€</span>
@@ -129,7 +150,7 @@
 
 					<h3 class="card-title mb-3">Résumé</h3>
 					<section
-						class="text-grey" style="position: relative;width: 100%;">
+						class="text-grey bg-dark" style="position: relative;width: 100%;">
 						<!-- Explication du champ "Prime" -->
 						<div id="resum"></div>
 						<div style="display:none;">
@@ -137,77 +158,306 @@
 						</div>
 					</section>
 				</div>
+				<!-- Modal -->
+				<div class="modal fade" id="connexionModal" tabindex="-1" aria-labelledby="connexionModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg modal-dialog-centered ">
+						<div class="modal-content bg-dark">
+							<div class="modal-header">
+								<h1 class="modal-title fs-4" id="connexionModalLabel">Vous devez vous inscrire</h1>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body p-5">
+							{% if not connected %}
+								<div class="row">
+									<div class="col-md-6">
+										{{ form_row(form.employe.user.nom) }}
+									</div>
+									<div class="col-md-6">
+										{{ form_row(form.employe.user.prenom) }}
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										{{ form_row(form.employe.user.email) }}
+										<div id="email-error-message" class="invalid-feedback d-block" style="display:none;"></div>
+									</div>
+									<div class="col-md-6">
+										{{ form_row(form.employe.user.telephone) }}
+										<div id="telephone-error-message" class="invalid-feedback d-block" style="display:none;"></div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										{{ form_row(form.employe.user.plainPassword.first) }}
+										<div id="password-error-message" class="invalid-feedback d-block" style="display:none;"></div>
+									</div>
+									<div class="col-md-6">
+										{{ form_row(form.employe.user.plainPassword.second) }}
+									</div>
+								</div>
+								<div class="form-check form-check-inline">
+									<div class="row">
+										<div class="col-1 m-0 p-0">
+											<div class="form-check form-check-inline">
+												{{ form_widget(form.employe.user.agreeTerms) }}
+											</div>
+										</div>
+										<div class="col-11 m-0 pl-0">
+											<label class="form-check-label fs-6" for="{{ form.employe.user.agreeTerms.vars.id }}">
+												{{ attribute(form.employe.user.agreeTerms.vars.attr, 'label')|trans({
+										'%terms_url%': path('app_home_terms'),
+										'%privacy_url%': path('app_home_privacy')
+									})|raw }}
+											</label>
+										</div>
+									</div>
+
+								</div>
+								<div class="text-center">
+									<button class="btn rounded-pill px-5 btn-light" type="submit" id="register-submit">
+										{{ 'app_register.menu'|trans }}
+									</button>
+								</div>
+							
+							{% endif %}
+								<div style="display:none;">
+									{{ form_widget(form)}}
+								</div>
+								{{ form_end(form) }}
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div id="simulateur-entreprise" style="display:none;">
+					{{form_start(formCompany, {'attr': {'id': 'example-company'}}) }}
+					{{ form_widget(formCompany.deviseSymbole, {'attr': {'data-id': 'simulateur_deviseSymbole'}})}}
+					<!-- Début du formulaire avec l'ID "example-company" -->
+					<h3 class="card-title mb-3">Devise</h3>
+					<section class="text-grey bg-dark"
+						style="position: relative;width: 100%;">
+						<!-- Explication du champ "Taux de change" -->
+						<legend class="h2">{{ form_label(formCompany.devise) }}</legend>
+						<div class="row">
+							<div class="col-lg-6">
+								{{ form_widget(formCompany.devise)}}
+							</div>
+							<div class="col-lg-6">
+								<div class="input-group">
+									{{ form_widget(formCompany.taux)}}
+									<span class="input-group-text">Ar</span>
+								</div>
+							</div>
+						</div>
+						<p class="mt-4">Le taux de change correspond au taux utilisé pour convertir le montant de votre paiement dans la devise de votre client.</p>
+						<legend class="h2">{{ form_label(formCompany.type) }}</legend>
+						<div class="">
+							{{ form_widget(formCompany.type)}}
+						</div>
+					</section>
+
+					<h3 class="card-title mb-3">Statut</h3>
+					<section class="text-grey bg-dark"
+						style="position: relative;width: 100%;">
+						<!-- Explication du champ "Taux de change" -->
+						<legend class="h2">{{ form_label(formCompany.status) }}</legend>
+						<div class="row">
+							{{ form_widget(formCompany.status)}}
+						</div>
+						<p id="status-explanation" class="mt-4">Le taux de change est le taux appliqué pour convertir les coûts salariaux estimés dans la devise de votre entreprise à partir de celle du pays de résidence de l'employé potentiel.</p>
+					</section>
+
+					<h3 class="card-title mb-3">Salaire Net</h3>
+					<section class="text-grey bg-dark"
+						style="position: relative;width: 100%;">
+						<!-- Explication du champ "Salaire Net" -->
+						<legend class="h2">{{ form_label(formCompany.salaireNet) }}</legend>
+						<div class="col-lg-6 col-sm-12">
+							<div class="input-group">
+								{{ form_widget(formCompany.salaireNet)}}
+								<span class="input-group-text change-devise">€</span>
+							</div>
+						</div>
+						<p class="mt-4">Le salaire net représente le montant que vous souhaitez percevoir après déduction des impôts et des cotisations sociales.</p>
+					</section>
+
+					<h3 class="card-title mb-3">Avantages</h3>
+					<section
+						class="text-grey bg-dark" style="position: relative;width: 100%;">
+						<!-- Explication du champ "Charge" -->
+						<div class="row align-items-center">
+							<div class="col-lg-4 col-sm-6">
+								<label class="col-form-label mt-3">{{ form_label(formCompany.nombreEnfant) }}
+									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Pour calculer les avantages fiscaux et les allocations familiales.">
+										<i class="bi bi-info-circle-fill"></i>
+									</span>
+								</label>
+							</div>
+							<div class="col-lg-3 col-sm-6">
+								<div class="input-group">
+									{{ form_widget(formCompany.nombreEnfant)}}
+								</div>
+							</div>
+						</div>
+						<div class="row align-items-center" id="freelance">
+							<div class="col-lg-4 col-sm-6">
+								<label class="col-form-label mt-3">{{ form_label(formCompany.avantage.primeConnexion) }}
+									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Forfait mensuel souhaité.">
+										<i class="bi bi-info-circle-fill"></i>
+									</span>
+								</label>
+							</div>
+							<div class="col-lg-3 col-sm-6">
+								<div class="input-group">
+									{{ form_widget(formCompany.avantage.primeConnexion)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+							</div>
+						</div>
+						<div class="row align-items-center">
+							<div class="col-lg-4 col-sm-6">
+								<label class="col-form-label mt-3">Indemnités repas</label>
+							</div>
+							<div class="col-lg-6 col-sm-6">
+								<div class="input-group">
+									{{ form_widget(formCompany.jourRepas)}}
+									{{ form_widget(formCompany.prixRepas)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+								<div class="row small">
+									<div class="col-5 form-text">Nombre de jour</div>
+									<div class="col-7 form-text">Prix journalier</div>
+								</div>
+							</div>
+						</div>
+						<div class="row align-items-center" id="employe" style="display: none;">
+							<div class="col-lg-4 col-sm-6">
+								<label class="col-form-label mt-3">Indemnités deplacement</label>
+							</div>
+							<div class="col-lg-6 col-sm-6">
+								<div class="input-group">
+									{{ form_widget(formCompany.jourDeplacement)}}
+									{{ form_widget(formCompany.prixDeplacement)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+								<div class="row small">
+									<div class="col-5 form-text text-white">Nombre de jour</div>
+									<div class="col-7 form-text text-white">Prix journalier</div>
+								</div>
+							</div>
+						</div>
+						<div class="row align-items-center">
+							<div class="col-lg-4 ">
+								<label class="col-form-label mt-3">{{ form_label(formCompany.avantage.primeFonction) }}
+									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Frais professionnels">
+										<i class="bi bi-info-circle-fill"></i>
+									</span>
+								</label>
+							</div>
+							<div class="col-lg-3 ">
+								<div class="input-group">
+									{{ form_widget(formCompany.avantage.primeFonction)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+							</div>
+						</div>
+						<div class="row align-items-center">
+							<div class="col-lg-4 ">
+								<label class="col-form-label mt-3">{{ form_label(formCompany.primeNet) }}
+									<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Prime après déductions, en plus du salaire net.">
+										<i class="bi bi-info-circle-fill"></i>
+									</span>
+								</label>
+							</div>
+							<div class="col-lg-3 ">
+								<div class="input-group">
+									{{ form_widget(formCompany.primeNet)}}
+									<span class="input-group-text change-devise">€</span>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<h3 class="card-title mb-3">Résumé</h3>
+					<section
+						class="text-grey bg-dark" style="position: relative;width: 100%;">
+						<!-- Explication du champ "Prime" -->
+						<div id="resumCompany"></div>
+						<div style="display:none;">
+							<button type="button" id="popupCompany" data-bs-toggle="modal" data-bs-target="#connexionCompagnyModal"></button>
+						</div>
+					</section>
+				</div>
+				<!-- Modal -->
+				<div class="modal fade" id="connexionCompagnyModal" tabindex="-1" aria-labelledby="connexionModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg modal-dialog-centered">
+						<div class="modal-content bg-dark">
+							<div class="modal-header">
+								<h1 class="modal-title fs-4" id="connexionModalLabel">Vous devez vous inscrire</h1>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body p-5">
+							{% if not connected %}
+								<div class="row">
+									<div class="col-md-6">
+										{{ form_row(formCompany.employe.user.nom) }}
+									</div>
+									<div class="col-md-6">
+										{{ form_row(formCompany.employe.user.prenom) }}
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										{{ form_row(formCompany.employe.user.email) }}
+										<div id="email-error-message" class="invalid-feedback d-block" style="display:none;"></div>
+									</div>
+									<div class="col-md-6">
+										{{ form_row(formCompany.employe.user.telephone) }}
+										<div id="telephone-error-message" class="invalid-feedback d-block" style="display:none;"></div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										{{ form_row(formCompany.employe.user.plainPassword.first) }}
+										<div id="password-error-message" class="invalid-feedback d-block" style="display:none;"></div>
+									</div>
+									<div class="col-md-6">
+										{{ form_row(formCompany.employe.user.plainPassword.second) }}
+									</div>
+								</div>
+								<div class="form-check form-check-inline">
+									<div class="row">
+										<div class="col-1 m-0 p-0">
+											<div class="form-check form-check-inline">
+												{{ form_widget(formCompany.employe.user.agreeTerms) }}
+											</div>
+										</div>
+										<div class="col-11 m-0 pl-0">
+											<label class="form-check-label fs-6" for="{{ formCompany.employe.user.agreeTerms.vars.id }}">
+												{{ attribute(formCompany.employe.user.agreeTerms.vars.attr, 'label')|trans({
+										'%terms_url%': path('app_home_terms'),
+										'%privacy_url%': path('app_home_privacy')
+									})|raw }}
+											</label>
+										</div>
+									</div>
+
+								</div>
+								<div class="text-center">
+									<button class="btn rounded-pill px-5 btn-light" type="submit" id="register-submit">
+										{{ 'app_register.menu'|trans }}
+									</button>
+								</div>
+							
+							{% endif %}
+								<div style="display:none;">
+									{{ form_widget(formCompany)}}
+								</div>
+								{{ form_end(formCompany) }}
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
     </div>
 </section>
-
-	<!-- Modal -->
-	<div class="modal fade" id="connexionModal" tabindex="-1" aria-labelledby="connexionModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg ">
-			<div class="modal-content bg-dark">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="connexionModalLabel">Vous devez vous inscrire</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-				{% if not connected %}
-					<div class="row">
-						<div class="col-md-6">
-							{{ form_row(form.employe.user.nom) }}
-						</div>
-						<div class="col-md-6">
-							{{ form_row(form.employe.user.prenom) }}
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							{{ form_row(form.employe.user.email) }}
-							<div id="email-error-message" class="invalid-feedback d-block" style="display:none;"></div>
-						</div>
-						<div class="col-md-6">
-							{{ form_row(form.employe.user.telephone) }}
-							<div id="telephone-error-message" class="invalid-feedback d-block" style="display:none;"></div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							{{ form_row(form.employe.user.plainPassword.first) }}
-							<div id="password-error-message" class="invalid-feedback d-block" style="display:none;"></div>
-						</div>
-						<div class="col-md-6">
-							{{ form_row(form.employe.user.plainPassword.second) }}
-						</div>
-					</div>
-					<div class="form-check form-check-inline">
-						<div class="row">
-							<div class="col-1 m-0 p-0">
-								<div class="form-check form-check-inline">
-									{{ form_widget(form.employe.user.agreeTerms) }}
-								</div>
-							</div>
-							<div class="col-11 m-0 pl-0">
-								<label class="form-check-label fs-6" for="{{ form.employe.user.agreeTerms.vars.id }}">
-									{{ attribute(form.employe.user.agreeTerms.vars.attr, 'label')|trans({
-                            '%terms_url%': path('app_home_terms'),
-                            '%privacy_url%': path('app_home_privacy')
-                        })|raw }}
-								</label>
-							</div>
-						</div>
-
-					</div>
-					<div class="text-center">
-						<button class="btn rounded-pill px-5 btn-dark" type="submit" id="register-submit">
-							{{ 'app_register.menu'|trans }}
-						</button>
-					</div>
-				
-				{% endif %}
-					<div style="display:none;">
-						{{ form_widget(form)}}
-					</div>
-					{{ form_end(form) }}
-				</div>
-			</div>
-		</div>
-	</div>

@@ -256,11 +256,11 @@ function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connecte
       onStepChanged: function (event, currentIndex, priorIndex) {
         // Used to skip the "Warning" step if the user is old enough.
         if (currentIndex === 4) {
-          let data = $('#example-basic').serializeArray().map(function(item) {
+          let data = $('#example-company').serializeArray().map(function(item) {
             item.label = $(`[name="${item.name}"]`).attr('data-unit');
             return item;
           })
-          let resum = $('#resum')
+          let resum = $('#resumCompany')
           let html = ''
           // Définition de la fonction getDevise
             function getDevise(id, callback) {
@@ -360,7 +360,7 @@ function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connecte
         console.log(connected)
         if (!connected) {
           // Si connected est faux, affichez un popup
-          $('#popup').click();
+          $('#popupCompany').click();
           return false; // Empêche la soumission du formulaire
         }
         form.submit()

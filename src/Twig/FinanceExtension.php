@@ -2,6 +2,8 @@
 
 namespace App\Twig;
 
+use App\Entity\CandidateProfile;
+use App\Entity\Entreprise\Favoris;
 use DateTime;
 use App\Entity\User;
 use Twig\TwigFilter;
@@ -11,6 +13,7 @@ use Twig\TwigFunction;
 use App\Entity\ReferrerProfile;
 use App\Entity\Referrer\Referral;
 use App\Entity\Entreprise\JobListing;
+use App\Entity\EntrepriseProfile;
 use App\Entity\Finance\Contrat;
 use App\Entity\Finance\Employe;
 use App\Entity\Finance\Simulateur;
@@ -69,6 +72,7 @@ class FinanceExtension extends AbstractExtension
             new TwigFunction('convertToDevise', [$this, 'convertToDevise']),
             new TwigFunction('convertToAriary', [$this, 'convertToAriary']),
             new TwigFunction('getFraisPortage', [$this, 'getFraisPortage']),
+            new TwigFunction('isFavorite', [$this, 'isFavorite']),
         ];
     }
 
@@ -352,4 +356,15 @@ class FinanceExtension extends AbstractExtension
         return round($results['frais_de_portage_euro']) ;
     }
 
+    public function isFavorite(array $favoris, CandidateProfile $candidateProfile)
+    {
+        foreach ($favoris as $favori) {
+            // Vérifier si le candidat actuel dans la boucle correspond à $candidateProfile
+            if ($favori->getCandidat() === $candidateProfile) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }
