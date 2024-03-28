@@ -33,9 +33,9 @@
 				</div>
 			<div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
 				<div class="">
-					{{form_start(form, {'attr': {'id': 'example-basic'}}) }}
+					{{form_start(form, {'attr': {'id': 'example-company'}}) }}
 					{{ form_widget(form.deviseSymbole, {'attr': {'data-id': 'simulateur_deviseSymbole'}})}}
-					<!-- Début du formulaire avec l'ID "example-basic" -->
+					<!-- Début du formulaire avec l'ID "example-company" -->
 					<h3 class="card-title mb-3">Devise</h3>
 					<section
 						style="position: relative;width: 100%;">
@@ -185,7 +185,7 @@
 					<section
 						class="text-grey" style="position: relative;width: 100%;">
 						<!-- Explication du champ "Prime" -->
-						<div id="resum"></div>
+						<div id="resumCompany"></div>
 						<div style="display:none;">
 							<button type="button" id="popup" data-bs-toggle="modal" data-bs-target="#connexionModal"></button>
 						</div>
@@ -272,7 +272,7 @@
 	<script src="{{asset('assets/main.js')}}"></script>
 	<script>
 		$(function () {
-			initEntrepriseFormStep($("#example-basic"), "h3", "section", "fade", utilisateurEstConnecte());
+			initEntrepriseFormStep($("#example-company"), "h3", "section", "fade", utilisateurEstConnecte());
 			
 			$('#simulateur_entreprise_employe_user_email').blur(function() {
 				var email = $(this).val();

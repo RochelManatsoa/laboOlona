@@ -250,9 +250,9 @@ class SimulateurEntrepriseManager
             }elseif (1500001 < $salaire_brut and $salaire_brut < 3000000) {
                 return $salaire_brut * 15 / 100;
             }elseif (3000001 < $salaire_brut and $salaire_brut < 6000000) {
-                return $salaire_brut * 8 / 100;
+                return $salaire_brut * 12 / 100;
             }elseif (6000001 < $salaire_brut) {
-                return $salaire_brut * 8 / 100;
+                return $salaire_brut * 10 / 100;
             }
         }
         if($salaire_brut < 1500000 ){
@@ -260,9 +260,9 @@ class SimulateurEntrepriseManager
         }elseif (1500001 < $salaire_brut and $salaire_brut < 3000000) {
             return $this->getCoutAvantPortage($salaire_brut) * 15 / 100;
         }elseif (3000001 < $salaire_brut and $salaire_brut < 6000000) {
-            return $this->getCoutAvantPortage($salaire_brut) * 8 / 100;
+            return $this->getCoutAvantPortage($salaire_brut) * 12 / 100;
         }elseif (6000001 < $salaire_brut) {
-            return $this->getCoutAvantPortage($salaire_brut) * 8 / 100;
+            return $this->getCoutAvantPortage($salaire_brut) * 10 / 100;
         }
     }
 
