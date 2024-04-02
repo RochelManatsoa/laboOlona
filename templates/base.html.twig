@@ -22,7 +22,8 @@
         {% endblock %}
 
         {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+            {{ encore_entry_script_tags('app') }}         
+	        <script src="{{asset('assets/errorLogger.js')}}"></script>
         {% endblock %}
     </head>
     <body style="background:black;" class="container-fluid">

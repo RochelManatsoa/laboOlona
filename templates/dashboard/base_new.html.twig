@@ -15,6 +15,7 @@
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
+	        <script src="{{asset('assets/errorLogger.js')}}"></script>
         {% endblock %}
     </head>
     <body>

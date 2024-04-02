@@ -2,7 +2,6 @@
 
 namespace App\Form\Moderateur;
 
-use App\Entity\Entreprise\JobListing;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Moderateur\Assignation;
 use Symfony\Component\Form\AbstractType;
@@ -29,6 +28,9 @@ class AssignationFormType extends AbstractType
             ->add('jobListing')
             ->add('forfait', MoneyType::class, [])
             ->add('commentaire')
+            ->add('submit', SubmitType::class, [
+                'label' => 'Assigner'
+            ])
         ;
     }
 

@@ -16,13 +16,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Form\DataTransformer\CompetencesTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use App\Form\Autocomplete\CompetencesAutocompleteField;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class AnnonceType extends AbstractType
@@ -66,7 +62,9 @@ class AnnonceType extends AbstractType
                 ]
             ])
             ->add('salaire', HiddenType::class, [])
-            ->add('budgetAnnonce', BudgetAnnonceType::class, ['label' => 'Lieu',])
+            ->add('budgetAnnonce', BudgetAnnonceType::class, [
+                'label' => 'Budget',
+            ])
             ->add('lieu', TextType::class, ['label' => 'Lieu',])
             ->add('nombrePoste', null, ['label' => 'Nombre de personne à chercher',])
             ->add('competences', TextType::class, [
@@ -84,7 +82,6 @@ class AnnonceType extends AbstractType
                 'no_results_found_text' => 'Aucun résultat' ,
                 'no_more_results_text' => 'Plus de résultats' ,
             ])
-            // ->add('langues')
         ;
 
         $builder->get('competences')
