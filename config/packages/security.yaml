@@ -13,6 +13,21 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        admin:
+            pattern:            /admin(.*)
+            form_login:
+                provider:       app_user_provider
+                login_path:     admin_login
+                use_forward:    false
+                check_path:     admin_login
+                failure_path:   null
+            logout:
+                path:           admin_logout
+                target:         admin_login
+            custom_authenticator: 
+                - App\Security\Admin\AdminLoginAuthenticator
+            entry_point: App\Security\Admin\AdminLoginAuthenticator
         main:
             lazy: true
             provider: app_user_provider

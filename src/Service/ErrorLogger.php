@@ -43,12 +43,14 @@ class ErrorLogger
         $url = $request ? $request->getUri() : 'N/A';
         $userAgent = $request ? $request->headers->get('User-Agent') : 'N/A';
         $errorLog = new ErrorLog();
-        $errorLog->setMessage($exception->getMessage())
+        $longueurMax = 255; // ou toute autre limite appropriée pour votre colonne
+        $messageTronque = mb_substr($exception->getMessage(), 0, $longueurMax);
+        $errorLog->setMessage($messageTronque)
             ->setType('php') 
             ->setUrl($url) 
             ->setFileName($exception->getFile()) 
             ->setLineNumber($exception->getLine()) 
-            ->setErrorObj($exception->getTraceAsString())
+            // ->setErrorObj($exception->getTraceAsString())
             ->setUserAgent($userAgent) 
             ->setUserId($userId) 
             ->setCreatedAt(new \DateTime()); 
