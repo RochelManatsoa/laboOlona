@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Crud;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -34,8 +35,10 @@ class UserCrudController extends AbstractCrudController
             TextField::new('type'),
             TextField::new('nom'),
             TextField::new('prenom'),
-            TextField::new('telephone'),
-            ArrayField::new('roles'),
+            DateField::new('dateInscription', 'Inscrit le')->hideOnForm(),
+            DateField::new('lastLogin', 'Last login')->hideOnForm(),
+            TextField::new('telephone')->hideOnIndex(),
+            ArrayField::new('roles')->hideOnIndex(),
         ];
     }
 }

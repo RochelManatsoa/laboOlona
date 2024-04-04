@@ -54,13 +54,21 @@ class AdminLoginAuthenticator extends AbstractLoginFormAuthenticator
     
     public function authenticate(Request $request): Passport
     {
-        $email = $request->request->get('email', '');
+        $formData = $request->request->all();
+
+        if (isset($formData['admin_login_form']) && is_array($formData['admin_login_form'])) {
+            $email = $formData['admin_login_form']['email'] ?? '';
+            $password = $formData['admin_login_form']['password'] ?? '';
+        } else {
+            $email = ''; 
+            $password = ''; 
+        }
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
         return new Passport(
             new UserBadge($email),
-            new PasswordCredentials($request->request->get('password', '')),
+            new PasswordCredentials($password),
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
                 new RememberMeBadge(),
@@ -114,6 +122,6 @@ class AdminLoginAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): RedirectResponse
     {
-        return new RedirectResponse($this->router->generate('sonata_admin_dashboard'));
+        return new RedirectResponse($this->router->generate('admin'));
     }
 }

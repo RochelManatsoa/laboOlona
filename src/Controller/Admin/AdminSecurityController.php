@@ -34,9 +34,7 @@ final class AdminSecurityController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/logout", name="admin_logout")
-     */
+    #[Route('/admin/logout', name: 'admin_logout')]
     public function logoutAction(): void
     {
         // Left empty intentionally because this will be handled by Symfony.

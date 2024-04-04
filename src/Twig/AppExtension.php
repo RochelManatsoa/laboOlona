@@ -579,9 +579,18 @@ class AppExtension extends AbstractExtension
     public function getEditedCv(string $cvName)
     {
         $safeFileName = "";
-        $safeFileName = $this->em->getRepository(EditedCv::class)->findOneByCvLink($cvName);
-        if($safeFileName instanceof EditedCv){
-            return $safeFileName;
+        $safeFileName = $this->em->getRepository(EditedCv::class)->findBy(
+            ['cvLink' => $cvName], 
+            ['id' => 'DESC'] 
+        );
+        if (!empty($safeFileName)) { 
+            if (is_array($safeFileName)) { 
+                if (isset($safeFileName[0]) && $safeFileName[0] instanceof EditedCv) {
+                    return $safeFileName[0];
+                }
+            } else {
+                return $safeFileName;
+            }
         }
         return null;
 
