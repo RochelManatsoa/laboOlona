@@ -298,4 +298,29 @@ class EmployeManager
 
         return $salaire_brut + $this->getChargesPatronales($salaire_brut) + $this->getFraisPortage($salaire_brut, $simulateur) + $this->getCoworking($simulateur);
     }
+
+    public function searchEmployes(?string $nom = null): array
+    {
+        $qb = $this->em->createQueryBuilder();
+
+        $parameters = [];
+        $conditions = [];
+
+        if($nom == null){
+            return $this->em->getRepository(Employe::class)->findBy([], ['id' => 'DESC']);
+        }
+
+        if (!empty($nom)) {
+            $conditions[] = '(u.nom LIKE :nom )';
+            $parameters['nom'] = '%' . $nom . '%';
+        }
+
+        $qb->select('e')
+            ->from('App\Entity\Finance\Employe', 'e')
+            ->leftJoin('e.user', 'u')
+            ->where(implode(' AND ', $conditions))
+            ->setParameters($parameters);
+        
+        return $qb->getQuery()->getResult();
+    }
 }

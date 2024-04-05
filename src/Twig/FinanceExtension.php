@@ -138,6 +138,10 @@ class FinanceExtension extends AbstractExtension
                 $button = '<span class="badge rounded-pill text-bg-info">Resilié</span>';
                 break;
                 
+            case 'VALID':
+                $button = '<span class="badge rounded-pill text-bg-primary">Simulation OK</span>';
+                break;
+                
             case 'SUSPENDED':
                 $button = '<span class="badge rounded-pill text-bg-danger">Suspendu</span>';
                 break;

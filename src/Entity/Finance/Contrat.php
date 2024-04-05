@@ -14,6 +14,7 @@ class Contrat
 
     const STATUS_PENDING = 'PENDING';
     const STATUS_ACTIVE = 'ACTIVE';
+    const STATUS_VALID = 'VALID';
     const STATUS_EXPIRED = 'EXPIRED';
     const STATUS_ARCHIVED = 'ARCHIVED';
     const STATUS_SUSPENDED = 'SUSPENDED';
@@ -31,6 +32,7 @@ class Contrat
     public static function getStatuses() {
         return [
             'En attente' => self::STATUS_PENDING ,
+            'Simulation OK' => self::STATUS_VALID ,
             'Actif' => self::STATUS_ACTIVE ,
             'Expiré' => self::STATUS_EXPIRED ,
             'Resilié' => self::STATUS_ARCHIVED ,

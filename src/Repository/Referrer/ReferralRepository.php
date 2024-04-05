@@ -24,110 +24,82 @@ class ReferralRepository extends ServiceEntityRepository
 
     public function countReferralsByDate(ReferrerProfile $referrerProfile)
     {
-        // Créer un QueryBuilder
         $qb = $this->createQueryBuilder('r');
 
-        // Sélectionner le compte et grouper par date de création
+        // Sélectionne le compte et grouper par date de création
         $qb->select('COUNT(r.id) AS referralCount', 'r.createdAt AS date')
-            ->where('r.referredBy = :referrer') // Correction ici: utiliser '=' au lieu de '=='
+            ->where('r.referredBy = :referrer') 
             ->setParameter('referrer', $referrerProfile) 
            ->groupBy('date')
-           ->orderBy('date', 'ASC'); // Ordonner par date de manière ascendante
+           ->orderBy('date', 'ASC'); 
 
-        // Exécuter la requête et obtenir le résultat
         $result = $qb->getQuery()->getResult();
 
         return $result;
     }
 
-    // public function getReferralsByReferrer($annonceId = null)
-    // {
-    //     $qb = $this->createQueryBuilder('r')
-    //         ->innerJoin('r.referredBy', 'rp')
-    //         ->innerJoin('r.annonce', 'jl')
-    //         ->orderBy('rp.id', 'ASC')
-    //         ->addOrderBy('r.createdAt', 'DESC');
+    public function countReferralsByDays(ReferrerProfile $referrerProfile)
+    {
+        $qb = $this->createQueryBuilder('r');
 
-    //     // Filtrer par annonce si un ID est fourni
-    //     if ($annonceId !== null) {
-    //         $qb->andWhere('jl.id = :annonceId')
-    //         ->setParameter('annonceId', $annonceId);
-    //     }
+        // Calcule la date de début (il y a 28 jours)
+        $startDate = new \DateTime('-28 days');
+        $startDate->setTime(0, 0); 
 
-    //     $result = $qb->getQuery()->getResult();
+        // Date de fin (aujourd'hui)
+        $endDate = new \DateTime('now');
+        $endDate->setTime(23, 59, 59); // Optionnel: définir l'heure à 23:59:59 pour inclure toute la journée
 
-    //     $referralsByReferrer = [];
-    //     foreach ($result as $row) {
-    //         $referrerId = $row->getReferredBy()->getId();
-    //         if (!isset($referralsByReferrer[$referrerId])) {
-    //             $referralsByReferrer[$referrerId] = [];
-    //         }
-    //         $referralsByReferrer[$referrerId][] = $row;
-    //     }
+        // Sélectionne le compte et groupe par date de création
+        $qb->select('COUNT(r.id) AS referralCount', 'r.createdAt AS date')
+        ->where('r.referredBy = :referrer')
+        ->andWhere('r.createdAt >= :startDate') 
+        ->andWhere('r.createdAt <= :endDate')   
+        ->setParameter('referrer', $referrerProfile)
+        ->setParameter('startDate', $startDate)
+        ->setParameter('endDate', $endDate)
+        ->groupBy('r.createdAt') 
+        ->orderBy('r.createdAt', 'ASC'); 
 
-    //     return $referralsByReferrer;
-    // }
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
 
     public function getReferralsByReferrer($annonceId = null, $referrerId = null)
-{
-    $qb = $this->createQueryBuilder('r')
-        ->select('r', 'rp', 'jl') // Assurez-vous de sélectionner les entités nécessaires
-        ->innerJoin('r.referredBy', 'rp')
-        ->innerJoin('r.annonce', 'jl')
-        ->orderBy('rp.id', 'ASC')
-        ->addOrderBy('r.createdAt', 'DESC');
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('r', 'rp', 'jl') 
+            ->innerJoin('r.referredBy', 'rp')
+            ->innerJoin('r.annonce', 'jl')
+            ->orderBy('rp.id', 'ASC')
+            ->addOrderBy('r.createdAt', 'DESC');
 
-    // Filtrer par annonce si un ID est fourni
-    if ($annonceId !== null) {
-        $qb->andWhere('jl.id = :annonceId')
-           ->setParameter('annonceId', $annonceId);
-    }
-
-    // Filtrer par referrer si un ID est fourni
-    if ($referrerId !== null) {
-        $qb->andWhere('rp.id = :referrerId')
-           ->setParameter('referrerId', $referrerId);
-    }
-
-    $result = $qb->getQuery()->getResult();
-
-    $referralsByReferrer = [];
-    foreach ($result as $row) {
-        $currentReferrerId = $row->getReferredBy()->getId(); // Récupère l'ID du referrer pour le row courant
-        if (!isset($referralsByReferrer[$currentReferrerId])) {
-            $referralsByReferrer[$currentReferrerId] = [];
+        // Filtre par annonce si un ID est fourni
+        if ($annonceId !== null) {
+            $qb->andWhere('jl.id = :annonceId')
+            ->setParameter('annonceId', $annonceId);
         }
-        $referralsByReferrer[$currentReferrerId][] = $row;
+
+        // Filtre par referrer si un ID est fourni
+        if ($referrerId !== null) {
+            $qb->andWhere('rp.id = :referrerId')
+            ->setParameter('referrerId', $referrerId);
+        }
+
+        $result = $qb->getQuery()->getResult();
+
+        $referralsByReferrer = [];
+        foreach ($result as $row) {
+            $currentReferrerId = $row->getReferredBy()->getId(); 
+            if (!isset($referralsByReferrer[$currentReferrerId])) {
+                $referralsByReferrer[$currentReferrerId] = [];
+            }
+            $referralsByReferrer[$currentReferrerId][] = $row;
+        }
+
+        return $referralsByReferrer;
     }
 
-    return $referralsByReferrer;
-}
 
-
-
-
-//    /**
-//     * @return Referral[] Returns an array of Referral objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Referral
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

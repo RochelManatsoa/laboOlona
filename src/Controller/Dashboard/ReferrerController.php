@@ -67,22 +67,22 @@ class ReferrerController extends AbstractController
     #[Route('/stats', name: 'app_dashboard_referrer_stats')]
     public function stats(ChartBuilderInterface $chartBuilder): Response
     {
-        $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $pie = $chartBuilder->createChart(Chart::TYPE_PIE);
-        $data = $this->referralRepository->countReferralsByDate($this->userService->getReferrer());
-
-        $startDate = new DateTime('2024-02-01');
-        $endDate = new DateTime('now');
-        // Initialiser toutes les dates avec 0 referrals
+        $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
+        $data = $this->referralRepository->countReferralsByDays($this->userService->getReferrer());
+        $number = $this->referralRepository->countReferralsByDate($this->userService->getReferrer());
+        $endDate = new \DateTime('now');
+        $startDate = clone $endDate;
+        $startDate->modify('-28 days');
         while ($startDate <= $endDate) {
             $formattedResults[$startDate->format('d/m')] = 0;
             $startDate->modify('+1 day');
         }
-
-        // Maintenant, ajoutez les données de referrals existantes
+        
+        // Maintenant, ajoute les données de referrals existantes
         foreach ($data as $result) {
             $dateKey = $result['date']->format('d/m');
-            $formattedResults[$dateKey] += $result['referralCount']; // Cela assumera maintenant que $dateKey existe déjà
+            $formattedResults[$dateKey] = ($formattedResults[$dateKey] ?? 0) + $result['referralCount'];
         }
 
         // Les labels et les valeurs peuvent être extraites directement
@@ -126,6 +126,7 @@ class ReferrerController extends AbstractController
             'chart' => $chart,
             'pie' => $pie,
             'referrals' => $data,
+            'number' => $number,
         ]);
     }
 

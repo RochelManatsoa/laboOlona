@@ -70,6 +70,13 @@
                 {{ 'app_logout.menu'|trans }}
               </a>
             </li>
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+              <li class="bg-info text-dark">
+                <a class="dropdown-item" href="{{ path('admin') }}">
+                  Administration
+                </a>
+              </li>
+            {% endif %}
           </ul>
         </div>
       {% else %}

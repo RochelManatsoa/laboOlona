@@ -32,9 +32,7 @@ class ContratController extends AbstractController
     {
         return $this->render('finance/contrat/index.html.twig', [
             'contrats' => $this->paginatorInterface->paginate(
-                $this->contratRepository->findAll([
-                    'id' => 'DESC'
-                ]),
+                $this->contratRepository->findBy([], ['id' => 'DESC']),
                 $request->query->getInt('page', 1),
                 10
             ),

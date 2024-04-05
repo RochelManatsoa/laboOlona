@@ -64,7 +64,7 @@ class PortageController extends AbstractController
                 10
             ),
             'result' => $data,
-            'portages' => $this->em->getRepository(Contrat::class)->findAll(),
+            'portages' => $this->em->getRepository(Contrat::class)->findBy([], ['id' => 'DESC']),
             'form' => $form->createView(),
         ]);
     }

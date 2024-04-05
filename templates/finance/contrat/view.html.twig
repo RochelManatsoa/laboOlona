@@ -145,55 +145,75 @@
 									</div>
 								</div>
 							</div>
+							{% if simulateur.status is defined and simulateur.status is same as('FREELANCE') %}
 							<hr>
 							<div class="row">
-								<div class="col text-danger h6">Charge salariale</div>
+								<div class="col text-danger h5">Impôt Synthétique Intermittent (ISI)</div>
 							</div>
 							<div class="row">
-								<div class="col-sm-6 text-strong">CNAPS 1% :</div>
-								<div class="col-sm-6 text-right">{{results.cnaps_euro|number_format(2, '.', '')}}</div>
+								<div class="col-6 text-strong">ISI 5% :</div>
+								<div class="col-6 text-right">{{results.irsa_euro|number_format(2, '.', '')}}</div>
+							</div>
+							<hr>
+							<div class="row bg-info">
+								<div class="col-6 text-strong">Prestation totale :</div>
+								<div class="col-6 text-right text-strong">{{ results.salaire_brut_estime_euro|number_format(2, '.', '') }}
+									{{ simulateur.devise.symbole }}</div>
+							</div>
+							{% else %}
+							<hr>
+							<div class="row">
+								<div class="col text-danger h5">Charge salariale</div>
 							</div>
 							<div class="row">
-								<div class="col-sm-6 text-strong">OSTIE 1% :</div>
-								<div class="col-sm-6 text-right">{{results.ostie_euro|number_format(2, '.', '')}}</div>
+								<div class="col-6 text-strong">CNAPS 1% :</div>
+								<div class="col-6 text-right">{{results.cnaps_euro|number_format(2, '.', '')}}</div>
 							</div>
 							<div class="row">
-								<div class="col-sm-6 text-strong">IRSA :</div>
-								<div class="col-sm-6 text-right  border-bottom">{{ results.irsa_euro|number_format(2, '.', '')}}</div>
+								<div class="col-6 text-strong">OSTIE 1% :</div>
+								<div class="col-6 text-right">{{results.ostie_euro|number_format(2, '.', '')}}</div>
+							</div>
+							<div class="row">
+								<div class="col-6 text-strong">IRSA :</div>
+								<div class="col-6 text-right  border-bottom">{{ results.irsa_euro|number_format(2, '.', '')}}</div>
 							</div>
 							<div class="row ">
-								<div class="col-sm-6 "></div>
-								<div class="col-sm-6 text-right text-strong">{{ results.charge_salariale_euro|number_format(2, '.', '')}}
+								<div class="col-6 "></div>
+								<div class="col-6 text-right text-strong">{{ results.charge_salariale_euro|number_format(2, '.', '')}}
 								</div>
 							</div>
 							<hr>
 							<div class="row bg-info">
-								<div class="col-sm-6 text-strong">Salaire brut :</div>
-								<div class="col-sm-6 text-right text-strong">{{ results.salaire_brut_estime_euro|number_format(2, '.', '') }}
+								<div class="col-6 text-strong">Salaire brut :</div>
+								<div class="col-6 text-right text-strong">{{ results.salaire_brut_estime_euro|number_format(2, '.', '') }}
 									{{ simulateur.devise.symbole }}</div>
 							</div>
+							{% endif %}
 						</div>
 						<div class="col-sm-6">
+							<hr class="d-block d-sm-none">
+							{% if simulateur.status is defined and simulateur.status is not same as('FREELANCE') %}
 							<div class="row">
-								<div class="col text-danger h6">Charge patronnale</div>
+								<div class="col text-danger h5">Charge patronnale</div>
 							</div>
 							<div class="row">
-								<div class="col-sm-6 text-strong">CNAPS 13% :</div>
-								<div class="col-sm-6 text-right">{{(salaire_plafond * 0.13)|number_format(2, '.', '')}}</div>
+								<div class="col-6 text-strong">CNAPS 13% :</div>
+								<div class="col-6 text-right">{{(salaire_plafond * 0.13)|number_format(2, '.', '')}}</div>
 							</div>
 							<div class="row">
-								<div class="col-sm-6 text-strong">OSTIE 5% :</div>
-								<div class="col-sm-6 text-right">{{(salaire_plafond * 0.05)|number_format(2, '.', '')}}</div>
+								<div class="col-6 text-strong">OSTIE 5% :</div>
+								<div class="col-6 text-right">{{(salaire_plafond * 0.05)|number_format(2, '.', '')}}</div>
 							</div>
 							<div class="row">
-								<div class="col-sm-6 text-strong">FMPF 1% :</div>
-								<div class="col-sm-6 text-right border-bottom">{{ (salaire_plafond * 0.01)|number_format(2, '.', '')}}</div>
+								<div class="col-6 text-strong">FMPF 1% :</div>
+								<div class="col-6 text-right border-bottom">{{ (salaire_plafond * 0.01)|number_format(2, '.', '')}}</div>
 							</div>
 							<div class="row">
-								<div class="col-sm-6 "></div>
-								<div class="col-sm-6 text-right text-strong">{{ results.charges_patronales_euro|number_format(2, '.', '')}}</div>
+								<div class="col-6 "></div>
+								<div class="col-6 text-right text-strong">{{ results.charges_patronales_euro|number_format(2, '.', '')}}</div>
 							</div>
 							<hr>
+							{% endif %}
 							<div class="row">
 								<div class="col text-danger h6">Frais de portage</div>
 							</div>

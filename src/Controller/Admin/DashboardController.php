@@ -2,45 +2,89 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\User;
+use App\Entity\Secteur;
+use App\Entity\Finance\Devise;
+use App\Entity\Errors\ErrorLog;
+use App\Entity\ReferrerProfile;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
-use App\Entity\Errors\ErrorLog;
-use App\Entity\Finance\Devise;
-use App\Entity\Moderateur\Assignation;
-use App\Entity\Moderateur\Invitation;
+use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
+use Symfony\UX\Chartjs\Model\Chart;
+use App\Entity\Moderateur\Invitation;
+use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
-use App\Entity\ReferrerProfile;
-use App\Entity\Secteur;
-use App\Entity\User;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
-use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 class DashboardController extends AbstractDashboardController
 {
+    public function __construct(
+        private UserService $userService,
+        private EntityManagerInterface $em,
+        private ChartBuilderInterface $chartBuilder,
+    ) {}
+
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        // return parent::index();
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_PIE);
+        $userTypesCounts = $this->em->getRepository(User::class)->countUsersByType();
 
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
+        $labels = [];
+        $data = [];
+        $backgroundColors = ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)'];
 
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirect('...');
-        // }
+        foreach ($userTypesCounts as $typeCount) {
+            $labels[] = sprintf('%s (%d)', $typeCount['userType'], $typeCount['userCount']);
+            $data[] = $typeCount['userCount'];
+        }
 
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        return $this->render('admin/index.html.twig');
+        $chart->setData([
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Types d\'inscriptions',
+                    'backgroundColor' => $backgroundColors,
+                    'data' => $data,
+                ],
+            ],
+        ]);
+        $chartToday = $this->chartBuilder->createChart(Chart::TYPE_PIE);
+        $userCountsTodayByType = $this->em->getRepository(User::class)->countUsersRegisteredTodayByType();
+
+        $labelsToday = [];
+        $dataToday = [];
+        $backgroundColors = ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 206, 86)', 'rgb(75, 192, 192)'];
+
+        foreach ($userCountsTodayByType as $count) {
+            $labelsToday[] = $count['userType'];
+            $dataToday[] = $count['userCount'];
+        }
+
+        $chartToday->setData([
+            'labels' => $labelsToday,
+            'datasets' => [
+                [
+                    'label' => 'Inscriptions d\'aujourd\'hui par type',
+                    'backgroundColor' => $backgroundColors,
+                    'data' => $dataToday,
+                ],
+            ],
+        ]);
+
+        return $this->render('admin/index.html.twig', [
+            'userCountsTodayByType' => $this->em->getRepository(User::class)->countUsersRegisteredToday(),
+            'userTypesCounts' => $this->em->getRepository(User::class)->countAllUsers(),
+            'chart' => $chart,
+            'chartToday' => $chartToday,
+        ]);
     }
 
     public function configureDashboard(): Dashboard

@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block title %}Toutes les annonces{% endblock %}
 
@@ -8,7 +8,7 @@
         {% if annonces|length > 0 %}
             <div class="annonce-list p-2">
                 {% for annonce in annonces %}
-                    <div class="annonce-item shadow p-4 m-4">
+                    <div class="annonce-item shadow p-2 p-sm-5 m-1 m-sm-4">
                         <div class="row">
                             <div class="col-1">
                             </div>

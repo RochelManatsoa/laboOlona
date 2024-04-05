@@ -6,6 +6,7 @@ use App\Entity\Finance\Avantage;
 use App\Entity\Finance\Employe;
 use App\Entity\User;
 use App\Form\Finance\EmployeType;
+use App\Form\Search\EmployesSearchType;
 use App\Manager\Finance\EmployeManager;
 use App\Repository\Finance\EmployeRepository;
 use App\Repository\UserRepository;
@@ -32,14 +33,22 @@ class EmployeController extends AbstractController
     #[Route('/', name: 'app_finance_employe')]
     public function index(Request $request): Response
     {
+        $data = $this->employeRepository->findBy([], ['id' => 'DESC']);
+        /** Formulaire de recherche annonces */
+        $form = $this->createForm(EmployesSearchType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $nom = $form->get('nom')->getData();
+            $data = $this->employeManager->searchEmployes($nom);
+        }
+
         return $this->render('finance/employe/index.html.twig', [
             'employes' => $this->paginatorInterface->paginate(
-                $this->employeRepository->findAll([
-                    'id' => 'DESC'
-                ]),
+                $data,
                 $request->query->getInt('page', 1),
                 10
             ),
+            'form' => $form->createView()
         ]);
     }
 

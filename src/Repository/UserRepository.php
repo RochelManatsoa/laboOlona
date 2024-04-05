@@ -39,29 +39,69 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
+    
+    public function findUsersRegisteredToday(): array
+    {
+        $qb = $this->createQueryBuilder('u');
 
-//    /**
-//     * @return User[] Returns an array of User objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+        // Détermine la date de début (aujourd'hui à 00h00)
+        // $startDate = new \DateTime('today midnight');
+        
+        // Détermine la date de fin (maintenant)
+        $endDate = new \DateTime('now');
+        $startDate = clone $endDate;
+        $startDate->modify('-28 days');
 
-//    public function findOneBySomeField($value): ?User
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $qb->where('u.dateInscription >= :startDate')
+           ->andWhere('u.dateInscription <= :endDate')
+           ->setParameter('startDate', $startDate)
+           ->setParameter('endDate', $endDate);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function countUsersByType(): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('u.type AS userType', 'COUNT(u.id) AS userCount')
+            ->groupBy('u.type');
+
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function countUsersRegisteredTodayByType(): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('u.type AS userType', 'COUNT(u.id) AS userCount')
+            ->where('u.dateInscription >= :startOfDay')
+            ->setParameter('startOfDay', new \DateTime('today'))
+            ->groupBy('u.type');
+
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function countUsersRegisteredToday(): int
+    {
+        // Définir la date de début à aujourd'hui à 00h00
+        $startOfDay = new \DateTime('today');
+        
+        $qb = $this->createQueryBuilder('u')
+            ->select('COUNT(u.id) AS totalUsers')
+            ->where('u.dateInscription >= :startOfDay')
+            ->setParameter('startOfDay', $startOfDay);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+    
+    public function countAllUsers(): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
