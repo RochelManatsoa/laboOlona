@@ -253,6 +253,8 @@ class EntrepriseManager
         // Construction de la requête de base
         $qb->select('c')
         ->from('App\Entity\CandidateProfile', 'c')
+        ->where('c.status = :statusValid') // Ajoutez cette ligne pour filtrer par statut
+        ->setParameter('statusValid', CandidateProfile::STATUS_VALID) // Définition du paramètre pour le statut
         ->leftJoin('c.secteurs', 's')
         ->leftJoin('c.langages', 'l')
         ->leftJoin('l.langue', 'lang')

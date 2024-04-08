@@ -417,8 +417,8 @@ class ModerateurController extends AbstractController
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $status = $request->request->get('status');
-        if ($status && in_array($status, ['OUI', 'NON'])) {
-            $candidateProfile->setStatus($status);
+        if ($status && in_array($status, ['0', '1'])) {
+            $candidateProfile->setIsValid($status);
             $entityManager->flush();
             if($status === CandidateProfile::STATUS_VALID){
                 /** On envoi un mail */

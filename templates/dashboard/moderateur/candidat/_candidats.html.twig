@@ -47,8 +47,8 @@
                      <td>
                         <form method="post" action="{{ path('change_status_certification_candidat', {'uid': candidat.uid}) }}">
                             <select name="status" class="form-control" onchange="this.form.submit()">
-                                <option value="OUI" {{ candidat.isValid == 'OUI' ? 'selected' : '' }}>Certifié</option>
-                                <option value="NON" {{ candidat.isValid == 'NON' ? 'selected' : '' }}>Non certifié</option>
+                                <option value="0" {{ candidat.isValid == '0' ? 'selected' : '' }}>Certifié</option>
+                                <option value="1" {{ candidat.isValid == '1' ? 'selected' : '' }}>Non certifié</option>
                             </select>
                         </form>
                      </td>
