@@ -38,6 +38,8 @@ class UserCrudController extends AbstractCrudController
             DateField::new('dateInscription', 'Inscrit le')->hideOnForm(),
             DateField::new('lastLogin', 'Last login')->hideOnForm(),
             TextField::new('telephone')->hideOnIndex(),
+            TextField::new('adress')->hideOnIndex(),
+            TextField::new('googleId')->hideOnIndex(),
             ArrayField::new('roles')->hideOnIndex(),
         ];
     }

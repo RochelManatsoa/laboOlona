@@ -31,21 +31,19 @@
 
           <ul class="dropdown-menu dropdown-menu-end">
             <li>
-              {% if app.user.type == 'MODERATEUR' %}
-              <a class="dropdown-item" href="{{ path('app_connect') }}">
-              {% elseif app.user.type == 'ENTREPRISE' %}
-              <a class="dropdown-item" href="{{ path('app_dashboard_entreprise_profil') }}">
-              {% elseif app.user.type == 'EMPLOYE' %}
-              {% if is_granted('ROLE_CANDIDAT') %}
-              <a class="dropdown-item" href="{{ path('app_dashboard_candidat_compte') }}">
-              {% else %}
-              <a class="dropdown-item" href="{{ path('app_dashboard_employes_infos') }}">
-              {% endif %}
-              {% else %}
-              <a class="dropdown-item" href="{{ path('app_dashboard_candidat_compte') }}">
-              {% endif %}
-                Mon compte
-              </a>
+				{% if app.user.type == 'MODERATEUR' %}
+					<a class="dropdown-item" href="{{ path('app_connect') }}">
+				{% elseif app.user.type == 'ENTREPRISE' %}
+					<a class="dropdown-item" href="{{ path('app_dashboard_entreprise_profil') }}">
+				{% elseif app.user.type == 'EMPLOYE' %}
+					<a class="dropdown-item" href="{{ path('app_dashboard_employes_infos') }}">
+				{% elseif app.user.type == 'CANDIDAT' %}
+					<a class="dropdown-item" href="{{ path('app_dashboard_candidat_compte') }}">
+				{% else %}
+					<a class="dropdown-item" href="{{ path('app_profile_account') }}">
+				{% endif %}
+					Mon compte
+				</a>
             </li>
             {% if app.user.type == 'CANDIDAT' or is_granted('ROLE_CANDIDAT') %}
               <li>

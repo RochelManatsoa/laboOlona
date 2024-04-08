@@ -38,6 +38,8 @@ class ErrorLogCrudController extends AbstractCrudController
             TextareaField::new('fileName')->hideOnIndex(),
             TextField::new('lineNumber')->hideOnIndex(),
             TextareaField::new('userAgent')->hideOnIndex(),
+            TextareaField::new('errorMessage')->hideOnIndex(),
+            TextareaField::new('errorObject')->hideOnIndex(),
             DateField::new('createdAt'),
         ];
     }

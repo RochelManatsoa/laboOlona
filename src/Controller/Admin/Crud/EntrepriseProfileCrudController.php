@@ -25,14 +25,16 @@ class EntrepriseProfileCrudController extends AbstractCrudController
         ;
     }
 
-    /*
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            IdField::new('id')->hideOnForm(),
+            TextField::new('nom'),
+            TextField::new('taille'),
+            TextField::new('localisation'),
+            TextField::new('siteWeb'),
+            TextField::new('status')->hideOnIndex(),
+            TextEditorField::new('description')->hideOnIndex(),
         ];
     }
-    */
 }

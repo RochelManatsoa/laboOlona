@@ -31,10 +31,11 @@ class JsErrorController extends AbstractController
         $errorLog = new ErrorLog();
         $errorLog->setType('javascript');
         $errorLog->setMessage($data['message'] ?? 'No message provided');
+        $errorLog->setErrorMessage($data['message'] ?? 'No message provided');
         $errorLog->setUrl($data['url'] ?? null);
         $errorLog->setFileName($data['fileName'] ?? null);
         $errorLog->setLineNumber($data['lineNumber'] ?? null);
-        // $errorLog->setErrorObj($data['errorObj'] ?? null);
+        $errorLog->setErrorObject($data['errorObj'] ?? null);
         $errorLog->setUserAgent($data['userAgent'] ?? null);
         $errorLog->setCreatedAt(new \DateTime());
         $errorLog->setUserId($userId);

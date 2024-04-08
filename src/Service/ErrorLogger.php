@@ -50,7 +50,8 @@ class ErrorLogger
             ->setUrl($url) 
             ->setFileName($exception->getFile()) 
             ->setLineNumber($exception->getLine()) 
-            // ->setErrorObj($exception->getTraceAsString())
+            ->setErrorObject($exception->getTraceAsString())
+            ->setErrorMessage($exception->getMessage())
             ->setUserAgent($userAgent) 
             ->setUserId($userId) 
             ->setCreatedAt(new \DateTime()); 

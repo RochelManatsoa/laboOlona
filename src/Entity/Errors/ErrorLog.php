@@ -44,6 +44,12 @@ class ErrorLog
     #[ORM\Column(nullable: true)]
     private ?int $userId = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $errorObject = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $errorMessage = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -165,6 +171,30 @@ class ErrorLog
     public function setUserId(?int $userId): static
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getErrorObject(): ?string
+    {
+        return $this->errorObject;
+    }
+
+    public function setErrorObject(?string $errorObject): static
+    {
+        $this->errorObject = $errorObject;
+
+        return $this;
+    }
+
+    public function getErrorMessage(): ?string
+    {
+        return $this->errorMessage;
+    }
+
+    public function setErrorMessage(?string $errorMessage): static
+    {
+        $this->errorMessage = $errorMessage;
 
         return $this;
     }
