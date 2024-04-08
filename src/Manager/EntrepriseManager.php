@@ -242,10 +242,7 @@ class EntrepriseManager
     {
         // Vérifie si tous les tableaux sont vides
         if (empty($secteurs) && empty($titres) && empty($competences) && empty($langues)) {
-            return $this->candidateProfileRepository->findBy(
-                ['status' => CandidateProfile::STATUS_VALID],
-                ['id' => 'DESC']
-            );
+            return $this->candidateProfileRepository->findAllValid();
         }
         
         $qb = $this->em->createQueryBuilder();
@@ -254,6 +251,9 @@ class EntrepriseManager
         $qb->select('c')
         ->from('App\Entity\CandidateProfile', 'c')
         ->where('c.status = :statusValid') // Ajoutez cette ligne pour filtrer par statut
+        ->andWhere('c.fileName IS NOT NULL') 
+        ->andWhere('c.fileName <> :defaultAvatar') 
+        ->setParameter('defaultAvatar', 'avatar-default.jpg')
         ->setParameter('statusValid', CandidateProfile::STATUS_VALID) // Définition du paramètre pour le statut
         ->leftJoin('c.secteurs', 's')
         ->leftJoin('c.langages', 'l')
@@ -286,6 +286,68 @@ class EntrepriseManager
         
         return $qb->getQuery()->getResult();
     }
-
-
+    
+    public function newfilter(?string $query): array
+    {
+        if ($query === null) {
+            return $this->candidateProfileRepository->findAllValid();
+        }
+        
+        $parameters = [
+            'statusValid' => CandidateProfile::STATUS_VALID,
+            'defaultAvatar' => 'avatar-default.jpg'
+        ];
+        $conditions = [
+            'c.status = :statusValid',
+            'c.fileName IS NOT NULL',
+            'c.fileName <> :defaultAvatar'
+        ];
+        
+        // Création du QueryBuilder
+        $qb = $this->em->createQueryBuilder();
+        
+        // Construction de la requête de base
+        $qb->select('c')
+           ->from('App\Entity\CandidateProfile', 'c')
+           ->leftJoin('c.competences', 'comp')
+           ->leftJoin('c.secteurs', 'sect')
+           ->leftJoin('c.experiences', 'exp'); // Assurez-vous que cette jointure est correcte selon votre logique métier
+        
+        // Traiter $query si elle n'est pas vide
+        if (!empty($query)) {
+            $words = explode(' ', $query);
+            $searchConditions = [];
+            
+            foreach ($words as $index => $word) {
+                $word = trim($word);
+                if (!empty($word)) {
+                    $wordParam = "query$index"; // Création d'un identifiant de paramètre basé sur l'index du mot
+                    // Condition pour rechercher le mot dans le titre, les compétences, les expériences et les secteurs
+                    $searchConditions[] = "(c.titre LIKE :$wordParam OR comp.nom LIKE :$wordParam OR exp.nom LIKE :$wordParam OR sect.nom LIKE :$wordParam)";
+                    $parameters[$wordParam] = '%' . $word . '%';
+                }
+            }
+            
+            if (!empty($searchConditions)) {
+                // Ajoute les conditions de recherche dans le tableau des conditions
+                $conditions[] = '(' . implode(' OR ', $searchConditions) . ')';
+            }
+        }
+        
+        // Appliquer les conditions dynamiques
+        if (!empty($conditions)) {
+            $qb->where(implode(' AND ', $conditions));
+        }
+        
+        // Appliquer les paramètres dynamiques
+        foreach ($parameters as $key => $value) {
+            $qb->setParameter($key, $value);
+        }
+        
+        // Ajout du tri
+        $qb->orderBy('c.id', 'DESC');
+        
+        // Exécution de la requête et retour des résultats
+        return $qb->getQuery()->getResult();
+    }
 }

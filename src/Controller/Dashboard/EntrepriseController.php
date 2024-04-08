@@ -36,6 +36,7 @@ use App\Repository\Entreprise\JobListingRepository;
 use App\Repository\Candidate\ApplicationsRepository;
 use App\Repository\Moderateur\TypeContratRepository;
 use App\Form\Search\Annonce\EntrepriseAnnonceSearchType;
+use App\Form\Search\Candidat\EntrepriseCandidateSearchType;
 use App\Manager\SimulateurEntrepriseManager;
 use App\Repository\Finance\SimulateurRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -270,24 +271,27 @@ class EntrepriseController extends AbstractController
         $secteurs = $user->getEntrepriseProfile()->getSecteurs();
         $searchData = new SearchCandidateData();
         $searchData->setSecteurs($secteurs->toArray());
-        $form = $this->createForm(SearchCandidateTypeCopy::class, $searchData);
+        // $form = $this->createForm(SearchCandidateTypeCopy::class, $searchData);
+        $form = $this->createForm(EntrepriseCandidateSearchType::class);
         $form->handleRequest($request);
         $data = $this->em->getRepository(CandidateProfile::class)->findAllValid();
         $favoris = $this->favorisRepository->findBy([
             'entreprise' => $user->getEntrepriseProfile(),
         ]);
         if ($form->isSubmitted() && $form->isValid()) {
-            $secteurs = $form->get('secteurs')->getData();
-            $titre = $form->get('titre')->getData();
-            $competences = $form->get('competences')->getData();
-            $langues = $form->get('langue')->getData();
-            $page = $form->get('page')->getData();
-            $competencesArray = $competences instanceof \Doctrine\Common\Collections\Collection ? $competences->toArray() : $competences;
-            $languesArray = $langues instanceof \Doctrine\Common\Collections\Collection ? $langues->toArray() : $competences;
-            $titreValues = array_map(function ($titreObject) {
-                return $titreObject->getTitre(); // Assurez-vous que getTitre() renvoie la chaîne du titre
-            }, $titre);
-            $data = $this->entrepriseManager->filter($secteurs, $titreValues, $competencesArray, $languesArray);
+            // $secteurs = $form->get('secteurs')->getData();
+            // $titre = $form->get('titre')->getData();
+            // $competences = $form->get('competences')->getData();
+            // $langues = $form->get('langue')->getData();
+            // $page = $form->get('page')->getData();
+            $query = $form->get('query')->getData();
+            // $competencesArray = $competences instanceof \Doctrine\Common\Collections\Collection ? $competences->toArray() : $competences;
+            // $languesArray = $langues instanceof \Doctrine\Common\Collections\Collection ? $langues->toArray() : $competences;
+            // $titreValues = array_map(function ($titreObject) {
+            //     return $titreObject->getTitre(); // Assurez-vous que getTitre() renvoie la chaîne du titre
+            // }, $titre);
+            // $data = $this->entrepriseManager->filter($secteurs, $titreValues, $competencesArray, $languesArray);
+            $data = $this->entrepriseManager->newfilter($query);
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'content' => $this->renderView('dashboard/entreprise/candidat/_candidats.html.twig', [
@@ -296,32 +300,14 @@ class EntrepriseController extends AbstractController
                             $request->query->getInt('page', 1),
                             12
                         ),
+                        'favoris' => $favoris,
                         'result' => $data
                     ]),
                 ]);
             }
-        }else {
-            $errors = [];
-            foreach ($form->getErrors(true) as $error) {
-                $errors[] = $error->getMessage();
-            }
-            
-            if (!empty($errors)) {
-                // Si la requête est AJAX mais le formulaire n'est pas valide
-                return new JsonResponse([
-                    'errors' => $errors,
-                ], 400);
-            }
-            
-            if ($request->isXmlHttpRequest()) {
-                // Si la requête est AJAX mais le formulaire n'est pas valide
-                return new JsonResponse([
-                    'error' => 'Formulaire invalide ou données incorrectes.',
-                ], 400);
-            }
         }
 
-        return $this->render('dashboard/entreprise/candidat/index.html.twig', [
+        return $this->render('dashboard/entreprise/candidat/index_new.html.twig', [
             'candidats' => $paginatorInterface->paginate(
                 $data,
                 $request->query->getInt('page', 1),
