@@ -8,6 +8,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 
 class ErrorLogCrudController extends AbstractCrudController
 {
@@ -30,8 +33,12 @@ class ErrorLogCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('type'),
-            TextField::new('message'),
-            TextField::new('userId'),
+            TextareaField::new('message'),
+            IntegerField::new('userId'),
+            TextareaField::new('fileName')->hideOnIndex(),
+            TextField::new('lineNumber')->hideOnIndex(),
+            TextareaField::new('userAgent')->hideOnIndex(),
+            DateField::new('createdAt'),
         ];
     }
 }
