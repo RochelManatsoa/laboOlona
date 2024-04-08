@@ -69,7 +69,11 @@ class ProfileController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         
-        return $this->redirectAction($user->getType());
+        if(null !== $user->getType()){
+            return $this->redirectAction($user->getType());
+        }
+
+        return $this->redirectToRoute('app_profile_account');
     }
     
     #[Route('/profile/account', name: 'app_profile_account')]
