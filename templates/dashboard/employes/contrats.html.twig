@@ -21,7 +21,7 @@
 						{% for item in contrats %}
 							<div class="row text-muted">
 								<div class="col-3 small">
-									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.id })}}" class="">
+									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.simulateur.id })}}" class="">
 										{{ item.simulateur.salaireNet}}
 										{{ item.simulateur.devise.symbole}}
 									</a>

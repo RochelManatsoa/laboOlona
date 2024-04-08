@@ -222,6 +222,16 @@
 								<div class="col-sm-6 text-right text-strong">{{ results.frais_de_portage_euro|number_format(2, '.', '')}}</div>
 							</div>
 							<hr>
+							{% if simulateur.type is same as('OLONA')  %}
+								<div class="row">
+									<div class="col text-danger h5">Espace Co Working Olona</div>
+								</div>
+								<div class="row">
+									<div class="col-8 text-strong">Espace Co Working :</div>
+									<div class="col-4 text-right text-strong">{{ results.coworking|number_format(2, '.', '')}}</div>
+								</div>
+								<hr>
+							{% endif %}
 							<br>
 							<br>
 							<div class="row bg-warning shadow py-3 mx-2">
