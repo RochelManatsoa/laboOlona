@@ -12,12 +12,28 @@
                 <p class="text-muted">
                     <i class="bi bi-search"></i> Utilisez ce tableau pour trouver des profils candidats correspondant à vos besoins. Cliquez sur "Voir profil" pour plus de détails ou pour entrer en contact avec le candidat.
                 </p>
+                <p class="text-muted">
+                    <i class="bi bi-info-circle"></i>
+                    {% if entreprise.secteurs |length  > 1 %}
+                        Vos secteurs d'expertise :
+                        {% for item in entreprise.secteurs %}
+                            <span class="text-strong">{{ item.nom }}</span> |
+                        {% endfor %}
+                        sont sélectionnés automatiquement
+                    {% else %}
+                        Votre secteur : <span class="text-strong">{{entreprise.secteurs[0]}}</span>
+                        est séléctionné automatiquement
+                    {% endif %} 
+                </p>
             </div>
         </div>
         {{ form_start(form, {'attr': {'class': 'form-group', 'id':'entreprise-candidat-search-form'}}) }}
                 <div class="row">
                     <div class="col">
                         <div class="row">
+                            <div class="col-12 col-lg-4 text-center">
+                                <button class="btn btn-primary px-5 rounded-pill mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Secteur d'expertise</button>
+                            </div>
                             <div class="col-12 col-lg-4 text-center">
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-primary px-5 rounded-pill mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -30,9 +46,6 @@
                             </div>
                             <div class="col-12 col-lg-4 text-center">
                                 <button class="btn btn-outline-dark px-5 rounded-pill mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightFavorite" aria-controls="offcanvasRightFavorite"><i class="bi bi-star-fill text-warning"></i> Mes favoris</button>
-                            </div>
-                            <div class="col-12 col-lg-4 text-center">
-                                <button class="btn btn-primary px-5 rounded-pill mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Secteur d'expertise</button>
                             </div>
                         </div>
                         <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
@@ -100,13 +113,13 @@
       </div>
       <div class="modal-body">
         <div class="my-2 mx-1">
-            {{ form_widget(form.titre, {'attr': {'class': 'js-example-basic-multiple-titre p-1 m-1', 'style': 'width: 100%'}}) }}
+            {{ form_widget(form.titre, {'attr': {'class': 'js-example-basic-multiple-titre p-1 m-1', 'style': 'width: 100%', 'id':'titre'}}) }}
         </div>
         <div class="my-2 mx-1">
-            {{ form_widget(form.competences, {'attr': {'class': 'js-example-basic-multiple-competences p-1 m-1', 'style': 'width: 100%'}}) }}
+            {{ form_widget(form.competences, {'attr': {'class': 'js-example-basic-multiple-competences p-1 m-1', 'style': 'width: 100%', 'id':'competences'}}) }}
         </div>
         <div class="my-2 mx-1">
-            {{ form_widget(form.langue, {'attr': {'class': 'js-example-basic-multiple-langues p-1 m-1', 'style': 'width: 100%'}}) }}
+            {{ form_widget(form.langue, {'attr': {'class': 'js-example-basic-multiple-langues p-1 m-1', 'style': 'width: 100%', 'id':'langues'}}) }}
         </div>
       </div>
       <div class="modal-footer">
@@ -126,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function updateTotalBadge() {
         const titreSelect = document.querySelector('#titre').tomselect;
+        console.log(titreSelect)
         const competencesSelect = document.querySelector('#competences').tomselect;
         const langueSelect = document.querySelector('#langue').tomselect;
 
@@ -150,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Gestionnaire d'événements pour le bouton "Effacer" et les changements sur les champs
     document.getElementById('reset-button').addEventListener('click', function() {
         const titreSelect = document.querySelector('#titre').tomselect;
+        console.log(titreSelect)
         const competencesSelect = document.querySelector('#competences').tomselect;
         const langueSelect = document.querySelector('#langue').tomselect;
 
@@ -183,49 +198,49 @@ document.addEventListener('DOMContentLoaded', function() {
     const secteurCheckboxes = document.querySelectorAll('input[name="secteurs[]"]'); // Remplacez "secteurs[]" par le nom correct du champ
 
     // Ajouter un écouteur d'événements pour chaque case à cocher
-    // secteurCheckboxes.forEach(function(checkbox) {
-    //     checkbox.addEventListener('change', function() {
-    //         // Lorsqu'un secteur est sélectionné ou désélectionné
-    //         const selectedSecteurs = Array.from(secteurCheckboxes)
-    //             .filter(cb => cb.checked) // Filtrer les cases cochées
-    //             .map(cb => cb.value); // Récupérer la valeur de chaque case cochée
+    secteurCheckboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            // Lorsqu'un secteur est sélectionné ou désélectionné
+            const selectedSecteurs = Array.from(secteurCheckboxes)
+                .filter(cb => cb.checked) // Filtrer les cases cochées
+                .map(cb => cb.value); // Récupérer la valeur de chaque case cochée
 
-    //         // Convertir le tableau en une chaîne de secteurs séparés par des virgules
-    //         console.log(selectedSecteurs)
-    //         const secteursString = selectedSecteurs.join(',');
+            // Convertir le tableau en une chaîne de secteurs séparés par des virgules
+            console.log(selectedSecteurs)
+            const secteursString = selectedSecteurs.join(',');
 
-    //         fetch(`/ajax/get-titre-poste?secteurs=${encodeURIComponent(secteursString)}`)
-    //             .then(response => response.json())
-    //             .then(data => {
-    //                 // Logique pour mettre à jour les autres champs
-    //                 // Assurez-vous de disposer d'une référence à votre instance TomSelect pour le champ 'titre'
-    //                 const titreSelect = document.getElementById('titre').tomselect;
-    //                 const competenceSelect = document.getElementById('competences').tomselect;
-    //                 console.log(data)
-    //                 // Effacer les options existantes
-    //                 titreSelect.clearOptions();
-    //                 competenceSelect.clearOptions();
-    //                 console.log(titreSelect)
+            fetch(`/ajax/get-titre-poste?secteurs=${encodeURIComponent(secteursString)}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Logique pour mettre à jour les autres champs
+                    // Assurez-vous de disposer d'une référence à votre instance TomSelect pour le champ 'titre'
+                    const titreSelect = document.getElementById('titre').tomselect;
+                    const competenceSelect = document.getElementById('competences').tomselect;
+                    console.log(data)
+                    // Effacer les options existantes
+                    titreSelect.clearOptions();
+                    competenceSelect.clearOptions();
+                    console.log(titreSelect)
 
-    //                 // Ajouter de nouvelles options
-    //                 data.titres.forEach(titre => {
-    //                     titreSelect.addOption({value: titre.id, text: titre.nom});
-    //                 });
+                    // Ajouter de nouvelles options
+                    data.titres.forEach(titre => {
+                        titreSelect.addOption({value: titre.id, text: titre.nom});
+                    });
 
-    //                 // Ajouter de nouvelles options
-    //                 data.competences.forEach(titre => {
-    //                     competenceSelect.addOption({value: titre.id, text: titre.nom});
-    //                 });
+                    // Ajouter de nouvelles options
+                    data.competences.forEach(titre => {
+                        competenceSelect.addOption({value: titre.id, text: titre.nom});
+                    });
 
-    //                 // Si nécessaire, actualisez l'état de TomSelect
-    //                 titreSelect.refreshOptions();
-    //                 competenceSelect.refreshOptions();
-    //             })
-    //             .catch(error => {
-    //                 console.error('Erreur lors de la récupération des titres:', error);
-    //             });
-    //     });
-    // });
+                    // Si nécessaire, actualisez l'état de TomSelect
+                    titreSelect.refreshOptions();
+                    competenceSelect.refreshOptions();
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des titres:', error);
+                });
+        });
+    });
 });
 
 $(document).ready(function() {

@@ -568,14 +568,6 @@ class AppExtension extends AbstractExtension
         }
     }
 
-    public function safeFileName(string $cvName): string
-    {
-        $safeFileName = "";
-        $safeFileName = $this->em->getRepository(CV::class)->findOneByCvLink($cvName);
-
-        return $safeFileName->getSafeFileName();
-    }
-
     public function getEditedCv(string $cvName)
     {
         $safeFileName = "";

@@ -271,27 +271,27 @@ class EntrepriseController extends AbstractController
         $secteurs = $user->getEntrepriseProfile()->getSecteurs();
         $searchData = new SearchCandidateData();
         $searchData->setSecteurs($secteurs->toArray());
-        // $form = $this->createForm(SearchCandidateTypeCopy::class, $searchData);
-        $form = $this->createForm(EntrepriseCandidateSearchType::class);
+        $form = $this->createForm(SearchCandidateTypeCopy::class, $searchData);
+        // $form = $this->createForm(EntrepriseCandidateSearchType::class);
         $form->handleRequest($request);
         $data = $this->em->getRepository(CandidateProfile::class)->findAllValid();
         $favoris = $this->favorisRepository->findBy([
             'entreprise' => $user->getEntrepriseProfile(),
         ]);
         if ($form->isSubmitted() && $form->isValid()) {
-            // $secteurs = $form->get('secteurs')->getData();
-            // $titre = $form->get('titre')->getData();
-            // $competences = $form->get('competences')->getData();
-            // $langues = $form->get('langue')->getData();
-            // $page = $form->get('page')->getData();
-            $query = $form->get('query')->getData();
-            // $competencesArray = $competences instanceof \Doctrine\Common\Collections\Collection ? $competences->toArray() : $competences;
-            // $languesArray = $langues instanceof \Doctrine\Common\Collections\Collection ? $langues->toArray() : $competences;
-            // $titreValues = array_map(function ($titreObject) {
-            //     return $titreObject->getTitre(); // Assurez-vous que getTitre() renvoie la chaîne du titre
-            // }, $titre);
-            // $data = $this->entrepriseManager->filter($secteurs, $titreValues, $competencesArray, $languesArray);
-            $data = $this->entrepriseManager->newfilter($query);
+            $secteurs = $form->get('secteurs')->getData();
+            $titre = $form->get('titre')->getData();
+            $competences = $form->get('competences')->getData();
+            $langues = $form->get('langue')->getData();
+            $page = $form->get('page')->getData();
+            // $query = $form->get('query')->getData();
+            $competencesArray = $competences instanceof \Doctrine\Common\Collections\Collection ? $competences->toArray() : $competences;
+            $languesArray = $langues instanceof \Doctrine\Common\Collections\Collection ? $langues->toArray() : $competences;
+            $titreValues = array_map(function ($titreObject) {
+                return $titreObject->getTitre(); // Assurez-vous que getTitre() renvoie la chaîne du titre
+            }, $titre);
+            $data = $this->entrepriseManager->filter($secteurs, $titreValues, $competencesArray, $languesArray);
+            // $data = $this->entrepriseManager->newfilter($query);
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'content' => $this->renderView('dashboard/entreprise/candidat/_candidats.html.twig', [
@@ -307,7 +307,7 @@ class EntrepriseController extends AbstractController
             }
         }
 
-        return $this->render('dashboard/entreprise/candidat/index_new.html.twig', [
+        return $this->render('dashboard/entreprise/candidat/index.html.twig', [
             'candidats' => $paginatorInterface->paginate(
                 $data,
                 $request->query->getInt('page', 1),
@@ -315,6 +315,7 @@ class EntrepriseController extends AbstractController
             ),
             'favoris' => $favoris,
             'result' => $data,
+            'entreprise' => $user->getEntrepriseProfile(),
             'form' => $form->createView(),
         ]);
     }

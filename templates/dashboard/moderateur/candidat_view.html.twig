@@ -318,51 +318,56 @@
                         <div class="col-md-9 mx-auto">
                             {% if candidat.cvs|length > 0 %}
                                 {% for cv in candidat.cvs %}
+                                    {% set formCvEdit = cvForms[cv.id].form %}
                                     <div class="row">
                                         <div class="col-6 my-2">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" title="Ouvrir" target="_blank">
                                                         <div class="row">
                                                             <div class="col-6">
-                                                                <!-- Icône agrandie -->
-                                                                <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
+                                                                <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" title="Ouvrir" target="_blank">
+                                                                    <!-- Icône agrandie -->
+                                                                    <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
+                                                                </a>
                                                             </div>
                                                             <div class="col-6">
-                                                                {{ cv.uploadedAt|date('d/M/Y')}}
+                                                                {{ cv.uploadedAt|date('d/M/Y à h:i')}}
                                                             </div>
                                                         </div>
-                                                        <p class="card-title small">{{ cv.safeFileName }}.pdf</p>
-                                                        <!-- Lien pour visualiser le CV dans un nouvel onglet -->
-                                                    </a>
+                                                            <a href="{{ asset('uploads/cv/olona/' ~ cv.cvLink) }}" title="Ouvrir" target="_blank" class="text-dark small">
+                                                                <p class="card-title small">{{ cv.cvLink }}</p>
+                                                            </a>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-6 my-2">
                                             {% set editedCv = getEditedCv(cv.cvLink) %}
-                                            {% if editedCv is not null %}
+                                            {% if cv.edited is not null %}
                                                 <div class="card">
                                                     <div class="card-body bg-light text-dark">
-                                                        <a href="{{ asset('uploads/cv/edited/' ~ editedCv.cvLink) }}" title="Ouvrir" target="_blank">
                                                             <div class="row">
                                                                 <div class="col-6">
                                                                     <!-- Icône agrandie -->
-                                                                    <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
+                                                                    <a href="{{ asset('uploads/cv/olona/' ~ cv.edited.cvLink) }}" title="Ouvrir" target="_blank" class="text-dark small">
+                                                                        <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
+                                                                    </a>
                                                                 </div>
                                                                 <div class="col-6">
-                                                                    {{ editedCv.uploadedAt|date('d/M/Y')}}
+                                                                    {{ cv.edited.uploadedAt|date('d/M/Y à h:i')}}
+                                                                    <a href="{{ path('app_delete_edited_cv', {'cvEditedId': cv.edited.id})}}" class="btn btn-danger btn-sm mx-4" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce CV modifié ?');"><i class="bi bi-trash"></i></a>
                                                                 </div>
                                                             </div>
-                                                            <p class="card-title small">{{ editedCv.safeFileName }}.pdf</p>
+                                                                <a href="{{ asset('uploads/cv/olona/' ~ cv.edited.cvLink) }}" title="Ouvrir" target="_blank" class="text-dark small">
+                                                                    <p class="card-title small">{{ cv.edited.cvLink }}</p>
+                                                                </a>
                                                             <!-- Lien pour visualiser le CV dans un nouvel onglet -->
-                                                        </a>
                                                     </div>
                                                 </div>
                                                 {% else %}
                                                 <div class="jumbotron p-4 small text-info">
-                                                    <i class="bi bi-info-circle"></i> Téléchargez le CV depuis le lien fourni.
-                                                    Modifiez-le en conservant le même format de fichier.
-                                                    Envoyez le CV modifié en utilisant le même nom de fichier.
+                                                    <i class="bi bi-info-circle"></i> 
+                                                    Envoyez le CV modifié ici
+                                                    {{ include('dashboard/moderateur/cv/_form.html.twig', { 'cv': cv }) }}
                                                 </div>
                                             
                                             {% endif %}
@@ -379,18 +384,6 @@
                                     </div>
                                 </div>
                             {% endif %}
-                            {{ form_start(formCv) }}
-                                <div class="row my-5">
-                                    <p>Ajouter un cv modifié <i class="bi bi-info-circle text-info"></i></p>
-                                    <div class="col-8">
-                                        {{ form_row(formCv.cvEdit) }}
-                                        {{ form_errors(formCv.cvEdit) }}
-                                    </div>
-                                    <div class="col-4">
-                                        <button type="submit" class="btn btn-outline-primary">Envoyer</button>
-                                    </div>
-                                </div>
-                            {{ form_end(formCv) }}
 
                         </div> 
                         <h3 class="text-center mb-4">Langues</h3>
@@ -617,7 +610,7 @@
                 container.html(originalContent[id]);
             }
         }
-        $(document).on('submit', 'form', function(e) {
+        $(document).on('submit', '#formAssignation', function(e) {
             e.preventDefault(); // Empêche le formulaire de soumettre normalement
 
             var form = $(this);

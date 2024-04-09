@@ -30,6 +30,7 @@ services:
         arguments:
             $targetDirectory: '%kernel.project_dir%/public/uploads/cv'
             $targetDirectoryEdited: '%kernel.project_dir%/public/uploads/cv/edited'
+            $targetDirectoryEditedOlona: '%kernel.project_dir%/public/uploads/cv/olona'
 
 
     App\Service\WooCommerce:

@@ -119,17 +119,21 @@ class ProfileManager
         $this->em->flush();
     }
 
-    public function saveCVEdited(array $fileName, CandidateProfile $candidat)
+    public function saveCVEdited(array $fileName, CandidateProfile $candidat, CV $cv)
     {
-        $cv = new EditedCv();
-        $cv
+        $editedCv = $cv->getEdited();
+        if (!$editedCv instanceof EditedCv) {
+            $editedCv = new EditedCv();
+        }
+        $editedCv
         ->setCvLink($fileName[0])
         ->setSafeFileName($fileName[1])
         ->setUploadedAt(new DateTime())
         ->setCandidat($candidat)
+        ->setCV($cv)
         ;
 
-        $this->em->persist($cv);
+        $this->em->persist($editedCv);
         $this->em->flush();
     }
 

@@ -18,6 +18,7 @@ use App\Form\Candidat\UploadCVType;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
+use App\Entity\Candidate\CV;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
 use App\Form\Search\AnnonceSearchType;
@@ -325,7 +326,7 @@ class CandidatController extends AbstractController
         if ($formUpload->isSubmitted() && $formUpload->isValid()) {
             $cvFile = $formUpload->get('cv')->getData();
             if ($cvFile) {
-                $fileName = $this->fileUploader->upload($cvFile);
+                $fileName = $this->fileUploader->upload($cvFile, $candidat);
                 $candidat->setCv($fileName[0]);
                 $this->profileManager->saveCV($fileName, $candidat);
             }
@@ -497,7 +498,7 @@ class CandidatController extends AbstractController
         if ($formThree->isSubmitted() && $formThree->isValid()) {
             $cvFile = $formThree->get('cv')->getData();
             if ($cvFile) {
-                $fileName = $this->fileUploader->upload($cvFile);
+                $fileName = $this->fileUploader->upload($cvFile, $candidat);
                 $candidat->setCv($fileName[0]);
                 $this->profileManager->saveCV($fileName, $candidat);
             }
@@ -515,6 +516,21 @@ class CandidatController extends AbstractController
             'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
             'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
         ]);
+    }
+
+    #[Route('/delete/{cvId}', name: 'app_delete_cv')]
+    public function deleteEditedCV(Request $request, int $cvId): Response
+    {
+        $cvEdited = $this->em->getRepository(CV::class)->find($cvId);
+
+        if ($cvEdited !== null) {
+            $this->em->remove($cvEdited);
+            $this->em->flush();
+        }
+
+
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_candidat_compte');
     }
 
     #[Route('/guides/astuce', name: 'app_dashboard_guides_astuce')]

@@ -1,11 +1,10 @@
 <p class="mx-2 mt-3 small">
  <strong>{{ result|length }}</strong> résultats disponibles.
 </p>
-
 <!-- Section pour les candidats recommandés -->
 <div class="row mb-5">
     {# <h3 class="col-12 mb-3 h4">Optez pour les candidat(e)s certifié(e)s Olona-talents </h3> #}
-        {% for candidat in candidats %}
+    {% for candidat in candidats %}
         <div class="col-sm-12 col-lg-4 mb-4 mb-2 shadow">
             <div class="h-100">
                 <div class="card-img-top bg-image-candidat" style="background-image: url('{{vich_uploader_asset(candidat, 'file')}}');" alt="{{ candidat.titre }}">

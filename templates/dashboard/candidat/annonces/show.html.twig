@@ -87,7 +87,7 @@
                                 </div>
                                 <div class="col-lg-9 col-sm-12">
                                     {% if candidat.cv is not null %}
-                                    <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target=_blank class="badge badge-sm bg-dark rounded-pill"><i class="bi bi-paperclip"></i> {{ safeFileName(candidat.cv) }}.pdf</a>
+                                    <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target=_blank class="badge badge-sm bg-dark rounded-pill"><i class="bi bi-paperclip"></i> {{ candidat.cv }}.pdf</a>
                                     {% else %}
                                     <div class="alert alert-primary d-flex align-items-center" role="alert">
                                         <i class="bi bi-info-circle-fill mx-1 mx-sm-3"></i>
@@ -195,6 +195,10 @@ $(document).on('click', '.select-cv-btn', function() {
                     {% if candidat.cvs|length > 0 %}
                         <div class="row">
                             {% for cv in app.user.candidateProfile.cvs %}
+                            {% set class = 'btn-outline-dark' %}
+                            {% if cv.cvLink == app.user.candidateProfile.cv %}
+                            {% set class = 'btn-dark' %}
+                            {% endif %}
                             <div class="col-md-6 my-2">
                                 <div class="card">
                                     <div class="card-body">
@@ -202,8 +206,9 @@ $(document).on('click', '.select-cv-btn', function() {
                                         <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
                                         <p class="card-title small">{{ cv.safeFileName }}</p>
                                         <!-- Lien pour visualiser le CV dans un nouvel onglet -->
-                                        <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" class="btn btn-sm rounded-pill btn-primary" title="Ouvrir" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
-                                        <a href="javascript:void(0);" data-cv-link="{{ cv.cvLink }}" data-cv-id="{{ cv.id }}" class="select-cv-btn btn btn-sm rounded-pill btn-danger" title="Sélectionner"><i class="bi bi-check2-square"></i></a>
+                                        <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" class="btn btn-sm rounded-pill btn-light shadow" title="Ouvrir" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
+                                        <a href="javascript:void(0);" data-cv-link="{{ cv.cvLink }}" data-cv-id="{{ cv.id }}" class="select-cv-btn btn btn-sm rounded-pill {{ class }}" title="Sélectionner"><i class="bi bi-check2-square"></i></a>
+                                        <a href="{{ path('app_delete_cv', {'cvId':cv.id})}}" class="btn btn-sm rounded-pill shadow btn-light" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce document ?');"><i class="bi bi-trash"></i></a>
 
                                     </div>
                                 </div>

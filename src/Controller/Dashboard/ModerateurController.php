@@ -29,6 +29,7 @@ use App\Form\Moderateur\EditedCvType;
 use App\Repository\SecteurRepository;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
+use App\Entity\Candidate\CV;
 use App\Entity\Finance\Employe;
 use App\Entity\Moderateur\Assignation;
 use App\Form\Candidat\AvailabilityType;
@@ -327,7 +328,7 @@ class ModerateurController extends AbstractController
 
             $cvFile = $formCandidate->get('cv')->getData();
             if ($cvFile) {
-                $fileName = $this->fileUploader->upload($cvFile);
+                $fileName = $this->fileUploader->upload($cvFile, $candidateProfile);
                 $candidateProfile->setCv($fileName[0]);
                 $this->profileManager->saveCV($fileName, $candidateProfile);
             }
@@ -491,6 +492,29 @@ class ModerateurController extends AbstractController
             return $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()]);
         }
 
+        /**
+         * New process upload cv
+         */
+        $cvForms = [];
+        $cvs = $this->em->getRepository(CV::class)->findby([
+            'candidat' => $candidat
+        ], ['id' => 'DESC']);
+
+        foreach ($cvs as $key => $cv) {
+            $formName = 'cv_form_'.$cv->getId();
+            $cvForm = $this->createForm(EditedCvType::class, $cv, [
+                'form_id' => $formName
+            ]);
+            $cvForm->handleRequest($request);
+            $cvForms[$cv->getId()] = [
+                'form' => $cvForm->createView(),
+                'formName' => $formName
+            ];
+        }
+        /**
+         * End new process 
+         */
+
         $editedCv = new EditedCv();
         $editedCv->setUploadedAt(new DateTime());
         $editedCv->setCandidat($candidat);
@@ -499,9 +523,11 @@ class ModerateurController extends AbstractController
         if($formCv->isSubmitted() && $formCv->isValid()){
             $cvFile = $formCv->get('cvEdit')->getData();
             if ($cvFile) {
-                $fileName = $this->fileUploader->uploadEditedCv($cvFile);
+                $fileName = $this->fileUploader->uploadEditedCv($cvFile, $candidat);
                 $this->profileManager->saveCVEdited($fileName, $candidat);
             }
+            $referer = $request->headers->get('referer');
+            return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view');
         }
 
         $formDispo = $this->createForm(AvailabilityType::class, $this->candidatManager->initAvailability($candidat));
@@ -557,6 +583,8 @@ class ModerateurController extends AbstractController
             'form' => $form->createView(),
             'formDispo' => $formDispo->createView(),
             'formCv' => $formCv->createView(),
+            'cvForms' => $cvForms, 
+            'cvs' => $cvs, 
             'formAssignation' => $formAssignation->createView(),
         ]);
     }
@@ -915,5 +943,50 @@ class ModerateurController extends AbstractController
                 10
             ),
         ]);
+    }
+
+    #[Route('/cv/edit/{cvId}', name: 'app_edit_cv')]
+    public function editCV(Request $request, int $cvId): Response
+    {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $cv = $this->em->getRepository(CV::class)->find($cvId);
+        $cvEditedFrom = $this->createForm(EditedCvType::class, $cv->getEdited());
+        
+        $cvEditedFrom->handleRequest($request);
+
+        if ($cvEditedFrom->isSubmitted() && $cvEditedFrom->isValid()) {
+            $cvFile = $cvEditedFrom->get('cvEdit')->getData();
+            if ($cvFile) {
+                $fileName = $this->fileUploader->uploadEditedCv($cvFile, $cv->getCandidat());
+                $this->profileManager->saveCVEdited($fileName, $cv->getCandidat(), $cv);
+            }
+        }
+
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $cv->getCandidat()->getId()]);
+    }
+
+    #[Route('/delete/edited/{cvEditedId}', name: 'app_delete_edited_cv')]
+    public function deleteEditedCV(Request $request, int $cvEditedId): Response
+    {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $cvEdited = $this->em->getRepository(EditedCv::class)->find($cvEditedId);
+
+        if ($cvEdited !== null) {
+            $cV = $cvEdited->getCV(); 
+
+            if ($cV !== null) {
+                // Rompre la relation
+                $cV->setEdited(null);
+                $this->em->persist($cV);
+            }
+
+            $this->em->remove($cvEdited);
+            $this->em->flush();
+        }
+
+
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $cv->getCv()->getCandidat()->getId()]);
     }
 }

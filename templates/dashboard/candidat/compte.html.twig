@@ -342,8 +342,12 @@
         <hr class="mb-4">
         <h5 class=""><i class="mx-2 h5 bi bi-archive"></i> Mes documents</h5>
         <div class="row">
-            <div class="col">
+            <div class="col-12 col-sm-6">
             {% for cv in app.user.candidateProfile.cvs %}
+                {% set class = 'btn-outline-dark' %}
+                {% if cv.cvLink == app.user.candidateProfile.cv %}
+                {% set class = 'btn-dark' %}
+                {% endif %}
                 <div class="col-md-6 my-2">
                     <div class="card">
                         <div class="card-body">
@@ -351,15 +355,16 @@
                             <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
                             <p class="card-title small">{{ cv.safeFileName }}.pdf</p>
                             <!-- Lien pour visualiser le CV dans un nouvel onglet -->
-                            <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" class="btn btn-sm rounded-pill btn-primary" title="Ouvrir" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
-                            <a href="javascript:void(0);" data-cv-link="{{ cv.cvLink }}" data-cv-id="{{ cv.id }}" class="select-cv-btn btn btn-sm rounded-pill btn-danger" title="Sélectionner"><i class="bi bi-check2-square"></i></a>
+                            <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" class="btn btn-sm rounded-pill shadow btn-light text-dark" title="Ouvrir" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
+                            <a href="javascript:void(0);" data-cv-link="{{ cv.cvLink }}" data-cv-id="{{ cv.id }}" class="select-cv-btn btn btn-sm rounded-pill shadow {{class}}" title="Sélectionner"><i class="bi bi-check2-square"></i></a>
+                            <a href="{{ path('app_delete_cv', {'cvId':cv.id})}}" class="btn btn-sm rounded-pill shadow btn-light" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce document ?');"><i class="bi bi-trash"></i></a>
 
                         </div>
                     </div>
                 </div>
             {% endfor %}
             </div>
-            <div class="col">
+            <div class="col-12 col-sm-6">
                 {{ form_label(form_three.cv) }}
                 {{ form_widget(form_three.cv) }}
                 {{ form_errors(form_three.cv) }}
@@ -394,6 +399,10 @@
                     {% if app.user.candidateProfile %}
                         <div class="row">
                             {% for cv in app.user.candidateProfile.cvs %}
+                            {% set class = 'btn-outline-dark' %}
+                            {% if cv.cvLink == app.user.candidateProfile.cv %}
+                            {% set class = 'btn-dark' %}
+                            {% endif %}
                             <div class="col-md-6 my-2">
                                 <div class="card">
                                     <div class="card-body">
@@ -402,7 +411,7 @@
                                         <p class="card-title small">{{ cv.safeFileName }}</p>
                                         <!-- Lien pour visualiser le CV dans un nouvel onglet -->
                                         <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" class="btn btn-sm rounded-pill btn-primary" title="Ouvrir" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
-                                        <a href="javascript:void(0);" data-cv-link="{{ cv.cvLink }}" data-cv-id="{{ cv.id }}" class="select-cv-btn btn btn-sm rounded-pill btn-danger" title="Sélectionner"><i class="bi bi-check2-square"></i></a>
+                                        <a href="javascript:void(0);" data-cv-link="{{ cv.cvLink }}" data-cv-id="{{ cv.id }}" class="select-cv-btn btn btn-sm rounded-pill {{ class }}" title="Sélectionner"><i class="bi bi-check2-square"></i></a>
 
                                     </div>
                                 </div>
@@ -551,6 +560,40 @@
                 restoreOriginalContent(id, container);
             } else {
                 console.log('ID non trouvé.');
+            }
+        });
+
+        $(document).on('click', '.select-cv-btn', function(e) {
+            var select = $(this);
+            var cvId = $(this).data('cv-id');
+            var cvLink = $(this).data('cv-link');
+
+            // Étape 1: Vérifiez si l'opération a déjà été effectuée
+            if (!localStorage.getItem('cvSelected')) {
+                $.ajax({
+                    url: '{{ path("app_profile_candidate_select_CV", {"id": 0}) }}'.replace('/0/', '/' + cvId + '/'),
+                    type: 'GET',
+                    success: function(response) {
+                        // Mettez à jour le champ de formulaire, affichez un message, etc.
+                        $('#cv-link-field').val(cvLink);
+                        console.log(response);
+                        // Fermer le modal si nécessaire
+                        $('#candidatDocuments').trigger('hide.bs.modal');
+
+                        // Étape 2: Définir une valeur dans le stockage local
+                        localStorage.setItem('cvSelected', 'true');
+
+                        // Actualiser la page
+                        location.reload();
+                    },
+                    error: function() {
+                        console.error('Une erreur est survenue lors de la sélection du CV.');
+                    }
+                });
+            } else {
+                // Étape 3: Réinitialiser la valeur stockée pour une nouvelle opération
+                localStorage.removeItem('cvSelected');
+                alert('Le CV a déjà été sélectionné. Effectuer une nouvelle opération si nécessaire.');
             }
         });
 
