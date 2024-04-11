@@ -61,5 +61,4 @@ services:
             
     App\Service\ErrorLogger:
         tags:
-            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException' }
-
+            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException', priority: 100 }

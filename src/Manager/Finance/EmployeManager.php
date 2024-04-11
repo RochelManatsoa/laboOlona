@@ -295,7 +295,9 @@ class EmployeManager
 
     private function getFactureTotal(float $salaire_brut, Simulateur $simulateur):float
     {
-
+        if($simulateur->getStatus() === "FREELANCE"){
+            return $salaire_brut + $this->getFraisPortage($salaire_brut, $simulateur);
+        }
         return $salaire_brut + $this->getChargesPatronales($salaire_brut) + $this->getFraisPortage($salaire_brut, $simulateur) + $this->getCoworking($simulateur);
     }
 

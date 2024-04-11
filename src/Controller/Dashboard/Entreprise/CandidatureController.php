@@ -36,12 +36,8 @@ class CandidatureController extends AbstractController
     {
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
-        $candidat = $user->getEntrepriseProfile();
-        if (!$candidat instanceof EntrepriseProfile) {
-            // Si l'utilisateur n'a pas de profil candidat, on lance une exception
-            throw new AccessDeniedException('Désolé, la page que vous souhaitez consulter est réservée aux profils entreprise. Si vous possédez un tel profil, veuillez vous assurer que vous êtes connecté avec les identifiants appropriés.');
-        }
-    
+        $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, ' Si vous avez la moindre question ou si vous souhaitez un accompagnement personnalisé, n\'hésitez surtout pas à nous envoyer un message instantané directement sur nos réseaux sociaux. Nous sommes ici pour vous accompagner à chaque étape vers le succès.');
+
         return null;
     }
     

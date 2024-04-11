@@ -63,6 +63,9 @@ class Assignation
     #[ORM\OneToOne(inversedBy: 'assignation', cascade: ['persist', 'remove'])]
     private ?Applications $application = null;
 
+    #[ORM\OneToOne(mappedBy: 'assignation', cascade: ['persist', 'remove'])]
+    private ?Forfait $forfaitAssignation = null;
+
     public function __construct()
     {
         $this->dateAssignation = new DateTime();
@@ -177,6 +180,28 @@ class Assignation
     public function setApplication(?Applications $application): static
     {
         $this->application = $application;
+
+        return $this;
+    }
+
+    public function getForfaitAssignation(): ?Forfait
+    {
+        return $this->forfaitAssignation;
+    }
+
+    public function setForfaitAssignation(?Forfait $forfaitAssignation): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($forfaitAssignation === null && $this->forfaitAssignation !== null) {
+            $this->forfaitAssignation->setAssignation(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($forfaitAssignation !== null && $forfaitAssignation->getAssignation() !== $this) {
+            $forfaitAssignation->setAssignation($this);
+        }
+
+        $this->forfaitAssignation = $forfaitAssignation;
 
         return $this;
     }

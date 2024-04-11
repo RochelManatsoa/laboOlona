@@ -229,7 +229,7 @@
                             <!-- En-têtes -->
                             <div class="row">
                                 <div class="col-3 font-weight-bold">Entreprise</div>
-                                <div class="col-2 font-weight-bold">Forfait</div>
+                                <div class="col-2 font-weight-bold text-center">Forfait</div>
                                 <div class="col-5 font-weight-bold">Commentaire</div>
                                 <div class="col-2 font-weight-bold">Action</div>
                             </div>
@@ -241,10 +241,9 @@
                                     {{ assignation.jobListing.entreprise.nom }}<br>
                                     <span class="text-muted small">{{ assignation.jobListing.titre }}</span>
                                 </div>
-                                <div class="col-2">
-                                    {{ assignation.forfait }} €<br>
-                                    <span class="text-muted small">{{ assignation.rolePositionVisee }}</span><br>
-                                    {# <span class="badge bg-danger">{{ assignation.status }}</span> #}
+                                <div class="col-2 text-center">
+                                    {{ getTarifForfait(assignation)|raw }}<br>
+                                    <span class="text-muted small">{{ getTypeAssignation(assignation)|raw }}</span><br>
                                     {{ getStatusAssignation(assignation)|raw }}
 
                                 </div>
@@ -526,9 +525,31 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    {{ form_start(formAssignation, {'attr': {'id':'formAssignation'}})}}
-                    {{ form_widget(formAssignation)}}
-                    {{ form_end(formAssignation)}}
+                    {{ form_start(formAssignation, {'attr':{'id':'formAssignation'}})  }}
+                    {{form_row(formAssignation.entreprise)}}
+                    {{form_row(formAssignation.jobListing)}}
+                        <div class="row mb-3">
+                            <div class="col-12 col-lg-4">
+                                <span class="text-muted small">Type</span>
+                                {{ form_widget(formAssignation.forfaitAssignation.typeForfait, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <div class="col-12 col-lg-4">
+                                <span class="text-muted small">Montant</span>
+                                {{ form_widget(formAssignation.forfaitAssignation.montant, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <div class="col-12 col-lg-4">
+                                <span class="text-muted small">Devise</span>
+                                {{ form_widget(formAssignation.forfaitAssignation.devise, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                    {{form_row(formAssignation.status)}}
+                    {{form_row(formAssignation.commentaire)}}
+                    {{form_widget(formAssignation.submit)}}
+                    <div style="display:none;">
+                    {{form_widget(formAssignation.forfait, {'attr':{'value':'0'}})}}
+                    {{form_widget(formAssignation)}}
+                    </div>
+                    {{form_end(formAssignation)}}
                 </div>
                 </div>
             </div>

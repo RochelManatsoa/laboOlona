@@ -9,6 +9,7 @@ use App\Entity\Errors\ErrorLog;
 use App\Entity\ReferrerProfile;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Finance\Employe;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
 use Symfony\UX\Chartjs\Model\Chart;
@@ -101,7 +102,8 @@ class DashboardController extends AbstractDashboardController
             MenuItem::subMenu('Roles', 'fa fa-id-card-clip')->setSubItems([
                 MenuItem::linkToCrud('Profils', 'fas fa-users', CandidateProfile::class),
                 MenuItem::linkToCrud('Entreprises', 'fas fa-building', EntrepriseProfile::class),
-                MenuItem::linkToCrud('Coopteurs', 'fas fa-address-card', ReferrerProfile::class),
+                MenuItem::linkToCrud('Coopteurs', 'fas fa-people-robbery', ReferrerProfile::class),
+                MenuItem::linkToCrud('Employés', 'fas fa-address-card', Employe::class),
             ]),
             MenuItem::subMenu('Moderation', 'fa fa-wand-magic-sparkles')->setSubItems([
                 MenuItem::linkToCrud('Assignations', 'fas fa-sliders', Assignation::class),

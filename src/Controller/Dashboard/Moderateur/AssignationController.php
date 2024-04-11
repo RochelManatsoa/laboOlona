@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Repository\EntrepriseProfileRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Moderateur\AssignateProfileFormType;
+use App\Manager\AssignationManager;
 use App\Repository\Moderateur\AssignationRepository;
 use App\Twig\AppExtension;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,6 +27,7 @@ class AssignationController extends AbstractController
         private CandidateProfileRepository $candidateProfileRepository,
         private EntrepriseProfileRepository $entrepriseProfileRepository,
         private AssignationRepository $assignationRepository,
+        private AssignationManager $assignationManager,
         private PaginatorInterface $paginatorInterface,
         private UserService $userService,
         private AppExtension $appExtension,
@@ -55,7 +57,19 @@ class AssignationController extends AbstractController
         }
     
         return $this->render('dashboard/moderateur/assignation/index.html.twig', [
-            'affectations' => $this->assignationRepository->findAll(),
+            'assignations' => $this->assignationRepository->findBy([], ['id' => 'DESC']),
+            'attentes' => $this->assignationManager->getGroupedBy(
+                Assignation::STATUS_PENDING
+            ),
+            'acceptees' => $this->assignationManager->getGroupedBy(
+                Assignation::STATUS_ACCEPTED
+            ),
+            'refusees' => $this->assignationManager->getGroupedBy(
+                Assignation::STATUS_REFUSED
+            ),
+            'moderees' => $this->assignationManager->getGroupedBy(
+                Assignation::STATUS_MODERATED
+            ),
             'profils' => $this->paginatorInterface->paginate(
                 $profils,
                 $request->query->getInt('page', 1),

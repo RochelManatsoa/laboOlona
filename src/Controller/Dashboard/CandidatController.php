@@ -233,6 +233,9 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        if(!$candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
         $typesContrat = $this->typeContratRepository->findAll();
 
         $form = $this->createForm(CandidatAnnonceSearchType::class, null, [
@@ -284,6 +287,9 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        if(!$candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
         $application = $this->applicationsRepository->findOneBy([
             'candidat' => $candidat,
             'annonce' => $annonce
@@ -424,6 +430,9 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        if(!$candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
 
         return $this->render('dashboard/candidat/annonces/details.html.twig', [
             'annonce' => $annonce,
@@ -438,6 +447,9 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        if(!$candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
 
         return $this->render('dashboard/candidat/candidature/index.html.twig', [
             'pendings' => $paginatorInterface->paginate(
@@ -475,6 +487,9 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        if(!$candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
 
         $formOne = $this->createForm(EditStepOneType::class, $candidat);
         $formTwo = $this->createForm(EditStepTwoType::class, $candidat);

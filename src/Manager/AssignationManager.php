@@ -12,6 +12,8 @@ use App\Repository\CandidateProfileRepository;
 use App\Repository\EntrepriseProfileRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
+use App\Repository\Moderateur\AssignationRepository;
+use Doctrine\ORM\Query\Expr\Func;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -24,6 +26,7 @@ class AssignationManager
         private EntrepriseProfileRepository $entrepriseProfileRepository,
         private CandidateProfileRepository $candidateProfileRepository,
         private JobListingRepository $jobListingRepository,
+        private AssignationRepository $assignationRepository,
         private MailerService $mailerService,
         private ModerateurManager $moderateurManager,
         private UrlGeneratorInterface $urlGenerator,
@@ -53,5 +56,31 @@ class AssignationManager
         $this->save($assignation);
 
         return $assignation;
+    }
+
+    public function getGroupedBy(string $status){
+        $assignations = $this->assignationRepository->findBy([
+            'status' => $status
+        ], ['id' => 'DESC']);
+        
+        $assignationsByJobListing = [];
+
+        foreach ($assignations as $assignation) {
+            $jobListing = $assignation->getJobListing();
+            if ($jobListing) {
+                $jobListingId = $jobListing->getId();
+                if (!array_key_exists($jobListingId, $assignationsByJobListing)) {
+                    $assignationsByJobListing[$jobListingId] = [
+                        'jobListing' => $jobListing,
+                        'assignations' => []
+                    ];
+                }
+                $assignationsByJobListing[$jobListingId]['assignations'][] = $assignation;
+            }
+        }
+        
+        // Si vous avez besoin d'un tableau d'annonces sans les clés d'identification,
+        // vous pouvez utiliser array_values pour réindexer le tableau
+        return $assignationsByJobListing;
     }
 }

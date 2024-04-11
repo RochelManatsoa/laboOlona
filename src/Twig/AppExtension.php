@@ -18,6 +18,7 @@ use Twig\Extension\AbstractExtension;
 use App\Entity\Candidate\Applications;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Candidate\TarifCandidat;
+use App\Entity\Moderateur\Forfait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -77,6 +78,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getAge', [$this, 'getAge']),
             new TwigFunction('getPseudo', [$this, 'getPseudo']),
             new TwigFunction('invitation', [$this, 'invitation']),
+            new TwigFunction('getTarifForfait', [$this, 'getTarifForfait']),
             new TwigFunction('getTarifCandidat', [$this, 'getTarifCandidat']),
             new TwigFunction('generatePseudo', [$this, 'generatePseudo']),
             new TwigFunction('getForfaitAssignation', [$this, 'getForfaitAssignation']),
@@ -737,6 +739,29 @@ class AppExtension extends AbstractExtension
         return $tarif;
     }
 
+    public function getTarifForfait(Assignation $assignation)
+    {
+        $tarif = '<i class="bi bi-ban px-4"></i>';
+        $tarifCandidat = $assignation->getForfaitAssignation();
+        if($tarifCandidat instanceof Forfait){
+            switch ($tarifCandidat->getAssignation()->getForfaitAssignation()->getTypeForfait()) {
+                case Forfait::TYPE_HOURLY :
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.Forfait::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par heure';
+                    break;
+                
+                case Forfait::TYPE_DAILY :
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.Forfait::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par jour';
+                    break;
+
+                case Forfait::TYPE_MONTHLY :
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.Forfait::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par mois';
+                    break;
+            }
+        }
+
+        return $tarif;
+    }
+
     public function getTypeAssignation(Assignation $assignation)
     {
         $type = '<strong>OLONA</strong>';
@@ -756,7 +781,7 @@ class AppExtension extends AbstractExtension
     public function getForfaitAssignation(Assignation $assignation)
     {
         $forfait = '<strong><i class="bi bi-ban"></i></strong>';
-        if ($assignation->getStatus() !== Assignation::STATUS_PENDING) {
+        if ($assignation->getForfait() !== null) {
             $forfait = '<strong>'.$assignation->getForfait().' €</strong>';
         }
 
@@ -765,9 +790,26 @@ class AppExtension extends AbstractExtension
 
     public function getStatusAssignation(Assignation $assignation)
     {
-        $status = '<span class="badge bg-danger">En attente</span>';
-        if ($assignation->getStatus() !== Assignation::STATUS_PENDING) {
-            $status = '<span class="badge bg-info">Modéré</span>';
+        switch ($assignation->getStatus()) {
+            case Assignation::STATUS_ACCEPTED :
+                $status = '<span class="badge bg-success">Acceptée</span>';
+                break;
+            
+            case Assignation::STATUS_REFUSED :
+                $status = '<span class="badge bg-danger">Refusée</span>';
+                break;
+            
+            case Assignation::STATUS_MODERATED :
+                $status = '<span class="badge bg-primary">Moderée</span>';
+                break;
+            
+            case Assignation::STATUS_PENDING :
+                $status = '<span class="badge bg-dark">En attente</span>';
+                break;
+            
+            default:
+                $status = '<span class="badge bg-dark">En attente</span>';
+                break;
         }
 
         return $status;

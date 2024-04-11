@@ -30,6 +30,7 @@ class EntrepriseProfileCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('nom'),
+            TextField::new('entreprise.fullName', 'Nom et prénom')->hideOnForm(),
             TextField::new('taille'),
             TextField::new('localisation'),
             TextField::new('siteWeb'),

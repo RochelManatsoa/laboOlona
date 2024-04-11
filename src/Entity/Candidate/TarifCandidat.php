@@ -24,6 +24,13 @@ class TarifCandidat
             'Mensuel' => self::TYPE_MONTHLY ,
         ];
     }
+    public static function arrayInverseTarifType() {
+        return [
+            self::TYPE_HOURLY => 'Horaire',
+            self::TYPE_DAILY => 'Journalier' ,
+            self::TYPE_MONTHLY => 'Mensuel',
+        ];
+    }
 
     public static function arrayInverseDevise() {
         return [

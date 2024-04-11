@@ -32,8 +32,9 @@ class CandidateProfileCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('titre'),
-            TextField::new('candidat.nom', 'Nom'),
-            TextField::new('candidat.prenom', 'Prénom(s)'),
+            TextField::new('candidat.fullName', 'Nom et prénom')->hideOnForm(),
+            TextField::new('candidat.nom', 'Nom')->hideOnIndex(),
+            TextField::new('candidat.prenom', 'Prénom(s)')->hideOnIndex(),
             DateField::new('candidat.dateInscription', 'Inscrit le')->hideOnForm(),
             DateField::new('candidat.lastLogin', 'Last login')->hideOnForm(),
             TextEditorField::new('resume', 'Biographie')->hideOnIndex(),

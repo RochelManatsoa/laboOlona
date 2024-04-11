@@ -100,6 +100,9 @@ $(function() {
             titre: $('input[name="annonce[titre]"]').val(),
             description: descriptionContent,
             salaire: $('input[name="annonce[salaire]"]').val(),
+            budget: $('select[name="annonce[budgetAnnonce][typeBudget]"] option:selected').text(),
+            devise: $('select[name="annonce[budgetAnnonce][devise]"] option:selected').text(),
+            montant: $('input[name="annonce[budgetAnnonce][montant]"]').val(),
             nombrePoste: $('input[name="annonce[nombrePoste]"]').val(),
             dateExpiration: $('input[name="annonce[dateExpiration]"]').val(),
         };
@@ -123,21 +126,23 @@ $(function() {
                 <p><span class="text-strong">Titre :</span> <br>${formData.titre}</p>
                 <p><span class="text-strong">Type :</span> <br>${typeText}</p>
                 <p><span class="text-strong">Secteur d'activité :</span> <br>${sectorText}</p>
-                <p><span class="text-strong">Budget :</span> <br>${formData.salaire} €</p>
-                <p><span class="text-strong">Nombre de personne à chercher :</span> <br>${formData.nombrePoste}</p>
-                <p><span class="text-strong">Date du début :</span> <br>${formData.dateExpiration} </p>
+                <p><span class="text-strong">Budget : ${formData.budget} </span> <br>${formData.montant} ${formData.devise}</p>
                 <!-- Et ainsi de suite pour les autres champs... -->
                 </div>
                 <!-- Colonne pour la liste des éléments dans values -->
                 <div class="col-md-6">
+                <p><span class="text-strong">Nombre de personne à chercher :</span> <br>${formData.nombrePoste}</p>
+                <p><span class="text-strong">Date du début :</span> <br>${formData.dateExpiration} </p>
                 <p><span class="text-strong">Comptétences requises :</span></p>
                 <ul>
                     ${values.map(value => `<li>${value}</li>`).join('')}
                 </ul>
-                <p><span class="text-strong">Description du poste:</span> <br>${formData.description}</p>
                 </div>
             </div>
+            <div class="row">
+                <p><span class="text-strong">Description du poste:</span> <br>${formData.description}</p>
             </div>
+        </div>
 
         `;
         $('#previewModal .modal-body').html(content);

@@ -84,7 +84,7 @@ app_home:
             li7: "Prestataire de services désigne toute personne physique ou morale qui traite les données pour le compte de la Société. Il fait référence à des sociétés tierces ou à des personnes employées par la Société pour faciliter le Service, pour fournir le Service au nom de la Société, pour effectuer des services liés au Service ou pour aider la Société à analyser la manière dont le Service est utilisé."
             li8: "<strong>Service de médias sociaux tiers</strong> désigne tout site Web ou tout site Web de réseau social par lequel un utilisateur peut se connecter ou créer un compte pour utiliser le service ."
             li9: "<strong>Données d'utilisation</strong> fait référence aux données collectées automatiquement, soit générées par l'utilisation du Service, soit à partir de l'infrastructure du Service elle-même (par exemple, la durée d'un visite de la page)"
-            li10: "<strong>Site Web</strong> fait référence à OLONA TALENTS, accessible depuis <a href=\"%home_url%\">https://olona-talents.com/</a>"
+            li10: "<strong>Site Web</strong> fait référence à OLONA TALENTS, accessible depuis <a href=%home_url%>https://olona-talents.com/</a>"
             li11: "<strong>Vous</strong> désigne la personne accédant ou utilisant le Service, ou la société ou toute autre entité juridique au nom de laquelle cette personne accède ou utilise le Service , selon le cas."
 
         section4:
@@ -852,7 +852,7 @@ app_identity_expert_step_three:
     user: 
         firstName: Nom(s)
     title: Vos réseaux professionnels*
-    message: (*) Chez OLONA TALENTS, nous accordons une grande importance à la protection de vos données personnelles. Soyez assuré(e) que les informations fournies dans cette section ne seront utilisées que dans le cadre strict de nos services et ne seront ni rendues public, ni partagées avec des tiers sans votre consentement explicite au début de la mise en relation avec vos futurs clients. <br>Pour plus de details sur la manière dont nous partageons et utilisons vos données, veuillez consulter notre <a href=\"%privacy_url%\">Politique de confidentialité.</a>
+    message: (*) Chez OLONA TALENTS, nous accordons une grande importance à la protection de vos données personnelles. Soyez assuré(e) que les informations fournies dans cette section ne seront utilisées que dans le cadre strict de nos services et ne seront ni rendues public, ni partagées avec des tiers sans votre consentement explicite au début de la mise en relation avec vos futurs clients. <br>Pour plus de details sur la manière dont nous partageons et utilisons vos données, veuillez consulter notre <a href=%privacy_url%>Politique de confidentialité.</a>
     keywords: "freelance, project, talent"
     button: Valider mon profil
     cancel: Retour

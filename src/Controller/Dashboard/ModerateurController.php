@@ -453,7 +453,7 @@ class ModerateurController extends AbstractController
         $assignation = $this->assignationManager->init();
         $assignation->setProfil($candidat);
         $assignation->setRolePositionVisee(Assignation::TYPE_OLONA);
-        $assignation->setStatus(Assignation::STATUS_MODERATED);
+        $assignation->setStatus(Assignation::STATUS_PENDING);
         $formAssignation = $this->createForm(AssignationFormType::class, $assignation);
         $formAssignation->handleRequest($request);
         if($formAssignation->isSubmitted() && $formAssignation->isValid()){

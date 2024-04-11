@@ -71,6 +71,12 @@ class Employe
         $this->contrats = new ArrayCollection();
         $this->simulateurs = new ArrayCollection();
     }
+    
+    public function getSimulateurCount(): int
+    {
+        return count($this->simulateurs);
+    }
+    
 
     public function getId(): ?int
     {

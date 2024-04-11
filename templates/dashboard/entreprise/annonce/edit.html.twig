@@ -57,11 +57,17 @@
 									<i class="text-primary h5 bi bi-currency-dollar"></i>
 									{{ form_label(form.salaire) }}</label>
 									<div class="row mb-3">
-										<div class="col-12 col-lg-6">
+										<div class="col-12 col-lg-4">
 											{{ form_widget(form.budgetAnnonce.typeBudget, {'attr': {'class': 'form-control'}}) }}
+											<span class="text-muted small">Type</span>
 										</div>
-										<div class="col-12 col-lg-6">
+										<div class="col-12 col-lg-4">
 											{{ form_widget(form.budgetAnnonce.montant, {'attr': {'class': 'form-control'}}) }}
+											<span class="text-muted small">Montant</span>
+										</div>
+										<div class="col-12 col-lg-4">
+											{{ form_widget(form.budgetAnnonce.devise, {'attr': {'class': 'form-control'}}) }}
+											<span class="text-muted small">Devise</span>
 										</div>
 									</div>
 							</div>

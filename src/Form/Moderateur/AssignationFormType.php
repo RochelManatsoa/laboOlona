@@ -7,8 +7,9 @@ use App\Entity\Moderateur\Assignation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class AssignationFormType extends AbstractType
@@ -27,7 +28,11 @@ class AssignationFormType extends AbstractType
             ])
             ->add('jobListing')
             ->add('forfait', MoneyType::class, [])
+            ->add('forfaitAssignation', ForfaitType::class, [])
             ->add('commentaire')
+            ->add('status', ChoiceType::class, [
+                'choices' => Assignation::getStatuses(),
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Assigner'
             ])

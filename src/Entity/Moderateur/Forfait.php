@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Entity\Entreprise;
+namespace App\Entity\Moderateur;
 
-use App\Repository\Entreprise\BudgetAnnonceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\Moderateur\ForfaitRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: BudgetAnnonceRepository::class)]
-class BudgetAnnonce
+#[ORM\Entity(repositoryClass: ForfaitRepository::class)]
+class Forfait
 {
-    const TYPE_PONCTUAL = 'PONCTUAL';
+    const TYPE_HOURLY = 'HOURLY';
+    const TYPE_DAILY = 'DAILY';
     const TYPE_MONTHLY = 'MONTHLY';
     const DEVISE_EUR = 'EUR';
     const DEVISE_USD = 'USD';
@@ -19,15 +18,16 @@ class BudgetAnnonce
 
     public static function arrayTarifType() {
         return [
+            'Horaire' => self::TYPE_HOURLY ,
+            'Journalier' => self::TYPE_DAILY ,
             'Mensuel' => self::TYPE_MONTHLY ,
-            'Ponctuel' => self::TYPE_PONCTUAL ,
         ];
     }
-
     public static function arrayInverseTarifType() {
         return [
-            self::TYPE_MONTHLY  => 'Mensuel' ,
-            self::TYPE_PONCTUAL  => 'Ponctuel',
+            self::TYPE_HOURLY => 'Horaire',
+            self::TYPE_DAILY => 'Journalier' ,
+            self::TYPE_MONTHLY => 'Mensuel',
         ];
     }
 
@@ -51,7 +51,7 @@ class BudgetAnnonce
         $deviseArray = self::arrayInverseDevise();
         return $deviseArray[$devise] ?? null; 
     }
-
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -64,15 +64,10 @@ class BudgetAnnonce
     private ?string $devise = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    private ?string $typeBudget = null;
+    private ?string $typeForfait = null;
 
-    #[ORM\OneToMany(mappedBy: 'budgetAnnonce', targetEntity: JobListing::class)]
-    private Collection $annonce;
-
-    public function __construct()
-    {
-        $this->annonce = new ArrayCollection();
-    }
+    #[ORM\OneToOne(inversedBy: 'forfaitAssignation', cascade: ['persist', 'remove'])]
+    private ?Assignation $assignation = null;
 
     public function getId(): ?int
     {
@@ -103,44 +98,26 @@ class BudgetAnnonce
         return $this;
     }
 
-    public function getTypeBudget(): ?string
+    public function getTypeForfait(): ?string
     {
-        return $this->typeBudget;
+        return $this->typeForfait;
     }
 
-    public function setTypeBudget(?string $typeBudget): static
+    public function setTypeForfait(?string $typeForfait): static
     {
-        $this->typeBudget = $typeBudget;
+        $this->typeForfait = $typeForfait;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, JobListing>
-     */
-    public function getAnnonce(): Collection
+    public function getAssignation(): ?Assignation
     {
-        return $this->annonce;
+        return $this->assignation;
     }
 
-    public function addAnnonce(JobListing $annonce): static
+    public function setAssignation(?Assignation $assignation): static
     {
-        if (!$this->annonce->contains($annonce)) {
-            $this->annonce->add($annonce);
-            $annonce->setBudgetAnnonce($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAnnonce(JobListing $annonce): static
-    {
-        if ($this->annonce->removeElement($annonce)) {
-            // set the owning side to null (unless already changed)
-            if ($annonce->getBudgetAnnonce() === $this) {
-                $annonce->setBudgetAnnonce(null);
-            }
-        }
+        $this->assignation = $assignation;
 
         return $this;
     }
