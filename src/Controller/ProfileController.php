@@ -178,7 +178,7 @@ class ProfileController extends AbstractController
             $profile = $form->getData();
             $cvFile = $form->get('cv')->getData();
             if ($cvFile) {
-                $fileName = $this->fileUploader->upload($cvFile);
+                $fileName = $this->fileUploader->upload($cvFile, $profile);
                 $profile->setCv($fileName[0]);
                 $this->profileManager->saveCV($fileName, $profile);
             }

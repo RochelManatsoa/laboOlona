@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Template Olona Talents</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --base-font-size: 16px;
+            /* Taille de base pour les calculs de taille de police */
+            --base-screen-width: 1260px;
+            /* Largeur d'écran de référence pour les calculs */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .container {
+            width: 1260px;
+            margin: 30px;
+        }
+
+        .header,
+        .logo,
+        .social-icons {
+            display: inline;
+        }
+
+        .social-icons {
+            float: right;
+        }
+
+        .banner-content {
+            text-align: center;
+            font-family: 'Poppins';
+            font-size: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            vertical-align: middle;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: .375rem .75rem;
+            font-size: 2rem;
+            line-height: 1.5;
+            border-radius: .25rem;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out,
+                border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .rounded-pill {
+            border-radius: 50rem !important;
+        }
+
+        .px-5 {
+            padding-right: 3rem !important;
+            padding-left: 3rem !important;
+        }
+
+        .btn-light {
+            color: #000;
+            background-color: #f8f9fa;
+            border-color: #f8f9fa;
+        }
+
+        .btn-custom-height {
+            height: calc(40px + (68 - 40) * ((100vw - 320px) / (1920 - 320)));
+            line-height: calc(40px + (68 - 40) * ((100vw - 320px) / (1920 - 320)));
+            padding-left: calc(1rem + (3 - 1) * ((100vw - 320px) / (1920 - 320)));
+            padding-right: calc(1rem + (3 - 1) * ((100vw - 320px) / (1920 - 320)));
+            /* Adjust line height to vertically center the text */
+        }
+
+        .banner-image img {
+            margin-top: 30px;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        .banner-purple {
+            text-align: center;
+            font-size: 50px;
+            font-weight: 700;
+            padding-top: 25px;
+            padding-bottom: 25px;
+            background-color: #324ef4;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            font-weight: 600;
+            line-height: 2;
+            font-size: 45px;
+        }
+
+        td div.left{
+            text-align: left;
+            padding-left: 50px;
+        }
+
+        td div.right {
+            text-align: right;
+            padding-right: 50px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .text-blue {
+            color: blue;
+        }
+        .mb-3 {
+            margin: 1rem;
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+    <div class="header">
+        <div class="logo">
+            <img src="https://olona-talents.com/images/logo-olona-teams-white.png" width="250" alt="Olona Talents Logo">
+        </div>
+        <div class="social-icons">
+            <a href="https://www.linkedin.com/company/web-outsourcing-data/"><img src="https://olona-talents.com/images/mailing/linkedin.png" alt="LinkedIn"></a>
+            <a href="#"><img src="https://olona-talents.com/images/mailing/facebook.png" alt="Facebook"></a>
+            <a href="#"><img src="https://olona-talents.com/images/mailing/instagram.png" alt="Instagram"></a>
+            <a href="https://www.youtube.com/@olonatalents"><img src="https://olona-talents.com/images/mailing/youtube.png" alt="YouTube"></a>
+        </div>
+    </div>
+
+    <div class="banner-content">
+        <h1>Trouvez vos freelances <span style="color: blue;">à Madagascar</span></h1>
+        <a href="https://olona-talents.com/dashboard/entreprise/recherche-candidats" class="btn btn-primary btn-custom-height rounded-pill px-5 mb-3">Je recherche une
+            équipe</a>
+        <a href="https://olona-talents.com/dashboard/entreprise/recherche-candidats" class="btn btn-light btn-custom-height rounded-pill px-5 mb-3">J'ai déjà une équipe</a>
+    </div>
+
+
+
+    <div class="banner-image">
+        <img src="https://olona-talents.com/images/mailing/thumbnail.png" alt="Olona Talents Logo">
+    </div>
+
+    <div class="banner-purple">
+        <span>
+            Ce que nous vous proposons!
+        </span>
+    </div>
+
+    <div class="table-responsive">
+        <table>
+            <tr>
+                <td>
+                    <div class="left">
+                        Un vaste catalogue de<br>
+                        <span class="text-blue">Profils<br>minitieusement<br></span>
+                        évalués et certifiés.<br>
+                    </div>
+                </td>
+                <td>
+                    <img src="https://olona-talents.com/images/mailing/media_20240412_121926_6539414528596052394.png" alt="Olona Talents Logo">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="https://olona-talents.com/images/mailing/media_20240412_121926_774673479678192698.png" alt="Olona Talents Logo">
+                </td>
+                <td>
+                    <div class="right">
+                        Une équipe de<br>
+                        <span class="text-blue">sourcing dédiée<br></span>
+                        à votre disposition.<br>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="left">
+                        Aucun<br>
+                        <span class="text-blue">frais de<br>recrutement<br></span>
+                        excessifs dès le départ.<br>
+                    </div>
+                </td>
+                <td>
+                    <img src="https://olona-talents.com/images/mailing/media_20240412_121926_3626512075250581030.png" alt="Olona Talents Logo">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="https://olona-talents.com/images/mailing/media_20240412_121926_755006937987753328.png" alt="Olona Talents Logo">
+                </td>
+                <td>
+                    <div class="right">
+                        Un modèle robuste pour<br>
+                        <span class="text-blue">garantir la sécurité<br></span>
+                        dans votre collaboration.<br>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="left">
+                        Une gestion où<br>
+                        <span class="text-blue">la transparence prime<br></span>
+                        à chaque étape.<br>
+                    </div>
+                </td>
+                <td>
+                    <img src="https://olona-talents.com/images/mailing/media_20240412_121926_1001946434445666466.png" alt="Olona Talents Logo">
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="banner-content" style="margin-bottom: 175px;">
+        <h1>Trouvez vos freelances <span style="color: blue;">à Madagascar</span></h1>
+        <a href="https://olona-talents.com/register" class="btn btn-primary btn-custom-height rounded-pill px-5">Je crée mon compte
+            entreprise gratuit</a>
+    </div>
+
+</body>
+
+</html>

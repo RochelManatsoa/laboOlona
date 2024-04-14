@@ -20,9 +20,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mime\Address;
 use App\Repository\Moderateur\InvitationRepository;
 use App\Security\AppAuthenticator;
+use App\Service\Mailer\MailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security\UserAuthenticator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
@@ -37,6 +39,8 @@ class InvitationController extends AbstractController
         private EmailVerifier $emailVerifier,
         private UserAuthenticatorInterface $userAuthenticator,
         private AppAuthenticator $appAuthenticator,
+        private MailerService $mailerService,
+        private UrlGeneratorInterface $urlGenerator,
         private UserPasswordHasherInterface $userPasswordHasher
     )
     {}
@@ -151,5 +155,21 @@ class InvitationController extends AbstractController
             'annonce' => $annonce,
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/invitation/entreprise/test', name: 'app_invitation')]
+    public function emailTest(Request $request): Response
+    {
+        $this->mailerService->send(
+            'nirinarocheldev@gmail.com',
+            "Mail entreprise Olona Talents",
+            "entreprise/welcome.html.twig",
+            [
+                'user' => 'Nirina',
+                'dashboard_url' => $this->urlGenerator->generate('app_connect', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]
+        );
+
+        return new Response('OK');
     }
 }
