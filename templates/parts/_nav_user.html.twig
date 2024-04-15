@@ -36,9 +36,15 @@
 						Tableau de bord
 					</a>
 				{% elseif app.user.type == 'ENTREPRISE' %}
+				{% if app.user.entreprise is defined and app.user.entreprise is not null %}
 					<a class="dropdown-item" href="{{ path('app_dashboard_entreprise_profil') }}">
 						Tableau de bord
 					</a>
+				{% else %}
+					<a class="dropdown-item" href="{{ path('app_profile_entreprise') }}">
+						Mon profil
+					</a>
+				{% endif %}
 				{% elseif app.user.type == 'EMPLOYE' %}
 					<a class="dropdown-item" href="{{ path('app_dashboard_employes_infos') }}">
 						Mes infos
