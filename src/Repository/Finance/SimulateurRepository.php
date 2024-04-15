@@ -37,6 +37,14 @@ class SimulateurRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findSimulationsWithEmploye()
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->where('s.employe IS NOT NULL');
+
+        return $qb->getQuery()->getResult();
+    }
+
 
 //    /**
 //     * @return Simulateur[] Returns an array of Simulateur objects

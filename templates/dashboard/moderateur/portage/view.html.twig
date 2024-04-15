@@ -4,6 +4,8 @@
 	{% set salaire_plafond = convertToAriary(results.salaire_brut_estime_euro, simulateur) %}
 	{% if salaire_plafond > 1910400 %}
 		{% set salaire_plafond = convertToDevise(1910400, simulateur) %}
+	{% else %}
+		{% set salaire_plafond = results.salaire_brut_estime_euro %}
 	{% endif %}
 	<div class="container my-5">
 		<h2>Portage salariale</h2>

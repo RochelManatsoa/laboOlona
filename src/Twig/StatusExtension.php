@@ -12,6 +12,7 @@ use App\Entity\Entreprise\JobListing;
 use Twig\Extension\AbstractExtension;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Entreprise\BudgetAnnonce;
+use App\Entity\Finance\Simulateur;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\ReferrerProfileRepository;
@@ -45,6 +46,7 @@ class StatusExtension extends AbstractExtension
             new TwigFunction('arrayInverseDevise', [$this, 'arrayInverseDevise']),
             new TwigFunction('arrayInverseCandidatTarifType', [$this, 'arrayInverseCandidatTarifType']),
             new TwigFunction('arrayInverseTarifType', [$this, 'arrayInverseTarifType']),
+            new TwigFunction('satusSimulateur', [$this, 'satusSimulateur']),
         ];
     }
 
@@ -63,6 +65,26 @@ class StatusExtension extends AbstractExtension
         $type = TarifCandidat::arrayInverseTarifType()[$typeTarif] ?? '';
         
         return $type;
+    }
+
+    public function satusSimulateur(Simulateur $simulateur)
+    {
+        $type = $simulateur->getStatus() ?? '';
+        switch ($type) {
+            case Simulateur::STATUS_VALID :
+                $status = '<span class="badge text-bg-success">Valide</span>';
+                break;
+
+            case Simulateur::STATUS_DELETED :
+                $status = '<span class="badge text-bg-dark">Effacé</span>';
+                break;
+            
+            default:
+                $status = '<span class="badge text-bg-success">Valide</span>';
+                break;
+        }
+        
+        return $status;
     }
 
 }

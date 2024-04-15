@@ -1,7 +1,323 @@
 {% extends 'finance/base.html.twig' %}
 
-{% block title %}Salaire{% endblock %}
+{% block title %}Salaire
+{% endblock %}
 
 {% block body %}
-
+	<div class="container">
+		<div class="annonce-list p-2">
+			<div class="annonce-item shadow p-5 m-4">
+				<h1 class="card-title h2 mb-3">Salaires simulés</h1>
+				<!-- Onglets -->
+				<ul class="nav nav-tabs nav-underline mb-4">
+					<li class="nav-item">
+						<a class="nav-link px-4 active" id="simulation1-tab" data-bs-toggle="tab" href="#simulation1">+ de 4M Ar</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-4" id="simulations2-tab" data-bs-toggle="tab" href="#simulations2">3 à 4M Ar</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-4" id="simulations3-tab" data-bs-toggle="tab" href="#simulations3">2 à 3M Ar</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-4" id="simulations4-tab" data-bs-toggle="tab" href="#simulations4">1 à 2M Ar</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-4" id="simulations5-tab" data-bs-toggle="tab" href="#simulations5">- de 1M Ar</a>
+					</li>
+				</ul>
+				<!-- Contenu des onglets -->
+				<div class="tab-content mt-3">
+					<div class="tab-pane fade show active" id="simulation1">
+							<div class="container">
+								<div class="row text-strong">
+									<div class="col-sm-5">Utilisateur | Salaire Net</div>
+									<div class="col-sm-6">
+										<div class="row">
+											<div class="col-sm-6 col-md-4 text-center">Statut</div>
+											<div class="col-sm-6 col-md-4 text-center">Créé le</div>
+											<div class="col-sm-6 col-md-4">Simulation</div>
+										</div>
+									</div>
+									<div class="col-sm-1"></div>
+								</div>
+								<hr>
+								{% for item in simulations1 %}
+									<div class="row text-muted">
+										<div class="col-sm-5 small">
+											<a href="{{path('app_finance_salaire_employe', {'id':item.employe.id})}}" class="">
+												{{ item.employe.user.nom}}
+												{{ item.employe.user.prenom}}
+											</a>
+											|
+											<span class="text-dark text-strong">{{ item.salaireNet }}
+												{{ item.devise.symbole}}</span>
+											<br>
+											<span class="text-muted">{{ item.employe.user.email}}</span>
+										</div>
+										<div class="col-sm-6">
+											<div class="row">
+												<div class="col-sm-6 col-md-4 text-center">
+													{{ satusSimulateur(item)|raw }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-center">
+													{{ item.createdAt|date('d/m/Y') }}<br>
+													{{ item.createdAt|date('à h:i') }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-dark">
+													{{ convertToAriary(item.salaireNet, item)|number_format(0, '.', '.') }}
+													Ar
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-1 small">
+											<a href="{{ path('app_finance_salaire_view', {'id':item.id})}}" class="btn btn-sm btn-info">
+												<i class="bi bi-eye"></i>
+											</a>
+										</div>
+									</div>
+									<hr>
+								{% endfor %}
+								<!-- Plus de lignes et colonnes ici -->
+							</div>
+							<div class="navigation mt-5">
+								{{ knp_pagination_render(simulations1, 'parts/_pagination.html.twig') }}
+							</div>
+					</div>
+				</div>
+				<div class="tab-content mt-3">
+					<div class="tab-pane fade" id="simulations2">
+							<div class="container">
+								<div class="row text-strong">
+									<div class="col-sm-5">Utilisateur | Salaire Net</div>
+									<div class="col-sm-6">
+										<div class="row">
+											<div class="col-sm-6 col-md-4 text-center">Statut</div>
+											<div class="col-sm-6 col-md-4 text-center">Créé le</div>
+											<div class="col-sm-6 col-md-4">Simulation</div>
+										</div>
+									</div>
+									<div class="col-sm-1"></div>
+								</div>
+								<hr>
+								{% for item in simulations2 %}
+									<div class="row text-muted">
+										<div class="col-sm-5 small">
+											<a href="{{path('app_finance_salaire_employe', {'id':item.employe.id})}}" class="">
+												{{ item.employe.user.nom}}
+												{{ item.employe.user.prenom}}
+											</a>
+											|
+											<span class="text-dark text-strong">{{ item.salaireNet }}
+												{{ item.devise.symbole}}</span>
+											<br>
+											<span class="text-muted">{{ item.employe.user.email}}</span>
+										</div>
+										<div class="col-sm-6">
+											<div class="row">
+												<div class="col-sm-6 col-md-4 text-center">
+													{{ satusSimulateur(item)|raw }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-center">
+													{{ item.createdAt|date('d/m/Y') }}<br>
+													{{ item.createdAt|date('à h:i') }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-dark">
+													{{ convertToAriary(item.salaireNet, item)|number_format(0, '.', '.') }}
+													Ar
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-1 small">
+											<a href="{{ path('app_finance_salaire_view', {'id':item.id})}}" class="btn btn-sm btn-info">
+												<i class="bi bi-eye"></i>
+											</a>
+										</div>
+									</div>
+									<hr>
+								{% endfor %}
+								<!-- Plus de lignes et colonnes ici -->
+							</div>
+							<div class="navigation mt-5">
+								{{ knp_pagination_render(simulations2, 'parts/_pagination.html.twig') }}
+							</div>
+					</div>
+				</div>
+				<div class="tab-content mt-3">
+					<div class="tab-pane fade" id="simulations3">
+							<div class="container">
+								<div class="row text-strong">
+									<div class="col-sm-5">Utilisateur | Salaire Net</div>
+									<div class="col-sm-6">
+										<div class="row">
+											<div class="col-sm-6 col-md-4 text-center">Statut</div>
+											<div class="col-sm-6 col-md-4 text-center">Créé le</div>
+											<div class="col-sm-6 col-md-4">Simulation</div>
+										</div>
+									</div>
+									<div class="col-sm-1"></div>
+								</div>
+								<hr>
+								{% for item in simulations3 %}
+									<div class="row text-muted">
+										<div class="col-sm-5 small">
+											<a href="{{path('app_finance_salaire_employe', {'id':item.employe.id})}}" class="">
+												{{ item.employe.user.nom}}
+												{{ item.employe.user.prenom}}
+											</a>
+											|
+											<span class="text-dark text-strong">{{ item.salaireNet }}
+												{{ item.devise.symbole}}</span>
+											<br>
+											<span class="text-muted">{{ item.employe.user.email}}</span>
+										</div>
+										<div class="col-sm-6">
+											<div class="row">
+												<div class="col-sm-6 col-md-4 text-center">
+													{{ satusSimulateur(item)|raw }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-center">
+													{{ item.createdAt|date('d/m/Y') }}<br>
+													{{ item.createdAt|date('à h:i') }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-dark">
+													{{ convertToAriary(item.salaireNet, item)|number_format(0, '.', '.') }}
+													Ar
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-1 small">
+											<a href="{{ path('app_finance_salaire_view', {'id':item.id})}}" class="btn btn-sm btn-info">
+												<i class="bi bi-eye"></i>
+											</a>
+										</div>
+									</div>
+									<hr>
+								{% endfor %}
+								<!-- Plus de lignes et colonnes ici -->
+							</div>
+							<div class="navigation mt-5">
+								{{ knp_pagination_render(simulations3, 'parts/_pagination.html.twig') }}
+							</div>
+					</div>
+				</div>
+				<div class="tab-content mt-3">
+					<div class="tab-pane fade" id="simulations4">
+							<div class="container">
+								<div class="row text-strong">
+									<div class="col-sm-5">Utilisateur | Salaire Net</div>
+									<div class="col-sm-6">
+										<div class="row">
+											<div class="col-sm-6 col-md-4 text-center">Statut</div>
+											<div class="col-sm-6 col-md-4 text-center">Créé le</div>
+											<div class="col-sm-6 col-md-4">Simulation</div>
+										</div>
+									</div>
+									<div class="col-sm-1"></div>
+								</div>
+								<hr>
+								{% for item in simulations4 %}
+									<div class="row text-muted">
+										<div class="col-sm-5 small">
+											<a href="{{path('app_finance_salaire_employe', {'id':item.employe.id})}}" class="">
+												{{ item.employe.user.nom}}
+												{{ item.employe.user.prenom}}
+											</a>
+											|
+											<span class="text-dark text-strong">{{ item.salaireNet }}
+												{{ item.devise.symbole}}</span>
+											<br>
+											<span class="text-muted">{{ item.employe.user.email}}</span>
+										</div>
+										<div class="col-sm-6">
+											<div class="row">
+												<div class="col-sm-6 col-md-4 text-center">
+													{{ satusSimulateur(item)|raw }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-center">
+													{{ item.createdAt|date('d/m/Y') }}<br>
+													{{ item.createdAt|date('à h:i') }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-dark">
+													{{ convertToAriary(item.salaireNet, item)|number_format(0, '.', '.') }}
+													Ar
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-1 small">
+											<a href="{{ path('app_finance_salaire_view', {'id':item.id})}}" class="btn btn-sm btn-info">
+												<i class="bi bi-eye"></i>
+											</a>
+										</div>
+									</div>
+									<hr>
+								{% endfor %}
+								<!-- Plus de lignes et colonnes ici -->
+							</div>
+							<div class="navigation mt-5">
+								{{ knp_pagination_render(simulations4, 'parts/_pagination.html.twig') }}
+							</div>
+					</div>
+				</div>
+				<div class="tab-content mt-3">
+					<div class="tab-pane fade" id="simulations5">
+							<div class="container">
+								<div class="row text-strong">
+									<div class="col-sm-5">Utilisateur | Salaire Net</div>
+									<div class="col-sm-6">
+										<div class="row">
+											<div class="col-sm-6 col-md-4 text-center">Statut</div>
+											<div class="col-sm-6 col-md-4 text-center">Créé le</div>
+											<div class="col-sm-6 col-md-4">Simulation</div>
+										</div>
+									</div>
+									<div class="col-sm-1"></div>
+								</div>
+								<hr>
+								{% for item in simulations5 %}
+									<div class="row text-muted">
+										<div class="col-sm-5 small">
+											<a href="{{path('app_finance_salaire_employe', {'id':item.employe.id})}}" class="">
+												{{ item.employe.user.nom}}
+												{{ item.employe.user.prenom}}
+											</a>
+											|
+											<span class="text-dark text-strong">{{ item.salaireNet }}
+												{{ item.devise.symbole}}</span>
+											<br>
+											<span class="text-muted">{{ item.employe.user.email}}</span>
+										</div>
+										<div class="col-sm-6">
+											<div class="row">
+												<div class="col-sm-6 col-md-4 text-center">
+													{{ satusSimulateur(item)|raw }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-center">
+													{{ item.createdAt|date('d/m/Y') }}<br>
+													{{ item.createdAt|date('à h:i') }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-dark">
+													{{ convertToAriary(item.salaireNet, item)|number_format(0, '.', '.') }}
+													Ar
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-1 small">
+											<a href="{{ path('app_finance_salaire_view', {'id':item.id})}}" class="btn btn-sm btn-info">
+												<i class="bi bi-eye"></i>
+											</a>
+										</div>
+									</div>
+									<hr>
+								{% endfor %}
+								<!-- Plus de lignes et colonnes ici -->
+							</div>
+							<div class="navigation mt-5">
+								{{ knp_pagination_render(simulations5, 'parts/_pagination.html.twig') }}
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

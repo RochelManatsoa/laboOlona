@@ -2,25 +2,42 @@
 
 namespace App\Service\Mailer;
 
+use Symfony\Component\Mime\Address;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Notifier\Exception\TransportExceptionInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class MailerService 
 {
-    public function __construct(private MailerInterface $mailer){}
+    private $env;
+    public function __construct(
+        private MailerInterface $mailer,
+        ParameterBagInterface $params
+    ){
+        $this->env = $params->get('app.env');
+    }
 
     public function send(
         string $to,
         string $subject,
         string $template,
-        array $context
+        array $context,
+        string $from = ''
     ): void
     {
         $email = new TemplatedEmail();
+        $sender = $from === '' ? 'noreply@olona-talents.com': $from;
+        $env = 'Olona Talents';
+        if ($this->env === 'prod') {
+            $email->to($to);
+        } else {
+            $env = '[Preprod] Olona Talents';
+            $email->to('nirinarocheldev@gmail.com'); 
+            // $email->addTo('andryrandriamalala@outlook.fr');
+        }
         $email 
-            ->from(new Address('noreply@olona-talents.com', 'Olona Talents'))
+            ->from(new Address($sender, $env))
             ->to($to)
             ->subject($subject)
             ->htmlTemplate("mails/$template")

@@ -374,7 +374,8 @@ class ModerateurManager
             ->leftJoin('c.candidat', 'u')
             ->leftJoin('c.availability', 'a')
             ->where(implode(' AND ', $conditions))
-            ->setParameters($parameters);
+            ->setParameters($parameters)
+            ->orderBy('c.id', 'DESC'); 
         
         return $qb->getQuery()->getResult();
     }
