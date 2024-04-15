@@ -210,8 +210,8 @@ class HomeController extends AbstractController
             $contactForm = $form->getData();
             $this->em->persist($contactForm);
             $this->em->flush();
-            $this->mailerService->send(
-                "contact@olona-talents.com",
+            $this->mailerService->sendMultiple(
+                ["contact@olona-talents.com", "nirinarocheldev@gmail.com"],
                 "Nouvelle entrée sur le formulaire de contact",
                 "contact.html.twig",
                 [

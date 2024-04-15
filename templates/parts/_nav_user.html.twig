@@ -33,19 +33,27 @@
             <li>
 				{% if app.user.type == 'MODERATEUR' %}
 					<a class="dropdown-item" href="{{ path('app_connect') }}">
+						Tableau de bord
+					</a>
 				{% elseif app.user.type == 'ENTREPRISE' %}
 					<a class="dropdown-item" href="{{ path('app_dashboard_entreprise_profil') }}">
+						Tableau de bord
+					</a>
 				{% elseif app.user.type == 'EMPLOYE' %}
 					<a class="dropdown-item" href="{{ path('app_dashboard_employes_infos') }}">
+						Mes infos
+					</a>
 				{% elseif app.user.type == 'CANDIDAT' %}
 					<a class="dropdown-item" href="{{ path('app_dashboard_candidat_compte') }}">
+						Mon compte
+					</a>
 				{% else %}
 					<a class="dropdown-item" href="{{ path('app_profile_account') }}">
+						Mon profile
+					</a>
 				{% endif %}
-					Mon compte
-				</a>
             </li>
-            {% if app.user.type == 'CANDIDAT' or is_granted('ROLE_CANDIDAT') %}
+            {% if app.user.type == 'CANDIDAT' %}
               <li>
                 <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#candidatAvaillability">Disponibilité</button>
               </li>

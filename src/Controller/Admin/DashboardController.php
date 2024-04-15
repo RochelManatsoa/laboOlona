@@ -10,6 +10,7 @@ use App\Entity\ReferrerProfile;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Finance\Employe;
+use App\Entity\Finance\Simulateur;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
 use Symfony\UX\Chartjs\Model\Chart;
@@ -37,7 +38,11 @@ class DashboardController extends AbstractDashboardController
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_PIE);
         $userTypesCounts = $this->em->getRepository(User::class)->countUsersByType();
-
+        foreach ($userTypesCounts as $key => $value) {
+            if ($value['userType'] === null) {
+                $userTypesCounts[$key]['userType'] = "NON DÉFINI";  
+            }
+        }
         $labels = [];
         $data = [];
         $backgroundColors = ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)'];
@@ -59,13 +64,17 @@ class DashboardController extends AbstractDashboardController
         ]);
         $chartToday = $this->chartBuilder->createChart(Chart::TYPE_PIE);
         $userCountsTodayByType = $this->em->getRepository(User::class)->countUsersRegisteredTodayByType();
-
+        foreach ($userCountsTodayByType as $key => $value) {
+            if ($value['userType'] === null) {
+                $userCountsTodayByType[$key]['userType'] = "NON DÉFINI";  
+            }
+        }
         $labelsToday = [];
         $dataToday = [];
         $backgroundColors = ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 206, 86)', 'rgb(75, 192, 192)'];
 
         foreach ($userCountsTodayByType as $count) {
-            $labelsToday[] = $count['userType'];
+            $labelsToday[] = sprintf('%s (%d)', $count['userType'], $count['userCount']);
             $dataToday[] = $count['userCount'];
         }
 
@@ -115,6 +124,7 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Type de contrat', 'fas fa-layer-group', TypeContrat::class),
                 MenuItem::linkToCrud('Devise', 'fas fa-circle-dollar-to-slot', Devise::class),
             ]),
+            MenuItem::linkToCrud('Simulations', 'fas fa-vial-virus', Simulateur::class),
             MenuItem::linkToCrud('Errors', 'fas fa-bug', ErrorLog::class),
         ];
     }

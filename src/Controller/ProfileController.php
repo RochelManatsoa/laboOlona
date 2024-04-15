@@ -142,11 +142,11 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $candidat = $form->getData();
-            // if($candidat instanceof CandidateProfile && !$candidat->isEmailSent()){
-            //     $candidat->setEmailSent(true);
-            //     /** notify moderateurs */
-            //     $this->mailManager->newUser($candidat->getCandidat());
-            // }
+            if($candidat instanceof CandidateProfile && !$candidat->isEmailSent()){
+                $candidat->setEmailSent(true);
+                /** notify moderateurs */
+                $this->mailManager->newUser($candidat->getCandidat());
+            }
             $this->em->persist($candidat);
             $this->em->flush();
             

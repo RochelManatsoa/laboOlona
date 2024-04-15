@@ -405,7 +405,7 @@ class EntrepriseController extends AbstractController
         ]);
     }
 
-    #[Route('/simulateur', name: 'app_dashboard_entreprise_profil')]
+    #[Route('/simulateur', name: 'app_dashboard_entreprise_simulateur')]
     public function simulateur(Request $request): Response
     {
         $this->checkEntreprise();
