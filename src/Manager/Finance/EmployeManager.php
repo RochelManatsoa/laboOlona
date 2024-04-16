@@ -76,9 +76,9 @@ class EmployeManager
         string $type
     )
     {
-        $salaire_brut_estime_euro = (($salaire_net) / (1 - 0.05));
-        $salaire_de_base_euro = ( $salaire_brut_estime_euro );
-        $charge = $salaire_brut_estime_euro - ($salaire_net) ;
+        $salaire_brut_estime_euro = (($salaire_net + $fraisProfessionnels + $fraisDeplacement + $fraisRepas + $fraisConnexion ) / (1 - 0.05));
+        $salaire_de_base_euro = ( $salaire_brut_estime_euro - ($fraisProfessionnels + $fraisDeplacement + $fraisRepas + $fraisConnexion ));
+        $charge = $salaire_de_base_euro - ($salaire_net ) ;
 
         return [
             'fraisRepas' => $fraisRepas,
@@ -89,7 +89,7 @@ class EmployeManager
             'nbrEnfant' => $nbrEnfant,
             'salaire_de_base_ariary' => $salaire_de_base_euro,
             'salaire_de_base_euro' => $this->convertAriaryToEuro($salaire_de_base_euro, $tauxDeChange),
-            'salaire_brut_estime_euro' => $this->convertAriaryToEuro($salaire_de_base_euro, $tauxDeChange),
+            'salaire_brut_estime_euro' => $this->convertAriaryToEuro($salaire_brut_estime_euro, $tauxDeChange),
             'charge_salariale_euro' => $this->convertAriaryToEuro($charge, $tauxDeChange),
             'salaire_net_euro' => $this->convertAriaryToEuro($salaire_net, $tauxDeChange),
             'facture_total_a_envoyer_euro' => $this->convertAriaryToEuro($this->getFactureTotal($salaire_brut_estime_euro, $simulateur), $tauxDeChange),
