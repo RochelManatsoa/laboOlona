@@ -1,6 +1,6 @@
 {% set current_route = app.request.attributes.get('_route') %}
 <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark position-sticky top-0" style="width: 280px;">
-    <ul class="nav nav-pills flex-column mb-auto">
+    <ul class="nav nav-pills flex-column mb-auto small">
       <li class="nav-item">
         <a href="{{ path('app_finance_dashboard')}}" 
             class="nav-link {{ current_route == 'app_finance_dashboard' ? 'active' : 'text-white' }}" 
@@ -19,7 +19,7 @@
       <li>
         <a href="{{ path('app_finance_salaire') }}" class="nav-link {{ current_route == 'app_finance_salaire' ? 'active' : 'text-white' }}">
           <i class="mx-2 h5 bi bi-wallet2"></i>
-          Salaires
+          Simulations effectuées
         </a>
       </li>
       <li>

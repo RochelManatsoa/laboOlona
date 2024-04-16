@@ -21,12 +21,12 @@
                     {% if employes|length > 0 %}
                     <div class="container">
                         <div class="row text-strong">
-                            <div class="col-sm-5">Employé</div>
+                            <div class="col-sm-5">Nom et prénom(s)</div>
                             <div class="col-sm-6">
                                 <div class="row">
-                                    <div class="col-sm-6 col-md-4 text-center">Entreprise</div>
-                                    <div class="col-sm-6 col-md-4">Embauche</div>
-                                    <div class="col-sm-6 col-md-4">Expire le</div>
+                                    <div class="col-sm-6 col-md-4 text-center">Simulations</div>
+                                    <div class="col-sm-6 col-md-4">Inscrit le</div>
+                                    <div class="col-sm-6 col-md-4">Connecté</div>
                                 </div>
                             </div>
                             <div class="col-sm-1"></div>
@@ -36,22 +36,21 @@
                             <div class="row text-muted">
                                 <div class="col-sm-5 small">
                                     <a href="{{ path('app_finance_employe_view', {'id' : item.id })}}" class="">
-                                        {{ item.user.nom}} 
-                                        {{ item.user.prenom}}
+                                        {{ item.user.fullName}} 
                                     </a>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-4 text-center">
-                                            {# <a href="{{ path('app_dashboard_moderateur_cooptation_annonce', {'jobId' : item.annonce.jobId })}}" class="">
-                                                <span class="badge text-bg-warning">{{ item.referrals|length }}</span>
-                                            </a> #}
+                                            <a href="{{ path('app_finance_salaire_employe', {'id' : item.id })}}" class="">
+                                                <span class="badge text-bg-warning">{{ item.simulateurs|length }}</span>
+                                            </a>
                                         </div>
                                         <div class="col-sm-6 col-md-4 small">
                                         {{ item.dateEmbauche|date('d/m/Y') }}
                                         </div>
-                                        <div class="col-sm-6 col-md-4">
-                                        {# {{ item.annonce.dateExpiration|date('d/m/Y') }} #}
+                                        <div class="col-sm-6 col-md-4 small">
+                                        {{ item.user.lastLogin|time_ago }}
                                         </div>
                                     </div>
                                 </div>

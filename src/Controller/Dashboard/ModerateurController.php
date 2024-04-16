@@ -524,7 +524,7 @@ class ModerateurController extends AbstractController
             $cvFile = $formCv->get('cvEdit')->getData();
             if ($cvFile) {
                 $fileName = $this->fileUploader->uploadEditedCv($cvFile, $candidat);
-                $this->profileManager->saveCVEdited($fileName, $candidat);
+                $this->profileManager->saveCVEdited($fileName, $candidat, $cvFile);
             }
             $referer = $request->headers->get('referer');
             return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view');
@@ -971,7 +971,10 @@ class ModerateurController extends AbstractController
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $cvEdited = $this->em->getRepository(EditedCv::class)->find($cvEditedId);
-
+        /**
+         * @var User $user
+         */
+        $user = $this->userService->getCurrentUser();
         if ($cvEdited !== null) {
             $cV = $cvEdited->getCV(); 
 
@@ -987,6 +990,6 @@ class ModerateurController extends AbstractController
 
 
         $referer = $request->headers->get('referer');
-        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $cv->getCv()->getCandidat()->getId()]);
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $user->getCandidateProfile()->getId()]);
     }
 }

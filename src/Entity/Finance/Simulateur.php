@@ -214,12 +214,12 @@ class Simulateur
     {
         // unset the owning side of the relation if necessary
         if ($contrat === null && $this->contrat !== null) {
-            $this->contrat->setCandidat(null);
+            $this->contrat->setEmploye(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($contrat !== null && $contrat->getCandidat() !== $this) {
-            $contrat->setCandidat($this);
+        if ($contrat !== null && $contrat->getEmploye() !== $this) {
+            $contrat->setEmploye($this->getEmploye());
         }
 
         $this->contrat = $contrat;
