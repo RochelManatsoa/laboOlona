@@ -47,6 +47,7 @@ class StatusExtension extends AbstractExtension
             new TwigFunction('arrayInverseCandidatTarifType', [$this, 'arrayInverseCandidatTarifType']),
             new TwigFunction('arrayInverseTarifType', [$this, 'arrayInverseTarifType']),
             new TwigFunction('satusSimulateur', [$this, 'satusSimulateur']),
+            new TwigFunction('typeSimulateur', [$this, 'typeSimulateur']),
         ];
     }
 
