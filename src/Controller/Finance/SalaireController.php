@@ -108,9 +108,24 @@ class SalaireController extends AbstractController
         $notification->setDestinataire($simulateur->getEmploye()->getUser());
         $notification->setType(Notification::TYPE_RELANCE);
         $notification->setIsRead(false);
+        $notification->setTitre('Simulateur de salaire sur Olona Talents');
         $notification->setContenu(
             '
             <p>Bonjour '.$simulateur->getEmploye()->getUser()->getFullName().',</p>
+            <p>Nous espérons que vous avez trouvé notre outil de simulation de salaire utile pour mieux comprendre vos perspectives salariales !</p>
+
+            <p>Nous avons remarqué que vous aviez récemment utilisé notre simulateur de salaire le [date de la simulation], et nous souhaitions nous assurer que vous avez reçu toutes les informations dont vous avez besoin pour avancer dans votre carrière.</p>
+
+            <p>Si vous avez des questions concernant vos résultats ou si vous souhaitez discuter des opportunités qui pourraient correspondre à vos attentes salariales, n\'hésitez pas à prendre contact avec nous. Nous serions ravis de vous aider à évaluer vos options et à planifier vos prochains pas.</p>
+
+            <p>Pour plus de détails ou pour revoir vos résultats de simulation, vous pouvez accéder à votre compte sur [lien vers la plateforme]. Si vous souhaitez discuter directement avec un de nos conseillers, vous pouvez prendre rendez-vous ici [lien pour prendre rendez-vous].</p>
+
+            <p>Nous vous remercions de votre confiance en Olona-Talents et nous réjouissons de vous accompagner dans votre parcours professionnel.</p>
+
+            <p>Cordialement,</p>
+
+            [Votre Nom]<br>
+            Équipe Olona-Talents
             '
         );
         $form = $this->createForm(NotificationProfileType::class, $notification);

@@ -7,298 +7,175 @@
 	<div class="container">
 		<div class="annonce-list p-2">
 			<div class="annonce-item shadow p-5 m-4">
-				<h1 class="card-title h2 mb-4">{{ employe.user.nom }}
-					{{ employe.user.prenom }}</h1>
+				<h2 class="h3">Employé :
+					<span class="text-danger">{{ employe.user.fullName }}</span>
+				</h2>
 
-                <hr>
-                    
-				<div class="container">
+				<!-- Onglets -->
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a class="nav-link active" id="details-tab" data-bs-toggle="tab" href="#details">Résumé</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="simulateurs-tab" data-bs-toggle="tab" href="#simulateurs">Simulateurs ({{ employe.simulateurs|length }})</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="email-tab" data-bs-toggle="tab" href="#email">
+							<i class="bi h5 mx-2 bi-envelope-at"></i>
+							Email
+						</a>
+					</li>
+				</ul>
 
-					<div class="row ">
-						<div class="col-sm-6">
-							<div class="row">
-								<div class="col-sm-6 text-strong">Matricule:
+				<!-- Contenu des onglets -->
+				<div class="tab-content mt-3">
+
+					<div class="tab-pane fade show active" id="details">
+						<div class="card">
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-3">
+										<div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
+									</div>
+									<div class="col-md-9">
+										<h5 class="card-title">{{ employe.user.fullName }}</h5>
+										<p class="card-text">
+											<span class="text-muted">Email :</span>
+											{{ employe.user.email }}<br>
+											<span class="text-muted">Téléphone :
+											</span>
+											<span class="text-dark">{{ employe.user.telephone }}</span><br>
+											<span class="text-muted">Adresse :
+											</span>
+											<span class="text-dark">{{ employe.user.adress }}</span><br>
+											<span class="text-muted">Dernière connexion :
+											</span>
+											<span class="text-dark">
+												{{ employe.user.lastLogin|time_ago }}
+											</span><br>
+										</p>
+									</div>
 								</div>
-								<div class="col-sm-6">{{ employe.matricule }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Nom :</div>
-								<div class="col-sm-6">{{ employe.user.nom }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Prénom :</div>
-								<div class="col-sm-6">{{ employe.user.prenom }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">N° CNAPS :</div>
-								<div class="col-sm-6">{{ employe.cnaps }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">N° CIN :</div>
-								<div class="col-sm-6">{{ employe.cin }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Nbr Enfants :</div>
-								<div class="col-sm-6">{{ employe.nombreEnfants }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Fonction :</div>
-								<div class="col-sm-6">{{ employe.fonction }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Adresse :</div>
-								<div class="col-sm-6">{{ employe.user.adress }}</div>
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="row">
-								<div class="col-sm-6 text-strong">Période :
-								</div>
-								<div class="col-sm-6">{{getPeriod()}}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Date d'embauche :</div>
-								<div class="col-sm-6">{{ employe.dateEmbauche|date('d/m/Y') }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Congé M-1 :</div>
-								<div class="col-sm-6">{{ getConge(employe.dateEmbauche)}}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Droit congé :</div>
-								<div class="col-sm-6">2.5</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Congé pris :</div>
-								<div class="col-sm-6">{{ employe.congePris }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Situation congé :</div>
-								<div class="col-sm-6">{{ getConge(employe.dateEmbauche) - employe.congePris}}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Catégorie :</div>
-								<div class="col-sm-6">{{ employe.categorie }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Date de debauche :</div>
-								<div class="col-sm-6"></div>
+								<p class="card-text mt-3">
+									<strong>Date d'inscription:</strong>
+									<br>
+									{{ employe.user.dateInscription|date('d/m/Y à h:i') }}
+								</p>
+								<p class="card-text mt-3">
+									<strong>Date de naissance:</strong>
+									<br>
+									{{ employe.dateNaissance|date('d/m/Y') }}
+								</p>
 							</div>
 						</div>
 					</div>
 
-					<hr>
+					<div class="tab-pane fade" id="simulateurs">
+						<div class="card">
+							<div class="card-body">
+								{% if employe.simulateurs|length > 0%}
+									<div class="row text-strong">
+										<div class="col-sm-5">Utilisateur | Salaire Net</div>
+										<div class="col-sm-6">
+											<div class="row">
+												<div class="col-sm-6 col-md-4 text-center">Statut</div>
+												<div class="col-sm-6 col-md-4 text-center">Créé le</div>
+												<div class="col-sm-6 col-md-4">Simulation</div>
+											</div>
+										</div>
+										<div class="col-sm-1"></div>
+									</div>
+									<hr>
 
-					<div class="row ">
-
-						<div class="col-sm-6">
-
-							<div class="row">
-								<div class="col-sm-6 text-strong">Salaire de base:
+									<!-- Lignes et cellules -->
+									{% for item in employe.simulateurs %}
+										<div class="row text-muted">
+											<div class="col-sm-5 small">
+												<a href="{{path('app_finance_salaire_employe', {'id':item.employe.id})}}" class="">
+													{{ item.employe.user.nom}}
+													{{ item.employe.user.prenom}}
+												</a>
+												|
+												<span class="text-dark text-strong">{{ item.salaireNet }}
+													{{ item.devise.symbole}}</span>
+												<br>
+												<span class="text-muted">{{ item.employe.user.email}}</span>
+											</div>
+											<div class="col-sm-6">
+												<div class="row">
+													<div class="col-sm-6 col-md-4 text-center">
+														{{ satusSimulateur(item)|raw }}
+													</div>
+													<div class="col-sm-6 col-md-4 small text-center">
+														{{ item.createdAt|date('d/m/Y') }}<br>
+														{{ item.createdAt|date('à h:i') }}
+													</div>
+													<div class="col-sm-6 col-md-4 small text-dark">
+														{{ convertToAriary(item.salaireNet, item)|number_format(0, '.', '.') }}
+														Ar
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-1 small">
+												<a href="{{ path('app_finance_salaire_view', {'id':item.id})}}" class="btn btn-sm btn-info">
+													<i class="bi bi-eye"></i>
+												</a>
+											</div>
+										</div>
+										<hr>
+									{% endfor %}
 								</div>
-								<div class="col-sm-6 text-right">{{ employe.salaireBase|number_format(2, '.', '') }}</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-6 text-strong">Abscence et CM :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center">{{ employe.avantage.absence }}</div>
-										<div class="col-sm-6 text-right">{{ getAbsence(employe)|number_format(2, '.', '') }}</div>
+							{% else %}
+								<div class="row">
+									<div class="col-md-9 mx-auto">
+										<div class="container my-5">
+											<div class="p-5 text-center bg-body-tertiary rounded-3">
+												<h1 class="text-body-emphasis">Aucune assignations</h1>
+												<p class="">
+													<i class="bi bi-info-circle"></i>
+													Le candidat n'a encore assigné à une entreprise.
+												</p>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">HS Nuit 30% :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center">{{ employe.avantage.hs30 }}</div>
-										<div class="col-sm-6 text-right">{{ getHS30(employe)|number_format(2, '.', '') }}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">HS Dimanche 40% :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center">{{ employe.avantage.hs40 }}</div>
-										<div class="col-sm-6 text-right">{{ getHS40(employe)|number_format(2, '.', '') }}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">HS Nuit 50% (occasionnel):</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center">{{ employe.avantage.hs50 }}</div>
-										<div class="col-sm-6 text-right">{{ getHS50(employe)|number_format(2, '.', '') }}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">HS 100% (jours fériés):</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center">{{ employe.avantage.hn }}</div>
-										<div class="col-sm-6 text-right">{{ getHS100(employe)|number_format(2, '.', '') }}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">HS Jour 30% :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center">{{ employe.avantage.hs130 }}</div>
-										<div class="col-sm-6 text-right">{{ getHS150(employe)|number_format(2, '.', '') }}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">HS Jour 50% :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center">{{ employe.avantage.hs150 }}</div>
-										<div class="col-sm-6 text-right">{{ getHS150(employe)|number_format(2, '.', '') }}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Congé payé :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center">{{ employe.avantage.congePaye }}</div>
-										<div class="col-sm-6 text-right">{{ getCongePaye(employe)|number_format(2, '.', '')}}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Congé pris :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center">
-											- {{ employe.avantage.congePaye }}</div>
-										<div class="col-sm-6 text-right">-
-											{{ getCongePris(employe)|number_format(2, '.', '')}}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Prime de Fonct° :</div>
-								<div class="col-sm-6 text-right">{{ employe.avantage.primeFonction|number_format(2, '.', '')}}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Prime/Connect :</div>
-								<div class="col-sm-6 text-right">{{ employe.avantage.primeConnexion|number_format(2, '.', '')}}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Rappel :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6"></div>
-										<div class="col-sm-6 text-right">{{ employe.avantage.rappel|number_format(2, '.', '') }}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Repas :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center">{{ employe.avantage.repas }}</div>
-										<div class="col-sm-6 text-right">{{ (employe.avantage.repas * 3500)|number_format(2, '.', '') }}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Déplacement :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center">{{ employe.avantage.deplacement }}</div>
-										<div class="col-sm-6 text-right">{{ (employe.avantage.deplacement * 2500)|number_format(2, '.', '') }}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Allocation Congé :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center"></div>
-										<div class="col-sm-6 text-right">{{ employe.avantage.allocationConge|number_format(2, '.', '') }}</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Préavis :</div>
-								<div class="col-sm-6">
-									<div class="row">
-										<div class="col-sm-6 text-center"></div>
-										<div class="col-sm-6 text-right">{{ employe.avantage.preavis|number_format(2, '.', '') }}</div>
-									</div>
-								</div>
-							</div>
+							{% endif %}
 						</div>
-						<div class="col-sm-6">
-							<div class="row">
-								<div class="col-sm-6 text-strong">Prime/Avance 15 :
-								</div>
-								<div class="col-sm-6 text-right">{{ employe.avantage.primeAvance15|number_format(2, '.', '') }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Avance Spéciale :</div>
-								<div class="col-sm-6 text-right">{{ employe.avantage.avanceSpeciale|number_format(2, '.', '')}}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Choix déduction :</div>
-								<div class="col-sm-6 text-right">{{ employe.avantage.choixDeduction|number_format(2, '.', '') }}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Cnaps 1% :</div>
-								<div class="col-sm-6 text-right">{{getCnaps(employe)|number_format(2, '.', '')}}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">Ostie 1% :</div>
-								<div class="col-sm-6 text-right">{{getOstie(employe)|number_format(2, '.', '')}}</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6 text-strong">IRSA :</div>
-								<div class="col-sm-6 text-right">{{ getIrsa(employe)|number_format(2, '.', '')}}</div>
-							</div>
-                            <br>
-                            <br>
-                            <br>
-							<div class="row bg-info">
-								<div class="col-sm-6 text-strong">Total :</div>
-								<div class="col-sm-6 text-right">{{ getTotalMoins(employe)|number_format(2, '.', '') }}</div>
-							</div>
-                            <br>
-							<div class="row bg-info">
-								<div class="col-sm-6 text-strong">Solde :</div>
-								<div class="col-sm-6 text-right">{{ getSalaireNet(employe)|number_format(2, '.', '') }}</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<div class="row bg-info">
-									<div class="col-sm-6 text-strong">Salaire brut :</div>
-									<div class="col-sm-6 text-right">{{ getSalaireBrut(employe)|number_format(2, '.', '') }}</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="row bg-info">
-									<div class="col-sm-6 text-strong">Salaire net :</div>
-									<div class="col-sm-6 text-right">{{ getSalaireNetRounded(employe)|number_format(2, '.', '') }}</div>
+					</div>
+
+					<div class="tab-pane fade" id="email">
+						<div class="card">
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-3">
+										<div class="alert alert-info small" role="alert">
+											<i class="bi bi-info-circle"></i>
+											L'intégralité de ce contenu sera envoyée à l'utilisateur. N'oubliez pas d'ajouter 'Bonjour' suivi du nom de l'utilisateur. La mise en forme que vous appliquez ici sera conservée à l'envoi.
+										</div>
+									</div>
+									<div class="col-md-9">
+										{{ form_start(form)}}
+										{{ form_widget(form)}}
+										{{ form_errors(form)}}
+										<div class="input-group-append my-4">
+											<button type="submit" class="btn btn-success rounded-pill px-3 px-sm-5">Envoyer</button>
+										</div>
+										{{ form_end(form)}}
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<hr>
-					<a href="{{ path('app_finance_employe_edit', {'id':employe.id})}}" class="btn btn-danger px-5 rounded-pill my-3">
-						<i class="mx-2 bi bi-pencil"></i>Modifier</a>
 				</div>
-
 			</div>
-			<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
-				<i class="mx-2 bi bi-arrow-left"></i>Retour
-			</a>
+
 		</div>
+		<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
+			<i class="mx-2 bi bi-arrow-left"></i>Retour
+		</a>
 	</div>
-{% endblock %}
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#notification_profile_contenu' ) )
+</script>
+</div>{% endblock %}
