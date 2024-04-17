@@ -1,0 +1,272 @@
+{% extends 'dashboard/base.html.twig' %}
+{% block title %}Détails de l'Entreprise{% endblock %}
+{% block header %} {% include "parts/_navbar-none.html.twig" with { 'title': 'Détails de l\'Entreprise'} %} {% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="annonce-list p-2">
+            <div class="annonce-item shadow p-5 m-4">
+                <h1 class="card-title h2">{{ entreprise.nom }}</h1>
+                <p class="text-muted small">
+                    <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ entreprise.status }} 
+                        <span class="small text-center mx-3">|</span>
+                    {{ entreprise.taille }} 
+                        <span class="small text-center mx-3">|</span>
+                    <i class="bi bi-geo-alt-fill"></i> {{ entreprise.localisation }} 
+                        <span class="small text-center mx-3">|</span>
+                    <i class="bi bi-calendar-week"></i> Inscrit le {{ entreprise.entreprise.dateInscription|date('d/m/Y') }}
+                        <span class="small text-center mx-3">|</span>
+                    <i class="bi bi-box-arrow-in-right"></i> Connecté {{ entreprise.entreprise.lastLogin|time_ago }}
+                </p>
+                <!-- Onglets -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="details-tab" data-bs-toggle="tab" href="#details">Résumé</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="annonces-tab" data-bs-toggle="tab" href="#annonces">Annonces ({{ entreprise.jobListings|length }})</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="mettings-tab" data-bs-toggle="tab" href="#mettings">Mettings ({{ entreprise.mettings|length }})</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="assignations-tab" data-bs-toggle="tab" href="#assignations">Assignations ({{ assignations|length}}) </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="email-tab" data-bs-toggle="tab" href="#email"><i class="bi h5 bi-envelope-at"></i></a>
+                    </li>
+                </ul>
+
+                <!-- Contenu des onglets -->
+                <div class="tab-content mt-3">
+
+                    <div class="tab-pane fade show active" id="details">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ asset('uploads/experts/company-default.jpg') }}');" alt="Avatar"></div>
+                                    </div> 
+                                    <div class="col-md-9">
+                                        <h5 class="card-title">{{ entreprise.nom }}</h5>
+                                        <p class="card-text">
+                                        <span class="text-muted">Site Web :</span> {{ entreprise.siteweb }}<br>
+                                        <span class="text-muted">Email :</span> {{ entreprise.entreprise.email }}<br>
+                                        <span class="text-muted">Téléphone : </span> <span class="text-dark">{{ entreprise.entreprise.telephone }}</span><br>
+                                        <span class="text-muted">Adresse : </span> <span class="text-dark">{{ entreprise.entreprise.adress }} - {{ show_country(entreprise.localisation) }}</span><br>
+                                        <span class="text-muted">Dernière connexion : </span> <span class="text-dark">  {{ entreprise.entreprise.lastLogin|time_ago }} </span><br> 
+                                        <span class="text-muted">Secteur d'activité : </span><br> 
+                                            {% for item in entreprise.secteurs %}
+                                            <span class="badge text-bg-warning">
+                                                {{ item.nom }}
+                                            </span>
+                                            {% endfor %}<br> 
+                                        </p> 
+                                    </div> 
+                                </div> 
+                                <p class="card-text mt-3">
+                                    <strong>Description:</strong> {{ entreprise.description|raw }}<br>
+                                </p> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="annonces">
+                        <div class="card">
+                            <div class="card-body">
+                                {% if entreprise.jobListings|length > 0 %}
+                                    <table class="table" id="competencesTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-3">Créée le</th>
+                                                <th class="col-9">Détails</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for annonce in entreprise.jobListings %}
+                                                <tr>
+                                                    <td>
+                                                        {{ annonce.dateCreation|date('d/m/Y à h:i') }}
+                                                    </td>
+                                                    <td>
+                                                    <a href="{{ path('app_dashboard_moderateur_annonce_view', {'id': annonce.id })}}" class="">{{ annonce.titre }}</a>
+                                                    <p class="text-muted small">
+                                                        <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ annonce.status }} 
+                                                            <span class="small text-center mx-3">|</span>
+                                                        {{ annonce.typeContrat }} 
+                                                            <span class="small text-center mx-3">|</span>
+                                                        <i class="bi bi-hourglass-split"></i> Expire le {{ annonce.dateExpiration|date('d/m/Y') }}
+                                                            <span class="small text-center mx-3">|</span>
+                                                        <i class="bi bi-eye"></i> {{ annonce.annonceVues|length }} vues
+                                                    </p>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                <div class="row">
+                                    <div class="col-md-9 mx-auto">
+                                        <div class="container my-5">
+                                            <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                            <h1 class="text-body-emphasis">Aucune</h1>
+                                            <p class="">
+                                                <i class="bi bi-info-circle"></i> L'entreprise n'a pas encore publier d'annonces
+                                            </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="mettings">
+                        <div class="card">
+                            <div class="card-body">
+                                {% if entreprise.mettings|length > 0 %}
+                                    <table class="table" id="experiencesTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-3">Expérience</th>
+                                                <th class="col-9">Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for metting in entreprise.mettings %}
+                                                <tr>
+                                                    <td>
+                                                        {{ metting.status }}<br>
+                                                    </td>
+                                                    <td>{{ metting.commentaire|raw }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                <div class="row">
+                                    <div class="col-md-9 mx-auto">
+                                        <div class="container my-5">
+                                            <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                            <h1 class="text-body-emphasis">Aucune</h1>
+                                            <p class="">
+                                                <i class="bi bi-info-circle"></i> L'entreprise n'a pas encore de rendez-vous.
+                                            </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="assignations">
+                        <div class="card">
+                            <div class="card-body">
+                                {% if assignations|length > 0 %}
+                                <table class="table table-responsive">
+                                    <thead>
+                                        <tr>
+                                            {# <th class="col-1">ID</th> #}
+                                            <th class="col-4">Assignations</th>
+                                            <th class="col-1 text-center">Statut</th>
+                                            {# <th class="col-1">Annonces</th> #}
+                                            {# <th class="col-1">RDV</th> #}
+                                            <th class="col-2 text-center">Type</th>
+                                            <th class="col-1 text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                {% for assignation in assignations %}
+                                    <tr>
+                                        {# <td class="id-column">{{ annonce.id }}</td> #}
+                                        <td>
+                                            <span class="text-dark">
+                                                {{ assignation.profil.candidat.nom }} {{ assignation.profil.candidat.prenom }}
+                                            </span><br>
+                                            <span class="small text-muted">
+                                                {{ assignation.jobListing.titre }}
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="">
+                                                {{ getStatusAssignation(assignation)|raw}}
+                                            </span>
+                                        </td>
+                                        {# <td>
+                                            <a href="{{path('app_dashboard_moderateur_entreprises_annonces', { 'id': entreprise.id}) }}" class="btn btn-sm btn-info">
+                                                {{ annonce.jobListings|length }}
+                                            </a>
+                                        </td> #}
+                                        {# <td>{{ annonce.mettings|length }}</td> #}
+                                        <td class="text-center">{{ getTypeAssignation(assignation)|raw }}<br>
+                                        {% if assignation.rolePositionVisee == 'OLONA'%}
+                                        {{ getTarifForfait(assignation)|raw}}
+                                        {% else %}
+                                        {{ getTarifCandidat(assignation.profil)|raw }}
+                                        {% endif %}
+                                        </td>
+                                        <td class="actions-col text-center">
+                                            <a href="{{ path('ajax_change_assignation_delete', {'id': assignation.id })}}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette assignation ?');"><i class="bi bi-trash"></i></a>
+                                            <a href="{{ path('app_dashboard_moderateur_assignation_view', {'id': assignation.id })}}" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                <div class="row">
+                                    <div class="col-md-9 mx-auto">
+                                        <div class="container my-5">
+                                            <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                            <h1 class="text-body-emphasis">Aucune</h1>
+                                            <p class="">
+                                                <i class="bi bi-info-circle"></i> L'entreprise n'a pas encore d'assignation.
+                                            </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="email">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="alert alert-info small" role="alert">
+                                            <i class="bi bi-info-circle"></i> L'intégralité de ce contenu sera envoyée à l'utilisateur. N'oubliez pas d'ajouter 'Bonjour' suivi du nom de l'utilisateur. La mise en forme que vous appliquez ici sera conservée à l'envoi.
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-9">
+                                        {{ form_start(form)}}
+                                        {{ form_widget(form)}}
+                                        {{ form_errors(form)}}
+                                        <div class="input-group-append my-4">
+                                            <button type="submit" class="btn btn-success rounded-pill px-5">Envoyer</button>
+                                        </div>
+                                        {{ form_end(form)}}
+                                    </div> 
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-3 px-sm-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+
+    </section>
+</div>
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#notification_profile_contenu' ) )
+</script>
+{% endblock %}

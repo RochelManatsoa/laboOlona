@@ -69,7 +69,7 @@ class ProfileController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         
-        if(null !== $user->getType()){
+        if($user instanceof User && $user->getType() !== null){
             return $this->redirectAction($user->getType());
         }
 
