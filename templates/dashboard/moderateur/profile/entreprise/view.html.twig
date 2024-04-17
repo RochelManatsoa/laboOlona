@@ -7,11 +7,11 @@
             <div class="annonce-item shadow p-5 m-4">
                 <h1 class="card-title h2">{{ entreprise.nom }}</h1>
                 <p class="text-muted small">
-                    <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ entreprise.status }} 
+                    {{ satusEntreprise(entreprise)|raw}} 
                         <span class="small text-center mx-3">|</span>
                     {{ entreprise.taille }} 
                         <span class="small text-center mx-3">|</span>
-                    <i class="bi bi-geo-alt-fill"></i> {{ entreprise.localisation }} 
+                    <i class="bi bi-geo-alt-fill"></i> {{ show_country(entreprise.localisation) }} 
                         <span class="small text-center mx-3">|</span>
                     <i class="bi bi-calendar-week"></i> Inscrit le {{ entreprise.entreprise.dateInscription|date('d/m/Y') }}
                         <span class="small text-center mx-3">|</span>
@@ -128,17 +128,21 @@
                                     <table class="table" id="experiencesTable">
                                         <thead>
                                             <tr>
-                                                <th class="col-3">Expérience</th>
-                                                <th class="col-9">Description</th>
+                                                <th class="col-3">Date et heure</th>
+                                                <th class="col-9">Informations</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for metting in entreprise.mettings %}
                                                 <tr>
                                                     <td>
-                                                        {{ metting.status }}<br>
+                                                        {{ metting.dateRendezVous|date('d/m/Y à h:i') }}<br>
+                                                        <a href="{{ metting.link }}" class="btn btn-warning" target=_blank><i class="bi bi-link-45deg"></i></a>
                                                     </td>
-                                                    <td>{{ metting.commentaire|raw }}</td>
+                                                    <td>
+                                                        {{ metting.title }} {{ satusMetting(metting)|raw }}<br>
+                                                        <div class="text-muted small">{{ metting.commentaire|raw }}</div>
+                                                    </td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
