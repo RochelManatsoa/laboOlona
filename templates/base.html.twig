@@ -50,15 +50,16 @@
 	        <script src="{{asset('assets/errorLogger.js')}}"></script>
         {% endblock %}
         <style>
-        .cookie-consent {
-            position: fixed;
-            color: #ffffff;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000; /* High z-index to stay on top */
-        }
-    </style>
+            .cookie-consent {
+                position: fixed;
+                color: #ffffff;
+                background-color: #000000;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000; /* High z-index to stay on top */
+            }
+        </style>
     </head>
     <body style="background:black;" class="container-fluid">
         {% set current_route = app.request.attributes.get('_route') %}
@@ -72,7 +73,7 @@
                 {% block body %}{% endblock %}
             </div>
         </div>
-        <div class="cookie-consent bg-dark">
+        <div class="cookie-consent">
             <div class="mb-0" role="alert">
                 <div class="container">
                     <div class="row p-4">

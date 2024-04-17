@@ -39,6 +39,17 @@
             {{ encore_entry_script_tags('app') }}
 	        <script src="{{asset('assets/errorLogger.js')}}"></script>
         {% endblock %}
+        <style>
+            .cookie-consent {
+                position: fixed;
+                color: #ffffff;
+                background-color: #000000;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000; /* High z-index to stay on top */
+            }
+        </style>
     </head>
     <body>
         {% set include_nav = app.user ? 'parts/_nav_user.html.twig' : 'parts/_nav_default.html.twig' %}
@@ -68,6 +79,21 @@
                             {% endfor %}
                             {% block body %}{% endblock %}
                             {% block inner_footer %}{% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cookie-consent">
+            <div class="mb-0" role="alert">
+                <div class="container">
+                    <div class="row p-4">
+                        <div class="col-12 col-sm-8">
+                            <h3 class="">Cookies et confidentialité</h3>
+                            <p class="mb-2">Ce site utilise des cookies pour améliorer l'expérience utilisateur. <a href="{{path('app_home_privacy')}}" target=_blank >En savoir plus</a>.</p>
+                        </div>
+                        <div class="col-12 col-sm-4 text-center d-flex align-items-center justify-content-center">
+                            <button onclick="consentGrantedAdStorage()" class="btn btn-primary rounded-pill px-5">Accepter</button>
                         </div>
                     </div>
                 </div>
