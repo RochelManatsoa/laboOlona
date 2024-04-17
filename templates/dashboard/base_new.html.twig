@@ -6,13 +6,28 @@
         <title>{% block title %}{{ meta_title() }}{% endblock %}</title>
         <link rel="icon" href="{{ asset('images/favicon.ico')}}">
         <meta name="description" content="{{ meta_description() }}">
+        <script>
+            // Define dataLayer and the gtag function.
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+
+            // Set default consent to 'denied' as a placeholder
+            // Determine actual values based on your own requirements
+            gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
+                'analytics_storage': 'granted'
+            });
+        </script>
+        <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10865325730"></script>
         <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
 
-        gtag('config', 'AW-10865325730');
+            gtag('js', new Date());
+            gtag('config', 'AW-10865325730');
         </script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 
@@ -59,6 +74,50 @@
             </div>
         </div>
         {% block footer %} {% include "parts/_footer.html.twig" %} {% endblock %}
+        <!-- Create one update function for each consent parameter -->
+        <script>
+            // Fonction pour vérifier le consentement et l'expiration
+            function checkCookieConsent() {
+                let consentInfo = localStorage.getItem('cookieConsent');
+                if (consentInfo) {
+                    consentInfo = JSON.parse(consentInfo);
+                    const expirationDate = new Date(consentInfo.expiryDate);
+                    const now = new Date();
+                    if (now > expirationDate) {
+                        localStorage.removeItem('cookieConsent'); // Expire le consentement
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            window.onload = function() {
+                if (checkCookieConsent()) {
+                    document.querySelector('.cookie-consent').style.display = 'none';
+                }
+            }
+
+            function consentGrantedAdStorage() {
+                gtag('consent', 'update', {
+                    'ad_storage': 'granted',
+                    'ad_user_data': 'granted',
+                    'ad_personalization': 'granted',
+                    'analytics_storage': 'granted'
+                });
+
+                const now = new Date();
+                const expiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 30); // Expiration après 30 jours
+
+                // Enregistrer le consentement avec la date d'expiration
+                localStorage.setItem('cookieConsent', JSON.stringify({
+                    status: 'granted',
+                    expiryDate: expiryDate.toISOString()
+                }));
+
+                document.querySelector('.cookie-consent').style.display = 'none';
+            }
+        </script>
         {% block modal %}
         {% if app.user.type == 'CANDIDAT' %}
             {{ render(controller('App\\Controller\\Dashboard\\CandidatController::availabilityFormView')) }}
