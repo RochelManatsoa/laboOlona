@@ -100,6 +100,7 @@
 				{% set current_route = app.request.attributes.get('_route') %}
 				<div class="d-flex flex-column flex-shrink-0 px-2 text-white bg-dark position-sticky top-0 small">
 					<ul class="nav nav-pills flex-column mb-auto">
+					{% if app.user.type is defined and app.user.type is not null %}
 						{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
 							<li>
 								<a href="{{ path('app_dashboard_candidat_annonce') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_annonce' ? 'active' : 'text-white' }}">
@@ -219,6 +220,14 @@
 								</li>
 							{% endif %}
 						{% endif %}
+					{% else %}
+							<li>
+								<a href="{{ path('app_profile') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_annonces' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-person-bounding-box"></i>
+									Mon profil
+								</a>
+							</li>
+					{% endif %}
 						<li>
 							<a href="{{ path('app_dashboard_moderateur_affiliate_tool')}}" class="nav-link {{ current_route == 'app_dashboard_moderateur_affiliate_tool' ? 'active' : 'text-white' }}">
 								<i class="mx-2 h5 bi bi-robot"></i>

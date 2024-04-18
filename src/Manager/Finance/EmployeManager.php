@@ -76,9 +76,9 @@ class EmployeManager
         string $type
     )
     {
-        $salaire_brut_estime_euro = (($salaire_net + $fraisProfessionnels + $fraisDeplacement + $fraisRepas + $fraisConnexion ) / (1 - 0.05));
+        $salaire_brut_estime_euro = (($salaire_net) / (1 - 0.05));
         $salaire_de_base_euro = ( $salaire_brut_estime_euro - ($fraisProfessionnels + $fraisDeplacement + $fraisRepas + $fraisConnexion ));
-        $charge = $salaire_de_base_euro - ($salaire_net ) ;
+        $charge = $salaire_brut_estime_euro - ($salaire_net ) ;
 
         return [
             'fraisRepas' => $fraisRepas,

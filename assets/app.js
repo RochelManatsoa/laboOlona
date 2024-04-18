@@ -63,32 +63,40 @@ $(function() {
             $(this).removeClass('blinking');
         }, 900);
     });
-    let offset = 10; 
-    $(window).on('scroll', function() {
-        const threshold = 1;
-        const position = $(window).scrollTop() + $(window).height();
-        const height = $(document).height();
     
-        if (position >= height - threshold && offset <= 20) { // Ajout de la condition offset <= 20
-            console.log('fini');
-            $.ajax({
-                url: `/ajax/candidat?offset=${offset}`,
-                type: 'GET',
-                success: function(response) {
-                    if (response) {
-                        const $produitItemDiv = $('#candidates .expert-item');
-                        if ($produitItemDiv.length) {
-                            $produitItemDiv.append(response.html);
-                        }
+    let offset = 20; // Comme les 20 premiers sont déjà affichés
+let isLoading = false;
+
+$(window).on('scroll', function() {
+    const threshold = 1;
+    const position = $(window).scrollTop() + $(window).height();
+    const height = $(document).height();
+
+    // Vérifier si le nombre total de candidats chargés est inférieur à 50
+    if (position >= height - threshold && offset < 50 && !isLoading) {
+        isLoading = true; // Activer le verrou
+
+        $.ajax({
+            url: `/ajax/candidat?offset=${offset}`,
+            type: 'GET',
+            success: function(response) {
+                if (response) {
+                    const $produitItemDiv = $('#candidates .expert-item');
+                    if ($produitItemDiv.length) {
+                        $produitItemDiv.append(response.html);
                         offset += 10; // Incrémente pour le prochain lot
                     }
-                },
-                error: function(error) {
-                    console.error('Une erreur est survenue:', error);
+                    isLoading = false; // Libérer le verrou
                 }
-            });
-        }
-    });
+            },
+            error: function(error) {
+                console.error('Une erreur est survenue:', error);
+                isLoading = false; // Libérer le verrou en cas d'erreur
+            }
+        });
+    }
+});
+
 
     $('#previewButton').on('click', function(e) {
         e.preventDefault();

@@ -35,7 +35,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
              ->andWhere('c.status = :statusValid') 
              ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
              ->setParameter('defaultAvatar', 'avatar-default.jpg')
-             ->orderBy('c.id', 'ASC')
+             ->orderBy('c.id', 'DESC')
              ->setMaxResults($max)
              ->setFirstResult($offset)
              ->getQuery()

@@ -5,7 +5,7 @@
             <p class="text-black text-center mt-2 mb-3 w-100 fs-5"> {{ 'app_home.section.postings.p'|trans }} </p>
             
             <div class="container-fluid">
-                {{ component('candidat_carousel_top') }}
+                {{ component('candidat_carousel_top', { topRanked: topRanked}) }}
             </div>
             <hr class="my-5">
             <div class="container my-4">
