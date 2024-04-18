@@ -34,7 +34,8 @@ class MailerService
         } else {
             $env = '[Preprod] Olona Talents';
             $email->to('nirinarocheldev@gmail.com'); 
-            $email->addTo('andryrandriamalala@outlook.fr');
+            $email->addTo('jrandriamalala.olona@gmail.com');
+            $email->addTo('miandrisoa.olona@gmail.com');
         }
         $email 
             ->from(new Address($sender, $env))
@@ -62,14 +63,15 @@ class MailerService
     ): void {
         $email = new TemplatedEmail();
         $env = 'Olona Talents';
-        if ($this->env === 'prod') {// Ajout de chaque destinataire
+        if ($this->env === 'prod') {
             foreach ($to as $recipient) {
                 $email->addTo($recipient);
             }
         } else {
             $env = '[Preprod] Olona Talents';
             $email->to('nirinarocheldev@gmail.com'); 
-            $email->addTo('andryrandriamalala@outlook.fr');
+            $email->addTo('jrandriamalala.olona@gmail.com');
+            $email->addTo('miandrisoa.olona@gmail.com');
         }
         $email
             ->from(new Address('noreply@olona-talents.com', $env))

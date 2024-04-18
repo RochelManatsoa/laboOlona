@@ -25,7 +25,7 @@
                     <br>
                     <span class="small text-muted">
                         Par
-                        <a href="{{ path('voir_enapp_dashboard_moderateur_profile_entreprise_viewtreprise', {'id': application.annonce.entreprise.id}) }}">
+                        <a href="{{ path('app_dashboard_moderateur_profile_entreprise_view', {'id': application.annonce.entreprise.id}) }}">
                             {{ application.annonce.entreprise.nom|upper }}
                         </a> {{ application.annonce.dateCreation|time_ago }} 
                         {{ getReferrerByEmail(application.candidat.candidat.email)|raw}}

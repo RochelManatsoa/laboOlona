@@ -161,15 +161,16 @@ class InvitationController extends AbstractController
     public function emailTest(Request $request): Response
     {
         $this->mailerService->send(
-            'nirinarocheldev@gmail.com',
-            "Mail entreprise Olona Talents",
+            'jrandriamalala.olona@gmail.com',
+            "Mail TEST pour entreprise Olona Talents",
             "entreprise/welcome.html.twig",
             [
                 'user' => 'Nirina',
                 'dashboard_url' => $this->urlGenerator->generate('app_connect', [], UrlGeneratorInterface::ABSOLUTE_URL),
             ]
         );
+        $this->addFlash('success', 'Mail Test envoyé');
 
-        return new Response('OK');
+        return $this->redirectToRoute('app_connect');
     }
 }
