@@ -121,7 +121,7 @@ class CandidatController extends AbstractController
         // Enregistrez les modifications dans la base de données
         $this->em->persist($experience);
         $this->em->flush();
-        $this->candidatManager->sendNotificationEmail($experience->getProfil());
+        // $this->candidatManager->sendNotificationEmail($experience->getProfil());
 
         return $this->redirectToRoute('app_dashboard_candidat_compte',[
             'success' => true,
@@ -207,7 +207,7 @@ class CandidatController extends AbstractController
         // Enregistrez les modifications dans la base de données
         $this->em->persist($competence);
         $this->em->flush();
-        $this->candidatManager->sendNotificationEmail($candidat);
+        // $this->candidatManager->sendNotificationEmail($candidat);
 
         return $this->redirectToRoute('app_dashboard_candidat_compte',[
             'success' => true,
@@ -286,7 +286,7 @@ class CandidatController extends AbstractController
         // Enregistrez les modifications dans la base de données
         $this->em->persist($langue);
         $this->em->flush();
-        $this->candidatManager->sendNotificationEmail($langue->getProfile());
+        // $this->candidatManager->sendNotificationEmail($langue->getProfile());
 
         return $this->redirectToRoute('app_dashboard_candidat_compte',[
             'success' => true,

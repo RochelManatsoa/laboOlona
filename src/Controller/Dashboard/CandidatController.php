@@ -123,7 +123,7 @@ class CandidatController extends AbstractController
             // Enregistrer les modifications dans la base de données
             $this->em->persist($availability);
             $this->em->flush();
-            $this->candidatManager->sendNotificationEmail($candidat);
+            // $this->candidatManager->sendNotificationEmail($candidat);
         }
 
         // Renvoyer l'utilisateur à l'URL d'où il est venu en cas d'échec
