@@ -92,4 +92,11 @@
 <script>
     ClassicEditor.create( document.querySelector( '#job_listing_description' ) )
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    var devise = "{{ arrayInverseDevise()[annonce.budgetAnnonce.devise] }}"; // Assurez-vous que cette valeur est bien encodée et sécurisée selon vos besoins
+    $(document).ready(function() {
+        $('span.input-group-text').text(devise);
+    });
+</script>
 {% endblock %}
