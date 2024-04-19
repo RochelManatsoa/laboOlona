@@ -71,7 +71,13 @@
                     <p class="">
                         <i class="bi bi-cash-stack mx-3"></i>
                         Budget indicatif : 
-                        <span class="text-strong">{{ annonce.salaire }} €</span>
+                        <span class="text-strong">
+                        {% if annonce.budgetAnnonce is defined and annonce.budgetAnnonce is not null %}
+                        {{ annonce.budgetAnnonce.montant }} {{arrayInverseDevise()[annonce.budgetAnnonce.devise]}}
+                        {% else %}
+                        {{ annonce.salaire }} €
+                        {% endif %}
+                        </span>
                     </p>
                 </div>
 
