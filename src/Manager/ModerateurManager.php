@@ -86,7 +86,8 @@ class ModerateurManager
     public function getModerateurEmails(): array
     {
         $emails = [];
-        $excludedEmails = ['c.rasori@olona-outsourcing.com', 'moderateur@olona.com', 'sm.affiliation@gmail.com']; // Liste des e-mails à exclure
+        // Liste des e-mails à exclure
+        $excludedEmails = ['c.rasori@olona-outsourcing.com', 'moderateur@olona.com', 'sm.affiliation@gmail.com', 'michel.vomiandry@gmail.com']; 
 
         foreach ($this->moderateurProfileRepository->findAll() as $value) {
             $email = $value->getModerateur()->getEmail();
