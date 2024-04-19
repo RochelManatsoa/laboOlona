@@ -1,15 +1,22 @@
-<section id="video" class="my-5" style="background-color: black;">
-	<div class="container-fluid my-5 d-flex flex-column justify-content-center">
-        <div class="container-fluid mt-5">
-            <div class="row">
-                <div class="col-md-12">
-                    <video width="100%" controls autoplay muted loop>
-                        <source src="{{ asset('/video/olona-talents.mp4') }}" type="video/mp4">
-                        Votre navigateur ne supporte pas la balise vidéo.
-                    </video>
+<section id="video" class="" style="background-color: black;">
+<div class="container-fluid d-flex flex-column justify-content-center">
+    <div class="container-fluid my-3 my-sm-5">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <!-- Loader (Spinner) -->
+                <div id="video-loader" class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Chargement...</span>
                 </div>
+
+                <!-- Video element, initially hidden -->
+                <video id="video-element" width="100%" controls autoplay muted loop style="display:none;">
+                    <source src="{{ asset('/video/olona-talents.mp4') }}" type="video/mp4">
+                    Votre navigateur ne supporte pas la balise vidéo.
+                </video>
             </div>
         </div>
-	</div>
+    </div>
+</div>
+
 </section>
 

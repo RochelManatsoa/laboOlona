@@ -168,5 +168,20 @@
 			return isEmpty;
 		}
 
+		var video = $('#video-element');
+
+		video.on('canplaythrough', function() {
+			// Cacher le loader
+			$('#video-loader').hide();
+			// Afficher la vidéo
+			video.show();
+			// Démarrer la vidéo
+			video[0].play();
+		});
+
+		video.on('loadstart', function() {
+			// Afficher le loader lorsque la vidéo commence à charger
+			$('#video-loader').show();
+		});
 	</script>
 {% endblock %}
