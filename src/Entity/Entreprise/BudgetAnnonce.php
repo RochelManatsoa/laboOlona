@@ -2,6 +2,7 @@
 
 namespace App\Entity\Entreprise;
 
+use App\Entity\Finance\Devise;
 use App\Repository\Entreprise\BudgetAnnonceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -68,6 +69,18 @@ class BudgetAnnonce
 
     #[ORM\OneToMany(mappedBy: 'budgetAnnonce', targetEntity: JobListing::class)]
     private Collection $annonce;
+
+    #[ORM\ManyToOne]
+    private ?Devise $currency = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $taux = null;
 
     public function __construct()
     {
@@ -141,6 +154,54 @@ class BudgetAnnonce
                 $annonce->setBudgetAnnonce(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCurrency(): ?Devise
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(?Devise $currency): static
+    {
+        $this->currency = $currency;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getTaux(): ?float
+    {
+        return $this->taux;
+    }
+
+    public function setTaux(?float $taux): static
+    {
+        $this->taux = $taux;
 
         return $this;
     }

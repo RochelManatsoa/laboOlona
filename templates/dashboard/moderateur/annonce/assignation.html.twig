@@ -52,10 +52,10 @@
             </div>
             <div class="col">
             <dl>
-                <dt>Salaire</dt>
+                <dt>Budget {% if annonce.budgetAnnonce is defined and annonce.budgetAnnonce is not null %}({{ arrayInverseTarifType()[annonce.budgetAnnonce.typeBudget] }}){% endif %}</dt>
                 <dd>
                     {% if annonce.budgetAnnonce is defined and annonce.budgetAnnonce is not null %}
-                    {{ annonce.budgetAnnonce.montant }} {{ arrayInverseDevise()[annonce.budgetAnnonce.devise] }}
+                    {{ annonce.budgetAnnonce.montant }} {{ annonce.budgetAnnonce.devise }}
                     {% else %}
                     {{ annonce.salaire }} €
                     {% endif %}
@@ -75,6 +75,25 @@
             </dl>   
             </div>
         </div>
+        <div class="row">
+            <div class="col-3">
+                <dl>
+                    <dt>Nombre de poste</dt>
+                    <dd>{{ annonce.nombrePoste }} </dd>
+                </dl>  
+            </div>  
+            <div class="col-3">
+                <dl>
+                    <dt>Prime par poste</dt>
+                    <dd>
+                        {% if annonce.primeAnnonce is defined and annonce.primeAnnonce is not null %}
+                        {{annonce.primeAnnonce.montant }} {{ annonce.primeAnnonce.symbole }}</span>
+                        {% else %}
+                        {{annonce.prime }} €
+                        {% endif %}</dd>
+                </dl>  
+            </div>  
+        </div> 
     <dl>
         <dt>Compétences requises</dt>
         <dd>
@@ -88,11 +107,8 @@
                 </div>
             {% endif %}
         </dd>
-    </dl>
-    <dl>
-        <dt>Nombre de poste</dt>
-        <dd>{{ annonce.nombrePoste }} </dd>
-    </dl>  
+    </dl> 
+    <hr>
     <dl><table class="table table-responsive">
         <thead>
             <tr>

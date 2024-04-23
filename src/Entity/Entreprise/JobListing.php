@@ -140,6 +140,9 @@ class JobListing
     #[ORM\ManyToOne(inversedBy: 'annonce', cascade: ['persist'])]
     private ?BudgetAnnonce $budgetAnnonce = null;
 
+    #[ORM\OneToOne(mappedBy: 'annonce', cascade: ['persist', 'remove'])]
+    private ?PrimeAnnonce $primeAnnonce = null;
+
     public function __toString()
     {
         return $this->titre;        
@@ -492,6 +495,28 @@ class JobListing
     public function setBudgetAnnonce(?BudgetAnnonce $budgetAnnonce): static
     {
         $this->budgetAnnonce = $budgetAnnonce;
+
+        return $this;
+    }
+
+    public function getPrimeAnnonce(): ?PrimeAnnonce
+    {
+        return $this->primeAnnonce;
+    }
+
+    public function setPrimeAnnonce(?PrimeAnnonce $primeAnnonce): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($primeAnnonce === null && $this->primeAnnonce !== null) {
+            $this->primeAnnonce->setAnnonce(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($primeAnnonce !== null && $primeAnnonce->getAnnonce() !== $this) {
+            $primeAnnonce->setAnnonce($this);
+        }
+
+        $this->primeAnnonce = $primeAnnonce;
 
         return $this;
     }

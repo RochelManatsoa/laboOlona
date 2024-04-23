@@ -70,7 +70,7 @@
                                     <span class="text-muted small">Publiée {{item.jobListing.dateCreation|time_ago }} </span> | 
                                     <span class="text-muted small">Budget 
                                     {% if item.jobListing.budgetAnnonce is defined and item.jobListing.budgetAnnonce is not null %}
-                                    {{item.jobListing.budgetAnnonce.montant }} {{ arrayInverseDevise()[item.jobListing.budgetAnnonce.devise] }}</span>
+                                    {{item.jobListing.budgetAnnonce.montant }} {{ item.jobListing.budgetAnnonce.devise }}</span>
                                     {% else %}
                                     {{item.jobListing.salaire }} €
                                     {% endif %}
@@ -107,7 +107,7 @@
                                     <span class="text-muted small">Publiée {{item.jobListing.dateCreation|time_ago }} </span> | 
                                     <span class="text-muted small">Budget 
                                     {% if item.jobListing.budgetAnnonce is defined and item.jobListing.budgetAnnonce is not null %}
-                                    {{item.jobListing.budgetAnnonce.montant }} {{ arrayInverseDevise()[item.jobListing.budgetAnnonce.devise] }}</span>
+                                    {{item.jobListing.budgetAnnonce.montant }} {{ item.jobListing.budgetAnnonce.devise }}</span>
                                     {% else %}
                                     {{item.jobListing.salaire }} €
                                     {% endif %}
@@ -144,7 +144,7 @@
                                     <span class="text-muted small">Publiée {{item.jobListing.dateCreation|time_ago }} </span> | 
                                     <span class="text-muted small">Budget 
                                     {% if item.jobListing.budgetAnnonce is defined and item.jobListing.budgetAnnonce is not null %}
-                                    {{item.jobListing.budgetAnnonce.montant }} {{ arrayInverseDevise()[item.jobListing.budgetAnnonce.devise] }}</span>
+                                    {{item.jobListing.budgetAnnonce.montant }} {{ item.jobListing.budgetAnnonce.devise }}</span>
                                     {% else %}
                                     {{item.jobListing.salaire }} €
                                     {% endif %}
@@ -181,7 +181,7 @@
                                     <span class="text-muted small">Publiée {{item.jobListing.dateCreation|time_ago }} </span> | 
                                     <span class="text-muted small">Budget 
                                     {% if item.jobListing.budgetAnnonce is defined and item.jobListing.budgetAnnonce is not null %}
-                                    {{item.jobListing.budgetAnnonce.montant }} {{ arrayInverseDevise()[item.jobListing.budgetAnnonce.devise] }}</span>
+                                    {{item.jobListing.budgetAnnonce.montant }} {{ item.jobListing.budgetAnnonce.devise }}</span>
                                     {% else %}
                                     {{item.jobListing.salaire }} €
                                     {% endif %}

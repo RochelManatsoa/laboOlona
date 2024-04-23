@@ -4,6 +4,7 @@ namespace App\Controller\Dashboard\Moderateur;
 
 use DateTime;
 use App\Entity\Notification;
+use App\Entity\Finance\Devise;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\CandidateProfile;
 use App\Entity\Vues\AnnonceVues;
@@ -14,6 +15,8 @@ use App\Form\Entreprise\AnnonceType;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
+use App\Entity\Entreprise\BudgetAnnonce;
+use App\Entity\Entreprise\PrimeAnnonce;
 use App\Form\Entreprise\JobListingType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Moderateur\NotificationType;
@@ -82,7 +85,22 @@ class AnnonceController extends AbstractController
     public function viewAnnonce(Request $request, JobListing $annonce): Response
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
-        $form = $this->createForm(JobListingType::class, $annonce);
+        $prime = $annonce->getPrimeAnnonce();
+        $budget = $annonce->getBudgetAnnonce();
+        if(!$prime instanceof PrimeAnnonce){
+            $prime = new PrimeAnnonce();
+            $prime->setCreatedAt(new DateTime());
+            $annonce->setPrimeAnnonce($prime);
+        }
+        if(!$budget instanceof BudgetAnnonce){
+            $budget = new BudgetAnnonce();
+            $budget->setCreatedAt(new DateTime());
+            $annonce->setBudgetAnnonce($budget);
+        }
+        $prime->setUpdateAt(new DateTime());
+        $budget->setUpdatedAt(new DateTime());
+        $defaultDevise = $this->em->getRepository(Devise::class)->findOneBy(['slug' => 'euro']);
+        $form = $this->createForm(JobListingType::class, $annonce, ['default_devise' => $defaultDevise]);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $this->em->persist($form->getData());

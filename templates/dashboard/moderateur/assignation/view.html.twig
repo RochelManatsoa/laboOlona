@@ -32,7 +32,7 @@
                 <strong>Contrat</strong> {{ assignation.jobListing.typeContrat.nom }}<br>
                 <strong>Budget</strong> : 
                     {% if assignation.jobListing.budgetAnnonce is defined and assignation.jobListing.budgetAnnonce is not null %}
-                    {{assignation.jobListing.budgetAnnonce.montant }} {{ arrayInverseDevise()[assignation.jobListing.budgetAnnonce.devise] }} {{ arrayInverseTarifType()[assignation.jobListing.budgetAnnonce.typeBudget] }}</span>
+                    {{assignation.jobListing.budgetAnnonce.montant }} {{ assignation.jobListing.budgetAnnonce.devise }} {{ arrayInverseTarifType()[assignation.jobListing.budgetAnnonce.typeBudget] }}</span>
                     {% else %}
                     {{assignation.jobListing.salaire }} €
                     {% endif %}<br>
@@ -63,13 +63,13 @@
                         <span class="text-muted small">Type</span>
                         {{ form_widget(form.forfaitAssignation.typeForfait, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    <div class="col-12 col-lg-4">
+                    <div class="col-12 col-lg-3">
                         <span class="text-muted small">Montant</span>
                         {{ form_widget(form.forfaitAssignation.montant, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    <div class="col-12 col-lg-4">
+                    <div class="col-12 col-lg-5">
                         <span class="text-muted small">Devise</span>
-                        {{ form_widget(form.forfaitAssignation.devise, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_widget(form.forfaitAssignation.currency, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
             {{form_row(form.status)}}

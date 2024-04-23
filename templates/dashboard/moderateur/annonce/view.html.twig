@@ -6,7 +6,7 @@
             <div class="annonce-item shadow p-5 m-4">
                 <h1 class="card-title h2">{{ annonce.titre }}</h1>
                 <p class="text-muted small">
-                    <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ annonce.status }} 
+                    <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ getStatuses(annonce.status) }}  
                         <span class="small text-center mx-3">|</span>
                     {{ annonce.typeContrat }} 
                         <span class="small text-center mx-3">|</span>
@@ -28,14 +28,18 @@
                     </div>
                     <div class="col-md-3 col-sm-6">
                         <dl>
-                            <dt>Budget</dt>
-                            <dd>{{ form_row(form.salaire)}}</dd>
-                        </dl>   
+                            <dt>Date d'expiration</dt>
+                            <dd>
+                            {{ form_row(form.dateExpiration)}}
+                            </dd>  
+                        </dl>  
                     </div>
                     <div class="col-md-3 col-sm-6">
                         <dl>
-                            <dt>Prime par poste</dt>
-                            <dd>{{ form_row(form.prime)}}</dd>
+                            <dt>Status</dt>
+                            <dd>
+                            {{ form_row(form.status)}}
+                            </dd>  
                         </dl>  
                     </div>
                     <div class="col-md-3 col-sm-6">
@@ -46,6 +50,44 @@
                     </div>
                 </div>
                 <div class="row">
+                    <dl>
+                        <dt>Budget</dt>                        
+                        <dd>
+                            <div class="form-group row"> <!-- Utilisez 'row' pour aligner les éléments sur une seule ligne -->
+                                <div class="col-4">
+                                    <span class="text-muted small">Type</span>
+                                    {{ form_row(form.budgetAnnonce.typeBudget) }}
+                                </div>
+                                <div class="col-4">
+                                    <span class="text-muted small">Montant</span>
+                                    {{ form_row(form.budgetAnnonce.montant) }}
+                                </div>
+                                <div class="col-4">
+                                    <span class="text-muted small">Devise</span>
+                                    {{ form_row(form.budgetAnnonce.currency) }}
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>  
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <dl>
+                            <dt>Prime par poste</dt>
+                            <dd>
+                                <div class="form-group row"> <!-- Utilisez 'row' pour aligner les éléments sur une seule ligne -->
+                                    <div class="col-6"> <!-- 'montant' prend 8 colonnes -->
+                                        <span class="text-muted small">Montant</span>
+                                        {{ form_row(form.primeAnnonce.montant) }}
+                                    </div>
+                                    <div class="col-6"> <!-- 'devise' prend 4 colonnes -->
+                                        <span class="text-muted small">Devise</span>
+                                        {{ form_row(form.primeAnnonce.devise) }}
+                                    </div>
+                                </div>
+                            </dd>
+                        </dl>  
+                    </div>
                     <div class="col-md-6 col-sm-6">
                         <dl>
                             <dt>Compétences requises</dt>
@@ -53,20 +95,6 @@
                             {{ form_row(form.competences)}}
                             </dd>  
                         </dl>
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                        <dl>
-                            <dt>Status</dt>
-                            <dd>
-                            {{ form_row(form.status)}}
-                            </dd>  
-                        </dl>  
-                        <dl>
-                            <dt>Date d'expiration</dt>
-                            <dd>
-                            {{ form_row(form.dateExpiration)}}
-                            </dd>  
-                        </dl> 
                     </div>
                 </div>
                 <hr>
@@ -94,7 +122,7 @@
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
-    var devise = "{{ arrayInverseDevise()[annonce.budgetAnnonce.devise] }}"; // Assurez-vous que cette valeur est bien encodée et sécurisée selon vos besoins
+    var devise = "{{ annonce.budgetAnnonce.devise }}"; // Assurez-vous que cette valeur est bien encodée et sécurisée selon vos besoins
     $(document).ready(function() {
         $('span.input-group-text').text(devise);
     });

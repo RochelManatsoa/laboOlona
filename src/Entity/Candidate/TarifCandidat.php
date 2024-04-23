@@ -3,6 +3,7 @@
 namespace App\Entity\Candidate;
 
 use App\Entity\CandidateProfile;
+use App\Entity\Finance\Devise;
 use App\Repository\Candidate\TarifCandidatRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -70,6 +71,15 @@ class TarifCandidat
     #[ORM\OneToOne(inversedBy: 'tarifCandidat', cascade: ['persist', 'remove'])]
     private ?CandidateProfile $candidat = null;
 
+    #[ORM\ManyToOne]
+    private ?Devise $currency = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,6 +129,42 @@ class TarifCandidat
     public function setCandidat(?CandidateProfile $candidat): static
     {
         $this->candidat = $candidat;
+
+        return $this;
+    }
+
+    public function getCurrency(): ?Devise
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(?Devise $currency): static
+    {
+        $this->currency = $currency;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

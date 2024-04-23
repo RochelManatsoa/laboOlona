@@ -23,7 +23,7 @@
             </span><br>
             <strong>Salaire:</strong> 
             {% if annonce.budgetAnnonce is defined and annonce.budgetAnnonce is not null %}
-            {{ annonce.budgetAnnonce.montant }} {{ arrayInverseDevise()[annonce.budgetAnnonce.devise] }} ({{ arrayInverseTarifType()[annonce.budgetAnnonce.typeBudget] }})
+            {{ annonce.budgetAnnonce.montant }} {{ annonce.budgetAnnonce.devise }} ({{ arrayInverseTarifType()[annonce.budgetAnnonce.typeBudget] }})
             {% else %}
             {{ annonce.salaire }} €
             {% endif %}

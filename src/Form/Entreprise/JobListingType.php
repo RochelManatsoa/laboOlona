@@ -57,7 +57,15 @@ class JobListingType extends AbstractType
                 ]
             ])
             ->add('salaire', MoneyType::class, ['label' => false])
-            ->add('prime', MoneyType::class, ['label' => false])
+            // ->add('prime', MoneyType::class, ['label' => false])
+            ->add('primeAnnonce', PrimeAnnonceType::class, [
+                'label' => false,
+                'default_devise' => $options['default_devise'] ?? null
+            ])
+            ->add('budgetAnnonce', BudgetAnnonceType::class, [
+                'label' => false,
+                'default_devise' => $options['default_devise'] ?? null
+            ])
             ->add('lieu', TextType::class, ['label' => false ])
             ->add('status', ChoiceType::class, [
                 'choices' => JobListing::getStatuses(),
@@ -132,6 +140,7 @@ class JobListingType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => JobListing::class,
+            'default_devise' => null, 
         ]);
     }
 

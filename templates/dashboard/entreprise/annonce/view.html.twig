@@ -48,7 +48,7 @@
                         Budget indicatif : 
 						<span class="text-strong">
 							{% if annonce.budgetAnnonce is defined and annonce.budgetAnnonce is not null %}
-							{{ annonce.budgetAnnonce.montant }} {{ arrayInverseDevise()[annonce.budgetAnnonce.devise] }}
+							{{ annonce.budgetAnnonce.montant }} {{ annonce.budgetAnnonce.devise }}
 							{% else %}
 							{{ annonce.salaire }} €
 							{% endif %}

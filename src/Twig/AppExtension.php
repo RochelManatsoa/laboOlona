@@ -18,6 +18,7 @@ use Twig\Extension\AbstractExtension;
 use App\Entity\Candidate\Applications;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Candidate\TarifCandidat;
+use App\Entity\Finance\Devise;
 use App\Entity\Moderateur\Forfait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -723,20 +724,32 @@ class AppExtension extends AbstractExtension
         if($tarifCandidat instanceof TarifCandidat){
             switch ($tarifCandidat->getTypeTarif()) {
                 case TarifCandidat::TYPE_HOURLY :
-                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.TarifCandidat::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par heure';
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.$this->getCurrency($tarifCandidat).'</strong> par heure';
                     break;
                 
                 case TarifCandidat::TYPE_DAILY :
-                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.TarifCandidat::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par jour';
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.$this->getCurrency($tarifCandidat).'</strong> par jour';
                     break;
 
                 case TarifCandidat::TYPE_MONTHLY :
-                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.TarifCandidat::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par mois';
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.$this->getCurrency($tarifCandidat).'</strong> par mois';
                     break;
             }
         }
 
         return $tarif;
+    }
+
+    public function getCurrency(TarifCandidat $tarifCandidat)
+    {
+        $currency = '<i class="bi bi-ban px-4"></i>';
+        if($tarifCandidat->getCurrency() instanceof Devise){
+            $currency = $tarifCandidat->getDevise();
+        }else{
+            $currency = TarifCandidat::getDeviseSymbol($tarifCandidat->getDevise());
+        }
+
+        return $currency;
     }
 
     public function getTarifForfait(Assignation $assignation)
@@ -781,8 +794,8 @@ class AppExtension extends AbstractExtension
     public function getForfaitAssignation(Assignation $assignation)
     {
         $forfait = '<strong><i class="bi bi-ban"></i></strong>';
-        if ($assignation->getForfait() !== null) {
-            $forfait = '<strong>'.$assignation->getForfait().' €</strong>';
+        if ($assignation->getForfaitAssignation() instanceof Forfait) {
+            $forfait = '<strong>'.$assignation->getForfaitAssignation()->getMontant().' '.$assignation->getForfaitAssignation()->getDevise().'</strong> '.Forfait::arrayInverseTarifType()[$assignation->getForfaitAssignation()->getTypeForfait()].'';
         }
 
         return $forfait;

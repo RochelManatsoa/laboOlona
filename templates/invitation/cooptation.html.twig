@@ -8,7 +8,7 @@
             <div class="annonce-item shadow p-5 m-4">
                 <h1 class="card-title h2">{{ annonce.titre }}</h1>
                 <p class="text-warning small">
-                    <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ annonce.status }} 
+                    <i class="bi bi-circle-fill small mx-2 text-danger"></i>{{ getStatuses(annonce.status) }}  
                         <span class="small text-center mx-3">|</span>
                     {{ annonce.typeContrat }} 
                         <span class="small text-center mx-3">|</span>
@@ -53,7 +53,7 @@
                         Budget indicatif : 
                         <span class="text-strong">
                         {% if annonce.budgetAnnonce is defined and annonce.budgetAnnonce is not null %}
-                        {{ annonce.budgetAnnonce.montant }} {{arrayInverseDevise()[annonce.budgetAnnonce.devise]}}
+                        {{ annonce.budgetAnnonce.montant }} {{annonce.budgetAnnonce.devise}}
                         {% else %}
                         {{ annonce.salaire }} €
                         {% endif %}

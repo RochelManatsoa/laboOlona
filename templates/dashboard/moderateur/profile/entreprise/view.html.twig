@@ -90,7 +90,7 @@
                                                     <td>
                                                     <a href="{{ path('app_dashboard_moderateur_annonce_view', {'id': annonce.id })}}" class="">{{ annonce.titre }}</a>
                                                     <p class="text-muted small">
-                                                        <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ annonce.status }} 
+                                                        <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ getStatuses(annonce.status) }} 
                                                             <span class="small text-center mx-3">|</span>
                                                         {{ annonce.typeContrat }} 
                                                             <span class="small text-center mx-3">|</span>

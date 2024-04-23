@@ -109,7 +109,7 @@ $(window).on('scroll', function() {
             description: descriptionContent,
             salaire: $('input[name="annonce[salaire]"]').val(),
             budget: $('select[name="annonce[budgetAnnonce][typeBudget]"] option:selected').text(),
-            devise: $('select[name="annonce[budgetAnnonce][devise]"] option:selected').text(),
+            devise: $('input[name="annonce[budgetAnnonce][devise]"]').val(),
             montant: $('input[name="annonce[budgetAnnonce][montant]"]').val(),
             nombrePoste: $('input[name="annonce[nombrePoste]"]').val(),
             dateExpiration: $('input[name="annonce[dateExpiration]"]').val(),

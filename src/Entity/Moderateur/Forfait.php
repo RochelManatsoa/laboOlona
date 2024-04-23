@@ -2,6 +2,7 @@
 
 namespace App\Entity\Moderateur;
 
+use App\Entity\Finance\Devise;
 use App\Repository\Moderateur\ForfaitRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -69,6 +70,12 @@ class Forfait
     #[ORM\OneToOne(inversedBy: 'forfaitAssignation', cascade: ['persist', 'remove'])]
     private ?Assignation $assignation = null;
 
+    #[ORM\ManyToOne]
+    private ?Devise $currency = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -118,6 +125,30 @@ class Forfait
     public function setAssignation(?Assignation $assignation): static
     {
         $this->assignation = $assignation;
+
+        return $this;
+    }
+
+    public function getCurrency(): ?Devise
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(?Devise $currency): static
+    {
+        $this->currency = $currency;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

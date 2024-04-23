@@ -36,14 +36,14 @@
                                     <span class="text-muted"><strong>Candidature spontannée</strong><br><span class="text-muted small">déposée le {{application.dateCandidature|date('d/m/Y')}}</span></span>
                                 </div>
                                 <div class="col-2 text-center">
-                                    {% if application.assignation.status is same as(constant('App\\Entity\\Moderateur\\Assignation::STATUS_MODERATED')) %}
+                                    {% if application.assignation is defined and application.assignation is not null %}
                                     {{ getForfaitAssignation(application.assignation)|raw }}
                                     {% else %}
                                     <span class="text-muted"><strong><i class="bi bi-ban"></i></strong><br></span>
                                     {% endif %}
                                 </div>
                                 <div class="col-3 text-center">
-                                    {% if application.assignation.status is same as(constant('App\\Entity\\Moderateur\\Assignation::STATUS_MODERATED')) %}
+                                    {% if application.assignation is defined and application.assignation is not null %}
                                     <a href="{{ path('app_dashboard_entreprise_accept_profile', {'id':application.assignation.id})}}" class="btn btn-outline-dark rounded-pill px-3 my-2 btn-sm edit-assignation" >Contacter le profil</a>
                                     {% else %}
                                     <a href="{{ path('app_dashboard_entreprise_contact_profile', {'id':application.candidat.id})}}" class="btn btn-dark rounded-pill px-3 my-2 btn-sm edit-assignation" >Demander un devis</a>
