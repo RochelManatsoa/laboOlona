@@ -15,7 +15,9 @@
                             <div class="col-11">
                                 <div class="d-flex w-100 justify-content-between">
                                     <a href="{{ path('app_dashboard_referrer_annonce_view', {'jobId': annonce.jobId}) }}" class="text-dark">
-                                        <h5 class="mb-1">{{ annonce.titre|upper }} <span class="badge bg-danger">{{ getPrimeByAnnonce(annonce) }} € de prime</span></h5>
+                                        <h5 class="mb-1">{{ annonce.titre|upper }} 
+                                        {{ getPrimeStr(annonce)|raw }}
+                                        </h5>
                                     </a>
                                 </div>
                                 <p class="mb-1">                    

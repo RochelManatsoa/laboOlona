@@ -134,10 +134,24 @@ class ReferrerController extends AbstractController
     public function rewards(Request $request): Response
     {
         $referrer = $this->userService->getReferrer();
-        $data = $this->referralRepository->findBy(['referredBy' => $referrer]);
+        $data = $this->referralRepository->findBy(['referredBy' => $referrer], ['id' => 'DESC']);
+        $totalRewards = 0;
+
+        foreach ($data as $referral) {
+            // Vérifiez si la propriété 'annonce' et 'status' de 'annonce' sont disponibles
+            if ($referral->getAnnonce() && $referral->getAnnonce()->getStatus() === JobListing::STATUS_PUBLISHED) {
+                $totalRewards += $referral->getRewards();
+            }
+        }
+        $data = array_filter($data, function ($referral) {
+            // Assurez-vous que l'objet annonce existe et que la méthode getStatus est disponible
+            return $referral->getAnnonce() && $referral->getAnnonce()->getStatus() === JobListing::STATUS_PUBLISHED;
+        });
+        
 
         return $this->render('dashboard/referrer/rewards.html.twig', [
             'referrer' => $referrer,
+            'totalRewards' => $totalRewards,
             'referrals' => $this->paginatorInterface->paginate(
                 $this->referenceManager->getReferenceAnnonce($data),
                 $request->query->getInt('page', 1),

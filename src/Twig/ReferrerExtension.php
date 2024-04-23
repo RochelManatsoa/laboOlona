@@ -9,6 +9,7 @@ use App\Entity\ReferrerProfile;
 use App\Entity\Referrer\Referral;
 use App\Entity\Entreprise\JobListing;
 use Twig\Extension\AbstractExtension;
+use App\Entity\Entreprise\PrimeAnnonce;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\ReferrerProfileRepository;
@@ -42,6 +43,7 @@ class ReferrerExtension extends AbstractExtension
             new TwigFunction('stepCooptation', [$this, 'stepCooptation']),
             new TwigFunction('generateCoopteurPseudo', [$this, 'generateCoopteurPseudo']),
             new TwigFunction('getReferrerById', [$this, 'getReferrerById']),
+            new TwigFunction('getPrimeStr', [$this, 'getPrimeStr']),
             new TwigFunction('getPrimeByAnnonce', [$this, 'getPrimeByAnnonce']),
             new TwigFunction('getTotalePrime', [$this, 'getTotalePrime']),
             new TwigFunction('checkEmailCandidat', [$this, 'checkEmailCandidat']),
@@ -99,6 +101,23 @@ class ReferrerExtension extends AbstractExtension
         $prime = $rewards = $jobListing->getPrime();
         if($prime === null){
             $rewards = $jobListing->getSalaire() * 0.1 / $jobListing->getNombrePoste();
+        }
+
+        return $rewards;
+    }
+
+    public function getPrimeStr(JobListing $jobListing): string
+    {
+        $rewards = "";
+        if($jobListing->getPrime() === null && $jobListing->getPrimeAnnonce() === null){
+            return "";
+        }
+        if($jobListing->getPrime() !== null){
+            $rewards = '<span class="badge bg-danger">'.$jobListing->getPrime().' € de prime</span>';
+        }
+        $prime = $jobListing->getPrimeAnnonce();
+        if($prime instanceof PrimeAnnonce && $jobListing->getPrimeAnnonce()->getMontant() !== null){
+            $rewards = '<span class="badge bg-danger">'.$jobListing->getPrimeAnnonce()->getMontant().' '. $jobListing->getPrimeAnnonce()->getSymbole().' de prime </span>';
         }
 
         return $rewards;
