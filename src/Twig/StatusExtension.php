@@ -133,23 +133,23 @@ class StatusExtension extends AbstractExtension
         $type = $entreprise->getStatus() ?? '';
         switch ($type) {
             case EntrepriseProfile::STATUS_VALID :
-                $status = '<span class="badge h2 text-bg-success">Validé</span>';
+                $status = '<span class="badge text-bg-success">Validé</span>';
                 break;
 
             case EntrepriseProfile::STATUS_PENDING :
-                $status = '<span class="badge h2 text-bg-info">En attente</span>';
+                $status = '<span class="badge text-bg-info">En attente</span>';
                 break;
 
             case EntrepriseProfile::STATUS_PREMIUM :
-                $status = '<span class="badge h2 text-bg-dark">Premium</span>';
+                $status = '<span class="badge text-bg-dark">Premium</span>';
                 break;
 
             case EntrepriseProfile::STATUS_BANNED :
-                $status = '<span class="badge h2 text-bg-danger">Banni</span>';
+                $status = '<span class="badge text-bg-danger">Banni</span>';
                 break;
             
             default:
-                $status = '<span class="badge h2 text-bg-info">En attente</span>';
+                $status = '<span class="badge text-bg-info">En attente</span>';
                 break;
         }
         

@@ -5,7 +5,7 @@
 
 {% block body %}
 	<div class="container">
-		<div class="annonce-list p-2">
+		<div class="annonce-list p-1 p-sm-2">
 			<div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
 				<h1 class="h2">Mes simulations</h1>
 				<div>
@@ -16,28 +16,28 @@
 				{% if simulateurs|length > 0 %}
 					<div class="container">
 						<div class="row text-strong">
-							<div class="col-3">Salaire Net</div>
-							<div class="col-4 text-center">Devise</div>
-							<div class="col-3 text-center">Date</div>
-							<div class="col-2 text-center"></div>
+							<div class="col">Salaire Net</div>
+							<div class="col text-center d-none d-md-block">Devise</div>
+							<div class="col text-center">Date</div>
+							<div class="col text-center"></div>
 						</div>
 						<hr>
 						{% for item in simulateurs %}
 							<div class="row text-muted align-items-center">
-								<div class="col-3 small">
+								<div class="col small">
 									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.id })}}" class="">
 										{{ item.salaireNet}}
 										{{ item.devise.symbole}}
 									</a>
 								</div>
-								<div class="col-4 small text-center">
+								<div class="col small text-center  d-none d-md-block">
 									{{ item.taux}}
 									Ar
 								</div>
-								<div class="col-3 small text-center">
+								<div class="col small text-center">
 									{{ item.createdAt|date('d/m/Y') }}
 								</div>
-								<div class="col-2 small text-center">
+								<div class="col small text-center">
 									<a href="{{ path('app_dashboard_employes_simulation_delete', {'id' : item.id })}}" class="btn btn-sm btn-danger small" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette simulation ?');">
 										<i class="bi bi-trash"></i>
 									</a>

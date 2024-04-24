@@ -113,7 +113,7 @@ $(document).ready(function() {
         var formData = $('#moderateur-entreprise-search-form').serialize();
 
         $.ajax({
-            url: '{{ path('app_dashboard_moderateur_entreprises') }}',
+            url: '{{ path('app_dashboard_moderateur_profile_entreprise') }}',
             type: 'GET',
             data: formData,
             success: function(data) {

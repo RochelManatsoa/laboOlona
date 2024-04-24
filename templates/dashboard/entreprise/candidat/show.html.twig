@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <div class="card shadow">
         <div class="card-header bg-primary text-white">
-        <h1 class="h3 mt-3 text-center"> {{generatePseudo(candidat)}} - {{ candidat.titre|upper }}</h1>
+        <h1 class="h3 mt-3 text-center"> Candidat - {{generatePseudo(candidat)}} </h1>
         </div>
         <div class="card-body">
             <div class="row mb-4">
@@ -16,12 +16,12 @@
                 <div class="col-md-8">
                     <h2 class="card-title h3">Informations Générales</h2>
                     <p><strong>Date d'inscription :</strong> <span class="text-muted">{{ candidat.createdAt|date('d/m/Y') }}</span></p>
-                    <p><strong>Dernière mise à jour du profil :</strong> <span class="text-muted">{{ candidat.updatedAt|date('d/m/Y') }}</span></p>
+                    <p><strong>Dernière connexion :</strong> <span class="text-muted">{{ candidat.candidat.lastLogin|time_ago }}</span></p>
                     <p><strong>Localisation :</strong> <span class="text-muted">{{ countryName }}</span></p>
                     <p><strong>Âge :</strong> <span class="text-muted">{{ age }}</span></p>
                     <p><strong>Titre professionnel :</strong> <span class="text-muted">{{ candidat.titre }}</span></p>
                     <p></p>
-                    <p><strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-dark' : 'bg-danger' }}">{{ candidat.isValid ? 'Oui' : 'Non' }}</span></p>
+                    <p><strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-dark' : 'bg-danger' }}">{{ candidat.isValid ? 'Non' : 'Oui' }}</span></p>
                     <p><strong>Diponibilité :</strong> 
                         <span class="text-dark">
                             {% if candidat.availability is not null %}
@@ -31,10 +31,10 @@
                             {% endif %} 
                         </span>
                     </p><!-- Button trigger modal -->
-                    {% if candidat.editedCvs|length > 0 %}
-                    <button type="button" class="btn btn-outline-primary rounded-pill px-4 px-sm-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <i class="bi bi-file-earmark-pdf-fill"></i>  Voir son CV 
-                    </button>
+                    {% if candidat.editedCvs|length > 0 and (entreprise.status == 'EntrepriseProfile::STATUS_VALID' or entreprise.status == 'EntrepriseProfile::STATUS_PREMIUM') %}
+                        <button type="button" class="btn btn-outline-primary rounded-pill px-4 px-sm-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+                        </button>
                     {% endif %}
                     <a href="{{ path('app_dashboard_entreprise_contact_profile', {'id':candidat.id})}}" class="btn btn-outline-primary rounded-pill my-3 px-4 px-sm-5">
                       <i class="bi bi-send "></i> Plus d'informations

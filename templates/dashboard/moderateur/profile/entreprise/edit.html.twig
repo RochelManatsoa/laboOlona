@@ -1,0 +1,80 @@
+{% extends 'dashboard/base_new.html.twig' %}
+
+{% block title %}Tableau de bord
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="container mt-3">
+		<h1 class="mb-4">Modifier une entreprise</h1>
+		<!-- Titre avec couleur d'accentuation -->
+
+		<div class="row">
+			<div class="col">
+				<div class="card shadow mb-3">
+					<div class="card-body">
+						{{ form_start(form) }}
+						<div class="row mb-3">
+							<div class="col">
+								<label class="text-strong">
+									Nom de l'entreprise
+                                </label>
+								{{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+							</div>
+							<div class="col">
+								<label class="text-strong">
+									Status
+                                </label>
+								{{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-12 col-lg-6">
+								<label class="text-strong">
+									{{ form_label(form.taille) }}</label>
+								{{ form_widget(form.taille, {'attr': {'class': 'form-control'}}) }}
+							</div>
+							<div class="col-12 col-lg-6">
+								<label class="text-strong">
+									{{ form_label(form.siteWeb) }}</label>
+								{{ form_widget(form.siteWeb, {'attr': {'class': 'form-control'}}) }}
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-12 col-lg-6">
+								<label class="text-strong">
+									{{ form_label(form.localisation) }}</label>
+								{{ form_widget(form.localisation, {'attr': {'class': 'form-control'}}) }}
+							</div>
+							<div class="col-12 col-lg-6">
+								<label class="text-strong">
+									{{ form_label(form.secteurs) }}</label>
+								{{ form_widget(form.secteurs, {'attr': {'class': 'form-select'}}) }}
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col">
+								<label class="text-strong">
+									{{ form_label(form.description) }}</label>
+								{{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+							</div>
+						</div>
+						<div style="display:none">
+							{{ form_widget(form) }}
+						</div>
+						<div class="text-end">
+							<button type="submit" class="btn btn-primary rounded-pill px-5">Mettre à jour</button>
+						</div>
+						{{ form_end(form) }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+	<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+	<script>
+		ClassicEditor.create(document.querySelector('#entreprise_description'))
+	</script>
+{% endblock %}

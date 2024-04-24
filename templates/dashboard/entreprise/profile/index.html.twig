@@ -38,10 +38,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="text-dark text-strong">
-                    {{ form_label(form.description) }}
+                    <div class="col">
+                        <label class="text-strong">
+                            {{ form_label(form.description) }}</label>
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    {{ form_widget(form.description, {'attr': {'class': 'form-control mb-4'}}) }}
                 </div>
             </section>
             <section class="text-dark card shadow p-4 my-3">
@@ -50,13 +51,13 @@
                     Contact
                 </h2>
                 <hr class="mb-4">
-                <div class="row">
-                    <div class="col-12 col-lg-6">
-                        <div class="text-dark text-strong">
-                        {{ form_label(form.entreprise.email) }}
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <div class="text-dark text-strong">
+                                {{ form_label(form.entreprise.email) }}
+                            </div>
+                            {{ form_widget(form.entreprise.email, {'attr': {'class': 'form-control mb-4', 'readonly': true}}) }}
                         </div>
-                        {{ form_widget(form.entreprise.email, {'attr': {'class': 'form-control mb-4'}}) }}
-                    </div>
                     <div class="col-12 col-lg-6">
                         <div class="text-dark text-strong">
                         {{ form_label(form.entreprise.telephone) }}

@@ -344,6 +344,7 @@ class EntrepriseController extends AbstractController
         return $this->render('dashboard/entreprise/candidat/show.html.twig', [
             'candidat' => $candidateProfile,
             'age' => $age,
+            'entreprise' => $entreprise,
             'favori' => $favori,
             'countryName' => $countryName,
             'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidateProfile),

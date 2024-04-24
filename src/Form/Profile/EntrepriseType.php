@@ -47,6 +47,10 @@ class EntrepriseType extends AbstractType
             ->add('localisation', CountryType::class, [
                 'label' => 'Pays'
             ])
+            ->add('status', ChoiceType::class, [
+                'label' => 'status',
+                'choices' => EntrepriseProfile::CHOICE_STATUS,
+            ])
         ;
     }
 

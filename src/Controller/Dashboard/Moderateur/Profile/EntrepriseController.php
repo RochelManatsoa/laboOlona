@@ -3,20 +3,25 @@
 namespace App\Controller\Dashboard\Moderateur\Profile;
 
 use DateTime;
+use App\Entity\User;
 use App\Twig\AppExtension;
 use App\Entity\Notification;
 use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
-use App\Entity\Moderateur\Assignation;
+use App\Service\Mailer\MailerService;
+use App\Form\Moderateur\EntrepriseType as NewEntrepriseType;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Moderateur\NotificationProfileType;
-use App\Service\Mailer\MailerService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\Profile\EntrepriseType;
+use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
+use App\Manager\ProfileManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/dashboard/moderateur/profile/entreprise')]
 class EntrepriseController extends AbstractController
@@ -27,18 +32,57 @@ class EntrepriseController extends AbstractController
         private AppExtension $appExtension,
         private UrlGeneratorInterface $urlGenerator,
         private MailerService $mailerService,
+        private PaginatorInterface $paginatorInterface,
         private ModerateurManager $moderateurManager,
+        private ProfileManager $profileManager
     ) {}
     
     #[Route('/', name: 'app_dashboard_moderateur_profile_entreprise')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $user = (new User())->setDateInscription(new DateTime())->setType(User::ACCOUNT_ENTREPRISE);
+        $entreprise = $this->profileManager->createCompany($user);
+        $formEntreprise = $this->createForm(NewEntrepriseType::class, $entreprise);
+        $formEntreprise->handleRequest($request);
+        if($formEntreprise->isSubmitted() && $formEntreprise->isValid()){
+            $this->profileManager->saveCompany($entreprise);
+            $this->addFlash('success', 'Entreprise créé avec succès');
+        }
+        $data = $this->moderateurManager->findAllEntreprise();
+        /** Formulaire de recherche entreprise */
+        $form = $this->createForm(ModerateurEntrepriseSearchType::class);
+        $form->handleRequest($request);
+        $data = $this->moderateurManager->findAllEntreprise();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $nom = $form->get('nom')->getData();
+            $secteur = $form->get('secteur')->getData();
+            $status = $form->get('status')->getData();
+            $data = $this->moderateurManager->searchEntreprise($nom, $secteur, $status);
+            if ($request->isXmlHttpRequest()) {
+                // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
+                return $this->json([
+                    'content' => $this->renderView('dashboard/moderateur/entreprise/_entreprises.html.twig', [
+                        'entreprises' => $this->paginatorInterface->paginate(
+                            $data,
+                            $request->query->getInt('page', 1),
+                            10
+                        ),
+                        'result' => $data
+                    ])
+                ]);
+            }
+        }
+        
         return $this->render('dashboard/moderateur/profile/entreprise/index.html.twig', [
-            'entreprises' => $this->em->getRepository(EntrepriseProfile::class)->findBy(
-                [],
-                ['id' => 'DESC']
+            'entreprises' => $this->paginatorInterface->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
             ),
+            'result' => $data,
+            'form' => $form->createView(),
+            'formEntreprise' => $formEntreprise->createView(),
         ]);
     }
 
@@ -91,7 +135,20 @@ class EntrepriseController extends AbstractController
     public function edit(Request $request, EntrepriseProfile $entreprise): Response
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+
+        $form = $this->createForm(EntrepriseType::class, $entreprise);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $jobListing = $form->getData();
+            $this->em->persist($jobListing);
+            $this->em->flush();
+            $this->addFlash('success', 'Entreprise modifiée avec succès.');
+
+            return $this->redirectToRoute('app_dashboard_moderateur_profile_entreprise');
+        }
+
         return $this->render('dashboard/moderateur/profile/entreprise/edit.html.twig', [
+            'form' => $form->createView(),
             'entreprise' => $entreprise,
         ]);
     }
