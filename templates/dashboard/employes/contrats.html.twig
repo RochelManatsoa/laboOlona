@@ -5,12 +5,12 @@
 {% block body %}
 	<div class="container">
 		<div class="annonce-list p-2">
-			<div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
+			<div class="annonce-item shadow p-2 p-sm-5 m-1 m-sm-4">
 				<h1 class="h2">Mes contrats</h1>
 				<hr>
 
 				{% if contrats|length > 0 %}
-					<div class="container">
+					<div class="container d-none d-sm-block">
 						<div class="row text-strong">
 							<div class="col-3">Salaire Net</div>
 							<div class="col-4 text-center">Statut</div>
@@ -33,6 +33,29 @@
 									{{ item.simulateur.createdAt|date('d/m/Y') }}
 								</div>
 								<div class="col-2 small text-center">
+									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.simulateur.id })}}" class="btn btn-sm btn-info">
+										<i class="bi bi-eye"></i>
+									</a>
+								</div>
+							</div>
+							<hr>
+						{% endfor %}
+						<!-- Plus de lignes et colonnes ici -->
+					</div>
+					<div class="container d-block d-sm-none">
+						{% for item in contrats %}
+							<div class="row text-muted">
+								<div class="col-12 ">
+										<span class="text-strong">Salaire Net</span> : {{ item.simulateur.salaireNet}}
+										{{ item.simulateur.devise.symbole}}
+								</div>
+								<div class="col-12">
+									<span class="text-strong">Statut</span> : {{ item|contratStatusBadge|raw }}
+								</div>
+								<div class="col-12 ">
+									<span class="text-strong">Créé le</span> : {{ item.simulateur.createdAt|date('d/m/Y') }}
+								</div>
+								<div class="col-12 ">
 									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.simulateur.id })}}" class="btn btn-sm btn-info">
 										<i class="bi bi-eye"></i>
 									</a>

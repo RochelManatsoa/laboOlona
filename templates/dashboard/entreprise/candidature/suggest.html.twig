@@ -1,113 +1,112 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block title %}
     Tableau de bord
 {% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <div class="card shadow">
-            <div class="card-header bg-primary h5 text-white">
-                {{ annonce.titre }}
-            </div>
-            <div class="card-body">
-                        <div class="container-fluid">
-                            <!-- En-têtes -->
-                            <div class="row">
-                                <div class="col-2 font-weight-bold">Candidat</div>
-                                <div class="col-2 font-weight-bold"></div>
-                                <div class="col-3 font-weight-bold text-center">Forfait</div>
-                                <div class="col-5 font-weight-bold text-center">Commentaire</div>
-                            </div>
+    <div class="container">
+        <div class="annonce-list p-0 p-sm-2">
+            <div class="annonce-item shadow p-2 p-sm-5 m-1 m-sm-4">
+                <h1 class="card-title h3">Candidatures suggérées</h1>
+                <p class="card-title h4">{{ annonce.titre }}</p>
+                <p class="text-muted small">
+                    <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ getStatuses(annonce.status) }} 
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
+                    {{ annonce.typeContrat }} 
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
+                    <i class="bi bi-geo-alt-fill"></i> {{ annonce.lieu }} 
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
+                    <i class="bi bi-hourglass-split"></i> Expire le {{ annonce.dateExpiration|date('d/m/Y') }}
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
+                    <i class="bi bi-eye"></i> {{ annonce.annonceVues|length }} vues
+                </p>
 
-                            <!-- Lignes et cellules -->
-                            {% for assignation in annonce.assignations %}
-                            {% if assignation.application is defined and assignation.application is empty %}
-                            <div class="row border-top py-2 align-items-center">
-                                <div class="col-2">
-                                    <div class="img-fluid rounded-start bg-image-candidat" style="background-image: url('{{vich_uploader_asset(assignation.profil, 'file')}}');" alt="{{ generatePseudo(assignation.profil) }}"></div>
-                                </div>
-                                <div class="col-2">
-                                    <span class="text-muted small">{{ generatePseudo(assignation.profil) }} 
-                                    <a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': assignation.profil.id}) }}" class=""><i class="bi bi-eye"></i></a><br></span>
-                                    {{ assignation.profil.titre }} <br>
-                                    <span class="text-muted small">{{ assignation.dateAssignation|time_ago }}</span>
-                                </div>
-                                <div class="col-3 text-center">
+                <hr>
+                <div class="container-fluid d-none d-sm-block">
+                    <!-- En-têtes -->
+                    <div class="row">
+                        <div class="col-2 text-strong">Candidat</div>
+                        <div class="col-2 text-strong"></div>
+                        <div class="col-3 text-strong text-center">Type</div>
+                        <div class="col-2 text-strong text-center">Forfait</div>
+                        <div class="col-3 text-strong text-center">Action</div>
+                    </div>
+
+                    <!-- Lignes et cellules -->
+                    {% for assignation in annonce.assignations %}
+                    {% if assignation.application is defined and assignation.application is empty %}
+                    <div class="row border-top py-2 align-items-center">
+                        <div class="col-2">
+                            <div class="img-fluid rounded-start bg-image-candidat" style="background-image: url('{{vich_uploader_asset(assignation.profil, 'file')}}');" alt="{{ generatePseudo(assignation.profil) }}"></div>
+                        </div>
+                        <div class="col-2">
+                            <span class="text-muted small">{{ generatePseudo(assignation.profil) }} <br></span>
+                            {{ assignation.profil.titre }} <br>
+                            <span class="text-muted small">{{ assignation.dateAssignation|time_ago }}</span>
+                        </div>
+                        <div class="col-3 text-center">
+                            <span class="text-muted">{{ getTypeAssignation(assignation)|raw }}</span><br>
+                            <span class="text-muted">Forfait : {{ getForfaitAssignation(assignation)|raw }}</span>
+                        </div>
+                        <div class="col-2 text-center">
+                            {% if application is defined and application is not null %}
+                            {{ getForfaitAssignation(application)|raw }}
+                            {% else %}
+                            <span class="text-muted"><strong><i class="bi bi-ban"></i></strong><br></span>
+                            {% endif %}
+                        </div>
+                        <div class="col-3 text-center">
+                            {% if application is defined and application is not null %}
+                            <a href="{{ path('app_dashboard_entreprise_accept_profile', {'id':assignation.id})}}" class="btn btn-outline-dark rounded-pill px-3 my-2 btn-sm edit-assignation" >Contacter le profil</a>
+                            {% else %}
+                            <a href="{{ path('app_dashboard_entreprise_contact_profile', {'id':assignation.profil.id})}}" class="btn btn-dark rounded-pill px-3 my-2 btn-sm edit-assignation" >Demander un devis</a>
+                            {% endif %}
+                            <a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': assignation.profil.id}) }}" class="btn btn-outline-primary rounded-pill px-3 my-2 btn-sm"><i class="bi bi-eye"></i> Voir le profil</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="container-fluid d-block d-sm-none">
+
+                    <!-- Lignes et cellules -->
+                    {% for assignation in annonce.assignations %}
+                    {% if assignation.application is defined and assignation.application is empty %}
+                      <div class="col">
+                        <div class="card mt-4">
+                            <div class="card-img-top bg-image-candidat" style="background-image: url('{{vich_uploader_asset(assignation.profil, 'file')}}');" alt="{{ assignation.profil.candidat.prenom }}"></div>
+                                <p class="card-title h6 bg-dark text-white text-center py-2">{{ generatePseudo(assignation.profil) }}</p>
+                                <div class="card-body text-center">
+                                    <small class="mt-auto">
+                                        <small class="card-text">{{ assignation.profil.titre|upper }}</small><br>
+                                    </small>
                                     <span class="text-muted">{{ getTypeAssignation(assignation)|raw }}</span><br>
                                     <span class="text-muted">Forfait : {{ getForfaitAssignation(assignation)|raw }}</span>
-                                </div>
-                                <div class="col-5 small">
-                                    {{ assignation.commentaire|raw }}<br><br>
-                                    <a href="{{ path('app_dashboard_entreprise_accept_profile', {'id':assignation.id})}}" class="btn btn-outline-dark rounded-pill px-3 my-2 btn-sm edit-assignation" >Contacter le profil</a>
+                                    <div class="text-center">
+                                        {% if assignation is defined and assignation is not null %}
+                                        <a href="{{ path('app_dashboard_entreprise_accept_profile', {'id':assignation.id})}}" class="btn btn-info rounded-pill px-3 w-100 my-2 btn-sm edit-assignation" >Contacter le profil</a>
+                                        {% else %}
+                                        <a href="{{ path('app_dashboard_entreprise_contact_profile', {'id':assignation.profil.id})}}" class="btn btn-dark rounded-pill px-3 w-100 my-2 btn-sm edit-assignation" >Demander un devis</a>
+                                        {% endif %}
+                                        <a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': assignation.profil.id}) }}" class="btn btn-outline-primary rounded-pill px-3 w-100 my-2 btn-sm"><i class="bi bi-eye"></i> Voir le profil</a>
+                                    </div>
                                 </div>
                             </div>
-                            {% endif %}
-                            {% endfor %}
                         </div>
-                    
-               {# <div class="row">
-                    <div class="col-md-6 d-flex justify-content-left align-items-center">
-                        <img src="{{vich_uploader_asset(application.candidat, 'file')}}" class="card-img-top" alt="avatar" style="width: 50%; height: auto; border-radius: 10px; object-fit: cover;">
-                    </div>
-                    <div class="col-md-6">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                Candidat : 
-                                <span class="text-success">
-                                    {{ generatePseudo(application.candidat) }}
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                Titre : 
-                                <span class="text-info">
-                                    {{ application.candidat.titre }}
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                Experiences : 
-                                <span class="text-info">
-                                    {{ application.candidat.experiences|length }}
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                Competences : 
-                                <span class="text-info">
-                                    {{ application.candidat.competences|length }}
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                Date candidature: 
-                                <span class="text-danger">
-                                    {{ application.dateCandidature|date('d/m/Y') }}
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': application.candidat.id}) }}" class="btn btn-warning btn-sm rounded-pill"><i class="bi bi-eye"></i> Voir profil complet</a>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    
-                        {% if application.status == 'ACCEPTED'  %}
-                            <button type="button" class="col-md-3 btn btn-dark rounded-pill"> Contacter le candidat</button>
-                        {% endif %}
-                
+                    {% endif %}
+                    {% endfor %}
                 </div>
-                <hr>
-                    <h5 class="card-title text-secondary">
-                        Lettre de motivation
-                    </h5>
-                    <p class="card-text">
-                        {{ application.lettreMotivation }}
-                    </p>
-                </div> #}
-            </div>
-            </div>
-            <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3">
-                <i class="mx-2 bi bi-arrow-left"></i>
-                Retour
-            </a>
 
-        {% endblock %}
+
+            </div>
+        </div>
+    </div>
+    <a href="javascript:history.back()" class=" px-5 btn btn-success rounded-pill my-3">
+        <i class="mx-2 bi bi-arrow-left"></i>
+        Retour
+    </a>
+    
+{% endblock %}
         

@@ -151,6 +151,20 @@
 								Simulateur salaire
 								</a>
 							</li>
+							<li>
+								<a href="{{ path('app_dashboard_entreprise_candidatures')}}" 
+									class="nav-link {{ current_route == 'app_dashboard_entreprise_candidatures' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-person-badge-fill"></i>
+									{{ 'app_dashboard_entreprise.manage'|trans }}  
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('rendezvous_index')}}" 
+									class="nav-link {{ current_route == 'rendezvous_index' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-calendar3"></i>
+									{{ 'app_dashboard_entreprise.metting'|trans }} 
+								</a>
+							</li>
 						{% endif %}
 						{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_REFERRER')) %}
 							<li class="nav-item">

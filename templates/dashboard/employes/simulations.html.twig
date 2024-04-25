@@ -14,7 +14,7 @@
 				<hr>
 
 				{% if simulateurs|length > 0 %}
-					<div class="container">
+					<div class="container d-none d-sm-block">
 						<div class="row text-strong">
 							<div class="col">Salaire Net</div>
 							<div class="col text-center d-none d-md-block">Devise</div>
@@ -40,6 +40,30 @@
 								<div class="col small text-center">
 									<a href="{{ path('app_dashboard_employes_simulation_delete', {'id' : item.id })}}" class="btn btn-sm btn-danger small" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette simulation ?');">
 										<i class="bi bi-trash"></i>
+									</a>
+								</div>
+							</div>
+							<hr>
+						{% endfor %}
+						<!-- Plus de lignes et colonnes ici -->
+					</div>
+					<div class="container d-block d-sm-none">
+						{% for item in simulateurs %}
+							<div class="row text-muted">
+								<div class="col-12 ">
+										<span class="text-strong">Salaire Net</span> : {{ item.salaireNet}}
+										{{ item.devise.symbole}}
+								</div>
+								<div class="col-12">
+									<span class="text-strong">Taux</span> : {{ item.taux}}
+									Ar
+								</div>
+								<div class="col-12 ">
+									<span class="text-strong">Créé le</span> : {{ item.createdAt|date('d/m/Y') }}
+								</div>
+								<div class="col-12 ">
+									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.id })}}" class="btn btn-sm btn-info">
+										<i class="bi bi-eye"></i>
 									</a>
 								</div>
 							</div>

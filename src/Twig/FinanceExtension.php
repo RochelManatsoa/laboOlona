@@ -82,35 +82,35 @@ class FinanceExtension extends AbstractExtension
         $status = $contrat->getStatus();
         switch ($status) {
             case 'APPROVED':
-                $button = '<button type="button" class="btn btn-primary rounded-pill px-5" disabled><i class="bi bi-check2-circle"></i> Approuvé</button>';
+                $button = '<button type="button" class="btn btn-primary rounded-pill px-3 px-sm-5" disabled><i class="bi bi-check2-circle"></i> Approuvé</button>';
                 break;
 
             case 'ACTIVE':
-                $button = '<button type="button" class="btn btn-success rounded-pill px-5" disabled><i class="bi bi-check2-circle"></i> Actif</button>';
+                $button = '<button type="button" class="btn btn-success rounded-pill px-3 px-sm-5" disabled><i class="bi bi-check2-circle"></i> Actif</button>';
                 break;
                 
             case 'EXPIRED':
-                $button = '<button type="button" class="btn btn-outline-dark disabled rounded-pill px-5"><i class="bi bi-hourglass-bottom mx-2"></i>Expiré</button>';
+                $button = '<button type="button" class="btn btn-outline-dark disabled rounded-pill px-3 px-sm-5"><i class="bi bi-hourglass-bottom mx-2"></i>Expiré</button>';
                 break;
                 
             case 'ARCHIVED':
-                $button = '<button type="button" class="btn btn-info disabled rounded-pill px-5"><i class="bi bi-info-circle-fill"></i> Resilié</button>';
+                $button = '<button type="button" class="btn btn-info disabled rounded-pill px-3 px-sm-5"><i class="bi bi-info-circle-fill"></i> Resilié</button>';
                 break;
                 
             case 'SUSPENDED':
-                $button = '<button type="button" class="btn btn-danger disabled rounded-pill px-5"><i class="bi bi-info-circle-fill"></i> Suspendu</button>';
+                $button = '<button type="button" class="btn btn-danger disabled rounded-pill px-3 px-sm-5"><i class="bi bi-info-circle-fill"></i> Suspendu</button>';
                 break;
                 
             case 'UNFULFILLED':
-                $button = '<button type="button" class="btn btn-dark disabled rounded-pill px-5"><i class="bi bi-info-circle-fill"></i> Non exécuté</button>';
+                $button = '<button type="button" class="btn btn-dark disabled rounded-pill px-3 px-sm-5"><i class="bi bi-info-circle-fill"></i> Non exécuté</button>';
                 break;
                 
             case 'RENEWED':
-                $button = '<button type="button" class="btn btn-success disabled rounded-pill px-5"><i class="bi bi-info-circle-fill"></i> Renouvelé</button>';
+                $button = '<button type="button" class="btn btn-success disabled rounded-pill px-3 px-sm-5"><i class="bi bi-info-circle-fill"></i> Renouvelé</button>';
                 break;
             
             default:
-                $button = '<button type="button" class="btn btn-outline-success rounded-pill px-5 disabled"><i class="bi bi-hourglass-split"></i> En attente de réponse</button>';
+                $button = '<button type="button" class="btn btn-outline-success rounded-pill px-3 px-sm-5 disabled"><i class="bi bi-hourglass-split"></i> En attente de réponse</button>';
                 break;
         }
 
