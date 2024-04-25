@@ -31,7 +31,7 @@
                             {% endif %} 
                         </span>
                     </p><!-- Button trigger modal -->
-                    {% if candidat.editedCvs|length > 0 and (entreprise.status == 'EntrepriseProfile::STATUS_VALID' or entreprise.status == 'EntrepriseProfile::STATUS_PREMIUM') %}
+                    {% if candidat.editedCvs|length > 0 and (entreprise.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_VALID')) or entreprise.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_PREMIUM') )) %}
                         <button type="button" class="btn btn-outline-primary rounded-pill px-4 px-sm-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
                         </button>
