@@ -13,12 +13,11 @@ class Contrat
     const TYPE_EMPLOYE = 'EMPLOYE';
 
     const STATUS_PENDING = 'PENDING';
-    const STATUS_ACTIVE = 'ACTIVE';
     const STATUS_VALID = 'VALID';
-    const STATUS_EXPIRED = 'EXPIRED';
+    const STATUS_CONTACT = 'CONTACT';
+    const STATUS_RELANCE = 'RELANCE';
     const STATUS_ARCHIVED = 'ARCHIVED';
     const STATUS_SUSPENDED = 'SUSPENDED';
-    const STATUS_RENEWED = 'RENEWED';
     const STATUS_APPROVED = 'APPROVED';
     const STATUS_UNFULFILLED = 'UNFULFILLED';
 
@@ -33,12 +32,11 @@ class Contrat
         return [
             'En attente' => self::STATUS_PENDING ,
             'Simulation OK' => self::STATUS_VALID ,
-            'Actif' => self::STATUS_ACTIVE ,
-            'Expiré' => self::STATUS_EXPIRED ,
+            'Contact effectué' => self::STATUS_CONTACT ,
+            'Relance effectuée' => self::STATUS_RELANCE ,
+            'Approuvé' => self::STATUS_APPROVED ,
             'Resilié' => self::STATUS_ARCHIVED ,
             'Suspendu' => self::STATUS_SUSPENDED ,
-            'Renouvelé' => self::STATUS_RENEWED ,
-            'Approuvé' => self::STATUS_APPROVED ,
             'Non exécuté' => self::STATUS_UNFULFILLED ,
         ];
     }
@@ -46,11 +44,10 @@ class Contrat
     public static function getArrayStatuses() {
         return [
              self::STATUS_PENDING ,
-             self::STATUS_ACTIVE ,
-             self::STATUS_EXPIRED ,
+             self::STATUS_CONTACT ,
+             self::STATUS_RELANCE ,
              self::STATUS_ARCHIVED ,
              self::STATUS_SUSPENDED ,
-             self::STATUS_RENEWED ,
              self::STATUS_APPROVED ,
              self::STATUS_UNFULFILLED ,
         ];

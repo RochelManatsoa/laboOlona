@@ -1,6 +1,6 @@
 {% set current_route = app.request.attributes.get('_route') %}
 <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark position-sticky top-0" style="width: 280px;">
-    <ul class="nav nav-pills flex-column mb-auto small">
+    <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
         <a href="{{ path('app_finance_dashboard')}}" 
             class="nav-link {{ current_route == 'app_finance_dashboard' ? 'active' : 'text-white' }}" 
@@ -13,19 +13,19 @@
       <li>
         <a href="{{ path('app_finance_employe') }}" class="nav-link {{ current_route == 'app_finance_employe' ? 'active' : 'text-white' }}">
           <i class="mx-2 h5 bi bi-people-fill"></i>
-          Tous les employés
+          Prospects simulateur
         </a>
       </li>
       <li>
-        <a href="{{ path('app_finance_salaire') }}" class="nav-link {{ current_route == 'app_finance_salaire' ? 'active' : 'text-white' }}">
-          <i class="mx-2 h5 bi bi-wallet2"></i>
-          Simulations effectuées
+        <a href="{{ path('app_finance_simulateur') }}" class="nav-link {{ current_route == 'app_finance_simulateur' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-person-gear"></i>
+          Simulations
         </a>
       </li>
       <li>
         <a href="{{ path('app_finance_contrat') }}" class="nav-link {{ current_route == 'app_finance_contrat' ? 'active' : 'text-white' }}">
           <i class="mx-2 h5 bi bi-file-earmark-text-fill"></i>
-          Contrats
+          Demandes
         </a>
       </li>
     <hr>

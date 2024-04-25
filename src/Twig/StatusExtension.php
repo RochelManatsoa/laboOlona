@@ -74,18 +74,30 @@ class StatusExtension extends AbstractExtension
 
     public function satusSimulateur(Simulateur $simulateur)
     {
-        $type = $simulateur->getStatus() ?? '';
+        $type = $simulateur->getStatusFinance() ?? '';
         switch ($type) {
-            case Simulateur::STATUS_VALID :
-                $status = '<span class="badge text-bg-success">Valide</span>';
+            case Simulateur::STATUS_LIBRE :
+                $status = '<span class="badge text-bg-success">Simulation libre</span>';
                 break;
 
-            case Simulateur::STATUS_DELETED :
-                $status = '<span class="badge text-bg-dark">Effacé</span>';
+            case Simulateur::STATUS_SEND :
+                $status = '<span class="badge text-bg-warning">Demande envoyée</span>';
+                break;
+
+            case Simulateur::STATUS_CONTACT :
+                $status = '<span class="badge text-bg-info">Prise de contact</span>';
+                break;
+
+            case Simulateur::STATUS_RELANCE :
+                $status = '<span class="badge text-bg-primary">Relance</span>';
+                break;
+
+            case Simulateur::STATUS_CLIENT :
+                $status = '<span class="badge text-bg-danger">Client</span>';
                 break;
             
             default:
-                $status = '<span class="badge text-bg-success">Valide</span>';
+                $status = '<span class="badge text-bg-success">Simulation libre</span>';
                 break;
         }
         

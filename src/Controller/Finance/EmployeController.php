@@ -6,10 +6,13 @@ use DateTime;
 use App\Entity\User;
 use App\Entity\Notification;
 use App\Entity\Finance\Employe;
+use App\Data\Finance\SearchData;
+use App\Entity\CandidateProfile;
 use App\Entity\Finance\Avantage;
 use App\Form\Finance\EmployeType;
 use App\Service\User\UserService;
 use App\Repository\UserRepository;
+use App\Form\Simulateur\SearchForm;
 use App\Service\Mailer\MailerService;
 use App\Form\Search\EmployesSearchType;
 use App\Manager\Finance\EmployeManager;
@@ -41,24 +44,40 @@ class EmployeController extends AbstractController
     #[Route('/', name: 'app_finance_employe')]
     public function index(Request $request): Response
     {
-        $data = $this->employeRepository->findBy([], ['id' => 'DESC']);
-        /** Formulaire de recherche annonces */
-        $form = $this->createForm(EmployesSearchType::class);
+        $this->denyAccessUnlessGranted('FINANCE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux administrateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $data = new SearchData;
+        $data->page = $request->get('page', 1);
+        $form = $this->createForm(SearchForm::class, $data);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $nom = $form->get('nom')->getData();
-            $data = $this->employeManager->searchEmployes($nom);
-        }
-
+        $employes = $this->employeRepository->findSearch($data);
+        
         return $this->render('finance/employe/index.html.twig', [
-            'employes' => $this->paginatorInterface->paginate(
-                $data,
-                $request->query->getInt('page', 1),
-                10
-            ),
-            'form' => $form->createView()
+            'employes' => $employes,
+            'form' => $form->createView(),
         ]);
     }
+
+    // #[Route('/', name: 'app_finance_employe')]
+    // public function index(Request $request): Response
+    // {
+    //     $data = $this->employeRepository->findBy([], ['id' => 'DESC']);
+    //     /** Formulaire de recherche annonces */
+    //     $form = $this->createForm(EmployesSearchType::class);
+    //     $form->handleRequest($request);
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $nom = $form->get('nom')->getData();
+    //         $data = $this->employeManager->searchEmployes($nom);
+    //     }
+
+    //     return $this->render('finance/employe/index.html.twig', [
+    //         'employes' => $this->paginatorInterface->paginate(
+    //             $data,
+    //             $request->query->getInt('page', 1),
+    //             10
+    //         ),
+    //         'form' => $form->createView()
+    //     ]);
+    // }
 
     #[Route('/new', name: 'app_finance_employe_new')]
     public function new(Request $request): Response

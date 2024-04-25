@@ -2,10 +2,14 @@
 
 namespace App\Controller\Finance;
 
-use App\Entity\Finance\Employe;
 use DateTime;
 use App\Entity\Notification;
+use App\Entity\Finance\Employe;
+use App\Data\Finance\SearchData;
+use App\Service\User\UserService;
 use App\Entity\Finance\Simulateur;
+use App\Form\Simulateur\SearchForm;
+use App\Service\Mailer\MailerService;
 use App\Manager\Finance\EmployeManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -15,10 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Moderateur\NotificationProfileType;
 use App\Repository\Finance\SimulateurRepository;
-use App\Service\Mailer\MailerService;
-use App\Service\User\UserService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/finance/salaire')]
 class SalaireController extends AbstractController
@@ -160,13 +162,19 @@ class SalaireController extends AbstractController
     #[Route('/employe/{id}', name: 'app_finance_salaire_employe')]
     public function employeSimulations(Request $request, Employe $employe): Response
     {   
+
+        $this->denyAccessUnlessGranted('FINANCE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux administrateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $data = new SearchData;
+        $data->employe = $employe;
+        $data->page = $request->get('page', 1);
+        $form = $this->createForm(SearchForm::class, $data);
+        $form->handleRequest($request);
+        $simulations = $this->simulateurRepository->findSearch($data);
+
         return $this->render('finance/salaire/employe.html.twig', [
-            'simulations' => $this->paginatorInterface->paginate(
-                $employe->getSimulateurs(),
-                $request->query->getInt('page', 1),
-                10
-            ),
+            'simulations' => $simulations,
             'employe' => $employe,
+            'form' => $form->createView(),
         ]);
     }
 }

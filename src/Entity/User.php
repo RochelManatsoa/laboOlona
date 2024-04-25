@@ -30,6 +30,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'Candidat' => self::ACCOUNT_CANDIDAT ,
             'Entreprise' => self::ACCOUNT_ENTREPRISE ,
             'Coopteur' => self::ACCOUNT_REFERRER ,
+            'Employé' => self::ACCOUNT_EMPLOYE ,
         ];
     }
 

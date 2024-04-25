@@ -7,15 +7,16 @@
         <div class="annonce-list p-2">
             <div class="annonce-item shadow p-5 m-4">
                 <h1 class="card-title h2 mb-3">Liste des contrats</h1>
+                    {% include "finance/_filter_demande.html.twig" with {form:form} %}
                     {% if contrats|length > 0 %}
-                    <div class="container">
+                    <div class="container mt-5">
                         <div class="row text-strong">
                             <div class="col-sm-5">Utilisateur | Salaire Net</div>
                             <div class="col-sm-6">
                                 <div class="row">
-                                    <div class="col-sm-6 col-md-4 text-center">Statut</div>
-                                    <div class="col-sm-6 col-md-4 text-center">Créé le</div>
-                                    <div class="col-sm-6 col-md-4">Frais</div>
+                                    <div class="col-sm-6 col-md-4 text-center small">{{ knp_pagination_sortable(contrats, 'Statut', 's.statusFinance') }}</div>
+                                    <div class="col-sm-6 col-md-4 text-center small">{{ knp_pagination_sortable(contrats, 'Créé le', 's.createdAt') }}</div>
+                                    <div class="col-sm-6 col-md-4 text-center small">{{ knp_pagination_sortable(contrats, 'Montant', 'montant') }}</div>
                                 </div>
                             </div>
                             <div class="col-sm-1"></div>
@@ -24,29 +25,28 @@
                         {% for item in contrats %}
                             <div class="row text-muted">
                                 <div class="col-sm-5 small">
-                                    <a href="{{ path('app_finance_employe_view', {'id' : item.id })}}" class="">
-                                        {{ item.employe.user.nom}} 
-                                        {{ item.employe.user.prenom}}
-                                    </a> | <span class="text-dark text-strong">{{ item.simulateur.salaireNet }} {{ item.simulateur.devise.symbole}}</span>
+                                    <a href="{{ path('app_finance_employe_view', {'id' : item[0].id })}}" class="">
+                                        {{ item[0].employe.user.fullName}} 
+                                    </a> | <span class="text-dark text-strong">{{ item[0].simulateur.salaireNet }} {{ item[0].simulateur.devise.symbole}}</span>
                                         <br>
-                                        <span class="text-muted">{{ item.employe.user.email}}</span>
+                                        <span class="text-muted">{{ item[0].employe.user.type}}</span>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-4 text-center">
-                                        {{ item|contratStatusBadge|raw }}
+                                        {{ item[0]|contratStatusBadge|raw }}
                                         </div>
                                         <div class="col-sm-6 col-md-4 small text-center">
-                                        {{ item.simulateur.createdAt|date('d/m/Y') }}<br>
-                                        {{ item.simulateur.createdAt|date('à h:i') }}
+                                        {{ item[0].simulateur.createdAt|date('d/m/Y') }}<br>
+                                        {{ item[0].simulateur.createdAt|date('à h:i') }}
                                         </div>
-                                        <div class="col-sm-6 col-md-4 small text-dark">
-                                        {{ getFraisPortage(item.simulateur) }} {{ item.simulateur.devise.symbole}}
+                                        <div class="col-sm-6 col-md-4 small text-dark text-center">
+                                        {{ item['montant']|number_format(0, '.', '.') }} Ar
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-1 small">
-                                    <a href="{{ path('app_finance_contrat_view', {'id' : item.id })}}" class="btn btn-sm btn-info">
+                                    <a href="{{ path('app_finance_contrat_view', {'id' : item[0].id })}}" class="btn btn-sm btn-info">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                 </div>
@@ -60,8 +60,7 @@
                     </div>
                     {% else %}
                     <div class="container p-5 mx-auto text-center">
-                        Aucunes cooptations effectuées jusqu'à présent <br>
-                        <a href="{{path('app_dashboard_moderateur_coopteurs')}}" class="btn btn-primary px-5 rounded-pill my-4">Liste des Coopteurs</a>
+                        Aucuns résultats correspondant à votre recherche <br>
                     </div>
                 {% endif %}
 

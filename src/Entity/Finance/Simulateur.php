@@ -10,8 +10,32 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: SimulateurRepository::class)]
 class Simulateur
 {    
-    const STATUS_VALID = 'VALID';
-    const STATUS_DELETED = 'DELETED';
+    const STATUS_LIBRE = 'LIBRE';
+    const STATUS_SEND = 'SEND';
+    const STATUS_CONTACT = 'CONTACT';
+    const STATUS_RELANCE = 'RELANCE';
+    const STATUS_CLIENT = 'CLIENT';
+
+
+    public static function getStatuses() {
+        return [
+            'Simulation libre' => self::STATUS_LIBRE ,
+            'Demande envoyée' => self::STATUS_SEND ,
+            'Prise de contact' => self::STATUS_CONTACT ,
+            'Relance' => self::STATUS_RELANCE ,
+            'Client' => self::STATUS_CLIENT ,
+        ];
+    }
+
+    public static function getArrayStatuses() {
+        return [
+             self::STATUS_LIBRE ,
+             self::STATUS_SEND ,
+             self::STATUS_CONTACT ,
+             self::STATUS_RELANCE ,
+             self::STATUS_CLIENT ,
+        ];
+    }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -75,9 +99,12 @@ class Simulateur
     #[ORM\Column(nullable: true)]
     private ?bool $isDeleted = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $statusFinance = null;
+
     public function __construct()
     {
-        $this->status = self::STATUS_VALID;
+        $this->statusFinance = self::STATUS_LIBRE;
     }
     
     public function getId(): ?int
@@ -319,6 +346,18 @@ class Simulateur
     public function setIsDeleted(?bool $isDeleted): static
     {
         $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    public function getStatusFinance(): ?string
+    {
+        return $this->statusFinance;
+    }
+
+    public function setStatusFinance(?string $statusFinance): static
+    {
+        $this->statusFinance = $statusFinance;
 
         return $this;
     }
