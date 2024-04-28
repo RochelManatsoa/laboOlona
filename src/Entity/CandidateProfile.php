@@ -48,9 +48,11 @@ class CandidateProfile
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['identity'])]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['identity'])]
     private ?string $resume = null;
 
     #[ORM\ManyToMany(targetEntity: Competences::class, mappedBy: 'profil', cascade: ['persist', 'remove'])]
@@ -66,18 +68,22 @@ class CandidateProfile
     private Collection $mettings;
 
     #[ORM\ManyToMany(targetEntity: Secteur::class,  inversedBy: 'canditat')]
+    #[Groups(['identity'])]
     private Collection $secteurs;
 
     #[Vich\UploadableField(mapping: 'cv_expert', fileNameProperty: 'fileName')]
     private ?File $file = null;
     
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['identity'])]
     private ?string $fileName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['identity'])]
     private ?string $localisation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['identity'])]
     private ?\DateTimeInterface $birthday = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -100,9 +106,11 @@ class CandidateProfile
     private ?bool $isValid = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['identity'])]
     private ?string $status = null;
 
     #[ORM\Column(type: 'uuid')]
+    #[Groups(['identity'])]
     private ?Uuid $uid = null;
 
     #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: CV::class, cascade: ['persist', 'remove'])]
@@ -115,6 +123,7 @@ class CandidateProfile
     private Collection $editedCvs;
 
     #[ORM\ManyToOne(inversedBy: 'candidats', cascade: ['persist', 'remove'])]
+    #[Groups(['identity'])]
     private ?Availability $availability = null;
 
     #[ORM\OneToOne(mappedBy: 'candidat', cascade: ['persist', 'remove'])]
@@ -733,5 +742,35 @@ class CandidateProfile
         }
 
         return $this;
+    }
+
+    #[Groups(['identity'])]
+    public function getCountViews(): int
+    {
+        return $this->vues->count();
+    }
+
+    #[Groups(['identity'])]
+    public function getCountApplications(): int
+    {
+        return $this->applications->count();
+    }
+
+    #[Groups(['identity'])]
+    public function getCountExperiences(): int
+    {
+        return $this->experiences->count();
+    }
+
+    #[Groups(['identity'])]
+    public function getCountCompetences(): int
+    {
+        return $this->competences->count();
+    }
+
+    #[Groups(['identity'])]
+    public function getUrlImage(): string
+    {
+        return 'https://olona-talents.com/uploads/experts/'.$this->fileName;
     }
 }

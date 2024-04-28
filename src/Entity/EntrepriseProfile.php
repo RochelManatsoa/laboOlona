@@ -2,14 +2,15 @@
 
 namespace App\Entity;
 
-use App\Entity\Entreprise\Favoris;
-use App\Entity\Entreprise\JobListing;
-use App\Entity\Moderateur\Metting;
-use App\Repository\EntrepriseProfileRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Entreprise\Favoris;
+use App\Entity\Moderateur\Metting;
+use App\Entity\Entreprise\JobListing;
+use Doctrine\Common\Collections\Collection;
+use App\Repository\EntrepriseProfileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EntrepriseProfileRepository::class)]
 class EntrepriseProfile
@@ -66,6 +67,7 @@ class EntrepriseProfile
     private Collection $secteurs;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['annonce'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]

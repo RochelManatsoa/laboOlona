@@ -87,27 +87,34 @@ class JobListing
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['annonce'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['annonce'])]
     private ?\DateTimeInterface $dateCreation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['annonce'])]
     private ?\DateTimeInterface $dateExpiration = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['annonce'])]
     private ?string $status = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[Groups(['annonce'])]
     private ?string $salaire = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['annonce'])]
     private ?string $lieu = null;
 
     #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Applications::class, cascade: ['remove'])]
     private Collection $applications;
 
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
+    #[Groups(['annonce'])]
     private ?Secteur $secteur = null;
 
     #[ORM\ManyToMany(targetEntity: Competences::class, inversedBy: 'jobListings')]
@@ -120,12 +127,15 @@ class JobListing
     private Collection $langues;
 
     #[ORM\Column(type: 'uuid')]
+    #[Groups(['annonce'])]
     private ?Uuid $jobId = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['annonce'])]
     private ?int $nombrePoste = null;
 
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
+    #[Groups(['annonce'])]
     private ?TypeContrat $typeContrat = null;
 
     #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: Assignation::class, cascade: ['remove'])]
@@ -138,6 +148,7 @@ class JobListing
     private ?string $prime = null;
 
     #[ORM\ManyToOne(inversedBy: 'annonce', cascade: ['persist'])]
+    #[Groups(['annonce'])]
     private ?BudgetAnnonce $budgetAnnonce = null;
 
     #[ORM\OneToOne(mappedBy: 'annonce', cascade: ['persist', 'remove'])]
@@ -519,5 +530,17 @@ class JobListing
         $this->primeAnnonce = $primeAnnonce;
 
         return $this;
+    }
+
+    #[Groups(['annonce'])]
+    public function getCountViews(): int
+    {
+        return $this->annonceVues->count();
+    }
+
+    #[Groups(['annonce'])]
+    public function getCountApplications(): int
+    {
+        return $this->applications->count();
     }
 }
