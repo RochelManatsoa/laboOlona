@@ -10,10 +10,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/api')]
+#[IsGranted('ROLE_USER')]
 class ApiController extends AbstractController
 {
     public function __construct(

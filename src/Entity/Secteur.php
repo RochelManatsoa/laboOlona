@@ -23,9 +23,11 @@ class Secteur
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['identity'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['identity'])]
     private ?string $description = null;
 
     #[ORM\ManyToMany(targetEntity: EntrepriseProfile::class, mappedBy: 'secteurs')]
