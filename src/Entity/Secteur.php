@@ -19,11 +19,11 @@ class Secteur
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'annonce'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'annonce'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

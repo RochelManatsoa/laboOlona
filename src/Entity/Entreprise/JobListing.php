@@ -118,6 +118,7 @@ class JobListing
     private ?Secteur $secteur = null;
 
     #[ORM\ManyToMany(targetEntity: Competences::class, inversedBy: 'jobListings')]
+    #[Groups(['annonce'])]
     private Collection $competences;
 
     #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: AnnonceVues::class, cascade: ['remove'])]
@@ -135,7 +136,6 @@ class JobListing
     private ?int $nombrePoste = null;
 
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
-    #[Groups(['annonce'])]
     private ?TypeContrat $typeContrat = null;
 
     #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: Assignation::class, cascade: ['remove'])]
@@ -148,7 +148,6 @@ class JobListing
     private ?string $prime = null;
 
     #[ORM\ManyToOne(inversedBy: 'annonce', cascade: ['persist'])]
-    #[Groups(['annonce'])]
     private ?BudgetAnnonce $budgetAnnonce = null;
 
     #[ORM\OneToOne(mappedBy: 'annonce', cascade: ['persist', 'remove'])]
@@ -533,6 +532,12 @@ class JobListing
     }
 
     #[Groups(['annonce'])]
+    public function getSecteurName(): string
+    {
+        return $this->secteur->getNom();
+    }
+
+    #[Groups(['annonce'])]
     public function getCountViews(): int
     {
         return $this->annonceVues->count();
@@ -542,5 +547,49 @@ class JobListing
     public function getCountApplications(): int
     {
         return $this->applications->count();
+    }
+
+    #[Groups(['annonce'])]
+    public function getBudget(): string
+    {
+        $type = '-';
+        if($this->budgetAnnonce){
+            $type = BudgetAnnonce::arrayInverseTarifType()[$this->budgetAnnonce->getTypeBudget()];
+        }
+        return $type;
+    }
+
+    #[Groups(['annonce'])]
+    public function getMontantBudget(): string
+    {
+        $montant = $this->salaire.' €';
+        if($this->budgetAnnonce){
+            if($this->budgetAnnonce->getCurrency()){
+                $montant = $this->budgetAnnonce->getMontant().' '.$this->budgetAnnonce->getCurrency()->getSymbole();
+            }else{
+                $montant = $this->budgetAnnonce->getMontant().' €';
+            }
+        }
+        return $montant;
+    }
+
+    #[Groups(['annonce'])]
+    public function getMontantPrime(): string
+    {
+        $montant = '-';
+        if($this->primeAnnonce && $this->primeAnnonce->getDevise()){
+            $montant = $this->primeAnnonce->getMontant().' '.$this->primeAnnonce->getDevise()->getSymbole();
+        }
+        return $montant;
+    }
+
+    #[Groups(['annonce'])]
+    public function getContrat(): string
+    {
+        $contrat = '-';
+        if($this->typeContrat){
+            $contrat = $this->typeContrat->getNom();
+        }
+        return $contrat;
     }
 }

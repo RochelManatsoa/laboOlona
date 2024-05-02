@@ -2,13 +2,14 @@
 
 namespace App\Entity\Candidate;
 
-use App\Entity\CandidateProfile;
-use App\Entity\Entreprise\JobListing;
-use App\Repository\Candidate\CompetencesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use App\Entity\CandidateProfile;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Entreprise\JobListing;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Repository\Candidate\CompetencesRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CompetencesRepository::class)]
 class Competences
@@ -19,9 +20,11 @@ class Competences
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['annonce'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['annonce'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

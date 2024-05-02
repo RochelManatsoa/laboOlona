@@ -33,7 +33,7 @@ class ApiController extends AbstractController
 
         $annonces = $this->jobListingRepository->findBy(
             ['status' => JobListing::STATUS_PUBLISHED],
-            ['id' => 'ASC'],  
+            ['id' => 'DESC'],  
             $perPage,        
             $offset          
         );
