@@ -114,11 +114,9 @@ class JobListing
     private Collection $applications;
 
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
-    #[Groups(['annonce'])]
     private ?Secteur $secteur = null;
 
     #[ORM\ManyToMany(targetEntity: Competences::class, inversedBy: 'jobListings')]
-    #[Groups(['annonce'])]
     private Collection $competences;
 
     #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: AnnonceVues::class, cascade: ['remove'])]
@@ -591,5 +589,11 @@ class JobListing
             $contrat = $this->typeContrat->getNom();
         }
         return $contrat;
+    }
+
+    #[Groups(['annonce'])]
+    public function getUrl(): string
+    {
+        return 'https://olona-talents.com/dashboard/candidat/annonce/'.$this->jobId;
     }
 }
