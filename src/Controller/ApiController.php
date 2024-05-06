@@ -109,4 +109,14 @@ class ApiController extends AbstractController
             'candidat' => $candidat
         ], Response::HTTP_FOUND, [], ['groups' => 'identity']);
     }
+
+    #[Route('/simulateur', name: 'app_api_simulateur', methods: ['POST'])]
+    public function simulateur(Request $request): Response
+    {        
+        $data = $request->request->all(); 
+    
+        return $this->json([
+            'candidat' => $data
+        ], Response::HTTP_FOUND, [], []);
+    }
 }

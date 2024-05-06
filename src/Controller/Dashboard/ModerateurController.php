@@ -586,6 +586,9 @@ class ModerateurController extends AbstractController
             'cvForms' => $cvForms, 
             'cvs' => $cvs, 
             'formAssignation' => $formAssignation->createView(),
+            'notifications' => $this->em->getRepository(Notification::class)->findBy([
+                'destinataire' => $candidat->getCandidat()
+            ], ['id' => 'DESC']),
         ]);
     }
 

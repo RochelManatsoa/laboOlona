@@ -458,6 +458,23 @@
                             <div class="alert alert-info small" role="alert">
                                 <i class="bi bi-info-circle"></i> L'intégralité de ce contenu sera envoyée à l'utilisateur. N'oubliez pas d'ajouter 'Bonjour' suivi du nom de l'utilisateur. La mise en forme que vous appliquez ici sera conservée à l'envoi.
                             </div>
+                            <h3 class="">Relance</h3>
+                            {% if notifications|length > 0 %}
+                            <div class="list-group d-grid gap-2 border-0">
+
+                                {% for item in notifications %}
+                                <label class="list-group-item rounded-2 py-2" for="listGroupCheckableRadios2">
+                                {{ item.dateMessage|date('d/m/Y à h:m')}}
+                                <span class="d-block small opacity-50">{{ item.titre }}</span>
+                                </label>
+
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="alert alert-danger small" role="alert">
+                                <i class="bi bi-info-circle"></i> Aucune relance effectuée.
+                            </div>
+                            {% endif %}
                         </div> 
                         <div class="col-md-9">
                             {{ form_start(form)}}
