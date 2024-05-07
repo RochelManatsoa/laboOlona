@@ -287,6 +287,7 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        $entreprise = $annonce->getEntreprise();
         if(!$candidat instanceof CandidateProfile){
             return $this->redirectToRoute('app_profile');
         }
@@ -386,6 +387,21 @@ class CandidatController extends AbstractController
                     'objet' => "mise à jour",
                     'details_annonce' => $annonce,
                     'dashboard_url' => $this->urlGenerator->generate('app_dashboard_candidat_annonces', ['id' => $application->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
+    
+            /** Envoi email entreprise */
+            $this->mailerService->send(
+                $entreprise->getEntreprise()->getEmail(),
+                "Nouvelle candidature reçue sur votre annonce Olona-talents.com",
+                "entreprise/notification_candidature.html.twig",
+                [
+                    'user' => $entreprise->getEntreprise(),
+                    'candidature' => $application,
+                    'candidat' => $candidat,
+                    'objet' => "mise à jour",
+                    'details_annonce' => $annonce,
+                    'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidature_annonce_view_default', ['id' => $annonce->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
                 ]
             );
 
