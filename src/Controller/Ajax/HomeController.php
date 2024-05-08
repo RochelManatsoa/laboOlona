@@ -40,10 +40,17 @@ class HomeController extends AbstractController
         $session = $this->requestStack->getSession();
         $session->set('simulateur', [ 'simu' => $simulateur]);
 
-        return $this->json([
+        $response = $this->json([
             'message' => 'Session mise à jour',
             'simulateur' => $simulateur,
         ], 200, []);
+    
+        // Ajouter les en-têtes CORS
+        $response->headers->set('Access-Control-Allow-Origin', 'https://www.home.olona-talents.com');
+        $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+        return $response;
     }
 
     #[Route('/ajax/get/simulateur/{id}', name: 'ajax_home_simulateurs')]
@@ -68,9 +75,16 @@ class HomeController extends AbstractController
     {
         $email = $request->request->get('email');
 
-        return $this->json([
+        $response = $this->json([
             'user' => $this->userRepository->findOneBy(['email' => $email]),
         ], 200, [], ['groups' => 'user']);
+    
+        // Ajouter les en-têtes CORS
+        $response->headers->set('Access-Control-Allow-Origin', 'https://www.home.olona-talents.com');
+        $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+        return $response;
     }
 
 }
