@@ -49,9 +49,18 @@ class HomeController extends AbstractController
     #[Route('/ajax/get/simulateur/{id}', name: 'ajax_home_simulateurs')]
     public function simulateurs(Request $request, int $id): Response
     {
-        return $this->json([
-            'devise' => $this->deviseRepository->find($id),
+        $devise = $this->deviseRepository->find($id);
+    
+        $response = $this->json([
+            'devise' => $devise,
         ], 200, [], ['groups' => 'devise']);
+    
+        // Ajouter les en-têtes CORS
+        $response->headers->set('Access-Control-Allow-Origin', 'https://www.home.olona-talents.com');
+        $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+        return $response;
     }
 
     #[Route('/ajax/check/email', name: 'ajax_home_check_email')]
