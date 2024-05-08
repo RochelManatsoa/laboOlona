@@ -33,6 +33,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'Employé' => self::ACCOUNT_EMPLOYE ,
         ];
     }
+   
+    public static function getTypeAccount() {
+        return [
+            'Candidat' => self::ACCOUNT_CANDIDAT ,
+            'Entreprise' => self::ACCOUNT_ENTREPRISE ,
+            'Coopteur' => self::ACCOUNT_REFERRER ,
+        ];
+    }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

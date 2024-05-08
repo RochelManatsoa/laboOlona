@@ -9,6 +9,7 @@ use App\Entity\Finance\Employe;
 use App\Entity\CandidateProfile;
 use App\Entity\Finance\Simulateur;
 use App\Entity\Entreprise\JobListing;
+use App\Entity\Finance\Avantage;
 use App\Manager\Finance\EmployeManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -129,6 +130,10 @@ class ApiController extends AbstractController
         try {
             $simulateur = $data["simulateur"];
             $simulation = (new Simulateur())->setCreatedAt(new DateTime());
+            $avantage = new Avantage();
+            $avantage->setPrimeConnexion((float)$data["simulateur"]["avantage"]["primeConnexion"]);
+            $avantage->setPrimeFonction((float)$data["simulateur"]["avantage"]["primeFonction"]);
+            $simulation->setAvantage($avantage);
             $email = $data["simulateur"]["user"]["email"];
             $userExist = $this->em->getRepository(User::class)->findOneByEmail($email);
             $devise = $this->em->getRepository(Devise::class)->find($data["simulateur"]["devise"]);
@@ -139,20 +144,20 @@ class ApiController extends AbstractController
                 $userExist = new User();
                 $userExist->setDateInscription(new DateTime())
                     ->setEmail($email)
+                    ->setRoles(['ROLE_EMPLOYE'])
                     ->setPassword($this->encoder->hashPassword($userExist, $data["simulateur"]["user"]["password"]))
                     ->setNom($data["simulateur"]["user"]["nom"])
                     ->setPrenom($data["simulateur"]["user"]["prenom"])
                     ->setTelephone($data["simulateur"]["user"]["telephone"])
                 ;
-            }else{
+            }
                 $employe = $userExist->getEmploye();
                 if(!$employe instanceof Employe){
                     $employe = new Employe();
                     $employe->setUser($userExist);
                     $employe->setSalaireBase(0);
+                    $employe->setNombreEnfants((int)$data["simulateur"]["nombreEnfant"]);
                 }
-            }
-            $employe->setNombreEnfants((int)$data["simulateur"]["nombreEnfant"]);
             $simulation->setEmploye($employe);
             $simulation->setType($data["simulateur"]["type"]);
             $simulation->setTaux($data["simulateur"]["taux"]);
@@ -163,6 +168,7 @@ class ApiController extends AbstractController
             $simulation->setJourDeplacement((int)$data["simulateur"]["jourDeplacement"]);
             $simulation->setPrixRepas((int)$data["simulateur"]["prixRepas"]);
             $simulation->setPrixDeplacement((int)$data["simulateur"]["prixDeplacement"]);
+            $this->em->persist($avantage);
             $this->em->persist($simulation);
             $this->em->persist($employe);
             $this->em->persist($userExist);
