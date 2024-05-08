@@ -2,10 +2,11 @@
 
 namespace App\Entity\Finance;
 
-use App\Entity\Finance\Contrat;
-use App\Repository\Finance\SimulateurRepository;
 use Doctrine\DBAL\Types\Types;
+use App\Entity\Finance\Contrat;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\Finance\SimulateurRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SimulateurRepository::class)]
 class Simulateur
@@ -40,9 +41,11 @@ class Simulateur
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['simulateur'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['simulateur'])]
     private ?float $salaireNet = null;
 
     #[ORM\Column]
@@ -64,6 +67,7 @@ class Simulateur
     private ?float $forfait = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['simulateur'])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
