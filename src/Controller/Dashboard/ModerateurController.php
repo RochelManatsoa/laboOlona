@@ -410,7 +410,7 @@ class ModerateurController extends AbstractController
         }
 
         $referer = $request->headers->get('referer');
-        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidats');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_profile_candidat');
     }
 
     #[Route('/candidat/{uid}/certification', name: 'change_status_certification_candidat', methods: ['POST'])]
@@ -439,7 +439,7 @@ class ModerateurController extends AbstractController
             $this->addFlash('error', 'Statut invalide.');
         }
 
-        return $this->redirectToRoute('app_dashboard_moderateur_candidats');
+        return $this->redirectToRoute('app_dashboard_moderateur_profile_candidat');
     }
 
 
@@ -750,7 +750,7 @@ class ModerateurController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_dashboard_moderateur_candidats');
+        return $this->redirectToRoute('app_dashboard_moderateur_profile_candidat');
     }
 
     #[Route('/mettings', name: 'app_dashboard_moderateur_mettings')]

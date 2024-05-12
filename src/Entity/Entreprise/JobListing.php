@@ -594,6 +594,6 @@ class JobListing
     #[Groups(['annonce'])]
     public function getUrl(): string
     {
-        return 'https://olona-talents.com/dashboard/candidat/annonce/'.$this->jobId;
+        return 'https://app.olona-talents.com/dashboard/candidat/annonce/'.$this->jobId;
     }
 }

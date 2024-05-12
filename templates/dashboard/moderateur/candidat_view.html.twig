@@ -2,7 +2,23 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h2 class="h3">Détails du Candidat : <span class="text-danger">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</span></h2>
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="h3">
+                Détails du Candidat : <span class="text-danger">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</span>
+            </h2>
+        </div>
+        <div class="col-md-4">
+            <form method="post" action="{{ path('change_status_candidat', {'uid': candidat.uid}) }}" class="d-flex justify-content-end">
+                <select name="status" class="form-select form-select-lg bg-dark text-white" onchange="confirmChange(this)">
+                    <option value="PENDING" {{ candidat.status == 'PENDING' ? 'selected' : '' }}>En attente</option>
+                    <option value="VALID" {{ candidat.status == 'VALID' ? 'selected' : '' }}>Valide</option>
+                    <option value="FEATURED" {{ candidat.status == 'FEATURED' ? 'selected' : '' }}>Mis en avant</option>
+                    <option value="RESERVED" {{ candidat.status == 'RESERVED' ? 'selected' : '' }}>Vivier</option>
+                </select>
+            </form>
+        </div>
+    </div>
 
     <!-- Onglets -->
     <ul class="nav nav-tabs">
@@ -463,12 +479,28 @@
                             <div class="list-group d-grid gap-2 border-0">
 
                                 {% for item in notifications %}
-                                <label class="list-group-item rounded-2 py-2" for="listGroupCheckableRadios2">
-                                {{ item.dateMessage|date('d/m/Y à h:m')}}
-                                <span class="d-block small opacity-50">{{ item.titre }}</span>
+                                <label class="list-group-item rounded-2 py-2" data-bs-toggle="modal" data-bs-target="#exampleModal{{ loop.index }}" for="listGroupCheckableRadios2">
+                                    {{ item.dateMessage|date('d/m/Y à h:m')}}
+                                    <span class="d-block small opacity-50">{{ item.titre }}</span>
                                 </label>
 
-                                {% endfor %}
+                                <!-- Modal pour chaque item -->
+                                <div class="modal fade" id="exampleModal{{ loop.index }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ loop.index }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content modal-lg">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title fs-5" id="exampleModalLabel{{ loop.index }}">{{ item.titre }}</h3>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                {{ item.contenu|raw }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+
                             </div>
                             {% else %}
                             <div class="alert alert-danger small" role="alert">
@@ -481,7 +513,7 @@
                             {{ form_widget(form)}}
                             {{ form_errors(form)}}
                             <div class="input-group-append my-4">
-                                <button type="submit" class="btn btn-primary rounded-pill">Envoyer</button>
+                                <button type="submit" class="btn btn-outline-primary rounded-pill px-5">Envoyer</button>
                             </div>
                             {{ form_end(form)}}
                         </div> 
@@ -491,7 +523,7 @@
         </div>
         
     </div>
-    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 </div>
 
         <div class="modal fade" id="candidatAvaillability" tabindex="-1" aria-labelledby="candidatAvaillabilityLabel" aria-hidden="true">
@@ -574,6 +606,13 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const statusSelect = document.querySelector('select[name="status"]');
+        statusSelect.setAttribute('data-previous', statusSelect.value); // Initialise avec la valeur actuelle au chargement
+        statusSelect.addEventListener('change', function() {
+            this.setAttribute('data-previous', this.value);
+        });
+    });
     let globalEditorInstance;
     document.addEventListener('DOMContentLoaded', function() {
         ClassicEditor.create(document.querySelector('#notification_profile_contenu'))
@@ -587,6 +626,14 @@
                 console.error(error);
             });
     });
+    function confirmChange(selectElement) {
+        if (confirm('Êtes-vous sûr de vouloir changer le statut du candidat ?')) {
+            selectElement.form.submit();
+        } else {
+            // Réinitialise la sélection à la valeur précédente si l'utilisateur annule
+            selectElement.value = selectElement.getAttribute('data-previous');
+        }
+    }
 
 </script>
 

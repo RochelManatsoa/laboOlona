@@ -3,9 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\CandidateProfile;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Data\Profile\CandidatSearchData;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<CandidateProfile>
@@ -17,12 +19,10 @@ use Knp\Component\Pager\PaginatorInterface;
  */
 class CandidateProfileRepository extends ServiceEntityRepository
 {
-    private $paginator;
     
-    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, CandidateProfile::class);
-        $this->paginator = $paginator;
     }
 
     /**
@@ -112,13 +112,53 @@ class CandidateProfileRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
     
-//    public function findOneBySomeField($value): ?CandidateProfile
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+
+    public function findSearch(CandidatSearchData $searchData): PaginationInterface
+    {
+        $qb = $this
+        ->createQueryBuilder('c')
+        ->select('c, c.id AS matricule, u.id, u.nom, COUNT(DISTINCT s.id) AS nombreDeCompetences, COUNT(DISTINCT e.id) AS nombreDeExperiences, COUNT(DISTINCT n.id) AS nombreDeRelance')
+        ->leftJoin('c.competences', 's')
+        ->leftJoin('c.experiences', 'e')
+        ->join('c.candidat', 'u')
+        ->leftJoin('u.recus', 'n')
+        ->groupBy('u.id')
+        ->orderBy('c.id', 'DESC')
+        ;
+
+        
+        if (!empty($searchData->q)) {
+            $words = explode(' ', $searchData->q);
+            foreach ($words as $word) {
+                $word = trim($word);
+                if (!empty($word)) {
+                    $qb->andWhere('u.nom LIKE :word OR u.prenom LIKE :word OR u.email LIKE :word OR c.titre LIKE :word')
+                        ->setParameter('word', "%{$word}%");
+                }
+            }
+        }
+
+        if(!empty($searchData->status)){
+            $qb = $qb
+                ->andWhere('c.status LIKE :status')
+                ->setParameter('status', "%{$searchData->status}%")
+            ;
+        }
+
+        if(!empty($searchData->matricule)){
+            $qb = $qb
+                ->andWhere('c.id LIKE :id')
+                ->setParameter('id', "%{$searchData->matricule}%")
+            ;
+        }
+
+        $query =  $qb->getQuery();
+        // dd($query->getResult());
+
+        return $this->paginator->paginate(
+            $query,
+            $searchData->page,
+            10
+        );
+    }
 }

@@ -5,11 +5,7 @@ namespace App\Controller;
 use DateTime;
 use App\Entity\User;
 use Twig\Environment;
-use App\Form\JobListingType;
-use App\Entity\AffiliateTool;
 use App\Entity\Finance\Devise;
-use App\Form\Finance\SimuType;
-use App\Form\RegisterFormType;
 use App\Entity\Finance\Employe;
 use App\Service\User\UserService;
 use App\Entity\Finance\Simulateur;
@@ -211,7 +207,7 @@ class HomeController extends AbstractController
             $this->em->persist($contactForm);
             $this->em->flush();
             $this->mailerService->sendMultiple(
-                ["contact@olona-talents.com", "nirinarocheldev@gmail.com"],
+                ["contact@olona-talents.com", "nirinarocheldev@gmail.com", "techniques@olona-talents.com"],
                 "Nouvelle entrée sur le formulaire de contact",
                 "contact.html.twig",
                 [

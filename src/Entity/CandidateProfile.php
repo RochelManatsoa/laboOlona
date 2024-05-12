@@ -35,6 +35,26 @@ class CandidateProfile
     const STATUS_FEATURED = 'FEATURED';
     const STATUS_RESERVED = 'RESERVED';
 
+    public static function getStatuses() {
+        return [
+            'En attente' => self::STATUS_PENDING ,
+            'Bani' => self::STATUS_BANNISHED ,
+            'Valide' => self::STATUS_VALID ,
+            'Mis en avant' => self::STATUS_FEATURED ,
+            'Vivier' => self::STATUS_RESERVED ,
+        ];
+    }
+
+    public static function getArrayStatuses() {
+        return [
+             self::STATUS_PENDING ,
+             self::STATUS_BANNISHED ,
+             self::STATUS_VALID ,
+             self::STATUS_FEATURED ,
+             self::STATUS_RESERVED ,
+        ];
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -771,6 +791,6 @@ class CandidateProfile
     #[Groups(['identity'])]
     public function getUrlImage(): string
     {
-        return 'https://olona-talents.com/uploads/experts/'.$this->fileName;
+        return 'https://app.olona-talents.com/uploads/experts/'.$this->fileName;
     }
 }

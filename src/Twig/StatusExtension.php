@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Entity\Candidate\TarifCandidat;
+use App\Entity\CandidateProfile;
 use App\Entity\User;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -50,6 +51,7 @@ class StatusExtension extends AbstractExtension
             new TwigFunction('arrayInverseTarifType', [$this, 'arrayInverseTarifType']),
             new TwigFunction('satusSimulateur', [$this, 'satusSimulateur']),
             new TwigFunction('satusEntreprise', [$this, 'satusEntreprise']),
+            new TwigFunction('satusCandidate', [$this, 'satusCandidate']),
             new TwigFunction('satusMetting', [$this, 'satusMetting']),
             new TwigFunction('typeSimulateur', [$this, 'typeSimulateur']),
         ];
@@ -158,6 +160,38 @@ class StatusExtension extends AbstractExtension
 
             case EntrepriseProfile::STATUS_BANNED :
                 $status = '<span class="badge text-bg-danger">Banni</span>';
+                break;
+            
+            default:
+                $status = '<span class="badge text-bg-info">En attente</span>';
+                break;
+        }
+        
+        return $status;
+    }
+
+    public function satusCandidate(CandidateProfile $entreprise)
+    {
+        $type = $entreprise->getStatus() ?? '';
+        switch ($type) {
+            case CandidateProfile::STATUS_VALID :
+                $status = '<span class="badge text-bg-primary">Validé</span>';
+                break;
+
+            case CandidateProfile::STATUS_PENDING :
+                $status = '<span class="badge text-bg-danger">En attente</span>';
+                break;
+
+            case CandidateProfile::STATUS_FEATURED :
+                $status = '<span class="badge text-bg-dark">Mis en avant</span>';
+                break;
+
+            case CandidateProfile::STATUS_BANNISHED :
+                $status = '<span class="badge text-bg-info">Banni</span>';
+                break;
+
+            case CandidateProfile::STATUS_RESERVED :
+                $status = '<span class="badge text-bg-danger">Vivier</span>';
                 break;
             
             default:

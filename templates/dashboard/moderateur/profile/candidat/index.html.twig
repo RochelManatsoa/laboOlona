@@ -1,20 +1,103 @@
-{% extends 'base.html.twig' %}
+{% extends 'dashboard/base.html.twig' %}
 
-{% block title %}Hello CandidatController!{% endblock %}
-
+{% block title %}Candidats
+{% endblock %}
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	<div class="container mt-5">
+		<h2>Gestion des candidats</h2>
+		{% include "dashboard/moderateur/profile/_filter_profile.html.twig" with {form:form} %}
+		{% if candidats|length > 0 %}
+		<span class="text-muted small">Votre recherche renvoie <span class="text-strong">{{ candidats.getTotalItemCount }}</span> résultats.</span>
+			<div class="navigation">
+				{{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
+			</div>
+			<div class="container mt-5">
+				<div class="row text-strong">
+					<div class="col-sm-3">Nom et prénom(s)</div>
+					<div class="col-sm-8">
+						<div class="row">
+							<div class="col-sm-6 col-md-2 text-center text-dark small">
+								{{ knp_pagination_sortable(candidats, 'Matricule', 'matricule') }}
+                            </div>
+							<div class="col-sm-6 col-md-2 text-center text-dark small">
+								{{ knp_pagination_sortable(candidats, 'Inscrit le', 'u.dateInscription') }}
+                            </div>
+							<div class="col-sm-6 col-md-2 text-center text-dark small">
+								{{ knp_pagination_sortable(candidats, 'Connecté', 'u.lastLogin') }}
+                            </div>
+							<div class="col-sm-6 col-md-2 text-center text-dark small">
+                                {{ knp_pagination_sortable(candidats, 'Exp', 'nombreDeExperiences') }}
+                            </div>
+							<div class="col-sm-6 col-md-2 text-center text-dark small">
+								{{ knp_pagination_sortable(candidats, 'Comp', 'nombreDeCompetences') }}
+                            </div>
+							<div class="col-sm-6 col-md-2 text-center text-dark small">
+								{{ knp_pagination_sortable(candidats, 'Relance', 'nombreDeRelance') }}
+                            </div>
+						</div>
+					</div>
+					<div class="col-sm-1"></div>
+				</div>
+				<hr>
+				{% for item in candidats %}
+					<div class="row text-muted">
+						<div class="col-sm-3 small">
+							<div class="row">
+								<div class="col-4">
+                            		<div class="img-fluid rounded-start bg-image-candidat" style="background-image: url('{{ item[0].fileName ? asset('uploads/experts/' ~ item[0].fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="{{ generatePseudo(item[0]) }}"></div>
+								</div>
+								<div class="col-8">
+									<a href="{{ path('app_dashboard_moderateur_candidat_view', {'id' : item[0].id })}}" class="">
+										{{ item[0].candidat.fullName}}<br>
+									</a>
+										{{ item[0].candidat.email }}
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-8">
+							<div class="row">
+								<div class="col-sm-6 text-center col-md-2 small">
+									{{ generatePseudo(item[0]) }}<br>
+									{{ satusCandidate(item[0])|raw }}
+								</div>
+								<div class="col-sm-6 text-center col-md-2 small">
+									{{ item[0].candidat.dateInscription|date('d/m/Y') }}
+								</div>
+								<div class="col-sm-6 text-center col-md-2 small">
+									{{ item[0].candidat.lastLogin|time_ago }}
+								</div>
+								<div class="col-sm-6 text-center col-md-2 text-center">
+									<span class="badge text-bg-warning">{{ item[0].experiences|length }}</span><br>
+								</div>
+								<div class="col-sm-6 text-center col-md-2 ">
+									<span class="badge text-bg-success">{{ item[0].competences|length }}</span>
+								</div>
+								<div class="col-sm-6 text-center col-md-2 ">
+									<span class="badge text-bg-dark">{{ item['nombreDeRelance'] }}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-1 small">
+							<a href="{{ path('app_dashboard_moderateur_candidat_view', {'id' : item[0].id })}}" class="btn btn-sm btn-info">
+								<i class="bi bi-eye"></i>
+							</a>
+						</div>
+					</div>
+					<hr>
+				{% endfor %}
+			</div>
+			<div class="navigation mt-5">
+				{{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
+			</div>
+		{% else %}
+			<div class="container p-5 mx-auto text-center">
+				Aucuns résultats correspondant à votre recherche
+				<br>
+			</div>
+		{% endif %}
+		<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
+			<i class="mx-2 bi bi-arrow-left"></i>Retour
+		</a>
+	</div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/rochel/Documents/symfony/laboOlona/src/Controller/Dashboard/Moderateur/Profile/CandidatController.php'|file_link(0) }}">src/Controller/Dashboard/Moderateur/Profile/CandidatController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/rochel/Documents/symfony/laboOlona/templates/dashboard/moderateur/profile/candidat/index.html.twig'|file_link(0) }}">templates/dashboard/moderateur/profile/candidat/index.html.twig</a></code></li>
-    </ul>
-</div>
 {% endblock %}

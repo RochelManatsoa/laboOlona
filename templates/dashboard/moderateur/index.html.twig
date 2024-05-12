@@ -82,7 +82,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="card-body">
-                        <a href="{{ path('app_dashboard_moderateur_candidats') }}" class="text-decoration-none text-white">
+                        <a href="{{ path('app_dashboard_moderateur_profile_candidat') }}" class="text-decoration-none text-white">
                             <h2 class="card-title">{{ candidats|length }}</h2>
                             <p class="card-text small">Candidats</p>
                         </a>
@@ -90,7 +90,7 @@
                     </div>
                     <div class="col">
                         <div class="card-body">
-                        <a href="{{ path('app_dashboard_moderateur_candidats', {'status':'PENDING'}) }}" class="text-decoration-none">
+                        <a href="{{ path('app_dashboard_moderateur_profile_candidat', {'status':'PENDING'}) }}" class="text-decoration-none">
                         {% if candidats_pending|length > 0 %}
                             <p class="card-text"> <span class="badge text-bg-dark rounded-pill"><span class="fs-6">{{ candidats_pending|length }}</span> à valider</span></p>
                         {% endif %}
