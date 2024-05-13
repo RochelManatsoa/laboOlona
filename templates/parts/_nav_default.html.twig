@@ -1,31 +1,11 @@
 {% set current_route = app.request.attributes.get('_route') %}
 <nav class="navbar navbar-dark bg-black fixed-top border-bottom">
 	<div class="container">
-		<a class="navbar-brand" href="{{ path('app_home')}}">
+		<a class="navbar-brand" href="https://www.olona-talents.com/">
 			<img src="{{ asset('images/logo-olona-teams-white.png')}}" alt="Olona Talents" width="122" height="50">
 		</a>
 
 		<ul class="navbar-nav d-none d-lg-flex flex-row justify-content-center">
-			<li class="nav-item me-3">
-				<a class="nav-link {{ current_route == 'app_dashboard_entreprise_new_annonce' ? 'active' : '' }}" href="{{ path('app_dashboard_entreprise_new_annonce') }}">
-					{{ 'app_dashboard_entreprise_posting_new.menu'|trans }}
-				</a>
-			</li>
-			<li class="nav-item me-3">
-				<a class="nav-link {{ current_route == 'app_dashboard_entreprise_recherche_candidats' ? 'active' : '' }}" href="{{ path('app_dashboard_entreprise_recherche_candidats') }}">
-					{{ 'app_home_experts.menu'|trans }}
-				</a>
-			</li>
-			<li class="nav-item me-3">
-				<a class="nav-link {{ current_route == 'app_dashboard_candidat_annonce' ? 'active' : '' }}" href="{{ path('app_dashboard_candidat_annonce') }}">
-					{{ 'app_home_posting.menu'|trans }}
-				</a>
-			</li>
-			<li class="nav-item me-3">
-				<a class="btn btn-secondary" href="{{ path('app_home_service') }}">
-					Comment ça marche ?
-				</a>
-			</li>
 		</ul>
 
 
