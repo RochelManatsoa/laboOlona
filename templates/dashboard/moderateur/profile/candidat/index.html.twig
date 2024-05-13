@@ -40,13 +40,24 @@
 				</div>
 				<hr>
 				{% for item in candidats %}
-					<div class="row text-muted">
+					<div class="row text-muted d-flex align-items-center">
 						<div class="col-sm-3 small">
 							<div class="row">
 								<div class="col-4">
                             		<div class="img-fluid rounded-start bg-image-candidat" style="background-image: url('{{ item[0].fileName ? asset('uploads/experts/' ~ item[0].fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="{{ generatePseudo(item[0]) }}"></div>
 								</div>
-								<div class="col-8">
+								<div class="col-8 text-dark">
+										{{ item[0].secteurs|length}} secteurs<br>
+										CV : 
+										{% if item[0].cv is not null %}
+										<i class="bi bi-check-lg btn btn-sm btn-success"></i>
+										{% else %}
+										<i class="bi bi-ban btn btn-sm btn-light"></i>
+										{% endif %}
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
 									<a href="{{ path('app_dashboard_moderateur_candidat_view', {'id' : item[0].id })}}" class="">
 										{{ item[0].candidat.fullName}}<br>
 									</a>

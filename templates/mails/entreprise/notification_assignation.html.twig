@@ -107,21 +107,13 @@
             <img src="https://app.olona-talents.com/images/logo-olona-talents-black.png" alt="Logo Olona-talents">
         </div>
         <div class="content">
-            <p class="greeting">Bonjour {{user.nom}} </p>
-            <p>Votre entretien <strong>{{ rendezvous.title }}</strong> a été reprogrammé.</p>
-            <p><strong>Détails de l'entretien :</strong></p>
-            <p><strong>Date et Heure :</strong> {{ rendezvous.dateRendezVous|date('d/m/Y H:i') }}</p>
-            <p><strong>Lieu :</strong> {{ rendezvous.lieu }}</p>
-            {% if rendezvous.link %}
-            <p><strong>Lien de l'entretien virtuel :</strong> <a href="{{ rendezvous.link }}">Lien</a></p>
-            {% endif %}
-                
-            <p>Veuillez confirmer votre participation en cliquant sur le lien ci-dessous :</p>
-            <a href="{{ confirmationLink }}" style="display: inline-block; padding: 12px 24px; background-color: #0D6EFD; color: #FFFFFF; border-radius: 5px; text-decoration: none; font-weight: 500; margin-bottom: 20px;">Confirmer ma participation</a>
-
-            <p>En cas d'empêchement ou de besoin de reprogrammer, veuillez nous contacter dès que possible.</p>
-
-            <p>Merci et nous sommes impatients de vous rencontrer !</p>
+            <p>Bonjour</p>
+            <p>Nous espérons que vous allez bien. Suite à votre annonce récemment publiée sur Olona Talents <strong>{{ details_annonce.titre|raw }}</strong>, nous avons le plaisir de vous suggérer un profil qui semble correspondre à vos besoins.</p>
+            <p>Le profil <strong>{{ generatePseudo(candidat) }} | {{ candidat.titre }}</strong> possède les compétences et l'expérience que vous recherchez, et nous pensons qu’il pourrait être un excellent ajout à votre équipe.</p>
+            <p>Vous pouvez consulter le profil de <strong>{{ generatePseudo(candidat) }}</strong> directement sur notre plateforme. Nous sommes convaincus que ce profil a le potentiel pour contribuer de manière significative à votre entreprise.</p>
+            <p>N’hésitez pas à nous contacter pour toute information supplémentaire ou pour organiser un entretien avec le candidat.</p>
+            <p>Nous vous remercions pour votre confiance en Olona Talents et restons à votre disposition pour toute assistance complémentaire.</p>
+            <a href="{{ dashboard_url|raw }}" style="display: inline-block; padding: 12px 24px; background-color: #0D6EFD; color: #FFFFFF; border-radius: 5px; text-decoration: none; font-weight: 500; margin-bottom: 20px;">Voir le profil</a>
             
             <div class="tips">
                 <strong>Tip du Jour :</strong>

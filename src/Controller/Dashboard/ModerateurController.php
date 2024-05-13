@@ -487,6 +487,22 @@ class ModerateurController extends AbstractController
             $this->notificationManager->createNotification($this->moderateurManager->getModerateurs()[1], $assignation->getJobListing()->getEntreprise()->getEntreprise(), Notification::TYPE_CONTACT, $titre, $contenu );
             $assignation = $formAssignation->getData();
             $this->assignationManager->saveForm($formAssignation);
+
+    
+            /** Envoi email entreprise */
+            $this->mailerService->send(
+                $assignation->getJobListing()->getEntreprise()->getEntreprise()->getEmail(),
+                "Suggestion de profil pour votre annonce sur Olona Talents",
+                "entreprise/notification_assignation.html.twig",
+                [
+                    'user' => $assignation->getJobListing()->getEntreprise()->getEntreprise(),
+                    'candidature' => $assignation,
+                    'candidat' => $candidat,
+                    'objet' => "mise à jour",
+                    'details_annonce' => $assignation->getJobListing(),
+                    'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidature_annonce_view_suggest', ['id' => $assignation->getJobListing()->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
             $this->addFlash('success', 'Assignation effectuée');
                 
             return $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()]);

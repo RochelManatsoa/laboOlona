@@ -755,19 +755,19 @@ class AppExtension extends AbstractExtension
     public function getTarifForfait(Assignation $assignation)
     {
         $tarif = '<i class="bi bi-ban px-4"></i>';
-        $tarifCandidat = $assignation->getForfaitAssignation();
-        if($tarifCandidat instanceof Forfait){
-            switch ($tarifCandidat->getAssignation()->getForfaitAssignation()->getTypeForfait()) {
+        $forfait = $assignation->getForfaitAssignation();
+        if($forfait instanceof Forfait){
+            switch ($forfait->getAssignation()->getForfaitAssignation()->getTypeForfait()) {
                 case Forfait::TYPE_HOURLY :
-                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.Forfait::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par heure';
+                    $tarif = '<strong>'.$forfait->getMontant().' '.$forfait->getDevise().'</strong> par heure';
                     break;
                 
                 case Forfait::TYPE_DAILY :
-                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.Forfait::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par jour';
+                    $tarif = '<strong>'.$forfait->getMontant().' '.$forfait->getDevise().'</strong> par jour';
                     break;
 
                 case Forfait::TYPE_MONTHLY :
-                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.Forfait::getDeviseSymbol($tarifCandidat->getDevise()).'</strong> par mois';
+                    $tarif = '<strong>'.$forfait->getMontant().' '.$forfait->getDevise().'</strong> par mois';
                     break;
             }
         }
