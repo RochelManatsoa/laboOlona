@@ -793,4 +793,13 @@ class CandidateProfile
     {
         return 'https://app.olona-talents.com/uploads/experts/'.$this->fileName;
     }
+
+    #[Groups(['identity'])]
+    public function getMatricule(): string
+    {
+        $letters = 'OT';
+        $paddedId = sprintf('%04d', $this->getId());
+
+        return $letters . $paddedId;
+    }
 }

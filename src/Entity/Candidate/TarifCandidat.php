@@ -80,6 +80,29 @@ class TarifCandidat
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    public function __toString(): string
+    {
+        $tarif = $this->getMontant();
+        $symbole = $this->getDeviseSymbol($this->getDevise());
+        if($this->getCurrency()){
+            $symbole = $this->getCurrency()->getSymbole();
+        }
+        switch ($this->getTypeTarif()) {
+            case TarifCandidat::TYPE_HOURLY :
+                $tarif = $this->getMontant().' '.$symbole.' /heure';
+                break;
+            
+            case TarifCandidat::TYPE_DAILY :
+                $tarif = $this->getMontant().' '.$symbole.' /jour';
+                break;
+
+            case TarifCandidat::TYPE_MONTHLY :
+                $tarif = $this->getMontant().' '.$symbole.' /mois';
+                break;
+        }
+        return $tarif;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

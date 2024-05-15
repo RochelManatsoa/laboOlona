@@ -23,7 +23,7 @@ class Devise
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['devise'])]
-    private ?string $symbole = null;
+    private ?string $symbole = '€';
 
     #[ORM\Column(nullable: true)]
     #[Groups(['devise'])]

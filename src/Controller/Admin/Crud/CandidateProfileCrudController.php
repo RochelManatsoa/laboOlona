@@ -5,11 +5,16 @@ namespace App\Controller\Admin\Crud;
 use App\Entity\CandidateProfile;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use App\Controller\Admin\TarifCandidatCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class CandidateProfileCrudController extends AbstractCrudController
 {
@@ -30,16 +35,21 @@ class CandidateProfileCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            FormField::addColumn(8),
             IdField::new('id')->hideOnForm(),
             TextField::new('titre'),
             TextField::new('candidat.fullName', 'Nom et prénom')->hideOnForm(),
             TextField::new('candidat.nom', 'Nom')->hideOnIndex(),
             TextField::new('candidat.prenom', 'Prénom(s)')->hideOnIndex(),
+            TextEditorField::new('resume', 'Biographie')->hideOnIndex(),
+            FormField::addColumn(4),
             DateField::new('candidat.dateInscription', 'Inscrit le')->hideOnForm(),
             DateField::new('candidat.lastLogin', 'Last login')->hideOnForm(),
-            TextEditorField::new('resume', 'Biographie')->hideOnIndex(),
+            ChoiceField::new('status', 'Statut')->setChoices(CandidateProfile::getStatuses())->hideOnIndex(),
             AssociationField::new('competences', 'Compétences')->hideOnIndex(),
-            // AssociationField::new('langages', 'Langues')->hideOnIndex(),
+            AssociationField::new('secteurs', 'Secteurs')->hideOnIndex(),
+            ImageField::new('fileName', 'Avatar')->setUploadDir('/public/uploads/experts/')->setBasePath('uploads/experts/'),
+            AssociationField::new('tarifCandidat', 'Tarif Candidat')->hideOnForm()->setSortable(false),
         ];
     }
 }

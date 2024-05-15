@@ -32,7 +32,8 @@ class ContratRepository extends ServiceEntityRepository
         ->select('c', 's', 'e', 'u', '(s.salaireNet * s.taux) AS montant')
         ->join('c.simulateur', 's')
         ->join('s.employe', 'e')
-        ->join('e.user', 'u');
+        ->join('e.user', 'u')
+        ->orderBy('c.id', 'DESC')
         ;
 
         if($searchData->employe instanceof Employe){

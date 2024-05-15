@@ -38,6 +38,16 @@ class CandidatSearchFormType extends AbstractType
                 'attr' => [
                 ]
             ])
+            ->add('cv', ChoiceType::class, [
+                'choices' => [
+                    'Sans CV' => 0,
+                    'Avec CV' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'CV',
+                'data' => 0,
+            ])
         ;
     }
 

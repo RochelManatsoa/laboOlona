@@ -209,6 +209,9 @@ class CandidatManager
     }
     
     public function sendNotificationEmail($candidat) {
+        $candidat->setStatus(CandidateProfile::STATUS_PENDING);
+        $this->em->persist($candidat);
+        $this->em->flush();
         $this->mailerService->sendMultiple(
             $this->moderateurManager->getModerateurEmails(),
             $candidat->getCandidat()->getPrenom().' a mis à jour son profil sur Olona Talents',

@@ -145,6 +145,14 @@ class CandidateProfileRepository extends ServiceEntityRepository
             ;
         }
 
+        if ($searchData->cv === 1) {
+            $qb = $qb
+                ->andWhere('c.cv IS NOT NULL');
+        } elseif ($searchData->cv === 0) {
+            $qb = $qb
+                ->andWhere('c.cv IS NULL');
+        }
+
         if(!empty($searchData->matricule)){
             $qb = $qb
                 ->andWhere('c.id LIKE :id')

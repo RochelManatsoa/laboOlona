@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
 use App\Entity\User;
 use App\Service\YouTubeService;
@@ -58,11 +59,16 @@ class SecurityController extends AbstractController
         if ($user->getType() === User::ACCOUNT_ENTREPRISE) {
             if(!$user->getEntrepriseProfile() instanceof EntrepriseProfile){
                 return $this->redirectToRoute('app_profile_entreprise');
+            }elseif ($user->getEntrepriseProfile()->getStatus() === EntrepriseProfile::STATUS_BANNED) {
+                return $this->redirectToRoute('app_logout');
             }
             return $this->redirectToRoute('app_dashboard_entreprise');
         }
     
         if ($user->getType() === User::ACCOUNT_CANDIDAT) {
+            if ($user->getCandidateProfile() instanceof CandidateProfile && $user->getCandidateProfile()->getStatus() === CandidateProfile::STATUS_BANNISHED) {
+                return $this->redirectToRoute('app_logout');
+            }
             return $this->redirectToRoute('app_dashboard_candidat');
         }
 

@@ -30,5 +30,10 @@ class CandidatSearchData
     /**
      * @var null|integer
      */
+    public $cv;
+
+    /**
+     * @var null|integer
+     */
     public $matricule;
 }
