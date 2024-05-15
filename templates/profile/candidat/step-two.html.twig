@@ -1,5 +1,12 @@
 {% extends 'base.html.twig' %}
-
+{% block stylesheets %}
+{{ parent()}}
+<style>
+    .ck-content {
+        min-height: 200px;  
+    }
+</style>
+{% endblock %}
 {% block body %}
     <section id="step-two" class="" style="background-color: black;">
         <div class="container">
@@ -212,10 +219,10 @@
                 </div>
                 <hr class="my-4">
                 <div class="d-flex flex-column flex-sm-row justify-content-center">
-                    <a href="{{ path('app_profile_candidate_step_one')}}" id="cancel" class="btn btn-outline-dark rounded-pill mx-2 mb-3">
+                    <a href="{{ path('app_profile_candidate_step_one')}}" id="cancel" class="btn btn-outline-dark rounded-pill mx-2 px-2 px-sm-5 mb-3">
                         {{ 'app_identity_expert_step_two.cancel'|trans }}
                     </a>
-                    <button type="submit" id="submitForm" class="btn btn-primary rounded-pill mx-2 mb-3">
+                    <button type="submit" id="submitForm" class="btn btn-primary rounded-pill mx-2 px-2 px-sm-5 mb-3">
                         {{ 'app_identity_expert_step_two.button'|trans }}
                     </button>
                 </div>

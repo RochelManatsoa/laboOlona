@@ -1,37 +1,69 @@
 {% extends 'dashboard/base.html.twig' %}
 
+
 {% block body %}
-<div class="container mt-5">
-    <h2>Portages salariales</h2>
-    {# {{ form_start(form, {'attr': {'class': 'form-group mb-2 col-6', 'id':'moderateur-secteur-search-form'}}) }}
-    <div class="input-group">
-        {{ form_widget(form.secteur, {'attr': {'class': 'form-control'}}) }}
-    </div>
-    {{ form_end(form) }} #}
-    <div id="secteurs-container">
-        {% include 'dashboard/moderateur/portage/_portages.html.twig' %}
-    </div>
-</div>
+    <div class="container">
+        <div class="annonce-list p-2">
+                <h1 class="card-title h2 mb-3">Liste des contrats</h1>
+                    {% include "finance/_filter_demande.html.twig" with {form:form} %}
+		            <span class="text-muted small">Votre recherche renvoie <span class="text-strong">{{ contrats.getTotalItemCount }}</span> résultats.</span>
+                    {% if contrats|length > 0 %}
+                    <div class="container mt-5">
+                        <div class="row text-strong">
+                            <div class="col-sm-5">Utilisateur | Salaire Net</div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-4 text-center small">{{ knp_pagination_sortable(contrats, 'Statut', 's.statusFinance') }}</div>
+                                    <div class="col-sm-6 col-md-4 text-center small">{{ knp_pagination_sortable(contrats, 'Créé le', 's.createdAt') }}</div>
+                                    <div class="col-sm-6 col-md-4 text-center small">{{ knp_pagination_sortable(contrats, 'Montant', 'montant') }}</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1"></div>
+                        </div>
+                        <hr>
+                        {% for item in contrats %}
+                            <div class="row text-muted">
+                                <div class="col-sm-5 small">
+                                    <a href="{{ path('app_finance_employe_view', {'id' : item[0].id })}}" class="">
+                                        {{ item[0].employe.user.fullName}} 
+                                    </a> | <span class="text-dark text-strong">{{ item[0].simulateur.salaireNet }} {{ item[0].simulateur.devise.symbole}}</span>
+                                        <br>
+                                        <span class="text-muted">{{ item[0].employe.user.type}}</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-4 text-center">
+                                        {{ item[0]|contratStatusBadge|raw }}
+                                        </div>
+                                        <div class="col-sm-6 col-md-4 small text-center">
+                                        {{ item[0].simulateur.createdAt|date('d/m/Y') }}<br>
+                                        {{ item[0].simulateur.createdAt|date('à h:i') }}
+                                        </div>
+                                        <div class="col-sm-6 col-md-4 small text-dark text-center">
+                                        {{ item['montant']|number_format(0, '.', '.') }} Ar
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1 small">
+                                    <a href="{{ path('app_dashboard_moderateur_view_portage', {'id' : item[0].id })}}" class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </div>
+                            </div>                    
+                            <hr>                    
+                        {% endfor %}
+                    <!-- Plus de lignes et colonnes ici -->
+                    </div>
+                    <div class="navigation mt-5">
+                        {{ knp_pagination_render(contrats, 'parts/_pagination.html.twig') }}
+                    </div>
+                    {% else %}
+                    <div class="container p-5 mx-auto text-center">
+                        Aucuns résultats correspondant à votre recherche <br>
+                    </div>
+                {% endif %}
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    function searchAnnonces() {
-        var formData = $('#moderateur-secteur-search-form').serialize();
-
-        $.ajax({
-            url: '{{ path('app_dashboard_moderateur_secteur') }}',
-            type: 'GET',
-            data: formData,
-            success: function(data) {
-                $('#secteurs-container').html(data.content);
-            }
-        });
-    }
-    $('#moderateur-secteur-search-form input, #moderateur-secteur-search-form select').on('keyup change', function() {
-        searchAnnonces();
-    });
-});
-</script>
+        </div>
+    </div>
 {% endblock %}
 

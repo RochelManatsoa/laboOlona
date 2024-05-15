@@ -555,6 +555,9 @@ class CandidatController extends AbstractController
         $cvEdited = $this->em->getRepository(CV::class)->find($cvId);
 
         if ($cvEdited !== null) {
+            $candidat = $cvEdited->getCandidat();
+            $candidat->setCv(null);
+            $this->em->persist($candidat);
             $this->em->remove($cvEdited);
             $this->em->flush();
         }

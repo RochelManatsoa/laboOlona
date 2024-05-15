@@ -2,9 +2,12 @@
 
 namespace App\Controller\Dashboard\Moderateur;
 
+use App\Data\Finance\SearchData;
+use App\Data\Profile\PortageSearchData;
 use App\Entity\Finance\Contrat;
 use App\Entity\Finance\Simulateur;
 use App\Entity\Secteur;
+use App\Form\Moderateur\Finance\PortageSearchFormType;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
 use App\Form\Moderateur\SecteurType;
@@ -14,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\Search\Secteur\SecteurSearchType;
+use App\Form\Simulateur\SearchForm;
 use App\Manager\Finance\EmployeManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,40 +35,56 @@ class PortageController extends AbstractController
         private EmployeManager $employeManager,
     ) {}
 
+    // #[Route('/portages', name: 'app_dashboard_moderateur_portage')]
+    // public function portage(Request $request, SecteurRepository $secteurRepository, PaginatorInterface $paginatorInterface): Response
+    // {
+    //     $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+    //     /** Formulaire de recherche secteur */
+    //     $form = $this->createForm(SecteurSearchType::class);
+    //     $form->handleRequest($request);
+    //     $data = $secteurRepository->findAll();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $searchTerm = $form->get('secteur')->getData();
+    //         $data = $this->moderateurManager->searchSecteur($searchTerm);
+    //         if ($request->isXmlHttpRequest()) {
+    //             // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
+    //             return new JsonResponse([
+    //                 'content' => $this->renderView('dashboard/moderateur/secteur/_secteurs.html.twig', [
+    //                     'secteurs' => $paginatorInterface->paginate(
+    //                         $data,
+    //                         $request->query->getInt('page', 1),
+    //                         10
+    //                     ),
+    //                     'result' => $data
+    //                 ])
+    //             ]);
+    //         }
+    //     }
+
+    //     return $this->render('dashboard/moderateur/portage/index.html.twig', [
+    //         'secteurs' => $paginatorInterface->paginate(
+    //             $data,
+    //             $request->query->getInt('page', 1),
+    //             10
+    //         ),
+    //         'result' => $data,
+    //         'portages' => $this->em->getRepository(Contrat::class)->findBy([], ['id' => 'DESC']),
+    //         'form' => $form->createView(),
+    //     ]);
+    // }
+
     #[Route('/portages', name: 'app_dashboard_moderateur_portage')]
-    public function portage(Request $request, SecteurRepository $secteurRepository, PaginatorInterface $paginatorInterface): Response
+    public function index(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
-        /** Formulaire de recherche secteur */
-        $form = $this->createForm(SecteurSearchType::class);
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux administrateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $data = new SearchData();
+        $data->page = $request->get('page', 1);
+        $form = $this->createForm(SearchForm::class, $data);
         $form->handleRequest($request);
-        $data = $secteurRepository->findAll();
-        if ($form->isSubmitted() && $form->isValid()) {
-            $searchTerm = $form->get('secteur')->getData();
-            $data = $this->moderateurManager->searchSecteur($searchTerm);
-            if ($request->isXmlHttpRequest()) {
-                // Si c'est une requête AJAX, renvoyer une réponse JSON ou un fragment HTML
-                return new JsonResponse([
-                    'content' => $this->renderView('dashboard/moderateur/secteur/_secteurs.html.twig', [
-                        'secteurs' => $paginatorInterface->paginate(
-                            $data,
-                            $request->query->getInt('page', 1),
-                            10
-                        ),
-                        'result' => $data
-                    ])
-                ]);
-            }
-        }
+        $contrats = $this->em->getRepository(Contrat::class)->findSearch($data);
 
         return $this->render('dashboard/moderateur/portage/index.html.twig', [
-            'secteurs' => $paginatorInterface->paginate(
-                $data,
-                $request->query->getInt('page', 1),
-                10
-            ),
-            'result' => $data,
-            'portages' => $this->em->getRepository(Contrat::class)->findBy([], ['id' => 'DESC']),
+            'contrats' => $contrats,
             'form' => $form->createView(),
         ]);
     }
