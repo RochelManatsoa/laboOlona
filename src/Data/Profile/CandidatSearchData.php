@@ -35,5 +35,20 @@ class CandidatSearchData
     /**
      * @var null|integer
      */
+    public $experiences;
+
+    /**
+     * @var null|integer
+     */
+    public $competences;
+
+    /**
+     * @var null|integer
+     */
+    public $avatar;
+
+    /**
+     * @var null|integer
+     */
     public $matricule;
 }

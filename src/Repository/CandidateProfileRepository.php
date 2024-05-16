@@ -153,6 +153,30 @@ class CandidateProfileRepository extends ServiceEntityRepository
                 ->andWhere('c.cv IS NULL');
         }
 
+        if ($searchData->avatar === 1) {
+            $qb = $qb
+                ->andWhere('c.fileName IS NOT NULL');
+        } elseif ($searchData->avatar === 0) {
+            $qb = $qb
+                ->andWhere('c.fileName IS NULL');
+        }
+
+        if ($searchData->competences === 1) {
+            $qb = $qb
+                ->andWhere('s.id IS NOT NULL');
+        } elseif ($searchData->competences === 0) {
+            $qb = $qb
+                ->andWhere('c.competences IS EMPTY');
+        }
+
+        if ($searchData->experiences === 1) {
+            $qb = $qb
+                ->andWhere('e.id IS NOT NULL');
+        } elseif ($searchData->experiences === 0) {
+            $qb = $qb
+                ->andWhere('c.experiences IS EMPTY');
+        }
+
         if(!empty($searchData->matricule)){
             $qb = $qb
                 ->andWhere('c.id LIKE :id')

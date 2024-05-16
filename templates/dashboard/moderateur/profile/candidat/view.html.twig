@@ -1,0 +1,121 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="h3">
+                Détails du Candidat : <span class="text-danger">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</span>
+            </h2>
+        </div>
+        <div class="col-md-4">
+            <form method="post" action="{{ path('change_status_candidat', {'uid': candidat.uid}) }}" class="d-flex justify-content-end">
+                <select name="status" class="form-select form-select-lg bg-dark text-white" onchange="confirmChange(this)">
+                    <option value="PENDING" {{ candidat.status == 'PENDING' ? 'selected' : '' }}>En attente</option>
+                    <option value="VALID" {{ candidat.status == 'VALID' ? 'selected' : '' }}>Valide</option>
+                    <option value="FEATURED" {{ candidat.status == 'FEATURED' ? 'selected' : '' }}>Mis en avant</option>
+                    <option value="RESERVED" {{ candidat.status == 'RESERVED' ? 'selected' : '' }}>Vivier</option>
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <!-- Onglets -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" id="details-tab" data-bs-toggle="tab" href="#details">Résumé</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="competences-tab" data-bs-toggle="tab" href="#competences">Comp. ({{ candidat.competences|length }})</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="experiences-tab" data-bs-toggle="tab" href="#experiences">Exp. ({{ candidat.experiences|length }})</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="candidatures-tab" data-bs-toggle="tab" href="#candidatures">Candidatures ({{ candidat.applications|length }})</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="assignation-tab" data-bs-toggle="tab" href="#assignation">Assign. ({{ candidat.assignations|length }})</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="cv-tab" data-bs-toggle="tab" href="#cv">CV / Autres infos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="email-tab" data-bs-toggle="tab" href="#email"><i class="bi h5 bi-envelope-at"></i></a>
+        </li>
+    </ul>
+
+    {{ form_start(formCandidate)}}
+    <!-- Contenu des onglets -->
+    <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="details">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                        <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
+                        </div> 
+                        <div class="col-md-9">
+                        
+                        </div> 
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="competences">
+            <div class="card">
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="experiences">
+            <div class="card">
+                <div class="card-body">
+                
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="candidatures">
+            <div class="card">
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="assignation">
+            <div class="card">
+                <div class="card-body">
+                
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="cv">
+            <div class="card">
+                <div class="card-body">
+                
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="email">
+            <div class="card">
+                <div class="card-body">
+                
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div style="display:none">
+    {{ form_widget(formCandidate)}}
+    </div>
+    {{ form_end(formCandidate)}}
+    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+</div>
+{% endblock %}

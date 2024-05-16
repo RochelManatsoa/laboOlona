@@ -744,7 +744,7 @@ class AppExtension extends AbstractExtension
     {
         $currency = '<i class="bi bi-ban px-4"></i>';
         if($tarifCandidat->getCurrency() instanceof Devise){
-            $currency = $tarifCandidat->getDevise();
+            $currency = $tarifCandidat->getCurrency()->getSymbole();
         }else{
             $currency = TarifCandidat::getDeviseSymbol($tarifCandidat->getDevise());
         }

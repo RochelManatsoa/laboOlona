@@ -46,7 +46,33 @@ class CandidatSearchFormType extends AbstractType
                 'label' => false,
                 'required' => false,
                 'placeholder' => 'CV',
-                'data' => 0,
+            ])
+            ->add('experiences', ChoiceType::class, [
+                'choices' => [
+                    'Sans expériences' => 0,
+                    'Avec expériences' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Expériences',
+            ])
+            ->add('competences', ChoiceType::class, [
+                'choices' => [
+                    'Sans competénces' => 0,
+                    'Avec competénces' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Compétences',
+            ])
+            ->add('avatar', ChoiceType::class, [
+                'choices' => [
+                    'Sans photo' => 0,
+                    'Avec photo' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Photo',
             ])
         ;
     }
