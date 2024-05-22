@@ -1,0 +1,187 @@
+
+			<div class="tab-pane fade" id="cv">
+				<div class="card">
+					<div class="card-body">
+                    <div class="row">
+                        <h3 class="text-center mb-4">CV</h3>
+                        <div class="col-md-9 mx-auto">
+                            {% if candidat.cvs|length > 0 %}
+                                {% for cv in candidat.cvs %}
+                                    {% set formCvEdit = cvForms[cv.id].form %}
+                                    <div class="row">
+                                        <div class="col-6 my-2">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" title="Ouvrir" target="_blank">
+                                                                    <!-- Icône agrandie -->
+                                                                    <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
+                                                                </a>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                {{ cv.uploadedAt|date('d/M/Y à h:i')}}
+                                                            </div>
+                                                        </div>
+                                                            <a href="{{ asset('uploads/cv/' ~ cv.cvLink) }}" title="Ouvrir" target="_blank" class="text-dark small">
+                                                                <p class="card-title small">{{ cv.cvLink }}</p>
+                                                            </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 my-2">
+                                            {% set editedCv = getEditedCv(cv.cvLink) %}
+                                            {% if cv.edited is not null %}
+                                                <div class="card">
+                                                    <div class="card-body bg-light text-dark">
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <!-- Icône agrandie -->
+                                                                    <a href="{{ asset('uploads/cv/olona/' ~ cv.edited.cvLink) }}" title="Ouvrir" target="_blank" class="text-dark small">
+                                                                        <i class="bi bi-file-earmark-person" style="font-size: 3rem;"></i>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    {{ cv.edited.uploadedAt|date('d/M/Y à h:i')}}
+                                                                    <a href="{{ path('app_delete_edited_cv', {'cvEditedId': cv.edited.id})}}" class="btn btn-danger btn-sm mx-4" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce CV modifié ?');"><i class="bi bi-trash"></i></a>
+                                                                </div>
+                                                            </div>
+                                                                <a href="{{ asset('uploads/cv/olona/' ~ cv.edited.cvLink) }}" title="Ouvrir" target="_blank" class="text-dark small">
+                                                                    <p class="card-title small">{{ cv.edited.cvLink }}</p>
+                                                                </a>
+                                                            <!-- Lien pour visualiser le CV dans un nouvel onglet -->
+                                                    </div>
+                                                </div>
+                                                {% else %}
+                                                <div class="jumbotron p-4 small text-info">
+                                                    <i class="bi bi-info-circle"></i> 
+                                                    Envoyez le CV modifié ici
+                                                    {{ include('dashboard/moderateur/cv/_form.html.twig', { 'cv': cv }) }}
+                                                </div>
+                                            
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="container my-5">
+                                    <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                    <h1 class="text-body-emphasis">Aucun CV envoyé </i></h1>
+                                    <p class="">
+                                        <i class="bi bi-info-circle"></i> Veuillez envoyer un e-mail à l'utilisateur pour l'informer de l'envoi de son CV. Cette étape est nécessaire pour la validation de son profil.
+                                    </p>
+									{{ form_widget(formCandidate.cv) }}
+									{{ form_errors(formCandidate.cv) }}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                        </div> 
+                        <h3 class="text-center mb-4">Langues</h3>
+                        <div class="col-md-9 mx-auto">
+                            {% if candidat.langages|length > 0 %}
+                            <div class="row">
+                                {% for langage in candidat.langages %}
+                                    <div class="col-3 my-2 flex">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                    <!-- Icône agrandie -->
+                                                    <span class="h1">{{ isoToEmoji(langage.langue.code) }}</span> <br>{{ langage.langue.nom }} 
+                                                    <span class="d-flex align-items-center">
+                                                        <span class="p-1 lh-1">
+                                                            {% for i in 1..5 %}
+                                                                {% if i <= langage.niveau %}
+                                                                    <i class="small bi bi-star-fill text-warning"></i>
+                                                                {% else %}
+                                                                    <i class="small bi bi-star text-dark"></i>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </span>
+                                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                <div class="container my-5">
+                                    <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                    <h1 class="text-body-emphasis">Aucune langues renseignées</h1>
+                                    <p class="">
+                                        <i class="bi bi-info-circle"></i> Veuillez envoyer un e-mail à l'utilisateur pour l'informer des langues qu'ils maîtrise. Cette étape est nécessaire pour la validation de son profil.
+                                    </p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div> 
+                        <h3 class="text-center mb-4">Réseau sociaux</h3>
+                                <div class="col-md-9 mx-auto text-center mb-3">                            
+                                    {% if candidat.social is not empty %}
+                                        {% if candidat.social.linkedin is not empty %}
+                                            <a title="{{ candidat.social.linkedin }}" href="{{candidat.social.linkedin}}" target=_blank ><i class="bi h2 bi-linkedin"></i></a>
+                                        {% endif %}
+                                        {% if candidat.social.skype is not empty %}
+                                            <a title="{{ candidat.social.skype }}" href="{{candidat.social.skype}}" target=_blank ><i class="bi h2 bi-skype"></i></a>
+                                        {% endif %}
+                                        {% if candidat.social.slack is not empty %}
+                                            <a title="{{ candidat.social.slack }}" href="{{candidat.social.slack}}" target=_blank ><i class="bi h2 bi-slack"></i></a>
+                                        {% endif %}
+                                        {% if candidat.social.facebook is not empty %}
+                                            <a title="{{ candidat.social.facebook }}" href="{{candidat.social.facebook}}" target=_blank ><i class="bi h2 bi-facebook"></i></a>
+                                        {% endif %}
+                                        {% if candidat.social.instagram is not empty %}
+                                            <a title="{{ candidat.social.instagram }}" href="{{candidat.social.instagram}}" target=_blank ><i class="bi h2 bi-instagram"></i></a>
+                                        {% endif %}
+                                        {% if candidat.social.github is not empty %}
+                                            <a title="{{ candidat.social.github }}" href="{{candidat.social.github}}" target=_blank ><i class="bi h2 bi-github"></i></a>
+                                        {% endif %}
+                                    {% endif %}
+                                </div> 
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-floating mb-3">
+                                                {{ form_widget(formCandidate.social.linkedin)}}
+                                                {{ form_label(formCandidate.social.linkedin)}}
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-floating mb-3">
+                                                {{ form_widget(formCandidate.social.skype)}}
+                                                {{ form_label(formCandidate.social.skype)}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-floating mb-3">
+                                                {{ form_widget(formCandidate.social.slack)}}
+                                                {{ form_label(formCandidate.social.slack)}}
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-floating mb-3">
+                                                {{ form_widget(formCandidate.social.facebook)}}
+                                                {{ form_label(formCandidate.social.facebook)}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-floating mb-3">
+                                                {{ form_widget(formCandidate.social.instagram)}}
+                                                {{ form_label(formCandidate.social.instagram)}}
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-floating mb-3">
+                                                {{ form_widget(formCandidate.social.github)}}
+                                                {{ form_label(formCandidate.social.github)}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div> 
+                    </div>
+				</div>
+			</div>

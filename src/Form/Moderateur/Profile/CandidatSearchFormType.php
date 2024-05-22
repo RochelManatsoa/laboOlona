@@ -47,6 +47,42 @@ class CandidatSearchFormType extends AbstractType
                 'required' => false,
                 'placeholder' => 'CV',
             ])
+            ->add('tarif', ChoiceType::class, [
+                'choices' => [
+                    'Sans Tarif' => 0,
+                    'Avec Tarif' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Tarif',
+            ])
+            ->add('dispo', ChoiceType::class, [
+                'choices' => [
+                    'Sans Disponibilité' => 0,
+                    'Avec Disponibilité' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Disponibilité',
+            ])
+            ->add('resume', ChoiceType::class, [
+                'choices' => [
+                    'Sans Biographie' => 0,
+                    'Avec Biographie' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Biographie',
+            ])
+            ->add('secteurs', ChoiceType::class, [
+                'choices' => [
+                    'Sans Secteur' => 0,
+                    'Avec Secteur' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Secteur',
+            ])
             ->add('experiences', ChoiceType::class, [
                 'choices' => [
                     'Sans expériences' => 0,

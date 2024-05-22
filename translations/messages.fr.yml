@@ -574,7 +574,7 @@ app_dashboard_moderateur_profile_candidat:
     title: Modération
     dashboard_title: Candidats
 
-app_dashboard_moderateur_candidat_view:
+app_dashboard_moderateur_profile_candidat_view:
     title: Modération
     dashboard_title: Détails du candidat
 

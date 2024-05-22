@@ -30,7 +30,7 @@
                         <td><span class="badge bg-danger"><a href="{{ path('app_dashboard_moderateur_candidat_applications_refusees', {'id': candidat.id}) }}" class="text-decoration-none text-white">{{ candidat.applications|filter(app => app.status == 'REFUSED')|length }}</a></span></td>
                         <td><span class="badge bg-info"><a href="{{ path('app_dashboard_moderateur_candidat_competences', {'id': candidat.id}) }}" class="text-decoration-none text-white">{{ candidat.competences|length }}</a></span></td>
                         <td><span class="badge bg-secondary"><a href="{{ path('app_dashboard_moderateur_candidat_experiences', {'id': candidat.id}) }}" class="text-decoration-none text-white">{{ candidat.experiences|length }}</a></span></td>
-                        <td><a href="{{ path('app_dashboard_moderateur_candidat_view', {'id': candidat.id}) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Voir</a></td>
+                        <td><a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id': candidat.id}) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Voir</a></td>
                     </tr>
                     {% else %}
                         <tr>

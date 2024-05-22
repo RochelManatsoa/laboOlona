@@ -533,7 +533,7 @@
                         <h2 class="modal-title fs-5 text-dark" id="candidatAvaillabilityLabel">Changer la disponibilité du candicat</h2>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    {{ form_start(formDispo, {'action': path('app_dashboard_moderateur_candidat_view', {'id': candidat.id} )})}}
+                    {{ form_start(formDispo, {'action': path('app_dashboard_moderateur_profile_candidat_view', {'id': candidat.id} )})}}
                     <div class="modal-body text-dark">
                             <div class="row">
                                 <div class="col my-2">
@@ -741,7 +741,7 @@
                 }
             });
         });
-        var urlRedirection = "{{ path('app_dashboard_moderateur_candidat_view', {'id': candidat.id})}}";
+        var urlRedirection = "{{ path('app_dashboard_moderateur_profile_candidat_view', {'id': candidat.id})}}";
         $('#formAssignation').on('submit', function(e) {
             console.log(urlRedirection)
             // Fermer le modal Bootstrap

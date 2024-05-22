@@ -218,7 +218,7 @@ class CandidatManager
             "moderateur/notification_update_profile.html.twig",
             [
                 'user' => $candidat->getCandidat(),
-                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_profile_candidat_view', ['id' => $candidat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
             ]
         );
     }

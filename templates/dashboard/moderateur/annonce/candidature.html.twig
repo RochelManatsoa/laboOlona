@@ -100,7 +100,7 @@
             {% for application in candidatures %}
                 <tr>
                     <td>
-                        <a href="{{ path('app_dashboard_moderateur_candidat_view', {'id': application.candidat.id} ) }}">
+                        <a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id': application.candidat.id} ) }}">
                             {{ application.candidat.candidat.nom }} {{ application.candidat.candidat.prenom }}
                         </a><br>
                         <span class="text-muted small">{{ application.candidat.titre }}</span>

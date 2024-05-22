@@ -459,7 +459,7 @@ class ModerateurController extends AbstractController
         if($formAssignation->isSubmitted() && $formAssignation->isValid()){
             if($assignation->getJobListing()->getStatus() !== JobListing::STATUS_PUBLISHED){
                 $this->addFlash('danger', 'Vous devez publier l\'annonce avant de faire une assignation');                
-                return $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()]);
+                return $this->redirectToRoute('app_dashboard_moderateur_profile_candidat_view', ['id' => $candidat->getId()]);
             }
 
             /** Send Notification */
@@ -505,7 +505,7 @@ class ModerateurController extends AbstractController
             );
             $this->addFlash('success', 'Assignation effectuée');
                 
-            return $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()]);
+            return $this->redirectToRoute('app_dashboard_moderateur_profile_candidat_view', ['id' => $candidat->getId()]);
         }
 
         /**
@@ -543,7 +543,7 @@ class ModerateurController extends AbstractController
                 $this->profileManager->saveCVEdited($fileName, $candidat, $cvFile);
             }
             $referer = $request->headers->get('referer');
-            return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view');
+            return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_profile_candidat_view');
         }
 
         $formDispo = $this->createForm(AvailabilityType::class, $this->candidatManager->initAvailability($candidat));
@@ -557,7 +557,7 @@ class ModerateurController extends AbstractController
             $this->em->flush();
 
             $referer = $request->headers->get('referer');
-            return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view');
+            return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_profile_candidat_view');
         }
 
         $notification = new Notification();
@@ -982,7 +982,7 @@ class ModerateurController extends AbstractController
         }
 
         $referer = $request->headers->get('referer');
-        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $cv->getCandidat()->getId()]);
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_profile_candidat_view', ['id' => $cv->getCandidat()->getId()]);
     }
 
     #[Route('/delete/edited/{cvEditedId}', name: 'app_delete_edited_cv')]
@@ -1009,6 +1009,6 @@ class ModerateurController extends AbstractController
 
 
         $referer = $request->headers->get('referer');
-        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_candidat_view', ['id' => $user->getCandidateProfile()->getId()]);
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_profile_candidat_view', ['id' => $user->getCandidateProfile()->getId()]);
     }
 }

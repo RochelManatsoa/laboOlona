@@ -58,7 +58,7 @@
 							</div>
 							<div class="row">
 								<div class="col">
-									<a href="{{ path('app_dashboard_moderateur_candidat_view', {'id' : item[0].id })}}" class="">
+									<a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id' : item[0].id })}}" class="">
 										{{ item[0].candidat.fullName}}<br>
 									</a>
 										{{ item[0].candidat.email }}
@@ -89,7 +89,7 @@
 							</div>
 						</div>
 						<div class="col-sm-1 small">
-							<a href="{{ path('app_dashboard_moderateur_candidat_view', {'id' : item[0].id })}}" class="btn btn-sm btn-info">
+							<a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id' : item[0].id })}}" class="btn btn-sm btn-info">
 								<i class="bi bi-eye"></i>
 							</a>
 						</div>

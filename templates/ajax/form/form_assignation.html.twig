@@ -1,4 +1,4 @@
-<form method="post" action="{{ path('app_ajax_update_assignation', {'id': assignation.id })}}" class="row">
+<form method="post" action="{{ path('app_ajax_update_assignation', {'id': assignation.id })}}" class="row border-top py-2 assignation" data-assignation-id="2">
     <input type="hidden" name="assignation_id_{{ assignation.id }}" value="{{ assignation.id }}">
     <div class="col-3">
     {{ assignation.jobListing.entreprise.nom }}<br>

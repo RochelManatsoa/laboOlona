@@ -45,6 +45,26 @@ class CandidatSearchData
     /**
      * @var null|integer
      */
+    public $secteurs;
+
+    /**
+     * @var null|integer
+     */
+    public $resume;
+
+    /**
+     * @var null|integer
+     */
+    public $dispo;
+
+    /**
+     * @var null|integer
+     */
+    public $tarif;
+
+    /**
+     * @var null|integer
+     */
     public $avatar;
 
     /**

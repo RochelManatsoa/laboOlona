@@ -122,7 +122,7 @@
             {% for assignation in candidatures %}
                 <tr>
                     <td>
-                        <a href="{{ path('app_dashboard_moderateur_candidat_view', {'id': assignation.profil.id} ) }}">
+                        <a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id': assignation.profil.id} ) }}">
                             {{ assignation.profil.candidat.nom }} {{ assignation.profil.candidat.prenom }}
                         </a><br>
                         <span class="text-muted small">{{ assignation.profil.titre }}</span><br>

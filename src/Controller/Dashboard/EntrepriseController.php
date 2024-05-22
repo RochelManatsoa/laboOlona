@@ -499,7 +499,7 @@ class EntrepriseController extends AbstractController
         ';
         $contenuMod = '        
             <p>Nous souhaitons vous informer que l\'entreprise '.$entreprise->getNom().' souhaite contacter le profil '.$this->appExtension->generatePseudo($candidateProfile).'</p>
-            <p><a href="'.$this->urlGenerator->generate('app_dashboard_moderateur_candidat_view',['id' => $candidateProfile->getId()], UrlGeneratorInterface::ABSOLUTE_URL).'"> Assigner </a></p>
+            <p><a href="'.$this->urlGenerator->generate('app_dashboard_moderateur_profile_candidat_view',['id' => $candidateProfile->getId()], UrlGeneratorInterface::ABSOLUTE_URL).'"> Assigner </a></p>
         ';
         $this->notificationManager->notifyModerateurs($user, Notification::TYPE_CONTACT, $titreMod, $contenuMod );
         $this->notificationManager->createNotification($this->moderateurManager->getModerateurs()[1], $user, Notification::TYPE_CONTACT, $titre, $contenu );
@@ -512,7 +512,7 @@ class EntrepriseController extends AbstractController
                 'entreprise' => $entreprise,
                 'profil' => $candidateProfile,
                 'dashboard_url' => $this->urlGenerator->generate(
-                    'app_dashboard_moderateur_candidat_view',
+                    'app_dashboard_moderateur_profile_candidat_view',
                     [
                         'id' => $candidateProfile->getId(),
                     ], 

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Ajax;
 
+use App\Entity\Candidate\Applications;
 use App\Entity\Candidate\CV;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
@@ -10,6 +11,7 @@ use App\Entity\Candidate\Competences;
 use App\Entity\Candidate\Experiences;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AffiliateToolRepository;
+use App\Repository\Candidate\ApplicationsRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -123,9 +125,9 @@ class CandidatController extends AbstractController
         $this->em->flush();
         // $this->candidatManager->sendNotificationEmail($experience->getProfil());
 
-        return $this->redirectToRoute('app_dashboard_candidat_compte',[
-            'success' => true,
-        ]);
+        
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_connect');
     }
 
 
@@ -146,6 +148,90 @@ class CandidatController extends AbstractController
 
         return $this->json([
             'experience_id' => $experienceId,
+            'success' => $success,
+        ], 200, [], []);
+
+    }
+    #[Route('/ajax/application/edit', name: 'app_ajax_edit_application')]
+    public function editApplication(
+        Request $request,
+        ApplicationsRepository $applicationsRepository // Injectez le repository des expériences
+    ): JsonResponse
+    {
+        $success = false;
+        $applicationId = $request->request->get('application_id');
+        $application = $applicationsRepository->find($applicationId);
+
+        if ($application) {
+
+            $formHtml = $this->renderView('ajax/form/form_application.html.twig', [
+                'application' => $application,
+            ]);
+
+            $success = true;
+
+            return $this->json([
+                'success' => true,
+                'form' => $formHtml,
+            ]);
+        } else {
+            // Gérer le cas où l'expérience n'est pas trouvée
+            return $this->json([
+                'application_id' => $applicationId,
+                'success' => false,
+                'error' => 'Candidature non trouvée',
+            ]);
+        }
+    }
+
+    #[Route('/ajax/application/update/{id}', name: 'app_ajax_update_application')]
+    public function updateApplication(Request $request, ApplicationsRepository $applicationsRepository, $id): Response
+    {
+        $application = $applicationsRepository->find($id);
+
+        if (!$application) {
+            return $this->json([
+                'success' => false,
+                'error' => 'Candidature non trouvée',
+            ]);
+        }
+
+        // Mettez à jour l'entité Experience avec les nouvelles données
+        // $experience->setNom($request->request->get('nom'));
+        // $experience->setEntreprise($request->request->get('entreprise'));
+        // $experience->setEnPoste(null !== $request->request->get('enPoste') ? true : false);
+        // $experience->setDateDebut(new \DateTime($request->request->get('dateDebut')));
+        // $experience->setDateFin(new \DateTime($request->request->get('dateFin')));
+        // $experience->setDescription($request->request->get('description'));
+
+        
+        // Enregistrez les modifications dans la base de données
+        $this->em->persist($application);
+        $this->em->flush();
+
+        
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_connect');
+    }
+
+
+
+    #[Route('/ajax/application/delete', name: 'app_ajax_delete_application')]
+    public function deleteApplication(
+        Request $request,
+    ): Response
+    {
+        $success = false;
+        $applicationId = $request->request->get('application_id');
+        $application = $this->experiencesRepository->find($applicationId);
+        if($application instanceof Applications){
+            $this->em->remove($application);
+            $this->em->flush();
+            $success = true;
+        }
+
+        return $this->json([
+            'application_id' => $applicationId,
             'success' => $success,
         ], 200, [], []);
 
@@ -209,9 +295,9 @@ class CandidatController extends AbstractController
         $this->em->flush();
         // $this->candidatManager->sendNotificationEmail($candidat);
 
-        return $this->redirectToRoute('app_dashboard_candidat_compte',[
-            'success' => true,
-        ]);
+        
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_connect');
     }
 
 

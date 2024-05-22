@@ -144,6 +144,9 @@ class ModerateurController extends AbstractController
         // Enregistrez les modifications dans la base de données
         $this->em->persist($assignation);
         $this->em->flush();
+        
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_connect');
 
         /** Send Notification */
         $titre = 'Réponse à votre demande de devis';

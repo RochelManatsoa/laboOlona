@@ -127,8 +127,7 @@ class TarifCandidat
 
     public function setDevise(string $devise): static
     {
-        $this->devise = $devise;
-
+        $this->devise = $devise ?? ''; // Transforme `null` en chaîne vide
         return $this;
     }
 

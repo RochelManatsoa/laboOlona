@@ -44,7 +44,7 @@ class MailManager
             "moderateur/notification_welcome.html.twig",
             [
                 'user' => $user,
-                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidat_view', ['id' => $user->getCandidateProfile()->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_profile_candidat_view', ['id' => $user->getCandidateProfile()->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
             ]
         );
     }

@@ -1,0 +1,20 @@
+<form method="post" action="{{ path('app_ajax_update_application', {'id': application.id })}}" class="row border-top py-2 application" data-application-id={{ application.id }}>
+    <input type="hidden" name="application_id_{{ application.id }}" value="{{ application.id }}">
+    <div class="col-3">
+    {# {{ application.jobListing.entreprise.nom }}<br> #}
+    {# <span class="text-muted small">{{ application.jobListing.titre}}</span> #}
+    </div>
+    <div class="col-2">
+        <label for="assignation_forfait_{{ application.id }}">Forfait</label>
+        <input type="number" id="application_forfait_{{ application.id }}" name="forfait" class="form-control" value="{{ application.forfait ?? '' }}" required>
+    </div>
+    <div class="col-5">
+        <label for="assignation_commentaire_{{ application.id }}">Commentaire</label>
+        <textarea id="application_commentaire_{{ application.id }}" name="commentaire" class="form-control ckeditor-textarea" rows="6">{{ application.commentaire ?? '' }}</textarea>
+    </div>
+    <div class="col-2">
+        <button type="submit" class="btn btn-info rounded-pill my-1 btn-sm">Soumettre</button>
+        <button type="button" class="btn btn-outline-dark rounded-pill my-1 btn-sm cancel-application">Annuler</button>
+    </div>
+</form>
+    

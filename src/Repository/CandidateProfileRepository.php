@@ -120,6 +120,9 @@ class CandidateProfileRepository extends ServiceEntityRepository
         ->select('c, c.id AS matricule, u.id, u.nom, COUNT(DISTINCT s.id) AS nombreDeCompetences, COUNT(DISTINCT e.id) AS nombreDeExperiences, COUNT(DISTINCT n.id) AS nombreDeRelance')
         ->leftJoin('c.competences', 's')
         ->leftJoin('c.experiences', 'e')
+        ->leftJoin('c.secteurs', 'sect')
+        ->leftJoin('c.tarifCandidat', 't')
+        ->leftJoin('c.availability', 'dispo')
         ->join('c.candidat', 'u')
         ->leftJoin('u.recus', 'n')
         ->groupBy('u.id')
@@ -161,12 +164,42 @@ class CandidateProfileRepository extends ServiceEntityRepository
                 ->andWhere('c.fileName IS NULL');
         }
 
+        if ($searchData->resume === 1) {
+            $qb = $qb
+                ->andWhere('c.resume IS NOT NULL');
+        } elseif ($searchData->resume === 0) {
+            $qb = $qb
+                ->andWhere('c.resume IS NULL');
+        }
+
+        if ($searchData->tarif === 1) {
+            $qb = $qb
+                ->andWhere('t.id IS NOT NULL');
+        } elseif ($searchData->tarif === 0) {
+            $qb = $qb
+                ->andWhere('t.id IS NULL');
+        }
+
+        if ($searchData->dispo === 1) {
+            $qb->andWhere('dispo.id IS NOT NULL');
+        } elseif ($searchData->dispo === 0) {
+            $qb->andWhere('dispo.id IS NULL');
+        }
+
         if ($searchData->competences === 1) {
             $qb = $qb
                 ->andWhere('s.id IS NOT NULL');
         } elseif ($searchData->competences === 0) {
             $qb = $qb
                 ->andWhere('c.competences IS EMPTY');
+        }
+
+        if ($searchData->secteurs === 1) {
+            $qb = $qb
+                ->andWhere('sect.id IS NOT NULL');
+        } elseif ($searchData->secteurs === 0) {
+            $qb = $qb
+                ->andWhere('c.secteurs IS EMPTY');
         }
 
         if ($searchData->experiences === 1) {

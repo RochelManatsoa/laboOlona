@@ -62,7 +62,7 @@
                     <td class="actions-col">
                         <form action="{{  path('supprimer_candidat',  {'id': candidat.id})  }}" method="POST">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ candidat.id) }}">
-                            <a href="{{path('app_dashboard_moderateur_candidat_view', {'id': candidat.id})}}" class="btn btn-sm btn-info rounded-pill"><i class="bi bi-eye"></i></a>
+                            <a href="{{path('app_dashboard_moderateur_profile_candidat_view', {'id': candidat.id})}}" class="btn btn-sm btn-info rounded-pill"><i class="bi bi-eye"></i></a>
                             <button class="btn btn-sm btn-danger rounded-pill" type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce profil ?');">
                                 <i class="bi bi-trash"></i>
                             </button>

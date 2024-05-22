@@ -1,0 +1,60 @@
+
+			<div class="tab-pane fade" id="assignation">
+				<div class="card">
+					<div class="card-body">
+                    <button type="button" class="px-5 my-3 btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#assignationModalAdd">
+                        Ajouter
+                    </button>
+                    {% if candidat.assignations|length > 0%}
+                        <div class="container-fluid">
+                            <!-- En-têtes -->
+                            <div class="row">
+                                <div class="col-3 font-weight-bold">Entreprise</div>
+                                <div class="col-2 font-weight-bold text-center">Forfait</div>
+                                <div class="col-5 font-weight-bold">Commentaire</div>
+                                <div class="col-2 font-weight-bold">Action</div>
+                            </div>
+
+                            <!-- Lignes et cellules -->
+                            {% for assignation in candidat.assignations %}
+                            <div class="row border-top py-2 assignation" data-assignation-id="{{ assignation.id }}">
+                                <div class="col-3">
+                                    {{ assignation.jobListing.entreprise.nom }}<br>
+                                    <span class="text-muted small">{{ assignation.jobListing.titre }}</span>
+                                </div>
+                                <div class="col-2 text-center">
+                                    {{ getTarifForfait(assignation)|raw }}<br>
+                                    <span class="text-muted small">{{ getTypeAssignation(assignation)|raw }}</span><br>
+                                    {{ getStatusAssignation(assignation)|raw }}
+
+                                </div>
+                                <div class="col-5">
+                                    <span class="text-muted small">{{ assignation.dateAssignation|date('d-m-Y') }}</span><br>
+                                    {{ assignation.commentaire|raw }}
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary btn-sm edit-assignation" data-assignation-id="{{ assignation.id }}"><i class="bi bi-pencil-square"></i></button>
+                                    <a href="{{ path('ajax_change_assignation_delete', {'id': assignation.id })}}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette assignation ?');"><i class="bi bi-trash"></i></a>
+                                    <a href="{{ path('app_dashboard_moderateur_assignation_view', {'id': assignation.id })}}" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-md-9 mx-auto">
+                            <div class="container my-5">
+                                <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                <h1 class="text-body-emphasis">Aucune assignations</h1>
+                                <p class="">
+                                    <i class="bi bi-info-circle"></i> Le candidat n'a encore assigné à une entreprise.
+                                </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+					
+					</div>
+				</div>
+			</div>

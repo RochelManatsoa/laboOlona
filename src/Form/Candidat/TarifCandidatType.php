@@ -40,9 +40,10 @@ class TarifCandidatType extends AbstractType
                 'attr' =>  [
                     'data-id' => 'tarif_symbole',
                 ],
-                'data' => "€", 
+                'data' => '€',  // Assurez-vous que la valeur par défaut est définie ici
+                'required' => true,
+                'empty_data' => '€', 
             ])
-            // ->add('candidat')
         ;
     }
 
