@@ -3,11 +3,14 @@
 namespace App\Controller\Dashboard\Moderateur\Profile;
 
 use DateTime;
+use App\Twig\AppExtension;
 use App\Entity\Candidate\CV;
 use App\Entity\Notification;
 use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
+use App\Manager\ModerateurManager;
+use App\Manager\AssignationManager;
 use App\Manager\NotificationManager;
 use App\Entity\Entreprise\JobListing;
 use App\Form\Moderateur\EditedCvType;
@@ -22,12 +25,10 @@ use App\Form\Moderateur\Profile\CandidatType;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
+use App\Form\Moderateur\Profile\CandidatCvType;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Moderateur\NotificationProfileType;
 use App\Form\Moderateur\Profile\CandidatSearchFormType;
-use App\Manager\AssignationManager;
-use App\Manager\ModerateurManager;
-use App\Twig\AppExtension;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -69,11 +70,17 @@ class CandidatController extends AbstractController
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux administrateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $formCandidate = $this->createForm(CandidatType::class, $candidat);
+        $formCvCandidate = $this->createForm(CandidatCvType::class, $candidat);
         $formCandidate->handleRequest($request);
+        $formCvCandidate->handleRequest($request);
         if($formCandidate->isSubmitted() && $formCandidate->isValid()){
             $this->em->persist($formCandidate->getData());
             $this->em->flush();
             $this->addFlash('success', 'Modification effectuée');
+        }
+        if($formCvCandidate->isSubmitted() && $formCvCandidate->isValid()){
+            $this->em->persist($formCvCandidate->getData());
+            $this->em->flush();
         }
         $assignation = $this->assignationManager->init();
         $assignation->setProfil($candidat);
@@ -201,6 +208,7 @@ class CandidatController extends AbstractController
             'cvForms' => $cvForms, 
             'formAssignation' => $formAssignation->createView(),
             'form' => $form->createView(),
+            'formCvCandidate' => $formCvCandidate->createView(),
             'formCandidate' => $formCandidate->createView(),
             'notifications' => $this->em->getRepository(Notification::class)->findBy([
                 'destinataire' => $candidat->getCandidat()

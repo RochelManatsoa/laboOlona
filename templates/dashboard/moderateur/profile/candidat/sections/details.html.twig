@@ -2,6 +2,7 @@
 			<div class="tab-pane fade show active" id="details">
 				<div class="card">
 					<div class="card-body">
+					{{ form_start(formCandidate, {'attr': {'id': 'formCandidate'}})}}
 						<div class="row">
 							<div class="col-md-4">
 							    <h2 class="h3 text-center">Photo</h2>
@@ -10,9 +11,6 @@
                                 {{ form_errors(formCandidate.file) }}
                                 <h2 class="h3 text-center my-3">Secteurs</h2>
 									{{ form_widget(formCandidate.secteurs)}}
-									<button type="button" id="submitButton" class="btn btn-success rounded-pill my-3 px-5">
-										<i class="mx-2 bi bi-save"></i>Enregistrer
-									</button>
 							</div>
 							<div class="col-md-8">
 								<div class="form-floating mb-3">
@@ -101,6 +99,10 @@
 								</div>
 							</div>
 						</div>
+					<div style="display:none">
+					{{ form_widget(formCandidate)}}
+					</div>
+					{{ form_end(formCandidate)}}
 					</div>
 				</div>
 			</div>

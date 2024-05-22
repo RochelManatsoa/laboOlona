@@ -180,6 +180,14 @@ class CandidateProfileRepository extends ServiceEntityRepository
                 ->andWhere('t.id IS NULL');
         }
 
+        if ($searchData->relance === 1) {
+            $qb = $qb
+                ->andWhere('n.id IS NOT NULL');
+        } elseif ($searchData->relance === 0) {
+            $qb = $qb
+                ->andWhere('n.id IS NULL');
+        }
+
         if ($searchData->dispo === 1) {
             $qb->andWhere('dispo.id IS NOT NULL');
         } elseif ($searchData->dispo === 0) {

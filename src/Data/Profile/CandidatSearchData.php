@@ -50,6 +50,11 @@ class CandidatSearchData
     /**
      * @var null|integer
      */
+    public $relance;
+
+    /**
+     * @var null|integer
+     */
     public $resume;
 
     /**

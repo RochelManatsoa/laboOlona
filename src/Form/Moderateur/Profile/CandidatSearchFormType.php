@@ -56,6 +56,15 @@ class CandidatSearchFormType extends AbstractType
                 'required' => false,
                 'placeholder' => 'Tarif',
             ])
+            ->add('relance', ChoiceType::class, [
+                'choices' => [
+                    'Sans Relance' => 0,
+                    'Avec Relance' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Relance',
+            ])
             ->add('dispo', ChoiceType::class, [
                 'choices' => [
                     'Sans Disponibilité' => 0,
