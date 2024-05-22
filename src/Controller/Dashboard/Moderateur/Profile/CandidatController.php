@@ -29,6 +29,8 @@ use App\Form\Moderateur\Profile\CandidatCvType;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Moderateur\NotificationProfileType;
 use App\Form\Moderateur\Profile\CandidatSearchFormType;
+use App\Manager\ProfileManager;
+use App\Service\FileUploader;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -46,6 +48,8 @@ class CandidatController extends AbstractController
         private CandidatManager $candidatManager,
         private MailerService $mailerService,
         private UrlGeneratorInterface $urlGenerator,
+        private FileUploader $fileUploader,
+        private ProfileManager $profileManager,
         private UserService $userService,
     ){}
 
@@ -79,6 +83,12 @@ class CandidatController extends AbstractController
             $this->addFlash('success', 'Modification effectuée');
         }
         if($formCvCandidate->isSubmitted() && $formCvCandidate->isValid()){
+            $cvFile = $formCvCandidate->get('cv')->getData();
+            if ($cvFile) {
+                $fileName = $this->fileUploader->upload($cvFile, $candidat);
+                $candidat->setCv($fileName[0]);
+                $this->profileManager->saveCV($fileName, $candidat);
+            }
             $this->em->persist($formCvCandidate->getData());
             $this->em->flush();
         }
