@@ -106,13 +106,12 @@ class MailerService
             $email = new TemplatedEmail();
             $sender = 'noreply@olona-talents.com';
             $env = 'Olona Talents';
-            $email->to($profile->getCandidat()->getEmail());
-            // if ($this->env === 'prod') {
-            //     $email->to($profile->getCandidat()->getEmail());
-            // } else {
-            //     $env = '[Preprod] Olona Talents';
-            //     $email->to('nirinarocheldev@gmail.com'); 
-            // }
+            if ($this->env === 'prod') {
+                $email->to($profile->getCandidat()->getEmail());
+            } else {
+                $env = '[Preprod] Olona Talents';
+                $email->to('nirinarocheldev@gmail.com'); 
+            }
             $email 
                 ->from(new Address($sender, $env))
                 ->subject($emailTemplate->getTitre())
