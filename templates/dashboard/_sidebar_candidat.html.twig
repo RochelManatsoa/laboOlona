@@ -45,7 +45,7 @@
         </a>
       </li>
     {% endif %}
-    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) or is_granted('ROLE_CANDIDAT') %}
       <li>
         <a href="{{ path('app_dashboard_candidat_annonce') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_annonce' ? 'active' : 'text-white' }}">
           <i class="mx-2 h5 bi bi-search"></i>

@@ -19,6 +19,7 @@ use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
 use App\Entity\Candidate\CV;
+use App\Entity\Finance\Employe;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
 use App\Form\Search\AnnonceSearchType;
@@ -74,11 +75,15 @@ class CandidatController extends AbstractController
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
         $entreprise = $user->getEntrepriseProfile();
+        $employe = $user->getEmploye();
         if ($entreprise instanceof EntrepriseProfile) {
             // Si l'utilisateur n'a pas de profil candidat, on lance une exception
             throw new AccessDeniedException('Désolé, la page que vous souhaitez consulter est réservée aux profils candidats. Si vous possédez un tel profil, veuillez vous assurer que vous êtes connecté avec les identifiants appropriés.');
         }
         if($candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
+        if($employe instanceof Employe){
             return $this->redirectToRoute('app_profile');
         }
     

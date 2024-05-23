@@ -144,7 +144,7 @@ class ApiController extends AbstractController
                 $userExist = new User();
                 $userExist->setDateInscription(new DateTime())
                     ->setEmail($email)
-                    ->setRoles(['ROLE_EMPLOYE'])
+                    ->setRoles(['ROLE_EMPLOYE','ROLE_CANDIDAT'])
                     ->setPassword($this->encoder->hashPassword($userExist, $data["simulateur"]["user"]["password"]))
                     ->setNom($data["simulateur"]["user"]["nom"])
                     ->setPrenom($data["simulateur"]["user"]["prenom"])

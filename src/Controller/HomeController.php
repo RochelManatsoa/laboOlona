@@ -103,7 +103,7 @@ class HomeController extends AbstractController
             if (!$connected) {
                 $user->setDateInscription(new DateTime());
                 $user->setType(User::ACCOUNT_EMPLOYE);
-                $user->setRoles(['ROLE_EMPLOYE']);
+                $user->setRoles(['ROLE_EMPLOYE', 'ROLE_CANDIDAT']);
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -156,7 +156,7 @@ class HomeController extends AbstractController
             if (!$connected) {
                 $user->setDateInscription(new DateTime());
                 $user->setType(User::ACCOUNT_ENTREPRISE);
-                $user->setRoles(['ROLE_EMPLOYE']);
+                $user->setRoles(['ROLE_EMPLOYE', 'ROLE_ENTREPRISE']);
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -320,7 +320,7 @@ class HomeController extends AbstractController
             if (!$connected) {
                 $user->setDateInscription(new DateTime());
                 $user->setType(User::ACCOUNT_EMPLOYE);
-                $user->setRoles(['ROLE_EMPLOYE']);
+                $user->setRoles(['ROLE_EMPLOYE', 'ROLE_CANDIDAT']);
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -405,7 +405,7 @@ class HomeController extends AbstractController
             if (!$connected) {
                 $user->setDateInscription(new DateTime());
                 $user->setType(User::ACCOUNT_ENTREPRISE);
-                $user->setRoles(['ROLE_EMPLOYE']);
+                $user->setRoles(['ROLE_EMPLOYE', 'ROLE_ENTREPRISE']);
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,

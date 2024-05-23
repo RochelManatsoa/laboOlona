@@ -56,6 +56,10 @@ class ProfileController extends AbstractController
             case User::ACCOUNT_REFERRER :
                 return $this->redirectToRoute('app_profile_referrer_step_one', []);
                 break;
+
+            case User::ACCOUNT_EMPLOYE :
+                return $this->redirectToRoute('app_profile_candidate_step_one', []);
+                break;
             
             default:
                 return $this->redirectToRoute('app_profile_account', []);
@@ -134,7 +138,7 @@ class ProfileController extends AbstractController
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
 
-        if (!$candidat instanceof CandidateProfile) {
+        if (!$candidat instanceof CandidateProfile) {  
             $candidat = $this->profileManager->createCandidat($user);
         }
 
