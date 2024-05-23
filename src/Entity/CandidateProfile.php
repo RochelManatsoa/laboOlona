@@ -155,6 +155,12 @@ class CandidateProfile
     #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: Favoris::class)]
     private Collection $favoris;
 
+    #[ORM\Column]
+    private ?int $relanceCount = 0;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $relancedAt = null;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -801,5 +807,37 @@ class CandidateProfile
         $paddedId = sprintf('%04d', $this->getId());
 
         return $letters . $paddedId;
+    }
+
+    public function getRelanceCount(): ?int
+    {
+        return $this->relanceCount;
+    }
+
+    public function incrementRelanceCount(): self
+    {
+        $this->relanceCount++;
+        $this->setRelancedAt(new DateTime());
+
+        return $this;
+    }
+
+    public function setRelanceCount(int $relanceCount): static
+    {
+        $this->relanceCount = $relanceCount;
+
+        return $this;
+    }
+
+    public function getRelancedAt(): ?\DateTimeInterface
+    {
+        return $this->relancedAt;
+    }
+
+    public function setRelancedAt(?\DateTimeInterface $relancedAt): static
+    {
+        $this->relancedAt = $relancedAt;
+
+        return $this;
     }
 }

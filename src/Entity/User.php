@@ -34,6 +34,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         ];
     }
    
+    public static function getInverseChoices() {
+        return [
+             self::ACCOUNT_CANDIDAT => 'Candidat',
+             self::ACCOUNT_ENTREPRISE => 'Entreprise',
+             self::ACCOUNT_REFERRER => 'Coopteur',
+             self::ACCOUNT_EMPLOYE => 'Employé',
+        ];
+    }
+   
     public static function getTypeAccount() {
         return [
             'Candidat' => self::ACCOUNT_CANDIDAT ,

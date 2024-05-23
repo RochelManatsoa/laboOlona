@@ -23,9 +23,6 @@
 								{{ knp_pagination_sortable(candidats, 'Inscrit le', 'u.dateInscription') }}
                             </div>
 							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Connecté', 'u.lastLogin') }}
-                            </div>
-							<div class="col-sm-6 col-md-2 text-center text-dark small">
                                 {{ knp_pagination_sortable(candidats, 'Exp', 'nombreDeExperiences') }}
                             </div>
 							<div class="col-sm-6 col-md-2 text-center text-dark small">
@@ -33,6 +30,9 @@
                             </div>
 							<div class="col-sm-6 col-md-2 text-center text-dark small">
 								{{ knp_pagination_sortable(candidats, 'Relance', 'nombreDeRelance') }}
+                            </div>
+							<div class="col-sm-6 col-md-2 text-center text-danger small">
+								{{ knp_pagination_sortable(candidats, 'Level', 'level') }}
                             </div>
 						</div>
 					</div>
@@ -74,9 +74,6 @@
 								<div class="col-sm-6 text-center col-md-2 small">
 									{{ item[0].candidat.dateInscription|date('d/m/Y') }}
 								</div>
-								<div class="col-sm-6 text-center col-md-2 small">
-									{{ item[0].candidat.lastLogin|time_ago }}
-								</div>
 								<div class="col-sm-6 text-center col-md-2 text-center">
 									<span class="badge text-bg-warning">{{ item[0].experiences|length }}</span><br>
 								</div>
@@ -85,6 +82,9 @@
 								</div>
 								<div class="col-sm-6 text-center col-md-2 ">
 									<span class="badge text-bg-dark">{{ item['nombreDeRelance'] }}</span>
+								</div>
+								<div class="col-sm-6 text-center col-md-2 ">
+									<span class="badge text-bg-danger">{{ item['level'] }}</span>
 								</div>
 							</div>
 						</div>

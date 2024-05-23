@@ -8,6 +8,7 @@ use App\Entity\Finance\Devise;
 use App\Entity\Errors\ErrorLog;
 use App\Entity\ReferrerProfile;
 use App\Entity\CandidateProfile;
+use App\Entity\Cron\CronLog;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Finance\Employe;
 use App\Entity\Finance\Simulateur;
@@ -17,6 +18,7 @@ use Symfony\UX\Chartjs\Model\Chart;
 use App\Entity\Moderateur\Invitation;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
+use App\Entity\TemplateEmail;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -125,6 +127,8 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Devise', 'fas fa-circle-dollar-to-slot', Devise::class),
             ]),
             MenuItem::linkToCrud('Simulations', 'fas fa-vial-virus', Simulateur::class),
+            MenuItem::linkToCrud('Modèles Email', 'fas fa-envelope', TemplateEmail::class),
+            MenuItem::linkToCrud('Relance ', 'fas fa-clock-rotate-left', CronLog::class),
             MenuItem::linkToCrud('Errors', 'fas fa-bug', ErrorLog::class),
         ];
     }

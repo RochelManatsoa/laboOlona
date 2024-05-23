@@ -117,7 +117,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
     {
         $qb = $this
         ->createQueryBuilder('c')
-        ->select('c, c.id AS matricule, u.id, u.nom, COUNT(DISTINCT s.id) AS nombreDeCompetences, COUNT(DISTINCT e.id) AS nombreDeExperiences, COUNT(DISTINCT n.id) AS nombreDeRelance')
+        ->select('c, c.id AS matricule, c.relanceCount AS level, u.id, u.nom, COUNT(DISTINCT s.id) AS nombreDeCompetences, COUNT(DISTINCT e.id) AS nombreDeExperiences, COUNT(DISTINCT n.id) AS nombreDeRelance')
         ->leftJoin('c.competences', 's')
         ->leftJoin('c.experiences', 'e')
         ->leftJoin('c.secteurs', 'sect')
@@ -233,5 +233,35 @@ class CandidateProfileRepository extends ServiceEntityRepository
             $searchData->page,
             10
         );
+    }
+
+    public function findProfilesToRelance(int $daysSinceCreation, int $daysSinceLastRelance, int $relanceNumber)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.competences', 'comps')
+            ->leftJoin('c.experiences', 'exps')
+            ->leftJoin('c.cvs', 'cvs')
+            ->leftJoin('c.tarifCandidat', 'tarif')
+            ->join('c.candidat', 'u')
+            ->where('comps.id IS NULL')
+            ->andWhere('exps.id IS NULL')
+            ->andWhere('c.fileName IS NULL')
+            ->andWhere('cvs.id IS NULL')
+            ->andWhere('tarif.id IS NULL')
+            ->andWhere('c.createdAt <= :createdAt')
+            ->andWhere('c.relanceCount = :relanceCount')
+            ->setParameter('createdAt', new \DateTime('-' . $daysSinceCreation . ' days'))
+            ->setParameter('relanceCount', $relanceNumber - 1);
+            if ($relanceNumber === 0) {
+                $qb->leftJoin('u.recus', 'n')
+                   ->andWhere('n.id IS NULL');
+            }
+
+        if ($daysSinceLastRelance > 0) {
+            $qb->andWhere('c.relancedAt <= :lastRelanceAt')
+               ->setParameter('lastRelanceAt', new \DateTime('-' . $daysSinceLastRelance . ' days'));
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

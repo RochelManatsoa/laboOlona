@@ -28,6 +28,15 @@ class Notification
             'Relance' => self::TYPE_RELANCE ,
         ];
     }
+    public static function getInverseStatuses() {
+        return [
+            self::TYPE_ANNONCE => 'Annonce',
+            self::TYPE_PROFIL => 'Profil',
+            self::TYPE_CONTACT => 'Contact',
+            self::TYPE_MESSAGE => 'Message',
+            self::TYPE_RELANCE => 'Relance',
+        ];
+    }
     
     #[ORM\Id]
     #[ORM\GeneratedValue]
