@@ -56,6 +56,17 @@ class CandidatSearchFormType extends AbstractType
                 'required' => false,
                 'placeholder' => 'Tarif',
             ])
+            ->add('level', ChoiceType::class, [
+                'choices' => [
+                    'Level 0' => 0,
+                    'Level 1' => 1,
+                    'Level 2' => 2,
+                    'Level 3' => 3,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Level',
+            ])
             ->add('relance', ChoiceType::class, [
                 'choices' => [
                     'Sans Relance' => 0,

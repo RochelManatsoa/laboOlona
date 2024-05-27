@@ -1,114 +1,267 @@
 {% extends 'dashboard/base.html.twig' %}
 
-{% block title %}Candidats
-{% endblock %}
+{% block title %}Candidats{% endblock %}
+
 {% block body %}
-	<div class="container mt-5">
-		<h2>Gestion des candidats</h2>
-		{% include "dashboard/moderateur/profile/_filter_profile.html.twig" with {form:form} %}
-		{% if candidats|length > 0 %}
-		<span class="text-muted small">Votre recherche renvoie <span class="text-strong">{{ candidats.getTotalItemCount }}</span> résultats.</span>
+<div class="container mt-5">
+    <h2>Gestion des candidats</h2>
+    {% include "dashboard/moderateur/profile/_filter_profile.html.twig" with {form:form} %}
+        {% if candidats|length > 0 %}
+		<form id="bulkActionForm" method="post" action="{{ path('app_dashboard_moderateur_profile_candidat_action_group') }}">
+			<span class="text-muted small">Votre recherche renvoie <span class="text-strong">{{ candidats.getTotalItemCount }}</span> résultats.</span>
 			<div class="navigation">
 				{{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
 			</div>
 			<div class="container mt-5">
 				<div class="row text-strong">
-					<div class="col-sm-3">Nom et prénom(s)</div>
-					<div class="col-sm-8">
+					<div class="col-sm-1">
+						<input type="checkbox" class="select-all">
+					</div>
+					<div class="col-sm-4">Nom et prénom(s)</div>
+					<div class="col-sm-6">
 						<div class="row">
 							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Matricule', 'matricule') }}
-                            </div>
+								{{ knp_pagination_sortable(candidats, 'Matr', 'matricule') }}
+							</div>
 							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Inscrit le', 'u.dateInscription') }}
-                            </div>
+								{{ knp_pagination_sortable(candidats, 'Insc', 'u.dateInscription') }}
+							</div>
 							<div class="col-sm-6 col-md-2 text-center text-dark small">
-                                {{ knp_pagination_sortable(candidats, 'Exp', 'nombreDeExperiences') }}
-                            </div>
+								{{ knp_pagination_sortable(candidats, 'Exp', 'nombreDeExperiences') }}
+							</div>
 							<div class="col-sm-6 col-md-2 text-center text-dark small">
 								{{ knp_pagination_sortable(candidats, 'Comp', 'nombreDeCompetences') }}
-                            </div>
+							</div>
 							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Relance', 'nombreDeRelance') }}
-                            </div>
+								{{ knp_pagination_sortable(candidats, 'Rel', 'nombreDeRelance') }}
+							</div>
 							<div class="col-sm-6 col-md-2 text-center text-danger small">
 								{{ knp_pagination_sortable(candidats, 'Level', 'level') }}
-                            </div>
+							</div>
 						</div>
 					</div>
 					<div class="col-sm-1"></div>
 				</div>
 				<hr>
 				{% for item in candidats %}
-					<div class="row text-muted d-flex align-items-center">
-						<div class="col-sm-3 small">
-							<div class="row">
-								<div class="col-4">
-                            		<div class="img-fluid rounded-start bg-image-candidat" style="background-image: url('{{ item[0].fileName ? asset('uploads/experts/' ~ item[0].fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="{{ generatePseudo(item[0]) }}"></div>
-								</div>
-								<div class="col-8 text-dark">
-										{{ item[0].secteurs|length}} secteurs<br>
-										CV : 
-										{% if item[0].cv is not null %}
-										<i class="bi bi-check-lg btn btn-sm btn-success"></i>
-										{% else %}
-										<i class="bi bi-ban btn btn-sm btn-light"></i>
-										{% endif %}
-								</div>
+				<div class="row text-muted d-flex align-items-center">
+					<div class="col-sm-1">
+						<input type="checkbox" name="selectedProfiles[]" value="{{ item[0].id }}">
+					</div>
+					<div class="col-sm-4 small">
+						<div class="row">
+							<div class="col-3">
+								<div class="img-fluid rounded-start bg-image-candidat" style="background-image: url('{{ item[0].fileName ? asset('uploads/experts/' ~ item[0].fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="{{ generatePseudo(item[0]) }}"></div>
 							</div>
-							<div class="row">
-								<div class="col">
-									<a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id' : item[0].id })}}" class="">
-										{{ item[0].candidat.fullName}}<br>
-									</a>
-										{{ item[0].candidat.email }}
-								</div>
+							<div class="col-9 text-dark">
+								<a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id' : item[0].id })}}" class="">
+									{{ item[0].candidat.fullName}}<br>
+								</a>
+								{{ item[0].candidat.email }}<br>
+								{{ item[0].secteurs|length}} secteurs |
+								CV :
+								{% if item[0].cv is not null %}
+								<i class="bi bi-check-lg bg-light"></i>
+								{% else %}
+								<i class="bi bi-ban bg-light"></i>
+								{% endif %}
 							</div>
 						</div>
-						<div class="col-sm-8">
-							<div class="row">
-								<div class="col-sm-6 text-center col-md-2 small">
-									{{ generatePseudo(item[0]) }}<br>
-									{{ satusCandidate(item[0])|raw }}
-								</div>
-								<div class="col-sm-6 text-center col-md-2 small">
-									{{ item[0].candidat.dateInscription|date('d/m/Y') }}
-								</div>
-								<div class="col-sm-6 text-center col-md-2 text-center">
-									<span class="badge text-bg-warning">{{ item[0].experiences|length }}</span><br>
-								</div>
-								<div class="col-sm-6 text-center col-md-2 ">
-									<span class="badge text-bg-success">{{ item[0].competences|length }}</span>
-								</div>
-								<div class="col-sm-6 text-center col-md-2 ">
-									<span class="badge text-bg-dark">{{ item['nombreDeRelance'] }}</span>
-								</div>
-								<div class="col-sm-6 text-center col-md-2 ">
-									<span class="badge text-bg-danger">{{ item['level'] }}</span>
-								</div>
+						<div class="row">
+							<div class="col">
 							</div>
-						</div>
-						<div class="col-sm-1 small">
-							<a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id' : item[0].id })}}" class="btn btn-sm btn-info">
-								<i class="bi bi-eye"></i>
-							</a>
 						</div>
 					</div>
-					<hr>
+					<div class="col-sm-6">
+						<div class="row">
+							<div class="col-sm-6 text-center col-md-2 small">
+								{{ generatePseudo(item[0]) }}<br>
+								{{ satusCandidate(item[0])|raw }}
+							</div>
+							<div class="col-sm-6 text-center col-md-2 small">
+								{{ item[0].candidat.dateInscription|date('d/m/Y') }}
+							</div>
+							<div class="col-sm-6 text-center col-md-2 text-center">
+								<span class="badge text-bg-warning">{{ item[0].experiences|length }}</span><br>
+							</div>
+							<div class="col-sm-6 text-center col-md-2 ">
+								<span class="badge text-bg-success">{{ item[0].competences|length }}</span>
+							</div>
+							<div class="col-sm-6 text-center col-md-2 ">
+								<span class="badge text-bg-dark">{{ item['nombreDeRelance'] }}</span>
+							</div>
+							<div class="col-sm-6 text-center col-md-2 ">
+								<span class="badge text-bg-danger">{{ item['level'] }}</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-1 small">
+						<a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id' : item[0].id })}}" class="btn btn-sm btn-info">
+							<i class="bi bi-eye"></i>
+						</a>
+					</div>
+				</div>
+				<hr>
 				{% endfor %}
+				<div class="row text-strong">
+					<div class="col-sm-1">
+						<input type="checkbox" class="select-all">
+					</div>
+					<div class="col-sm-4">Nom et prénom(s)</div>
+					<div class="col-sm-6">
+						<div class="row">
+							<div class="col-sm-6 col-md-2 text-center text-dark small">
+								{{ knp_pagination_sortable(candidats, 'Matr', 'matricule') }}
+							</div>
+							<div class="col-sm-6 col-md-2 text-center text-dark small">
+								{{ knp_pagination_sortable(candidats, 'Insc', 'u.dateInscription') }}
+							</div>
+							<div class="col-sm-6 col-md-2 text-center text-dark small">
+								{{ knp_pagination_sortable(candidats, 'Exp', 'nombreDeExperiences') }}
+							</div>
+							<div class="col-sm-6 col-md-2 text-center text-dark small">
+								{{ knp_pagination_sortable(candidats, 'Comp', 'nombreDeCompetences') }}
+							</div>
+							<div class="col-sm-6 col-md-2 text-center text-dark small">
+								{{ knp_pagination_sortable(candidats, 'Rel', 'nombreDeRelance') }}
+							</div>
+							<div class="col-sm-6 col-md-2 text-center text-danger small">
+								{{ knp_pagination_sortable(candidats, 'Level', 'level') }}
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-1"></div>
+				</div>
+				<hr>
 			</div>
+			
+			<div class="col-12 col-sm-4 mb-4">
+				<div class="input-group">
+					<select name="action" id="bulkActionSelect" class="form-control">
+						<option value="">Action groupée</option>
+						<option value="relance">Relancer</option>
+						<option value="valid">Valider</option>
+						<option value="pending">Mettre en attente</option>
+						<!-- Ajoutez d'autres actions groupées ici -->
+					</select>
+					<button type="button" style="display:none;" data-bs-toggle="modal" data-bs-target="#exampleModal" id="buttonModal"></button>
+					<button type="button" class="btn btn-primary" id="applyBulkAction">Appliquer</button>
+				</div>
+			</div>
+		</form>
 			<div class="navigation mt-5">
 				{{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
 			</div>
-		{% else %}
+			{% else %}
 			<div class="container p-5 mx-auto text-center">
 				Aucuns résultats correspondant à votre recherche
 				<br>
 			</div>
-		{% endif %}
-		<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
-			<i class="mx-2 bi bi-arrow-left"></i>Retour
-		</a>
-	</div>
+        {% endif %}
+    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
+        <i class="mx-2 bi bi-arrow-left"></i>Retour
+    </a>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Envoyer un mail de relance</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+		<form id="relanceEmailForm">
+			<div class="form-group">
+				<label class="mt-3 text-strong" for="templateEmail">Selectionner un modèle</label>
+				<select name="action" id="templateEmail" class="form-control">
+					<option value="">Pas de modèle</option>
+					{% for template in templateEmails %}
+						<option value="{{ template.categorie}}" data-titre="{{ template.titre }}" data-contenu="{{ template.contenu }}" >{{ template.categorie}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="mt-3 text-strong" for="emailTitle">Titre de l'Email</label>
+				<input type="text" class="form-control" id="emailTitle" name="emailTitle" required>
+			</div>
+			<div class="form-group">
+				<label class="mt-3 text-strong" for="emailContent">Contenu de l'Email</label>
+				<textarea class="form-control" id="emailContent" name="emailContent" rows="5" required></textarea>
+			</div>
+			<button type="button" class="btn px-5 btn-primary my-3 rounded-pill" id="sendRelanceEmail">Envoyer</button>
+		</form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialisation de CKEditor
+            let emailContentEditor;
+            ClassicEditor
+                .create(document.querySelector('#emailContent'))
+                .then(editor => {
+                    emailContentEditor = editor;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
 
+			$('.select-all').on('click', function(event) {
+				var checkboxes = $('input[name="selectedProfiles[]"]');
+				checkboxes.prop('checked', $(this).prop('checked'));
+			});
+			
+            $('#templateEmail').on('change', function() {
+                var selectedOption = $(this).find('option:selected');
+                var titre = selectedOption.data('titre');
+                var contenu = selectedOption.data('contenu');
+
+                $('#emailTitle').val(titre);
+
+                if (emailContentEditor) {
+                    emailContentEditor.setData(contenu);
+                }
+            });
+
+            $('#applyBulkAction').on('click', function() {
+                var selectedAction = $('#bulkActionSelect').val();
+                console.log(selectedAction)
+                if (selectedAction === 'relance') {
+                    $('#buttonModal').click();
+                } else {
+                    var confirmation = confirm('Êtes-vous sûr de vouloir effectuer cette action groupée ?');
+                    if (confirmation) {
+                        $('#bulkActionForm').submit();
+                    }
+                }
+            });
+
+            $('#sendRelanceEmail').on('click', function() {
+                var emailTitle = $('#emailTitle').val();
+                var emailContent = emailContentEditor.getData();
+
+                if (emailTitle && emailContent) {
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'emailTitle',
+                        value: emailTitle
+                    }).appendTo('#bulkActionForm');
+                    
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'emailContent',
+                        value: emailContent
+                    }).appendTo('#bulkActionForm');
+
+                    $('#bulkActionForm').off('submit').submit();
+                } else {
+                    alert('Veuillez remplir tous les champs du formulaire d\'email.');
+                }
+            });
+        });
+    </script>
 {% endblock %}

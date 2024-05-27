@@ -88,10 +88,10 @@
 								<label class="text-strong custom-tooltip" data-tooltip="Précisez le salaire ou la fourchette salariale. Cela offre une transparence essentielle et attire des candidats en adéquation avec vos attentes.">
 									<i class="text-primary h5 bi bi-currency-dollar"></i>
 									Budget</label>
-								<div class="d-flex mb-4">
-									{{ form_widget(form.budgetAnnonce.typeBudget, {'attr': {'class': '', 'style':'width:40%'}}) }}
+								<div class="d-flex mb-4 input-group">
+									{{ form_widget(form.budgetAnnonce.typeBudget, {'attr': {'class': '', 'style':'width:30%'}}) }}
 									{{ form_widget(form.budgetAnnonce.montant, {'attr': {'class': '', 'style':'width:40%'}}) }}
-									{{ form_widget(form.budgetAnnonce.devise, {'attr': {'class': '', 'style':'width:20%'}}) }}
+									{{ form_widget(form.budgetAnnonce.currency, {'attr': {'class': '', 'style':'width:30%'}}) }}
 									{{ form_widget(form.salaire) }}
 								</div>
 							</div>

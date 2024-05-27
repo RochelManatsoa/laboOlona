@@ -60,6 +60,11 @@ class CandidatSearchData
     /**
      * @var null|integer
      */
+    public $level;
+
+    /**
+     * @var null|integer
+     */
     public $dispo;
 
     /**

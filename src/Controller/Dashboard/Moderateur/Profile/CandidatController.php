@@ -18,6 +18,7 @@ use App\Service\Mailer\MailerService;
 use App\Entity\Moderateur\Assignation;
 use App\Form\Candidat\AvailabilityType;
 use App\Data\Profile\CandidatSearchData;
+use App\Entity\TemplateEmail;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\Moderateur\AssignationFormType;
@@ -66,7 +67,66 @@ class CandidatController extends AbstractController
         return $this->render('dashboard/moderateur/profile/candidat/index.html.twig', [
             'candidats' => $candidats,
             'form' => $form->createView(),
+            'templateEmails' => $this->em->getRepository(TemplateEmail::class)->findAll(),
         ]);
+    }
+    
+    #[Route('/action-group', name: 'app_dashboard_moderateur_profile_candidat_action_group', methods: ['POST'])]
+    public function actionGroup(Request $request): Response
+    {
+        $selectedProfiles = $request->request->all('selectedProfiles');
+        $action = $request->request->get('action');
+        $emailTitle = $request->request->get('emailTitle');
+        $emailContent = $request->request->get('emailContent');
+
+        if (empty($selectedProfiles)) {
+            $this->addFlash('warning', 'Aucun profil sélectionné.');
+            return $this->redirectToRoute('app_dashboard_moderateur_profile_candidat');
+        }
+
+        switch ($action) {
+            case 'valid':
+                foreach ($selectedProfiles as $profileId) {
+                    $profile = $this->candidateProfileRepository->find($profileId);
+                    if ($profile) {
+                        $profile->setStatus(CandidateProfile::STATUS_VALID);
+                        $this->em->persist($profile);
+                    }
+                }
+                $this->em->flush();
+                $this->addFlash('success', 'Les profils sélectionnés ont été validés.');
+            break;
+
+            case 'pending':
+                foreach ($selectedProfiles as $profileId) {
+                    $profile = $this->candidateProfileRepository->find($profileId);
+                    if ($profile) {
+                        $profile->setStatus(CandidateProfile::STATUS_PENDING);
+                        $this->em->persist($profile);
+                    }
+                }
+                $this->em->flush();
+                $this->addFlash('success', 'Les profils sélectionnés ont été mis en attente.');
+            break;
+
+            case 'relance':
+                foreach ($selectedProfiles as $profileId) {
+                    $profile = $this->candidateProfileRepository->find($profileId);
+                    if ($profile) {
+                        // Envoyer l'email de relance
+                        $this->mailerService->sendMultipleRelanceEmail($profile, $emailTitle, $emailContent);
+                    }
+                }
+                $this->addFlash('success', 'Les candidats sélectionnés ont été relancés.');
+            break;
+
+            default:
+                $this->addFlash('warning', 'Aucune action valide sélectionnée.');
+                break;
+        }
+
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_profile_candidat');
     }
 
     #[Route('/{id}', name: 'app_dashboard_moderateur_profile_candidat_view')]

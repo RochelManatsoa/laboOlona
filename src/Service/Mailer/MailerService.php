@@ -96,7 +96,6 @@ class MailerService
         }
     }
 
-
     public function sendRelanceEmail(CandidateProfile $profile, string $type, string $categorie, string $compte)
     {
         $emailTemplate = $this->templateEmailRepository->findByTypeAndCategorieAndCompte($type, $categorie, $compte);
@@ -134,6 +133,41 @@ class MailerService
                 throw $transportException;
     
             }
+        }
+    }
+
+    public function sendMultipleRelanceEmail(CandidateProfile $profile, string $titre, string $contenu)
+    {
+        $email = new TemplatedEmail();
+        $sender = 'noreply@olona-talents.com';
+        $env = 'Olona Talents';
+        if ($this->env === 'prod') {
+            $email->to($profile->getCandidat()->getEmail());
+        } else {
+            $env = '[Preprod] Olona Talents';
+            $email->to('nirinarocheldev@gmail.com'); 
+        }
+        $email 
+            ->from(new Address($sender, $env))
+            ->subject($titre)
+            ->htmlTemplate("mails/relance/profile/candidat.html.twig")
+            ->context([
+                'user' => $profile->getCandidat(),
+                'contenu' => '<p>Bonjour '.$profile->getCandidat()->getPrenom().',</p>'.$contenu,
+            ])
+            ;
+
+        try{
+
+            $this->mailer->send($email);
+            $notification = $this->notificationManager->createNotification($this->moderateurManager->getModerateurs()[1], $profile->getCandidat(), Notification::TYPE_PROFIL, $titre, '<p>Bonjour '.$profile->getCandidat()->getPrenom().',</p>'.$contenu );
+            $this->em->persist($notification);
+            $this->em->flush();
+
+        }catch(TransportExceptionInterface $transportException){
+
+            throw $transportException;
+
         }
     }
 }

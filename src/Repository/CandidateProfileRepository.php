@@ -225,13 +225,20 @@ class CandidateProfileRepository extends ServiceEntityRepository
             ;
         }
 
+        if(!empty($searchData->level)){
+            $qb = $qb
+                ->andWhere('c.relanceCount LIKE :relanceCount')
+                ->setParameter('relanceCount', "%{$searchData->level}%")
+            ;
+        }
+
         $query =  $qb->getQuery();
         // dd($query->getResult());
 
         return $this->paginator->paginate(
             $query,
             $searchData->page,
-            10
+            20
         );
     }
 
