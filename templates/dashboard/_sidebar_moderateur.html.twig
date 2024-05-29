@@ -10,30 +10,6 @@
         </a>
       </li>
       <hr>
-      <li class="nav-item">
-        <a href="{{ path('app_dashboard_moderateur_secteur')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_secteur' ? 'active' : 'text-white' }}" 
-            {{ current_route == 'app_dashboard_moderateur_secteur' ? 'aria-current=page' : '' }}>
-            <i class="mx-2 h5 bi bi-bookmarks"></i>
-            Secteur d'activité   
-        </a>
-      </li>
-      <li>
-        <a href="{{ path('app_dashboard_moderateur_type_contrat')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_type_contrat' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-list-columns"></i>
-            Type de contrat   
-        </a>
-
-      </li>
-      <li>
-        <a href="{{ path('app_dashboard_moderateur_devise')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_devise' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-currency-exchange"></i>
-            Devises  
-        </a>
-
-      </li>
       <li>
         <a href="{{ path('app_dashboard_moderateur_portage')}}" 
             class="nav-link {{ current_route == 'app_dashboard_moderateur_portage' ? 'active' : 'text-white' }}">
@@ -43,12 +19,25 @@
 
       </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_annonces')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_annonces' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-megaphone"></i>
-            Annonces   
+        <a href="{{ path('app_dashboard_moderateur_profile_candidat')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_profile_candidat' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-people"></i>
+            Profils  
         </a>
-
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_moderateur_profile_stat')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_profile_stat' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-clipboard2-data-fill"></i>
+            Statistique  
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_moderateur_assignation')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_assignation' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-hand-index"></i>
+            Assignation  
+        </a>
       </li>
       <li>
         <a href="{{ path('app_dashboard_moderateur_profile_entreprise')}}" 
@@ -58,18 +47,12 @@
         </a>
       </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_profile_candidat')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_profile_candidat' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-people"></i>
-            Profils  
+        <a href="{{ path('app_dashboard_moderateur_annonces')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_annonces' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-megaphone"></i>
+            Annonces   
         </a>
-      </li>
-      <li>
-        <a href="{{ path('app_dashboard_moderateur_assignation')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_assignation' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-hand-index"></i>
-            Assignation  
-        </a>
+
       </li>
       <li>
         <a href="{{ path('app_dashboard_moderateur_invitation')}}" 

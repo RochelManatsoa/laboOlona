@@ -384,6 +384,7 @@ class ModerateurController extends AbstractController
         $status = $request->request->get('status');
         if ($status && in_array($status, ['PENDING', 'BANNISHED', 'VALID', 'FEATURED', 'RESERVED'])) {
             $candidateProfile->setStatus($status);
+            $candidateProfile->setUpdatedAt(new DateTime());
             $entityManager->flush();
             if($status === CandidateProfile::STATUS_VALID){
                 /** On envoi un mail */

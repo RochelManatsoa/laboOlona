@@ -1133,6 +1133,10 @@ app_dashboard_moderateur_view_portage :
     title : Détails portage salarial
     dashboard_title : Détails portage salarial
 
+app_dashboard_moderateur_profile_stat : 
+    title : Statistiques
+    dashboard_title : Statistiques
+
 app_dashboard_employes_annonces : 
     title : Toutes les annonces Olona Talents
     dashboard_title : Toutes les annonces Olona Talents

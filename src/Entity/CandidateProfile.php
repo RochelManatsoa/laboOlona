@@ -179,7 +179,7 @@ class CandidateProfile
 
     public function __toString()
     {
-        return $this->getCandidat()->getNom();
+        return $this->getCandidat()->getPrenom();
     }
     
     public function __serialize(): array

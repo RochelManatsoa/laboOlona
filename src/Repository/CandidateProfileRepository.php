@@ -122,6 +122,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
         ->leftJoin('c.experiences', 'e')
         ->leftJoin('c.secteurs', 'sect')
         ->leftJoin('c.tarifCandidat', 't')
+        ->leftJoin('c.cvs', 'cv')
         ->leftJoin('c.availability', 'dispo')
         ->join('c.candidat', 'u')
         ->leftJoin('u.recus', 'n')
@@ -150,10 +151,10 @@ class CandidateProfileRepository extends ServiceEntityRepository
 
         if ($searchData->cv === 1) {
             $qb = $qb
-                ->andWhere('c.cv IS NOT NULL');
+                ->andWhere('cv.id IS NOT NULL');
         } elseif ($searchData->cv === 0) {
             $qb = $qb
-                ->andWhere('c.cv IS NULL');
+                ->andWhere('cv.id IS NULL');
         }
 
         if ($searchData->avatar === 1) {

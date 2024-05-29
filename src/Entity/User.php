@@ -145,6 +145,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->videoVues = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->getFullName();
+    }
+
     public function getFullName()
     {
         return $this->getNom().' '.$this->getPrenom();
