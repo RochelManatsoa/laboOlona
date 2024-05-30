@@ -14,7 +14,7 @@
 /migrations/
 /vendor/
 ###< symfony/framework-bundle ###
-
+/config/jwt/*
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
