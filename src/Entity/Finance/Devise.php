@@ -2,6 +2,7 @@
 
 namespace App\Entity\Finance;
 
+use App\Entity\EntrepriseProfile;
 use App\Repository\Finance\DeviseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -36,6 +37,9 @@ class Devise
     #[Groups(['devise'])]
     private ?string $slug = null;
 
+    #[ORM\OneToMany(mappedBy: 'devise', targetEntity: EntrepriseProfile::class)]
+    private Collection $entrepriseProfiles;
+
     public function __toString()
     {
         return $this->nom .' ( '.$this->symbole.' )' ;
@@ -44,6 +48,7 @@ class Devise
     public function __construct()
     {
         $this->simulateurs = new ArrayCollection();
+        $this->entrepriseProfiles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -125,6 +130,36 @@ class Devise
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EntrepriseProfile>
+     */
+    public function getEntrepriseProfiles(): Collection
+    {
+        return $this->entrepriseProfiles;
+    }
+
+    public function addEntrepriseProfile(EntrepriseProfile $entrepriseProfile): static
+    {
+        if (!$this->entrepriseProfiles->contains($entrepriseProfile)) {
+            $this->entrepriseProfiles->add($entrepriseProfile);
+            $entrepriseProfile->setDevise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEntrepriseProfile(EntrepriseProfile $entrepriseProfile): static
+    {
+        if ($this->entrepriseProfiles->removeElement($entrepriseProfile)) {
+            // set the owning side to null (unless already changed)
+            if ($entrepriseProfile->getDevise() === $this) {
+                $entrepriseProfile->setDevise(null);
+            }
+        }
 
         return $this;
     }

@@ -2,12 +2,13 @@
 
 namespace App\Manager\Finance;
 
+use Twig\Environment as Twig;
+use App\Entity\Finance\Devise;
 use App\Entity\Finance\Employe;
 use App\Entity\Finance\Simulateur;
-use App\Repository\Finance\DeviseRepository;
-use Twig\Environment as Twig;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Repository\Finance\DeviseRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class EmployeManager
@@ -236,6 +237,30 @@ class EmployeManager
     public function convertAriaryToEuro(?float $montantAriary, float $tauxDeChange): float {
         return $montantAriary / $tauxDeChange;
     }
+    
+    public function convertSimulationToDevise(Simulateur $simulateur, Devise $devise): Simulateur {
+        $currentDevise = $simulateur->getDevise();
+    
+        if ($currentDevise != $devise) {
+            $currentTaux = $currentDevise->getTaux();
+            $newTaux = $devise->getTaux();
+    
+            $simulateur->setDevise($devise);
+            $simulateur->setSalaireNet($simulateur->getSalaireNet() * $currentTaux / $newTaux);
+            $simulateur->setPrimeNet($simulateur->getPrimeNet() * $currentTaux / $newTaux);
+            $simulateur->setPrixDeplacement($simulateur->getPrixDeplacement() * $currentTaux / $newTaux);
+            $simulateur->setPrixRepas($simulateur->getPrixRepas() * $currentTaux / $newTaux);
+    
+            $avantage = $simulateur->getAvantage();
+            if ($avantage !== null) {
+                $avantage->setPrimeConnexion($avantage->getPrimeConnexion() * $currentTaux / $newTaux);
+                $avantage->setPrimeFonction($avantage->getPrimeFonction() * $currentTaux / $newTaux);
+            }
+        }
+    
+        return $simulateur;
+    }
+    
 
     private function getFraisPortage(float $salaire_brut, Simulateur $simulateur):float
     {

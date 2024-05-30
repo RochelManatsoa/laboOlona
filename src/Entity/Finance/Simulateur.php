@@ -2,6 +2,9 @@
 
 namespace App\Entity\Finance;
 
+use App\Entity\Candidate\TarifCandidat;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use App\Entity\Finance\Contrat;
 use Doctrine\ORM\Mapping as ORM;
@@ -106,9 +109,13 @@ class Simulateur
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $statusFinance = null;
 
+    #[ORM\OneToMany(mappedBy: 'simulation', targetEntity: TarifCandidat::class)]
+    private Collection $tarifCandidats;
+
     public function __construct()
     {
         $this->statusFinance = self::STATUS_LIBRE;
+        $this->tarifCandidats = new ArrayCollection();
     }
     
     public function getId(): ?int
@@ -362,6 +369,36 @@ class Simulateur
     public function setStatusFinance(?string $statusFinance): static
     {
         $this->statusFinance = $statusFinance;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TarifCandidat>
+     */
+    public function getTarifCandidats(): Collection
+    {
+        return $this->tarifCandidats;
+    }
+
+    public function addTarifCandidat(TarifCandidat $tarifCandidat): static
+    {
+        if (!$this->tarifCandidats->contains($tarifCandidat)) {
+            $this->tarifCandidats->add($tarifCandidat);
+            $tarifCandidat->setSimulation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTarifCandidat(TarifCandidat $tarifCandidat): static
+    {
+        if ($this->tarifCandidats->removeElement($tarifCandidat)) {
+            // set the owning side to null (unless already changed)
+            if ($tarifCandidat->getSimulation() === $this) {
+                $tarifCandidat->setSimulation(null);
+            }
+        }
 
         return $this;
     }

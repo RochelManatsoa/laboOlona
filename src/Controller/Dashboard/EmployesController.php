@@ -2,6 +2,8 @@
 
 namespace App\Controller\Dashboard;
 
+use App\Entity\Candidate\TarifCandidat;
+use App\Entity\CandidateProfile;
 use App\Manager\MailManager;
 use App\Entity\Finance\Contrat;
 use App\Form\Finance\EmployeType;
@@ -47,17 +49,38 @@ class EmployesController extends AbstractController
     }
 
     #[Route('/simulations', name: 'app_dashboard_employes_simulations')]
-    public function simulations(): Response
+    public function simulations(Request $request): Response
     {
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
+        $candidat = $user->getCandidateProfile();
+        if (!$candidat instanceof CandidateProfile) {
+            $candidat = false;
+        }
         $simulateurs = $this->simulateurRepository->findBy([
             'employe' => $user->getEmploye(),
             'isDeleted' => null
         ],['id' => 'DESC']);
 
+
+        if ($request->isMethod('POST')) {
+            $simulationId = $request->request->get('simulation');
+            $simulation = $this->simulateurRepository->find($simulationId);
+            if ($simulation) {
+                $user->getCandidateProfile()->getTarifCandidat()
+                ->setMontant($simulation->getSalaireNet())
+                ->setTypeTarif(TarifCandidat::TYPE_MONTHLY)
+                ->setCurrency($simulation->getDevise())
+                ->setDevise($simulation->getDeviseSymbole())
+                ->setSimulation($simulation);
+                $this->em->flush();
+                $this->addFlash('success', 'Le tarif du candidat a été mis à jour.');
+            }
+        }
+
         return $this->render('dashboard/employes/simulations.html.twig', [
             'simulateurs' => $simulateurs,
+            'candidat' => $candidat,
         ]);
     }
 

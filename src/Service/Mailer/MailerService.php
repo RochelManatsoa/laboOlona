@@ -8,6 +8,7 @@ use App\Manager\ModerateurManager;
 use Symfony\Component\Mime\Address;
 use App\Manager\NotificationManager;
 use App\Repository\TemplateEmailRepository;
+use App\Service\User\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
@@ -23,6 +24,7 @@ class MailerService
         private NotificationManager $notificationManager,
         private ModerateurManager $moderateurManager,
         private EntityManagerInterface $em,
+        private UserService $userService,
         ParameterBagInterface $params
     ){
         $this->env = $params->get('app.env');
@@ -160,7 +162,7 @@ class MailerService
         try{
 
             $this->mailer->send($email);
-            $notification = $this->notificationManager->createNotification($this->moderateurManager->getModerateurs()[1], $profile->getCandidat(), Notification::TYPE_PROFIL, $titre, '<p>Bonjour '.$profile->getCandidat()->getPrenom().',</p>'.$contenu );
+            $notification = $this->notificationManager->createNotification($this->userService->getCurrentUser(), $profile->getCandidat(), Notification::TYPE_PROFIL, $titre, '<p>Bonjour '.$profile->getCandidat()->getPrenom().',</p>'.$contenu );
             $this->em->persist($notification);
             $this->em->flush();
 

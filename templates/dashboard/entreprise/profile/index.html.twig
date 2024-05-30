@@ -9,10 +9,15 @@
         <div class="row">
             {{ form_start(form) }}
             <section class="text-dark card shadow p-4 my-3">
-                <h2 class="h4">
-                    <i class="bi bi-building-check mx-2"></i>
-                    Entreprise
-                </h2>
+                <div class="d-inline-block w-100">
+                    <h2 class="h4 d-inline-block">
+                        <i class="bi bi-building-check mx-2"></i>
+                        Entreprise
+                    </h2>
+                    <div class="float-end col-4">
+                        {{ form_widget(form.devise, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                </div>
                 <hr class="mb-4">
                 
                 <div class="row">

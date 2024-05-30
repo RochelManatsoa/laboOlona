@@ -7,45 +7,69 @@
 	<div class="container">
 		<div class="annonce-list p-1 p-sm-2">
 			<div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
-				<h1 class="h2">Mes simulations</h1>
-				<div>
-					<a href="{{ path('app_home_simulateur_portage')}}" class="btn btn-success rounded-pill px-5">Simulateur</a>
+				{% if candidat %}
+				<div class="alert alert-warning alert-dismissible fade show" role="alert">
+					Sélectionnez une <strong>simulation</strong>  pour définir votre tarif candidat.
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>
+				{% endif %}
+				<h1 class="h2">Mes simulations</h1>
+				<div class="row mt-3">
+					<div class="col d-flex justify-content-between">
+						<div>
+							<a href="{{ path('app_home_simulateur_portage') }}" class="btn btn-success rounded-pill px-5">Simulateur</a>
+						</div>
+						<div>
+						{% if candidat %}
+							<button id="submit-button" type="button" class="btn btn-primary rounded-pill px-5" disabled>Enregistrer comme tarif</button>
+						{% endif %}
+						</div>
+					</div>
+				</div>
+
 				<hr>
 
 				{% if simulateurs|length > 0 %}
 					<div class="container d-none d-sm-block">
-						<div class="row text-strong">
-							<div class="col">Salaire Net</div>
-							<div class="col text-center d-none d-md-block">Devise</div>
-							<div class="col text-center">Date</div>
-							<div class="col text-center"></div>
-						</div>
-						<hr>
-						{% for item in simulateurs %}
-							<div class="row text-muted align-items-center">
-								<div class="col small">
-									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.id })}}" class="">
-										{{ item.salaireNet}}
-										{{ item.devise.symbole}}
-									</a>
-								</div>
-								<div class="col small text-center  d-none d-md-block">
-									{{ item.taux}}
-									Ar
-								</div>
-								<div class="col small text-center">
-									{{ item.createdAt|date('d/m/Y') }}
-								</div>
-								<div class="col small text-center">
-									<a href="{{ path('app_dashboard_employes_simulation_delete', {'id' : item.id })}}" class="btn btn-sm btn-danger small" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette simulation ?');">
-										<i class="bi bi-trash"></i>
-									</a>
-								</div>
+						<form id="simulation-form" method="post" action="{{ path('app_dashboard_employes_simulations') }}">
+							<div class="row text-strong">
+								<div class="col-1"></div>
+								<div class="col">Salaire Net</div>
+								<div class="col text-center d-none d-md-block">Devise</div>
+								<div class="col text-center">Date</div>
+								<div class="col-1 text-center"></div>
 							</div>
 							<hr>
-						{% endfor %}
-						<!-- Plus de lignes et colonnes ici -->
+							{% set currentTarifCandidat = candidat.tarifCandidat %}
+							{% for item in simulateurs %}
+								<div class="row text-muted align-items-center">
+									<div class="col-1">
+										<input type="radio" name="simulation" value="{{ item.id }}" 
+										{% if currentTarifCandidat.simulation is defined and currentTarifCandidat.simulation.id == item.id %}checked{% endif %}
+										class="form-check-input simulation-radio">
+									</div>
+									<div class="col small">
+										<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.id })}}" class="">
+											{{ item.salaireNet }}
+											{{ item.devise.symbole }}
+										</a>
+									</div>
+									<div class="col small text-center d-none d-md-block">
+										{{ item.taux }}
+										Ar
+									</div>
+									<div class="col small text-center">
+										{{ item.createdAt|date('d/m/Y') }}
+									</div>
+									<div class="col-1 small text-center">
+										<a href="{{ path('app_dashboard_employes_simulation_delete', {'id' : item.id })}}" class="btn btn-sm btn-danger small" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette simulation ?');">
+											<i class="bi bi-trash"></i>
+										</a>
+									</div>
+								</div>
+								<hr>
+							{% endfor %}
+						</form>
 					</div>
 					<div class="container d-block d-sm-none">
 						{% for item in simulateurs %}
@@ -82,6 +106,19 @@
 		</div>
 	</div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitButton = document.getElementById('submit-button');
+            document.querySelectorAll('.simulation-radio').forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    submitButton.disabled = false;
+                });
+            });
+            submitButton.addEventListener('click', function() {
+                document.getElementById('simulation-form').submit();
+            });
+        });
+    </script>
 {% endblock %}
 {% block inner_footer %}
 	{% include "dashboard/_inner_footer.html.twig" %}

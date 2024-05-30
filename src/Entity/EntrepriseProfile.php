@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Finance\Devise;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Entreprise\Favoris;
@@ -75,6 +76,9 @@ class EntrepriseProfile
 
     #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Favoris::class)]
     private Collection $favoris;
+
+    #[ORM\ManyToOne(inversedBy: 'entrepriseProfiles')]
+    private ?Devise $devise = null;
 
     public function __construct()
     {
@@ -312,6 +316,18 @@ class EntrepriseProfile
                 $favori->setEntreprise(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDevise(): ?Devise
+    {
+        return $this->devise;
+    }
+
+    public function setDevise(?Devise $devise): static
+    {
+        $this->devise = $devise;
 
         return $this;
     }

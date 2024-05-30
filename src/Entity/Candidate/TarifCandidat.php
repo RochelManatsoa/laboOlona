@@ -4,6 +4,7 @@ namespace App\Entity\Candidate;
 
 use App\Entity\CandidateProfile;
 use App\Entity\Finance\Devise;
+use App\Entity\Finance\Simulateur;
 use App\Repository\Candidate\TarifCandidatRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -79,6 +80,9 @@ class TarifCandidat
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tarifCandidats')]
+    private ?Simulateur $simulation = null;
 
     public function __toString(): string
     {
@@ -187,6 +191,18 @@ class TarifCandidat
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getSimulation(): ?Simulateur
+    {
+        return $this->simulation;
+    }
+
+    public function setSimulation(?Simulateur $simulation): static
+    {
+        $this->simulation = $simulation;
 
         return $this;
     }

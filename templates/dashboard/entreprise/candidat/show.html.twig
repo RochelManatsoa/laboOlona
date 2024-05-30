@@ -20,7 +20,6 @@
                     <p><strong>Localisation :</strong> <span class="text-muted">{{ countryName }}</span></p>
                     <p><strong>Âge :</strong> <span class="text-muted">{{ age }}</span></p>
                     <p><strong>Titre professionnel :</strong> <span class="text-muted">{{ candidat.titre }}</span></p>
-                    <p></p>
                     <p><strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-dark' : 'bg-danger' }}">{{ candidat.isValid ? 'Non' : 'Oui' }}</span></p>
                     <p><strong>Diponibilité :</strong> 
                         <span class="text-dark">
@@ -31,6 +30,17 @@
                             {% endif %} 
                         </span>
                     </p><!-- Button trigger modal -->
+                    {% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+                    <p>
+                      <strong>Coût total sur base mensuel :</strong>
+                      <span class="mx-4 text-muted">{{ candidat.tarifCandidat.simulation.salaireNet }} {{ candidat.tarifCandidat.simulation.devise.symbole }} </span>
+                      <span class="small">
+                        <a href="{{ path('app_dashboard_entreprise_simulation_candidat', {'id' : candidat.id })}}" class="">
+                          <i class="bi bi-box-arrow-up-right"></i> Détails
+                        </a>
+                      </span>
+                    </p>
+                    {% endif %}
                     {% if candidat.editedCvs|length > 0 and (entreprise.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_VALID')) or entreprise.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_PREMIUM') )) %}
                         <button type="button" class="btn btn-outline-primary rounded-pill px-4 px-sm-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
