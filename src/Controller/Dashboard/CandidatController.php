@@ -47,6 +47,7 @@ use App\Form\Profile\Candidat\Edit\StepOneType as EditStepOneType;
 use App\Form\Profile\Candidat\Edit\StepTwoType as EditStepTwoType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use App\Form\Profile\Candidat\Edit\StepThreeType as EditStepThreeType;
+use App\Service\PdfProcessor;
 
 #[Route('/dashboard/candidat')]
 class CandidatController extends AbstractController
@@ -64,6 +65,7 @@ class CandidatController extends AbstractController
         private TypeContratRepository $typeContratRepository,
         private RequestStack $requestStack,
         private FileUploader $fileUploader,
+        private PdfProcessor $pdfProcessor,
         private ModerateurManager $moderateurManager,
         private UrlGeneratorInterface $urlGenerator,
     ) {
@@ -536,6 +538,10 @@ class CandidatController extends AbstractController
             if ($cvFile) {
                 $fileName = $this->fileUploader->upload($cvFile, $candidat);
                 $candidat->setCv($fileName[0]);
+
+                // Process the PDF with Tesseract and store the response
+                $pdfPath = $this->fileUploader->getTargetDirectory() . '/' . $fileName[0];
+                $this->pdfProcessor->processPdf($pdfPath, $candidat);
                 $this->profileManager->saveCV($fileName, $candidat);
             }
             $this->em->persist($candidat);

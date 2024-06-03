@@ -7,6 +7,8 @@ use App\Entity\Secteur;
 use App\Entity\CandidateProfile;
 use App\Service\User\UserService;
 use App\Entity\Entreprise\JobListing;
+use App\Entity\EntrepriseProfile;
+use App\Entity\Finance\Devise;
 use App\Entity\Langue;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CandidateProfileRepository;
@@ -349,5 +351,15 @@ class EntrepriseManager
         
         // Exécution de la requête et retour des résultats
         return $qb->getQuery()->getResult();
+    }
+
+    public function getEntrepriseDevise(EntrepriseProfile $entrepriseProfile):Devise
+    {
+        $devise = $entrepriseProfile->getDevise();
+        if(!$devise instanceof Devise){
+            $devise = $this->em->getRepository(Devise::class)->find(1);
+        }
+
+        return $devise;
     }
 }

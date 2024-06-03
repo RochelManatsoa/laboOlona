@@ -10,6 +10,7 @@ use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
 use App\Data\SearchCandidateData;
 use App\Entity\Candidate\TarifCandidat;
+use App\Entity\Entreprise\BudgetAnnonce;
 use App\Service\User\UserService;
 use App\Entity\Finance\Simulateur;
 use App\Manager\EntrepriseManager;
@@ -154,8 +155,11 @@ class EntrepriseController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $entreprise = $user->getEntrepriseProfile();
+        $devise = $this->entrepriseManager->getEntrepriseDevise($entreprise);
         $jobListing = new JobListing();
-        $jobListing->setEntreprise($entreprise); // suppose que l'utilisateur connecté est une entreprise
+        $budgetJob = (new BudgetAnnonce())->setCurrency($devise);
+        $jobListing->setEntreprise($entreprise); 
+        $jobListing->setBudgetAnnonce($budgetJob); 
         $jobListing->setDateCreation(new \DateTime());
         $jobListing->setJobId(new Uuid(Uuid::v1()));
         $jobListing->setStatus(JobListing::STATUS_PENDING);

@@ -25,6 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Form\Profile\Referrer\StepOneType as ReferrerStepOne;
 use App\Form\Profile\Referrer\StepTwoType as ReferrerStepTwo;
+use App\Service\PdfProcessor;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -32,6 +33,7 @@ class ProfileController extends AbstractController
 {
     public function __construct(
         private UserService $userService,
+        private PdfProcessor $pdfProcessor,
         private EntityManagerInterface $em,
         private MailManager $mailManager,
         private ProfileManager $profileManager,
@@ -184,6 +186,10 @@ class ProfileController extends AbstractController
             if ($cvFile) {
                 $fileName = $this->fileUploader->upload($cvFile, $profile);
                 $profile->setCv($fileName[0]);
+
+                // Process the PDF with Tesseract and store the response
+                $pdfPath = $this->fileUploader->getTargetDirectory() . '/' . $fileName[0];
+                $this->pdfProcessor->processPdf($pdfPath, $profile);
                 $this->profileManager->saveCV($fileName, $profile);
             }
             $this->profileManager->saveCandidate($profile);

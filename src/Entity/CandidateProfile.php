@@ -161,6 +161,9 @@ class CandidateProfile
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $relancedAt = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $tesseractResult = null;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -837,6 +840,18 @@ class CandidateProfile
     public function setRelancedAt(?\DateTimeInterface $relancedAt): static
     {
         $this->relancedAt = $relancedAt;
+
+        return $this;
+    }
+
+    public function getTesseractResult(): ?string
+    {
+        return $this->tesseractResult;
+    }
+
+    public function setTesseractResult(?string $tesseractResult): static
+    {
+        $this->tesseractResult = $tesseractResult;
 
         return $this;
     }

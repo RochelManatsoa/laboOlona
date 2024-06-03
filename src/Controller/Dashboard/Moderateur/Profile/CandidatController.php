@@ -6,6 +6,10 @@ use DateTime;
 use App\Twig\AppExtension;
 use App\Entity\Candidate\CV;
 use App\Entity\Notification;
+use App\Entity\TemplateEmail;
+use App\Service\FileUploader;
+use App\Service\PdfProcessor;
+use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
@@ -18,7 +22,6 @@ use App\Service\Mailer\MailerService;
 use App\Entity\Moderateur\Assignation;
 use App\Form\Candidat\AvailabilityType;
 use App\Data\Profile\CandidatSearchData;
-use App\Entity\TemplateEmail;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\Moderateur\AssignationFormType;
@@ -30,8 +33,6 @@ use App\Form\Moderateur\Profile\CandidatCvType;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Moderateur\NotificationProfileType;
 use App\Form\Moderateur\Profile\CandidatSearchFormType;
-use App\Manager\ProfileManager;
-use App\Service\FileUploader;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -40,6 +41,7 @@ class CandidatController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $em,
+        private PdfProcessor $pdfProcessor,
         private CandidateProfileRepository $candidateProfileRepository,
         private PaginatorInterface $paginatorInterface,
         private NotificationManager $notificationManager,
@@ -147,6 +149,10 @@ class CandidatController extends AbstractController
             if ($cvFile) {
                 $fileName = $this->fileUploader->upload($cvFile, $candidat);
                 $candidat->setCv($fileName[0]);
+
+                // Process the PDF with Tesseract and store the response
+                $pdfPath = $this->fileUploader->getTargetDirectory() . '/' . $fileName[0];
+                $this->pdfProcessor->processPdf($pdfPath, $candidat);
                 $this->profileManager->saveCV($fileName, $candidat);
             }
             $this->em->persist($formCvCandidate->getData());

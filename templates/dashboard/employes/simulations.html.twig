@@ -45,7 +45,7 @@
 								<div class="row text-muted align-items-center">
 									<div class="col-1">
 										<input type="radio" name="simulation" value="{{ item.id }}" 
-										{% if currentTarifCandidat.simulation is defined and currentTarifCandidat.simulation.id == item.id %}checked{% endif %}
+										{% if currentTarifCandidat.simulation is defined and currentTarifCandidat.simulation is not null and currentTarifCandidat.simulation.id == item.id %}checked{% endif %}
 										class="form-check-input simulation-radio">
 									</div>
 									<div class="col small">
