@@ -53,7 +53,28 @@ class ProfileExtension extends AbstractExtension
     {
         return [
             new TwigFunction('getTarifByCompanyCurrency', [$this, 'getTarifByCompanyCurrency']),
+            new TwigFunction('getDefaultTarifCandidat', [$this, 'getDefaultTarifCandidat']),
         ];
+    }
+    public function getDefaultTarifCandidat(CandidateProfile $profile): string
+    {
+        $tarif = '';
+        $tarifCandidat = $profile->getTarifCandidat();
+        if($tarifCandidat instanceof TarifCandidat){
+            $currentTarif = $this->convertTarifToDevise($tarifCandidat, $this->em->getRepository(Devise::class)->find(1));
+            $symbole = "€";
+            if($currentTarif->getCurrency() instanceof Devise){
+                $symbole = $currentTarif->getCurrency()->getSymbole();
+            }
+            $tarif = round($currentTarif->getMontant(), 2).' '.$symbole.' '.$this->getTypeTarif($currentTarif);
+            $simulation = $tarifCandidat->getSimulation();
+            if($simulation instanceof Simulateur){
+                $simulateur = $this->employeManager->convertSimulationToDevise($simulation, $currency);
+                $tarif = round($simulateur->getSalaireNet(), 2).' '.$simulateur->getDevise()->getSymbole().' /mois';
+            }
+        }
+
+        return $tarif;
     }
 
     public function getTarifByCompanyCurrency(CandidateProfile $profile, EntrepriseProfile $company): string
@@ -63,7 +84,11 @@ class ProfileExtension extends AbstractExtension
         $tarifCandidat = $profile->getTarifCandidat();
         if($tarifCandidat instanceof TarifCandidat){
             $currentTarif = $this->convertTarifToDevise($tarifCandidat, $currency);
-            $tarif = round($currentTarif->getMontant(), 2).' '.$currentTarif->getCurrency()->getSymbole().' '.$this->getTypeTarif($currentTarif);
+            $symbole = "€";
+            if($currentTarif->getCurrency() instanceof Devise){
+                $symbole = $currentTarif->getCurrency()->getSymbole();
+            }
+            $tarif = round($currentTarif->getMontant(), 2).' '.$symbole.' '.$this->getTypeTarif($currentTarif);
             $simulation = $tarifCandidat->getSimulation();
             if($simulation instanceof Simulateur){
                 $simulateur = $this->employeManager->convertSimulationToDevise($simulation, $currency);
@@ -79,6 +104,9 @@ class ProfileExtension extends AbstractExtension
         $currentDevise = $tarif->getCurrency();
         if(!$currentDevise instanceof Devise){
             $currentDevise = $this->em->getRepository(Devise::class)->find(1);
+        }    
+        if(!$devise instanceof Devise){
+            $devise = $this->em->getRepository(Devise::class)->find(1);
         }    
         if ($currentDevise != $devise) {
             $currentTaux = $currentDevise->getTaux();

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\CandidateProfile;
 use App\Data\Profile\CandidatSearchData;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Data\Profile\RecrutementSearchData;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -242,6 +243,73 @@ class CandidateProfileRepository extends ServiceEntityRepository
             20
         );
     }
+
+    public function findRecrutSearch(RecrutementSearchData $searchData): PaginationInterface
+    {
+        // dd($searchData);
+        if (empty($searchData->q)) {
+            return $this->paginator->paginate(
+                [], // tableau vide pour représenter aucun résultat
+                $searchData->page,
+                20
+            );
+        }
+
+        $qb = $this
+            ->createQueryBuilder('c')
+            ->select('c, c.id AS matricule, c.relanceCount AS level, u.id, u.nom, COUNT(DISTINCT s.id) AS nombreDeCompetences, COUNT(DISTINCT e.id) AS nombreDeExperiences, COUNT(DISTINCT n.id) AS nombreDeRelance')
+            ->leftJoin('c.competences', 's')
+            ->leftJoin('c.experiences', 'e')
+            ->leftJoin('c.secteurs', 'sect')
+            ->leftJoin('c.tarifCandidat', 't')
+            ->leftJoin('c.cvs', 'cv')
+            ->leftJoin('c.availability', 'dispo')
+            ->join('c.candidat', 'u')
+            ->leftJoin('u.recus', 'n')
+            ->andWhere('c.status = :status')
+            ->setParameter('status', CandidateProfile::STATUS_VALID)
+            ->groupBy('u.id')
+            ->orderBy('c.id', 'DESC')
+            ;
+
+        $words = explode(' ', $searchData->q);
+        $andX = $qb->expr()->andX();
+
+        foreach ($words as $index => $word) {
+            $word = trim($word);
+            if (!empty($word)) {
+                $parameterName = ":word{$index}";
+                $orX = $qb->expr()->orX(
+                    $qb->expr()->like('u.nom', $parameterName),
+                    $qb->expr()->like('u.prenom', $parameterName),
+                    $qb->expr()->like('u.email', $parameterName),
+                    $qb->expr()->like('c.titre', $parameterName),
+                    $qb->expr()->like('s.nom', $parameterName),
+                    $qb->expr()->like('e.description', $parameterName),
+                    $qb->expr()->like('sect.nom', $parameterName),
+                    $qb->expr()->like('t.typeTarif', $parameterName),
+                    $qb->expr()->like('c.tesseractResult', $parameterName),
+                    $qb->expr()->like('c.resultFree', $parameterName),
+                    $qb->expr()->like('dispo.nom', $parameterName)
+                );
+                $andX->add($orX);
+                $qb->setParameter($parameterName, "%{$word}%");
+            }
+        }
+
+        if ($andX->count() > 0) {
+            $qb->andWhere($andX);
+        }
+
+        $query = $qb->getQuery();
+
+        return $this->paginator->paginate(
+            $query,
+            $searchData->page,
+            20
+        );
+    }
+
 
     public function findProfilesToRelance(int $daysSinceCreation, int $daysSinceLastRelance, int $relanceNumber)
     {

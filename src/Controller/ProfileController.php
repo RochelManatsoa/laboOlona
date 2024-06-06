@@ -189,7 +189,7 @@ class ProfileController extends AbstractController
 
                 // Process the PDF with Tesseract and store the response
                 $pdfPath = $this->fileUploader->getTargetDirectory() . '/' . $fileName[0];
-                $this->pdfProcessor->processPdf($pdfPath, $profile);
+                // $this->pdfProcessor->processPdf($pdfPath, $profile);
                 $this->profileManager->saveCV($fileName, $profile);
             }
             $this->profileManager->saveCandidate($profile);

@@ -164,6 +164,12 @@ class CandidateProfile
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $tesseractResult = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $resultFree = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $resultPremium = null;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -852,6 +858,30 @@ class CandidateProfile
     public function setTesseractResult(?string $tesseractResult): static
     {
         $this->tesseractResult = $tesseractResult;
+
+        return $this;
+    }
+
+    public function getResultFree(): ?string
+    {
+        return $this->resultFree;
+    }
+
+    public function setResultFree(?string $resultFree): static
+    {
+        $this->resultFree = $resultFree;
+
+        return $this;
+    }
+
+    public function getResultPremium(): ?string
+    {
+        return $this->resultPremium;
+    }
+
+    public function setResultPremium(?string $resultPremium): static
+    {
+        $this->resultPremium = $resultPremium;
 
         return $this;
     }

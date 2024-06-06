@@ -152,7 +152,7 @@ class CandidatController extends AbstractController
 
                 // Process the PDF with Tesseract and store the response
                 $pdfPath = $this->fileUploader->getTargetDirectory() . '/' . $fileName[0];
-                $this->pdfProcessor->processPdf($pdfPath, $candidat);
+                // $this->pdfProcessor->processPdf($pdfPath, $candidat);
                 $this->profileManager->saveCV($fileName, $candidat);
             }
             $this->em->persist($formCvCandidate->getData());
