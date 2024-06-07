@@ -162,7 +162,12 @@ class MailerService
         try{
 
             $this->mailer->send($email);
-            $notification = $this->notificationManager->createNotification($this->userService->getCurrentUser(), $profile->getCandidat(), Notification::TYPE_PROFIL, $titre, '<p>Bonjour '.$profile->getCandidat()->getPrenom().',</p>'.$contenu );
+            $notification = 
+            $this->notificationManager->createNotification(
+                $this->userService->getCurrentUser(), 
+                $profile->getCandidat(), Notification::TYPE_PROFIL, $titre, 
+                '<p>Bonjour '.$profile->getCandidat()->getPrenom().',</p>'.$contenu 
+            );
             $this->em->persist($notification);
             $this->em->flush();
 

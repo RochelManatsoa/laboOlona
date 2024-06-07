@@ -6,6 +6,9 @@ use App\Entity\CandidateProfile;
 use App\Twig\AppExtension;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\RouterInterface;
 use setasign\Fpdi\Tcpdf\Fpdi;
 
 class FileUploader
@@ -15,6 +18,8 @@ class FileUploader
         private string $targetDirectoryEditedOlona,
         private string $targetDirectoryEdited,
         private AppExtension $appExtension,
+        private RequestStack $requestStack,
+        private RouterInterface $router
     ) {
     }
 
@@ -67,17 +72,25 @@ class FileUploader
 
     public function modifyPdfTitle($filePath, $newTitle)
     {
-        $pdf = new Fpdi();
+        try {
+            $pdf = new Fpdi();
 
-        $pdf->SetTitle($newTitle);
+            $pdf->SetTitle($newTitle);
 
-        $pageCount = $pdf->setSourceFile($filePath);
-        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-            $tplIdx = $pdf->importPage($pageNo, '/MediaBox');
-            $pdf->AddPage();
-            $pdf->useTemplate($tplIdx, 10, 10, 200);
+            $pageCount = $pdf->setSourceFile($filePath);
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                $tplIdx = $pdf->importPage($pageNo, '/MediaBox');
+                $pdf->AddPage();
+                $pdf->useTemplate($tplIdx, 10, 10, 200);
+            }
+
+            $pdf->Output($filePath, 'F');
+        } catch (\Exception $e) {
+            $session = $this->requestStack->getSession();
+            $session->getFlashBag()->add('error', 'Impossible de lire le titre du PDF. Veuillez vérifier la propriété du PDF.');
+            $currentRequest = $this->requestStack->getCurrentRequest();
+            $currentRoute = $this->router->generate($currentRequest->attributes->get('_route'), $currentRequest->attributes->get('_route_params'));
+            return new RedirectResponse($currentRoute);
         }
-
-        $pdf->Output($filePath, 'F');
     }
 }
