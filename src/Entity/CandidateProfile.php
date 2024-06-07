@@ -170,6 +170,15 @@ class CandidateProfile
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $resultPremium = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $metaDescription = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $traductionEn = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $badKeywords = null;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -882,6 +891,42 @@ class CandidateProfile
     public function setResultPremium(?string $resultPremium): static
     {
         $this->resultPremium = $resultPremium;
+
+        return $this;
+    }
+
+    public function getMetaDescription(): ?string
+    {
+        return $this->metaDescription;
+    }
+
+    public function setMetaDescription(?string $metaDescription): static
+    {
+        $this->metaDescription = $metaDescription;
+
+        return $this;
+    }
+
+    public function getTraductionEn(): ?string
+    {
+        return $this->traductionEn;
+    }
+
+    public function setTraductionEn(?string $traductionEn): static
+    {
+        $this->traductionEn = $traductionEn;
+
+        return $this;
+    }
+
+    public function getBadKeywords(): ?string
+    {
+        return $this->badKeywords;
+    }
+
+    public function setBadKeywords(?string $badKeywords): static
+    {
+        $this->badKeywords = $badKeywords;
 
         return $this;
     }

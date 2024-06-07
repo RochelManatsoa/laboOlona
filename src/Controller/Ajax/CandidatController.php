@@ -188,7 +188,6 @@ class CandidatController extends AbstractController
     public function updateApplication(Request $request, ApplicationsRepository $applicationsRepository, $id): Response
     {
         $application = $applicationsRepository->find($id);
-
         if (!$application) {
             return $this->json([
                 'success' => false,
@@ -196,16 +195,7 @@ class CandidatController extends AbstractController
             ]);
         }
 
-        // Mettez à jour l'entité Experience avec les nouvelles données
-        // $experience->setNom($request->request->get('nom'));
-        // $experience->setEntreprise($request->request->get('entreprise'));
-        // $experience->setEnPoste(null !== $request->request->get('enPoste') ? true : false);
-        // $experience->setDateDebut(new \DateTime($request->request->get('dateDebut')));
-        // $experience->setDateFin(new \DateTime($request->request->get('dateFin')));
-        // $experience->setDescription($request->request->get('description'));
-
-        
-        // Enregistrez les modifications dans la base de données
+        $application->setLettreMotivation($request->request->get('lettreMotivation'));
         $this->em->persist($application);
         $this->em->flush();
 

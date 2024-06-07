@@ -70,20 +70,28 @@ class CsvUploadController extends AbstractController
 
             while (($data = fgetcsv($handle, 1000, ',')) !== false) {
                 // Assurez-vous que chaque ligne contient le nombre attendu de colonnes
-                if (count($data) < 3) {
+                if (count($data) < 5) {
                     continue; // Skip lines that don't have enough columns
                 }
                 // Transform the textual data into HTML
                 $resultResume = $this->extractProfessionalSummary($data[2]);
                 $resultFreeHtml = $this->transformToHtml($data[2]);
                 $resultPremiumHtml = $this->transformToHtml($data[1]);
+                $resultTraductionHtml = $this->transformToHtml($data[3]);
+                $badKeywords = $data[4];
 
                 // Supposons que le premier champ est l'ID de l'entité
                 $entity = $this->candidateProfileRepository->find((int)$data[0]);
 
                 if ($entity instanceof CandidateProfile) {
                     // Mettre à jour les champs de l'entité
-                    $entity->setResultFree($resultFreeHtml)->setResultPremium($resultPremiumHtml)->setTesseractResult($resultResume);
+                    $entity
+                        ->setResultFree($resultFreeHtml)
+                        ->setResultPremium($resultPremiumHtml)
+                        ->setMetaDescription($resultResume)
+                        ->setTraductionEn($resultTraductionHtml)
+                        ->setBadKeywords($badKeywords)
+                    ;
                     $entityManager->persist($entity);
                 } 
             }

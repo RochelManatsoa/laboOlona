@@ -44,7 +44,7 @@ class CandidateProfileCrudController extends AbstractCrudController
             TextEditorField::new('resume', 'Biographie')->hideOnIndex(),
             TextEditorField::new('resultFree', 'Resultat Free')->hideOnIndex(),
             TextEditorField::new('resultPremium', 'Resultat Premium')->hideOnIndex(),
-            TextEditorField::new('tesseractResult', 'Meta description')->hideOnIndex(),
+            TextEditorField::new('traductionEn', 'Traduction')->hideOnIndex(),
             FormField::addColumn(4),
             DateField::new('candidat.dateInscription', 'Inscrit le')->hideOnForm(),
             DateField::new('candidat.lastLogin', 'Last login')->hideOnForm(),
@@ -53,6 +53,8 @@ class CandidateProfileCrudController extends AbstractCrudController
             AssociationField::new('secteurs', 'Secteurs')->hideOnIndex(),
             ImageField::new('fileName', 'Avatar')->setUploadDir('/public/uploads/experts/')->setBasePath('uploads/experts/'),
             AssociationField::new('tarifCandidat', 'Tarif Candidat')->hideOnForm()->setSortable(false),
+            TextEditorField::new('metaDescription', 'Meta description')->hideOnIndex(),
+            TextEditorField::new('badKeywords', 'Meta description')->hideOnIndex(),
         ];
     }
 }

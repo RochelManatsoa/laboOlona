@@ -128,7 +128,7 @@
                         <strong class="">{{ generatePseudo(item[0]) }} </strong>{{ item[0].titre|upper }}
                         </div>
                         <div class="mb-3 small text-muted">
-                        {{ item[0].tesseractResult }}
+                        {{ item[0].metaDescription|raw }}
                         </div>
                     {% endfor %}
                     </div>

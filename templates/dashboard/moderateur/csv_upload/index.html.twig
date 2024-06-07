@@ -5,7 +5,7 @@
 {% block body %}
 	<div class="container mt-5">
 		<div class="row align-items-center">
-            <h2 class="h1 mb-4">Upload CSV File</h2>
+            <h1 class="h1 mb-4">Upload CSV File</h1>
             {{ form_start(form) }}
                 {{ form_row(form.csv_file) }}
                 <button class="btn btn-primary px-5">Upload</button>
@@ -17,6 +17,10 @@
             {% for message in app.flashes('error') %}
                 <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
+            <h2 class="h3 my-4">Format du fichier</h2>
+            <span class="text-muted">5 colonnes</span>
+
+		    <img src="{{ asset('images/csv_format.png')}}" class="img-fluid">
 		</div>
 	</div>
 {% endblock %}

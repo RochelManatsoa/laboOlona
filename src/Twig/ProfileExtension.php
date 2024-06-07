@@ -69,7 +69,7 @@ class ProfileExtension extends AbstractExtension
             $tarif = round($currentTarif->getMontant(), 2).' '.$symbole.' '.$this->getTypeTarif($currentTarif);
             $simulation = $tarifCandidat->getSimulation();
             if($simulation instanceof Simulateur){
-                $simulateur = $this->employeManager->convertSimulationToDevise($simulation, $currency);
+                $simulateur = $this->employeManager->convertSimulationToDevise($simulation, $this->em->getRepository(Devise::class)->find(1));
                 $tarif = round($simulateur->getSalaireNet(), 2).' '.$simulateur->getDevise()->getSymbole().' /mois';
             }
         }

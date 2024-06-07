@@ -104,20 +104,16 @@
             {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
         </a>
       </li>
-      {# <li>
-        <a href="{{ path('app_dashboard_entreprise_message')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_entreprise_message' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-chat-right-text"></i>
-            {{ 'app_dashboard_entreprise.messaging'|trans }} 
+
+      {% if 'ROLE_ADMIN' in app.user.roles %}
+      <li>
+        <a href="{{ path('app_dashboard_moderateur_csv_upload')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_csv_upload' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-box-arrow-in-right"></i>
+            Import CSV 
         </a>
       </li>
-      <li>
-        <a href="{{ path('app_dashboard_entreprise_notification')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_entreprise_notification' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-bell"></i>
-            {{ 'app_dashboard_entreprise.notification'|trans }}  
-        </a>
-      </li> #}
+      {% endif %}
     </ul>
 
     <hr>
