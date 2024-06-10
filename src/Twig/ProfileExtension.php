@@ -4,6 +4,7 @@ namespace App\Twig;
 
 use App\Entity\Candidate\TarifCandidat;
 use App\Entity\CandidateProfile;
+use App\Entity\Entreprise\BudgetAnnonce;
 use App\Entity\Entreprise\Favoris;
 use DateTime;
 use App\Entity\User;
@@ -54,8 +55,10 @@ class ProfileExtension extends AbstractExtension
         return [
             new TwigFunction('getTarifByCompanyCurrency', [$this, 'getTarifByCompanyCurrency']),
             new TwigFunction('getDefaultTarifCandidat', [$this, 'getDefaultTarifCandidat']),
+            new TwigFunction('getBudgetAnnonceStr', [$this, 'getBudgetAnnonceStr']),
         ];
     }
+
     public function getDefaultTarifCandidat(CandidateProfile $profile): string
     {
         $tarif = '';
@@ -72,6 +75,23 @@ class ProfileExtension extends AbstractExtension
                 $simulateur = $this->employeManager->convertSimulationToDevise($simulation, $this->em->getRepository(Devise::class)->find(1));
                 $tarif = round($simulateur->getSalaireNet(), 2).' '.$simulateur->getDevise()->getSymbole().' /mois';
             }
+        }
+
+        return $tarif;
+    }
+
+    public function getBudgetAnnonceStr(JobListing $annonce): string
+    {
+        $tarif = '';
+        $budgetAnnonce = $annonce->getBudgetAnnonce();
+        if($budgetAnnonce instanceof BudgetAnnonce){
+            $symbole = "€";
+            if($budgetAnnonce->getCurrency() instanceof Devise){
+                $symbole = $budgetAnnonce->getCurrency()->getSymbole();
+            }
+            $tarif = round($budgetAnnonce->getMontant(), 2).' '.$symbole;
+        }elseif($annonce->getBudget() !== null){
+            $tarif = $annonce->getBudget().' €';
         }
 
         return $tarif;

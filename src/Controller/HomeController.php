@@ -254,7 +254,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/formulaire', name: 'app_home_form')]
+    #[Route('/formulaire', name: 'app_home_form', methods: ['POST'])]
     public function form(Request $request): Response
     {
         if ($request->isMethod('POST')) {
