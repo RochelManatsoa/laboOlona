@@ -22,6 +22,7 @@ use App\Entity\Finance\Devise;
 use App\Service\Mailer\MailerService;
 use Symfony\Component\Intl\Countries;
 use App\Entity\Moderateur\Assignation;
+use App\Entity\Vues\CandidatVues;
 use App\Form\Profile\EditEntrepriseType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -41,9 +42,9 @@ use App\Form\Search\Annonce\EntrepriseAnnonceSearchType;
 use App\Manager\Finance\EmployeManager;
 use App\Manager\SimulateurEntrepriseManager;
 use App\Repository\Finance\SimulateurRepository;
+use DateTime;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/dashboard/entreprise')]
 class EntrepriseController extends AbstractController
@@ -270,6 +271,7 @@ class EntrepriseController extends AbstractController
         $this->checkEntreprise();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
+        $entreprise = $user->getEntrepriseProfile();
         $secteurs = $user->getEntrepriseProfile()->getSecteurs();
         $searchData = new SearchCandidateData();
         $searchData->setSecteurs($secteurs->toArray());
@@ -302,6 +304,7 @@ class EntrepriseController extends AbstractController
                             $request->query->getInt('page', 1),
                             12
                         ),
+                        'entreprise' => $entreprise,
                         'favoris' => $favoris,
                         'result' => $data
                     ]),
@@ -336,6 +339,26 @@ class EntrepriseController extends AbstractController
         ]);
         if($like){
             $favori = true;
+        }
+
+        if ($candidateProfile) {
+            $ipAddress = $request->getClientIp();
+            $viewRepository = $this->em->getRepository(CandidatVues::class);
+            $existingView = $viewRepository->findOneBy([
+                'candidat' => $candidateProfile,
+                'ipAddress' => $ipAddress,
+            ]);
+    
+            if (!$existingView) {
+                $view = new CandidatVues();
+                $view->setCandidat($candidateProfile);
+                $view->setIpAddress($ipAddress);
+                $view->setCreatedAt(new DateTime());
+    
+                $this->em->persist($view);
+                $candidateProfile->addVue($view);
+                $this->em->flush();
+            }
         }
 
         // Calcul de l'âge

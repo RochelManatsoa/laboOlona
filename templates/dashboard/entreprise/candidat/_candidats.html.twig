@@ -52,7 +52,11 @@
                     {% if candidat.tarifCandidat is defined and candidat.tarifCandidat is not null %}
                         <br>
                       <strong><i class="bi bi-tags"></i></strong>
-                      <span class="text-muted">{{ getTarifByCompanyCurrency(candidat, entreprise) }}</span>
+                      <span class="text-muted">
+                      {# {% if entreprise is defined and entreprise is not null %} #}
+                      {{ getTarifByCompanyCurrency(candidat, entreprise) }}
+                      {# {% endif %} #}
+                      </span>
                     {% endif %}
                     <br>
                         {% for secteur in candidat.secteurs %}
@@ -92,69 +96,3 @@
 </div>
 
 <hr>
-
-<!-- Section pour tous les candidats -->
-{# <div class="row">
-    <h3 class="col-12 mb-3">Voir tous les Candidats</h3>
-        <div class="card shadow p-2">
-            <table class="table table-responsive" id="candidatsTable">
-                <thead>
-                    <tr>
-                        <th scope="col-1">Titre</th>    
-                        <th scope="col-2">Nom</th>
-                        <th scope="col-2">Missions réalisées</th>
-                        <th scope="col-2">Disponibilité</th>
-                        <th scope="col-3">Compétences</th>
-                        <th scope="col-1">Expériences</th>
-                        <th scope="col-2">Langues</th>
-                        <th scope="col-1">Profil</th>
-                    </tr>
-                </thead>
-                <tbody> #}
-                    {# {% for candidat in candidats %} #}
-                        {# <tr>
-                            <td style="font-weight: 500;">{{ candidat.titre }}</td>  
-                            <td> #}
-                                {# {% set prenoms = candidat.candidat.prenom|split(' ') %} #}
-                                {# {{ prenoms|first }}Affiche le premier prénom #}
-                                {# {% for prenom in prenoms|slice(1) %}{{ prenom|slice(0, 1) }}.{% endfor %} Affiche les initiales des autres prénoms suivies d'un point #}
-                                {# {{ candidat.candidat.nom|slice(0, 1) }}.Affiche l'initiale du nom suivie d'un point #}
-                            {# </td>
-                            <td>
-                                <span class="badge bg-success"> #}
-                                    {# {{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }} #}
-                                {# </span>
-                            </td>
-                            <td class="small">
-                                <span class="text-dark">
-                                    {% if candidat.availability is not null %}
-                                        {{ checkAvailability(candidat.candidat)|raw}}
-                                    {% else %}
-                                        <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
-                                    {% endif %} 
-                                </span>
-                            </td>
-                            <td>
-                                {% for skill in candidat.competences %}
-                                <span class="badge bg-info">
-                                    {{ skill.nom }}
-                                </span>
-                                {% endfor %}
-                            </td>
-                            <td><span class="badge bg-secondary"><a href="{{ path('app_dashboard_moderateur_candidat_experiences', {'id': candidat.id}) }}" class="text-decoration-none text-white">{{ candidat.experiences|length }}</a></span></td>
-                            <td>
-                                {% for langue in candidat.langages %}
-                                    {{ isoToEmoji(langue.langue.code) }}
-                                {% endfor %}
-                            </td>
-                            <td><a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': candidat.id}) }}" class="btn btn-warning btn-sm rounded-pill"><i class="bi bi-eye"></i></a></td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="9">Aucun candidat trouvé.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div> #}
-{# </div> #}

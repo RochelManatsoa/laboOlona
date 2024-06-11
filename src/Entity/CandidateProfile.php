@@ -179,6 +179,15 @@ class CandidateProfile
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $badKeywords = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $tools = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $technologies = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $resumeCandidat = null;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -927,6 +936,42 @@ class CandidateProfile
     public function setBadKeywords(?string $badKeywords): static
     {
         $this->badKeywords = $badKeywords;
+
+        return $this;
+    }
+
+    public function getTools(): ?string
+    {
+        return $this->tools;
+    }
+
+    public function setTools(?string $tools): static
+    {
+        $this->tools = $tools;
+
+        return $this;
+    }
+
+    public function getTechnologies(): ?string
+    {
+        return $this->technologies;
+    }
+
+    public function setTechnologies(?string $technologies): static
+    {
+        $this->technologies = $technologies;
+
+        return $this;
+    }
+
+    public function getResumeCandidat(): ?string
+    {
+        return $this->resumeCandidat;
+    }
+
+    public function setResumeCandidat(?string $resumeCandidat): static
+    {
+        $this->resumeCandidat = $resumeCandidat;
 
         return $this;
     }

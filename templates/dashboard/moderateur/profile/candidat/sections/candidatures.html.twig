@@ -10,25 +10,26 @@
                                 <div class="col-8 font-weight-bold text-center">Lettre de motivation</div>
                                 <div class="col-1 font-weight-bold"></div>
                             </div>
-								{% for application in candidat.applications %}
-                            		<div class="row border-top py-2 applications" data-application-id="{{ application.id }}">
-										<div class="col-3">
-											{{ application.annonce.titre }}<br>
-											<span class="small">Status <span class="text-muted">{{ application.status }}</span><br>
-												Le {{ application.dateCandidature|date('d M Y')}}
-											</span>
-										</div>
-										<div class="col-8">
-											{{ application.lettreMotivation|raw }}
-										</div>
-										<div class="col-1">
-										<span class="">
-											<button class="btn btn-primary btn-sm edit-application" data-application-id="{{ application.id }}"><i class="bi bi-pencil-square"></i></button>
-											<button class="btn btn-danger btn-sm delete-application" data-application-id="{{ application.id }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?');"><i class="bi bi-trash"></i></button>
+							{% for application in candidat.applications %}
+								<div class="row border-top py-2 applications" data-application-id="{{ application.id }}">
+									<div class="col-3">
+										{{ application.annonce.titre }}<br>
+										<span class="small">Status <span class="text-muted">{{ application.status }}</span><br>
+											Le {{ application.dateCandidature|date('d M Y')}}
 										</span>
-										</div>
 									</div>
-								{% endfor %}
+									<div class="col-8">
+										{{ application.lettreMotivation|raw }}
+									</div>
+									<div class="col-1">
+									<span class="">
+										<button class="btn btn-primary btn-sm edit-application" data-application-id="{{ application.id }}"><i class="bi bi-pencil-square"></i></button>
+										<button class="btn btn-danger btn-sm delete-application" data-application-id="{{ application.id }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?');"><i class="bi bi-trash"></i></button>
+									</span>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
 						{% else %}
 						<div class="row">
 							<div class="col-md-9 mx-auto">

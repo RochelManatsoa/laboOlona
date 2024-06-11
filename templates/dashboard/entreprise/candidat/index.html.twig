@@ -101,7 +101,7 @@
                             </div>
                         </div>
                         <div id="candidats-container">
-                            {% include 'dashboard/entreprise/candidat/_candidats.html.twig' %}
+                            {% include 'dashboard/entreprise/candidat/_candidats.html.twig' with {entreprise:entreprise} %}
                         </div>
                     </div>
                     
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Mettre à jour le badge lors du chargement de la page
-    updateTotalBadge();
+    // updateTotalBadge();
 
     // Gestionnaire d'événements pour le bouton "Effacer" et les changements sur les champs
     document.getElementById('reset-button').addEventListener('click', function() {
@@ -325,7 +325,7 @@ $(document).ready(function() {
         console.log('search annonces ok');
         var formData = $('#entreprise-candidat-search-form').serialize();
         $.ajax({
-            url: '{{ path('app_dashboard_entreprise_recherche_candidats') }}', // Mettez à jour avec le chemin correct
+            url: '{{ path('app_dashboard_entreprise_recherche_candidats') }}', 
             type: 'GET',
             data: formData,
             success: function(data) {

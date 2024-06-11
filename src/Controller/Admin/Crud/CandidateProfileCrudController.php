@@ -53,8 +53,11 @@ class CandidateProfileCrudController extends AbstractCrudController
             AssociationField::new('secteurs', 'Secteurs')->hideOnIndex(),
             ImageField::new('fileName', 'Avatar')->setUploadDir('/public/uploads/experts/')->setBasePath('uploads/experts/'),
             AssociationField::new('tarifCandidat', 'Tarif Candidat')->hideOnForm()->setSortable(false),
+            TextEditorField::new('resumeCandidat', 'Points forts/Point faible')->hideOnIndex(),
             TextEditorField::new('metaDescription', 'Meta description')->hideOnIndex(),
-            TextEditorField::new('badKeywords', 'Meta description')->hideOnIndex(),
+            TextEditorField::new('badKeywords', 'Mots/Expressions')->hideOnIndex(),
+            TextEditorField::new('tools', 'Outils')->hideOnIndex(),
+            TextEditorField::new('technologies', 'Technologies')->hideOnIndex(),
         ];
     }
 }
