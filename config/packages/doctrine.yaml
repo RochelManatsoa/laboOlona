@@ -14,6 +14,8 @@ doctrine:
         validate_xml_mapping: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
+        controller_resolver:
+            auto_mapping: true  # Ajout de cette ligne
         mappings:
             App:
                 type: attribute
@@ -39,6 +41,8 @@ when@prod:
             result_cache_driver:
                 type: pool
                 pool: doctrine.result_cache_pool
+            controller_resolver:
+                auto_mapping: true  # Ajout de cette ligne
 
     framework:
         cache:
