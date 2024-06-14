@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -7,6 +6,9 @@
 /public/bundles/
 /public/uploads/*
 /public/video/*
+/assets/node_app/node_modules/*
+/assets/node_app/.env
+/assets/node_app/.env.*
 /nginx/
 /var/
 /migrations/
