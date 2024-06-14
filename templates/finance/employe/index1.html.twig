@@ -1,0 +1,82 @@
+{% extends 'finance/base.html.twig' %}
+
+{% block title %}Employés{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="annonce-list p-2">
+            <div class="annonce-item shadow p-5 m-4">
+                <h1 class="card-title h2 mb-3">Liste des employés</h1>
+                    <a href="{{ path('app_finance_employe_new')}}" class="btn rounded-pill px-5 btn-success my-4">
+                        Nouvel employé
+                    </a>
+                    {{ form_start(form, {'attr': {'class': 'form-inline'}}) }}
+                        <div class="input-group mb-3">
+                            {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                            <div class="input-group-append">
+                                {{ form_widget(form.submit, {'attr': {'class': 'btn btn-dark px-5'}}) }}
+                            </div>
+                        </div>
+                    {{ form_end(form) }}
+                    {% if employes|length > 0 %}
+                    <div class="container">
+                        <div class="row text-strong">
+                            <div class="col-sm-5">Nom et prénom(s)</div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-4 text-center">Simulations</div>
+                                    <div class="col-sm-6 col-md-4">Inscrit le</div>
+                                    <div class="col-sm-6 col-md-4">Connecté</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1"></div>
+                        </div>
+                        <hr>
+                        {% for item in employes %}
+                            <div class="row text-muted">
+                                <div class="col-sm-5 small">
+                                    <a href="{{ path('app_finance_employe_view', {'id' : item.id })}}" class="">
+                                        {{ item.user.fullName}} 
+                                    </a>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-4 text-center">
+                                            <a href="{{ path('app_finance_salaire_employe', {'id' : item.id })}}" class="">
+                                                <span class="badge text-bg-warning">{{ item.simulateurs|length }}</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-6 col-md-4 small">
+                                        {{ item.dateEmbauche|date('d/m/Y') }}
+                                        </div>
+                                        <div class="col-sm-6 col-md-4 small">
+                                        {{ item.user.lastLogin|time_ago }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1 small">
+                                    <a href="{{ path('app_finance_employe_view', {'id' : item.id })}}" class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </div>
+                            </div>                    
+                            <hr>                    
+                        {% endfor %}
+                    <!-- Plus de lignes et colonnes ici -->
+                    </div>
+                    <div class="navigation mt-5">
+                        {{ knp_pagination_render(employes, 'parts/_pagination.html.twig') }}
+                    </div>
+                    {% else %}
+                    <div class="container p-5 mx-auto text-center">
+                        Aucuns employés jusqu'à présent <br>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+			<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
+				<i class="mx-2 bi bi-arrow-left"></i>Retour
+			</a>
+    </div>
+{% endblock %}

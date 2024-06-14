@@ -10,21 +10,41 @@
         </a>
       </li>
       <hr>
-      <li class="nav-item">
-        <a href="{{ path('app_dashboard_moderateur_secteur')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_secteur' ? 'active' : 'text-white' }}" 
-            {{ current_route == 'app_dashboard_moderateur_secteur' ? 'aria-current=page' : '' }}>
-            <i class="mx-2 h5 bi bi-bookmarks"></i>
-            Secteur d'activité   
+      <li>
+        <a href="{{ path('app_dashboard_moderateur_portage')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_portage' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-building-fill-up"></i>
+            Portage  
+        </a>
+
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_moderateur_profile_candidat')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_profile_candidat' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-people"></i>
+            Profils  
         </a>
       </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_type_contrat')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_type_contrat' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-list-columns"></i>
-            Type de contrat   
+        <a href="{{ path('app_dashboard_moderateur_recrutement')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_recrutement' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-clipboard2-data-fill"></i>
+            Recrutement  
         </a>
-
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_moderateur_assignation')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_assignation' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-hand-index"></i>
+            Assignation  
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_moderateur_profile_entreprise')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_profile_entreprise' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-building"></i>
+            Entreprises  
+        </a>
       </li>
       <li>
         <a href="{{ path('app_dashboard_moderateur_annonces')}}" 
@@ -35,17 +55,10 @@
 
       </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_entreprises')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_entreprises' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-building"></i>
-            Entreprises  
-        </a>
-      </li>
-      <li>
-        <a href="{{ path('app_dashboard_moderateur_candidats')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_candidats' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-people"></i>
-            Candidats  
+        <a href="{{ path('app_dashboard_moderateur_invitation')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_invitation' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-envelope-arrow-up"></i>
+            Invitation  
         </a>
       </li>
       <li>
@@ -56,8 +69,15 @@
         </a>
       </li>
       <li>
-        <a href="{{ path('rendezvous_index')}}" 
-            class="nav-link {{ current_route == 'rendezvous_index' ? 'active' : 'text-white' }}">
+        <a href="{{ path('app_dashboard_moderateur_cooptation')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_cooptation' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-person-plus-fill"></i>
+            Cooptations  
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_moderateur_mettings')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_mettings' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-calendar3"></i>
             Rendez-vous  
         </a>
@@ -76,27 +96,24 @@
             Formations  
         </a>
       </li>
-      {# <li>
-        <a href="{{ path('app_dashboard_moderateur_notifications')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_notifications' ? 'active' : 'text-white' }}">
+      <li>
+        <a href="{{ path('app_dashboard_notification')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_notification' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-bell"></i>
             Notifications  
-        </a>
-      </li> #}
-      {# <li>
-        <a href="{{ path('app_dashboard_entreprise_message')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_entreprise_message' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-chat-right-text"></i>
-            {{ 'app_dashboard_entreprise.messaging'|trans }} 
+            {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
         </a>
       </li>
+
+      {% if 'ROLE_ADMIN' in app.user.roles %}
       <li>
-        <a href="{{ path('app_dashboard_entreprise_notification')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_entreprise_notification' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-bell"></i>
-            {{ 'app_dashboard_entreprise.notification'|trans }}  
+        <a href="{{ path('app_dashboard_moderateur_csv_upload')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_csv_upload' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-box-arrow-in-right"></i>
+            Import CSV 
         </a>
-      </li> #}
+      </li>
+      {% endif %}
     </ul>
 
     <hr>

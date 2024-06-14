@@ -13,15 +13,15 @@ class Experiences
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'open_ai'])]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'open_ai'])]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'open_ai'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 

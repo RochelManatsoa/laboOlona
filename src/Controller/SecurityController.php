@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
 use App\Entity\User;
 use App\Service\YouTubeService;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +48,7 @@ class SecurityController extends AbstractController
     {
         /** @var User|null $user */
         $user = $this->getUser();
-
+        
         if (!$user instanceof User) {
             return $this->redirectToRoute('app_profile');
         }
@@ -55,11 +57,27 @@ class SecurityController extends AbstractController
         }
     
         if ($user->getType() === User::ACCOUNT_ENTREPRISE) {
+            if(!$user->getEntrepriseProfile() instanceof EntrepriseProfile){
+                return $this->redirectToRoute('app_profile_entreprise');
+            }elseif ($user->getEntrepriseProfile()->getStatus() === EntrepriseProfile::STATUS_BANNED) {
+                return $this->redirectToRoute('app_logout');
+            }
             return $this->redirectToRoute('app_dashboard_entreprise');
         }
     
         if ($user->getType() === User::ACCOUNT_CANDIDAT) {
+            if ($user->getCandidateProfile() instanceof CandidateProfile && $user->getCandidateProfile()->getStatus() === CandidateProfile::STATUS_BANNISHED) {
+                return $this->redirectToRoute('app_logout');
+            }
             return $this->redirectToRoute('app_dashboard_candidat');
+        }
+
+        if ($user->getType() === User::ACCOUNT_REFERRER) {
+            return $this->redirectToRoute('app_dashboard_referrer');
+        }
+
+        if ($user->getType() === User::ACCOUNT_EMPLOYE) {
+            return $this->redirectToRoute('app_dashboard_employes_simulations');
         }
     
         return $this->redirectToRoute('app_profile');

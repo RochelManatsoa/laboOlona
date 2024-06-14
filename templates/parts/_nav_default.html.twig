@@ -1,0 +1,72 @@
+{% set current_route = app.request.attributes.get('_route') %}
+<nav class="navbar navbar-dark bg-black fixed-top border-bottom">
+	<div class="container">
+		<a class="navbar-brand" href="https://www.olona-talents.com/">
+			<img src="{{ asset('images/logo-olona-teams-white.png')}}" alt="Olona Talents" width="122" height="50">
+		</a>
+
+		<ul class="navbar-nav d-none d-lg-flex flex-row justify-content-center">
+		</ul>
+
+
+		<a href="{{ path('app_login') }}" class="btn btn-dark d-none d-lg-block rounded-pill px-5">
+			<i class="h5 bi bi-box-arrow-in-right"></i>
+			{{ 'app_login.menu'|trans }}
+		</a>
+		<button class="navbar-toggler d-block d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+			<div class="offcanvas-header">
+				<a class="navbar-brand" href="{{ path('app_home')}}">
+					<img src="{{ asset('images/logo-olona-teams-white.png')}}" alt="Olona Talents" width="122" height="50">
+				</a>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body">
+				<div class="d-flex flex-column flex-shrink-0 px-2 text-white bg-dark position-sticky top-0 small">
+					<ul class="nav nav-pills flex-column mb-auto">
+						<li>
+							<a href="{{ path('app_dashboard_entreprise_new_annonce')}}" class="nav-link rounded-pill {{ current_route == 'app_dashboard_entreprise_new_annonce' ? 'active' : 'text-white' }}">
+								<i class="mx-2 h5 bi bi-megaphone"></i>
+								Deposer une annonce
+							</a>
+						</li>
+						<li>
+							<a href="{{ path('app_dashboard_entreprise_recherche_candidats')}}" class="nav-link rounded-pill {{ current_route == 'app_dashboard_entreprise_recherche_candidats' ? 'active' : 'text-white' }}">
+								<i class="mx-2 h5 bi bi-person-check"></i>
+								Trouver un profil
+							</a>
+						</li>
+						<li>
+							<a href="{{ path('app_dashboard_candidat_annonce')}}" class="nav-link rounded-pill {{ current_route == 'app_dashboard_candidat_annonce' ? 'active' : 'text-white' }}">
+								<i class="mx-2 h5 bi bi-search"></i>
+								Trouver une offre
+							</a>
+						</li>
+						<li>
+							<a href="{{ path('app_home_service')}}" class="nav-link rounded-pill {{ current_route == 'app_home_service' ? 'active' : 'text-white' }}">
+								<i class="mx-2 h5 bi bi-info-circle"></i>
+								Comment ça marche
+							</a>
+						</li>
+						<hr>
+						<li>
+							<a href="{{ path('app_login')}}" class="nav-link rounded-pill {{ current_route == 'app_login' ? 'active' : 'text-white' }}">
+								<i class="mx-2 h5 bi bi-box-arrow-in-right"></i>
+								Se connecter
+							</a>
+						</li>
+						<div class="mx-auto text-dark mt-5" id="button-text">
+							<a href="{{ path('connect_google_start') }}" class="btn btn-light rounded-pill px-5">
+								{{ 'app_register.continue'|trans }}
+								<i class="bi bi-google h5 mx-2 "></i>
+							</a>
+						</div>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</nav>

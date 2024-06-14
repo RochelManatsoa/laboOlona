@@ -1,0 +1,72 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Rendez-vous: {{ metting.id }}{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="annonce-list p-2">
+			<div class="annonce-item shadow p-md-5 m-md-4">
+                <h1 class="h2">Metting #{{ metting.id }}</h1>
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th class="col-4">Titre</th>
+                            <td class="col-8">{{ metting.title }}</td>
+                        </tr>
+                        <tr>
+                            <th>Entreprise</th>
+                            <td>
+                                <div class="row">
+                                    <div class="col">{{ metting.entreprise.nom }}</div>
+                                    <div class="col"><a href="{{ path('rendezvous_send_reminder', {'id':metting.id, 'to':'entreprise'})}}" class="btn btn-dark rounded-pill px-3 btn-sm">Envoyer un rappel</a></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Candidat</th>
+                            <td>
+                                <div class="row">
+                                    <div class="col">{{ metting.candidat.candidat.nom }}</div>
+                                    <div class="col"><a href="{{ path('rendezvous_send_reminder', {'id':metting.id, 'to':'candidat'})}}" class="btn btn-dark rounded-pill px-3 btn-sm">Envoyer un rappel</a></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Date</th>
+                            <td>{{ metting.dateRendezVous|date('d/m/Y H:i') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Lieu</th>
+                            <td>{{ metting.lieu }}</td>
+                        </tr>
+                        <tr>
+                            <th>Lien</th>
+                            <td>
+                            <a href="{{ metting.link }}" target=_blank>
+                            Participer 
+                            </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>{{ metting.status }}</td>
+                        </tr>
+                        <tr>
+                            <th>Commentaire</th>
+                            <td>{{ metting.commentaire|raw }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex">
+                    <a href="{{ path('app_dashboard_moderateur_metting_edit', {'id': metting.id}) }}" class="btn btn-outline-primary rounded-pill px-5">Éditer</a>
+                    <form method="post" action="{{ path('app_dashboard_moderateur_metting_delete', {'id': metting.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ metting.id) }}">
+                        <button class="mx-3 btn btn-danger rounded-pill px-5">Supprimer</button>
+                    </form>
+                </div>
+        </div>
+    </div>
+</div>
+<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+{% endblock %}

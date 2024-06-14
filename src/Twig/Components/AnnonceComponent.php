@@ -10,7 +10,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 class AnnonceComponent
 {
     public string $type = 'success';
-    public string $message;
     public int $id;
 
     public function __construct(

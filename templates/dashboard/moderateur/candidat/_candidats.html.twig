@@ -1,4 +1,6 @@
-    
+    <p class="mx-2 small">
+    <strong>{{ result|length }}</strong> résultats disponibles.
+    </p>
     <div class="navigation">
         {{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
     </div>
@@ -6,20 +8,32 @@
         <thead>
             <tr>
                 <th class="col-2">Nom et prénom</th>
-                <th class="col-4">Email</th>
-                <th class="col-2">Titre</th>
+                <th class="col-4">Titre</th>
+                <th class="col-2 text-center">Assign.</th>
                 <th class="col-2">Statut</th>
                 <th class="col-2">Cértifié</th>
                 <th class="col-2">Dispo.</th>
-                <th class="col-1">Actions</th>
+                <th class="col-1">Voir</th>
             </tr>
         </thead>
         <tbody>
             {% for candidat in candidats %}
                 <tr>
-                    <td>{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</td>
-                    <td>{{ candidat.candidat.email }}</td>
-                    <td>{{ candidat.titre }}</td>
+                    <td>
+                        {{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}<br>
+                        <span class="small text-muted">{{ candidat.candidat.email }}</span>
+                    </td>
+                    <td>
+                        {{ candidat.titre }} <br>
+                        <span class="small text-dark text-strong">{{ generatePseudo(candidat) }}</span> <span class="small text-muted">inscrit le</span> <span class="small text-dark">{{candidat.candidat.dateInscription|date('d/m/Y')}}</span>
+                    </td>
+                    <td class="text-center">
+                    {% if candidat.assignations|length > 0 %}
+                    <span class="badge rounded-pill bg-dark h2">{{ candidat.assignations|length }}</span>
+                    {% else %}
+                    -
+                    {% endif %}
+                    </td>
                     <td>
                         <form method="post" action="{{ path('change_status_candidat', {'uid': candidat.uid}) }}">
                             <select name="status" class="form-control" onchange="this.form.submit()">
@@ -33,8 +47,8 @@
                      <td>
                         <form method="post" action="{{ path('change_status_certification_candidat', {'uid': candidat.uid}) }}">
                             <select name="status" class="form-control" onchange="this.form.submit()">
-                                <option value="OUI" {{ candidat.isValid == 'OUI' ? 'selected' : '' }}>Certifié</option>
-                                <option value="NON" {{ candidat.isValid == 'NON' ? 'selected' : '' }}>Non certifié</option>
+                                <option value="0" {{ candidat.isValid == '0' ? 'selected' : '' }}>Certifié</option>
+                                <option value="1" {{ candidat.isValid == '1' ? 'selected' : '' }}>Non certifié</option>
                             </select>
                         </form>
                      </td>
@@ -46,7 +60,13 @@
                         {% endif %}
                      </td>
                     <td class="actions-col">
-                        <a href="{{path('app_dashboard_moderateur_candidat_view', {'id': candidat.id})}}" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a>
+                        <form action="{{  path('supprimer_candidat',  {'id': candidat.id})  }}" method="POST">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ candidat.id) }}">
+                            <a href="{{path('app_dashboard_moderateur_profile_candidat_view', {'id': candidat.id})}}" class="btn btn-sm btn-info rounded-pill"><i class="bi bi-eye"></i></a>
+                            <button class="btn btn-sm btn-danger rounded-pill" type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce profil ?');">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
             {% endfor %}

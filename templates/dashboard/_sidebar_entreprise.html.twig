@@ -1,18 +1,7 @@
 {% set current_route = app.request.attributes.get('_route') %}
-<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark position-sticky top-0" style="width: 280px;">
-    {# <a href="{{ path('app_dashboard_entreprise')}}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-      <span class="fs-4">{{ 'app_dashboard_entreprise.title'|trans }}   </span>
-    </a>
-    <hr> #}
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark position-sticky" style="width: 280px;top: 5rem;">
 
     <ul class="nav nav-pills flex-column mb-auto">
-      <li class="nav-item">
-        <a href="{{ path('app_dashboard_entreprise_service')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_entreprise_service' ? 'active' : 'text-white' }}" 
-            {{ current_route == 'app_dashboard_entreprise_service' ? 'aria-current=page' : '' }}>
-            <i class="mx-2 h5 bi bi-lightbulb-fill"></i> Lisez-moi
-            </a>
-      </li>
       <li class="nav-item">
         <a href="{{ path('app_dashboard_entreprise_new_annonce')}}" 
             class="nav-link {{ current_route == 'app_dashboard_entreprise_new_annonce' ? 'active' : 'text-white' }}" 
@@ -36,6 +25,20 @@
             {{ 'app_dashboard_entreprise.find'|trans }}  
         </a>
       </li>
+      <li>
+        <a href="{{ path('app_home_simulateur_entreprise') }}" class="nav-link {{ current_route == 'app_home_simulateur_entreprise' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-currency-exchange"></i>
+          Simulateur salaire
+        </a>
+      </li>
+    {% if is_granted('ROLE_EMPLOYE') %}
+      <li>
+        <a href="{{ path('app_dashboard_entreprise_simulations') }}" class="nav-link {{ current_route == 'app_dashboard_entreprise_simulations' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-aspect-ratio"></i>
+          Mes simulations
+        </a>
+      </li>
+    {% endif %}
       <li>
         <a href="{{ path('app_dashboard_entreprise_candidatures')}}" 
             class="nav-link {{ current_route == 'app_dashboard_entreprise_candidatures' ? 'active' : 'text-white' }}">
@@ -64,13 +67,21 @@
             Formations  
         </a>
       </li>
-      {# <li>
-        <a href="{{ path('app_dashboard_entreprise_notifications')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_entreprise_notifications' ? 'active' : 'text-white' }}">
+      <li class="nav-item">
+        <a href="{{ path('app_dashboard_entreprise_service')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_entreprise_service' ? 'active' : 'text-white' }}" 
+            {{ current_route == 'app_dashboard_entreprise_service' ? 'aria-current=page' : '' }}>
+            <i class="mx-2 h5 bi bi-lightbulb-fill"></i> Aide
+            </a>
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_notification')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_notification' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-bell"></i>
             {{ 'app_dashboard_entreprise.notification'|trans }}  
+            {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
         </a>
-      </li> #}
+      </li>
     </ul>
 
     <hr>

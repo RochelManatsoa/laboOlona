@@ -9,8 +9,7 @@ use Twig\Environment;
 class ExceptionListener
 {
     public function __construct(private Environment $twig)
-    {        
-    }
+    {}
 
     public function __invoke(ExceptionEvent $event): void
     {
@@ -22,6 +21,9 @@ class ExceptionListener
         }
 
         switch ($statusCode) {
+            case Response::HTTP_CONFLICT: // 409
+                $template = 'bundles/TwigBundle/Exception/error409.html.twig';
+                break;
             case Response::HTTP_NOT_FOUND:
                 $template = 'bundles/TwigBundle/Exception/error404.html.twig';
                 break;

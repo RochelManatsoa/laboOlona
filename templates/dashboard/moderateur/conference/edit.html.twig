@@ -1,0 +1,18 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Éditer le rendez-vous: {{ metting.id }}{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="annonce-list p-2">
+			<div class="annonce-item shadow p-md-5 m-md-4">
+                <h1 class="h2">Éditer le rendez-vous: #{{ metting.id }}</h1>
+				<hr>
+
+                {{ include('dashboard/moderateur/conference/_form.html.twig') }}
+                <a href="{{ path('app_dashboard_moderateur_metting_show', {'id': metting.id}) }}" class="btn btn-info rounded-pill px-5 mt-4"><i class="bi bi-eye"></i> Voir</a>
+            </div>
+        </div>
+    </div>
+<a href="javascript:history.back()" class="btn btn-primary rounded-pill px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+{% endblock %}

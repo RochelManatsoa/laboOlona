@@ -1,0 +1,26 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Candidats{% endblock %}
+
+{% block body %}
+	<div class="container mt-5">
+		<div class="row align-items-center">
+            <h1 class="h1 mb-4">Upload CSV File</h1>
+            {{ form_start(form) }}
+                {{ form_row(form.csv_file) }}
+                <button class="btn btn-primary px-5">Upload</button>
+            {{ form_end(form) }}
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+            <h2 class="h3 my-4">Format du fichier</h2>
+            <span class="text-muted">5 colonnes</span>
+
+		    <img src="{{ asset('images/csv_format.png')}}" class="img-fluid">
+		</div>
+	</div>
+{% endblock %}

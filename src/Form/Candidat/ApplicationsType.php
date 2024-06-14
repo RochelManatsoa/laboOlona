@@ -18,7 +18,7 @@ class ApplicationsType extends AbstractType
             //     'attr' => ['id' => 'cv-link-field']
             // ])
             ->add('lettreMotivation', TextareaType::class, [
-                'label' =>  'Lettre de motivation',
+                'label' =>  false,
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'Bonjour,

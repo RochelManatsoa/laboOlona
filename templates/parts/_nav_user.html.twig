@@ -1,0 +1,344 @@
+<nav class="navbar navbar-dark bg-black fixed-top border-bottom">
+	<div class="container">
+		<a class="navbar-brand" href="https://www.olona-talents.com/">
+			<img src="{{ asset('images/logo-olona-teams-white.png')}}" alt="Olona Talents" width="122" height="50">
+		</a>
+
+        <div class="ms-auto d-none d-lg-block text-end px-3">
+            <span class="small text-white">{{ app.user.email }}</span>
+            {% if app.user.type == 'CANDIDAT' %}
+                <br><span class="small text-white">{{ checkAvailability(app.user)|raw}}</span>
+            {% endif %}
+            {% if app.user.type == 'ENTREPRISE' %}
+                <br><span class="small text-warning">Compte Entreprise</span>
+            {% endif %}
+            {% if app.user.type == 'EMPLOYE' %}
+                <br><span class="small text-warning">Compte Employé</span>
+            {% endif %}
+            {% if app.user.type == 'COOPTEUR' %}
+                <br><span class="small text-warning">Compte Coopteur</span>
+            {% endif %}
+        </div>
+
+        <div class="dropdown">
+          <button class="dropdown-toggle btn btn-lg btn-dark" type="button" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {% if app.user.gravatar is not null %}
+              <img src="{{ app.user.gravatar }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+              {% else %}
+              <i class="bi bi-person-circle"></i>
+            {% endif %}
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+				{% if app.user.type == 'MODERATEUR' %}
+					<a class="dropdown-item" href="{{ path('app_connect') }}">
+						Tableau de bord
+					</a>
+				{% elseif app.user.type == 'ENTREPRISE' %}
+				{% if app.user.entrepriseProfile is defined and app.user.entrepriseProfile is not null %}
+					<a class="dropdown-item" href="{{ path('app_dashboard_entreprise_profil') }}">
+						Tableau de bord
+					</a>
+				{% else %}
+					<a class="dropdown-item" href="{{ path('app_profile_entreprise') }}">
+						Mon profil
+					</a>
+				{% endif %}
+				{% elseif app.user.type == 'EMPLOYE' %}
+					<a class="dropdown-item" href="{{ path('app_dashboard_employes_infos') }}">
+						Mes infos
+					</a>
+				{% elseif app.user.type == 'CANDIDAT' %}
+					<a class="dropdown-item" href="{{ path('app_dashboard_candidat_compte') }}">
+						Mon compte
+					</a>
+				{% else %}
+					<a class="dropdown-item" href="{{ path('app_profile_account') }}">
+						Mon profile
+					</a>
+				{% endif %}
+            </li>
+            {% if app.user.type == 'CANDIDAT' %}
+              <li>
+                <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#candidatAvaillability">Disponibilité</button>
+              </li>
+            {% endif %}
+            {% if 'ROLE_FINANCE' in app.user.roles %}
+              <li>
+                <a class="dropdown-item" href="{{ path('app_finance_employe') }}">
+                  Finance
+                </a>
+              </li>
+            {% endif %}
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+              <li class="bg-info text-dark">
+                <a class="dropdown-item" href="{{ path('admin') }}">
+                  Administration
+                </a>
+              </li>
+            {% endif %}
+            <li>
+              <a class="dropdown-item" href="{{ path('app_logout') }}">
+                {{ 'app_logout.menu'|trans }}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+		<button class="navbar-toggler d-block d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+			<div class="offcanvas-header">
+				<a class="navbar-brand" href="{{ path('app_home')}}">
+					<img src="{{ asset('images/logo-olona-teams-white.png')}}" alt="Olona Talents" width="122" height="50">
+				</a>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body">
+				{% set current_route = app.request.attributes.get('_route') %}
+				<div class="d-flex flex-column flex-shrink-0 px-2 text-white bg-dark position-sticky top-0 small">
+					<ul class="nav nav-pills flex-column mb-auto">
+					{% if app.user.type is defined and app.user.type is not null %}
+						{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+							<li>
+								<a href="{{ path('app_dashboard_candidat_annonce') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_annonce' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-search"></i>
+									{{ 'app_dashboard_candidat.find'|trans }}
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_candidat_annonces') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_annonces' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-megaphone"></i>
+									Mes candidatures
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('rendezvous_index')}}" class="nav-link {{ current_route == 'rendezvous_index' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-calendar3"></i>
+									{{ 'app_dashboard_entreprise.metting'|trans }}
+								</a>
+							</li>
+						{% endif %}
+						{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+							<li class="nav-item">
+								<a href="{{ path('app_dashboard_entreprise_new_annonce')}}" 
+									class="nav-link {{ current_route == 'app_dashboard_entreprise_new_annonce' ? 'active' : 'text-white' }}" 
+									{{ current_route == 'app_dashboard_entreprise_new_annonce' ? 'aria-current=page' : '' }}>
+									<i class="mx-2 h5 bi bi-plus-lg"></i>
+									{{ 'app_dashboard_entreprise.publish'|trans }}   
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_entreprise_annonces')}}" 
+									class="nav-link {{ current_route == 'app_dashboard_entreprise_annonces' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-megaphone"></i>
+									{{ 'app_dashboard_entreprise.my_posting'|trans }}   
+								</a>
+
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_entreprise_recherche_candidats')}}" 
+									class="nav-link {{ current_route == 'app_dashboard_entreprise_recherche_candidats' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-search"></i>
+									{{ 'app_dashboard_entreprise.find'|trans }}  
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_home_simulateur_portage') }}" class="nav-link {{ current_route == 'app_home_simulateur_portage' ? 'active' : 'text-white' }}">
+								<i class="mx-2 h5 bi bi-currency-exchange"></i>
+								Simulateur salaire
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_entreprise_candidatures')}}" 
+									class="nav-link {{ current_route == 'app_dashboard_entreprise_candidatures' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-person-badge-fill"></i>
+									{{ 'app_dashboard_entreprise.manage'|trans }}  
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('rendezvous_index')}}" 
+									class="nav-link {{ current_route == 'rendezvous_index' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-calendar3"></i>
+									{{ 'app_dashboard_entreprise.metting'|trans }} 
+								</a>
+							</li>
+						{% endif %}
+						{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_REFERRER')) %}
+							<li class="nav-item">
+								<a href="{{ path('app_dashboard_referrer')}}" class="nav-link {{ current_route == 'app_dashboard_referrer' ? 'active' : 'text-white' }}" {{ current_route == 'app_dashboard_referrer' ? 'aria-current=page' : '' }}>
+									<i class="mx-2 h5 bi bi-house-door"></i>
+									Tableau de bord
+								</a>
+							</li>
+							<hr>
+							<li>
+								<a href="{{ path('app_dashboard_referrer_annonces') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_annonces' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-megaphone"></i>
+									Toutes les annonces
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_referrer_stats') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_stats' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-bar-chart"></i>
+									Statistiques
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_referrer_rewards') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_rewards' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-currency-exchange"></i>
+									Récompenses
+								</a>
+
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_referrer_references')}}" class="nav-link {{ current_route == 'app_dashboard_referrer_references' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-info-circle"></i>
+									Mes cooptés
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_referrer_become')}}" class="nav-link {{ current_route == 'app_dashboard_referrer_become' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-person-vcard"></i>
+									Mes infos
+								</a>
+							</li>
+						{% endif %}
+						{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_EMPLOYE')) or is_granted('ROLE_EMPLOYE') %}
+							<li>
+								<a href="{{ path('app_dashboard_employes_simulations') }}" class="nav-link {{ current_route == 'app_dashboard_employes_simulations' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-aspect-ratio"></i>
+									Mes simulations
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_employes_contrats') }}" class="nav-link {{ current_route == 'app_dashboard_employes_contrats' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-folder2-open"></i>
+									Mes contrats
+								</a>
+							</li>
+							<li>
+								<a href="{{ path('app_dashboard_employes_infos')}}" class="nav-link {{ current_route == 'app_dashboard_employes_infos' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-person-vcard"></i>
+									Mes infos
+								</a>
+							</li>
+							{% if is_granted('ROLE_CANDIDAT') %}
+								<li>
+									<a href="{{ path('app_dashboard_employes_annonces') }}" class="nav-link {{ current_route == 'app_dashboard_employes_annonces' ? 'active' : 'text-white' }}">
+										<i class="mx-2 h5 bi bi-megaphone"></i>
+										Toutes les annonces
+									</a>
+								</li>
+							{% endif %}
+						{% endif %}
+					{% else %}
+							<li>
+								<a href="{{ path('app_profile') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_annonces' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-person-bounding-box"></i>
+									Mon profil
+								</a>
+							</li>
+					{% endif %}
+						<li>
+							<a href="{{ path('app_dashboard_moderateur_affiliate_tool')}}" class="nav-link {{ current_route == 'app_dashboard_moderateur_affiliate_tool' ? 'active' : 'text-white' }}">
+								<i class="mx-2 h5 bi bi-robot"></i>
+								AI Tools
+							</a>
+						</li>
+						<li>
+							<a href="{{ path('app_dashboard_formation')}}" class="nav-link {{ current_route == 'app_dashboard_formation' ? 'active' : 'text-white' }}">
+								<i class="mx-2 h5 bi bi-journal-bookmark-fill"></i>
+								Formations
+							</a>
+						</li>
+						<a href="{{ path('app_dashboard_notification')}}" class="nav-link {{ current_route == 'app_dashboard_notification' ? 'active' : 'text-white' }}">
+							<i class="mx-2 h5 bi bi-bell"></i>
+							{{ 'app_dashboard_entreprise.notification'|trans }}
+							{% if countUnReadNotification(app.user) > 0  %}
+								{{ component('count_notification_component')}}
+							{% endif %}
+						</a>
+					</li>
+				</ul>
+				{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+					{% if app.user.referrerProfile is not null %}
+						<ul class="nav nav-pills flex-column mb-auto">
+							<li class="nav-item bg-light text-dark rounded">
+								<button class="nav-link text-dark collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+									<i class="mx-2 h5 bi bi-person-plus-fill"></i>
+									Coopteur
+								</button>
+								<div class="collapse  text-dark " id="dashboard-collapse" style="">
+									<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+										<li>
+											<a href="{{ path('app_dashboard_referrer_annonces') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_annonces' ? 'active' : 'text-dark' }}">
+												<i class="mx-2 h5 bi bi-megaphone"></i>
+												Toutes les annonces
+											</a>
+										</li>
+										<li>
+											<a href="{{ path('app_dashboard_referrer_stats') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_stats' ? 'active' : 'text-dark' }}">
+												<i class="mx-2 h5 bi bi-bar-chart"></i>
+												Statistiques
+											</a>
+										</li>
+										<li>
+											<a href="{{ path('app_dashboard_referrer_rewards') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_rewards' ? 'active' : 'text-dark' }}">
+												<i class="mx-2 h5 bi bi-currency-exchange"></i>
+												Récompenses
+											</a>
+
+										</li>
+										<li>
+											<a href="{{ path('app_dashboard_referrer_references')}}" class="nav-link {{ current_route == 'app_dashboard_referrer_references' ? 'active' : 'text-dark' }}">
+												<i class="mx-2 h5 bi bi-info-circle"></i>
+												Mes cooptés
+											</a>
+										</li>
+										<li>
+											<a href="{{ path('app_dashboard_referrer_become')}}" class="nav-link {{ current_route == 'app_dashboard_referrer_become' ? 'active' : 'text-dark' }}">
+												<i class="mx-2 h5 bi bi-person-vcard"></i>
+												Mes infos
+											</a>
+										</li>
+									</ul>
+								</div>
+							</li>
+						</ul>
+					{% else %}
+						<ul class="nav nav-pills flex-column mb-auto">
+							<li class="nav-item bg-danger rounded">
+								<a href="{{ path('app_dashboard_referrer_become') }}" class="nav-link {{ current_route == 'app_dashboard_referrer_become' ? 'active' : 'text-white' }}">
+									<i class="mx-2 h5 bi bi-person-plus-fill"></i>
+									Devenir Coopteur
+								</a>
+							</li>
+						</ul>
+					{% endif %}
+				{% endif %}
+
+				<hr>
+				<ul class="nav nav-pills flex-column mb-auto">
+					{% if app.user.candidateProfile is not null %}
+						<li class="nav-item">
+							<a href="{{ path('app_dashboard_candidat_compte') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_compte' ? 'active' : 'text-white' }}">
+								<i class="mx-2 h5 bi bi-person-circle"></i>
+								{{ 'app_dashboard_candidat_compte.menu'|trans }}
+							</a>
+						</li>
+					{% endif %}
+					<li class="nav-item">
+						<a href="{{ path('app_logout') }}" class="nav-link text-white">
+							<i class="mx-2 h5 bi bi-box-arrow-right"></i>
+							{{ 'app_dashboard_entreprise.logout'|trans }}
+						</a>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+</nav>

@@ -6,7 +6,9 @@ use App\Entity\Candidate\Applications;
 use App\Entity\Candidate\Competences;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Langue;
+use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
+use App\Entity\Referrer\Referral;
 use App\Entity\Secteur;
 use App\Entity\Vues\AnnonceVues;
 use App\Repository\Entreprise\JobListingRepository;
@@ -15,6 +17,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: JobListingRepository::class)]
 class JobListing
@@ -30,6 +33,16 @@ class JobListing
     const STATUS_FEATURED = 'FEATURED';
     const STATUS_RESERVED = 'RESERVED';
 
+    public static function getCompanyStatuses() {
+        return [
+            'En attente' => self::STATUS_PENDING ,
+            'Bruillon' => self::STATUS_DRAFT ,
+            'Publiée' => self::STATUS_PUBLISHED ,
+            'Rejetée' => self::STATUS_REJECTED ,
+            'Archivée' => self::STATUS_ARCHIVED ,
+            'Mis en avant' => self::STATUS_FEATURED ,
+        ];
+    }
 
     public static function getStatuses() {
         return [
@@ -70,27 +83,34 @@ class JobListing
     private ?EntrepriseProfile $entreprise = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['annonce'])]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['annonce'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['annonce'])]
     private ?\DateTimeInterface $dateCreation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['annonce'])]
     private ?\DateTimeInterface $dateExpiration = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['annonce'])]
     private ?string $status = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[Groups(['annonce'])]
     private ?string $salaire = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['annonce'])]
     private ?string $lieu = null;
 
-    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Applications::class)]
+    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Applications::class, cascade: ['remove'])]
     private Collection $applications;
 
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
@@ -99,20 +119,42 @@ class JobListing
     #[ORM\ManyToMany(targetEntity: Competences::class, inversedBy: 'jobListings')]
     private Collection $competences;
 
-    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: AnnonceVues::class)]
+    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: AnnonceVues::class, cascade: ['remove'])]
     private Collection $annonceVues;
 
     #[ORM\ManyToMany(targetEntity: Langue::class, inversedBy: 'jobListings')]
     private Collection $langues;
 
     #[ORM\Column(type: 'uuid')]
+    #[Groups(['annonce'])]
     private ?Uuid $jobId = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['annonce'])]
     private ?int $nombrePoste = null;
 
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
     private ?TypeContrat $typeContrat = null;
+
+    #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: Assignation::class, cascade: ['remove'])]
+    private Collection $assignations;
+
+    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Referral::class)]
+    private Collection $referrals;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
+    private ?string $prime = null;
+
+    #[ORM\ManyToOne(inversedBy: 'annonce', cascade: ['persist'])]
+    private ?BudgetAnnonce $budgetAnnonce = null;
+
+    #[ORM\OneToOne(mappedBy: 'annonce', cascade: ['persist', 'remove'])]
+    private ?PrimeAnnonce $primeAnnonce = null;
+
+    public function __toString()
+    {
+        return $this->titre;        
+    }
 
     public function __construct()
     {
@@ -120,6 +162,8 @@ class JobListing
         $this->competences = new ArrayCollection();
         $this->annonceVues = new ArrayCollection();
         $this->langues = new ArrayCollection();
+        $this->assignations = new ArrayCollection();
+        $this->referrals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -377,5 +421,179 @@ class JobListing
         $this->typeContrat = $typeContrat;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Assignation>
+     */
+    public function getAssignations(): Collection
+    {
+        return $this->assignations;
+    }
+
+    public function addAssignation(Assignation $assignation): static
+    {
+        if (!$this->assignations->contains($assignation)) {
+            $this->assignations->add($assignation);
+            $assignation->setJobListing($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignation(Assignation $assignation): static
+    {
+        if ($this->assignations->removeElement($assignation)) {
+            // set the owning side to null (unless already changed)
+            if ($assignation->getJobListing() === $this) {
+                $assignation->setJobListing(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Referral>
+     */
+    public function getReferrals(): Collection
+    {
+        return $this->referrals;
+    }
+
+    public function addReferral(Referral $referral): static
+    {
+        if (!$this->referrals->contains($referral)) {
+            $this->referrals->add($referral);
+            $referral->setAnnonce($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferral(Referral $referral): static
+    {
+        if ($this->referrals->removeElement($referral)) {
+            // set the owning side to null (unless already changed)
+            if ($referral->getAnnonce() === $this) {
+                $referral->setAnnonce(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPrime(): ?string
+    {
+        return $this->prime;
+    }
+
+    public function setPrime(?string $prime): static
+    {
+        $this->prime = $prime;
+
+        return $this;
+    }
+
+    public function getBudgetAnnonce(): ?BudgetAnnonce
+    {
+        return $this->budgetAnnonce;
+    }
+
+    public function setBudgetAnnonce(?BudgetAnnonce $budgetAnnonce): static
+    {
+        $this->budgetAnnonce = $budgetAnnonce;
+
+        return $this;
+    }
+
+    public function getPrimeAnnonce(): ?PrimeAnnonce
+    {
+        return $this->primeAnnonce;
+    }
+
+    public function setPrimeAnnonce(?PrimeAnnonce $primeAnnonce): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($primeAnnonce === null && $this->primeAnnonce !== null) {
+            $this->primeAnnonce->setAnnonce(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($primeAnnonce !== null && $primeAnnonce->getAnnonce() !== $this) {
+            $primeAnnonce->setAnnonce($this);
+        }
+
+        $this->primeAnnonce = $primeAnnonce;
+
+        return $this;
+    }
+
+    #[Groups(['annonce'])]
+    public function getSecteurName(): string
+    {
+        return $this->secteur->getNom();
+    }
+
+    #[Groups(['annonce'])]
+    public function getCountViews(): int
+    {
+        return $this->annonceVues->count();
+    }
+
+    #[Groups(['annonce'])]
+    public function getCountApplications(): int
+    {
+        return $this->applications->count();
+    }
+
+    #[Groups(['annonce'])]
+    public function getBudget(): string
+    {
+        $type = '-';
+        if($this->budgetAnnonce){
+            $type = BudgetAnnonce::arrayInverseTarifType()[$this->budgetAnnonce->getTypeBudget()];
+        }
+        return $type;
+    }
+
+    #[Groups(['annonce'])]
+    public function getMontantBudget(): string
+    {
+        $montant = $this->salaire.' €';
+        if($this->budgetAnnonce){
+            if($this->budgetAnnonce->getCurrency()){
+                $montant = $this->budgetAnnonce->getMontant().' '.$this->budgetAnnonce->getCurrency()->getSymbole();
+            }else{
+                $montant = $this->budgetAnnonce->getMontant().' €';
+            }
+        }
+        return $montant;
+    }
+
+    #[Groups(['annonce'])]
+    public function getMontantPrime(): string
+    {
+        $montant = '-';
+        if($this->primeAnnonce && $this->primeAnnonce->getDevise()){
+            $montant = $this->primeAnnonce->getMontant().' '.$this->primeAnnonce->getDevise()->getSymbole();
+        }
+        return $montant;
+    }
+
+    #[Groups(['annonce'])]
+    public function getContrat(): string
+    {
+        $contrat = '-';
+        if($this->typeContrat){
+            $contrat = $this->typeContrat->getNom();
+        }
+        return $contrat;
+    }
+
+    #[Groups(['annonce'])]
+    public function getUrl(): string
+    {
+        return 'https://app.olona-talents.com/dashboard/candidat/annonce/'.$this->jobId;
     }
 }

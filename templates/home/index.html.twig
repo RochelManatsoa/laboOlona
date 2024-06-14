@@ -1,7 +1,187 @@
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+	{{parent()}}
+	<link href="{{asset('assets/css/jquery.steps.css')}}" rel="stylesheet">
+{% endblock %}
 {% block fluid %}<div class="container-fluid m-0">{% endblock %} 
 {% block body %}
 {% include "home/section/section-hero.html.twig" %}
+{% include "home/section/section-portage.html.twig" %}
 {% include "home/section/section-annonces.html.twig" %}
+{% include "home/section/section-video.html.twig" %}
 {% include "home/section/section-candidats.html.twig" with {'candidats': candidats} %}
+
+	{% block modal %}{% endblock %}
+	<script src="{{asset('assets/js/jquery.min.js')}}"></script>
+	<script src="{{asset('assets/js/jquery.steps.min.js')}}"></script>
+	<script src="{{asset('assets/js/jqueryValidate.js')}}"></script>
+	<script src="{{asset('assets/main.js')}}"></script>
+	<script>
+		$(function () {
+			initEntrepriseFormStep($("#example-company"), "h3", "section", "fade", utilisateurEstConnecte());
+			initFormStep($("#example-basic"), "h3", "section", "fade", utilisateurEstConnecte());
+			
+			// Gestionnaire d'événements pour le changement d'état du switch
+			$('#customSwitch').change(function() {
+				if ($(this).is(':checked')) {
+					// Si le switch est activé, affichez le simulateur d'entreprise et masquez le simulateur de candidat
+					$('#simulateur-entreprise').show();
+					$('#simulateur-candidat').hide();
+				} else {
+					// Si le switch est désactivé, affichez le simulateur de candidat et masquez le simulateur d'entreprise
+					$('#simulateur-candidat').show();
+					$('#simulateur-entreprise').hide();
+				}
+			});
+			$('#simulateur_employe_user_email').blur(function() {
+				var email = $(this).val();
+				if (email !== '') {
+					// Vérifiez la disponibilité de l'e-mail
+					checkEmailAvailability(email);
+				}
+    		});
+
+			$('#simulateur_employe_user_plainPassword_first').blur(function() {
+				var password = $(this).val();
+				if (password !== '') {
+					if(password.length < 5){
+						$('#password-error-message').html('Le mot de passe doit comporter au moins 6 caractères.').show();
+						$('#simulateur_employe_user_plainPassword_first').addClass(' is-invalid')
+						$('#register-submit').prop('type', 'button');
+					}else{
+						$('#password-error-message').html('').hide();
+    					$('#simulateur_employe_user_plainPassword_first').removeClass('is-invalid');
+						$('#register-submit').prop('type', 'submit');
+					}
+				}else{
+					$('#password-error-message').html('Veuillez entrer un mot de passe.').show();
+					$('#simulateur_employe_user_plainPassword_first').addClass(' is-invalid')
+					$('#register-submit').prop('type', 'button');
+				}
+    		});
+
+			$('#simulateur_employe_user_telephone').blur(function() {
+				var telephone = $(this).val();
+				if (telephone !== '') {
+					if(telephone.length < 9){
+						$('#telephone-error-message').html('Veuillez entrer un numéro valide.').show();
+						$('#simulateur_employe_user_telephone').addClass(' is-invalid')
+						$('#register-submit').prop('type', 'button');
+					}else{
+						$('#telephone-error-message').html('').hide();
+    					$('#simulateur_employe_user_telephone').removeClass('is-invalid');
+						$('#register-submit').prop('type', 'submit');
+					}
+				}else{
+					$('#telephone-error-message').html('Veuillez entrer votre numéro de téléphone.').show();
+					$('#simulateur_employe_user_telephone').addClass(' is-invalid')
+					$('#register-submit').prop('type', 'button');
+				}
+    		});
+
+			if (checkFields()) {
+				// Si l'un des champs est vide, désactivez le bouton submit
+				$('#register-submit').prop('disabled', true);
+				$('#register-submit').prop('type', 'button');
+			} else {
+				// Sinon, activez le bouton submit
+				$('#register-submit').prop('disabled', false);
+				$('#register-submit').prop('type', 'submit');
+			}
+
+			// Écouteur d'événement sur les champs pour vérifier lorsqu'ils changent
+			$('input[id^="simulateur_employe_user_"]').on('input', function() {
+				// Vérifiez si l'un des champs est vide
+				if (checkFields()) {
+					// Si l'un des champs est vide, désactivez le bouton submit
+					$('#register-submit').prop('disabled', true);
+					$('#register-submit').prop('type', 'button');
+				} else {
+					// Sinon, activez le bouton submit
+					$('#register-submit').prop('disabled', false);
+					$('#register-submit').prop('type', 'submit');
+				}
+			});
+
+			// Sélectionner le champ select
+			var selectType = $('#simulateur_type');
+
+			// Sélectionner les divs à afficher ou cacher
+			var divEmploye = $('#employe');
+			var divFreelance = $('#freelance');
+
+			// Ajouter un gestionnaire d'événement pour le changement de valeur dans le champ select
+			selectType.on('change', function() {
+				console.log($(this).val())
+				// Vérifier la valeur sélectionnée
+				if ($(this).val() === 'OLONA') {
+					// Afficher la div pour Employé et cacher la div pour Freelance
+					console.log("hide frelance")
+					divEmploye.show();
+					divFreelance.hide();
+				} else if ($(this).val() === 'TELETRAVAIL') {
+					// Afficher la div pour Freelance et cacher la div pour Employé
+					console.log("hide employe")
+					divEmploye.hide();
+					divFreelance.show();
+				}
+			});
+		})
+
+		function checkEmailAvailability(email) {
+			$.ajax({
+				type: 'POST',
+				url: '{{path('ajax_home_check_email')}}', // Remplacez cela par le chemin de votre script PHP de vérification
+				data: {
+					email: email
+				},
+				success: function(response) {
+					// Afficher le message de réponse
+					console.log(response)
+					if(response.user !== null){
+						$('#email-error-message').html('Il existe déjà un compte avec cette adresse e-mail.').show();
+						$('#simulateur_employe_user_email').addClass(' is-invalid')
+						$('#register-submit').prop('type', 'button');
+					}else{
+						$('#email-error-message').html('').hide();
+    					$('#simulateur_employe_user_email').removeClass('is-invalid');
+						$('#register-submit').prop('type', 'submit');
+					}
+				}
+			});
+		}
+
+		function utilisateurEstConnecte() {
+			const session = {{ app.session.all|json_encode()|raw }};;
+			return session.utilisateurEstConnecte
+		}
+
+		// Fonction pour vérifier si l'un des champs est vide
+		function checkFields() {
+			var isEmpty = false;
+			$('input[id^="simulateur_employe_user_"]').each(function() {
+				if ($(this).val() === '') {
+					isEmpty = true;
+					return false; // Sortir de la boucle si un champ est vide
+				}
+			});
+			return isEmpty;
+		}
+
+		var video = $('#video-element');
+
+		video.on('canplaythrough', function() {
+			// Cacher le loader
+			$('#video-loader').hide();
+			// Afficher la vidéo
+			video.show();
+			// Démarrer la vidéo
+			video[0].play();
+		});
+
+		video.on('loadstart', function() {
+			// Afficher le loader lorsque la vidéo commence à charger
+			$('#video-loader').show();
+		});
+	</script>
 {% endblock %}

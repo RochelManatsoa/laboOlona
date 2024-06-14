@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'PT Sans', sans-serif;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -19,6 +19,10 @@ h1, h2, h3, a, button {
 }
 a{
     text-decoration: none!important;
+}
+.pt-sans a{
+    font-family: 'PT Sans', sans-serif;
+    color:#0e6efd!important;
 }
 .content-padded {
     flex: 1;
@@ -78,6 +82,9 @@ a{
 }
 label.form-check-label.required{
     display: none !important;
+}
+#simulateur_entreprise_status .form-check-label.required, #simulateur_status .form-check-label.required {
+    display: block !important;
 }
 .custom-min-height {
     min-height: 100vh;  /* 75% de la hauteur de l'écran */
@@ -197,4 +204,8 @@ td .status-rejetee { background-color: #f44336!important; }
     width: 200px; /* Largeur fixe */
     white-space: normal; /* Permet au texte de passer à la ligne */
     max-width: 300px; /* Largeur maximale */
+}
+a[target="_blank"] .bi {
+    margin-left: -2px; /* Ajoute un peu d'espace entre le texte et l'icône */
+    color: #007bff; /* Couleur de l'icône, vous pouvez l'ajuster selon vos besoins */
 }

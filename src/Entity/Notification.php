@@ -12,15 +12,29 @@ class Notification
     const TYPE_ANNONCE = 'ANNONCE';
     const TYPE_PROFIL = 'PROFIL';
     const TYPE_MESSAGE = 'MESSAGE';
+    const TYPE_CONTACT = 'CONTACT';
     const TYPE_RELANCE = 'RELANCE';
+
+    const STATUS_VALID = 'VALID';
+    const STATUS_DELETED = 'DELETED';
 
 
     public static function getStatuses() {
         return [
             'Annonce' => self::TYPE_ANNONCE ,
             'Profil' => self::TYPE_PROFIL ,
+            'Contact' => self::TYPE_CONTACT ,
             'Message' => self::TYPE_MESSAGE ,
             'Relance' => self::TYPE_RELANCE ,
+        ];
+    }
+    public static function getInverseStatuses() {
+        return [
+            self::TYPE_ANNONCE => 'Annonce',
+            self::TYPE_PROFIL => 'Profil',
+            self::TYPE_CONTACT => 'Contact',
+            self::TYPE_MESSAGE => 'Message',
+            self::TYPE_RELANCE => 'Relance',
         ];
     }
     

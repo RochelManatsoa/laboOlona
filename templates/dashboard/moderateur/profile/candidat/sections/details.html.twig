@@ -1,0 +1,108 @@
+
+			<div class="tab-pane fade show active" id="details">
+				<div class="card">
+					<div class="card-body">
+					{{ form_start(formCandidate, {'attr': {'id': 'formCandidate'}})}}
+						<div class="row">
+							<div class="col-md-4">
+							    <h2 class="h3 text-center">Photo</h2>
+								<img src="{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" class="img-fluid profile-img" style="border-radius: 10px; object-fit: cover;">
+                                {{ form_widget(formCandidate.file) }}
+                                {{ form_errors(formCandidate.file) }}
+                                <h2 class="h3 text-center my-3">Secteurs</h2>
+									{{ form_widget(formCandidate.secteurs)}}
+							</div>
+							<div class="col-md-8">
+								<div class="form-floating mb-3">
+									{{ form_widget(formCandidate.titre)}}
+									{{ form_label(formCandidate.titre)}}
+								</div>
+								<div class="row">
+									<div class="col-6">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.candidat.nom)}}
+											{{ form_label(formCandidate.candidat.nom)}}
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.candidat.prenom)}}
+											{{ form_label(formCandidate.candidat.prenom)}}
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-6">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.candidat.email)}}
+											{{ form_label(formCandidate.candidat.email)}}
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.candidat.telephone)}}
+											{{ form_label(formCandidate.candidat.telephone)}}
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-6">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.candidat.adress)}}
+											{{ form_label(formCandidate.candidat.adress)}}
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.localisation)}}
+											{{ form_label(formCandidate.localisation)}}
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.tarifCandidat.typeTarif)}}
+											<label for="candidat_tarifCandidat_typeTarif">Type</label>
+										</div>
+									</div>
+									<div class="col-4">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.tarifCandidat.montant)}}
+											<label for="candidat_tarifCandidat_montant">Montant</label>
+										</div>
+									</div>
+									<div class="col-4">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.tarifCandidat.currency)}}
+											<label for="candidat_tarifCandidat_currency">Devise</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-6">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.availability.nom)}}
+											{{ form_label(formCandidate.availability.nom)}}
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.availability.dateFin)}}
+											{{ form_label(formCandidate.availability.dateFin)}}
+										</div>
+									</div>
+								</div>
+								<div class="form-floating mb-3">
+									{{ form_widget(formCandidate.resume)}}
+									<label for="candidat_resume">Biographie</label>
+								</div>
+							</div>
+						</div>
+					<div style="display:none">
+					{{ form_widget(formCandidate)}}
+					</div>
+					{{ form_end(formCandidate)}}
+					</div>
+				</div>
+			</div>

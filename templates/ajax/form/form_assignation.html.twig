@@ -1,0 +1,20 @@
+<form method="post" action="{{ path('app_ajax_update_assignation', {'id': assignation.id })}}" class="row border-top py-2 assignation" data-assignation-id="2">
+    <input type="hidden" name="assignation_id_{{ assignation.id }}" value="{{ assignation.id }}">
+    <div class="col-3">
+    {{ assignation.jobListing.entreprise.nom }}<br>
+    <span class="text-muted small">{{ assignation.jobListing.titre}}</span>
+    </div>
+    <div class="col-2">
+        <label for="assignation_forfait_{{ assignation.id }}">Forfait</label>
+        <input type="number" id="assignation_forfait_{{ assignation.id }}" name="forfait" class="form-control" value="{{ assignation.forfait ?? '' }}" required>
+    </div>
+    <div class="col-5">
+        <label for="assignation_commentaire_{{ assignation.id }}">Commentaire</label>
+        <textarea id="assignation_commentaire_{{ assignation.id }}" name="commentaire" class="form-control ckeditor-textarea" rows="6">{{ assignation.commentaire ?? '' }}</textarea>
+    </div>
+    <div class="col-2">
+        <button type="submit" class="btn btn-info rounded-pill my-1 btn-sm">Soumettre</button>
+        <button type="button" class="btn btn-outline-dark rounded-pill my-1 btn-sm cancel-assignation">Annuler</button>
+    </div>
+</form>
+    

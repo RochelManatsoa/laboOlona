@@ -7,6 +7,8 @@ parameters:
     cv_expert: /uploads/experts
     app.locales: [en, fr]
     cv_directory: '%kernel.project_dir%/public/uploads/cv'
+    csv_directory: '%kernel.project_dir%/public/uploads/csv'
+    app.env: '%env(APP_ENV)%'
 
 services:
     # default configuration for services in *this* file
@@ -30,6 +32,7 @@ services:
         arguments:
             $targetDirectory: '%kernel.project_dir%/public/uploads/cv'
             $targetDirectoryEdited: '%kernel.project_dir%/public/uploads/cv/edited'
+            $targetDirectoryEditedOlona: '%kernel.project_dir%/public/uploads/cv/olona'
 
 
     App\Service\WooCommerce:
@@ -53,4 +56,11 @@ services:
     App\EventListener\ExceptionListener:
         tags: [kernel.event_listener]
         arguments: ['@twig']
-
+    
+    App\Service\JitsiMeetService:
+        arguments:
+            $domain: 'meet.olona-talents.com'
+            
+    App\Service\ErrorLogger:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException', priority: 100 }

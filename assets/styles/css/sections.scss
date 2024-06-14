@@ -181,8 +181,20 @@
     background-position: center;
     width: 100%;
     height: 0;
+    position: relative;
     padding-top: 100%; /* Ceci assure un aspect carré */
 }
+
+.titre-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5); /* Fond sombre semi-transparent */
+    color: white; /* Texte blanc */
+    width: 100%;
+    text-align: center; /* Centrer le titre */
+}
+
 .bg-image-candidat-account {
     background-size: cover;
     background-position: center;
@@ -199,4 +211,9 @@
 }
 .my-custom-btn {
     background-color: rgba(255, 255, 255, 0.5); /* Changer 0.5 à la valeur de transparence que vous souhaitez, entre 0 (complètement transparent) et 1 (complètement opaque) */
+}
+.card-body-candidat{
+    height: 110px!important;
+    text-align: center;
+    justify-content: center;
 }

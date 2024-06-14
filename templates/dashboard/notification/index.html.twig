@@ -1,0 +1,40 @@
+{% extends 'dashboard/base_new.html.twig' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block body %}
+<div class="container mt-3">
+    <h1 class="mb-4">Mes notifications</h1>
+    {% if notifications|length > 0 %}
+        <div class="d-flex justify-content-end">
+            <a href="{{ path('app_dashboard_notification_see_all')}}" class="btn btn-warning rounded-pill px-4 text-end">Tout marquer comme lu</a>
+        </div>
+        <div class="d-flex flex-column flex-md-row p-2 gap-2 py-md-5 align-items-center justify-content-center">
+            <div class="list-group">
+            {% for notification in notifications %}
+                {% set class = "" %}
+                {% set icone = "bi-bell-fill" %}
+                {% if notification.isRead %}
+                    {% set class = "text-muted" %}
+                    {% set icone = "bi-bell" %}
+                {% endif %}
+                <a href="{{path('app_dashboard_notification_view', {'id': notification.id })}}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                    <i class="bi {{ icone }}"></i>
+                    <div class="d-flex gap-2 w-100 justify-content-between">
+                        <div class=" {{class}}">
+                            <h6 class="mb-0">{{ notification.titre }}</h6>
+                            {% set clean_contenu = notification.contenu|striptags|replace({'&nbsp;': '. '}) %}
+                            {{ clean_contenu|length > 93 ? clean_contenu|slice(0, 90) ~ '...' : clean_contenu }}
+                        </div>
+                        <small class="opacity-50 text-nowrap">{{ notification.dateMessage|time_ago}}</small>
+                    </div>
+                </a>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="d-flex justify-content-start">
+            <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

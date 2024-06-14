@@ -14,7 +14,7 @@ class AccountType extends AbstractType
     {
         $builder
             ->add('type', ChoiceType::class, [
-                'choices' => User::getChoices(),
+                'choices' => User::getTypeAccount(),
                 'required' => true,
                 'expanded' => true,
                 'multiple' => false,

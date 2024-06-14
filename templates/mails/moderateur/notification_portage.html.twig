@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification annonce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* [La même mise en forme que les mails précédents] */
+     body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #EDEDED;
+        }
+        a {
+            text-decoration: none;
+            color: #0D6EFD;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 6px 10px rgba(0,0,0,0.05);
+            text-align: center; 
+        }
+        .header img {
+            width: 250px;
+        }
+        .greeting {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .highlight, .bold {
+            font-weight: 700;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #0D6EFD;
+            color: #FFFFFF;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .info {
+            font-size: 12px;
+            color: #777;
+        }
+        .footer {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F2F2F2;
+            padding: 15px 0;
+            font-size: 12px;
+            color: #666;
+            margin-top: 25px;
+        }
+        .tips {
+            background-color: #FFF3E0;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+        .highlight, .bold {
+            font-weight: 700;
+            }
+
+        /* ... [styles identiques] ... */
+
+        ul li {
+            margin-bottom: 10px;
+            padding-left: 28px;
+            position: relative;
+            font-size: 0.9em;
+        }
+
+        ul li:before {
+            content: '🔔'; 
+            position: absolute;
+            left: 0;
+            color: #0D6EFD;
+            font-weight: bold;
+            padding-right: 10px; 
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #0D6EFD;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://app.olona-talents.com/images/logo-olona-talents-black.png" alt="Logo Olona-talents">
+        </div>
+        <div class="content">
+            <p class="greeting">Hello Moderateur,</p>
+            <p>Nous souhaitons vous informer qu'une demande de rappel pour un portage salariale a été deposée sur <span class="highlight">Olona-talents.com</span>.</p>
+            <p>Voici le détails :</p>
+            <p><strong>Salaire net souhaité</strong> : {{ simulateur.salaireNet }} {{ simulateur.devise.symbole }}</p>
+            <p><strong>Date de demande</strong> : {{ simulateur.createdAt|date('d/m/Y') }}</p>
+            <p><strong>Utilisateur</strong> : {{ user.nom }} {{ user.prenom }}</p>
+            <p><strong>Frais de portage</strong> : {{ details.frais_de_portage_euro|number_format(2, '.', '') }} {{ simulateur.devise.symbole }}</p>
+            <a href="{{ dashboard_url|raw }}" style="display: inline-block; padding: 12px 24px; background-color: #0D6EFD; color: #FFFFFF; border-radius: 5px; text-decoration: none; font-weight: 500; margin-bottom: 20px;">Voir l'annonce</a>
+            
+            <div class="tips">
+                <strong>Tip du Jour :</strong>
+                <p><span class="bold">🛡️ Sécurité :</span> Ne partagez jamais vos identifiants avec personne, même avec notre équipe. Nous ne demanderons jamais vos informations de connexion.</p>
+                <p><span class="bold">🔒 Confidentialité :</span> Consultez régulièrement les paramètres de votre profil pour vous assurer que vos informations sont exactes et à jour.</p>
+            </div>
+            <p class="info">Des questions ? Écrivez-nous à <a href="mailto:contact@olona-talents.com">contact@olona-talents.com</a> ou appelez-nous au <a href="tel:+261320373420">+261320373420</a>.</p>
+        </div>
+        <div class="footer">
+            <a href="https://olona-talents.com/privacy-policy">Politique de confidentialité</a> | 
+            <a href="https://olona-talents.com/terms-of-service">Conditions d'utilisation</a> | 
+            <a href="https://olona-talents.com/cookie-policy">Politique de cookies</a> | 
+            <a href="https://olona-talents.com/data-request">Demande de données</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -3,8 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\CandidateProfile;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Data\Profile\CandidatSearchData;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Data\Profile\RecrutementSearchData;
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<CandidateProfile>
@@ -16,7 +20,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CandidateProfileRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, CandidateProfile::class);
     }
@@ -31,7 +36,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
              ->andWhere('c.status = :statusValid') 
              ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
              ->setParameter('defaultAvatar', 'avatar-default.jpg')
-             ->orderBy('c.id', 'ASC')
+             ->orderBy('c.id', 'DESC')
              ->setMaxResults($max)
              ->setFirstResult($offset)
              ->getQuery()
@@ -65,13 +70,284 @@ class CandidateProfileRepository extends ServiceEntityRepository
              ->getResult();
      }
 
-//    public function findOneBySomeField($value): ?CandidateProfile
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+     public function findBySecteur($secteurId) {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.secteurs', 's')
+            ->where('s.id = :secteurId')
+            ->andWhere('c.fileName <> :defaultAvatar') 
+            ->andWhere('c.status = :statusValid') 
+            ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
+            ->setParameter('defaultAvatar', 'avatar-default.jpg')
+            ->setParameter('secteurId', $secteurId)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllValid() {
+        $query = $this->createQueryBuilder('c')
+             ->andWhere('c.fileName <> :defaultAvatar') 
+             ->andWhere('c.status = :statusValid') 
+             ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
+             ->setParameter('defaultAvatar', 'avatar-default.jpg')
+             ->orderBy('c.id', 'DESC')
+             ->getQuery()
+        ;
+        return $query->getResult();
+
+        // return $this->paginator->paginate(
+        //     $query,
+        //     1,
+        //     8
+        // );
+     }
+     
+    
+    public function findUniqueTitlesBySecteurs($secteurs)
+    {
+        $qb = $this->createQueryBuilder('cp')
+            ->select('DISTINCT cp.titre , cp.id')
+            ->leftJoin('cp.secteurs', 's')
+            ->where('s.id IN (:secteurs)')
+            ->setParameter('secteurs', $secteurs);
+    
+        return $qb->getQuery()->getResult();
+    }
+    
+
+    public function findSearch(CandidatSearchData $searchData): PaginationInterface
+    {
+        $qb = $this
+        ->createQueryBuilder('c')
+        ->select('c, c.id AS matricule, c.relanceCount AS level, u.id, u.nom, COUNT(DISTINCT s.id) AS nombreDeCompetences, COUNT(DISTINCT e.id) AS nombreDeExperiences, COUNT(DISTINCT n.id) AS nombreDeRelance')
+        ->leftJoin('c.competences', 's')
+        ->leftJoin('c.experiences', 'e')
+        ->leftJoin('c.secteurs', 'sect')
+        ->leftJoin('c.tarifCandidat', 't')
+        ->leftJoin('c.cvs', 'cv')
+        ->leftJoin('c.availability', 'dispo')
+        ->join('c.candidat', 'u')
+        ->leftJoin('u.recus', 'n')
+        ->groupBy('u.id')
+        ->orderBy('c.id', 'DESC')
+        ;
+
+        
+        if (!empty($searchData->q)) {
+            $words = explode(' ', $searchData->q);
+            foreach ($words as $word) {
+                $word = trim($word);
+                if (!empty($word)) {
+                    $qb->andWhere('u.nom LIKE :word OR u.prenom LIKE :word OR u.email LIKE :word OR c.titre LIKE :word')
+                        ->setParameter('word', "%{$word}%");
+                }
+            }
+        }
+
+        if(!empty($searchData->status)){
+            $qb = $qb
+                ->andWhere('c.status LIKE :status')
+                ->setParameter('status', "%{$searchData->status}%")
+            ;
+        }
+
+        if ($searchData->cv === 1) {
+            $qb = $qb
+                ->andWhere('cv.id IS NOT NULL');
+        } elseif ($searchData->cv === 0) {
+            $qb = $qb
+                ->andWhere('cv.id IS NULL');
+        }
+
+        if ($searchData->avatar === 1) {
+            $qb = $qb
+                ->andWhere('c.fileName IS NOT NULL');
+        } elseif ($searchData->avatar === 0) {
+            $qb = $qb
+                ->andWhere('c.fileName IS NULL');
+        }
+
+        if ($searchData->resume === 1) {
+            $qb = $qb
+                ->andWhere('c.resume IS NOT NULL');
+        } elseif ($searchData->resume === 0) {
+            $qb = $qb
+                ->andWhere('c.resume IS NULL');
+        }
+
+        if ($searchData->tarif === 1) {
+            $qb = $qb
+                ->andWhere('t.id IS NOT NULL');
+        } elseif ($searchData->tarif === 0) {
+            $qb = $qb
+                ->andWhere('t.id IS NULL');
+        }
+
+        if ($searchData->relance === 1) {
+            $qb = $qb
+                ->andWhere('n.id IS NOT NULL');
+        } elseif ($searchData->relance === 0) {
+            $qb = $qb
+                ->andWhere('n.id IS NULL');
+        }
+
+        if ($searchData->dispo === 1) {
+            $qb->andWhere('dispo.id IS NOT NULL');
+        } elseif ($searchData->dispo === 0) {
+            $qb->andWhere('dispo.id IS NULL');
+        }
+
+        if ($searchData->competences === 1) {
+            $qb = $qb
+                ->andWhere('s.id IS NOT NULL');
+        } elseif ($searchData->competences === 0) {
+            $qb = $qb
+                ->andWhere('c.competences IS EMPTY');
+        }
+
+        if ($searchData->secteurs === 1) {
+            $qb = $qb
+                ->andWhere('sect.id IS NOT NULL');
+        } elseif ($searchData->secteurs === 0) {
+            $qb = $qb
+                ->andWhere('c.secteurs IS EMPTY');
+        }
+
+        if ($searchData->experiences === 1) {
+            $qb = $qb
+                ->andWhere('e.id IS NOT NULL');
+        } elseif ($searchData->experiences === 0) {
+            $qb = $qb
+                ->andWhere('c.experiences IS EMPTY');
+        }
+
+        if(!empty($searchData->matricule)){
+            $qb = $qb
+                ->andWhere('c.id LIKE :id')
+                ->setParameter('id', "%{$searchData->matricule}%")
+            ;
+        }
+
+        if(!empty($searchData->level)){
+            $qb = $qb
+                ->andWhere('c.relanceCount LIKE :relanceCount')
+                ->setParameter('relanceCount', "%{$searchData->level}%")
+            ;
+        }
+
+        $query =  $qb->getQuery();
+        // dd($query->getResult());
+
+        return $this->paginator->paginate(
+            $query,
+            $searchData->page,
+            20
+        );
+    }
+
+    public function findRecrutSearch(RecrutementSearchData $searchData): PaginationInterface
+{
+    // dd($searchData);
+    if (empty($searchData->q)) {
+        return $this->paginator->paginate(
+            [], // tableau vide pour représenter aucun résultat
+            $searchData->page,
+            20
+        );
+    }
+
+    $qb = $this
+        ->createQueryBuilder('c')
+        ->select('c, c.id AS matricule, c.relanceCount AS level, u.id, u.nom, 
+                  COUNT(DISTINCT s.id) AS nombreDeCompetences, 
+                  COUNT(DISTINCT e.id) AS nombreDeExperiences, 
+                  COUNT(DISTINCT n.id) AS nombreDeRelance,
+                  COUNT(DISTINCT vues.id) AS nombreDeVues,
+                  COUNT(DISTINCT favoris.id) AS nombreDeFavoris')
+        ->leftJoin('c.competences', 's')
+        ->leftJoin('c.experiences', 'e')
+        ->leftJoin('c.secteurs', 'sect')
+        ->leftJoin('c.tarifCandidat', 't')
+        ->leftJoin('c.cvs', 'cv')
+        ->leftJoin('c.availability', 'dispo')
+        ->join('c.candidat', 'u')
+        ->leftJoin('u.recus', 'n')
+        ->leftJoin('c.vues', 'vues')
+        ->leftJoin('c.favoris', 'favoris')
+        ->andWhere('c.status = :status')
+        ->setParameter('status', CandidateProfile::STATUS_VALID)
+        ->groupBy('u.id')
+        ;
+
+    $words = explode(' ', $searchData->q);
+    $andX = $qb->expr()->andX();
+
+    foreach ($words as $index => $word) {
+        $word = trim($word);
+        if (!empty($word)) {
+            $parameterName = ":word{$index}";
+            $orX = $qb->expr()->orX(
+                $qb->expr()->like('u.nom', $parameterName),
+                $qb->expr()->like('u.prenom', $parameterName),
+                $qb->expr()->like('u.email', $parameterName),
+                $qb->expr()->like('c.titre', $parameterName),
+                $qb->expr()->like('s.nom', $parameterName),
+                $qb->expr()->like('e.description', $parameterName),
+                $qb->expr()->like('sect.nom', $parameterName),
+                $qb->expr()->like('t.typeTarif', $parameterName),
+                $qb->expr()->like('c.tesseractResult', $parameterName),
+                $qb->expr()->like('c.resultFree', $parameterName),
+                $qb->expr()->like('dispo.nom', $parameterName)
+            );
+            $andX->add($orX);
+            $qb->setParameter($parameterName, "%{$word}%");
+        }
+    }
+
+    if ($andX->count() > 0) {
+        $qb->andWhere($andX);
+    }
+
+    $qb->orderBy('nombreDeVues', 'DESC')
+       ->addOrderBy('nombreDeFavoris', 'DESC');
+
+    $query = $qb->getQuery();
+
+    return $this->paginator->paginate(
+        $query,
+        $searchData->page,
+        20
+    );
+}
+
+
+
+    public function findProfilesToRelance(int $daysSinceCreation, int $daysSinceLastRelance, int $relanceNumber)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.competences', 'comps')
+            ->leftJoin('c.experiences', 'exps')
+            ->leftJoin('c.cvs', 'cvs')
+            ->leftJoin('c.tarifCandidat', 'tarif')
+            ->join('c.candidat', 'u')
+            ->where('comps.id IS NULL')
+            ->andWhere('exps.id IS NULL')
+            ->andWhere('c.fileName IS NULL')
+            ->andWhere('cvs.id IS NULL')
+            ->andWhere('tarif.id IS NULL')
+            ->andWhere('c.createdAt <= :createdAt')
+            ->andWhere('c.relanceCount = :relanceCount')
+            ->setParameter('createdAt', new \DateTime('-' . $daysSinceCreation . ' days'))
+            ->setParameter('relanceCount', $relanceNumber - 1);
+            if ($relanceNumber === 0) {
+                $qb->leftJoin('u.recus', 'n')
+                   ->andWhere('n.id IS NULL');
+            }
+
+        if ($daysSinceLastRelance > 0) {
+            $qb->andWhere('c.relancedAt <= :lastRelanceAt')
+               ->setParameter('lastRelanceAt', new \DateTime('-' . $daysSinceLastRelance . ' days'));
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -61,3 +61,76 @@
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
 }
+
+.form-switch {
+    display: inline-block;
+    position: relative;
+    width: 140px; /* Ajusté pour plus d'espace */
+    height: 34px;
+  }
+  
+  .form-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  .switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .switch-slider {
+    background-color: #2196F3;
+  }
+  
+  input:checked + .switch-slider:before {
+    transform: translateX(96px); /* Ajustement pour la nouvelle largeur */
+  }
+  
+  .switch-label {
+    color: white;
+    position: absolute;
+    align-items: center;
+    width: 60%; /* Réduction de la largeur pour créer de l'espace de chaque côté */
+    height: 100%;
+    justify-content: center;
+    display: flex;
+  }
+  
+  .switch-label-on {
+    left: 10%; /* Décalage pour le label "Entreprise" */
+    display: none;
+  }
+  
+  .switch-label-off {
+    right: 10%; /* Décalage pour le label "Candidat" */
+  }
+  
+  input:checked + .switch-slider .switch-label-on {
+    display: flex;
+  }
+  
+  input:checked + .switch-slider .switch-label-off {
+    display: none;
+  }
+  

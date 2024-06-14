@@ -1,46 +1,46 @@
 <p class="mx-2 mt-3 small">
-Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
+ <strong>{{ result|length }}</strong> résultats disponibles.
 </p>
-
-<div class="navigation">
-{{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
-</div> 
-
 <!-- Section pour les candidats recommandés -->
 <div class="row mb-5">
-    <h3 class="col-12 mb-3">Optez pour les candidat(e)s certifié(e)s Olona-talents </h3>
-        {% for candidat in candidats %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
+    {# <h3 class="col-12 mb-3 h4">Optez pour les candidat(e)s certifié(e)s Olona-talents </h3> #}
+    {% for candidat in candidats %}
+        <div class="col-sm-12 col-lg-4 mb-4 mb-2 shadow">
+            <div class="h-100">
+                <div class="card-img-top bg-image-candidat" style="background-image: url('{{vich_uploader_asset(candidat, 'file')}}');" alt="{{ candidat.titre }}">
+                    <div class="titre-overlay position-absolute w-100">
+                        <h6 class="card-title m-0 p-2">{{ candidat.titre|upper }}</h6>
+                    </div>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ candidat.titre }}</h5>
-                    {# <p class="card-text">{{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}</p> #}
                     {% set prenoms = candidat.candidat.prenom|split(' ') %}
                         <p class="card-text">
-                            {{ prenoms|first }} {# Affiche le premier prénom #}
-                            {% for prenom in prenoms|slice(1) %} {# Passe le premier prénom #}
-                                {{ prenom|slice(0, 1) }}.{# Affiche l'initiale des autres prénoms #}
-                            {% endfor %}
-                            {{ candidat.candidat.nom|slice(0, 1) }}.
+                            {{ generatePseudo(candidat)}}
                         </p>
-                    <p class="card-text">
-                        Missions réalisées: <span class="badge bg-success">{{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }}</span>
-                    </p>
-                    <p class="card-text">
-                        {% for skill in candidat.competences %}
+                    <p class="card-text small">
+                    {% set count = 0 %}
+
+                    {% for skill in candidat.competences %}
+                        {% if count < 3 %}
                             <span class="badge bg-info">{{ skill.nom }}</span>
-                        {% endfor %}
-                    </p>
-                    <p class="card-text">
+                            {% set count = count + 1 %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if candidat.competences|length > 4 %}
+                        <span class="badge bg-dark rounded-pill">+{{ candidat.competences|length - 3 }}</span>
+                    {% endif %}
+
+                    <br>
+                        Missions réalisées: <span class="badge bg-success">{{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }}</span>
+                    <br>
                         Expériences: <span class="badge bg-secondary">{{ candidat.experiences|length }}</span>
-                    </p>
-                    <p class="card-text">
+                    <br>
                         Langues: 
                         {% for langue in candidat.langages %}
                             {{ isoToEmoji(langue.langue.code) }}
                         {% endfor %}
-                    </p>
-                    <p class="card-text">
+                    <br>
                         Disponibilité: 
                         <span class="text-dark">
                             {% if candidat.availability is not null %}
@@ -49,10 +49,36 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
                                 <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
                             {% endif %} 
                         </span>
+                    {% if candidat.tarifCandidat is defined and candidat.tarifCandidat is not null %}
+                        <br>
+                      <strong><i class="bi bi-tags"></i></strong>
+                      <span class="text-muted">
+                      {# {% if entreprise is defined and entreprise is not null %} #}
+                      {{ getTarifByCompanyCurrency(candidat, entreprise) }}
+                      {# {% endif %} #}
+                      </span>
+                    {% endif %}
+                    <br>
+                        {% for secteur in candidat.secteurs %}
+                            <span class="badge bg-success">{{ secteur.nom }}</span>
+                        {% endfor %}
                     </p>
                 </div>
-                <div class="card-footer">
-                    <a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': candidat.id}) }}" class="btn btn-warning btn-sm rounded-pill"><i class="bi bi-eye"></i> Voir Profil</a>
+                <div class="card-footer my-4 row">
+                <div class="col-6">
+                    <a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': candidat.id}) }}" class="btn btn-info btn-sm rounded-pill px-4"><i class="bi bi-eye"></i> Détails</a>
+                </div>
+                <div class="col-6">
+                    {% if isFavorite(favoris, candidat) %}
+                    <button data-id="{{ candidat.id }}" class="btn remove-from-favorites btn-outline-success btn-sm rounded-pill px-4">
+                    <i class="bi bi-star text-warning"></i> Effacer
+                    </button>
+                    {% else %}
+                    <button data-id="{{ candidat.id }}" class="btn btn-outline-success btn-sm rounded-pill px-4 add-to-favorites">
+                    <i class="bi bi-star-fill text-warning"></i> Ajouter
+                    </button>
+                    {% endif %}
+                </div>
                 </div>
             </div>
         </div>
@@ -63,72 +89,10 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
         </div>
     {% endfor %}
 
+    <div class="navigation">
+    {{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
+    </div> 
+
 </div>
 
 <hr>
-
-<!-- Section pour tous les candidats -->
-<div class="row">
-    <h3 class="col-12 mb-3">Voir tous les Candidats</h3>
-        <div class="card shadow p-2">
-            <table class="table table-responsive" id="candidatsTable">
-                <thead>
-                    <tr>
-                        <th scope="col-1">Titre</th>    
-                        <th scope="col-2">Nom</th>
-                        <th scope="col-2">Missions réalisées</th>
-                        <th scope="col-2">Disponibilité</th>
-                        <th scope="col-3">Compétences</th>
-                        <th scope="col-1">Expériences</th>
-                        <th scope="col-2">Langues</th>
-                        <th scope="col-1">Profil</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for candidat in candidats %}
-                        <tr>
-                            <td style="font-weight: 500;">{{ candidat.titre }}</td>  
-                            <td>
-                                {% set prenoms = candidat.candidat.prenom|split(' ') %}
-                                {{ prenoms|first }}{# Affiche le premier prénom #}
-                                {% for prenom in prenoms|slice(1) %}{{ prenom|slice(0, 1) }}.{% endfor %} {# Affiche les initiales des autres prénoms suivies d'un point #}
-                                {{ candidat.candidat.nom|slice(0, 1) }}.{# Affiche l'initiale du nom suivie d'un point #}
-                            </td>
-                            <td>
-                                <span class="badge bg-success">
-                                    {{ candidat.applications|filter(app => app.status == 'ACCEPTED')|length }}
-                                </span>
-                            </td>
-                            <td class="small">
-                                <span class="text-dark">
-                                    {% if candidat.availability is not null %}
-                                        {{ checkAvailability(candidat.candidat)|raw}}
-                                    {% else %}
-                                        <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
-                                    {% endif %} 
-                                </span>
-                            </td>
-                            <td>
-                                {% for skill in candidat.competences %}
-                                <span class="badge bg-info">
-                                    {{ skill.nom }}
-                                </span>
-                                {% endfor %}
-                            </td>
-                            <td><span class="badge bg-secondary"><a href="{{ path('app_dashboard_moderateur_candidat_experiences', {'id': candidat.id}) }}" class="text-decoration-none text-white">{{ candidat.experiences|length }}</a></span></td>
-                            <td>
-                                {% for langue in candidat.langages %}
-                                    {{ isoToEmoji(langue.langue.code) }}
-                                {% endfor %}
-                            </td>
-                            <td><a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': candidat.id}) }}" class="btn btn-warning btn-sm rounded-pill"><i class="bi bi-eye"></i></a></td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="9">Aucun candidat trouvé.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-</div>

@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block title %}Chercher un profil{% endblock %}
 
@@ -10,57 +10,335 @@
         <div class="row my-4">
             <div class="col-md-12">
                 <p class="text-muted">
-                    <i class="fa fa-search"></i> Utilisez ce tableau pour trouver des profils candidats correspondant à vos besoins. Cliquez sur "Voir profil" pour plus de détails ou pour entrer en contact avec le candidat.
+                    <i class="bi bi-search"></i> Utilisez ce tableau pour trouver des profils candidats correspondant à vos besoins. Cliquez sur "Voir profil" pour plus de détails ou pour entrer en contact avec le candidat.
+                </p>
+                <p class="text-muted">
+                    <i class="bi bi-info-circle"></i>
+                    {% if entreprise.secteurs |length  > 1 %}
+                        Vos secteurs d'expertise :
+                        {% for item in entreprise.secteurs %}
+                            <span class="text-strong">{{ item.nom }}</span> |
+                        {% endfor %}
+                        sont sélectionnés automatiquement
+                    {% else %}
+                        Votre secteur : <span class="text-strong">{{entreprise.secteurs[0]}}</span>
+                        est séléctionné automatiquement
+                    {% endif %} 
                 </p>
             </div>
         </div>
         {{ form_start(form, {'attr': {'class': 'form-group', 'id':'entreprise-candidat-search-form'}}) }}
-        <div class="row">
-            <div class="input-group">
+                <div class="row">
                     <div class="col">
-                        {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    <div class="col">
-                        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    <div class="col">
-                        {{ form_widget(form.competences, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    <div class="col">
-                        {{ form_widget(form.langues, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    <div class="col">
-                        {{ form_widget(form.availability, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-            </div>
-        </div>
-        {{ form_end(form) }}
+                        <div class="row">
+                            <div class="col-12 col-lg-4 text-center">
+                                <button class="btn btn-primary px-5 rounded-pill mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Secteur d'expertise</button>
+                            </div>
+                            <div class="col-12 col-lg-4 text-center">
+                                <!-- Button trigger modal -->
+                                {# <button type="button" class="btn btn-primary px-5 rounded-pill mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Recherche avancée
+                                    <span  id="titre-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        0
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </button> #}
 
-        <div id="candidats-container">
-            {% include 'dashboard/entreprise/candidat/_candidats.html.twig' %}
-        </div>
+                                <button type="button" class="ai-button position-relative mb-3">
+                                    <i class="bi bi-robot"></i>
+                                    Recherche avec IA
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            Bientôt disponible
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                </button>
+                            </div>
+                            <div class="col-12 col-lg-4 text-center">
+                                <button class="btn btn-outline-dark px-5 rounded-pill mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightFavorite" aria-controls="offcanvasRightFavorite"><i class="bi bi-star-fill text-warning"></i> Mes favoris</button>
+                            </div>
+                        </div>
+                        <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvasRightLabel">Secteur d'expertise</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                {{ form_widget(form.secteurs) }}
+                            </div>
+                        </div>
+                        <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRightFavorite" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvasRightLabel"><i class="bi bi-star-fill text-warning"></i> Mes favoris</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                {% if favoris|length > 0 %}
+                                <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary" style="width: 350px;">
+                                    <div class="list-group list-group-flush border-bottom scrollarea">
+                                    {% for favori in favoris %}
+                                    <a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': favori.candidat.id}) }}" class="list-group-item list-group-item-action py-3 lh-sm favori-link" aria-current="true" data-favori-id="{{ favori.candidat.id }}">
+                                        <div class="d-flex w-100 align-items-center justify-content-between">
+                                            <!-- Avatar container -->
+                                            <div class="">
+                                                <img src="{{ favori.candidat.fileName ? asset('uploads/experts/' ~ favori.candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
+                                            </div>
+                                            <!-- Text content -->
+                                            <div class="flex-grow-1 ms-3">
+                                                <strong class="mb-1">{{ generatePseudo(favori.candidat) }} </strong>
+                                                <div class="col-10 mb-1 small">{{ favori.candidat.titre|upper }}</div>
+                                            </div>
+                                            <!-- Date or any other information -->
+                                            <span class="delete-favori" data-id="{{ favori.candidat.id }}"><i class="bi bi-trash"></i></span>
+                                        </div>
+                                    </a>
 
-        <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                                {% else %}
+                                Aucun
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div id="candidats-container">
+                            {% include 'dashboard/entreprise/candidat/_candidats.html.twig' with {entreprise:entreprise} %}
+                        </div>
+                    </div>
+                    
+                </div>
+
+
+        <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
     </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Recherche avancée</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="my-2 mx-1">
+            {{ form_widget(form.titre, {'attr': {'class': 'js-example-basic-multiple-titre p-1 m-1', 'style': 'width: 100%', 'id':'titre'}}) }}
+        </div>
+        <div class="my-2 mx-1">
+            {{ form_widget(form.competences, {'attr': {'class': 'js-example-basic-multiple-competences p-1 m-1', 'style': 'width: 100%', 'id':'competences'}}) }}
+        </div>
+        <div class="my-2 mx-1">
+            {{ form_widget(form.langue, {'attr': {'class': 'js-example-basic-multiple-langues p-1 m-1', 'style': 'width: 100%', 'id':'langues'}}) }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-warning" id="reset-button">Effacer</button>
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </div>
+    </div>
+  </div>
+</div>
+                    <div style="display:none">
+                    {{form_widget(form)}}
+                    </div>
+        {{ form_end(form) }}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
-    function searchAnnonces() {
-        var formData = $('#entreprise-candidat-search-form').serialize();
+document.addEventListener('DOMContentLoaded', function() {
+    
+    function updateTotalBadge() {
+        const titreSelect = document.querySelector('#titre').tomselect;
+        console.log(titreSelect)
+        const competencesSelect = document.querySelector('#competences').tomselect;
+        const langueSelect = document.querySelector('#langue').tomselect;
 
-        $.ajax({
-            url: '{{ path('app_dashboard_entreprise_recherche_candidats') }}',
-            type: 'GET',
-            data: formData,
-            success: function(data) {
-                $('#candidats-container').html(data.content);
-            }
-        });
+        const titreCount = titreSelect.items.length;
+        const competencesCount = competencesSelect.items.length;
+        const langueCount = langueSelect.items.length;
+        const totalCount = titreCount + competencesCount + langueCount;
+        console.log(titreCount > 0, competencesCount > 0, langueCount > 0)
+
+        const badgeElement = document.getElementById('titre-badge');
+        if (titreCount > 0 || competencesCount > 0 || langueCount > 0) {
+            badgeElement.textContent = totalCount;
+            badgeElement.style.display = 'inline-block'; // Afficher le badge
+        } else {
+            badgeElement.style.display = 'none'; // Masquer le badge
+        }
     }
+
+    // Mettre à jour le badge lors du chargement de la page
+    // updateTotalBadge();
+
+    // Gestionnaire d'événements pour le bouton "Effacer" et les changements sur les champs
+    document.getElementById('reset-button').addEventListener('click', function() {
+        const titreSelect = document.querySelector('#titre').tomselect;
+        console.log(titreSelect)
+        const competencesSelect = document.querySelector('#competences').tomselect;
+        const langueSelect = document.querySelector('#langue').tomselect;
+
+        titreSelect.clear(); 
+        competencesSelect.clear();
+        langueSelect.clear();
+
+        updateTotalBadge(); // Mettre à jour le badge après la réinitialisation
+    });
+
+    document.querySelector('#titre').addEventListener('change', updateTotalBadge);
+    document.querySelector('#competences').addEventListener('change', updateTotalBadge);
+    document.querySelector('#langue').addEventListener('change', updateTotalBadge);
+
+
+    document.getElementById('reset-button').addEventListener('click', function() {
+        // Obtenez les instances TomSelect des champs de sélection
+        const titreSelect = document.querySelector('#titre').tomselect;
+        const competencesSelect = document.querySelector('#competences').tomselect;
+        const langueSelect = document.querySelector('#langue').tomselect;
+
+        // Utilisez la méthode `clear` pour vider les sélections
+        titreSelect.clear(); 
+        competencesSelect.clear();
+        langueSelect.clear();
+
+        updateTotalBadge(); // Mettre à jour le badge après la réinitialisation
+    });
+
+    // Sélectionner toutes les cases à cocher du secteur
+    const secteurCheckboxes = document.querySelectorAll('input[name="secteurs[]"]'); // Remplacez "secteurs[]" par le nom correct du champ
+
+    // Ajouter un écouteur d'événements pour chaque case à cocher
+    secteurCheckboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            // Lorsqu'un secteur est sélectionné ou désélectionné
+            const selectedSecteurs = Array.from(secteurCheckboxes)
+                .filter(cb => cb.checked) // Filtrer les cases cochées
+                .map(cb => cb.value); // Récupérer la valeur de chaque case cochée
+
+            // Convertir le tableau en une chaîne de secteurs séparés par des virgules
+            console.log(selectedSecteurs)
+            const secteursString = selectedSecteurs.join(',');
+
+            fetch(`/ajax/get-titre-poste?secteurs=${encodeURIComponent(secteursString)}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Logique pour mettre à jour les autres champs
+                    // Assurez-vous de disposer d'une référence à votre instance TomSelect pour le champ 'titre'
+                    const titreSelect = document.getElementById('titre').tomselect;
+                    const competenceSelect = document.getElementById('competences').tomselect;
+                    console.log(data)
+                    // Effacer les options existantes
+                    titreSelect.clearOptions();
+                    competenceSelect.clearOptions();
+                    console.log(titreSelect)
+
+                    // Ajouter de nouvelles options
+                    data.titres.forEach(titre => {
+                        titreSelect.addOption({value: titre.id, text: titre.nom});
+                    });
+
+                    // Ajouter de nouvelles options
+                    data.competences.forEach(titre => {
+                        competenceSelect.addOption({value: titre.id, text: titre.nom});
+                    });
+
+                    // Si nécessaire, actualisez l'état de TomSelect
+                    titreSelect.refreshOptions();
+                    competenceSelect.refreshOptions();
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des titres:', error);
+                });
+        });
+    });
+});
+
+$(document).ready(function() {
+  $(document).on('click', '.add-to-favorites', function(e) {
+    e.preventDefault();
+    var candidatId = $(this).data('id');
+    var button = $(this); 
+    var url = `/favori/ajouter/${candidatId}`;
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      success: function(response) {
+        console.log(response);
+        button.html('<i class="bi bi-star text-warning"></i> Effacer');
+        button.removeClass('add-to-favorites btn-success').addClass('remove-from-favorites btn-outline-success');
+        // Mettre à jour les attributs/data si nécessaire
+      },
+      error: function(xhr, status, error) {
+        alert('Erreur lors de l\'ajout aux favoris');
+      }
+    });
+  });
+  
+  $(document).on('click', '.remove-from-favorites', function(e) {
+    e.preventDefault();
+    var candidatId = $(this).data('id');
+    var button = $(this); 
+    var url = `/favori/supprimer/${candidatId}`;
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      success: function(response) {
+        console.log(response);
+        button.html('<i class="bi bi-star-fill text-warning"></i> Ajouter');
+        button.removeClass('remove-from-favorites btn-outline-light').addClass('add-to-favorites btn-light');
+        // Mettre à jour les attributs/data si nécessaire
+      },
+      error: function(xhr, status, error) {
+        alert('Erreur lors de la suppression des favoris');
+      }
+    });
+  });
+    // Gestionnaire de clic pour l'icône de suppression
+    $(document).on('click', '.delete-favori', function(e) {
+        e.preventDefault(); // Empêche la navigation par défaut
+        var candidatId = $(this).data('id');
+        var linkSelector = `.favori-link[data-favori-id='${candidatId}']`;
+        var url = `/favori/supprimer/${candidatId}`; // Modifiez avec votre URL de suppression
+
+        if(confirm('Êtes-vous sûr de vouloir supprimer ce favori ?')) {
+            $.ajax({
+                url: url,
+                type: 'POST', // Ou 'DELETE' selon votre API
+                success: function(response) {
+                    $(linkSelector).remove();
+                },
+                error: function(xhr, status, error) {
+                    // Traitement en cas d'erreur
+                    alert('Erreur lors de la suppression du favori.');
+                }
+            });
+        }
+    });
+
+    // Gérer la recherche et la mise à jour des annonces
     $('#entreprise-candidat-search-form input, #entreprise-candidat-search-form select').on('keyup change', function() {
         searchAnnonces();
     });
+
+    function searchAnnonces() {
+        console.log('search annonces ok');
+        var formData = $('#entreprise-candidat-search-form').serialize();
+        $.ajax({
+            url: '{{ path('app_dashboard_entreprise_recherche_candidats') }}', 
+            type: 'GET',
+            data: formData,
+            success: function(data) {
+                console.log(data)
+                $('#candidats-container').html(data.content);
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur AJAX : ", status, error);
+            }
+        });
+    }
+
 });
+
 </script>
 {% endblock %}

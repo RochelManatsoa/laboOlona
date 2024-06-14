@@ -13,7 +13,7 @@
         <dt>Description</dt>
         <dd>{{ annonce.description|raw }}</dd>
         <dt>Status</dt>
-        <dd>{{ annonce.status }}</dd>
+        <dd>{{ getStatuses(annonce.status) }} </dd>
         <!-- ... Ajoutez d'autres champs si nécessaire ... -->
     </dl>
 <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>

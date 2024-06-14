@@ -5,6 +5,7 @@ namespace App\Form\Entreprise;
 use App\Entity\Candidate\Competences;
 use App\Entity\Secteur;
 use App\Entity\Entreprise\JobListing;
+use App\Entity\EntrepriseProfile;
 use App\Entity\Moderateur\TypeContrat;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -15,12 +16,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Form\DataTransformer\CompetencesTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use App\Form\Autocomplete\CompetencesAutocompleteField;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class AnnonceType extends AbstractType
@@ -46,6 +44,11 @@ class AnnonceType extends AbstractType
                 'widget' => 'single_text',  
                 'format' => 'yyyy-MM-dd',   
             ])
+            ->add('entreprise', EntityType::class, [
+                'class' => EntrepriseProfile::class,
+                'label' => 'Selectionnez une entreprise',
+                'attr' => []
+            ])
             ->add('typeContrat', EntityType::class, [
                 'class' => TypeContrat::class,
                 'label' => 'app_dashboard_entreprise_posting_new.type',
@@ -58,7 +61,10 @@ class AnnonceType extends AbstractType
                     'rows' => 8
                 ]
             ])
-            ->add('salaire', MoneyType::class, ['label' => 'app_dashboard_entreprise_posting_new.tarif'])
+            ->add('salaire', HiddenType::class, [])
+            ->add('budgetAnnonce', BudgetAnnonceType::class, [
+                'label' => 'Budget',
+            ])
             ->add('lieu', TextType::class, ['label' => 'Lieu',])
             ->add('nombrePoste', null, ['label' => 'Nombre de personne à chercher',])
             ->add('competences', TextType::class, [
@@ -76,7 +82,6 @@ class AnnonceType extends AbstractType
                 'no_results_found_text' => 'Aucun résultat' ,
                 'no_more_results_text' => 'Plus de résultats' ,
             ])
-            // ->add('langues')
         ;
 
         $builder->get('competences')
@@ -89,7 +94,6 @@ class AnnonceType extends AbstractType
         
             // récupérer la valeur du champ "aicores" depuis le formulaire
             $competencesDataValue = $form->get('competences')->getNormData();
-            dump($competencesDataValue);
             
             // diviser la chaîne en tableau
             $skillValues = explode(',', $competencesDataValue);

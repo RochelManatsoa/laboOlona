@@ -5,6 +5,7 @@ namespace App\Entity\Candidate;
 use App\Entity\CandidateProfile;
 use App\Entity\Entreprise\JobListing;
 use App\Entity\Enum\StatusApplication;
+use App\Entity\Moderateur\Assignation;
 use App\Repository\Candidate\ApplicationsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -47,9 +48,6 @@ class Applications
     #[ORM\ManyToOne(inversedBy: 'applications')]
     private ?CandidateProfile $candidat = null;
 
-    #[ORM\ManyToOne(targetEntity: JobListing::class)]
-    private ?JobListing $jobListing = null;
-
     #[ORM\ManyToOne(inversedBy: 'applications')]
     private ?JobListing $annonce = null;
 
@@ -67,6 +65,9 @@ class Applications
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $pretentionSalariale = null;
+
+    #[ORM\OneToOne(mappedBy: 'application', cascade: ['persist', 'remove'])]
+    private ?Assignation $assignation = null;
 
     public function getId(): ?int
     {
@@ -167,5 +168,27 @@ class Applications
     {
         // Vérifie si le candidat associé à cette application correspond au candidat fourni
         return $this->candidat && $this->candidat->getId() === $candidateProfile->getId();
+    }
+
+    public function getAssignation(): ?Assignation
+    {
+        return $this->assignation;
+    }
+
+    public function setAssignation(?Assignation $assignation): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($assignation === null && $this->assignation !== null) {
+            $this->assignation->setApplication(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($assignation !== null && $assignation->getApplication() !== $this) {
+            $assignation->setApplication($this);
+        }
+
+        $this->assignation = $assignation;
+
+        return $this;
     }
 }

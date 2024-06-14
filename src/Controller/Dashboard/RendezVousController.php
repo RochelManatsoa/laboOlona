@@ -2,27 +2,32 @@
 
 namespace App\Controller\Dashboard;
 
-use DateTime;
 use App\Entity\User;
-use App\Form\MettingType;
-use App\Entity\Notification;
+use Symfony\Component\Uid\Uuid;
 use App\Manager\CandidatManager;
+use App\Entity\EntrepriseProfile;
+use App\Entity\ModerateurProfile;
+use App\Entity\Referrer\Referral;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
 use App\Manager\ModerateurManager;
 use App\Manager\RendezVousManager;
+use App\Form\Moderateur\MettingType;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
-use App\Entity\ModerateurProfile;
+use App\Entity\Moderateur\Assignation;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Moderateur\MettingRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Candidate\ApplicationsRepository;
+use App\Repository\Moderateur\AssignationRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 #[Route('/dashboard/rendez-vous')]
 class RendezVousController extends AbstractController
@@ -36,10 +41,11 @@ class RendezVousController extends AbstractController
         private RendezVousManager $rendezVousManager,
         private MettingRepository $mettingRepository,
         private ApplicationsRepository $applicationsRepository,
+        private AssignationRepository $assignationRepository,
         private RequestStack $requestStack,
         private UrlGeneratorInterface $urlGenerator,
-    ) {
-    }
+        private PaginatorInterface $paginatorInterface,
+    ) {}
     
     #[Route('/', name: 'rendezvous_index')]
     public function index(): Response
@@ -60,20 +66,37 @@ class RendezVousController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidature = $this->applicationsRepository->find($request->query->get('candidature', ''));
+        $assignation = $this->assignationRepository->find($request->query->get('assignation', ''));
 
         if($candidature instanceof Applications){
-            $rendezvous = $this->rendezVousManager->createRendezVous($user->getModerateurProfile(), $candidature->getCandidat(), $candidature->getAnnonce()->getEntreprise(), $candidature->getAnnonce());
+            $rendezVous = $this->rendezVousManager->createRendezVous($user->getModerateurProfile(), $candidature->getCandidat(), $candidature->getAnnonce()->getEntreprise(), $candidature->getAnnonce());
+        }else if($assignation instanceof Assignation){
+            $rendezVous = $this->rendezVousManager->createRendezVous($user->getModerateurProfile(), $assignation->getProfil(), $assignation->getJobListing()->getEntreprise(), $assignation->getJobListing());
         }else{
             $rendezVous = new Metting();
-            $rendezVous->setModerateur($user->getModerateurProfile());
-            $rendezVous->setCreeLe(new DateTime());
             $rendezVous->setStatus(Metting::STATUS_PENDING);
+            $rendezVous->setCustomId(new Uuid(Uuid::v4()));
+            $rendezVous->setLieu('meet.olona-talents.com');
         }
 
-        $form = $this->createForm(MettingType::class, $rendezvous);
+        $form = $this->createForm(MettingType::class, $rendezVous);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $rendezVous = $form->getData();
+            $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $rendezVous->getCandidat()->getCandidat()->getEmail()]);
+            $customId = $rendezVous->getCustomId();
+            $rendezVous->setLink($this->urlGenerator->generate(
+                'app_dashboard_conference', 
+                [
+                    'uuid' => $customId
+                ], 
+                UrlGenerator::ABSOLUTE_URL
+                ));
+
+            if($refered instanceof Referral){
+                $refered->setStep(5);
+                $this->em->persist($refered);
+            }
             $this->em->persist($rendezVous);
             $this->em->flush();
 
@@ -103,7 +126,7 @@ class RendezVousController extends AbstractController
 
             $this->addFlash('success', 'Rendez-vous sauvegarder');
 
-            return  $this->redirectToRoute('rendezvous_index', []);
+            return  $this->redirectToRoute('app_dashboard_moderateur_mettings', []);
         }
 
         return $this->render('dashboard/rendez_vous/create.html.twig', [
@@ -216,30 +239,62 @@ class RendezVousController extends AbstractController
     #[Route('/{id}/send-reminder', name: 'rendezvous_send_reminder')]
     public function sendReminder(Request $request, Metting $rendezVous): Response
     {
-        /** Envoi mail candidat & entrepise */
-        $this->mailerService->send(
-            $rendezVous->getEntreprise()->getEntreprise()->getEmail(),
-            "Rappel de votre Entretien",
-            "entreprise/rappel_rendezvous.html.twig",
-            [
-                'user' => $rendezVous->getEntreprise()->getEntreprise(),
-                'rendezvous' => $rendezVous,
-                'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]
-        );
-        $this->mailerService->send(
-            $rendezVous->getCandidat()->getCandidat()->getEmail(),
-            "Rappel de votre Entretien",
-            "candidat/rappel_rendezvous.html.twig",
-            [
-                'user' => $rendezVous->getCandidat()->getCandidat(),
-                'rendezvous' => $rendezVous,
-                'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]
-        );
+        $to = $request->query->get('to', null);
+        if($to !== null){
+            if($to === 'entreprise'){
+                /** Envoi mail entrepise */
+                $this->mailerService->send(
+                    $rendezVous->getEntreprise()->getEntreprise()->getEmail(),
+                    "Rappel de votre Entretien",
+                    "entreprise/rappel_rendezvous.html.twig",
+                    [
+                        'user' => $rendezVous->getEntreprise()->getEntreprise(),
+                        'rendezvous' => $rendezVous,
+                        'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    ]
+                );
+            }else{
+                /** Envoi mail candidat */
+                $this->mailerService->send(
+                    $rendezVous->getCandidat()->getCandidat()->getEmail(),
+                    "Rappel de votre Entretien",
+                    "candidat/rappel_rendezvous.html.twig",
+                    [
+                        'user' => $rendezVous->getCandidat()->getCandidat(),
+                        'rendezvous' => $rendezVous,
+                        'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    ]
+                );
+            }
+        }else{
+            /** Envoi mail candidat & entrepise */
+            $this->mailerService->send(
+                $rendezVous->getEntreprise()->getEntreprise()->getEmail(),
+                "Rappel de votre Entretien",
+                "entreprise/rappel_rendezvous.html.twig",
+                [
+                    'user' => $rendezVous->getEntreprise()->getEntreprise(),
+                    'rendezvous' => $rendezVous,
+                    'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
+            $this->mailerService->send(
+                $rendezVous->getCandidat()->getCandidat()->getEmail(),
+                "Rappel de votre Entretien",
+                "candidat/rappel_rendezvous.html.twig",
+                [
+                    'user' => $rendezVous->getCandidat()->getCandidat(),
+                    'rendezvous' => $rendezVous,
+                    'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezVous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
+
+        }
 
         $this->addFlash('success', 'Un emal de rappel a été envoyé');
-        return  $this->redirectToRoute('rendezvous_index', []);
+        $referer = $request->headers->get('referer');
+
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('rendezvous_index');
     }
     
     #[Route('/{id}/reschedule', name: 'rendezvous_reschedule')]
@@ -302,6 +357,24 @@ class RendezVousController extends AbstractController
         return $this->render('dashboard/rendez_vous/reschedule.html.twig', [
             'rendezvous' => $rendezvous,
             'form' => $form->createView(),
+        ]);
+    }
+    
+    #[Route('/entreprise/{id}', name: 'rendezvous_entreprise')]
+    public function entreprise(Request $request, EntrepriseProfile $entreprise): Response
+    {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $data = $entreprise->getMettings();
+        
+        return $this->render('dashboard/moderateur/metting/entreprise.html.twig', [
+            'annonces' => $this->paginatorInterface->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            ),
+            'result' => $data,
+            'entreprise' => $entreprise,
+            // 'form' => $form->createView(),
         ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\EntrepriseProfile;
+use App\Entity\Finance\Devise;
 use DateTime;
 use App\Entity\Langue;
 use App\Entity\Secteur;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
 use App\Repository\Moderateur\TypeContratRepository;
 use App\Repository\ModerateurProfileRepository;
+use App\Security\Voter\ModerateurVoter;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ModerateurManager
@@ -84,11 +86,28 @@ class ModerateurManager
     public function getModerateurEmails(): array
     {
         $emails = [];
+        // Liste des e-mails à exclure
+        $excludedEmails = ['c.rasori@olona-outsourcing.com', 'moderateur@olona.com', 'sm.affiliation@gmail.com', 'michel.vomiandry@gmail.com']; 
+
+        foreach ($this->moderateurProfileRepository->findAll() as $value) {
+            $email = $value->getModerateur()->getEmail();
+            if (!in_array($email, $excludedEmails)) {
+                $emails[] = $email;
+            }
+        }
+
+        return $emails;
+    }
+
+
+    public function getModerateurs(): array
+    {
+        $moderateurs = [];
         foreach($this->moderateurProfileRepository->findAll() as $value){
-            $emails[] = $value->getModerateur()->getEmail();
+            $moderateurs[] = $value->getModerateur();
         }
         
-        return $emails;
+        return $moderateurs;
     }
 
     public function initSector(): Secteur
@@ -109,6 +128,27 @@ class ModerateurManager
         $this->saveSector($secteur);
 
         return $secteur;
+
+    }
+
+    public function initDevise(): Devise
+    {
+        return new Devise();
+    }
+
+    public function saveDevise(Devise $devise): void
+    {
+		$this->em->persist($devise);
+        $this->em->flush();
+    }
+
+    public function saveDeviseForm(Form $form)
+    {
+        $devise = $form->getData();
+        $devise->setSlug($this->sluggerInterface->slug(strtolower($devise->getNom())));
+        $this->saveDevise($devise);
+
+        return $devise;
 
     }
 
@@ -245,6 +285,31 @@ class ModerateurManager
         return $qb->getQuery()->getResult();
     }
 
+    public function searchDevise(string $query = null): array
+    {
+        if (empty($query)) {
+            return $this->em->getRepository(Devise::class)->findAll();
+        }
+
+        $qb = $this->em->createQueryBuilder();
+
+        $keywords = array_filter(explode(' ', $query));
+        $parameters = [];
+        $conditions = [];
+
+        foreach ($keywords as $key => $keyword) {
+            $conditions[] = '(d.nom LIKE :query' . $key .')';
+            $parameters['query' . $key] = '%' . $keyword . '%';
+        }
+
+        $qb->select('d')
+            ->from('App\Entity\Finance\Devise', 'd')
+            ->where(implode(' OR ', $conditions))
+            ->setParameters($parameters);
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function searchAnnonce(?string $titre = null, ?string $entreprise = null, ?string $status = null): array
     {
         $qb = $this->em->createQueryBuilder();
@@ -253,7 +318,7 @@ class ModerateurManager
         $conditions = [];
 
         if($titre == null && $entreprise == null && $status == null){
-            return $this->jobListingRepository->findAllJobListingPublished();
+            return $this->findAllListingJob();
         }
 
         if (!empty($titre)) {
@@ -292,7 +357,7 @@ class ModerateurManager
         }
 
         if (!empty($titre)) {
-            $conditions[] = '(j.titre LIKE :titre )';
+            $conditions[] = '(c.titre LIKE :titre )';
             $parameters['titre'] = '%' . $titre . '%';
         }
 
@@ -316,7 +381,8 @@ class ModerateurManager
             ->leftJoin('c.candidat', 'u')
             ->leftJoin('c.availability', 'a')
             ->where(implode(' AND ', $conditions))
-            ->setParameters($parameters);
+            ->setParameters($parameters)
+            ->orderBy('c.id', 'DESC'); 
         
         return $qb->getQuery()->getResult();
     }

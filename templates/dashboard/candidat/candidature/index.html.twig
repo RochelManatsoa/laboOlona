@@ -1,114 +1,221 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block body %}
 
-<div class="container mt-3">
-    <div class="row text-dark">
-        <p>
-            Retrouvez à tout moment vos candidatures en cours, le suivi de leur statut, ainsi que l’historique des offres auxquelles vous avez postulées. Les candidatures archivées regroupent vos candidatures sur des offres expirées.
-        </p>
-        
-        <hr>
-            <!-- Onglets -->
-            <ul class="nav nav-tabs justify-content-center nav-underline">
-                <li class="nav-item">
-                    <a class="nav-link px-3 active" id="pending-tab" data-bs-toggle="tab" href="#pending">En attente</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link px-3" id="metting-tab" data-bs-toggle="tab" href="#metting">Rendez-vous</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link px-3" id="accepted-tab" data-bs-toggle="tab" href="#accepted">Acceptées</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link px-3" id="refused-tab" data-bs-toggle="tab" href="#refused">Non retenues</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link px-3" id="archived-tab" data-bs-toggle="tab" href="#archived">Archivées</a>
-                </li>
-            </ul>
-        
-            <!-- Contenu des onglets -->
-            <div class="tab-content mt-3">
-                <div class="tab-pane fade show active" id="pending">
-                    <div class="card">
-                        <div class="card-body">
-                            {% if pendings|length > 0 %}
-                            
-                            {% include 'dashboard/candidat/candidature/_pending.html.twig' %}
-                          
-                            {% else %}
-                            <div class="text-center col-6 mx-auto">
-                                <img src="{{ asset('images/empty.png')}}" class="img-fluid">
-                                <p class="text-center">Vous n'avez aucune candidature en cours.</p>
-                            </div>
-                            {% endif %}
-                            <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-                        </div>
-                    </div>
-                </div>
+	<div class="container mt-3">
+		<div class="row text-dark">
+			<p>
+				Retrouvez à tout moment vos candidatures en cours, le suivi de leur statut, ainsi que l’historique des offres auxquelles vous avez postulé. Les candidatures archivées regroupent vos candidatures sur des offres expirées.
+			</p>
 
-                <div class="tab-pane fade show" id="metting">
-                    <div class="card">
-                        <div class="card-body">
-                            {% if randezvous|length > 0 %}
-                            
-                            {% include 'dashboard/candidat/candidature/_metting.html.twig' %}
-                          
-                            {% else %}
-                            <div class="text-center col-6 mx-auto">
-                                <img src="{{ asset('images/empty.png')}}" class="img-fluid">
-                                <p class="text-center">Vous n'avez aucun rendez-vous en cours.</p>
-                            </div>
-                            {% endif %}
-                            <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-                        </div>
-                    </div>
-                </div>
-        
-                <div class="tab-pane fade" id="accepted">
-                    {% if accepteds|length > 0 %}
-                            
-                    {% include 'dashboard/candidat/candidature/_accepted.html.twig' %}
-                  
-                    {% else %}
-                    <div class="text-center col-6 mx-auto">
-                        <img src="{{ asset('images/empty.png')}}" class="img-fluid">
-                        <p class="my-5">Vous n’avez aucune candidature acceptées.</p>
-                    </div>
-                    {% endif %}
-                <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-                </div>
-        
-                <div class="tab-pane fade" id="refused">
-                    {% if refuseds|length > 0 %}
-                            
-                    {% include 'dashboard/candidat/candidature/_refused.html.twig' %}
-                  
-                    {% else %}
-                    <div class="text-center col-6 mx-auto">
-                        <img src="{{ asset('images/empty.png')}}" class="img-fluid">
-                        <p class="my-5">Vous n’avez aucune candidature refusées.</p>
-                    </div>
-                    {% endif %}
-                <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-                </div>
-        
-                <div class="tab-pane fade" id="archived">
-                    {% if archiveds|length > 0 %}
-                            
-                    {% include 'dashboard/candidat/candidature/_archived.html.twig' %}
-                  
-                    {% else %}
-                    <div class="text-center col-6 mx-auto">
-                        <img src="{{ asset('images/empty.png')}}" class="img-fluid">
-                        <p class="my-5">Vous n’avez aucune candidature archivées.</p>
-                    </div>
-                    {% endif %}
-                    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-                </div>
-            </div>
-    </div>
-</div>
+			<hr>
+			<!-- Onglets -->
+			<div class="d-block d-sm-none">
+				<div class="accordion" id="accordionPanelsStayOpenExample">
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+								En attente
+							</button>
+						</h2>
+						<div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+							<div class="accordion-body">
+								{% if pendings|length > 0 %}
+
+									{% include 'dashboard/candidat/candidature/_pending.html.twig' %}
+
+								{% else %}
+									<div class="text-center col-lg-6 col-sm-12 mx-auto">
+										<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+										<p class="text-center">Vous n'avez aucune candidature en cours.</p>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+								Rendez-vous
+							</button>
+						</h2>
+						<div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+							<div class="accordion-body">
+								{% if randezvous|length > 0 %}
+
+									{% include 'dashboard/candidat/candidature/_metting.html.twig' %}
+
+								{% else %}
+									<div class="text-center col-lg-6 col-sm-12 mx-auto">
+										<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+									    <p class="text-center">Vous n'avez aucun rendez-vous en cours.</p>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+								Acceptées
+							</button>
+						</h2>
+						<div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+							<div class="accordion-body">
+								{% if accepteds|length > 0 %}
+
+									{% include 'dashboard/candidat/candidature/_accepted.html.twig' %}
+
+								{% else %}
+									<div class="text-center col-lg-6 col-sm-12 mx-auto">
+										<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+										<p class="text-center">Vous n'avez aucune candidature acceptées.</p>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" aria-controls="panelsStayOpen-collapseFour">
+								Non retenues
+							</button>
+						</h2>
+						<div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse">
+							<div class="accordion-body">
+								{% if refuseds|length > 0 %}
+
+									{% include 'dashboard/candidat/candidature/_refused.html.twig' %}
+
+								{% else %}
+									<div class="text-center col-lg-6 col-sm-12 mx-auto">
+										<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+										<p class="text-center">Vous n'avez aucune candidature refusées.</p>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false" aria-controls="panelsStayOpen-collapseFive">
+								Archivées
+							</button>
+						</h2>
+						<div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse">
+							<div class="accordion-body">
+								{% if archiveds|length > 0 %}
+
+									{% include 'dashboard/candidat/candidature/_archived.html.twig' %}
+
+								{% else %}
+									<div class="text-center col-lg-6 col-sm-12 mx-auto">
+										<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+										<p class="text-center">Vous n'avez aucune candidature archivées.</p>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="d-none d-sm-block">
+				<ul class="nav nav-tabs justify-content-center nav-underline">
+					<li class="nav-item">
+						<a class="nav-link px-3 active" id="pending-tab" data-bs-toggle="tab" href="#pending">En attente</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-3" id="metting-tab" data-bs-toggle="tab" href="#metting">Rendez-vous</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-3" id="accepted-tab" data-bs-toggle="tab" href="#accepted">Acceptées</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-3" id="refused-tab" data-bs-toggle="tab" href="#refused">Non retenues</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-3" id="archived-tab" data-bs-toggle="tab" href="#archived">Archivées</a>
+					</li>
+				</ul>
+
+				<!-- Contenu des onglets -->
+				<div class="tab-content mt-3">
+					<div class="tab-pane fade show active" id="pending">
+						<div class="card">
+							<div class="card-body">
+								{% if pendings|length > 0 %}
+
+									{% include 'dashboard/candidat/candidature/_pending.html.twig' %}
+
+								{% else %}
+									<div class="text-center col-6 mx-auto">
+										<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+										<p class="text-center">Vous n'avez aucune candidature en cours.</p>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-pane fade show" id="metting">
+						<div class="card">
+							<div class="card-body">
+								{% if randezvous|length > 0 %}
+
+									{% include 'dashboard/candidat/candidature/_metting.html.twig' %}
+
+								{% else %}
+									<div class="text-center col-6 mx-auto">
+										<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+										<p class="text-center">Vous n'avez aucun rendez-vous en cours.</p>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="accepted">
+						{% if accepteds|length > 0 %}
+
+							{% include 'dashboard/candidat/candidature/_accepted.html.twig' %}
+
+						{% else %}
+							<div class="text-center col-6 mx-auto">
+								<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+								<p class="my-5">Vous n’avez aucune candidature acceptées.</p>
+							</div>
+						{% endif %}
+					</div>
+
+					<div class="tab-pane fade" id="refused">
+						{% if refuseds|length > 0 %}
+
+							{% include 'dashboard/candidat/candidature/_refused.html.twig' %}
+
+						{% else %}
+							<div class="text-center col-6 mx-auto">
+								<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+								<p class="my-5">Vous n’avez aucune candidature refusées.</p>
+							</div>
+						{% endif %}
+					</div>
+
+					<div class="tab-pane fade" id="archived">
+						{% if archiveds|length > 0 %}
+
+							{% include 'dashboard/candidat/candidature/_archived.html.twig' %}
+
+						{% else %}
+							<div class="text-center col-6 mx-auto">
+								<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+								<p class="my-5">Vous n’avez aucune candidature archivées.</p>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+	</div>
 
 {% endblock %}

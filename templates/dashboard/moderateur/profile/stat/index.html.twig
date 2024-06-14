@@ -1,0 +1,19 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Stats{% endblock %}
+
+{% block body %}
+
+
+<div class="container mt-5">
+    <h2>Stats relance</h2>
+    {% include "dashboard/moderateur/profile/_stat_profile.html.twig" with {form:form} %}
+    {# {{ dump(notifications)}} #}
+
+    {% if chart is not null %}
+        <div style="height: 400px; width: 800px;" class="my-5">
+            {{ render_chart(chart) }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

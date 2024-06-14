@@ -5,49 +5,46 @@ Votre recherche renvoie <strong>{{ result|length }}</strong> résultats.
 <div class="navigation">
 {{ knp_pagination_render(aiTools, 'parts/_pagination.html.twig') }}
 </div>
-<table class="table table-responsive">
-    <thead>
-        <tr>
-            <th class="col-2">Nom</th>
-            <th class="col-4">Description</th>
-            <th class="col-2">Catégories</th>
-            <th class="col-3">Image</th>
-            <th class="col-1"></th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for aitool in aiTools %}
+
+<div class="responsive-table">
+    {% for aitool in aiTools %}
             {% set description = aitool.shortDescriptionFr ?? aitool.shortDescription %}
-            <tr>
-                <td>
-                    <figure>
-                        <blockquote class="blockquote">
-                        <p><a href="{{path('app_dashboard_moderateur_view_affiliate_tool', { 'slug': aitool.slug}) }}"> {{ aitool.nom }} </a></p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                        <cite title="Source Title">{{ aitool.sloganFr ?? aitool.slogan }}</cite>
-                        </figcaption>
-                    </figure>                 
-                    <a href="{{ aitool.lienAffiliation }}" class="btn btn-sm btn-primary rounded-pill px-3">Visiter le site <i class="bi bi-box-arrow-up-right"></i></a>
-                </td>
-                <td>
-                    {{ description|length > 450 ? (description|slice(0, 447) ~ '... <a href="' ~ path('app_dashboard_moderateur_view_affiliate_tool', { 'slug': aitool.slug}) ~ '" class="en-savoir-plus">En savoir plus</a>')|raw : description|raw }}
-                </td>
-                <td class="id-column">
-                    {% for category in aitool.categories %}
-                    <span class="badge text-bg-info">{{ category.nom }}</span>
-                    {% endfor %}
-                </td>
-                <td><img src="{{ aitool.image }}" class="img-fluid" alt="thumbail"></td>
-                <td class="actions-col">
-                    <a href="{{path('app_dashboard_moderateur_view_affiliate_tool', { 'slug': aitool.slug}) }}" class="btn btn-sm btn-secondary"><i class="bi bi-eye"></i></a>
-                    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
-                        <a href="{{path('app_dashboard_moderateur_edit_affiliate_tool', { 'slug': aitool.slug}) }}" class="btn btn-sm btn-info"><i class="bi bi-pencil"></i></a>
-                        <a href="{{path('app_dashboard_moderateur_delete_affiliate_tool', { 'slug': aitool.slug}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');"><i class="bi bi-trash"></i></a>
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 border-bottom pb-2">
+        <div class="p-2 w-100">
+            <figure>
+                <blockquote class="blockquote">
+                    <p>
+                        <a href="{{path('app_dashboard_moderateur_view_affiliate_tool', { 'slug': aitool.slug}) }}"> 
+                            {{ aitool.nom }} 
+                        </a>
+                    </p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    <cite title="Source Title">{{ aitool.sloganFr ?? aitool.slogan }}</cite>
+                </figcaption>
+            </figure>
+            <a href="{{ aitool.lienAffiliation }}" class="btn btn-sm btn-primary rounded-pill px-3">Visiter le site <i class="bi bi-box-arrow-up-right"></i></a>
+        </div>
+        <div class="p-2 w-100">
+            {{ description|length > 150 ? (description|slice(0, 147) ~ '... <a href="' ~ path('app_dashboard_moderateur_view_affiliate_tool', { 'slug': aitool.slug}) ~ '" class="en-savoir-plus">En savoir plus</a>')|raw : description|raw }}
+        </div>
+        <div class="p-2 w-100">
+            {% for category in aitool.categories %}
+                <span class="badge text-bg-info">{{ category.nom }}</span>
+            {% endfor %}
+        </div>
+        <div class="p-2 w-100">
+            <img src="{{ aitool.image }}" class="img-fluid" alt="thumbail">
+        </div>
+        <div class="p-2 actions-col">
+            <a href="{{path('app_dashboard_moderateur_view_affiliate_tool', { 'slug': aitool.slug}) }}" class="btn btn-sm btn-secondary"><i class="bi bi-eye"></i></a>
+            {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
+                <a href="{{path('app_dashboard_moderateur_edit_affiliate_tool', { 'slug': aitool.slug}) }}" class="btn btn-sm btn-info"><i class="bi bi-pencil"></i></a>
+                <a href="{{path('app_dashboard_moderateur_delete_affiliate_tool', { 'slug': aitool.slug}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');"><i class="bi bi-trash"></i></a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 

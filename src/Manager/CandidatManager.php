@@ -209,13 +209,16 @@ class CandidatManager
     }
     
     public function sendNotificationEmail($candidat) {
+        $candidat->setStatus(CandidateProfile::STATUS_PENDING);
+        $this->em->persist($candidat);
+        $this->em->flush();
         $this->mailerService->sendMultiple(
             $this->moderateurManager->getModerateurEmails(),
             $candidat->getCandidat()->getPrenom().' a mis à jour son profil sur Olona Talents',
             "moderateur/notification_update_profile.html.twig",
             [
                 'user' => $candidat->getCandidat(),
-                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_profile_candidat_view', ['id' => $candidat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
             ]
         );
     }

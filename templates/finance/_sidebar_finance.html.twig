@@ -1,0 +1,49 @@
+{% set current_route = app.request.attributes.get('_route') %}
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark position-sticky top-0" style="width: 280px;">
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item">
+        <a href="{{ path('app_finance_dashboard')}}" 
+            class="nav-link {{ current_route == 'app_finance_dashboard' ? 'active' : 'text-white' }}" 
+            {{ current_route == 'app_finance_dashboard' ? 'aria-current=page' : '' }}>
+            <i class="mx-2 h5 bi bi-house-door"></i>
+            Tableau de bord  
+        </a>
+      </li>
+      <hr>
+      <li>
+        <a href="{{ path('app_finance_employe') }}" class="nav-link {{ current_route == 'app_finance_employe' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-people-fill"></i>
+          Prospects simulateur
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_finance_simulateur') }}" class="nav-link {{ current_route == 'app_finance_simulateur' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-person-gear"></i>
+          Simulations
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_finance_contrat') }}" class="nav-link {{ current_route == 'app_finance_contrat' ? 'active' : 'text-white' }}">
+          <i class="mx-2 h5 bi bi-file-earmark-text-fill"></i>
+          Demandes
+        </a>
+      </li>
+    <hr>
+      <ul class="nav nav-pills flex-column mb-auto">
+      {% if app.user.candidateProfile is not null %}
+        <li class="nav-item">
+          <a href="{{ path('app_dashboard_candidat_compte') }}" class="nav-link {{ current_route == 'app_dashboard_candidat_compte' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-person-circle"></i>
+            {{ 'app_dashboard_candidat_compte.menu'|trans }}
+          </a>
+        </li>
+      {% endif %}
+        <li class="nav-item">
+          <a href="{{ path('app_logout') }}" class="nav-link text-white">
+            <i class="mx-2 h5 bi bi-box-arrow-right"></i>
+            {{ 'app_dashboard_entreprise.logout'|trans }}
+          </a>
+        </li>
+      </ul>
+    </div>
+    

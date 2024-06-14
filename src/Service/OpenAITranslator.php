@@ -3,15 +3,21 @@
 namespace App\Service;
 
 use App\Twig\AppExtension;
+use App\Entity\CandidateProfile;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class OpenAITranslator
 {
+    private $projectDir;
+
     public function __construct(
         private HttpClientInterface $client, 
         private AppExtension $appExtension, 
-        private string $apiKey
+        private string $apiKey,
+        ParameterBagInterface $params
     ){
+        $this->projectDir = $params->get('kernel.project_dir');
     }
 
     public function translate(string $text, string $sourceLang, string $targetLang): string
@@ -135,13 +141,40 @@ class OpenAITranslator
     }
 
     public function trans($text) {
-        $command = "node /home/mast9834/sites/laboOlona/assets/node_app/index.js " . escapeshellarg($text);
+        $scriptPath = $this->projectDir . '/assets/node_app/index.js';
+        $command = sprintf('node %s %s %s', escapeshellarg($scriptPath), escapeshellarg($text), escapeshellarg($this->apiKey));
         exec($command, $output, $return_var);
     
         if ($return_var === 0) {
             return implode("\n", $output);
         } else {
-            return "Erreur lors de l'exécution du script Node.js";
+            return "Erreur lors de l'exécution du script index.js";
+        }
+    }
+
+    public function parse(CandidateProfile $candidateProfile)
+    {
+        $scriptPath = $this->projectDir . '/assets/node_app/parse.js';
+        $command = sprintf('node %s %s %s', escapeshellarg($scriptPath), escapeshellarg('https://app.olona-talents.com/uploads/cv/'. $candidateProfile->getCv()), escapeshellarg($this->apiKey));
+        exec($command, $output, $return_var);
+
+        if ($return_var === 0) {
+            return implode("\n", $output);
+        } else {
+            return "Erreur lors de l'exécution du script parse.js";
+        }
+    }
+
+    public function report(CandidateProfile $candidateProfile)
+    {
+        $scriptPath = $this->projectDir . '/assets/node_app/report.js';
+        $command = sprintf('node %s %s %s', escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getTesseractResult()), escapeshellarg($this->apiKey));
+        exec($command, $output, $return_var);
+
+        if ($return_var === 0) {
+            return implode("\n", $output);
+        } else {
+            return "Erreur lors de l'exécution du script report.js";
         }
     }
 

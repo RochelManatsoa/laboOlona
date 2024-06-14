@@ -4,8 +4,10 @@ namespace App\Form\Profile\Candidat;
 
 use App\Entity\Secteur;
 use App\Entity\CandidateProfile;
+use App\Form\Candidat\TarifCandidatType;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Profile\Candidat\ExperiencesType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
@@ -14,15 +16,27 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class StepTwoType extends AbstractType
 {
+    public function __construct(private EntityManagerInterface $em) {}
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $defaultSecteur = $this->em->getRepository(Secteur::class)->find(1);
         $builder
             ->add('titre', TextType::class, [
-                'required' => true,
+                'constraints' => new NotBlank(['message' => 'Vous devez remplir ce champ.']),
                 'label' => 'Votre titre *',
+                'attr' => [
+                    'placeholder' => 'Développeur application web'
+                ],
+                'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
+            ])
+            ->add('tarifCandidat', TarifCandidatType::class, [
+                'required' => false,
+                'label' => 'Tarif *',
                 'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
             ])
             ->add('resume', TextareaType::class, [
@@ -30,7 +44,8 @@ class StepTwoType extends AbstractType
                 'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
                 'required' => false,
                 'attr' => [
-                    'rows' => 8
+                    'rows' => 8,
+                    'placeholder' => 'Passionné par le développement web et fort de plus de 5 ans d\'expérience...'
                 ]
             ])
             ->add('cv', FileType::class, [
@@ -75,6 +90,7 @@ class StepTwoType extends AbstractType
                 'autocomplete' => true,
                 'multiple' => true,
                 'required' => true,
+                'data' => [$defaultSecteur],
             ])
         ;
     }

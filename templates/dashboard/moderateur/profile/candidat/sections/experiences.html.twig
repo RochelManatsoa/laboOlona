@@ -1,0 +1,45 @@
+
+			<div class="tab-pane fade" id="experiences">
+				<div class="card">
+					<div class="card-body">
+						<div class="row">
+							{% if candidat.experiences|length > 0 %}
+								{% for experience in candidat.experiences %}
+									<div class="experience" data-experience-id="{{ experience.id }}">
+										<p class="text-dark d-flex justify-content-between align-items-center">
+											{% if experience.enPoste %}
+												Depuis {{ experience.dateDebut|date('M Y')}}
+											{% else %}
+												{{ experience.dateDebut|date('M Y')}} - 
+												{{ experience.dateFin|date('M Y')}}
+											{% endif %}
+										</p>
+										<p class="text-dark small d-flex justify-content-between align-items-center">
+											<span>
+												<strong>{{ experience.nom }}</strong>
+												chez 
+												<strong>{{ experience.entreprise }}</strong>
+													{% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
+														({{ date_difference(experience.dateFin, experience.dateDebut) }})
+													{% endif %}
+
+											</span>
+											<span class="">
+												<button type="button" class="btn btn-primary btn-sm edit-experience" data-experience-id="{{ experience.id }}"><i class="bi bi-pencil-square"></i></button>
+												<button type="button" class="btn btn-danger btn-sm delete-experience" data-experience-id="{{ experience.id }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette expérience ?');"><i class="bi bi-trash"></i></button>
+											</span>
+										</p>
+										<div class=""> {{ experience.description|raw }}</div>
+										<hr class="my-4">
+									</div>
+								{% endfor %}
+							{% else %}
+							<div class="alert alert-primary" role="alert">
+								<i class="bi bi-info"></i>
+								Aucune expérience renseignée.
+							</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>

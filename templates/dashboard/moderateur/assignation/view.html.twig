@@ -1,0 +1,107 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2><i class="fas fa-file-alt"></i> Assignation #{{ assignation.id }}</h2>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12 col-sm-6">
+
+                <h3 class="h3 text-primary">{{ generatePseudo(assignation.profil) }}</h3>
+                <p>
+                {{ assignation.profil.candidat.nom }} {{ assignation.profil.candidat.prenom }}<br>
+                <strong>{{ assignation.profil.candidat.email }}</strong><br>
+                <strong>{{ assignation.profil.candidat.telephone }}</strong><br>
+                <strong>{{ assignation.profil.titre }}</strong><br>
+                Dernière connexion {{ assignation.profil.candidat.lastLogin|time_ago }}<br>
+                Pretention {{ getTarifCandidat(assignation.profil)|raw }} <br>
+                    <a href="{{ asset('uploads/cv/' ~ assignation.profil.cv) }}" class="btn btn-outline-primary rounded-pill btn-sm px-5 my-2" target=_blank >CV Original</a><br>
+                Skills :
+                {% for item in assignation.profil.competences %}
+                    <span class="badge bg-dark h2"><i class="bi bi-tags"></i> {{ item.nom }}</span>
+                {% endfor %} 
+                </p>
+            </div>
+            <div class="col-12 col-sm-6">
+
+                <h3 class="h3 text-info">{{ assignation.jobListing.entreprise.nom }}</h3>
+                <p>
+                {{ assignation.jobListing.titre }} <br>
+                Publié {{ assignation.jobListing.dateCreation|time_ago }}<br>
+                <strong>Statut</strong> {{ getStatuses(assignation.jobListing.status) }}<br>
+                <strong>Contrat</strong> {{ assignation.jobListing.typeContrat.nom }}<br>
+                <strong>Budget</strong> : 
+                    {% if assignation.jobListing.budgetAnnonce is defined and assignation.jobListing.budgetAnnonce is not null %}
+                    {{assignation.jobListing.budgetAnnonce.montant }} {{ assignation.jobListing.budgetAnnonce.devise }} {{ arrayInverseTarifType()[assignation.jobListing.budgetAnnonce.typeBudget] }}</span>
+                    {% else %}
+                    {{assignation.jobListing.salaire }} €
+                    {% endif %}<br>
+                Compétences requises :
+                {% for item in assignation.jobListing.competences %}
+                    <span class="badge bg-info h2"><i class="bi bi-tags"></i> {{ item.nom }}</span>
+                {% endfor %} 
+                <br>
+                </p>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-12 col-sm-4">
+
+                <p>
+                {{ getTypeAssignation(assignation)|raw }}<br>
+                Expire le {{ assignation.dateFinAssignation|date('d/m/Y') }}<br>
+                Statut {{ getStatusAssignation(assignation)|raw }}<br>
+                Forfait {{ getTarifForfait(assignation)|raw }}<br>
+                Commentaire : <br><span class="text-muted">{{ assignation.commentaire|raw }}<span><br>
+                </p>
+            </div>
+            <div class="col-12 col-sm-8">
+            {{form_start(form)}}
+                <div class="row mb-3">
+                    <div class="col-12 col-lg-4">
+                        <span class="text-muted small">Type</span>
+                        {{ form_widget(form.forfaitAssignation.typeForfait, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <span class="text-muted small">Montant</span>
+                        {{ form_widget(form.forfaitAssignation.montant, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-12 col-lg-5">
+                        <span class="text-muted small">Devise</span>
+                        {{ form_widget(form.forfaitAssignation.currency, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+            {{form_row(form.status)}}
+            {{form_row(form.commentaire)}}
+            <div style="display:none;">
+            {{form_widget(form)}}
+            </div>
+                <button type="submit" class="mb-3 btn btn-primary rounded-pill px-5">Mettre à jour</button>
+            {{form_end(form)}}
+            </div>
+        </div>
+
+
+
+        <!-- Conseils pour le Modérateur -->
+        <div class="card my-4">
+            <div class="card-header pt-3 bg-warning">
+            <h3 class="h4"><i class="fas fa-lightbulb"></i> Conseils pour l'Évaluation</h3>
+            </div>
+            <div class="card-body">
+                <p>Prenez en considération l'adéquation des compétences et des expériences du candidat avec les exigences du poste.</p>
+                <a href="{{ path('rendezvous_create', {'assignation': assignation.id })}}" class="btn btn-success px-5 rounded-pill">Organiser un rendez-vous</a>
+                <!-- Autres conseils ici -->
+            </div>
+        </div>
+
+    </div>
+<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+</div>
+{% endblock %}
+
+
+
+
+

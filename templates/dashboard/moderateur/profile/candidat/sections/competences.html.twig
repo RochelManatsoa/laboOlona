@@ -1,0 +1,55 @@
+
+			<div class="tab-pane fade" id="competences">
+				<div class="card">
+					<div class="card-body">
+                    {% if candidat.competences|length > 0 %}
+                        <table class="table" id="competencesTable">
+                            <thead>
+                                <tr>
+                                    <th class="col-3">Compétence</th>
+                                    <th class="col-9">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for competence in candidat.competences %}
+                                    <tr id="competence-row-{{ competence.id }}">
+                						<div class="competence" data-competence-id="{{ competence.id }}">
+                                        	<td>
+												{{ competence.nom }}<br>
+													<span class="p-1 lh-1">
+														{% for i in 1..5 %}
+															{% if i <= competence.note %}
+																<i class="small bi bi-star-fill text-warning"></i>
+															{% else %}
+																<i class="small bi bi-star text-dark"></i>
+															{% endif %}
+														{% endfor %}
+													</span>
+												<div class="">
+													<button class="btn btn-primary btn-sm edit-competence" data-competence-id="{{ competence.id }}"><i class="bi bi-pencil-square"></i></button>
+													<button class="btn btn-danger btn-sm delete-competence" data-competence-id="{{ competence.id }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette compétence ?');"><i class="bi bi-trash"></i></button>
+												</div>
+											</td>
+											<td>{{ competence.description|raw }}</td>
+										</div>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-md-9 mx-auto">
+                            <div class="container my-5">
+                                <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                <h1 class="text-body-emphasis">Aucune</h1>
+                                <p class="">
+                                    <i class="bi bi-info-circle"></i> Le candidat n'a encore renseigné aucune commpétences.
+                                </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+					</div>
+				</div>
+			</div>

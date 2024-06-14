@@ -5,6 +5,7 @@ use DateTime;
 use DateInterval;
 use App\Entity\User; 
 use App\Manager\IdentityManager;
+use App\Entity\Referrer\Referral;
 use App\Service\User\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,9 +33,8 @@ class GoogleAuthenticator extends OAuth2Authenticator
         private ClientRegistry $clientRegistry, 
         private EntityManagerInterface $em, 
         private RouterInterface $router,
-        // private IdentityManager $identityManager,
         private TokenGeneratorInterface $tokenGeneratorInterface,
-        // private MailerMailerService $mailerService,
+        private UrlGeneratorInterface $urlGenerator, 
         private UserPostAuthenticationService $userPostAuthenticationService,
         private RequestStack $requestStack,
     )
@@ -69,6 +69,11 @@ class GoogleAuthenticator extends OAuth2Authenticator
                     $existingUser->setEmail($email);
                     $existingUser->setDateInscription(new DateTime());
                     // $existingUser->setTokenRegistration($tokenRegistration);
+                    /** Check if from referrer */
+                    $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $existingUser->getEmail()]);
+                    if($refered instanceof Referral){
+                        $refered->setStep(2);
+                    }
                 }
 
                 $this->userPostAuthenticationService->updateLastLoginDate($existingUser);
@@ -112,9 +117,12 @@ class GoogleAuthenticator extends OAuth2Authenticator
         TokenInterface $token, 
         $providerKey) : Response
     {
-        $targetUrl = $this->router->generate('app_connect');
+        $this->userPostAuthenticationService->updateLastLoginDate($token->getUser());
+        if ($targetPath = $this->requestStack->getSession()->get('_security.'.$providerKey.'.target_path')) {
+            return new RedirectResponse($targetPath);
+        }
 
-        return new RedirectResponse($targetUrl);
+        return new RedirectResponse($this->urlGenerator->generate('app_connect'));
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response

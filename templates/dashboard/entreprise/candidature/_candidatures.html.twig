@@ -5,44 +5,88 @@
     {{ knp_pagination_render(applications, 'parts/_pagination.html.twig') }}
     </div>
     <div class="card shadow p-2">
+		<div class="d-none d-sm-block">
             <table class="table">
-            <thead>
-                <tr>
-                    <th>Titre de l'annonce</th>
-                    <th>Candidat</th>
-                    <th>Status</th>
-                    {# <th>Salaire</th> #}
-                    <th>Crée le</th>
-                    <th>Voir le profil</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for application in applications %}
-                <tr>
-                    <td>{{ application.annonce.titre }}</td>
-                    <td>{{ application.candidat.candidat.nom }}</td>
-                    <td>
-                        <div class="annonce {{ 'status-' ~ application.status|lower }}">                                    
-                            <span>{{ (application.status|candidature_status_Label) }}</span>
-                            <!-- Autres détails de l'annonce -->
-                        </div>
-                    </td>
-                    {# <td>{{ application.pretentionSalariale }}</td> #}
-                    <td>{{ application.dateCandidature|date('d M Y') }}</td>
-                    <td>
-                        <div class="d-flex">
-                            <a class="btn btn-sm btn-warning rounded-pill custom-tooltip" data-tooltip="Voir un aperçu du profil du candidat {{ application.candidat.candidat.nom }}" href="{{ path('app_dashboard_entreprise_view_candidature', {'id': application.id}) }}">
-                                <i class="bi bi-eye"></i>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Titre de l'annonce</th>
+                        <th colspan="2" class="text-center">Candidatures</th>
+                        <th rowspan="2" class="text-center d-none d-md-table-cell">Vues</th>
+                        <th rowspan="2" class="text-center d-none d-md-table-cell">Crée le</th>
+                    </tr>
+                    <tr>
+                        <th class="text-center">OLONA</th>
+                        <th class="text-center">Spontanées</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if applications|length > 0 %}
+                        {% for application in applications %}
+                            <tr class="small">
+                                <td class="align-middle">
+                                    <a href="{{ path('app_dashboard_moderateur_candidature_annonce_view', {'id': application.annonce.id})}}" class="text-dark">
+                                        {{ application.annonce.titre }}
+                                    </a>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <a href="{{ path('app_dashboard_moderateur_candidature_annonce_view_suggest', {'id': application.annonce.id})}}" class="sy">
+                                        <span class="badge text-bg-warning">{{ application.suggestions|length }}</span>
+                                        {% if application.suggestions|length > 0 %}
+                                        <br><span class="badge text-bg-danger">Forfait min {{ application.forfait_min }} €</span>
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <a href="{{ path('app_dashboard_moderateur_candidature_annonce_view_default', {'id': application.annonce.id})}}" class="sy">
+                                        <span class="badge text-bg-warning">{{ application.candidatures|length }}</span>
+                                    </a>
+                                </td>
+                                <td class="text-center align-middle d-none d-md-table-cell">{{ application.annonce.annonceVues|length }} fois</td>
+                                <td class="text-center align-middle d-none d-md-table-cell">{{ application.annonce.dateCreation|date('d M Y') }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5">Aucune candidature créé pour le moment</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+		<div class="d-block d-sm-none">
+            {% if applications|length > 0 %}
+                {% for application in applications %}
+                    <div class="small">
+                        <div class="align-middle">
+                            <span class="text-strong">Annonce</span> : 
+                            <a href="{{ path('app_dashboard_moderateur_candidature_annonce_view', {'id': application.annonce.id})}}" class="text-dark">
+                                {{ application.annonce.titre }}
                             </a>
                         </div>
-                    </td>
-
-                </tr>
+                        <div class="align-middle">
+                            <span class="text-strong">Proposé par OLONA</span> : 
+                            <a href="{{ path('app_dashboard_moderateur_candidature_annonce_view_suggest', {'id': application.annonce.id})}}" class="sy">
+                                <span class="badge text-bg-warning">{{ application.suggestions|length }}</span>
+                                {% if application.suggestions|length > 0 %} 
+                                <span class="badge text-bg-danger">Forfait min {{ application.forfait_min }} €</span>
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="align-middle">
+                            <span class="text-strong">Candidature Spontanées</span> : 
+                            <a href="{{ path('app_dashboard_moderateur_candidature_annonce_view_default', {'id': application.annonce.id})}}" class="sy">
+                                <span class="badge text-bg-warning">{{ application.candidatures|length }}</span>
+                            </a>
+                        </div>
+                        <div class="align-middle d-none d-md-table-cell">{{ application.annonce.annonceVues|length }} fois</div>
+                        <div class="align-middle d-none d-md-table-cell">{{ application.annonce.dateCreation|date('d M Y') }}</div>
+                    </div>
+                    <hr>
+                {% endfor %}
             {% else %}
-                <tr>
-                    <td colspan="7">Aucune candidature créé pour le moment</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                <div>
+                    <div colspan="5">Aucune candidature créé pour le moment</div>
+                </div>
+            {% endif %}
+        </div>
     </div>

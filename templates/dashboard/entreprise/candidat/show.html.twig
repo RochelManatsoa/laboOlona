@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block title %}Chercher un profil{% endblock %}
 
@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <div class="card shadow">
         <div class="card-header bg-primary text-white">
-        <h1 class="h3">Profil candidat : {{ candidat.titre|upper }}</h1>
+        <h1 class="h3 mt-3 text-center"> Candidat - {{generatePseudo(candidat)}} </h1>
         </div>
         <div class="card-body">
             <div class="row mb-4">
@@ -14,15 +14,13 @@
                     <div class="rounded-circle profile-img bg-image-candidat-view" style="background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
                 </div>
                 <div class="col-md-8">
-                    <h2 class="card-title">Informations Générales</h2>
+                    <h2 class="card-title h3">Informations Générales</h2>
                     <p><strong>Date d'inscription :</strong> <span class="text-muted">{{ candidat.createdAt|date('d/m/Y') }}</span></p>
-                    <p><strong>Dernière mise à jour du profil :</strong> <span class="text-muted">{{ candidat.updatedAt|date('d/m/Y') }}</span></p>
+                    <p><strong>Dernière connexion :</strong> <span class="text-muted">{{ candidat.candidat.lastLogin|time_ago }}</span></p>
                     <p><strong>Localisation :</strong> <span class="text-muted">{{ countryName }}</span></p>
                     <p><strong>Âge :</strong> <span class="text-muted">{{ age }}</span></p>
                     <p><strong>Titre professionnel :</strong> <span class="text-muted">{{ candidat.titre }}</span></p>
-                    <p></p>
-                    <p><strong>Statut :</strong> <span class="badge bg-success">{{ candidat.status }}</span></p>
-                    <p><strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-success' : 'bg-danger' }}">{{ candidat.isValid ? 'Oui' : 'Non' }}</span></p>
+                    <p><strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-dark' : 'bg-danger' }}">{{ candidat.isValid ? 'Non' : 'Oui' }}</span></p>
                     <p><strong>Diponibilité :</strong> 
                         <span class="text-dark">
                             {% if candidat.availability is not null %}
@@ -31,7 +29,35 @@
                                 <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
                             {% endif %} 
                         </span>
+                    </p><!-- Button trigger modal -->
+                    {% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+                    <p>
+                      <strong>Coût total sur base mensuel :</strong>
+                      <span class="mx-4 text-muted">{{ candidat.tarifCandidat.simulation.salaireNet }} {{ candidat.tarifCandidat.simulation.devise.symbole }} </span>
+                      <span class="small">
+                        <a href="{{ path('app_dashboard_entreprise_simulation_candidat', {'id' : candidat.id })}}" class="">
+                          <i class="bi bi-box-arrow-up-right"></i> Détails
+                        </a>
+                      </span>
                     </p>
+                    {% endif %}
+                    {% if candidat.editedCvs|length > 0 and (entreprise.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_VALID')) or entreprise.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_PREMIUM') )) %}
+                        <button type="button" class="btn btn-outline-primary rounded-pill px-4 px-sm-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+                        </button>
+                    {% endif %}
+                    <a href="{{ path('app_dashboard_entreprise_contact_profile', {'id':candidat.id})}}" class="btn btn-outline-primary rounded-pill my-3 px-4 px-sm-5">
+                      <i class="bi bi-send "></i> Plus d'informations
+                    </a>
+                    {% if favori %}
+                    <button data-id="{{ candidat.id }}" class="btn btn-outline-success rounded-pill px-4 px-sm-5 remove-from-favorites">
+                    <i class="bi bi-star text-warning"></i> Effacer des favoris
+                    </button>
+                    {% else %}
+                    <button data-id="{{ candidat.id }}" class="btn btn-success rounded-pill px-4 px-sm-5 add-to-favorites">
+                    <i class="bi bi-star-fill text-warning"></i> Ajouter comme favoris
+                    </button>
+                    {% endif %}
                 </div>
             </div>
             <p><strong>Résumé :</strong> <span class="text-muted">{{ candidat.resume|raw }}</span></p>
@@ -73,6 +99,67 @@
 
         </div>
     </div>
-    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+    <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 </div>
+
+{% if candidat.editedCvs|length > 0 %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <iframe class="embed-responsive-item w-100" style="height: 600px;" src="{{ asset('uploads/cv/olona/' ~ candidat.cvs[0].edited.cvLink) }}" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  // Gestionnaire pour l'ajout
+  $(document).on('click', '.add-to-favorites', function(e) {
+    e.preventDefault();
+    var candidatId = $(this).data('id');
+    var button = $(this); 
+    var url = `/favori/ajouter/${candidatId}`;
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      success: function(response) {
+        console.log(response);
+        button.html('<i class="bi bi-star text-warning"></i> Effacer des favoris');
+        button.removeClass('add-to-favorites btn-success').addClass('remove-from-favorites btn-outline-success');
+        // Mettre à jour les attributs/data si nécessaire
+      },
+      error: function(xhr, status, error) {
+        alert('Erreur lors de l\'ajout aux favoris');
+      }
+    });
+  });
+
+  // Gestionnaire pour la suppression
+  $(document).on('click', '.remove-from-favorites', function(e) {
+    e.preventDefault();
+    var candidatId = $(this).data('id');
+    var button = $(this); 
+    var url = `/favori/supprimer/${candidatId}`;
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      success: function(response) {
+        console.log(response);
+        button.html('<i class="bi bi-star-fill text-warning"></i> Ajouter comme favoris');
+        button.removeClass('remove-from-favorites btn-outline-success').addClass('add-to-favorites btn-success');
+        // Mettre à jour les attributs/data si nécessaire
+      },
+      error: function(xhr, status, error) {
+        alert('Erreur lors de la suppression des favoris');
+      }
+    });
+  });
+});
+</script>
 {% endblock %}

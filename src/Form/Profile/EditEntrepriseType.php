@@ -4,6 +4,7 @@ namespace App\Form\Profile;
 
 use App\Entity\Secteur;
 use App\Form\ContactType;
+use App\Entity\Finance\Devise;
 use App\Entity\EntrepriseProfile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,9 +20,13 @@ class EditEntrepriseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('nom', TextType::class, [
-            'label' => 'Raison sociale'
-        ])
+            ->add('devise', EntityType::class, [
+                'class' => Devise::class,
+                'label' => 'Séléctionner votre devise'
+            ])
+            ->add('nom', TextType::class, [
+                'label' => 'Raison sociale'
+            ])
             ->add('taille', ChoiceType::class, [
                 'choices' => EntrepriseProfile::CHOICE_SIZE,
             ])

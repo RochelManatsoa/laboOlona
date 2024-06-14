@@ -1,6 +1,6 @@
 <nav id="navbar-none" class="navbar navbar-expand-lg bg-black border-bottom" data-bs-theme="dark">
   <div class="container">
-  <a class="navbar-brand" href="{{path('app_home')}}">
+  <a class="navbar-brand" href="https://www.olona-talents.com/">
     <img src="{{ asset('images/logo-olona-talents.jpg')}}" alt="Olona Talents" width="122" height="50">
   </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,6 +11,15 @@
       {{ title }}
       </div>
       {% if app.user %}
+        {% if countUnReadNotification(app.user) > 0 %}
+          <a href="{{ path('app_dashboard_notification', {'isRead':'0'}) }}" class="btn btn-dark position-relative mx-3">
+            <i class="bi bi-bell-fill"></i>
+            <span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
+              {{ component('count_notification_component')}}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </a>
+        {% endif %}
       <div class="mx-3">
         <span class="small text-white">{{ app.user.email }}</span><br>
           {% if app.user.type == 'CANDIDAT' %}
@@ -27,27 +36,47 @@
           </button>
 
           <ul class="dropdown-menu dropdown-menu-end">
-            {% if app.user.type == 'CANDIDAT' %}
+            {% if app.user.type == 'CANDIDAT' or is_granted('ROLE_CANDIDAT') %}
               <li>
                 <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#candidatAvaillability">Disponibilité</button>
               </li>
             {% endif %}
             <li>
               {% if app.user.type == 'MODERATEUR' %}
-              <a class="dropdown-item" href="{{ path('app_connect') }}">
+              <a class="dropdown-item" href="{{ path('app_connect') }}">Tableau de bord
               {% elseif app.user.type == 'ENTREPRISE' %}
-              <a class="dropdown-item" href="{{ path('app_dashboard_entreprise_profil') }}">
+              <a class="dropdown-item" href="{{ path('app_dashboard_entreprise_profil') }}">Mon compte
+              {% elseif app.user.type == 'EMPLOYE' %}
+              {% if is_granted('ROLE_CANDIDAT') %}
+              <a class="dropdown-item" href="{{ path('app_dashboard_candidat_compte') }}">Mon compte
               {% else %}
-              <a class="dropdown-item" href="{{ path('app_dashboard_candidat_compte') }}">
+              <a class="dropdown-item" href="{{ path('app_dashboard_employes_infos') }}">Mon compte
               {% endif %}
-                Mon compte
+              {% else %}
+              <a class="dropdown-item" href="{{ path('app_dashboard_candidat_compte') }}">Mon compte
+              {% endif %}
+                
               </a>
             </li>
+            {% if 'ROLE_FINANCE' in app.user.roles %}
+              <li>
+                <a class="dropdown-item" href="{{ path('app_finance_employe') }}">
+                  Finance
+                </a>
+              </li>
+            {% endif %}
             <li>
               <a class="dropdown-item" href="{{ path('app_logout') }}">
                 {{ 'app_logout.menu'|trans }}
               </a>
             </li>
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+              <li class="bg-info text-dark">
+                <a class="dropdown-item" href="{{ path('admin') }}">
+                  Administration
+                </a>
+              </li>
+            {% endif %}
           </ul>
         </div>
       {% else %}

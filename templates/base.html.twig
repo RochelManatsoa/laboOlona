@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Olona Talents{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <link rel="icon" href="{{ asset('images/favicon.ico')}}">
         <meta name="description" content="{{ meta_description() }}">
         <meta name="keywords" content="{{ meta_keywords()}}">
         <meta property="og:title" content="{{ meta_title()}}">
@@ -13,6 +13,30 @@
         <meta property="og:image" content="{% block og_image %}{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}{% endblock %}">
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <script>
+            // Define dataLayer and the gtag function.
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+
+            // Set default consent to 'denied' as a placeholder
+            // Determine actual values based on your own requirements
+            gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
+                'analytics_storage': 'granted'
+            });
+        </script>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10865325730"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+
+            gtag('js', new Date());
+            gtag('config', 'AW-10865325730');
+        </script>
+
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
@@ -22,17 +46,95 @@
         {% endblock %}
 
         {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+            {{ encore_entry_script_tags('app') }}         
+	        <script src="{{asset('assets/errorLogger.js')}}"></script>
         {% endblock %}
+        <style>
+            .cookie-consent {
+                position: fixed;
+                color: #ffffff;
+                background-color: #000000;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000; /* High z-index to stay on top */
+            }
+        </style>
     </head>
     <body style="background:black;" class="container-fluid">
-        {% block header %} {% include "parts/_navbar.html.twig" %} {% endblock %}
-        <div class="bg-black text-white mt-auto mb-auto">
+        {% set current_route = app.request.attributes.get('_route') %}
+        {% if app.user %}
+        {% include "parts/_nav_user.html.twig" %}
+        {% else %}
+        {% include "parts/_nav_default.html.twig" %}
+        {% endif %}
+        <div class="bg-black text-white mt-auto mb-auto pt-5">
             {% block fluid %}<div class="container">{% endblock %}            
                 {% block body %}{% endblock %}
             </div>
         </div>
+        <div class="cookie-consent" style="display:none;">
+            <div class="mb-0" role="alert">
+                <div class="container">
+                    <div class="row p-4">
+                        <div class="col-12 col-sm-8">
+                            <h3 class="">Cookies et confidentialité</h3>
+                            <p class="mb-2">Ce site utilise des cookies pour améliorer l'expérience utilisateur. <a href="{{path('app_home_privacy')}}" target=_blank >En savoir plus</a>.</p>
+                        </div>
+                        <div class="col-12 col-sm-4 text-center d-flex align-items-center justify-content-center">
+                            <button onclick="consentGrantedAdStorage()" class="btn btn-primary rounded-pill px-5">Accepter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% block footer %} {% include "parts/_footer.html.twig" %} {% endblock %}
        
+        <script>
+            // Fonction pour vérifier le consentement et l'expiration
+            function checkCookieConsent() {
+                let consentInfo = localStorage.getItem('cookieConsent');
+                if (consentInfo) {
+                    consentInfo = JSON.parse(consentInfo);
+                    const expirationDate = new Date(consentInfo.expiryDate);
+                    const now = new Date();
+                    if (now > expirationDate) {
+                        localStorage.removeItem('cookieConsent'); // Expire le consentement
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            window.onload = function() {
+
+                if (!checkCookieConsent()) {
+                    // Affiche le bandeau si le consentement n'est pas valide ou absent
+                    document.querySelector('.cookie-consent').style.display = 'block';
+                }
+            }
+
+            function consentGrantedAdStorage() {
+                gtag('consent', 'update', {
+                    'ad_storage': 'granted',
+                    'ad_user_data': 'granted',
+                    'ad_personalization': 'granted',
+                    'analytics_storage': 'granted'
+                });
+
+                const now = new Date();
+                const expiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 30); // Expiration après 30 jours
+
+                // Enregistrer le consentement avec la date d'expiration
+                localStorage.setItem('cookieConsent', JSON.stringify({
+                    status: 'granted',
+                    expiryDate: expiryDate.toISOString()
+                }));
+
+                document.querySelector('.cookie-consent').style.display = 'none';
+            }
+        </script>
+
     </body>
 </html>

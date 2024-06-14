@@ -1,0 +1,12 @@
+{{ form_start(form, {'attr': {'class': 'form-inline'}}) }}
+    <div class="input-group mb-3">
+        {{ form_widget(form.q, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(form.salaires, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+        <div style="display:none;">
+            {{ form_widget(form) }}
+        </div>
+        <button class="btn btn-dark" type="submit"><i class="mx-2 h5 bi bi-search"></i></button>
+    </div>
+{{ form_end(form) }}

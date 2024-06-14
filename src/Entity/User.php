@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Enum\TypeUser;
+use App\Entity\Finance\Employe;
 use App\Entity\Vues\VideoVues;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,32 +12,57 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte avec cette adresse e-mail.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     const ACCOUNT_CANDIDAT = 'CANDIDAT';
     const ACCOUNT_ENTREPRISE = 'ENTREPRISE';
     const ACCOUNT_MODERATEUR = 'MODERATEUR';
+    const ACCOUNT_REFERRER = 'REFERRER';
+    const ACCOUNT_EMPLOYE = 'EMPLOYE';
    
     public static function getChoices() {
         return [
             'Candidat' => self::ACCOUNT_CANDIDAT ,
             'Entreprise' => self::ACCOUNT_ENTREPRISE ,
+            'Coopteur' => self::ACCOUNT_REFERRER ,
+            'Employé' => self::ACCOUNT_EMPLOYE ,
+        ];
+    }
+   
+    public static function getInverseChoices() {
+        return [
+             self::ACCOUNT_CANDIDAT => 'Candidat',
+             self::ACCOUNT_ENTREPRISE => 'Entreprise',
+             self::ACCOUNT_REFERRER => 'Coopteur',
+             self::ACCOUNT_EMPLOYE => 'Employé',
+        ];
+    }
+   
+    public static function getTypeAccount() {
+        return [
+            'Candidat' => self::ACCOUNT_CANDIDAT ,
+            'Entreprise' => self::ACCOUNT_ENTREPRISE ,
+            'Coopteur' => self::ACCOUNT_REFERRER ,
         ];
     }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['user'])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['user'])]
     private array $roles = [];
 
     /**
@@ -47,27 +72,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups(['user'])]
     private $isVerified = false;
 
     #[ORM\OneToOne(mappedBy: 'candidat', cascade: ['persist', 'remove'])]
     private ?CandidateProfile $candidateProfile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user'])]
     private ?string $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user'])]
     private ?string $prenom = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['user'])]
     private ?\DateTimeInterface $dateInscription = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dernierLogin = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user'])]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -85,7 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'destinataire', targetEntity: Notification::class, orphanRemoval: true)]
     private Collection $recus;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: SearchHistory::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: SearchHistory::class, cascade: ['remove'])]
     private Collection $searchHistories;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -94,11 +125,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $googleId = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: VideoVues::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: VideoVues::class, cascade: ['remove'])]
     private Collection $videoVues;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastLogin = null;
+
+    #[ORM\OneToOne(mappedBy: 'referrer', cascade: ['persist', 'remove'])]
+    private ?ReferrerProfile $referrerProfile = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Employe $employe = null;
 
     public function __construct()
     {
@@ -106,6 +143,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->recus = new ArrayCollection();
         $this->searchHistories = new ArrayCollection();
         $this->videoVues = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->getFullName();
+    }
+
+    public function getFullName()
+    {
+        return $this->getNom().' '.$this->getPrenom();
     }
 
     public function getId(): ?int
@@ -497,6 +544,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastLogin(?\DateTimeInterface $lastLogin): static
     {
         $this->lastLogin = $lastLogin;
+
+        return $this;
+    }
+
+    public function getReferrerProfile(): ?ReferrerProfile
+    {
+        return $this->referrerProfile;
+    }
+
+    public function setReferrerProfile(?ReferrerProfile $referrerProfile): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($referrerProfile === null && $this->referrerProfile !== null) {
+            $this->referrerProfile->setReferrer(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($referrerProfile !== null && $referrerProfile->getReferrer() !== $this) {
+            $referrerProfile->setReferrer($this);
+        }
+
+        $this->referrerProfile = $referrerProfile;
+
+        return $this;
+    }
+
+    public function getEmploye(): ?Employe
+    {
+        return $this->employe;
+    }
+
+    public function setEmploye(?Employe $employe): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($employe === null && $this->employe !== null) {
+            $this->employe->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($employe !== null && $employe->getUser() !== $this) {
+            $employe->setUser($this);
+        }
+
+        $this->employe = $employe;
 
         return $this;
     }

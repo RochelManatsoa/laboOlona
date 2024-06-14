@@ -1,0 +1,82 @@
+{% extends 'dashboard/base_new.html.twig' %}
+
+{% block title %}Mes contrats{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="annonce-list p-2">
+			<div class="annonce-item shadow p-2 p-sm-5 m-1 m-sm-4">
+				<h1 class="h2">Mes contrats</h1>
+				<hr>
+
+				{% if contrats|length > 0 %}
+					<div class="container d-none d-sm-block">
+						<div class="row text-strong">
+							<div class="col-3">Salaire Net</div>
+							<div class="col-4 text-center">Statut</div>
+							<div class="col-3 text-center">Date</div>
+							<div class="col-2 text-center"></div>
+						</div>
+						<hr>
+						{% for item in contrats %}
+							<div class="row text-muted">
+								<div class="col-3 small">
+									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.simulateur.id })}}" class="">
+										{{ item.simulateur.salaireNet}}
+										{{ item.simulateur.devise.symbole}}
+									</a>
+								</div>
+								<div class="col-4 text-center">
+									{{ item|contratStatusBadge|raw }}
+								</div>
+								<div class="col-3 small text-center">
+									{{ item.simulateur.createdAt|date('d/m/Y') }}
+								</div>
+								<div class="col-2 small text-center">
+									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.simulateur.id })}}" class="btn btn-sm btn-info">
+										<i class="bi bi-eye"></i>
+									</a>
+								</div>
+							</div>
+							<hr>
+						{% endfor %}
+						<!-- Plus de lignes et colonnes ici -->
+					</div>
+					<div class="container d-block d-sm-none">
+						{% for item in contrats %}
+							<div class="row text-muted">
+								<div class="col-12 ">
+										<span class="text-strong">Salaire Net</span> : {{ item.simulateur.salaireNet}}
+										{{ item.simulateur.devise.symbole}}
+								</div>
+								<div class="col-12">
+									<span class="text-strong">Statut</span> : {{ item|contratStatusBadge|raw }}
+								</div>
+								<div class="col-12 ">
+									<span class="text-strong">Créé le</span> : {{ item.simulateur.createdAt|date('d/m/Y') }}
+								</div>
+								<div class="col-12 ">
+									<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.simulateur.id })}}" class="btn btn-sm btn-info">
+										<i class="bi bi-eye"></i>
+									</a>
+								</div>
+							</div>
+							<hr>
+						{% endfor %}
+						<!-- Plus de lignes et colonnes ici -->
+					</div>
+				{% else %}
+					<div class="container p-5 mx-auto text-center h5">
+						Aucuns contrat effectuées jusqu'à présent
+						<br>
+					</div>
+				{% endif %}
+
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block inner_footer %}
+	{% include "dashboard/_inner_footer.html.twig" %}
+{% endblock %}

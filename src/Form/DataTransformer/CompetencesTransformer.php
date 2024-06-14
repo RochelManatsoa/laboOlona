@@ -23,7 +23,6 @@ class CompetencesTransformer implements DataTransformerInterface
 
     public function transform($competences)
     {
-        // dd(count($competences));
         if (null === $competences) {
             return '';
         }
@@ -73,7 +72,6 @@ class CompetencesTransformer implements DataTransformerInterface
                 $competencesCollection->add($competence);
             }
         }
-        dump($competencesCollection);
 
         return $competencesCollection;
     }

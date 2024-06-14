@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réinitialiser votre mot de passe{% endblock %}
+
+{% block body %}
+<section id="contact" class="my-5" style="background-color: black;">
+    <div class="container my-5 d-flex flex-column justify-content-center">
+        <div class="row my-4">
+            <div class="col d-flex flex-column justify-content-center">
+                {% for flash_error in app.flashes('reset_password_error') %}
+                    <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                {% endfor %}
+                <h1 class="text-white text-center display-5">Bienvenue sur Olona Talents</h1>
+
+                <p class="text-center col-md-6 mx-auto my-4">Vous êtes à un pas de rejoindre notre communauté exclusive. Veuillez entrer le mot de passe pour accéder à votre compte.</p>
+
+                {{ form_start(form, {'attr': {'class': 'col-md-6 mx-auto'}}) }}
+                    {{ form_row(form.plainPassword) }}
+
+                    <button class="btn btn-primary my-3">Accéder à mon compte</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

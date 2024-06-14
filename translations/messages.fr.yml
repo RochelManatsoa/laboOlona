@@ -1,33 +1,33 @@
 menu:
     legal: "Mentions légales"
 status:
-    DRAFT: L'annonce a été créée mais n'est pas encore visible par le public.
-    PUBLISHED: L'annonce est actuellement active et visible par le public.
-    PENDING: L'annonce est soumise pour examen ou approbation par un modérateur/administrateur.
-    REJECTED: L'annonce a été examinée et n'a pas été approuvée pour la publication.
-    EXPIRED: La durée de vie de l'annonce est terminée. Elle n'est plus active ni visible par le public.
-    ARCHIVED: L'annonce n'est plus active, mais est conservée à des fins d'enregistrement ou d'historique.
-    UNPUBLISHED: L'annonce a été manuellement désactivée et n'est pas visible par le public, mais peut être réactivée plus tard.
-    DELETED: L'annonce a été supprimée
-    FEATURED: L'annonce est mise en évidence ou priorisée par rapport à d'autres annonces.
-    RESERVED: L'annonce a été "réservée" ou "retenue" par un utilisateur ou un acheteur potentiel.
+    DRAFT: Préparez votre annonce à la perfection; elle reste privée jusqu'à ce que vous soyez prêt à briller.
+    PUBLISHED: Votre annonce est en ligne ! Elle attire désormais l'attention du monde entier.
+    PENDING: Votre annonce est en cours de révision. Patience, le succès est à portée de main !
+    REJECTED: Votre annonce nécessite quelques ajustements. Saisissez l'opportunité de la perfectionner.
+    EXPIRED: Le temps imparti est écoulé, mais chaque fin est un nouveau départ. Renouvelez ou actualisez votre annonce !
+    ARCHIVED: Votre annonce a fait son temps mais reste gravée dans nos archives pour référence future.
+    UNPUBLISHED: Vous avez mis votre annonce en pause. Réactivez-la à tout moment pour retrouver les projecteurs.
+    DELETED: Vous avez choisi de retirer votre annonce. L'innovation commence souvent par un espace vierge.
+    FEATURED: Votre annonce brille sous les projecteurs, captant l'attention et suscitant l'intérêt.
+    RESERVED: Votre annonce a capté l'intérêt ! Elle est maintenant en attente d'une décision finale de la part d'un acheteur potentiel.
 
 
 app_home:
-    title: "Top 1 Plateforme d'Emploi et Freelance Francophone & Malagache"
+    title: "Plateforme N°1 d'Emploi et Freelance Francophone & Malgache"
     menu: "Accueil"
-    description: "Trouvez des projets, postulez à des offres d'emploi et collaborez avec les meilleurs professionnels de Madagascar et francophones. Rejoignez-nous dès maintenant."
-    keywords: "freelance, projet, offre"
+    description: "Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent."
+    keywords: "freelance, projet, offre, portage salarial, cooptation, recrutement"
     section: 
         hero:
             h1: DÉCOUVREZ
-            h2: LES PROFESSIONNELS 
+            h2: LES TALENTS 
             h3: DE MADAGASCAR, D'AFRIQUE ET DE L'OCEAN INDIEN.
-            p: Collaborez avec des experts, explorez des opportunités inégalées et propulsez votre carrière vers de nouveaux sommets
+            p: Forgez des partenariats enrichissants et élevez votre business à des niveaux jamais atteints auparavant.
         postings:
-            h2: LES DERNIÈRES OFFRES D'EMPLOIS
-            h3: PROFESSIONNEL FRANCOPHONE ET MALGACHE.
-            p: Collaborez avec des experts, explorez des opportunités inégalées et propulsez votre carrière vers de nouveaux sommets.
+            h2: Explorez les dernières Offres d'Emploi
+            h3: LES OFFRES D'EMPLOI ACTUELLES pour professionnels francophones et malgaches.
+            p: Saisissez des opportunités uniques pour collaborer avec des experts et stimuler votre croissance professionnelle.
         about:
             h2: "COMMENT ÇA MARCHE (HOW IT WORKS) :"
             step: Étape
@@ -51,6 +51,9 @@ app_home:
             h2: NOS DERNIERS CANDIDATS
             p1: Êtes-vous un professionnel créatif cherchant à mettre en avant vos talents dans un environnement inspirant ? Ne cherchez pas plus loin que Studio Agatho, une agence qui conçoit le futur.
             p2: Rejoignez notre équipe et libérez votre art dans un lieu de travail collaboratif et dynamique.
+        simulator :
+            h2 : Être à son propre compte avec tous les avantages d’un salarié !
+            p1 : Calculez votre revenu à rejoignez dès maintenant notre service de Portage Salarial
         contact:
             h2: PRÊT À TRANSFORMER VOTRE CARRIÈRE OU VOTRE ENTREPRISE ?
             p1: Êtes-vous un professionnel créatif cherchant à mettre en avant vos talents dans un environnement inspirant ? Ne cherchez pas plus loin que Studio Agatho, une agence qui conçoit le futur.
@@ -81,7 +84,7 @@ app_home:
             li7: "Prestataire de services désigne toute personne physique ou morale qui traite les données pour le compte de la Société. Il fait référence à des sociétés tierces ou à des personnes employées par la Société pour faciliter le Service, pour fournir le Service au nom de la Société, pour effectuer des services liés au Service ou pour aider la Société à analyser la manière dont le Service est utilisé."
             li8: "<strong>Service de médias sociaux tiers</strong> désigne tout site Web ou tout site Web de réseau social par lequel un utilisateur peut se connecter ou créer un compte pour utiliser le service ."
             li9: "<strong>Données d'utilisation</strong> fait référence aux données collectées automatiquement, soit générées par l'utilisation du Service, soit à partir de l'infrastructure du Service elle-même (par exemple, la durée d'un visite de la page)"
-            li10: "<strong>Site Web</strong> fait référence à OLONA TALENTS, accessible depuis <a href=\"%home_url%\">https://olona-talents.com/</a>"
+            li10: "<strong>Site Web</strong> fait référence à OLONA TALENTS, accessible depuis <a href=%home_url%>https://olona-talents.com/</a>"
             li11: "<strong>Vous</strong> désigne la personne accédant ou utilisant le Service, ou la société ou toute autre entité juridique au nom de laquelle cette personne accède ou utilise le Service , selon le cas."
 
         section4:
@@ -366,14 +369,14 @@ app_register:
     menu: Créer mon compte
     title: "Inscription à Olona-talents.com"
     description: "Créez votre compte professionnel et accédez à une plateforme dédiée aux talents francophones et malgaches."
-    already_member: Déjà membre ? <a href=%login_url%>Connectez-vous ici</a>
+    already_member: Déjà membre ? <a style="font-family:'PT Sans',sans-serif;color:#0e6efd!important;" href=%login_url%>Connectez-vous ici</a>
     keywords: "freelance, project, talent"
     email: "Adresse éléctronique"
     first_name: "Nom *"
     last_name: "Prénom(s) *"
     password: "Mot de passe"
     repeat_password: "Repeter le mot de passe"
-    agree_terms: "<small>En vous inscrivant, vous acceptez nos <a href=\"%terms_url%\">Conditions Générales d'Utilisation</a> et notre <a href=\"%privacy_url%\">Politique de Confidentialité</a>.</small>"
+    agree_terms: "<small class='ml-3 pt-sans'>En vous inscrivant, vous acceptez nos <a href=\"%terms_url%\">Conditions Générales d'Utilisation</a> et notre <a href=\"%privacy_url%\">Politique de Confidentialité</a>.</small>"
     continue: "Continuer avec "
 
 app_email_sending:
@@ -517,7 +520,11 @@ app_dashboard_moderateur_secteur:
 
 app_dashboard_moderateur_edit_secteur:
     title: Modération
-    dashboard_title: Modifier un secteurs d'activité
+    dashboard_title: Modifier un secteur d'activité
+
+app_dashboard_moderateur_new_secteur:
+    title: Modération
+    dashboard_title: Ajouter un secteur d'activité
 
 app_dashboard_moderateur_type_contrat:
     title: Modération
@@ -525,7 +532,11 @@ app_dashboard_moderateur_type_contrat:
 
 app_dashboard_moderateur_edit_type_contrat:
     title: Modération
-    dashboard_title: Modifier untype de contrat
+    dashboard_title: Modifier un type de contrat
+
+app_dashboard_moderateur_new_type_contrat:
+    title: Modération
+    dashboard_title: Ajouter un type de contrat
 
 app_dashboard_moderateur_annonces:
     title: Modération
@@ -547,6 +558,10 @@ app_dashboard_moderateur_entreprises:
     title: Modération
     dashboard_title: Entreprises
 
+app_dashboard_moderateur_profile_entreprise:
+    title: Modération
+    dashboard_title: Entreprises
+
 app_dashboard_moderateur_entreprises_annonces:
     title: Modération
     dashboard_title: Annonces entreprises
@@ -555,7 +570,11 @@ app_dashboard_moderateur_candidats:
     title: Modération
     dashboard_title: Candidats
 
-app_dashboard_moderateur_candidat_view:
+app_dashboard_moderateur_profile_candidat:
+    title: Modération
+    dashboard_title: Candidats
+
+app_dashboard_moderateur_profile_candidat_view:
     title: Modération
     dashboard_title: Détails du candidat
 
@@ -569,7 +588,7 @@ app_dashboard_moderateur_candidature_view:
 
 app_dashboard_moderateur_mettings:
     title: Modération
-    dashboard_title: Tout les rendez-vous
+    dashboard_title: Tous les rendez-vous
 
 app_dashboard_moderateur_notifications:
     title: Modération
@@ -709,7 +728,7 @@ app_dashboard_candidat:
     curriculum: Assurez-vous que votre CV est clair, concis et à jour. Les employeurs passent en moyenne 6 secondes sur un CV. Faites en sorte que chaque seconde compte.
     olona_formation: Voir nos formations et obtenir votre certification OLONA TALENTS!!
     investigate: Investissez toujours dans votre apprentissage et votre developpement. Les compétences et connaissances supplémentaire peuvent ouvrir des nouvelles portes
-    get_started: Trouvez des offres par mot-clé, titre de mission, entreprise etc.
+    get_started: Trouvez le projet idéal, parcourez par mot-clé, titre ou entreprise.
     logout: "Sortir"
     profile_view: Votre profil a été consulté <strong>%views%</strong> fois cette semaine. Continuez à améliorer pour attirer plus d'employeurs
     history: Vous avez <strong>%demandes%</strong> demande en attente de réponse. Restez à l'écoute et preparez-vous pour vos futurs entretiens!
@@ -841,7 +860,7 @@ app_identity_expert_step_three:
     user: 
         firstName: Nom(s)
     title: Vos réseaux professionnels*
-    message: (*) Chez OLONA TALENTS, nous accordons une grande importance à la protection de vos données personnelles. Soyez assuré(e) que les informations fournies dans cette section ne seront utilisées que dans le cadre strict de nos services et ne seront ni rendues public, ni partagées avec des tiers sans votre consentement explicite au début de la mise en relation avec vos futurs clients. <br>Pour plus de details sur la manière dont nous partageons et utilisons vos données, veuillez consulter notre <a href=\"%privacy_url%\">Politique de confidentialité.</a>
+    message: (*) Chez OLONA TALENTS, nous accordons une grande importance à la protection de vos données personnelles. Soyez assuré(e) que les informations fournies dans cette section ne seront utilisées que dans le cadre strict de nos services et ne seront ni rendues public, ni partagées avec des tiers sans votre consentement explicite au début de la mise en relation avec vos futurs clients. <br>Pour plus de details sur la manière dont nous partageons et utilisons vos données, veuillez consulter notre <a href=%privacy_url%>Politique de confidentialité.</a>
     keywords: "freelance, project, talent"
     button: Valider mon profil
     cancel: Retour
@@ -949,3 +968,207 @@ app_home_service :
 app_dashboard_entreprise_view_candidature : 
     title : Candidature reçu
     dashboard_title : Candidature reçu
+
+app_dashboard_moderateur_candidat_applications : 
+    title : Candidature envoyés
+    dashboard_title : Candidature envoyés
+
+voir_entreprise : 
+    title : Détails de l'entreprise
+    dashboard_title : Détails de l'entreprise
+
+app_dashboard_moderateur_invitation : 
+    title : Incription par invitation
+    dashboard_title : Incription par invitation
+
+app_dashboard_moderateur_assignation : 
+    title : Assignation profils
+    dashboard_title : Assignation profils
+
+app_dashboard_moderateur_candidature_annonce_view : 
+    title : Candidatures reçus
+    dashboard_title : Candidatures reçus
+
+app_dashboard_moderateur_candidature_annonce_view_suggest : 
+    title : Candidatures suggérées
+    dashboard_title : Candidatures suggérées
+
+app_dashboard_moderateur_candidature_annonce_view_default : 
+    title : Candidatures spontanées
+    dashboard_title : Candidatures spontanées
+
+app_dashboard_notification : 
+    title : Mes notifications
+    dashboard_title : Mes notifications
+
+app_dashboard_notification_view : 
+    title : Mes notifications
+    dashboard_title : Mes notifications
+
+app_dashboard_moderateur_assignation_view : 
+    title : Détails assignation
+    dashboard_title : Détails assignation
+
+app_dashboard_moderateur_assignation_entreprise : 
+    title : Assignations entreprise
+    dashboard_title : Assignations entreprise
+
+rendezvous_entreprise : 
+    title : Rendez-vous entreprise
+    dashboard_title : Rendez-vous entreprise
+
+app_dashboard_moderateur_annonce_assignation_view : 
+    title : Assignation d'une annonce
+    dashboard_title : Assignation d'une annonce
+    
+app_dashboard_moderateur_metting_new : 
+    title : Créer un rendez-vous
+    dashboard_title : Créer un rendez-vous    
+
+app_dashboard_referrer : 
+    title : Tableau de bord Coopteur
+    dashboard_title : Tableau de bord Coopteur
+
+app_dashboard_referrer_annonces : 
+    title : Toutes les annonces
+    dashboard_title : Toutes les annonces
+
+app_dashboard_referrer_annonce_view : 
+    title : Détails de l'annonce
+    dashboard_title : Détails de l'annonce
+
+app_dashboard_referrer_stats : 
+    title : Mes statistiques
+    dashboard_title : Mes statistiques
+
+app_dashboard_referrer_rewards : 
+    title : Mes récompences
+    dashboard_title : Mes récompences
+    
+app_dashboard_referrer_references : 
+    title : Mes références
+    dashboard_title : Mes références
+    
+app_dashboard_referrer_info : 
+    title : Mes infos Coopteur
+    dashboard_title : Mes infos Coopteur
+    
+app_dashboard_referrer_cooptation : 
+    title : Recommander un profil
+    dashboard_title : Recommander un profil
+     
+app_dashboard_referrer_cooptation_references : 
+    title : Références pour une annonce
+    dashboard_title : Références pour une annonce
+     
+app_dashboard_referrer_become : 
+    title : Devenir Coopteur
+    dashboard_title : Devenir Coopteur
+     
+app_dashboard_moderateur_cooptation : 
+    title : Gestion des cooptations
+    dashboard_title : Gestion des cooptations
+     
+app_dashboard_moderateur_cooptation_view : 
+    title : Cooptation
+    dashboard_title : Cooptation
+     
+app_dashboard_moderateur_cooptation_annonce : 
+    title : Cooptation d'une annonce
+    dashboard_title : Cooptation d'une annonce
+     
+app_dashboard_moderateur_cooptation_annonce_referrer : 
+    title : Cooptation d'un référant
+    dashboard_title : Cooptation d'un référant
+     
+app_dashboard_moderateur_coopteur_view : 
+    title : Détails coopteur
+    dashboard_title : Détails coopteur
+
+app_dashboard_employes_simulation_view : 
+    title : Détails simulation
+    dashboard_title : Détails simulation
+
+app_dashboard_moderateur_devise : 
+    title : Gestion de devises
+    dashboard_title : Gestion de devises
+
+app_dashboard_moderateur_new_devise : 
+    title : Ajout de devises
+    dashboard_title : Ajout de devises
+
+app_dashboard_moderateur_edit_devise : 
+    title : Modification de devises
+    dashboard_title : Modification de devises
+
+app_dashboard_employes_simulations : 
+    title : Mes simulations
+    dashboard_title : Mes simulations
+
+app_dashboard_employes_infos : 
+    title : Mes informations
+    dashboard_title : Mes informations
+
+app_dashboard_employes_contrats : 
+    title : Mes contrats
+    dashboard_title : Mes contrats
+
+app_home_simulateur_portage : 
+    title : Simulateur portage salarial
+    dashboard_title : Simulateur portage salarial
+    description: Vous êtes un freelancer résidant à Madagascar et travaillez avec des clients internationaux ? Notre simulateur de portage salarial est conçu spécialement pour vous. 
+    keywords: portage, madagascar, freelance
+
+app_home_simulateur_entreprise : 
+    title : Simulateur de salaire pour entreprise
+    dashboard_title : Simulateur de salaire
+    description: Cet outil pratique vous permettra de calculer facilement le coût total d'embauche en prenant en compte les charges sociales, les taxes et tout autre frais associé, pour vous assurer d'offrir un salaire net attractif tout en maîtrisant vos coûts.
+    keywords: portage, madagascar, entreprise, salaire
+
+app_dashboard_moderateur_portage : 
+    title : Contrats portage salarial
+    dashboard_title : Contrats portage salarial
+
+app_dashboard_moderateur_view_portage : 
+    title : Détails portage salarial
+    dashboard_title : Détails portage salarial
+
+app_dashboard_moderateur_profile_stat : 
+    title : Statistiques
+    dashboard_title : Statistiques
+
+app_dashboard_moderateur_csv_upload : 
+    title : Import CSV
+    dashboard_title : Import CSV
+
+app_dashboard_moderateur_recrutement : 
+    title : Rechercher un profile
+    dashboard_title : Rechercher un profile
+
+app_dashboard_employes_annonces : 
+    title : Toutes les annonces Olona Talents
+    dashboard_title : Toutes les annonces Olona Talents
+
+app_dashboard_employes_annonce_view : 
+    title : Détails annonce
+    dashboard_title : Détails annonce
+
+app_dashboard_conference : 
+    title : Conférence Olona Talents
+    dashboard_title : Conférence Olona Talents
+
+app_dashboard_moderateur_metting_edit : 
+    title : Modifier un rendez-vous
+    dashboard_title : Modifier un rendez-vous
+
+app_dashboard_moderateur_metting_show : 
+    title : Détails d'un rendez-vous
+    dashboard_title : Détails d'un rendez-vous
+
+app_dashboard_candidat_annonce_details : 
+    title : Détails de l'annonce
+    dashboard_title : Détails de l'annonce
+
+app_dashboard_moderateur_simulateur : 
+    title : Simulations salaire
+    dashboard_title : Simulations salaire

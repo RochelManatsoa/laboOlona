@@ -1,0 +1,38 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Devises</h2>
+    <a href="{{ path('app_dashboard_moderateur_new_devise')}}" class="btn btn-warning my-3 rounded-pill px-5">Nouveau</a>
+    {{ form_start(form, {'attr': {'class': 'form-group mb-2 col-6', 'id':'moderateur-devise-search-form'}}) }}
+    <div class="input-group">
+        {{ form_widget(form.devise, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    {{ form_end(form) }}
+    <div id="devises-container">
+        {% include 'dashboard/moderateur/devise/_devises.html.twig' %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    function searchAnnonces() {
+        var formData = $('#moderateur-devise-search-form').serialize();
+
+        $.ajax({
+            url: '{{ path('app_dashboard_moderateur_devise') }}',
+            type: 'GET',
+            data: formData,
+            success: function(data) {
+                $('#devises-container').html(data.content);
+            }
+        });
+    }
+    $('#moderateur-secteur-search-form input, #moderateur-secteur-search-form select').on('keyup change', function() {
+        searchAnnonces();
+    });
+});
+</script>
+{% endblock %}
+

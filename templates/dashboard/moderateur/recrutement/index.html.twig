@@ -1,0 +1,213 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Recrutement{% endblock %}
+
+{% block body %}
+	<div class="container mt-5">
+        {% if candidats|length > 0 %}
+            {{ form_start(form, {'attr': {'class': 'form-inline justify-content-center '}}) }}
+                <div class="input-group mb-3 rounded-pill col-6">
+                    {{ form_widget(form.q, {'attr': {'class': 'form-control', 'placeholder': 'Recherche Olona Talents'}}) }}
+                    <button class="btn btn-primary px-5" type="submit">Chercher</button>
+                </div>
+            {{ form_end(form) }}
+		<div class="row">
+            <!-- Onglets -->
+            <ul class="nav nav-underline">
+                <li class="nav-item">
+                    <a class="nav-link px-3 small active" id="pending-tab" data-bs-toggle="tab" href="#pending">Tous ({{ candidats.getTotalItemCount }})</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 small" id="accepted-tab" data-bs-toggle="tab" href="#accepted">Secteurs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 small" id="refused-tab" data-bs-toggle="tab" href="#refused">Non retenues</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 small" id="archived-tab" data-bs-toggle="tab" href="#archived">Archivées</a>
+                </li>
+            </ul>
+            <hr>
+            <div class="col-8">        
+                <!-- Contenu des onglets -->
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="pending">
+                    {% for item in candidats %}
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <!-- Avatar container -->
+                            <div class="rounded-circle" style="
+                                width: 40px;
+                                height: 40px;
+                                background-image: url('{{ item[0].fileName ? asset('uploads/experts/' ~ item[0].fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+                                background-size: cover;
+                                background-position: center;
+                            ">
+                            </div>
+
+                            <!-- Text content -->
+                            <div class="flex-grow-1 ms-3">
+                                <a href="#" data-id="{{ item[0].id }}" class="candidate-link"><strong class="mb-1">{{ generatePseudo(item[0]) }} </strong></a>
+                                <div class="col-10 mb-1 small">{{ item[0].titre|upper }}</div>
+                            </div>
+                            <!-- Date or any other information -->
+                            <span data-candidate="{{ item[0].id }}" style="display:none">
+                            
+                                <div class="mb-4 mb-2">
+                                    <div class="h-100">
+                                        <div class="card-img-top bg-image-candidat" style="background-image: url('{{vich_uploader_asset(item[0], 'file')}}');" alt="{{ item[0].titre }}">
+                                            <div class="titre-overlay position-absolute w-100">
+                                                <h6 class="card-title m-0 p-2">{{ item[0].titre|upper }}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            {% set prenoms = item[0].candidat.prenom|split(' ') %}
+                                                <p class="card-text">
+                                                    {{ generatePseudo(item[0])}}
+                                                </p>
+                                            <p class="card-text small">
+                                            {% set count = 0 %}
+
+                                            {% for skill in item[0].competences %}
+                                                {% if count < 3 %}
+                                                    <span class="badge bg-info">{{ skill.nom }}</span>
+                                                    {% set count = count + 1 %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if item[0].competences|length > 4 %}
+                                                <span class="badge bg-dark rounded-pill">+{{ item[0].competences|length - 3 }}</span>
+                                            {% endif %}
+
+                                            <br>
+                                                Missions réalisées: <span class="badge bg-success">{{ item[0].applications|filter(app => app.status == 'ACCEPTED')|length }}</span>
+                                            <br>
+                                                Expériences: <span class="badge bg-secondary">{{ item[0].experiences|length }}</span>
+                                            <br>
+                                                Langues: 
+                                                {% for langue in item[0].langages %}
+                                                    {{ isoToEmoji(langue.langue.code) }}
+                                                {% endfor %}
+                                            <br>
+                                                Disponibilité: 
+                                                <span class="text-dark">
+                                                    {% if item[0].availability is not null %}
+                                                        {{ checkAvailability(item[0].candidat)|raw}}
+                                                    {% else %}
+                                                        <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                                                    {% endif %} 
+                                                </span>
+                                            {% if item[0].tarifCandidat is defined and item[0].tarifCandidat is not null %}
+                                                <br>
+                                            <strong><i class="bi bi-tags"></i></strong>
+                                            <span class="text-muted">{{getDefaultTarifCandidat(item[0])}}</span>
+                                            {% endif %}
+                                            <br>
+                                                {% set countSecteurs = 0 %}
+                                                {% for skill in item[0].secteurs %}
+                                                    {% if countSecteurs < 3 %}
+                                                        <span class="badge bg-warning">{{ skill.nom }}</span>
+                                                        {% set countSecteurs = countSecteurs + 1 %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% if item[0].secteurs|length > 4 %}
+                                                <span class="badge bg-dark rounded-pill">+{{ item[0].secteurs|length - 3 }}</span>
+                                            {% endif %}
+                                            </p>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6 mx-auto">
+                                                <a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id': item[0].id}) }}" class="btn btn-info btn-sm rounded-pill px-4"><i class="bi bi-eye"></i> Détails</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </span>
+                        </div>
+                        <div class="">
+                        <strong class="">{{ generatePseudo(item[0]) }} </strong>{{ item[0].titre|upper }}
+                        </div>
+                        <div class="mb-3 small text-muted">
+                        {{ item[0].metaDescription|raw }}
+                        </div>
+                    {% endfor %}
+                    </div>
+            
+                    <div class="tab-pane fade" id="accepted">
+                    </div>
+            
+                    <div class="tab-pane fade" id="refused">
+                    </div>
+            
+                    <div class="tab-pane fade" id="archived">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column flex-shrink-0 p-3 text-white position-sticky top-0">
+                    <div class="card" id="candidate-card-container">
+                        <img src="{{ asset('images/mailing/thumbnail.png')}}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Passez à la Version Premium!</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Boostez vos recrutements</h6>
+                            <p class="card-text">Profitez d'un accès illimité aux contacts candidats, de la mise en avant de vos annonces et bien plus encore.</p>
+                            <a href="#" class="card-link btn btn-primary rounded-pill w-100">Découvrez nos offres</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+        <div class="navigation">
+            {{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
+        </div>
+        {% else %}
+		<div class="row align-items-center">
+            <div class="container justify-content-center align-items-center">
+                <div class="row">
+                    <div class="col-12 col-sm-8 mx-auto">
+                        <div class="text-center mb-4">
+                            <img src="{{ asset('images/logo-olona-talents-black.png')}}" alt="Google Logo" width="272">
+                        </div>
+                        {{ form_start(form, {'attr': {'class': 'form-inline justify-content-center '}}) }}
+                            <div class="input-group mb-3 rounded-pill">
+                                {{ form_widget(form.q, {'attr': {'class': 'form-control', 'placeholder': 'Recherche Olona Talents'}}) }}
+                                <button class="btn btn-primary px-5" type="submit">Chercher</button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+		</div>
+        {% endif %}
+		<div class="row align-items-center">
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+		</div>
+	</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $('.candidate-link').on('click', function (event) {
+            event.preventDefault();
+
+            // Récupérer l'ID du candidat à partir de l'attribut data-id
+            var candidateId = $(this).data('id');
+            console.log(candidateId)
+
+            // Récupérer le contenu du <span> correspondant
+            var candidateContent = $('span[data-candidate="' + candidateId + '"]').html();
+
+            // Injecter le contenu dans le conteneur de la carte
+            $('#candidate-card-container').html(candidateContent);
+        });
+    });
+</script>
+
+{% endblock %}

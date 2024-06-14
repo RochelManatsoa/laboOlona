@@ -7,20 +7,25 @@ use DateInterval;
 use App\Entity\User;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use App\Entity\Posting;
-use App\Entity\Application;
 use App\Entity\Availability;
 use App\Entity\Candidate\CV;
+use App\Entity\Notification;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Moderateur\EditedCv;
 use App\Entity\Entreprise\JobListing;
-use App\Repository\AccountRepository;
 use Twig\Extension\AbstractExtension;
 use App\Entity\Candidate\Applications;
-use App\Entity\Moderateur\EditedCv;
+use App\Entity\Moderateur\Assignation;
+use App\Entity\Candidate\TarifCandidat;
+use App\Entity\Finance\Devise;
+use App\Entity\Moderateur\Forfait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
+use App\Repository\Entreprise\JobListingRepository;
+use App\Repository\Moderateur\AssignationRepository;
+use App\Repository\NotificationRepository;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AppExtension extends AbstractExtension
@@ -30,6 +35,9 @@ class AppExtension extends AbstractExtension
         private TranslatorInterface $translator,
         private Security $security,
         private EntityManagerInterface $em,
+        private AssignationRepository $assignationRepository,
+        private JobListingRepository $jobListingRepository,
+        private NotificationRepository $notificationRepository,
         )
     {
     }
@@ -70,6 +78,17 @@ class AppExtension extends AbstractExtension
             new TwigFunction('checkAvailability', [$this, 'checkAvailability']),
             new TwigFunction('getAge', [$this, 'getAge']),
             new TwigFunction('getPseudo', [$this, 'getPseudo']),
+            new TwigFunction('invitation', [$this, 'invitation']),
+            new TwigFunction('getTarifForfait', [$this, 'getTarifForfait']),
+            new TwigFunction('getTarifCandidat', [$this, 'getTarifCandidat']),
+            new TwigFunction('generatePseudo', [$this, 'generatePseudo']),
+            new TwigFunction('getForfaitAssignation', [$this, 'getForfaitAssignation']),
+            new TwigFunction('getStatusAssignation', [$this, 'getStatusAssignation']),
+            new TwigFunction('getTypeAssignation', [$this, 'getTypeAssignation']),
+            new TwigFunction('getAssignByEntreprise', [$this, 'getAssignByEntreprise']),
+            new TwigFunction('findValidJobListing', [$this, 'findValidJobListing']),
+            new TwigFunction('findPendingJobListing', [$this, 'findPendingJobListing']),
+            new TwigFunction('countUnReadNotification', [$this, 'countUnReadNotification']),
         ];
     }
 
@@ -137,7 +156,7 @@ class AppExtension extends AbstractExtension
             case User::ACCOUNT_ENTREPRISE :
                 return 'ENTREPRISE';
             default:
-                return '<i class="h6 bi mx-2 bi-circle-fill small text-warning"></i>';
+                return 'COOPTEUR';
         }
     }
 
@@ -552,20 +571,21 @@ class AppExtension extends AbstractExtension
         }
     }
 
-    public function safeFileName(string $cvName): string
-    {
-        $safeFileName = "";
-        $safeFileName = $this->em->getRepository(CV::class)->findOneByCvLink($cvName);
-
-        return $safeFileName->getSafeFileName();
-    }
-
     public function getEditedCv(string $cvName)
     {
         $safeFileName = "";
-        $safeFileName = $this->em->getRepository(EditedCv::class)->findOneByCvLink($cvName);
-        if($safeFileName instanceof EditedCv){
-            return $safeFileName;
+        $safeFileName = $this->em->getRepository(EditedCv::class)->findBy(
+            ['cvLink' => $cvName], 
+            ['id' => 'DESC'] 
+        );
+        if (!empty($safeFileName)) { 
+            if (is_array($safeFileName)) { 
+                if (isset($safeFileName[0]) && $safeFileName[0] instanceof EditedCv) {
+                    return $safeFileName[0];
+                }
+            } else {
+                return $safeFileName;
+            }
         }
         return null;
 
@@ -574,7 +594,7 @@ class AppExtension extends AbstractExtension
     public function timeAgo($datetime)
     {
         if (!$datetime instanceof \DateTimeInterface) {
-            return 'Jamais connecté depuis l\'inscription';
+            return 'Jamais connecté';
         }
 
         $now = new \DateTime();
@@ -606,7 +626,7 @@ class AppExtension extends AbstractExtension
 
     public function checkAvailability(User $user): string
     {
-        $status = '<i class="bi bi-exclamation-circle-fill"></i> Disponibilité';
+        $status = '<i class="bi bi-exclamation-circle-fill"></i> Non renseigné';
         if($user->getCandidateProfile() instanceof CandidateProfile){
             $availability = $user->getCandidateProfile()->getAvailability();
             if($availability instanceof Availability){
@@ -632,7 +652,7 @@ class AppExtension extends AbstractExtension
                         break;
                     
                     default:
-                        $status = '<i class="bi bi-exclamation-circle-fill"></i> Disponibilité';
+                        $status = '<i class="bi bi-exclamation-circle-fill"></i> Non renseigné';
                         break;
                 }
             }
@@ -672,4 +692,164 @@ class AppExtension extends AbstractExtension
         return $pseudo;
     }
 
+
+    function invitation(?string $status):string
+    {
+        $badge = '';
+        switch ($status) {
+            case 'USED':
+                $badge = '<span class="badge bg-dark h2">Utilisé</span>';
+                break;
+            
+            default:
+                $badge = '<span class="badge bg-danger h2"><i class="bi bi-hourglass-split"></i> En attente</span>';
+                break;
+        }
+    
+        return $badge;
+    }
+
+    public function generatePseudo(CandidateProfile $candidat)
+    {
+        $letters = 'OT';
+        $paddedId = sprintf('%04d', $candidat->getId());
+
+        return $letters . $paddedId;
+    }
+
+    public function getTarifCandidat(CandidateProfile $candidat)
+    {
+        $tarif = '<i class="bi bi-exclamation-circle-fill"></i> Non renseigné';
+        $tarifCandidat = $candidat->getTarifCandidat();
+        if($tarifCandidat instanceof TarifCandidat){
+            switch ($tarifCandidat->getTypeTarif()) {
+                case TarifCandidat::TYPE_HOURLY :
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.$this->getCurrency($tarifCandidat).'</strong> par heure';
+                    break;
+                
+                case TarifCandidat::TYPE_DAILY :
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.$this->getCurrency($tarifCandidat).'</strong> par jour';
+                    break;
+
+                case TarifCandidat::TYPE_MONTHLY :
+                    $tarif = '<strong>'.$tarifCandidat->getMontant().' '.$this->getCurrency($tarifCandidat).'</strong> par mois';
+                    break;
+            }
+        }
+
+        return $tarif;
+    }
+
+    public function getCurrency(TarifCandidat $tarifCandidat)
+    {
+        $currency = '<i class="bi bi-ban px-4"></i>';
+        if($tarifCandidat->getCurrency() instanceof Devise){
+            $currency = $tarifCandidat->getCurrency()->getSymbole();
+        }else{
+            $currency = TarifCandidat::getDeviseSymbol($tarifCandidat->getDevise());
+        }
+
+        return $currency;
+    }
+
+    public function getTarifForfait(Assignation $assignation)
+    {
+        $tarif = '<i class="bi bi-ban px-4"></i>';
+        $forfait = $assignation->getForfaitAssignation();
+        if($forfait instanceof Forfait){
+            switch ($forfait->getAssignation()->getForfaitAssignation()->getTypeForfait()) {
+                case Forfait::TYPE_HOURLY :
+                    $tarif = '<strong>'.$forfait->getMontant().' '.$forfait->getDevise().'</strong> par heure';
+                    break;
+                
+                case Forfait::TYPE_DAILY :
+                    $tarif = '<strong>'.$forfait->getMontant().' '.$forfait->getDevise().'</strong> par jour';
+                    break;
+
+                case Forfait::TYPE_MONTHLY :
+                    $tarif = '<strong>'.$forfait->getMontant().' '.$forfait->getDevise().'</strong> par mois';
+                    break;
+            }
+        }
+
+        return $tarif;
+    }
+
+    public function getTypeAssignation(Assignation $assignation)
+    {
+        $type = '<strong>OLONA</strong>';
+        switch ($assignation->getRolePositionVisee()) {
+            case Assignation::TYPE_CANDIDAT :
+                $type = '<strong>Candidature spontannée</strong><br><span class="text-muted small">déposée le '.$assignation->getDateAssignation()->format('d/m/Y').'</span>';
+                break;
+            
+            case Assignation::TYPE_OLONA :
+                $type = '<strong>OLONA</strong><br><span class="text-muted small">suggéré le '.$assignation->getDateAssignation()->format('d/m/Y').'</span>';
+                break;
+        }
+
+        return $type;
+    }
+
+    public function getForfaitAssignation(Assignation $assignation)
+    {
+        $forfait = '<strong><i class="bi bi-ban"></i></strong>';
+        if ($assignation->getForfaitAssignation() instanceof Forfait) {
+            $forfait = '<strong>'.$assignation->getForfaitAssignation()->getMontant().' '.$assignation->getForfaitAssignation()->getDevise().'</strong> '.Forfait::arrayInverseTarifType()[$assignation->getForfaitAssignation()->getTypeForfait()].'';
+        }
+
+        return $forfait;
+    }
+
+    public function getStatusAssignation(Assignation $assignation)
+    {
+        switch ($assignation->getStatus()) {
+            case Assignation::STATUS_ACCEPTED :
+                $status = '<span class="badge bg-success">Acceptée</span>';
+                break;
+            
+            case Assignation::STATUS_REFUSED :
+                $status = '<span class="badge bg-danger">Refusée</span>';
+                break;
+            
+            case Assignation::STATUS_MODERATED :
+                $status = '<span class="badge bg-primary">Moderée</span>';
+                break;
+            
+            case Assignation::STATUS_PENDING :
+                $status = '<span class="badge bg-dark">En attente</span>';
+                break;
+            
+            default:
+                $status = '<span class="badge bg-dark">En attente</span>';
+                break;
+        }
+
+        return $status;
+    }
+
+    public function getAssignByEntreprise(EntrepriseProfile $entreprise)
+    {
+        return $this->assignationRepository->findAssignByEntreprise($entreprise);
+    }
+
+    public function findValidJobListing(EntrepriseProfile $entreprise)
+    {
+        return $this->jobListingRepository->findByEntrepriseAndStatus($entreprise, 'PUBLISHED');
+    }
+
+    public function findPendingJobListing(EntrepriseProfile $entreprise)
+    {
+        return $this->jobListingRepository->findByEntrepriseAndStatus($entreprise, 'PENDING');
+    }
+
+    public function countUnReadNotification(User $user)
+    {
+        return count($this->notificationRepository->findByDestinataireAndStatusNot(
+            $user, 
+            ['id' => 'DESC'], 
+            Notification::STATUS_DELETED,
+            0
+        ));
+    }
 }

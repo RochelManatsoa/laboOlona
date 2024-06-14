@@ -1,0 +1,77 @@
+{% extends 'finance/base.html.twig' %}
+
+{% block title %}Employés{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="annonce-list p-2">
+            <div class="annonce-item shadow p-5 m-4">
+                <h1 class="card-title h2 mb-3">Liste des prospects simulateur</h1>
+                    {% include "finance/_filter.html.twig" with {form:form} %}
+                    {% if employes|length > 0 %}
+                    <div class="container mt-5">
+                        <div class="row text-strong">
+                            <div class="col-sm-3">Nom et prénom(s)</div>
+                            <div class="col-sm-8">
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-3 text-center text-dark small">{{ knp_pagination_sortable(employes, 'Simulations', 'nombreDeSimulateurs') }}</div>
+                                    <div class="col-sm-6 col-md-3 text-center text-dark small"> {{ knp_pagination_sortable(employes, 'Inscrit le', 'u.dateInscription') }}</div>
+                                    <div class="col-sm-6 col-md-3 text-center text-dark small"> {{ knp_pagination_sortable(employes, 'Connecté', 'u.lastLogin') }}</div>
+                                    <div class="col-sm-6 col-md-3 text-center text-dark small"> {{ knp_pagination_sortable(employes, 'Montant', 'montantTotal') }}</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1"></div>
+                        </div>
+                        <hr>
+                        {% for item in employes %}
+                            <div class="row text-muted">
+                                <div class="col-sm-3 small">
+                                    <a href="{{ path('app_finance_employe_view', {'id' : item[0].id })}}" class="">
+                                        {{ item[0].user.fullName}} 
+                                    </a><br>
+                                    {{ item[0].user.type}}
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="row">
+                                        <div class="col-sm-6 text-center col-md-3 text-center">
+                                            <a href="{{ path('app_finance_salaire_employe', {'id' : item[0].id })}}" class="">
+                                                <span class="badge text-bg-warning">{{ item[0].simulateurs|length }}</span><br>
+                                            </a>
+                                            {# {{ satusSimulateur(item[0])|raw}} #}
+                                        </div>
+                                        <div class="col-sm-6 text-center col-md-3 small">
+                                        {{ item[0].user.dateInscription|date('d/m/Y') }}
+                                        </div>
+                                        <div class="col-sm-6 text-center col-md-3 small">
+                                        {{ item[0].user.lastLogin|time_ago }}
+                                        </div>
+                                        <div class="col-sm-6 text-center col-md-3 small">
+                                            <span class="small text-dark">{{ item['montantTotal']|number_format(0, '.', '.') }} Ar</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1 small">
+                                    <a href="{{ path('app_finance_salaire_employe', {'id' : item[0].id })}}" class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </div>
+                            </div>                    
+                            <hr>                    
+                        {% endfor %}
+                    </div>
+                    <div class="navigation mt-5">
+                        {{ knp_pagination_render(employes, 'parts/_pagination.html.twig') }}
+                    </div>
+                    {% else %}
+                    <div class="container p-5 mx-auto text-center">
+                        Aucuns résultats correspondant à votre recherche <br>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+			<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
+				<i class="mx-2 bi bi-arrow-left"></i>Retour
+			</a>
+    </div>
+{% endblock %}

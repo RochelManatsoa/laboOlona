@@ -44,17 +44,6 @@ class YouTubeOAuthController extends AbstractController
         $this->googleClient = $client;
     }
 
-    private function checkModerateur()
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        if (!$user->getModerateurProfile() instanceof ModerateurProfile){ 
-            return $this->redirectToRoute('app_connect');
-        }
-
-        return null;
-    }
-
     #[Route('/youtube/auth', name: 'youtube_auth')]
     public function auth(Request $request, RequestStack $requestStack)
     {
@@ -80,10 +69,7 @@ class YouTubeOAuthController extends AbstractController
         RequestStack $requestStack
     ): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
 
         // Récupérer le jeton d'accès de la session ou de la base de données
         $accessToken = $requestStack->getSession()->get('youtube_access_token');
@@ -102,7 +88,6 @@ class YouTubeOAuthController extends AbstractController
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Récupérer les vidéos de la playlist
             $videosChannel = $youtubeService->getPlaylistVideos('PLV5Z9YWBGhPxh4FPyXsU-VLY7PsCOpcpn');
-            // dd($videosChannel);
             $videos = [];
 
             foreach ($videosChannel as $key => $video) {
@@ -129,7 +114,6 @@ class YouTubeOAuthController extends AbstractController
 
         }
 
-        // dd($videos);
         // Rendre une vue avec les vidéos
         return $this->render('dashboard/formation/youtube.html.twig', [
             'videos' => $videos,

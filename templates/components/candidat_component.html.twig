@@ -1,13 +1,11 @@
-{# {{ dump(this.candidat) }}
-{{ dump(this.userProfile.prenom) }} #}
-<a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': this.candidat.id}) }}">
+<a class="card-candidat" href="{{ path('app_dashboard_entreprise_details_candidat', {'id': this.candidat.id}) }}">
   <div class="col">
-      <div class="card">
+        <div class="card shadow">
           <div class="card-img-top bg-image-candidat" style="background-image: url('{{vich_uploader_asset(this.candidat, 'file')}}');" alt="{{ this.userProfile.prenom }}"></div>
-          <div class="card-body">
-              <p class="card-title h6">{{ this.userProfile.prenom }} {{ this.userProfile.nom|slice(0, 1)|upper }}.</p>
-              <small>
-                  <small class="card-text">{{ this.candidat.titre }}</small><br>
+        <p class="card-title h6 bg-dark text-white text-center py-2">{{ generatePseudo(this.candidat) }}</p>
+          <div class="card-body-candidat">
+              <small class="mt-auto">
+                  <small class="card-text">{{ this.candidat.titre|upper }}</small><br>
                   <small class="card-text"><i class="mx-1 bi bi-trophy"></i> {{ this.candidat.experiences|length }} {{ 'app_catalog_expert.realised'|trans }}</small><br>
                   <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
               </small>

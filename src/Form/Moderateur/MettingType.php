@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\UuidType;
 
 class MettingType extends AbstractType
 {
@@ -24,9 +25,12 @@ class MettingType extends AbstractType
                 'label' => 'Titre',
                 'required' => false 
             ])
-            ->add('link', TextType::class, [
-                'label' => 'Lien',
-                'required' => false 
+            ->add('customId', UuidType::class, [
+                'label' => 'ID de la conférence',
+                'required' => false ,
+                'attr' => [
+                    'readonly' => true,
+                ],
             ])
             ->add('entreprise', EntityType::class, [
                 'class' => EntrepriseProfile::class,
@@ -45,16 +49,16 @@ class MettingType extends AbstractType
                     'class' => 'form-control datetime-picker'
                 ]
             ])
+            ->add('link', TextType::class, [
+                'label' => 'Lieu',
+                'required' => false // Le lieu peut être nul
+            ])
             ->add('lieu', TextType::class, [
                 'label' => 'Lieu',
                 'required' => false // Le lieu peut être nul
             ])
             ->add('status', ChoiceType::class, [
-                'choices' => [
-                    'En Attente' => 'EN_ATTENTE',
-                    'Confirmé' => 'CONFIRME',
-                    'Annulé' => 'ANNULE',
-                ],
+                'choices' => Metting::getStatuses(),
                 'label' => 'Statut',
                 'required' => false // Le statut peut être nul
             ])

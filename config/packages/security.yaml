@@ -13,6 +13,34 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login_check # or api_login_check as defined in config/routes.yaml
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            jwt: ~
+
+        # admin:
+        #     pattern:            /admin(.*)
+        #     form_login:
+        #         provider:       app_user_provider
+        #         login_path:     admin_login
+        #         use_forward:    false
+        #         check_path:     admin_login
+        #         failure_path:   null
+        #     custom_authenticator: 
+        #         - App\Security\Admin\AdminLoginAuthenticator
+        #     entry_point: App\Security\Admin\AdminLoginAuthenticator
+        #     logout:
+        #         path:           admin_logout
+        #         target:         admin_login
         main:
             lazy: true
             provider: app_user_provider
@@ -40,10 +68,23 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # - { path: ^/admin/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile/, roles: ROLE_USER }
         - { path: ^/dashboard/, roles: ROLE_USER }
+        - { path: ^/finance, roles: ROLE_FINANCE }
+        - { path: ^/employes-hub, roles: ROLE_EMPLOYE }
         - { path: ^/youtube/playlist, roles: ROLE_USER }
+
+    
+    role_hierarchy:
+        ROLE_FINANCE: [ROLE_CANDIDAT]
+        ROLE_COOPTEUR: [ROLE_CANDIDAT]
+        ROLE_EMPLOYE: [ROLE_CANDIDAT]
+        # Les rôles moderateur et entreprise n'ont pas de rôles enfants
+        ROLE_MODERATEUR: []
+        ROLE_ENTREPRISE: []       []
 
 when@test:
     security:

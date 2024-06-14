@@ -1,0 +1,7 @@
+easy_admin:
+    entities:
+        CandidateProfile: 
+            class: App\Entity\CandidateProfile
+            form:
+                fields:
+                    - { property: 'uid', type: 'text', label: 'UUID' }

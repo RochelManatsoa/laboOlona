@@ -10,17 +10,21 @@ use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
 use App\Entity\Vues\AnnonceVues;
 use App\Manager\CandidatManager;
+use App\Entity\EntrepriseProfile;
+use App\Entity\Referrer\Referral;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
+use App\Form\Candidat\UploadCVType;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
-use App\Entity\EntrepriseProfile;
+use App\Entity\Candidate\CV;
+use App\Entity\Finance\Employe;
+use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
 use App\Form\Search\AnnonceSearchType;
 use App\Form\Candidat\ApplicationsType;
 use App\Form\Candidat\AvailabilityType;
-use App\Form\Candidat\UploadCVType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Profile\Candidat\StepOneType;
 use App\Form\Profile\Candidat\StepTwoType;
@@ -34,6 +38,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
 use App\Repository\Candidate\ApplicationsRepository;
+use App\Repository\Moderateur\AssignationRepository;
 use App\Repository\Moderateur\TypeContratRepository;
 use App\Form\Search\Annonce\CandidatAnnonceSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -42,6 +47,7 @@ use App\Form\Profile\Candidat\Edit\StepOneType as EditStepOneType;
 use App\Form\Profile\Candidat\Edit\StepTwoType as EditStepTwoType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use App\Form\Profile\Candidat\Edit\StepThreeType as EditStepThreeType;
+use App\Service\PdfProcessor;
 
 #[Route('/dashboard/candidat')]
 class CandidatController extends AbstractController
@@ -54,10 +60,12 @@ class CandidatController extends AbstractController
         private CandidatManager $candidatManager,
         private JobListingRepository $jobListingRepository,
         private ApplicationsRepository $applicationsRepository,
+        private AssignationRepository $assignationRepository,
         private LangagesRepository $langagesRepository,
         private TypeContratRepository $typeContratRepository,
         private RequestStack $requestStack,
         private FileUploader $fileUploader,
+        private PdfProcessor $pdfProcessor,
         private ModerateurManager $moderateurManager,
         private UrlGeneratorInterface $urlGenerator,
     ) {
@@ -69,11 +77,15 @@ class CandidatController extends AbstractController
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
         $entreprise = $user->getEntrepriseProfile();
+        $employe = $user->getEmploye();
         if ($entreprise instanceof EntrepriseProfile) {
             // Si l'utilisateur n'a pas de profil candidat, on lance une exception
             throw new AccessDeniedException('Désolé, la page que vous souhaitez consulter est réservée aux profils candidats. Si vous possédez un tel profil, veuillez vous assurer que vous êtes connecté avec les identifiants appropriés.');
         }
         if($candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
+        if($employe instanceof Employe){
             return $this->redirectToRoute('app_profile');
         }
     
@@ -118,7 +130,7 @@ class CandidatController extends AbstractController
             // Enregistrer les modifications dans la base de données
             $this->em->persist($availability);
             $this->em->flush();
-            $this->candidatManager->sendNotificationEmail($candidat);
+            // $this->candidatManager->sendNotificationEmail($candidat);
         }
 
         // Renvoyer l'utilisateur à l'URL d'où il est venu en cas d'échec
@@ -228,6 +240,9 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        if(!$candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
         $typesContrat = $this->typeContratRepository->findAll();
 
         $form = $this->createForm(CandidatAnnonceSearchType::class, null, [
@@ -238,7 +253,6 @@ class CandidatController extends AbstractController
         $data = $this->jobListingRepository->findAllJobListingPublished();
         // $annonces = $this->candidatManager->annoncesCandidatDefaut($candidat);
         if ($form->isSubmitted() && $form->isValid()) {
-            // dd($form->getData());
             $titre = $form->get('titre')->getData();
             $typeContratObjet = $form->get('typeContrat')->getData();
             $typeContrat = $typeContratObjet ? $typeContratObjet->getNom() : null; 
@@ -280,10 +294,32 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        $entreprise = $annonce->getEntreprise();
+        if(!$candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
         $application = $this->applicationsRepository->findOneBy([
             'candidat' => $candidat,
             'annonce' => $annonce
         ]);
+        $assignation = $this->assignationRepository->findOneBy([
+            'profil' => $candidat,
+            'jobListing' => $annonce
+        ]);
+
+        if(!$assignation instanceof Assignation){
+            $applied = true;
+            $montant = $candidat->getTarifCandidat() ? $candidat->getTarifCandidat()->getMontant() : 0;
+            $assignation = new Assignation();
+            $assignation->setDateAssignation(new DateTime());
+            $assignation->setJobListing($annonce);
+            $assignation->setRolePositionVisee(Assignation::TYPE_CANDIDAT);
+            $assignation->setProfil($candidat);
+            $assignation->setCommentaire("Candidature spontanée");
+            $assignation->setForfait($montant); 
+            $assignation->setStatus(Assignation::STATUS_PENDING);
+        }
+
         $applied = false;
 
         if(!$application instanceof Applications){
@@ -293,6 +329,7 @@ class CandidatController extends AbstractController
             $application->setAnnonce($annonce);
             $application->setCvLink($candidat->getCv());
             $application->setCandidat($candidat);
+            $application->setAssignation($assignation);
             $application->setStatus(Applications::STATUS_PENDING);
         }
         $form = $this->createForm(ApplicationsType::class, $application);
@@ -303,7 +340,7 @@ class CandidatController extends AbstractController
         if ($formUpload->isSubmitted() && $formUpload->isValid()) {
             $cvFile = $formUpload->get('cv')->getData();
             if ($cvFile) {
-                $fileName = $this->fileUploader->upload($cvFile);
+                $fileName = $this->fileUploader->upload($cvFile, $candidat);
                 $candidat->setCv($fileName[0]);
                 $this->profileManager->saveCV($fileName, $candidat);
             }
@@ -323,6 +360,12 @@ class CandidatController extends AbstractController
                 // Logique pour la soumission personnalisée
                 // Utiliser le CV personnalisé et/ou la lettre de motivation fournis
             }
+            $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $user->getEmail()]);
+            if($refered instanceof Referral){
+                $refered->setStep(4);
+                $this->em->persist($refered);
+            }
+            $this->em->persist($assignation);
             $this->em->persist($application);
             $this->em->flush();
     
@@ -351,6 +394,21 @@ class CandidatController extends AbstractController
                     'objet' => "mise à jour",
                     'details_annonce' => $annonce,
                     'dashboard_url' => $this->urlGenerator->generate('app_dashboard_candidat_annonces', ['id' => $application->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
+    
+            /** Envoi email entreprise */
+            $this->mailerService->send(
+                $entreprise->getEntreprise()->getEmail(),
+                "Nouvelle candidature reçue sur votre annonce Olona-talents.com",
+                "entreprise/notification_candidature.html.twig",
+                [
+                    'user' => $entreprise->getEntreprise(),
+                    'candidature' => $application,
+                    'candidat' => $candidat,
+                    'objet' => "mise à jour",
+                    'details_annonce' => $annonce,
+                    'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidature_annonce_view_default', ['id' => $annonce->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
                 ]
             );
 
@@ -395,6 +453,9 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        if(!$candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
 
         return $this->render('dashboard/candidat/annonces/details.html.twig', [
             'annonce' => $annonce,
@@ -409,6 +470,9 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        if(!$candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
 
         return $this->render('dashboard/candidat/candidature/index.html.twig', [
             'pendings' => $paginatorInterface->paginate(
@@ -446,6 +510,9 @@ class CandidatController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
+        if(!$candidat instanceof CandidateProfile){
+            return $this->redirectToRoute('app_profile');
+        }
 
         $formOne = $this->createForm(EditStepOneType::class, $candidat);
         $formTwo = $this->createForm(EditStepTwoType::class, $candidat);
@@ -469,8 +536,12 @@ class CandidatController extends AbstractController
         if ($formThree->isSubmitted() && $formThree->isValid()) {
             $cvFile = $formThree->get('cv')->getData();
             if ($cvFile) {
-                $fileName = $this->fileUploader->upload($cvFile);
+                $fileName = $this->fileUploader->upload($cvFile, $candidat);
                 $candidat->setCv($fileName[0]);
+
+                // Process the PDF with Tesseract and store the response
+                $pdfPath = $this->fileUploader->getTargetDirectory() . '/' . $fileName[0];
+                // $this->pdfProcessor->processPdf($pdfPath, $candidat);
                 $this->profileManager->saveCV($fileName, $candidat);
             }
             $this->em->persist($candidat);
@@ -487,6 +558,24 @@ class CandidatController extends AbstractController
             'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
             'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
         ]);
+    }
+
+    #[Route('/delete/{cvId}', name: 'app_delete_cv')]
+    public function deleteEditedCV(Request $request, int $cvId): Response
+    {
+        $cvEdited = $this->em->getRepository(CV::class)->find($cvId);
+
+        if ($cvEdited !== null) {
+            $candidat = $cvEdited->getCandidat();
+            $candidat->setCv(null);
+            $this->em->persist($candidat);
+            $this->em->remove($cvEdited);
+            $this->em->flush();
+        }
+
+
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_candidat_compte');
     }
 
     #[Route('/guides/astuce', name: 'app_dashboard_guides_astuce')]

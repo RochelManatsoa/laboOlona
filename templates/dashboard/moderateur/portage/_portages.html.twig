@@ -1,0 +1,42 @@
+    
+    <p class="mx-2">
+    {# Votre recherche renvoie <strong>{{ result|length }}</strong> résultats. #}
+    </p>
+    <div class="navigation">
+    {# {{ knp_pagination_render(secteurs, 'parts/_pagination.html.twig') }} #}
+    </div>
+    {% if portages|length > 0 %}
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th class="col-4">Utilisateur</th>
+                <th class="col-2 text-center">Salaire Net</th>
+                <th class="col-2 text-center">Créé le</th>
+                <th class="col-2 text-center">Statut</th>
+                <th class="col-2 text-center"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for portage in portages %}
+                <tr>
+                    <td>
+                        {{ portage.simulateur.employe.user.nom }} {{ portage.simulateur.employe.user.prenom }}<br>
+                        <span class="text-muted small">{{ portage.simulateur.employe.user.email }}</span> 
+                    </td>
+                    <td class="text-center">
+                        {{ portage.simulateur.salaireNet }} {{ portage.simulateur.devise.symbole }}<br>
+                        <span class="text-muted small">(taux: {{ portage.simulateur.taux }} Ar)</span>
+                    </td>
+                    <td class="text-center">{{ portage.simulateur.createdAt|date('d/m/Y') }}</td>
+                    <td class="text-center">{{ portage|contratStatusBadge|raw }}</td>
+                    <td class="actions-col">
+                        <a href="{{path('app_dashboard_moderateur_view_portage', { 'id': portage.id}) }}" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    Aucun contrats pour le moment
+    {% endif %}
+

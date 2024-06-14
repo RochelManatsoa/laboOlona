@@ -5,16 +5,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="robots" content="noindex">
         <title>{% block title %}{{ meta_title() }}{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <link rel="icon" href="{{ asset('images/favicon.ico')}}">
         <meta name="description" content="{{ meta_description() }}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1Ld2PCHjDEQu3HcO8AmYC88Bz9yE7Q6hCtvY5pF9m6ouCp68z5i5T1pFGDhlNq3bP2vTpmTmBsKP4jY1rgumg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
 
         {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+            {{ encore_entry_script_tags('app') }}            
+	        <script src="{{asset('assets/errorLogger.js')}}"></script>
         {% endblock %}
     </head>
     <body>
@@ -60,37 +61,39 @@
                 var fromDatePicker = document.querySelector('#availability_nom_1');
                 var datePickerContainer = document.querySelector('.date-picker-container');
                 var labelForFromDate = document.querySelector('label[for="availability_nom_1"]');
-                var formCheck = labelForFromDate.closest('.form-check');
             
-                // Insérer le datePicker après le label "A partir du" tout en restant à l'intérieur de .form-check
-                formCheck.insertBefore(datePickerContainer, labelForFromDate.nextSibling);
-            
-                // Appliquer les classes Bootstrap pour aligner les éléments
-                formCheck.classList.add('d-flex', 'align-items-center');
-                labelForFromDate.classList.add('flex-grow-1', 'mx-2'); // Assurez-vous que le label prend l'espace nécessaire
-                datePickerContainer.classList.add('flex-shrink-1'); // Empêcher le datePicker de s'étendre trop
-            
-                // Ajouter/Retirer l'attribut required basé sur la sélection
-                var radios = document.querySelectorAll('input[name="availability[nom]"]');
-                radios.forEach(function(radio) {
-                    radio.addEventListener('change', function() {
-                        var isFromDateSelected = fromDatePicker.checked;
-                        setDatePickerRequired(isFromDateSelected);
+                if (labelForFromDate) {
+                    var formCheck = labelForFromDate.closest('.form-check');
+                    // Insérer le datePicker après le label "A partir du" tout en restant à l'intérieur de .form-check
+                    formCheck.insertBefore(datePickerContainer, labelForFromDate.nextSibling);
+                
+                    // Appliquer les classes Bootstrap pour aligner les éléments
+                    formCheck.classList.add('d-flex', 'align-items-center');
+                    labelForFromDate.classList.add('flex-grow-1', 'mx-2'); // Assurez-vous que le label prend l'espace nécessaire
+                    datePickerContainer.classList.add('flex-shrink-1'); // Empêcher le datePicker de s'étendre trop
+                
+                    // Ajouter/Retirer l'attribut required basé sur la sélection
+                    var radios = document.querySelectorAll('input[name="availability[nom]"]');
+                    radios.forEach(function(radio) {
+                        radio.addEventListener('change', function() {
+                            var isFromDateSelected = fromDatePicker.checked;
+                            setDatePickerRequired(isFromDateSelected);
+                        });
                     });
-                });
-            
-                // Fonction pour ajuster l'attribut required du datePicker
-                function setDatePickerRequired(isRequired) {
-                    ['day', 'month', 'year'].forEach(function(part) {
-                        var element = document.querySelector('#availability_dateFin_' + part);
-                        if (element) {
-                            element.required = isRequired;
-                        }
-                    });
+                
+                    // Fonction pour ajuster l'attribut required du datePicker
+                    function setDatePickerRequired(isRequired) {
+                        ['day', 'month', 'year'].forEach(function(part) {
+                            var element = document.querySelector('#availability_dateFin_' + part);
+                            if (element) {
+                                element.required = isRequired;
+                            }
+                        });
+                    }
+                
+                    // Vérifier l'état initial
+                    setDatePickerRequired(fromDatePicker.checked);
                 }
-            
-                // Vérifier l'état initial
-                setDatePickerRequired(fromDatePicker.checked);
             });
             </script>
     </body>
