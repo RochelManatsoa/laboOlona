@@ -58,7 +58,7 @@ class CandidateProfile
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'open_ai'])]
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'candidateProfile', cascade: ['persist', 'remove'])]
@@ -72,12 +72,13 @@ class CandidateProfile
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'open_ai'])]
     private ?string $resume = null;
 
     #[ORM\ManyToMany(targetEntity: Competences::class, mappedBy: 'profil', cascade: ['persist', 'remove'])]
     private Collection $competences;
 
+    #[Groups(['open_ai'])]
     #[ORM\OneToMany(mappedBy: 'profil', targetEntity: Experiences::class, cascade: ['persist', 'remove'])]
     private Collection $experiences;
 
@@ -107,9 +108,10 @@ class CandidateProfile
     private ?\DateTimeInterface $birthday = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'open_ai'])]
     private ?string $titre = null;
 
+    #[Groups(['open_ai'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $cv = null;
 
@@ -126,7 +128,7 @@ class CandidateProfile
     private ?bool $isValid = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'open_ai'])]
     private ?string $status = null;
 
     #[ORM\Column(type: 'uuid')]

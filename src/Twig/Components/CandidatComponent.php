@@ -12,7 +12,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 class CandidatComponent
 {
     public string $type = 'success';
-    public string $message;
     public int $id;
 
     public function __construct(

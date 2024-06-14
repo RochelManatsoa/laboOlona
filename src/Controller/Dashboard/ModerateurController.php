@@ -63,6 +63,9 @@ use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
+use App\Service\OpenAIResume;
+use App\Service\OpenAITranslator;
+use App\Service\PdfProcessor;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -91,6 +94,9 @@ class ModerateurController extends AbstractController
         private InvitationRepository $invitationRepository,
         private SimulateurRepository $simulateurRepository,
         private AssignationManager $assignationManager,
+        private PdfProcessor $pdfProcessor,
+        private OpenAIResume $openAIResume,
+        private OpenAITranslator $openAITranslator,
         private AppExtension $appExtension,
         private ReferenceManager $referenceManager,
     ) {}
@@ -979,6 +985,16 @@ class ModerateurController extends AbstractController
             if ($cvFile) {
                 $fileName = $this->fileUploader->uploadEditedCv($cvFile, $cv->getCandidat());
                 $this->profileManager->saveCVEdited($fileName, $cv->getCandidat(), $cv);
+                /** Generate OpenAI resume */
+                $parsePdf = $this->openAITranslator->parse($cv->getCandidat());
+                $report = $this->openAITranslator->report($cv->getCandidat());
+                $traduction = $this->openAITranslator->trans($report);
+                $cv->getCandidat()->setTesseractResult($parsePdf);
+                $cv->getCandidat()->setResultPremium($report);
+                $cv->getCandidat()->setTraductionEn($traduction);
+                $this->em->persist($cv->getCandidat());
+                $this->em->flush();
+                $this->addFlash('success', 'Rapport généré par IA sauvegardé');
             }
         }
 

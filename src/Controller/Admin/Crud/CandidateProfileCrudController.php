@@ -45,6 +45,7 @@ class CandidateProfileCrudController extends AbstractCrudController
             TextEditorField::new('resultFree', 'Resultat Free')->hideOnIndex(),
             TextEditorField::new('resultPremium', 'Resultat Premium')->hideOnIndex(),
             TextEditorField::new('traductionEn', 'Traduction')->hideOnIndex(),
+            TextEditorField::new('tesseractResult', 'Import PDF')->hideOnIndex(),
             FormField::addColumn(4),
             DateField::new('candidat.dateInscription', 'Inscrit le')->hideOnForm(),
             DateField::new('candidat.lastLogin', 'Last login')->hideOnForm(),
