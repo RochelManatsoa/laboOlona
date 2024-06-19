@@ -87,12 +87,12 @@ async function useAssistantWithVectorStore(vectorStoreId) {
         model: 'gpt-4o',
         messages: [
           {
-            role: 'system',
+            role: 'assistant',
             content: "You are a recruitment assistant responsible for reading and extracting key information from a candidate's PDF resume. Your task is to structure this information in a clear and readable format for a recruitment report."
           },
           {
             role: 'user',
-            content: `Please read the resume from the vector store with ID ${vectorStoreId} and generate the report.`
+            content: `run the command.`
           }
         ],
         temperature: 1,
