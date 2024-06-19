@@ -5,8 +5,13 @@ namespace App\Controller\Dashboard;
 use DateTime;
 use App\Entity\User;
 use App\Twig\AppExtension;
+use App\Entity\Candidate\CV;
 use App\Entity\Notification;
 use App\Service\FileUploader;
+use App\Service\OpenAIResume;
+use App\Service\PdfProcessor;
+use App\Manager\OpenaiManager;
+use App\Entity\Finance\Employe;
 use App\Manager\ProfileManager;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\CandidateProfile;
@@ -14,6 +19,7 @@ use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
 use App\Entity\ModerateurProfile;
 use App\Entity\Referrer\Referral;
+use App\Service\OpenAITranslator;
 use App\Service\User\UserService;
 use App\Entity\Finance\Simulateur;
 use App\Entity\Moderateur\Metting;
@@ -29,8 +35,6 @@ use App\Form\Moderateur\EditedCvType;
 use App\Repository\SecteurRepository;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
-use App\Entity\Candidate\CV;
-use App\Entity\Finance\Employe;
 use App\Entity\Moderateur\Assignation;
 use App\Form\Candidat\AvailabilityType;
 use App\Form\Moderateur\InvitationType;
@@ -63,9 +67,6 @@ use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
-use App\Service\OpenAIResume;
-use App\Service\OpenAITranslator;
-use App\Service\PdfProcessor;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -73,6 +74,7 @@ class ModerateurController extends AbstractController
     public function __construct(
         private UserService $userService,
         private EntityManagerInterface $em,
+        private OpenaiManager $openaiManager,
         private MailerService $mailerService,
         private ModerateurManager $moderateurManager,
         private CandidatManager $candidatManager,
@@ -95,7 +97,6 @@ class ModerateurController extends AbstractController
         private SimulateurRepository $simulateurRepository,
         private AssignationManager $assignationManager,
         private PdfProcessor $pdfProcessor,
-        private OpenAIResume $openAIResume,
         private OpenAITranslator $openAITranslator,
         private AppExtension $appExtension,
         private ReferenceManager $referenceManager,
@@ -985,16 +986,7 @@ class ModerateurController extends AbstractController
             if ($cvFile) {
                 $fileName = $this->fileUploader->uploadEditedCv($cvFile, $cv->getCandidat());
                 $this->profileManager->saveCVEdited($fileName, $cv->getCandidat(), $cv);
-                /** Generate OpenAI resume */
-                $parsePdf = $this->openAITranslator->parse($cv->getCandidat());
-                $report = $this->openAITranslator->report($cv->getCandidat());
-                $traduction = $this->openAITranslator->trans($report);
-                $cv->getCandidat()->setTesseractResult($parsePdf);
-                $cv->getCandidat()->setResultPremium($report);
-                $cv->getCandidat()->setTraductionEn($traduction);
-                $this->em->persist($cv->getCandidat());
-                $this->em->flush();
-                $this->addFlash('success', 'Rapport généré par IA sauvegardé');
+                $this->em->getConnection()->close();
             }
         }
 

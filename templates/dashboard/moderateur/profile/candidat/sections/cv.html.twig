@@ -63,10 +63,16 @@
                                             </div>
                                         </div>
                                     {% endfor %}
+                                    <div class="container text-center mt-5">
+                                        <button class="btn btn-dark rounded-pill px-5 my-3 mx-auto" id="generate-resume" data-candidat-id="{{ candidat.id }}">Générer un résumé avec IA</button>
+                                        <div id="progress-container" class="progress my-3" style="display: none;">
+                                            <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                        </div>
+                                    </div>
                                 {% else %}
                                     <div class="container my-5">
                                         <div class="p-5 text-center bg-body-tertiary rounded-3">
-                                        <h1 class="text-body-emphasis">Aucun CV envoyé </i></h1>
+                                        <h1 class="text-body-emphasis">Aucun CV envoyé </h1>
                                         <p class="">
                                             <i class="bi bi-info-circle"></i> Veuillez envoyer un e-mail à l'utilisateur pour l'informer de l'envoi de son CV. Cette étape est nécessaire pour la validation de son profil.
                                         </p>

@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Twig\AppExtension;
 use App\Entity\CandidateProfile;
+use App\Manager\CandidatManager;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -14,6 +16,7 @@ class OpenAITranslator
     public function __construct(
         private HttpClientInterface $client, 
         private AppExtension $appExtension, 
+        private CandidatManager $candidatManager, 
         private string $apiKey,
         ParameterBagInterface $params
     ){
@@ -142,9 +145,11 @@ class OpenAITranslator
 
     public function trans($text) {
         $scriptPath = $this->projectDir . '/assets/node_app/index.js';
-        $command = sprintf('node %s %s %s', escapeshellarg($scriptPath), escapeshellarg($text), escapeshellarg($this->apiKey));
+        $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
+        $command = sprintf('%s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($text), escapeshellarg($this->apiKey));
+
         exec($command, $output, $return_var);
-    
+
         if ($return_var === 0) {
             return implode("\n", $output);
         } else {
@@ -154,8 +159,13 @@ class OpenAITranslator
 
     public function parse(CandidateProfile $candidateProfile)
     {
-        $scriptPath = $this->projectDir . '/assets/node_app/parse.js';
-        $command = sprintf('node %s %s %s', escapeshellarg($scriptPath), escapeshellarg('https://app.olona-talents.com/uploads/cv/'. $candidateProfile->getCv()), escapeshellarg($this->apiKey));
+        $cv = $candidateProfile->getCv();
+        if($cv === null){
+            return "CV manquant";
+        }
+        $scriptPath = $this->projectDir . '/assets/node_app/test1.js';
+        $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
+        $command = sprintf('%s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getCv()), escapeshellarg($this->apiKey));
         exec($command, $output, $return_var);
 
         if ($return_var === 0) {
@@ -168,7 +178,10 @@ class OpenAITranslator
     public function report(CandidateProfile $candidateProfile)
     {
         $scriptPath = $this->projectDir . '/assets/node_app/report.js';
-        $command = sprintf('node %s %s %s', escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getTesseractResult()), escapeshellarg($this->apiKey));
+        $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
+        // dd($scriptPath, $nodePath, $candidateProfile->getTesseractResult(), $this->apiKey);
+        $command = sprintf('%s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getTesseractResult()), escapeshellarg($this->apiKey));
+        
         exec($command, $output, $return_var);
 
         if ($return_var === 0) {

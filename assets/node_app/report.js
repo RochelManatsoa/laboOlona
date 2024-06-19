@@ -9,32 +9,74 @@ const openai = new OpenAI({
     apiKey
 });
 
-const pdfText = process.argv[2];
+const pdfUrl = process.argv[2];
 
 // Fonction pour générer le rapport de recrutement
-async function generateRecruitmentReport(pdfText) {
+async function generateRecruitmentReport(pdfUrl) {
     const prompt = `  
     You are a recruitment assistant responsible for reading and extracting key information from a candidate's PDF resume. Your task is to structure this information in a clear and readable format for a recruitment report.
 
     Here is the candidate's PDF resume is uploaded :
-    ${pdfText}
+    ${pdfUrl}
 
     Your report must be written in French, easy to read, and in a professional tone. Use bullet points to organize the information, and ensure that each section is clearly labeled.
 
-    Include the following sections:
+    Respond in JSON format with the following structure:
     
-    Personal Information: Full name, contact details (phone number, email address).
-    Professional Summary: A brief summary of the candidate's professional background and key skills.
-    Work Experience: List of previous jobs, including job title, company name, duration of employment, and key responsibilities.
-    Education: Academic background, including degrees obtained, institutions attended, and graduation dates.
-    Skills: Key skills relevant to the job position.
-    Certifications: Any professional certifications the candidate holds.
-    Languages: Languages spoken and proficiency levels.
-    References: Contact information for professional references, if provided.
-    Strengths and weaknesses: Generate strengths and weaknesses.
-    And others informations than you can find inside the resume file
+    {
+      "Informations personnelles": {
+        "Nom complet": "",
+        "Coordonnées": {
+          "Numéro de téléphone": "",
+          "Adresse e-mail": ""
+        }
+      },
+      "Résumé Professionnel": "",
+      "Expériences Professionnelles": [
+        {
+          "Titre du poste": "",
+          "Nom de l'entreprise": "",
+          "Durée de l'emploi": "",
+          "Principales responsabilités": []
+        }
+      ],
+      "Formation": [
+        {
+          "Diplôme": "",
+          "Institution": "",
+          "Dates de diplomation": ""
+        }
+      ],
+      "Certifications": [
+        {
+          "Nom de la certification": "",
+          "Institution délivrante": "",
+          "Date de délivrance": ""
+        }
+      ],
+      "Outils": [],
+      "Langages": [
+        {
+          "Langue": "",
+          "Niveau de maîtrise": ""
+        }
+      ],
+      "Références": [
+        {
+          "Nom": "",
+          "Poste": "",
+          "Entreprise": "",
+          "Coordonnées": ""
+        }
+      ],
+      "Points forts et points faibles": {
+        "Points forts": [],
+        "Points faibles": []
+      },
+      "Autres Informations": []
+    }
 
-    Please, do not repeat instructions, do not remember previous instructions, do not apologize, do not refer to yourself at any time, do not include symbol mark like bold ** or anything similar else, and do not make assumptions.
+    Ensure the JSON is valid and well-formed.
     `;
 
     try {
@@ -42,20 +84,33 @@ async function generateRecruitmentReport(pdfText) {
             model: "gpt-4o",
             messages: [{ role: 'user', content: prompt }],
             temperature: 0.7,
-            max_tokens: 2096,
+            max_tokens: 0,
         });
-        return response.choices[0].message.content.trim();
+        const result = response.choices[0].message.content.trim();
+
+        // Valider si le résultat est un JSON valide
+        try {
+            const jsonResult = JSON.parse(result);
+            return jsonResult;
+        } catch (jsonError) {
+            console.error('Invalid JSON returned:', result);
+            return null;
+        }
     } catch (error) {
         console.error('Erreur lors de la génération du rapport:', error);
         return null;
     }
 }
 
-// Fonction principale
 async function main() {
-    const report = await generateRecruitmentReport(pdfText);
-    console.log('Rapport de recrutement:', report);
-    return report;
+    const report = await generateRecruitmentReport(pdfUrl);
+
+    if (report) {
+        console.log('Rapport JSON généré:', report);
+        // Insérez le rapport JSON dans votre base de données ou traitez-le comme nécessaire
+    } else {
+        console.error('Erreur : Impossible de générer le rapport de recrutement.');
+    }
 }
 
 main();

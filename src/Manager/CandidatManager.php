@@ -11,6 +11,7 @@ use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CandidateProfileRepository;
+use Symfony\Component\Routing\RouterInterface;
 use App\Repository\EntrepriseProfileRepository;
 use App\Repository\Moderateur\MettingRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,8 +34,15 @@ class CandidatManager
         private MailerService $mailerService,
         private ModerateurManager $moderateurManager,
         private UrlGeneratorInterface $urlGenerator,
+        private RouterInterface $routerInterface,
         private UserService $userService
     ){}
+
+    
+    public function generatePdfLink(CandidateProfile $candidat): string
+    {
+        return $this->routerInterface->generate('app_home', [], UrlGeneratorInterface::ABSOLUTE_URL).'uploads/cv/'.$candidat->getCv();
+    }
 
     
     public function annoncesCandidatDefaut(CandidateProfile $candidat): array

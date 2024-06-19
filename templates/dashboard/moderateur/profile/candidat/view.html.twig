@@ -393,6 +393,62 @@
 				console.log('ID non trouvé.');
 			}
 		});
+        $('#generate-resume').on('click', function() {
+            var candidateId = $(this).data('candidat-id');
+
+            // Hide the button and show the progress bar
+            $(this).hide();
+            $('#progress-container').show();
+
+            // Initialize the progress bar
+            updateProgressBar(0);
+
+            // Function to update the progress bar
+            function updateProgressBar(percentage) {
+                $('#progress-bar').css('width', percentage + '%').attr('aria-valuenow', percentage).text(percentage + '%');
+            }
+
+            // Simulate progress update (this is just for demonstration)
+            let progress = 0;
+            let interval = setInterval(function() {
+                if (progress < 90) {
+                    progress += 10;
+                    updateProgressBar(progress);
+                } else {
+                    clearInterval(interval);
+                }
+            }, 2500);
+
+            // Make the AJAX request
+            $.ajax({
+                url: '/api/openai/generate/' + candidateId,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response)
+                    // Complete the progress bar
+                    updateProgressBar(100);
+
+                    setTimeout(function() {
+                        // Hide the progress bar and show a success message
+                        $('#progress-container').hide();
+                        if (response.status === 'success') {
+                            alert(response.message);
+                        } else {
+                            alert('Une erreur est survenue');
+                        }
+                        location.reload(); // Optionally reload the page or redirect
+                    }, 500); // Add a small delay to show the 100% state
+                },
+                error: function(xhr, status, error) {
+                    // Hide the progress bar and show an error message
+                    $('#progress-container').hide();
+                    let errorMessage = 'Une erreur est survenue: ' + (xhr.responseJSON ? xhr.responseJSON.message : error);
+                    alert(errorMessage);
+                    $('#generate-resume').show(); // Show the button again in case of error
+                }
+            });
+        });
+
 
         // Fonction pour restaurer le contenu original
         function restoreOriginalContent(id, containerSelector) {
