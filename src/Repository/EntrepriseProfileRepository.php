@@ -21,28 +21,58 @@ class EntrepriseProfileRepository extends ServiceEntityRepository
         parent::__construct($registry, EntrepriseProfile::class);
     }
 
-//    /**
-//     * @return EntrepriseProfile[] Returns an array of EntrepriseProfile objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findTopRanked(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e, COUNT(j.id) as HIDDEN nbr_annonces')
+            ->leftJoin('e.jobListings', 'j')
+            ->andWhere('e.status = :statusFeatured')
+            ->setParameter('statusFeatured', EntrepriseProfile::STATUS_PREMIUM)
+            ->groupBy('e')
+            ->orderBy('nbr_annonces', 'DESC')
+            ->setMaxResults(12)
+            ->getQuery()
+            ->getResult();
+    }
+    
+    public function findAllJobListingPublished()
+    {
+        $queryBuilder = $this->createQueryBuilder('e');
 
-//    public function findOneBySomeField($value): ?EntrepriseProfile
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $orConditions = $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->eq('e.status', ':statusValid'),
+            $queryBuilder->expr()->eq('e.status', ':statusFeatured')
+        );
+
+        $query = $queryBuilder
+            ->andWhere($orConditions)
+            ->setParameter('statusValid', EntrepriseProfile::STATUS_VALID)
+            ->setParameter('statusFeatured', EntrepriseProfile::STATUS_PREMIUM)
+            ->orderBy('e.id', 'DESC')
+            ->getQuery();
+            
+        return $query->getResult();
+    }
+    
+    public function findValidCompany()
+    {
+        $query = $this->createQueryBuilder('e')
+            ->andWhere('e.status = :statusValid')
+            ->setParameter('statusValid', EntrepriseProfile::STATUS_VALID)
+            ->orderBy('e.id', 'DESC')
+            ->getQuery();
+            
+        return $query->getResult();
+    }
+    
+    public function findPremiumCompany()
+    {
+        $query = $this->createQueryBuilder('e')
+            ->andWhere('e.status = :statusFeatured')
+            ->setParameter('statusFeatured', EntrepriseProfile::STATUS_PREMIUM)
+            ->orderBy('e.id', 'DESC')
+            ->getQuery();
+            
+        return $query->getResult();
+    }
 }

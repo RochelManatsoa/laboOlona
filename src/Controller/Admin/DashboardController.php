@@ -9,6 +9,7 @@ use App\Entity\Errors\ErrorLog;
 use App\Entity\ReferrerProfile;
 use App\Entity\CandidateProfile;
 use App\Entity\Cron\CronLog;
+use App\Entity\Entreprise\JobListing;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Finance\Employe;
 use App\Entity\Finance\Simulateur;
@@ -18,6 +19,7 @@ use Symfony\UX\Chartjs\Model\Chart;
 use App\Entity\Moderateur\Invitation;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
+use App\Entity\Prestation;
 use App\Entity\TemplateEmail;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -117,6 +119,8 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Employés', 'fas fa-address-card', Employe::class),
             ]),
             MenuItem::subMenu('Moderation', 'fa fa-wand-magic-sparkles')->setSubItems([
+                MenuItem::linkToCrud('Prestations', 'fas fa-hand-holding-hand', Prestation::class),
+                MenuItem::linkToCrud('Annonces', 'fas fa-list', JobListing::class),
                 MenuItem::linkToCrud('Assignations', 'fas fa-sliders', Assignation::class),
                 MenuItem::linkToCrud('Mettings', 'fas fa-handshake', Metting::class),
                 MenuItem::linkToCrud('Invitation', 'fas fa-hand-holding-heart', Invitation::class),
@@ -128,7 +132,7 @@ class DashboardController extends AbstractDashboardController
             ]),
             MenuItem::linkToCrud('Simulations', 'fas fa-vial-virus', Simulateur::class),
             MenuItem::linkToCrud('Modèles Email', 'fas fa-envelope', TemplateEmail::class),
-            MenuItem::linkToCrud('Relance ', 'fas fa-clock-rotate-left', CronLog::class),
+            MenuItem::linkToCrud('Tâches Cron ', 'fas fa-clock-rotate-left', CronLog::class),
             MenuItem::linkToCrud('Errors', 'fas fa-bug', ErrorLog::class),
         ];
     }

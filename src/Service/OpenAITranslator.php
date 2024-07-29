@@ -3,7 +3,10 @@
 namespace App\Service;
 
 use App\Twig\AppExtension;
+use App\Service\PdfProcessor;
 use App\Entity\CandidateProfile;
+use App\Entity\Entreprise\JobListing;
+use App\Entity\Prestation;
 use App\Manager\CandidatManager;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -17,6 +20,7 @@ class OpenAITranslator
         private HttpClientInterface $client, 
         private AppExtension $appExtension, 
         private CandidatManager $candidatManager, 
+        private PdfProcessor $pdfProcessor, 
         private string $apiKey,
         ParameterBagInterface $params
     ){
@@ -177,17 +181,43 @@ class OpenAITranslator
 
     public function report(CandidateProfile $candidateProfile)
     {
-        $scriptPath = $this->projectDir . '/assets/node_app/report.js';
+        $scriptPath = $this->projectDir . '/assets/node_app/ass.js';
         $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
-        // dd($scriptPath, $nodePath, $candidateProfile->getTesseractResult(), $this->apiKey);
-        $command = sprintf('%s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getTesseractResult()), escapeshellarg($this->apiKey));
+        $command = sprintf('%s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getCv()), escapeshellarg($this->apiKey), escapeshellarg($candidateProfile->getId()));
         
         exec($command, $output, $return_var);
-
         if ($return_var === 0) {
             return implode("\n", $output);
         } else {
-            return "Erreur lors de l'exécution du script report.js";
+            return "Erreur lors de l'exécution du script ass.js";
+        }
+    }
+
+    public function metaDescription(JobListing $annonce)
+    {
+        $scriptPath = $this->projectDir . '/assets/node_app/shortdesc.js';
+        $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
+        $command = sprintf('%s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($annonce->getDescription()), escapeshellarg($this->apiKey), escapeshellarg($annonce->getId()));
+        
+        exec($command, $output, $return_var);
+        if ($return_var === 0) {
+            return implode("\n", $output);
+        } else {
+            return "Erreur lors de l'exécution du script shortdesc.js";
+        }
+    }
+
+    public function resumePrestation(Prestation $prestation)
+    {
+        $scriptPath = $this->projectDir . '/assets/node_app/prestation.js';
+        $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
+        $command = sprintf('%s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($prestation->getDescription()), escapeshellarg($this->apiKey), escapeshellarg($prestation->getTitre()));
+        
+        exec($command, $output, $return_var);
+        if ($return_var === 0) {
+            return implode("\n", $output);
+        } else {
+            return "Erreur lors de l'exécution du script prestation.js";
         }
     }
 

@@ -1,0 +1,87 @@
+{% extends 'base_v2.html.twig' %}
+
+{% block title %}Connexion | Olona Talents
+{% endblock %}
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{asset('v2/css/nicepage.css')}}" media="screen">
+	<link rel="stylesheet" href="{{asset('v2/css/login.css')}}" media="screen">
+{% endblock %}
+
+{% block body %}
+
+	<section class="u-clearfix u-section-1" id="sec-cc27">
+		<div class="u-clearfix u-sheet u-sheet-1">
+			<div class="u-clearfix u-expanded-width u-gutter-16 u-layout-wrap u-layout-wrap-1">
+				<div class="u-gutter-0 u-layout">
+					<div class="u-layout-row">
+						<div class="u-size-29">
+							<div class="u-layout-col">
+								<div class="u-container-align-center u-container-style u-layout-cell u-size-60 u-layout-cell-1">
+									<div class="u-container-layout u-valign-middle u-container-layout-1">
+										<img class="u-image u-image-contain u-image-1" src="{{asset('v2/images/31.png')}}" data-image-width="1080" data-image-height="1080">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="u-size-31">
+							<div class="u-layout-col">
+								<div class="u-container-style u-layout-cell u-radius-20 u-shape-round u-size-60 u-layout-cell-2">
+									<div class="u-border-2 u-border-white u-container-layout u-valign-middle u-container-layout-2">
+										<h2 class="u-align-center u-text u-text-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Se connecter</h2>
+										<p class="u-align-center u-text u-text-2">
+											Pas encore membre ?&nbsp;<a href="{{ path('app_olona_talents_upgrade')}}" class="text-primary transition u-active-none u-border-none u-btn u-button-style u-hover-none u-none u-text-palette-1-base u-btn-1">
+                      						Inscrivez-vous dès maintenant&nbsp;</a>et rejoignez la communauté Olona-talents.
+										</p>
+										<a href="{{ path('connect_google_start') }}" class="u-align-center u-border-1 u-border-custom-color-2 u-btn u-btn-round u-button-style u-hover-custom-color-7 u-radius-50 u-white u-btn-2">
+                      						se connecter avec&nbsp;&nbsp;<span class="u-file-icon u-icon u-icon-1"><img src="images/10124147.png" alt=""></span>
+										</a>
+										<div class="u-expanded-width u-form u-form-1">
+											<form class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px" method="post">
+												{% if error %}
+												<div class="alert alert-dark">
+													{{ error.messageKey|trans(error.messageData, 'security') }}
+												</div>
+												{% endif %}
+
+												{% if app.user %}
+													<div class="mb-3">
+													You are logged in as  {{ app.user.userIdentifier }},                                     
+													<a href="{{ path('app_logout') }}">
+														Logout                                      
+													</a>
+													</div>
+												{% endif %}
+
+												<div class="u-form-group u-form-name u-label-none">
+													<label for="name-da97" class="u-label">Name</label>
+													<input value="{{ last_username }}" name="email" placeholder="Votre adresse mail" id="name-da97" type="email" class="u-border-no-bottom u-border-no-left u-border-no-right u-border-no-top u-grey-5 u-input u-input-rectangle" required="">
+												</div>
+												<div class="u-form-email u-form-group u-label-none">
+													<label for="email-da97" class="u-label">Email</label>
+													<input type="password" name="password" placeholder="Votre mot de passe" id="email-da97" name="email" class="u-border-no-bottom u-border-no-left u-border-no-right u-border-no-top u-grey-5 u-input u-input-rectangle" required="">
+												</div>
+												<div class="u-form-checkbox u-form-group u-label-none u-form-group-3">
+													<input type="checkbox" id="checkbox-f5a8" name="checkbox" value="On">
+													<label for="checkbox-f5a8" class="u-label">
+														En vous connectant sur Olona Talents vous accepter nos conditions général d'utilisation
+													</label>
+												</div>
+                    							<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+												<input type="submit" value="Connexion" class="btn btn-lg btn-primary rounded-pill">
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}

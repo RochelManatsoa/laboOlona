@@ -1,0 +1,91 @@
+{% extends 'base_v2.html.twig' %}
+
+{% block title %}Inscription | Olona Talents
+{% endblock %}
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{asset('v2/css/nicepage.css')}}" media="screen">
+	<link rel="stylesheet" href="{{asset('v2/css/login.css')}}" media="screen">
+{% endblock %}
+
+{% block body %}
+
+	<section class="u-clearfix u-section-1" id="sec-cc27">
+		<div class="u-clearfix u-sheet u-sheet-1">
+			<div class="u-clearfix u-expanded-width u-gutter-16 u-layout-wrap u-layout-wrap-1">
+				<div class="u-gutter-0 u-layout">
+					<div class="u-layout-row">
+						<div class="u-size-29">
+							<div class="u-layout-col">
+								<div class="u-container-align-center u-container-style u-layout-cell u-size-60 u-layout-cell-1">
+									<div class="u-container-layout u-valign-middle u-container-layout-1">
+										<img class="u-image u-image-contain u-image-1" src="images/31.png" data-image-width="1080" data-image-height="1080">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="u-size-31">
+							<div class="u-layout-col">
+								<div class="u-container-style u-layout-cell u-radius-20 u-shape-round u-size-60 u-layout-cell-2">
+									<div class="u-border-2 u-border-white u-container-layout u-valign-middle u-container-layout-2">
+									{% for flash_error in app.flashes('verify_email_error') %}
+										<div class="alert alert-light" role="alert">
+											{{ flash_error }}
+										</div>
+									{% endfor %}
+										<h2 class="u-align-center u-text u-text-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Inscription à Olona-talents.com</h2>
+										<p class="u-align-center u-text u-text-2">
+											Déjà membre ?&nbsp;<a href="{{ path('app_login')}}" class="text-primary transition u-active-none u-border-none u-btn u-button-style u-hover-none u-none u-text-palette-1-base u-btn-1">
+                      						Connectez-vous dès maintenant&nbsp;</a>et profitez des avantages de Olona-talents.
+										</p>
+										<a href="{{ path('connect_google_start') }}" class="u-align-center u-border-1 u-border-custom-color-2 u-btn u-btn-round u-button-style u-hover-custom-color-7 u-radius-50 u-white u-btn-2">
+                      						se connecter avec&nbsp;&nbsp;<span class="u-file-icon u-icon u-icon-1"><img src="images/10124147.png" alt=""></span>
+										</a>
+										<div class="u-expanded-width u-form u-form-1">
+											{{ form_errors(registrationForm) }}
+
+											{{ form_start(registrationForm, {'attr': {'class': 'row'}}) }}
+
+
+											{{ form_row(registrationForm.nom) }}
+											{{ form_row(registrationForm.prenom) }}
+											{{ form_row(registrationForm.email) }}
+											{{ form_row(registrationForm.plainPassword) }}
+											<div class="form-check form-check-inline">
+												<div class="row">
+													<div class="col-1 m-0 p-0">
+														<div class="form-check form-check-inline">
+															{{ form_widget(registrationForm.agreeTerms) }}
+														</div>
+													</div>
+													<div class="col-11 m-0 pl-0">
+														<label class="form-check-label fs-6" for="{{ registrationForm.agreeTerms.vars.id }}">
+															{{ attribute(registrationForm.agreeTerms.vars.attr, 'label')|trans({
+																'%terms_url%': path('app_home_terms'),
+																'%privacy_url%': path('app_home_privacy')
+															})|raw }}
+														</label>
+													</div>
+												</div>
+
+											</div>
+
+
+											<button class="btn btn-lg btn-primary rounded-pill px-5" type="submit" id="register-submit">
+												{{ 'app_register.menu'|trans }}                
+											</button>
+											{{ form_end(registrationForm) }}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

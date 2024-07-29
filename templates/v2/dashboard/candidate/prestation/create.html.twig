@@ -1,0 +1,37 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Créer une prestation | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+  {% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endblock %}
+
+{% block body %}
+    <section class="">
+      <div class="shadow p-2 p-sm-4">
+        <div class="col-12 col-sm-8 mx-auto p-2 p-sm-4">
+          {{ form_start(form) }}
+          {{ form_widget(form) }}
+          <button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+            <i class="bi bi-save"></i> Enregister
+          </button>
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </section>
+  <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+	<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+	<script>
+		ClassicEditor.create(document.querySelector('#prestation_description'))
+	</script>
+{% endblock %}

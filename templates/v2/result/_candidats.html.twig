@@ -1,0 +1,111 @@
+
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="pending">
+                    {% for item in candidats %}
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <!-- Avatar container -->
+                            <div class="rounded-circle" style="
+                                width: 40px;
+                                height: 40px;
+                                background-image: url('{{ item[0].fileName ? asset('uploads/experts/' ~ item[0].fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+                                background-size: cover;
+                                background-position: center;
+                            ">
+                            </div>
+
+                            <!-- Text content -->
+                            <div class="flex-grow-1 ms-3">
+                                <a href="#" data-id="{{ item[0].id }}" class="candidate-link"><strong class="mb-1">{{ generatePseudo(item[0]) }} </strong></a>
+                                <div class="col-10 mb-1 small">{{ item[0].titre|upper }}</div>
+                            </div>
+                            <!-- Date or any other information -->
+                            <span data-candidate="{{ item[0].id }}" style="display:none">
+                            
+                                <div class="mb-4 mb-2">
+                                    <div class="h-100">
+                                        <div class="card-img-top bg-image-candidat" style="background-image: url('{{vich_uploader_asset(item[0], 'file')}}');" alt="{{ item[0].titre }}">
+                                            <div class="titre-overlay position-absolute w-100">
+                                                <h6 class="card-title m-0 p-2">{{ item[0].titre|upper }}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            {% set prenoms = item[0].candidat.prenom|split(' ') %}
+                                                <p class="card-text">
+                                                    {{ generatePseudo(item[0])}}
+                                                </p>
+                                            <p class="card-text small">
+                                            {% set count = 0 %}
+
+                                            {% for skill in item[0].competences %}
+                                                {% if count < 3 %}
+                                                    <span class="badge bg-info">{{ skill.nom }}</span>
+                                                    {% set count = count + 1 %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if item[0].competences|length > 4 %}
+                                                <span class="badge bg-dark rounded-pill">+{{ item[0].competences|length - 3 }}</span>
+                                            {% endif %}
+
+                                            <br>
+                                                Missions réalisées: <span class="badge bg-success">{{ item[0].applications|filter(app => app.status == 'ACCEPTED')|length }}</span>
+                                            <br>
+                                                Expériences: <span class="badge bg-secondary">{{ item[0].experiences|length }}</span>
+                                            <br>
+                                                Langues: 
+                                                {% for langue in item[0].langages %}
+                                                    {{ isoToEmoji(langue.langue.code) }}
+                                                {% endfor %}
+                                            <br>
+                                                Disponibilité: 
+                                                <span class="text-dark">
+                                                    {% if item[0].availability is not null %}
+                                                        {{ checkAvailability(item[0].candidat)|raw}}
+                                                    {% else %}
+                                                        <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                                                    {% endif %} 
+                                                </span>
+                                            {% if item[0].tarifCandidat is defined and item[0].tarifCandidat is not null %}
+                                                <br>
+                                            <strong><i class="bi bi-tags"></i></strong>
+                                            <span class="text-muted">{{getDefaultTarifCandidat(item[0])}}</span>
+                                            {% endif %}
+                                            <br>
+                                                {% set countSecteurs = 0 %}
+                                                {% for skill in item[0].secteurs %}
+                                                    {% if countSecteurs < 3 %}
+                                                        <span class="badge bg-warning">{{ skill.nom }}</span>
+                                                        {% set countSecteurs = countSecteurs + 1 %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% if item[0].secteurs|length > 4 %}
+                                                <span class="badge bg-dark rounded-pill">+{{ item[0].secteurs|length - 3 }}</span>
+                                            {% endif %}
+                                            </p>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6 mx-auto">
+                                                <a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id': item[0].id}) }}" class="btn btn-info btn-sm rounded-pill px-4"><i class="bi bi-eye"></i> Détails</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </span>
+                        </div>
+                        <div class="mb-3 small fw-lighter">
+						{% set last_query = app.request.query.get('q', '') %}
+                        {{ highlightKeywords(item[0], last_query)|raw }}
+                        </div>
+                    {% endfor %}
+                    </div>
+            
+                    <div class="tab-pane fade" id="accepted">
+                    </div>
+            
+                    <div class="tab-pane fade" id="refused">
+                    </div>
+            
+                    <div class="tab-pane fade" id="archived">
+                    </div>
+                </div>

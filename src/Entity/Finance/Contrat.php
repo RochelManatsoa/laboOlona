@@ -73,7 +73,7 @@ class Contrat
     #[ORM\Column]
     private ?float $salaireBase = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'contrat', cascade: ['persist', 'remove'])]
     private ?Simulateur $simulateur = null;
 
     #[ORM\Column(length: 50, nullable: true)]

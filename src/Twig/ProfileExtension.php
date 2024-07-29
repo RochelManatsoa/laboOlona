@@ -2,26 +2,28 @@
 
 namespace App\Twig;
 
-use App\Entity\Candidate\TarifCandidat;
-use App\Entity\CandidateProfile;
-use App\Entity\Entreprise\BudgetAnnonce;
-use App\Entity\Entreprise\Favoris;
 use DateTime;
 use App\Entity\User;
 use Twig\TwigFilter;
 use DateTimeInterface;
 use IntlDateFormatter;
 use Twig\TwigFunction;
-use App\Entity\ReferrerProfile;
-use App\Entity\Referrer\Referral;
-use App\Entity\Entreprise\JobListing;
-use App\Entity\EntrepriseProfile;
-use App\Entity\Finance\Contrat;
+use App\Entity\Availability;
 use App\Entity\Finance\Devise;
+use App\Entity\Finance\Contrat;
 use App\Entity\Finance\Employe;
+use App\Entity\ReferrerProfile;
+use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
+use App\Entity\Referrer\Referral;
+use App\Entity\Entreprise\Favoris;
 use App\Entity\Finance\Simulateur;
-use App\Manager\Finance\EmployeManager;
+use App\Entity\Entreprise\JobListing;
 use Twig\Extension\AbstractExtension;
+use App\Entity\Candidate\TarifCandidat;
+use App\Entity\Entreprise\PrimeAnnonce;
+use App\Manager\Finance\EmployeManager;
+use App\Entity\Entreprise\BudgetAnnonce;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\ReferrerProfileRepository;
@@ -56,6 +58,9 @@ class ProfileExtension extends AbstractExtension
             new TwigFunction('getTarifByCompanyCurrency', [$this, 'getTarifByCompanyCurrency']),
             new TwigFunction('getDefaultTarifCandidat', [$this, 'getDefaultTarifCandidat']),
             new TwigFunction('getBudgetAnnonceStr', [$this, 'getBudgetAnnonceStr']),
+            new TwigFunction('getPrimeAnnonceStrById', [$this, 'getPrimeAnnonceStrById']),
+            new TwigFunction('getBudgetAnnonceStrById', [$this, 'getBudgetAnnonceStrById']),
+            new TwigFunction('getAvailabilityStr', [$this, 'getAvailabilityStr']),
         ];
     }
 
@@ -92,6 +97,46 @@ class ProfileExtension extends AbstractExtension
             $tarif = round($budgetAnnonce->getMontant(), 2).' '.$symbole;
         }elseif($annonce->getBudget() !== null){
             $tarif = $annonce->getBudget().' €';
+        }
+
+        return $tarif;
+    }
+
+    public function getBudgetAnnonceStrById(int $id): string
+    {
+        $tarif = '';
+        $annonce = $this->em->getRepository(JobListing::class)->find($id);
+        if(!$annonce instanceof JobListing){
+            return "";
+        }
+        $budgetAnnonce = $annonce->getBudgetAnnonce();
+        if($budgetAnnonce instanceof BudgetAnnonce){
+            $symbole = "€";
+            if($budgetAnnonce->getCurrency() instanceof Devise){
+                $symbole = $budgetAnnonce->getCurrency()->getSymbole();
+            }
+            $tarif = round($budgetAnnonce->getMontant(), 2).' '.$symbole;
+        }elseif($annonce->getBudget() !== null){
+            $tarif = $annonce->getBudget().' €';
+        }
+
+        return $tarif;
+    }
+
+    public function getPrimeAnnonceStrById(int $id): string
+    {
+        $tarif = '';
+        $annonce = $this->em->getRepository(JobListing::class)->find($id);
+        if(!$annonce instanceof JobListing){
+            return "";
+        }
+        $primeAnnonce = $annonce->getPrimeAnnonce();
+        if($primeAnnonce instanceof PrimeAnnonce){
+            $symbole = "€";
+            if($primeAnnonce->getDevise() instanceof Devise){
+                $symbole = $primeAnnonce->getDevise()->getSymbole();
+            }
+            $tarif = round($primeAnnonce->getMontant(), 2).' '.$symbole;
         }
 
         return $tarif;
@@ -156,5 +201,40 @@ class ProfileExtension extends AbstractExtension
         }
 
         return $type;
+    }
+
+    public function getAvailabilityStr(CandidateProfile $candidateProfile): string
+    {
+        $status = 'Non renseigné';
+        $availability = $candidateProfile->getAvailability();
+        if($availability instanceof Availability){
+            switch ($availability->getNom()) {
+                case 'immediate':
+                    $status = 'Disponible';
+                    break;
+
+                case 'from-date':
+                    $status = 'A partir du '. $availability->getDateFin()->format('d/m/Y');
+                    break;
+
+                case 'full-time':
+                    $status = 'Temps plein';
+                    break;
+
+                case 'part-time':
+                    $status = 'Temps partiel';
+                    break;
+
+                case 'not-available':
+                    $status = 'Non disponible';
+                    break;
+                
+                default:
+                    $status = 'Non renseigné';
+                    break;
+            }
+        }
+
+        return $status;
     }
 }

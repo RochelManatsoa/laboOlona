@@ -1,0 +1,63 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+
+{% block header %}
+	{% set last_query = app.request.query.get('q', '') %}
+	<!-- Boutons en haut à droite -->
+	<div class="fixed-top d-flex justify-content-end p-2">
+		<a href="{{ path('app_login')}}" class="me-3 mt-2">Se connecter</a>
+		<button id="switch-theme" class="btn btn-secondary btn-sm">
+			<i class="bi bi-moon-stars-fill"></i>
+		</button>
+	</div>
+	<header class="p-3 mb-2">
+		<div class="container">
+			<div class="row">
+				<div class="col-12 col-sm-4 mx-auto my-4">
+					<a href="{{ path('app_home') }}">
+						<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" class="img-fluid mx-auto" alt="Logo">
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 col-sm-10 text-center mx-auto">
+					<h1 class="fs-3 my-4">Le #1 moteur de recherche sur l'emploi boosté par l'IA</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 col-sm-6 mx-auto rounded-pill">
+					<form action="{{ path('app_olona_talents_result') }}" class="input-group mb-3 rounded-pill">
+						<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+						<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</header>
+{% endblock %}
+
+{% block body %}
+
+	<section class="">
+		<div class="row">
+			<div class="col-12 col-sm-7 mx-auto border rounded-4 shadow-custom">
+				<div class="text-center p-2 p-sm-5">
+					<h2 class="fs-4">
+						Faites des recherches pour commencer
+					</h2>
+					<p class="">
+						Commencez à feuilleter les profils qui vous interresse pour nous aider à vous proposer une sélection qui vous plaira.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}

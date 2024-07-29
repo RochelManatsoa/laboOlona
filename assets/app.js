@@ -6,14 +6,108 @@
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
-import './styles/app.scss';
-import 'bootstrap';
-import './bootstrap.js';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import $ from 'jquery';
+// import './styles/app.scss';
+// import 'bootstrap';
+// import './bootstrap.js';
+// import 'bootstrap-icons/font/bootstrap-icons.css';
+// import $ from 'jquery';
 
+import $ from 'jquery';
+import { Tooltip, Toast, Popover } from 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import './styles/app.scss'; // Assurez-vous que ce chemin est correct selon votre structure de projet
+
+// Import Swup
+import Swup from 'swup';
+import SwupFadeTheme from '@swup/fade-theme';
+import { startStimulusApp } from '@symfony/stimulus-bridge';
+
+// Initializes the Stimulus application
+const app = startStimulusApp();
+
+// Initialize Swup
+const swup = new Swup({
+    plugins: [new SwupFadeTheme()]
+});
+import Tagify from '@yaireo/tagify';
+import '@yaireo/tagify/dist/tagify.css';
+
+// Attendez que le DOM soit entièrement chargé
+document.addEventListener("DOMContentLoaded", function() {
+    // Sélectionnez tous les champs avec l'attribut data-role="tagify"
+    const tagifyElems = document.querySelectorAll('input[data-role=tagify]');
+
+    // Appliquez Tagify à chaque élément sélectionné
+    tagifyElems.forEach(function(elem) {
+        new Tagify(elem);
+    });
+});
+// Function to activate the tab from URL
+function activateTabFromUrl() {
+    // Obtenir les paramètres de l'URL
+    var urlParams = new URLSearchParams(window.location.search);
+    var selectedTab = urlParams.get('tab');
+
+    if (selectedTab) {
+        // Désactiver l'onglet actif par défaut
+        console.log(selectedTab)
+        $('.tab-pane').removeClass('show active');
+        $('.nav-link').removeClass('active');
+
+        // Trouver le lien du tab correspondant
+        var tabLink = $('a.nav-link[href="#' + selectedTab + '"]');
+
+        if (tabLink.length) {
+            // Activer le tab correspondant
+            var tab = new bootstrap.Tab(tabLink[0]);
+            tab.show();
+        }
+    }
+}
 
 $(function() {
+    // Function to update logo based on theme
+    function updateLogo() {
+        const currentTheme = $('body').hasClass('bootstrap-dark') ? 'dark' : 'light';
+        const logoSrc = currentTheme === 'dark' ? '/images/logo-olona-talents-white600x200.png' : '/images/logo-olona-talents-black600x200.png';
+        $('#logo').attr('src', logoSrc);
+
+        // Update switch theme icon
+        const themeIcon = currentTheme === 'dark' ? 'bi-brightness-high' : 'bi-moon-stars-fill';
+        $('#switch-theme i').removeClass();
+        $('#switch-theme i').addClass(`bi ${themeIcon}`);
+    }
+
+    $('#switch-theme').on('click', function() {
+        $('body').toggleClass('bootstrap-dark');
+        $('body').toggleClass('bootstrap-light');
+
+        // Enregistrer la préférence de l'utilisateur dans le localStorage
+        const currentTheme = $('body').hasClass('bootstrap-dark') ? 'bootstrap-dark' : 'bootstrap-light';
+        localStorage.setItem('theme', currentTheme);
+
+        // Update logo
+        updateLogo();
+    });
+
+    // Charger le thème enregistré par l'utilisateur
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        $('body').removeClass('bootstrap-dark bootstrap-light').addClass(savedTheme);
+    }
+
+    // Update logo and icon on initial load
+    updateLogo();
+
+    // Activer l'onglet correct au chargement initial
+    activateTabFromUrl();
+
+    // Écouter les transitions de Swup
+    document.addEventListener('swup:contentReplaced', function() {
+        activateTabFromUrl();
+    });
+
     $('[data-bs-toggle="tooltip"]').tooltip();
     $('#experience').on('shown.bs.modal', function () {
         // Fonction pour gérer la logique de chaque groupe de champs

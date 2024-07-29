@@ -4,7 +4,7 @@ const axios = require('axios');
 const OpenAI = require('openai');
 const FormData = require('form-data');
 const fs = require('fs'); 
-const pdfParse = require('pdf-parse');
+const pdf = require('pdf-parse');
 
 const apiKey = process.env.OPENAI_API_KEY || process.argv[3];
 
@@ -14,12 +14,30 @@ const openai = new OpenAI({
 
 const pdfPath = '/home/mast9834/laboOlona/public/uploads/cv/' + process.argv[2];
 
+const text = await extractTextFromPdf(pdfPath);
+const jsonlContent = convertTextToJsonl(text);
+
+
+// Fonction pour extraire le texte d'un fichier PDF
+const extractTextFromPdf = async (pdfPath) => {
+  const dataBuffer = fs.readFileSync(pdfPath);
+  const data = await pdf(dataBuffer);
+  return data.text;
+};
+
+// Fonction pour convertir le texte en format JSONL
+const convertTextToJsonl = (text) => {
+  const lines = text.split('\n').filter(line => line.trim() !== '');
+  const jsonlLines = lines.map(line => JSON.stringify({ text: line }));
+  return jsonlLines.join('\n');
+};
+
 // Fonction pour télécharger le fichier PDF et obtenir un file_id
-async function uploadPDF(pdfPath) {
+async function uploadPDF(jsonlContent) {
     try {
       const form = new FormData();
-      form.append('file', fs.createReadStream(pdfPath));
-      form.append('purpose', 'user_data');
+      form.append('file', fs.createReadStream(jsonlContent));
+      form.append('purpose', 'fine-tune');
   
       const uploadResponse = await axios.post('https://api.openai.com/v1/files', form, {
         headers: {
@@ -50,6 +68,7 @@ async function createVectorStore(fileId) {
           'OpenAI-Beta': 'assistants=v2'
         }
       });
+      console.log(vectorStoreResponse.data)
   
       const vectorStoreId = vectorStoreResponse.data.id;
   

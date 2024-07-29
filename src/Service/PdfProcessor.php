@@ -11,15 +11,21 @@ class PdfProcessor
     private $httpClient;
     private $entityManager;
 
-    public function __construct(HttpClientInterface $httpClient, EntityManagerInterface $entityManager)
+    public function __construct(
+        HttpClientInterface $httpClient, 
+        private FileUploader $fileUploader, 
+        EntityManagerInterface $entityManager
+    )
     {
         $this->httpClient = $httpClient;
         $this->entityManager = $entityManager;
     }
 
-    public function processPdf(string $pdfPath, CandidateProfile $candidateProfile): void
+    public function processPdf(int $candidatId)
     {
-        
+        $candidateProfile = $this->entityManager->getRepository(CandidateProfile::class)->find($candidatId);
+        $pdfPath = $this->fileUploader->getTargetDirectory() . '/'.$candidateProfile->getCv();
+        // dd($pdfPath);
         // Effectuer la requête curl pour envoyer le fichier PDF
         $boundary = '----WebKitFormBoundary'.md5(time());
         $body = "--$boundary\r\n".
@@ -36,13 +42,6 @@ class PdfProcessor
         ]);
 
         // Récupérer le contenu de la réponse
-        $content = $response->getContent();
-
-        // Stocker la réponse dans l'entité CandidateProfile
-        $candidateProfile->setTesseractResult($content);
-
-        // Sauvegarder les modifications dans la base de données
-        $this->entityManager->persist($candidateProfile);
-        $this->entityManager->flush();
+        return $response->getContent();
     }
 }

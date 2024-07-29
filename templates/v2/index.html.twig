@@ -1,0 +1,141 @@
+{% extends 'base_v2.html.twig' %}
+
+{% block title %}Olona Talents{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{asset('v2/css/nicehomepage.css')}}" media="screen">
+	<link rel="stylesheet" href="{{asset('v2/css/accueil.css')}}" media="screen">
+{% endblock %}
+
+{% block header %}
+	<header class="u-clearfix u-header" id="sec-e933">
+		<div class="u-clearfix u-sheet u-sheet-1">
+			<a href="{{ path('app_olona_talents')}}" class="u-image u-logo u-image-1" data-image-width="4310" data-image-height="1769">
+				<img src="{{ asset('images/logo-olona-talents-black.png')}}" class="u-logo-image u-logo-image-1">
+			</a>
+			<nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+				<div class="menu-collapse" style="font-size: 0.75rem;">
+					<a class="u-button-style u-custom-color u-custom-left-right-menu-spacing u-custom-text-decoration u-nav-link" href="#">
+						<svg class="u-svg-link" viewbox="0 0 24 24">
+							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use>
+						</svg>
+						<svg class="u-svg-content" version="1.1" id="menu-hamburger" viewbox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+							<g>
+								<rect y="1" width="16" height="2"></rect>
+								<rect y="7" width="16" height="2"></rect>
+								<rect y="13" width="16" height="2"></rect>
+							</g>
+						</svg>
+					</a>
+				</div>
+				<div class="u-custom-menu u-nav-container">
+					<ul class="u-custom-font u-heading-font u-nav u-unstyled u-nav-1">
+						<li class="u-nav-item">
+							<a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{{ path('app_login')}}" style="padding: 10px;">Connexion</a>
+						</li>
+					</ul>
+				</div>
+				<div class="u-custom-menu u-nav-container-collapse">
+					<div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+						<div class="u-inner-container-layout u-sidenav-overflow">
+							<div class="u-menu-close"></div>
+							<ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+								<li class="u-nav-item">
+									<a class="u-button-style u-nav-link" href="{{ path('app_login')}}">Connexion</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+				</div>
+			</nav>
+			<h2 class="u-subtitle u-text u-text-default u-text-1">Le #1 moteur de recherche sur l'emploi boosté par l'IA</h2>
+			<a href="#" class="u-active u-active-none u-align-center u-border-2 u-border-no-left u-border-no-right u-border-no-top u-bottom-left-radius-0 u-bottom-right-radius-0 u-btn u-btn-rectangle u-button-style u-hover-none u-none u-radius-0 u-top-left-radius-0 u-top-right-radius-0 u-btn-1" data-value="annonce">Annonce</a>
+			<a href="#" class="u-inactive u-active-none u-align-center u-border-2 u-border-no-left u-border-no-right u-border-no-top u-bottom-left-radius-0 u-bottom-right-radius-0 u-btn u-btn-rectangle u-button-style u-hover-none u-none u-radius-0 u-top-left-radius-0 u-top-right-radius-0 u-btn-2" data-value="candidat">Candidat</a>
+			<a href="#" class="u-inactive u-active-none u-align-center u-border-2 u-border-no-left u-border-no-right u-border-no-top u-bottom-left-radius-0 u-bottom-right-radius-0 u-btn u-btn-rectangle u-button-style u-hover-none u-none u-radius-0 u-top-left-radius-0 u-top-right-radius-0 u-btn-3" data-value="formations">Formations</a>
+			<form action="{{ path('app_olona_talents_result')}}" method="get" class="u-align-center u-border-1 u-border-grey-25 u-radius-50 u-search u-search-right u-white u-search-1">
+				<button class="u-search-button" type="submit">
+					<span class="u-file-icon u-search-icon u-spacing-10 u-search-icon-1">
+						<img src="{{ asset('v2/images/5650295.png')}}" alt="">
+					</span>
+				</button>
+				<input type="hidden" name="s" value="annonce">
+				<input class="u-search-input" type="search" name="q" value="" placeholder="Recherche">
+			</form>
+
+		</div>
+	</header>
+{% endblock %}
+
+{% block body %}
+	<section class="u-align-center u-clearfix u-container-align-center u-section-1" id="sec-2784">
+		<div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+			<div class="u-border-1 u-border-white u-container-style u-group u-radius-20 u-shape-round u-group-1">
+				<div class="u-container-layout u-container-layout-1">
+					<h2 class="u-align-center u-text u-text-1">
+						Faites des recherches pour commencer
+					</h2>
+					<p class="u-align-center u-text u-text-2">
+						Commencez à feuilleter les profils qui vous interresse pour nous aider à vous proposer une sélection qui vous plaira.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="u-align-center u-clearfix u-section-2" id="sec-fdf6">
+		<div class="u-clearfix u-sheet u-sheet-1">
+			<h2 class="u-align-center u-text u-text-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">ou faites appels à notre service RH !</h2>
+			<p class="u-align-center u-text u-text-2">Exemple de texte. Cliquez pour sélectionner l'élément de texte.</p>
+			<div class="u-form u-form-1">
+				<form action="https://forms.nicepagesrv.com/Form/Process" class="u-clearfix u-form-horizontal u-form-spacing-15 u-inner-form" style="padding: 15px" source="email">
+					<div class="u-form-group u-form-name u-label-top">
+						<label for="name-558c" class="u-label">Je souahite avoir</label>
+						<input type="text" placeholder="Décrivez votre demande" id="name-558c" name="name" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required="">
+					</div>
+					<div class="u-form-group u-form-number u-form-number-layout-range-number u-label-top u-form-group-2">
+						<label for="number-ce07" class="u-label">Budget (€)</label>
+						<div class="u-input-row">
+							<input value="0" min="0" max="100" step="1" type="range" placeholder="" id="number-ce07" name="number" class="u-input u-input-rectangle u-range">
+							<input type="number" placeholder="" id="number-number-ce07" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" min="0" max="100" step="1" value="0">
+						</div>
+					</div>
+					<div class="u-form-date u-form-group u-label-top u-form-group-3">
+						<label for="name-8b04" class="u-label">Date d'embauche</label>
+						<input type="text" placeholder="21/06/2024" id="name-8b04" name="name-2" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required="required" data-date-format="mm/dd/yyyy">
+					</div>
+					<div class="u-form-group u-form-submit u-label-top">
+						<a href="#" class="u-btn u-btn-submit u-button-style">Soumettre<br>
+						</a>
+						<input type="submit" value="submit" class="u-form-control-hidden">
+					</div>
+					<div class="u-form-send-message u-form-send-success">Thank you! Your message has been sent.</div>
+					<div class="u-form-send-error u-form-send-message">Unable to send your message. Please fix errors then try again.</div>
+					<input type="hidden" value="" name="recaptchaResponse">
+					<input type="hidden" name="formServices" value="29cca382-d162-d9b2-a4b3-ab7973fafea0">
+				</form>
+			</div>
+		</div>
+	</section>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+	$(document).ready(function() {
+		$('a[data-value]').click(function(event) {
+			event.preventDefault();
+			
+			// Update the active state
+			$('a[data-value]').removeClass('u-active').addClass('u-inactive');
+			$(this).removeClass('u-inactive').addClass('u-active');
+			
+			// Update the hidden input value
+			var selectedValue = $(this).attr('data-value');
+			$('input[name="s"]').val(selectedValue);
+		});
+	});
+
+	</script>
+{% endblock %}

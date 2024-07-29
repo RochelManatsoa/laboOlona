@@ -48,7 +48,7 @@ class HomeController extends AbstractController
     ) {
     }
 
-    #[Route('/', name: 'app_home')]
+    #[Route('/v1', name: 'app_olona_talents')]
     public function index(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,

@@ -151,6 +151,15 @@ class JobListing
     #[ORM\OneToOne(mappedBy: 'annonce', cascade: ['persist', 'remove'])]
     private ?PrimeAnnonce $primeAnnonce = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $shortDescription = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isGenerated = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $cleanDescription = null;
+
     public function __toString()
     {
         return $this->titre;        
@@ -595,5 +604,41 @@ class JobListing
     public function getUrl(): string
     {
         return 'https://app.olona-talents.com/dashboard/candidat/annonce/'.$this->jobId;
+    }
+
+    public function getShortDescription(): ?string
+    {
+        return $this->shortDescription;
+    }
+
+    public function setShortDescription(?string $shortDescription): static
+    {
+        $this->shortDescription = $shortDescription;
+
+        return $this;
+    }
+
+    public function isIsGenerated(): ?bool
+    {
+        return $this->isGenerated;
+    }
+
+    public function setIsGenerated(?bool $isGenerated): static
+    {
+        $this->isGenerated = $isGenerated;
+
+        return $this;
+    }
+
+    public function getCleanDescription(): ?string
+    {
+        return $this->cleanDescription;
+    }
+
+    public function setCleanDescription(?string $cleanDescription): static
+    {
+        $this->cleanDescription = $cleanDescription;
+
+        return $this;
     }
 }

@@ -1,0 +1,193 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Dashboard | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+  <style>
+      .load {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 1; /* Sit on top */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+
+      .load-content {
+          margin: 15% auto; /* 15% from the top and centered */
+          padding: 20px;
+          width: 80%; /* Could be more or less, depending on screen size */
+          text-align: center;
+          background: #000;
+      }
+
+      .loader {
+          font-size: 24px;
+          font-weight: bold;
+      }
+
+      .dot {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          margin: 0 2px;
+          background-color: #000;
+          border-radius: 50%;
+          animation: blink 1.4s infinite both;
+      }
+
+      .dot:nth-child(1) {
+          animation-delay: 0.2s;
+      }
+
+      .dot:nth-child(2) {
+          animation-delay: 0.4s;
+      }
+
+      .dot:nth-child(3) {
+          animation-delay: 0.6s;
+      }
+
+      @keyframes blink {
+          0%, 80%, 100% {
+              opacity: 0;
+          }
+          40% {
+              opacity: 1;
+          }
+      }
+  </style>
+{% endblock %}
+
+{% block sidebar %}
+  {% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endblock %}
+
+{% block body %}
+    <div class="load" id="cvModal">
+        <div class="load-content p-5 border">
+           <span class="fs-2 m-5">Analyse de votre CV</span> <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+        </div>
+    </div>
+    <section class="">
+      <div class="shadow p-2 p-sm-4">
+        <h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+          <span class="">
+            <img src="{{ asset('v2/images/7108023.png')}}" alt="icone" style="width:30px;" >
+          </span> 
+          Bienvenue dans votre espace VIP Olona Talents 
+          <span class="">
+            <img src="{{ asset('v2/images/7108023.png')}}" alt="icone" style="width:30px;" >
+          </span>
+        </h2>
+
+        <p class="fw-lighter"> Afin de maximiser vos chances de trouver l'emploi de vos
+          rêves, veuillez remplir ce formulaire avec soin. Notre IA spécialisée dans le recrutement
+          analysera et optimisera votre profil en fonction des informations fournies.</p>
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('danger') %}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+        
+            <h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+              <span class="">
+              <img src="{{ asset('v2/images/6939131.png')}}" alt="icone" style="width:30px;">
+              </span>
+              1ère chose à faire
+            </h3>
+        {{ form_start(form, {'attr': {'id': 'cvForm', 'class':'text-center'}})}}
+        {{ form_widget(form)}}
+        <button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+          <i class="bi bi-download"></i> Mettre en ligne un cv
+        </button>
+        {{ form_end(form)}}
+        <p class="text-center">Exemple de texte. Cliquez pour sélectionner l'élément de
+          texte.</p>
+        <div class="">
+          <ul class="nav nav-underline justify-content-center">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" id="view-tab" data-bs-toggle="tab" href="#view">Voir le profil public</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="edit-tab" data-bs-toggle="tab" href="#edit">Modifier votre profil</a>
+            </li>
+          </ul>
+        </div>
+          <div class="u-container-layout u-container-layout-3 custom-shadow">
+            <h3 class="fs-5 fw-bolder mt-3 mt-sm-5 text-center">
+              <span class="u-file-icon u-icon">
+                <img src="{{ asset('v2/images/3221746.png')}}" alt="icone" style="width:32px;">
+              </span>
+              Conseils pour Compléter Votre Profil
+            </h3>
+            <ul class="col-12 col-sm-8 mx-auto">
+                <li class="list-group-item mx-2">
+                    <div class="row mb-3">
+                        <div class="col-1">
+                            <i class="bi bi-check h5 text-danger"></i>
+                        </div>
+                        <div class="col-11">
+                            Prenez votre temps pour corrigez chaque section de manière détaillée et précise.
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item mx-2">
+                    <div class="row mb-3">
+                        <div class="col-1">
+                            <i class="bi bi-check h5 text-danger"></i>
+                        </div>
+                        <div class="col-11">
+                            Prenez votre temps pour corrigez chaque section de manière détaillée et précise.
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item mx-2">
+                    <div class="row mb-3">
+                        <div class="col-1">
+                            <i class="bi bi-check h5 text-danger"></i>
+                        </div>
+                        <div class="col-11">
+                            Relisez votre profil avant de le soumettre pour éviter les erreurs.
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item mx-2">
+                    <div class="row mb-3">
+                        <div class="col-1">
+                            <i class="bi bi-check h5 text-danger"></i>
+                        </div>
+                        <div class="col-11">
+                            Les modifications que vous apporterez seront soumis aux modérateurs pour validation.
+                        </div>
+                    </div>
+                </li>
+            </ul>
+          </div>
+      </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+        document.getElementById('cvForm').addEventListener('submit', function() {
+            document.getElementById('cvModal').style.display = 'block';
+        });
+    </script>
+{% endblock %}

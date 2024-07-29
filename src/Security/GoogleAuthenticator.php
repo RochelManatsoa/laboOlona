@@ -122,7 +122,7 @@ class GoogleAuthenticator extends OAuth2Authenticator
             return new RedirectResponse($targetPath);
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('app_connect'));
+        return new RedirectResponse($this->urlGenerator->generate('app_v2_dashboard'));
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response

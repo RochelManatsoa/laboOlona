@@ -16,6 +16,12 @@
                 "enabled": true,
                 "fetch": "lazy"
             }
+        },
+        "@symfony/ux-swup": {
+            "swup": {
+                "enabled": true,
+                "fetch": "eager"
+            }
         }
     },
     "entrypoints": []

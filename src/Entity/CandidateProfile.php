@@ -88,7 +88,7 @@ class CandidateProfile
     #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: Metting::class, cascade: ['persist', 'remove'])]
     private Collection $mettings;
 
-    #[ORM\ManyToMany(targetEntity: Secteur::class,  inversedBy: 'canditat')]
+    #[ORM\ManyToMany(targetEntity: Secteur::class,  inversedBy: 'candidat')]
     #[Groups(['identity'])]
     private Collection $secteurs;
 
@@ -190,6 +190,12 @@ class CandidateProfile
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $resumeCandidat = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isGeneretated = null;
+
+    #[ORM\OneToMany(mappedBy: 'candidateProfile', targetEntity: Prestation::class)]
+    private Collection $prestations;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -204,6 +210,7 @@ class CandidateProfile
         $this->editedCvs = new ArrayCollection();
         $this->assignations = new ArrayCollection();
         $this->favoris = new ArrayCollection();
+        $this->prestations = new ArrayCollection();
     }
 
     public function __toString()
@@ -974,6 +981,48 @@ class CandidateProfile
     public function setResumeCandidat(?string $resumeCandidat): static
     {
         $this->resumeCandidat = $resumeCandidat;
+
+        return $this;
+    }
+
+    public function isIsGeneretated(): ?bool
+    {
+        return $this->isGeneretated;
+    }
+
+    public function setIsGeneretated(?bool $isGeneretated): static
+    {
+        $this->isGeneretated = $isGeneretated;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Prestation>
+     */
+    public function getPrestations(): Collection
+    {
+        return $this->prestations;
+    }
+
+    public function addPrestation(Prestation $prestation): static
+    {
+        if (!$this->prestations->contains($prestation)) {
+            $this->prestations->add($prestation);
+            $prestation->setCandidateProfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrestation(Prestation $prestation): static
+    {
+        if ($this->prestations->removeElement($prestation)) {
+            // set the owning side to null (unless already changed)
+            if ($prestation->getCandidateProfile() === $this) {
+                $prestation->setCandidateProfile(null);
+            }
+        }
 
         return $this;
     }

@@ -1,10 +1,217 @@
-@import "~bootstrap/scss/bootstrap";
-@import 'css/form.scss';
-@import 'css/variables.scss';
-@import 'css/radio.scss';
-@import 'css/media-queries.scss';
-@import 'css/navbar.scss';
-@import 'css/body.scss';
+// assets/styles/app.scss
+// Import Bootstrap functions and variables
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+// Polices pour tout le document
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+}
+
+// Style des liens
+a {
+    text-decoration: none !important;
+    font-family: 'Roboto', sans-serif;
+    color: inherit !important;
+}
+
+a:hover {
+    text-decoration: none !important;
+}
+
+// Couleurs des liens pour chaque thème
+body.bootstrap-light a {
+    color: #343a40 !important;
+}
+
+body.bootstrap-dark a {
+    color: #adb5bd !important;
+}
+
+// Bouton de changement de thème
+.switch-theme-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.fixed-top {
+  right: 10px;
+  top: 10px;
+  z-index: 1000;
+}
+
+.fixed-top .btn {
+  margin-right: 10px;
+}
+
+// Thème par défaut (clair)
+body.bootstrap-light {
+    $theme-colors: (
+        "primary": #0d6efd,
+        "secondary": #6c757d,
+        "success": #198754,
+        "info": #0dcaf0,
+        "warning": #ffc107,
+        "danger": #dc3545,
+        "light": #f8f9fa,
+        "dark": #343a40
+    );
+
+    @import "~bootstrap/scss/bootstrap";
+
+    background-color: #ffffff;
+    color: #000000;
+
+    .card {
+        background-color: #f8f9fa;
+        color: #343a40;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    // Ombre pour le thème clair
+    .shadow-custom {
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+
+    // Styles spécifiques pour le thème clair
+    .carousel-indicators button {
+        background-color: #343a40;
+    }
+
+    .carousel-indicators .active {
+        background-color: #0d6efd;
+    }
+}
+
+// Thème sombre
+body.bootstrap-dark {
+    $theme-colors: (
+        "primary": #375a7f,
+        "secondary": #444c57,
+        "success": #00bc8c,
+        "info": #3498db,
+        "warning": #f39c12,
+        "danger": #e74c3c,
+        "light": #adb5bd,
+        "dark": #1e1e2d
+    );
+
+    @import "~bootstrap/scss/bootstrap";
+
+    background-color: #1e1e2d;
+    color: #ffffff;
+
+    .card {
+        background-color: #343a40;
+        color: #f8f9fa;
+    }
+
+    .btn-secondary, .dropdown-menu {
+        background-color: #444c57;
+        border-color: #444c57;
+    }
+
+    .btn-primary {
+        background-color: #375a7f;
+        border-color: #375a7f;
+    }
+
+    // Ombre pour le thème sombre
+    .shadow-custom {
+        box-shadow: 0 .5rem 1rem rgba(255, 255, 255, 0.1);
+    }
+
+    // Styles spécifiques pour le thème sombre
+    .carousel-indicators button {
+        background-color: #adb5bd;
+    }
+
+    .carousel-indicators .active {
+        background-color: #375a7f;
+    }
+}
+// Thème clair spécifique Pagination
+body.bootstrap-light {
+    .pagination {
+        .page-link {
+            color: $dark; // Texte en noir du thème clair
+            background-color: #f8f9fa;
+            border-color: $secondary;
+
+            &:hover {
+                background-color: darken(#f8f9fa, 5%);
+                border-color: darken($secondary, 5%);
+            }
+
+            &.active {
+                color: $white;
+                background-color: $primary;
+                border-color: $primary;
+            }
+        }
+    }
+}
+
+// Thème sombre spécifique Pagination
+body.bootstrap-dark {
+    .pagination {
+        .page-link {
+            color: $light; // Texte en gris clair du thème sombre
+            background-color: $dark;
+            border-color: $secondary;
+
+            &:hover {
+                background-color: darken($dark, 5%);
+                border-color: darken($secondary, 5%);
+            }
+
+            &.active {
+                color: $white;
+                background-color: $primary;
+                border-color: $primary;
+            }
+        }
+    }
+}
+.tagify__input {
+    flex-grow: 1;
+    display: inline-block;
+    min-width: auto!important;
+    margin: 0px!important; 
+    padding: 0px!important;
+    line-height: normal;
+    position: relative;
+    white-space: pre-wrap;
+    box-sizing: inherit;
+    overflow: hidden;
+}
+.ck .ck-editor__main p{
+    color: #000!important;
+    min-height:200px!important;
+}
+
+// @import 'css/form.scss';
+// @import 'css/variables.scss';
+// @import 'css/radio.scss';
+// @import 'css/media-queries.scss';
+// @import 'css/navbar.scss';
+// @import 'css/body.scss';
 @import 'css/sections.scss';
-@import 'css/perso.scss';
-@import 'css/profile.scss';
+// @import 'css/perso.scss';
+// @import 'css/profile.scss';

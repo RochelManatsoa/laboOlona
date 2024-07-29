@@ -73,6 +73,10 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile/, roles: ROLE_USER }
         - { path: ^/dashboard/, roles: ROLE_USER }
+        - { path: ^/v2/dashboard/, roles: ROLE_USER }
+        - { path: ^/v2/candidate, roles: ROLE_USER }
+        - { path: ^/v2/recruiter, roles: ROLE_USER }
+        - { path: ^/v2/staff, roles: ROLE_USER }
         - { path: ^/finance, roles: ROLE_FINANCE }
         - { path: ^/employes-hub, roles: ROLE_EMPLOYE }
         - { path: ^/youtube/playlist, roles: ROLE_USER }

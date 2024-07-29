@@ -82,6 +82,25 @@ class BudgetAnnonce
     #[ORM\Column(nullable: true)]
     private ?float $taux = null;
 
+    public function __toString(): string
+    {
+        $tarif = $this->getMontant();
+        $symbole = $this->getDeviseSymbol($this->getDevise());
+        if($this->getCurrency()){
+            $symbole = $this->getCurrency()->getSymbole();
+        }
+        switch ($this->getTypeBudget()) {
+            case BudgetAnnonce::TYPE_MONTHLY :
+                $tarif = $this->getMontant().' '.$symbole.' Mensuel';
+                break;
+
+            case BudgetAnnonce::TYPE_PONCTUAL :
+                $tarif = $this->getMontant().' '.$symbole.' Ponctuel';
+                break;
+        }
+        return $tarif;
+    }
+
     public function __construct()
     {
         $this->annonce = new ArrayCollection();

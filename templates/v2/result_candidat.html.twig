@@ -1,0 +1,406 @@
+{% extends 'base_v2.html.twig' %}
+
+{% block title %}Résultat de recherche | Olona Talents
+{% endblock %}
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{asset('v2/css/nicepage.css')}}" media="screen">
+	<link rel="stylesheet" href="{{asset('v2/css/result.css')}}" media="screen">
+{% endblock %}
+
+{% block body %}
+
+	<section class="u-clearfix u-section-1" id="sec-fa95">
+		<div class="u-clearfix u-sheet u-sheet-1">
+			<div class="u-container-style u-group u-shape-rectangle u-group-1">
+				<div class="u-container-layout u-container-layout-1">
+					<p class="u-text u-text-default u-text-1">Tous</p>
+					<p class="u-text u-text-default u-text-2">Secteurs d'activité</p>
+					<p class="u-text u-text-default u-text-3">Expériences</p>
+					<p class="u-text u-text-default u-text-4">Compétence</p>
+					<p class="u-text u-text-default u-text-5">Disponibilité</p>
+					<p class="u-text u-text-default u-text-6">Tarifs</p>
+					<div class="u-border-1 u-border-grey-40 u-line u-line-horizontal u-line-1"></div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<section class="u-clearfix u-section-2" id="sec-d6c8">
+		<div class="u-clearfix u-sheet u-sheet-1">
+			<div class="u-clearfix u-layout-wrap u-layout-wrap-1">
+				<div class="u-layout">
+					<div class="u-layout-row">
+						<div class="u-container-style u-layout-cell u-size-44 u-layout-cell-1">
+							<div class="u-container-layout u-container-layout-1">
+								<h3 class="u-text u-text-1">LTop candidats dans ce secteur métier</h3>
+								<div class="u-expanded-width u-layout-grid u-list u-list-1">
+									<div class="u-repeater u-repeater-1">
+									{% if top_candidat|length > 0 %}
+										{% for candidat in top_candidat %}
+										<div class="u-border-1 u-border-white u-container-style u-list-item u-radius-10 u-repeater-item u-shape-round u-list-item-1">
+											<div class="u-container-layout u-similar-container u-container-layout-2">
+												<span class="u-file-icon u-icon u-text-palette-3-base u-icon-1"><img src="{{ asset('v2/images/6372664-e4b4a3d2.png')}}" alt=""></span>
+												<div class="u-container-align-center u-container-style u-expanded-width u-group u-image u-image-contain u-image-1" data-image-width="1080" data-image-height="1080">
+													<div class="u-container-layout u-container-layout-3">
+													
+														<div class="rounded-circle" style="
+															width: 80px;
+															height: 80px;
+															display:inline-block;
+															background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+															background-size: cover;
+															background-position: center;
+														">
+														</div>
+													
+													</div>
+												</div>
+												<h4 class="u-align-center u-text u-text-2">{{ candidat.titre }}</h4>
+												<p class="u-align-center u-small-text u-text u-text-variant u-text-3">
+												{{ candidat.metaDescription|slice(0, 97)|join(' ') ~ '...'|raw }}
+												</p>
+												<p class="u-align-center u-text u-text-4">
+													<span class="u-icon">
+														<svg class="u-svg-content" viewbox="0 0 511 511" style="width: 1em; height: 1em;">
+															<path d="m114.59375 491.140625c-5.609375 0-11.179688-1.75-15.933594-5.1875-8.855468-6.417969-12.992187-17.449219-10.582031-28.09375l32.9375-145.089844-111.703125-97.960937c-8.210938-7.167969-11.347656-18.519532-7.976562-28.90625 3.371093-10.367188 12.542968-17.707032 23.402343-18.710938l147.796875-13.417968 58.433594-136.746094c4.308594-10.046875 14.121094-16.535156 25.023438-16.535156 10.902343 0 20.714843 6.488281 25.023437 16.511718l58.433594 136.769532 147.773437 13.417968c10.882813.980469 20.054688 8.34375 23.425782 18.710938 3.371093 10.367187.253906 21.738281-7.957032 28.90625l-111.703125 97.941406 32.9375 145.085938c2.414063 10.667968-1.726562 21.699218-10.578125 28.097656-8.832031 6.398437-20.609375 6.890625-29.910156 1.300781l-127.445312-76.160156-127.445313 76.203125c-4.308594 2.558594-9.109375 3.863281-13.953125 3.863281zm141.398438-112.875c4.84375 0 9.640624 1.300781 13.953124 3.859375l120.277344 71.9375-31.085937-136.941406c-2.21875-9.746094 1.089843-19.921875 8.621093-26.515625l105.472657-92.5-139.542969-12.671875c-10.046875-.917969-18.6875-7.234375-22.613281-16.492188l-55.082031-129.046875-55.148438 129.066407c-3.882812 9.195312-12.523438 15.511718-22.546875 16.429687l-139.5625 12.671875 105.46875 92.5c7.554687 6.613281 10.859375 16.769531 8.621094 26.539062l-31.0625 136.9375 120.277343-71.914062c4.308594-2.558594 9.109376-3.859375 13.953126-3.859375zm-84.585938-221.847656s0 .023437-.023438.042969zm169.128906-.0625.023438.042969c0-.023438 0-.023438-.023438-.042969zm0 0"></path>
+														</svg><img></span>&nbsp;Certifié Olona
+												</p>
+												<p class="u-align-center u-text u-text-5">
+													<span class="u-icon">
+														<svg class="u-svg-content" viewbox="0 0 511 511" style="width: 1em; height: 1em;">
+															<path d="m114.59375 491.140625c-5.609375 0-11.179688-1.75-15.933594-5.1875-8.855468-6.417969-12.992187-17.449219-10.582031-28.09375l32.9375-145.089844-111.703125-97.960937c-8.210938-7.167969-11.347656-18.519532-7.976562-28.90625 3.371093-10.367188 12.542968-17.707032 23.402343-18.710938l147.796875-13.417968 58.433594-136.746094c4.308594-10.046875 14.121094-16.535156 25.023438-16.535156 10.902343 0 20.714843 6.488281 25.023437 16.511718l58.433594 136.769532 147.773437 13.417968c10.882813.980469 20.054688 8.34375 23.425782 18.710938 3.371093 10.367187.253906 21.738281-7.957032 28.90625l-111.703125 97.941406 32.9375 145.085938c2.414063 10.667968-1.726562 21.699218-10.578125 28.097656-8.832031 6.398437-20.609375 6.890625-29.910156 1.300781l-127.445312-76.160156-127.445313 76.203125c-4.308594 2.558594-9.109375 3.863281-13.953125 3.863281zm141.398438-112.875c4.84375 0 9.640624 1.300781 13.953124 3.859375l120.277344 71.9375-31.085937-136.941406c-2.21875-9.746094 1.089843-19.921875 8.621093-26.515625l105.472657-92.5-139.542969-12.671875c-10.046875-.917969-18.6875-7.234375-22.613281-16.492188l-55.082031-129.046875-55.148438 129.066407c-3.882812 9.195312-12.523438 15.511718-22.546875 16.429687l-139.5625 12.671875 105.46875 92.5c7.554687 6.613281 10.859375 16.769531 8.621094 26.539062l-31.0625 136.9375 120.277343-71.914062c4.308594-2.558594 9.109376-3.859375 13.953126-3.859375zm-84.585938-221.847656s0 .023437-.023438.042969zm169.128906-.0625.023438.042969c0-.023438 0-.023438-.023438-.042969zm0 0"></path>
+														</svg><img></span>&nbsp;10 Projets réalisés
+												</p>
+												<p class="u-align-center u-text u-text-6">
+													<span class="u-icon">
+														<svg class="u-svg-content" viewbox="0 0 511 511" style="width: 1em; height: 1em;">
+															<path d="m114.59375 491.140625c-5.609375 0-11.179688-1.75-15.933594-5.1875-8.855468-6.417969-12.992187-17.449219-10.582031-28.09375l32.9375-145.089844-111.703125-97.960937c-8.210938-7.167969-11.347656-18.519532-7.976562-28.90625 3.371093-10.367188 12.542968-17.707032 23.402343-18.710938l147.796875-13.417968 58.433594-136.746094c4.308594-10.046875 14.121094-16.535156 25.023438-16.535156 10.902343 0 20.714843 6.488281 25.023437 16.511718l58.433594 136.769532 147.773437 13.417968c10.882813.980469 20.054688 8.34375 23.425782 18.710938 3.371093 10.367187.253906 21.738281-7.957032 28.90625l-111.703125 97.941406 32.9375 145.085938c2.414063 10.667968-1.726562 21.699218-10.578125 28.097656-8.832031 6.398437-20.609375 6.890625-29.910156 1.300781l-127.445312-76.160156-127.445313 76.203125c-4.308594 2.558594-9.109375 3.863281-13.953125 3.863281zm141.398438-112.875c4.84375 0 9.640624 1.300781 13.953124 3.859375l120.277344 71.9375-31.085937-136.941406c-2.21875-9.746094 1.089843-19.921875 8.621093-26.515625l105.472657-92.5-139.542969-12.671875c-10.046875-.917969-18.6875-7.234375-22.613281-16.492188l-55.082031-129.046875-55.148438 129.066407c-3.882812 9.195312-12.523438 15.511718-22.546875 16.429687l-139.5625 12.671875 105.46875 92.5c7.554687 6.613281 10.859375 16.769531 8.621094 26.539062l-31.0625 136.9375 120.277343-71.914062c4.308594-2.558594 9.109376-3.859375 13.953126-3.859375zm-84.585938-221.847656s0 .023437-.023438.042969zm169.128906-.0625.023438.042969c0-.023438 0-.023438-.023438-.042969zm0 0"></path>
+														</svg><img></span>&nbsp;5 ans d'expériences
+												</p>
+												<a href="https://nicepage.com/website-design" class="u-align-center u-border-none u-btn u-btn-round u-button-style u-custom-color-3 u-radius-50 u-btn-1">
+													<span class="u-file-icon u-icon u-text-white"><img src="{{ asset('v2/images/3995464-d390ea69.png')}}" alt=""></span>&nbsp;Concater
+												</a>
+											</div>
+										</div>	
+										{% endfor %}
+									{% endif %}
+									</div>
+								</div>
+								<div class="u-expanded-width u-list u-list-2">
+									<div class="u-repeater u-repeater-2">
+										{% for item in candidats %}
+											<div class="u-container-style u-list-item u-repeater-item">
+												<div class="u-container-layout u-similar-container u-container-layout-12">
+													<div class="u-text u-text-default u-text-27">
+														<span class="u-file-icon u-icon u-icon-26">
+														
+														<div class="rounded-circle" style="
+															width: 40px;
+															height: 40px;
+															display:inline-block;
+															background-image: url('{{ item[0].fileName ? asset('uploads/experts/' ~ item[0].fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+															background-size: cover;
+															background-position: center;
+														">
+														</div>
+														
+														</span>
+														{{ generatePseudo(item[0])}}
+													</div>
+													<h2 class="u-text u-text-default u-text-28">-
+														<a href="#" data-id="{{ item[0].id }}" class="candidate-link">{{ item[0].titre|upper }}</a>
+													</h2>
+													<p class="u-small-text u-text u-text-default u-text-variant u-text-29">
+														{{ item[0].metaDescription|raw }}
+													</p>
+													<a href="https://nicepage.com/c/contact-form-html-templates" class="u-border-none u-btn u-button-style u-none u-text-active-custom-color-5 u-text-custom-color-3 u-text-hover-custom-color-3 u-btn-6">
+														Plus d'informations
+														<span class="u-icon u-text-custom-color-3 u-icon-27">
+															<svg class="u-svg-content" viewbox="0 0 490.677 490.677" x="0px" y="0px">
+																<path d="M489.272,37.339c-1.92-3.307-5.44-5.333-9.259-5.333H10.68c-3.819,0-7.339,2.027-9.259,5.333    c-1.899,3.307-1.899,7.36,0.021,10.667l234.667,405.333c1.899,3.307,5.419,5.333,9.237,5.333s7.339-2.027,9.237-5.333 L489.251,48.005C491.149,44.72,491.149,40.645,489.272,37.339z"></path>
+															</svg><img></span>
+													</a>
+													<p class="u-text u-text-default u-text-30">
+														<span class="u-icon">
+															<svg class="u-svg-content" viewbox="0 0 511 511" style="width: 1em; height: 1em;">
+																<path d="m114.59375 491.140625c-5.609375 0-11.179688-1.75-15.933594-5.1875-8.855468-6.417969-12.992187-17.449219-10.582031-28.09375l32.9375-145.089844-111.703125-97.960937c-8.210938-7.167969-11.347656-18.519532-7.976562-28.90625 3.371093-10.367188 12.542968-17.707032 23.402343-18.710938l147.796875-13.417968 58.433594-136.746094c4.308594-10.046875 14.121094-16.535156 25.023438-16.535156 10.902343 0 20.714843 6.488281 25.023437 16.511718l58.433594 136.769532 147.773437 13.417968c10.882813.980469 20.054688 8.34375 23.425782 18.710938 3.371093 10.367187.253906 21.738281-7.957032 28.90625l-111.703125 97.941406 32.9375 145.085938c2.414063 10.667968-1.726562 21.699218-10.578125 28.097656-8.832031 6.398437-20.609375 6.890625-29.910156 1.300781l-127.445312-76.160156-127.445313 76.203125c-4.308594 2.558594-9.109375 3.863281-13.953125 3.863281zm141.398438-112.875c4.84375 0 9.640624 1.300781 13.953124 3.859375l120.277344 71.9375-31.085937-136.941406c-2.21875-9.746094 1.089843-19.921875 8.621093-26.515625l105.472657-92.5-139.542969-12.671875c-10.046875-.917969-18.6875-7.234375-22.613281-16.492188l-55.082031-129.046875-55.148438 129.066407c-3.882812 9.195312-12.523438 15.511718-22.546875 16.429687l-139.5625 12.671875 105.46875 92.5c7.554687 6.613281 10.859375 16.769531 8.621094 26.539062l-31.0625 136.9375 120.277343-71.914062c4.308594-2.558594 9.109376-3.859375 13.953126-3.859375zm-84.585938-221.847656s0 .023437-.023438.042969zm169.128906-.0625.023438.042969c0-.023438 0-.023438-.023438-.042969zm0 0"></path>
+															</svg><img></span>&nbsp;Certifié Olona
+													</p>
+													<p class="u-text u-text-default u-text-31">
+														<span class="u-icon">
+															<svg class="u-svg-content" viewbox="0 0 511 511" style="width: 1em; height: 1em;">
+																<path d="m114.59375 491.140625c-5.609375 0-11.179688-1.75-15.933594-5.1875-8.855468-6.417969-12.992187-17.449219-10.582031-28.09375l32.9375-145.089844-111.703125-97.960937c-8.210938-7.167969-11.347656-18.519532-7.976562-28.90625 3.371093-10.367188 12.542968-17.707032 23.402343-18.710938l147.796875-13.417968 58.433594-136.746094c4.308594-10.046875 14.121094-16.535156 25.023438-16.535156 10.902343 0 20.714843 6.488281 25.023437 16.511718l58.433594 136.769532 147.773437 13.417968c10.882813.980469 20.054688 8.34375 23.425782 18.710938 3.371093 10.367187.253906 21.738281-7.957032 28.90625l-111.703125 97.941406 32.9375 145.085938c2.414063 10.667968-1.726562 21.699218-10.578125 28.097656-8.832031 6.398437-20.609375 6.890625-29.910156 1.300781l-127.445312-76.160156-127.445313 76.203125c-4.308594 2.558594-9.109375 3.863281-13.953125 3.863281zm141.398438-112.875c4.84375 0 9.640624 1.300781 13.953124 3.859375l120.277344 71.9375-31.085937-136.941406c-2.21875-9.746094 1.089843-19.921875 8.621093-26.515625l105.472657-92.5-139.542969-12.671875c-10.046875-.917969-18.6875-7.234375-22.613281-16.492188l-55.082031-129.046875-55.148438 129.066407c-3.882812 9.195312-12.523438 15.511718-22.546875 16.429687l-139.5625 12.671875 105.46875 92.5c7.554687 6.613281 10.859375 16.769531 8.621094 26.539062l-31.0625 136.9375 120.277343-71.914062c4.308594-2.558594 9.109376-3.859375 13.953126-3.859375zm-84.585938-221.847656s0 .023437-.023438.042969zm169.128906-.0625.023438.042969c0-.023438 0-.023438-.023438-.042969zm0 0"></path>
+															</svg><img></span>&nbsp;Projets réalisées
+													</p>
+													<p class="u-text u-text-default u-text-32">
+														<span class="u-icon">
+															<svg class="u-svg-content" viewbox="0 0 511 511" style="width: 1em; height: 1em;">
+																<path d="m114.59375 491.140625c-5.609375 0-11.179688-1.75-15.933594-5.1875-8.855468-6.417969-12.992187-17.449219-10.582031-28.09375l32.9375-145.089844-111.703125-97.960937c-8.210938-7.167969-11.347656-18.519532-7.976562-28.90625 3.371093-10.367188 12.542968-17.707032 23.402343-18.710938l147.796875-13.417968 58.433594-136.746094c4.308594-10.046875 14.121094-16.535156 25.023438-16.535156 10.902343 0 20.714843 6.488281 25.023437 16.511718l58.433594 136.769532 147.773437 13.417968c10.882813.980469 20.054688 8.34375 23.425782 18.710938 3.371093 10.367187.253906 21.738281-7.957032 28.90625l-111.703125 97.941406 32.9375 145.085938c2.414063 10.667968-1.726562 21.699218-10.578125 28.097656-8.832031 6.398437-20.609375 6.890625-29.910156 1.300781l-127.445312-76.160156-127.445313 76.203125c-4.308594 2.558594-9.109375 3.863281-13.953125 3.863281zm141.398438-112.875c4.84375 0 9.640624 1.300781 13.953124 3.859375l120.277344 71.9375-31.085937-136.941406c-2.21875-9.746094 1.089843-19.921875 8.621093-26.515625l105.472657-92.5-139.542969-12.671875c-10.046875-.917969-18.6875-7.234375-22.613281-16.492188l-55.082031-129.046875-55.148438 129.066407c-3.882812 9.195312-12.523438 15.511718-22.546875 16.429687l-139.5625 12.671875 105.46875 92.5c7.554687 6.613281 10.859375 16.769531 8.621094 26.539062l-31.0625 136.9375 120.277343-71.914062c4.308594-2.558594 9.109376-3.859375 13.953126-3.859375zm-84.585938-221.847656s0 .023437-.023438.042969zm169.128906-.0625.023438.042969c0-.023438 0-.023438-.023438-.042969zm0 0"></path>
+															</svg><img></span>&nbsp;Disponible
+													</p>
+												</div>
+											</div>
+
+											<span data-candidate="{{ item[0].id }}" style="display:none">										
+												<div class="u-container-layout u-container-layout-23">
+													<div class="u-align-left u-border-1 u-border-grey-15 u-expanded-width u-line u-line-horizontal u-line-1"></div>
+													<div class="u-container-align-center u-container-style u-expanded-width u-group u-video u-video-contain u-video-1">
+														<div class="u-background-video u-expanded" style="">
+															<div class="embed-responsive embed-responsive-1">
+																<iframe style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;" class="embed-responsive-item" src="https://www.youtube.com/embed/B9YKnNtFqds?playlist=B9YKnNtFqds&amp;loop=1&amp;mute=1&amp;showinfo=0&amp;controls=0&amp;start=0&amp;autoplay=1" data-autoplay="1" frameborder="0" allowfullscreen=""></iframe>
+															</div>
+														</div>
+														<div class="u-container-layout u-container-layout-24"></div>
+													</div>
+													<h2 class="u-align-left u-text u-text-default u-text-87">
+														{{ item[0].titre}}
+													</h2>
+													<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-88">
+													
+														{{ item[0].metaDescription|raw }}
+													
+													</p>
+													{% if item[0].competences|length > 0 %}
+														<h3 class="u-align-left u-text u-text-default u-text-89">Competences</h3>
+														<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-90">
+														{% for competence in item[0].competences %}
+															{{ competence.nom }}<br>
+																<span class="">
+																	{% for i in 1..5 %}
+																		{% if i <= competence.note %}
+																			<i class="small bi bi-star-fill text-warning"></i>
+																		{% else %}
+																			<i class="small bi bi-star text-dark"></i>
+																		{% endif %}
+																	{% endfor %}
+																</span><br>
+														{% endfor %}
+														</p>
+													{% endif %}
+													{% if item[0].experiences|length > 0 %}
+														<h3 class="u-align-left u-text u-text-default u-text-91">Expériences</h3>
+														<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-90">
+														{% for experience in item[0].experiences %}
+															{{ experience.nom }}
+															<span class="small">chez <span class="text-muted">{{ experience.entreprise }}</span><br>
+																{% if experience.enPoste %}
+																	Depuis {{ experience.dateDebut|date('M Y')}}
+																{% else %}
+																	{{ experience.dateDebut|date('M Y')}} - 
+																	{{ experience.dateFin|date('M Y')}}
+																{% endif %}
+															</span><hr>
+														{% endfor %}
+														</p>
+													{% endif %}
+													{% if item[0].langages|length > 0 %}
+														<h3 class="u-align-left u-text u-text-default u-text-93">Langues</h3>
+														<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-90">
+														{% for langage in item[0].langages %}
+															<div class="row">
+																<div class="col-4">
+																	<span class="h2">{{ isoToEmoji(langage.langue.code) }}</span> 
+																</div>
+																<div class="col-8 small">
+																	{{ langage.langue.nom }} 
+																	<span class="d-flex align-items-center">
+																		<span class="p-1 lh-1">
+																			{% for i in 1..5 %}
+																				{% if i <= langage.niveau %}
+																					<i class="small bi bi-star-fill text-warning"></i>
+																				{% else %}
+																					<i class="small bi bi-star text-dark"></i>
+																				{% endif %}
+																			{% endfor %}
+																		</span>
+																	</span>
+																</div>
+															</div>
+															{% endfor %}
+														</p>
+													{% endif %}
+													<h3 class="u-align-left u-text u-text-95">Disponibilte</h3>
+													<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-96">
+														{% if item[0].availability is not null %}
+															{{ checkAvailability(item[0].candidat)|raw}}
+														{% endif %}
+													</p>
+													<h3 class="u-align-left u-text u-text-97">Tarifs</h3>
+													<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-98">
+														
+                                					{{ getTarifCandidat(item[0])|raw }}
+													</p>
+													<a href="https://nicepage.com/k/adult-website-templates" class="u-align-left u-border-2 u-border-grey-75 u-btn u-btn-round u-button-style u-hover-palette-2-base u-palette-3-base u-radius-1 u-btn-16">
+														<span class="u-file-icon u-icon u-icon-76"><img src="/images/3249451.png" alt=""></span>
+														&nbsp;Discuter maintenant
+													</a>
+													<h2 class="u-align-left u-text u-text-default u-text-99">Avis</h2>
+													<p class="u-align-left u-text u-text-default u-text-100">
+														<span class="u-icon"></span>&nbsp;
+														<span class="u-icon">
+															<svg class="u-svg-content" viewbox="0 0 53 53" x="0px" y="0px" style="width: 1em; height: 1em;">
+																<path style="fill:#E7ECED;" d="M18.613,41.552l-7.907,4.313c-0.464,0.253-0.881,0.564-1.269,0.903C14.047,50.655,19.998,53,26.5,53
+																																c6.454,0,12.367-2.31,16.964-6.144c-0.424-0.358-0.884-0.68-1.394-0.934l-8.467-4.233c-1.094-0.547-1.785-1.665-1.785-2.888v-3.322
+																																c0.238-0.271,0.51-0.619,0.801-1.03c1.154-1.63,2.027-3.423,2.632-5.304c1.086-0.335,1.886-1.338,1.886-2.53v-3.546
+																																c0-0.78-0.347-1.477-0.886-1.965v-5.126c0,0,1.053-7.977-9.75-7.977s-9.75,7.977-9.75,7.977v5.126
+																																c-0.54,0.488-0.886,1.185-0.886,1.965v3.546c0,0.934,0.491,1.756,1.226,2.231c0.886,3.857,3.206,6.633,3.206,6.633v3.24
+																																C20.296,39.899,19.65,40.986,18.613,41.552z"></path>
+																<g>
+																	<path style="fill:#556080;" d="M26.953,0.004C12.32-0.246,0.254,11.414,0.004,26.047C-0.138,34.344,3.56,41.801,9.448,46.76
+																																			c0.385-0.336,0.798-0.644,1.257-0.894l7.907-4.313c1.037-0.566,1.683-1.653,1.683-2.835v-3.24c0,0-2.321-2.776-3.206-6.633
+																																			c-0.734-0.475-1.226-1.296-1.226-2.231v-3.546c0-0.78,0.347-1.477,0.886-1.965v-5.126c0,0-1.053-7.977,9.75-7.977
+																																			s9.75,7.977,9.75,7.977v5.126c0.54,0.488,0.886,1.185,0.886,1.965v3.546c0,1.192-0.8,2.195-1.886,2.53
+																																			c-0.605,1.881-1.478,3.674-2.632,5.304c-0.291,0.411-0.563,0.759-0.801,1.03V38.8c0,1.223,0.691,2.342,1.785,2.888l8.467,4.233
+																																			c0.508,0.254,0.967,0.575,1.39,0.932c5.71-4.762,9.399-11.882,9.536-19.9C53.246,12.32,41.587,0.254,26.953,0.004z"></path>
+																</g>
+															</svg><img></span>&nbsp;Texte avec icône
+													</p>
+													<span class="u-align-left u-file-icon u-icon u-icon-79"><img src="{{ asset('v2/images/6063500.png')}}" alt=""></span>
+													<span class="u-align-left u-file-icon u-icon u-icon-80"><img src="{{ asset('v2/images/6063500.png')}}" alt=""></span>
+													<span class="u-align-left u-file-icon u-icon u-icon-81"><img src="{{ asset('v2/images/6063500.png')}}" alt=""></span>
+													<span class="u-align-left u-file-icon u-icon u-icon-82"><img src="{{ asset('v2/images/6063500.png')}}" alt=""></span>
+													<span class="u-align-left u-file-icon u-icon u-icon-83"><img src="{{ asset('v2/images/6063500.png')}}" alt=""></span>
+													<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-101">Exemple de
+																														texte court. Lorem ipsum dolor sit amet.</p>
+												</div>
+											</span>	
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="u-container-style u-layout-cell u-size-16 u-layout-cell-2">
+							<div class="u-container-layout u-container-layout-22">
+								<div class="u-border-1 u-border-grey-10 u-border-no-bottom u-border-no-right u-border-no-top u-container-align-left u-container-style u-expanded-width u-group u-shape-rectangle u-group-6">
+									<div class="u-container-layout u-container-layout-23" id="candidate-card-container">
+										<div class="u-align-left u-border-1 u-border-grey-15 u-expanded-width u-line u-line-horizontal u-line-1"></div>
+										<div class="u-container-align-center u-container-style u-expanded-width u-group u-video u-video-contain u-video-1">
+											<div class="u-background-video u-expanded" style="">
+												<div class="embed-responsive embed-responsive-1">
+													<iframe style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;" class="embed-responsive-item" src="https://www.youtube.com/embed/B9YKnNtFqds?playlist=B9YKnNtFqds&amp;loop=1&amp;mute=1&amp;showinfo=0&amp;controls=0&amp;start=0&amp;autoplay=1" data-autoplay="1" frameborder="0" allowfullscreen=""></iframe>
+												</div>
+											</div>
+											<div class="u-container-layout u-container-layout-24"></div>
+										</div>
+										<h2 class="u-align-left u-text u-text-default u-text-87">
+											Developpeur Full stack
+										</h2>
+										<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-88">
+											Exemple de texte
+																						court. Lorem ipsum dolor sit amet.Exemple de texte court. Lorem ipsum dolor sit amet.Exemple de
+																						texte court. Lorem ipsum dolor sit amet.Exemple de texte court. Lorem ipsum dolor sit amet.Exemple
+																						de texte court. Lorem ipsum dolor sit amet.
+										</p>
+										<h3 class="u-align-left u-text u-text-default u-text-89">Competences</h3>
+										<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-90">Exemple de texte
+																						                      court. Lorem ipsum dolor sit amet.</p>
+										<h3 class="u-align-left u-text u-text-default u-text-91">Experiences</h3>
+										<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-92">Exemple de texte
+																						                      court. Lorem ipsum dolor sit amet.</p>
+										<h3 class="u-align-left u-text u-text-default u-text-93">Langues</h3>
+										<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-94">Exemple de texte
+																						                      court. Lorem ipsum dolor sit amet.</p>
+										<h3 class="u-align-left u-text u-text-95">Disponibilte</h3>
+										<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-96">Exemple de texte
+																						                      court. Lorem ipsum dolor sit amet.</p>
+										<h3 class="u-align-left u-text u-text-97">Tarifs</h3>
+										<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-98">Exemple de texte
+																						                      court. Lorem ipsum dolor sit amet.</p>
+										<a href="https://nicepage.com/k/adult-website-templates" class="u-align-left u-border-2 u-border-grey-75 u-btn u-btn-round u-button-style u-hover-palette-2-base u-palette-3-base u-radius-1 u-btn-16">
+											<span class="u-file-icon u-icon u-icon-76"><img src="/images/3249451.png" alt=""></span>&nbsp;Discuter
+																								                      maintenant
+										</a>
+										<h2 class="u-align-left u-text u-text-default u-text-99">Avis</h2>
+										<p class="u-align-left u-text u-text-default u-text-100">
+											<span class="u-icon"></span>&nbsp;
+											<span class="u-icon">
+												<svg class="u-svg-content" viewbox="0 0 53 53" x="0px" y="0px" style="width: 1em; height: 1em;">
+													<path style="fill:#E7ECED;" d="M18.613,41.552l-7.907,4.313c-0.464,0.253-0.881,0.564-1.269,0.903C14.047,50.655,19.998,53,26.5,53
+																													c6.454,0,12.367-2.31,16.964-6.144c-0.424-0.358-0.884-0.68-1.394-0.934l-8.467-4.233c-1.094-0.547-1.785-1.665-1.785-2.888v-3.322
+																													c0.238-0.271,0.51-0.619,0.801-1.03c1.154-1.63,2.027-3.423,2.632-5.304c1.086-0.335,1.886-1.338,1.886-2.53v-3.546
+																													c0-0.78-0.347-1.477-0.886-1.965v-5.126c0,0,1.053-7.977-9.75-7.977s-9.75,7.977-9.75,7.977v5.126
+																													c-0.54,0.488-0.886,1.185-0.886,1.965v3.546c0,0.934,0.491,1.756,1.226,2.231c0.886,3.857,3.206,6.633,3.206,6.633v3.24
+																													C20.296,39.899,19.65,40.986,18.613,41.552z"></path>
+													<g>
+														<path style="fill:#556080;" d="M26.953,0.004C12.32-0.246,0.254,11.414,0.004,26.047C-0.138,34.344,3.56,41.801,9.448,46.76
+																																c0.385-0.336,0.798-0.644,1.257-0.894l7.907-4.313c1.037-0.566,1.683-1.653,1.683-2.835v-3.24c0,0-2.321-2.776-3.206-6.633
+																																c-0.734-0.475-1.226-1.296-1.226-2.231v-3.546c0-0.78,0.347-1.477,0.886-1.965v-5.126c0,0-1.053-7.977,9.75-7.977
+																																s9.75,7.977,9.75,7.977v5.126c0.54,0.488,0.886,1.185,0.886,1.965v3.546c0,1.192-0.8,2.195-1.886,2.53
+																																c-0.605,1.881-1.478,3.674-2.632,5.304c-0.291,0.411-0.563,0.759-0.801,1.03V38.8c0,1.223,0.691,2.342,1.785,2.888l8.467,4.233
+																																c0.508,0.254,0.967,0.575,1.39,0.932c5.71-4.762,9.399-11.882,9.536-19.9C53.246,12.32,41.587,0.254,26.953,0.004z"></path>
+													</g>
+												</svg><img></span>&nbsp;Texte avec icône
+										</p>
+										<span class="u-align-left u-file-icon u-icon u-icon-79"><img src="{{ asset('v2/images/6063500.png')}}" alt=""></span>
+										<span class="u-align-left u-file-icon u-icon u-icon-80"><img src="{{ asset('v2/images/6063500.png')}}" alt=""></span>
+										<span class="u-align-left u-file-icon u-icon u-icon-81"><img src="{{ asset('v2/images/6063500.png')}}" alt=""></span>
+										<span class="u-align-left u-file-icon u-icon u-icon-82"><img src="{{ asset('v2/images/6063500.png')}}" alt=""></span>
+										<span class="u-align-left u-file-icon u-icon u-icon-83"><img src="{{ asset('v2/images/6063500.png')}}" alt=""></span>
+										<p class="u-align-left u-small-text u-text u-text-default u-text-variant u-text-101">Exemple de
+																						                      texte court. Lorem ipsum dolor sit amet.</p>
+									</div>
+								</div>
+								<div class="u-align-center u-border-1 u-border-grey-15 u-line u-line-horizontal u-line-2"></div>
+								<h2 class="u-align-center u-text u-text-102" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">ou faites appels à notre service RH !</h2>
+								<p class="u-align-center u-text u-text-103">Exemple de texte. Cliquez pour sélectionner l'élément de
+																		                  texte.</p>
+								<div class="u-form u-form-1">
+									<form action="https://forms.nicepagesrv.com/Form/Process" class="u-clearfix u-form-spacing-15 u-form-vertical u-inner-form" style="padding: 15px" source="email">
+										<div class="u-form-group u-form-name u-label-top">
+											<label for="name-558c" class="u-label">Je souahite avoir</label>
+											<input type="text" placeholder="Décrivez votre demande" id="name-558c" name="name" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required="">
+										</div>
+										<div class="u-form-group u-form-number u-form-number-layout-range-number u-label-top u-form-group-2">
+											<label for="number-ce07" class="u-label">Budget (€)</label>
+											<div class="u-input-row">
+												<input value="0" min="0" max="100" step="1" type="range" placeholder="" id="number-ce07" name="number" class="u-input u-input-rectangle u-range">
+												<input type="number" placeholder="" id="number-number-ce07" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" min="0" max="100" step="1" value="0">
+											</div>
+										</div>
+										<div class="u-form-date u-form-group u-label-top u-form-group-3">
+											<label for="name-8b04" class="u-label">Date d'embauche</label>
+											<input type="text" placeholder="21/06/2024" id="name-8b04" name="name-2" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required="required" data-date-format="mm/dd/yyyy">
+										</div>
+										<div class="u-form-group u-form-submit u-label-top">
+											<a href="#" class="u-btn u-btn-submit u-button-style">Soumettre<br>
+											</a>
+											<input type="submit" value="submit" class="u-form-control-hidden">
+										</div>
+										<div class="u-form-send-message u-form-send-success">Thank you! Your message has been sent.</div>
+										<div class="u-form-send-error u-form-send-message">Unable to send your message. Please fix errors
+																						                      then try again.</div>
+										<input type="hidden" value="" name="recaptchaResponse">
+										<input type="hidden" name="formServices" value="">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $('.candidate-link').on('click', function (event) {
+
+            // Récupérer l'ID du candidat à partir de l'attribut data-id
+            var candidateId = $(this).data('id');
+            console.log(candidateId)
+
+            // Récupérer le contenu du <span> correspondant
+            var candidateContent = $('span[data-candidate="' + candidateId + '"]').html();
+
+            // Injecter le contenu dans le conteneur de la carte
+            $('#candidate-card-container').html(candidateContent);
+        });
+    });
+</script>
+{% endblock %}

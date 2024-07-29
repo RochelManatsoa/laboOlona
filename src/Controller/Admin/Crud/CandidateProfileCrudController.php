@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 
 class CandidateProfileCrudController extends AbstractCrudController
 {
@@ -42,9 +43,9 @@ class CandidateProfileCrudController extends AbstractCrudController
             TextEditorField::new('resume', 'Biographie')->hideOnIndex(),
             TextEditorField::new('resultFree', 'Resultat Free')->hideOnIndex(),
             TextEditorField::new('resultPremium', 'Resultat Premium')->hideOnIndex(),
-            TextEditorField::new('traductionEn', 'Traduction')->hideOnIndex(),
             TextEditorField::new('tesseractResult', 'Import PDF')->hideOnIndex(),
             FormField::addColumn(4),
+            BooleanField::new('isGeneretated', 'Report IA')->hideOnIndex(),
             DateField::new('candidat.dateInscription', 'Inscrit le')->hideOnForm(),
             DateField::new('candidat.lastLogin', 'Last login')->hideOnForm(),
             ChoiceField::new('status', 'Statut')->setChoices(CandidateProfile::getStatuses())->hideOnIndex(),
@@ -54,9 +55,10 @@ class CandidateProfileCrudController extends AbstractCrudController
             AssociationField::new('tarifCandidat', 'Tarif Candidat')->hideOnForm()->setSortable(false),
             TextEditorField::new('resumeCandidat', 'Points forts/Point faible')->hideOnIndex(),
             TextEditorField::new('metaDescription', 'Meta description')->hideOnIndex(),
-            TextEditorField::new('badKeywords', 'Mots/Expressions')->hideOnIndex(),
             TextEditorField::new('tools', 'Outils')->hideOnIndex(),
             TextEditorField::new('technologies', 'Technologies')->hideOnIndex(),
+            TextEditorField::new('badKeywords', 'Mots clés')->hideOnIndex(),
+            TextEditorField::new('traductionEn', 'Traduction')->hideOnIndex(),
         ];
     }
 }

@@ -70,3 +70,5 @@ async function useAssistant() {
 }
 
 useAssistant();
+
+Here is the resume content extracted as text:

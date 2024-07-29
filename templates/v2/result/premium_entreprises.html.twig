@@ -1,0 +1,49 @@
+{% if top_entreprises is not empty %}
+{% set numSlides = top_entreprises|length // 4 %}
+{% if top_entreprises|length % 4 > 0 %}
+{% set numSlides = numSlides + 1 %}
+{% endif %}
+<div class="container-fluid mt-5">
+    <div id="carousel_posting_component" class="carousel slide mb-5" data-bs-ride="carousel">
+
+        <div class="carousel-inner">
+            {% for i in 0..numSlides - 1 %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <div class="container-fluid">
+                    <div class="row"> <!-- Changement ici pour 4 colonnes -->
+                        {% for j in 0..3 %} <!-- Itérer sur 6 top_entreprises par slide -->
+                            {% set index = i * 4 + j %} <!-- Calcul de l'index basé sur 6 top_entreprises par slide -->
+                            {% if index < top_entreprises|length %}
+                                {% set posting = top_entreprises[index] %}
+
+                                            <div class="col">
+                                                <div class="card position-relative text-center">
+                                                    <!-- Badge -->
+                                                    <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3">PREMIUM</span>
+                                                    <p class="card-title h6 bg-dark text-white text-center py-2" style="height:120px; display: flex; align-items: center; justify-content: center;">{{ posting.nom|upper }}</p>
+                                                    <div class="card-body-candidat">
+                                                        <small class="mt-auto">
+                                                            <small class="card-text"><i class="bi bi-geo-alt"></i> {{ show_country(posting.localisation) }}</small> <br>
+                                                            <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ posting.jobListings|length }} annonces</small>
+                                                        </small>
+                                                    </div>
+                                                    <button type="button" class="btn-sm btn btn-primary rounded-pill my-3 px-2">Consulter</button>
+                                                </div>
+                                            </div>
+
+                                {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {# <div class="carousel-indicators mb-3">
+            {% for i in 0..numSlides - 1 %}
+            <button type="button" data-bs-target="#carousel_posting_component" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
+            {% endfor %}
+        </div> #}
+    </div>
+</div>
+{% endif %}

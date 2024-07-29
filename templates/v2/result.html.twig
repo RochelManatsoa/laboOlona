@@ -1,0 +1,98 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Résultat de recherche | Olona Talents
+{% endblock %}
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row mt-3 mt-sm-5">
+			<div class="col-12 col-sm-8">
+				<ul class="nav nav-underline">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" id="candidats-tab" data-bs-toggle="tab" href="#candidats">Candidats</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="annonces-tab" data-bs-toggle="tab" href="#annonces">Offre d'emploi</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="services-tab" data-bs-toggle="tab" href="#services">Services</a>
+					</li>
+				</ul>
+
+				<div class="tab-content">
+					<div class="tab-pane fade show active" id="candidats" role="tabpanel" aria-labelledby="candidats-tab" tabindex="0">
+						{# {% include "v2/result/premium_candidats.html.twig" with {'top_candidats': top_candidats} %} #}
+						{% include "v2/result/_search_candidats.html.twig" with {'candidats': candidats} %}
+					</div>
+					<div class="tab-pane fade" id="annonces" role="tabpanel" aria-labelledby="annonces-tab" tabindex="0">
+						{# {% include "v2/result/premium_annonces.html.twig" with {'top_annonces': top_annonces} %} #}
+						{% include "v2/result/_search_annonces.html.twig" with {'annonces': annonces} %}
+					</div>
+					<div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab" tabindex="0">
+						{# {% include "v2/result/premium_services.html.twig" with {'top_entreprises': top_entreprises} %} #}
+						{% include "v2/result/_search_prestations.html.twig" with {'prestations': prestations} %}
+					</div>
+				</div>
+			</div>
+			<div class="col-12 col-sm-4">
+                <div class="d-flex flex-column flex-shrink-0 p-3 text-white position-sticky top-0">
+                    <div class="card" id="candidate-card-container">
+                        <img src="{{ asset('images/mailing/thumbnail.png')}}" class="" alt="Premium Olona Talents">
+                        <div class="card-body">
+                            <h5 class="card-title">Passez à la Version Premium!</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Boostez vos recrutements</h6>
+                            <p class="card-text">Profitez d'un accès illimité aux contacts candidats, de la mise en avant de vos annonces et bien plus encore.</p>
+                            <button type="button" class="card-link btn btn-primary rounded-pill w-100">Découvrez nos offres</button>
+                        </div>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $('.candidate-link').on('click', function (event) {
+
+            // Récupérer l'ID du candidat à partir de l'attribut data-id
+            var candidateId = $(this).data('id');
+            console.log(candidateId)
+
+            // Récupérer le contenu du <span> correspondant
+            var candidateContent = $('span[data-candidate="' + candidateId + '"]').html();
+
+            // Injecter le contenu dans le conteneur de la carte
+            $('#candidate-card-container').html(candidateContent);
+        });
+        $('.annonce-link').on('click', function (event) {
+
+            // Récupérer l'ID du candidat à partir de l'attribut data-id
+            var annonceId = $(this).data('id');
+            console.log(annonceId)
+
+            // Récupérer le contenu du <span> correspondant
+            var candidateContent = $('span[data-annonce="' + annonceId + '"]').html();
+
+            // Injecter le contenu dans le conteneur de la carte
+            $('#candidate-card-container').html(candidateContent);
+        });
+        $('.prestation-link').on('click', function (event) {
+
+            // Récupérer l'ID du candidat à partir de l'attribut data-id
+            var prestationId = $(this).data('id');
+            console.log(prestationId)
+
+            // Récupérer le contenu du <span> correspondant
+            var candidateContent = $('span[data-prestation="' + prestationId + '"]').html();
+
+            // Injecter le contenu dans le conteneur de la carte
+            $('#candidate-card-container').html(candidateContent);
+        });
+    });
+
+</script>
+{% endblock %}

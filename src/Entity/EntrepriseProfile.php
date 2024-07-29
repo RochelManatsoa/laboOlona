@@ -80,12 +80,16 @@ class EntrepriseProfile
     #[ORM\ManyToOne(inversedBy: 'entrepriseProfiles')]
     private ?Devise $devise = null;
 
+    #[ORM\OneToMany(mappedBy: 'entrepriseProfile', targetEntity: Prestation::class)]
+    private Collection $prestations;
+
     public function __construct()
     {
         $this->jobListings = new ArrayCollection();
         $this->mettings = new ArrayCollection();
         $this->secteurs = new ArrayCollection();
         $this->favoris = new ArrayCollection();
+        $this->prestations = new ArrayCollection();
     }
 
     public function __toString()
@@ -328,6 +332,36 @@ class EntrepriseProfile
     public function setDevise(?Devise $devise): static
     {
         $this->devise = $devise;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Prestation>
+     */
+    public function getPrestations(): Collection
+    {
+        return $this->prestations;
+    }
+
+    public function addPrestation(Prestation $prestation): static
+    {
+        if (!$this->prestations->contains($prestation)) {
+            $this->prestations->add($prestation);
+            $prestation->setEntrepriseProfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrestation(Prestation $prestation): static
+    {
+        if ($this->prestations->removeElement($prestation)) {
+            // set the owning side to null (unless already changed)
+            if ($prestation->getEntrepriseProfile() === $this) {
+                $prestation->setEntrepriseProfile(null);
+            }
+        }
 
         return $this;
     }

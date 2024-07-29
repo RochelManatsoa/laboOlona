@@ -68,6 +68,7 @@ class EntrepriseController extends AbstractController
                             $request->query->getInt('page', 1),
                             10
                         ),
+                        'form' => $form->createView(),
                         'result' => $data
                     ])
                 ]);

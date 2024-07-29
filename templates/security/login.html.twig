@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %}
 
 {% block body %}
   <section id="login" class="pt-5 " style="background-color: black;">
@@ -77,4 +77,74 @@
           </div>
         </section>
       {% endblock %}
-          
+           #}
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Connexion | Olona Talents{% endblock %}
+
+{% block meta %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+<section class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #f8f9fa;">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 d-none d-md-block text-center">
+                <img src="{{ asset('v2/images/31.png') }}" class="img-fluid" alt="Image" style="max-width: 400px;">
+            </div>
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-lg border-0 rounded">
+                    <div class="card-body p-4">
+                        <h2 class="text-center mb-4">Se connecter</h2>
+                        <p class="text-center mb-4">
+                            Pas encore membre ? <a href="{{ path('app_olona_talents_premium') }}" class="text-primary">Inscrivez-vous dès maintenant</a> et rejoignez la communauté Olona-talents.
+                        </p>
+                        <div class="mb-4 text-center">
+                            <a href="{{ path('connect_google_start') }}" class="btn btn-outline-primary btn-block">
+                                Se connecter avec <i class="bi bi-google"></i>
+                            </a>
+                        </div>
+                        
+                        {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                        {% endif %}
+                        
+                        {% if app.user %}
+                        <div class="alert alert-dark text-center">
+                            Vous êtes connecté en tant que {{ app.user.userIdentifier }},
+                            <a href="{{ path('app_logout') }}">Déconnexion</a>
+                        </div>
+                        {% endif %}
+                        
+                        <form method="post">
+                            <div class="mb-3">
+                                <input type="email" name="email" id="email" value="{{ last_username }}" class="form-control" placeholder="Adresse e-mail" required autofocus>
+                            </div>
+
+                            <div class="mb-3">
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Votre mot de passe" required>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="terms">
+                                <label class="form-check-label" for="terms">
+                                    En vous connectant sur Olona Talents, vous acceptez nos conditions générales d'utilisation
+                                </label>
+                            </div>
+
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            
+                            <button type="submit" class="btn btn-primary btn-block">Connexion</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
