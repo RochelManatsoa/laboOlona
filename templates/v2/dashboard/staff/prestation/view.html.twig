@@ -1,0 +1,69 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}
+  {{ prestation.titre }} | Olona Talents
+{% endblock %}
+
+{% block body %}
+<section class="container my-5">
+  <div class="card shadow">
+    <div class="card-body">
+      <h1 class="card-title">{{ prestation.titre }}</h1>
+      <hr>
+      <p class="small">
+      <span class="">{{ prestation.createdAt|date('d/m/Y') }}</span> | 
+      <span class="">{{ prestation.status }}</span> | 
+      </p>
+      <h2 class="h5">Description</h2>
+      <p>{{ prestation.description|raw }}</p>
+      
+      <h2 class="h5">Expertises</h2>
+        {% for competence in prestation.competencesRequises %}
+          <span class="badge text-bg-primary rounded-pill mb-4">{{ competence }}</span>
+        {% endfor %}
+      
+      <h2 class="h5">Spécialisations</h2>
+        {% for specialisation in prestation.specialisations %}
+          <span class="badge text-bg-secondary rounded-pill mb-4">{{ specialisation }}</span>
+        {% endfor %}
+
+      {% if prestation.tarifsProposes is not empty %}
+      <h2 class="h5">Tarifs Proposés</h2>
+      <dl class="row">
+        <dt class="col-sm-3">Par Heure</dt>
+        <dd class="col-sm-9">{{ prestation.tarifsProposes.par_heure }}€</dd>
+        <dt class="col-sm-3">Par Projet</dt>
+        <dd class="col-sm-9">{{ prestation.tarifsProposes.par_projet }}€</dd>
+      </dl>
+      {% endif %}
+
+      <h2 class="h5">Modalités de Prestation</h2>
+      <p>{{ prestation.modalitesPrestation }}</p>
+
+      {% if prestation.medias is not empty %}
+      <h2 class="h5">Médias</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <h3>Images</h3>
+          {% for image in prestation.medias.images %}
+            <img src="{{ image }}" class="img-fluid rounded mb-2" alt="Image de prestation">
+          {% endfor %}
+        </div>
+        <div class="col-md-6">
+          <h3>Vidéos</h3>
+          {% for video in prestation.medias.videos %}
+            <video controls class="w-100">
+              <source src="{{ video }}" type="video/mp4">
+              Votre navigateur ne supporte pas la balise vidéo.
+            </video>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5">
+  <i class="mx-2 bi bi-arrow-left"></i>Retour
+</a>
+{% endblock %}

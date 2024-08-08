@@ -1,0 +1,112 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}
+  Créer une prestation | Olona Talents
+{% endblock %}
+{% block body %}
+    <section class="">
+      <div class="shadow p-2 p-sm-4">
+        <div class="col-12 col-sm-8 mx-auto p-2 p-sm-4">
+          {{ form_start(form) }}
+          {{ form_widget(form) }}
+          <button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+            <i class="bi bi-save"></i> Enregister
+          </button>
+          {% if prestation is defined and new == false %}
+          <button type="button" id="generate-resume" data-prestation-id="{{ prestation.id }}" class="btn btn-secondary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+            <i class="bi bi-robot"></i> Générer avec l'IA
+          </button>
+          <div id="progress-container" class="progress my-3" style="display: none;">
+            <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+          </div>
+          {% endif %}
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </section>
+  <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+	<script>
+		ClassicEditor.create(document.querySelector('#prestation_staff_description'))
+		ClassicEditor.create(document.querySelector('#prestation_staff_cleanDescription'))
+		ClassicEditor.create(document.querySelector('#prestation_staff_openai'))
+	</script>
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+      var availabilityDropdown = document.getElementById('prestation_staff_availability_nom');
+      var dateField = document.getElementById('prestation_staff_availability_dateFin');
+
+      if (availabilityDropdown && dateField) { // Vérifie si les éléments existent
+
+        function toggleDateInput() {
+          if (availabilityDropdown.value === 'from-date') {
+            dateField.style.display = 'block';  // Show the date field
+          } else {
+            dateField.style.display = 'none';  // Hide the date field
+          }
+        }
+
+        availabilityDropdown.addEventListener('change', toggleDateInput);
+
+        toggleDateInput();
+      }
+    });
+  </script>
+  <script>
+    $(document).ready(function() {
+        $('#generate-resume').on('click', function() {
+            var prestationId = $(this).data('prestation-id');
+            $(this).prop('disabled', true);
+            $('#progress-container').show();
+            updateProgressBar(0);
+
+            // Function to update the progress bar
+            function updateProgressBar(percentage) {
+                $('#progress-bar').css('width', percentage + '%').attr('aria-valuenow', percentage).text(percentage + '%');
+            }
+
+            let progress = 0;
+            let interval = setInterval(function() {
+                if (progress < 90) {
+                    progress += 5;
+                    updateProgressBar(progress);
+                } else {
+                    clearInterval(interval);
+                }
+            }, 3600);
+
+            // Make the AJAX request
+            $.ajax({
+                url: '/api/openai/prestation/' + prestationId,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response)
+                    // Complete the progress bar
+                    updateProgressBar(100);
+
+                    setTimeout(function() {
+                        // Hide the progress bar and show a success message
+                        $('#progress-container').hide();
+                        if (response.status === 'success') {
+                            alert(response.message);
+                        } else {
+                            alert('Une erreur est survenue');
+                        }
+                        location.reload(); 
+                    }, 500); 
+                },
+                error: function(xhr, status, error) {
+                    // Hide the progress bar and show an error message
+                    $('#progress-container').hide();
+                    let errorMessage = 'Une erreur est survenue: ' + (xhr.responseJSON ? xhr.responseJSON.message : error);
+                    alert(errorMessage);
+                    $('#generate-resume').show(); 
+                }
+            });
+        });
+    });
+  </script>
+
+{% endblock %}

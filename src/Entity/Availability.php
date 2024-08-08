@@ -11,6 +11,19 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AvailabilityRepository::class)]
 class Availability
 {
+
+    const TYPE_IMMEDIATE = 'immediate';
+    const TYPE_FROM_DATE = 'from-date';
+    const TYPE_FULL_TIME = 'full-time';
+    const TYPE_PART_TIME = 'part-time';
+
+    const CHOICE_TYPE = [
+        'Immédiatement' => self::TYPE_IMMEDIATE,
+        'A partir du' => self::TYPE_FROM_DATE,
+        'Temps plein' => self::TYPE_FULL_TIME,
+        'Temps partiel' => self::TYPE_PART_TIME,
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -31,9 +44,37 @@ class Availability
     #[ORM\OneToMany(mappedBy: 'availability', targetEntity: CandidateProfile::class)]
     private Collection $candidats;
 
+    #[ORM\OneToMany(mappedBy: 'availability', targetEntity: Prestation::class)]
+    private Collection $prestations;
+
     public function __construct()
     {
         $this->candidats = new ArrayCollection();
+        $this->prestations = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        $available = '';
+        switch ($this->getNom()) {
+            case self::TYPE_IMMEDIATE :
+                $available = 'Disponible';
+                break;
+            
+            case self::TYPE_FROM_DATE :
+                $available = 'A partir du '. $this->getDateDebut() ;
+                break;
+
+            case self::TYPE_FULL_TIME :
+                $available = 'Temps plein';
+                break;
+
+            case self::TYPE_PART_TIME :
+                $available = 'Temps partiel';
+                break;
+        }
+        
+        return $available;
     }
 
     public function getId(): ?int
@@ -113,6 +154,36 @@ class Availability
             // set the owning side to null (unless already changed)
             if ($candidat->getAvailability() === $this) {
                 $candidat->setAvailability(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Prestation>
+     */
+    public function getPrestations(): Collection
+    {
+        return $this->prestations;
+    }
+
+    public function addPrestation(Prestation $prestation): static
+    {
+        if (!$this->prestations->contains($prestation)) {
+            $this->prestations->add($prestation);
+            $prestation->setAvailability($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrestation(Prestation $prestation): static
+    {
+        if ($this->prestations->removeElement($prestation)) {
+            // set the owning side to null (unless already changed)
+            if ($prestation->getAvailability() === $this) {
+                $prestation->setAvailability(null);
             }
         }
 

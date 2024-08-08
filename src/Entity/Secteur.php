@@ -39,6 +39,9 @@ class Secteur
     #[ORM\OneToMany(mappedBy: 'secteur', targetEntity: JobListing::class)]
     private Collection $jobListings;
 
+    #[ORM\OneToMany(mappedBy: 'secteurs', targetEntity: Prestation::class)]
+    private Collection $prestations;
+
     public function __toString()
     {
         return $this->nom;
@@ -49,6 +52,7 @@ class Secteur
         $this->entreprise = new ArrayCollection();
         $this->candidat = new ArrayCollection();
         $this->jobListings = new ArrayCollection();
+        $this->prestations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -164,6 +168,36 @@ class Secteur
             // set the owning side to null (unless already changed)
             if ($jobListing->getSecteur() === $this) {
                 $jobListing->setSecteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Prestation>
+     */
+    public function getPrestations(): Collection
+    {
+        return $this->prestations;
+    }
+
+    public function addPrestation(Prestation $prestation): static
+    {
+        if (!$this->prestations->contains($prestation)) {
+            $this->prestations->add($prestation);
+            $prestation->setSecteurs($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrestation(Prestation $prestation): static
+    {
+        if ($this->prestations->removeElement($prestation)) {
+            // set the owning side to null (unless already changed)
+            if ($prestation->getSecteurs() === $this) {
+                $prestation->setSecteurs(null);
             }
         }
 

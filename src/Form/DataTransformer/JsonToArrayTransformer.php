@@ -6,7 +6,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class JsonToArrayTransformer implements DataTransformerInterface
 {
-    public function transform($value)
+    public function transform($value): mixed
     {
         // Transform array to JSON string expected by Tagify
         if ($value === null) {
@@ -23,7 +23,7 @@ class JsonToArrayTransformer implements DataTransformerInterface
         return json_encode($tagifyData);
     }
 
-    public function reverseTransform($value)
+    public function reverseTransform($value): mixed
     {
         // Transform Tagify JSON string to plain array
         if ($value === '') {

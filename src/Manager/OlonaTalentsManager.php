@@ -26,4 +26,50 @@ class OlonaTalentsManager
 
         return $params;
     }
+
+
+    public function getParamsJoblisting(int $from, int $size, string $query): array
+    {
+        return [
+            'index' => 'joblisting_index',
+            'body'  => [
+                'from' => $from,
+                'size' => $size,
+                'query' => [
+                    'multi_match' => [
+                        'query'  => $query,
+                        'fields' => [
+                            'titre', 
+                            'cleanDescription', 
+                            'lieu', 
+                            'shortDescription', 
+                            'typeContrat', 
+                            'budgetAnnonce', 
+                            'competences.nom', 
+                            'secteur.nom', 
+                            'langues.nom'
+                        ],
+                        'fuzziness' => 'AUTO',
+                    ],
+                ],
+                'highlight' => [
+                    'fields' => [
+                        'titre' => new \stdClass(),
+                        'cleanDescription' => new \stdClass(),
+                        'lieu' => new \stdClass(),
+                        'shortDescription' => new \stdClass(),
+                        'typeContrat' => new \stdClass(),
+                        'budgetAnnonce' => new \stdClass(),
+                        'metaDescription' => new \stdClass(),
+                        'traductionEn' => new \stdClass(),
+                        'competences' => new \stdClass(),
+                        'secteur' => new \stdClass(),
+                        'langues' => new \stdClass(),
+                    ],
+                    'pre_tags' => ['<strong>'],
+                    'post_tags' => ['</strong>']
+                ]
+            ],
+        ];
+    }
 }

@@ -142,7 +142,10 @@ class CandidatSearchFormType extends AbstractType
         ]);
     }
     
-    public function getBlockPrefix()
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix(): string
     {
         return '';
     }

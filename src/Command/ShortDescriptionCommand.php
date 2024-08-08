@@ -60,7 +60,7 @@ class ShortDescriptionCommand extends Command
 
         }
 
-        $prestations = $this->em->getRepository(Prestation::class)->findJoblistingsForReport();
+        $prestations = $this->em->getRepository(Prestation::class)->findPrestationsForReport();
         $output->writeln(count($prestations) .' prestations ');
         foreach ($prestations as $prestation) {
             try {

@@ -21,6 +21,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
+    .addEntry('main', './assets/main.js')
     .addStyleEntry('tagify', './node_modules/@yaireo/tagify/dist/tagify.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

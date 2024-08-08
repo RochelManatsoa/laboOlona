@@ -70,7 +70,10 @@ class StatSearchFormType extends AbstractType
         ]);
     }
     
-    public function getBlockPrefix()
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix(): string
     {
         return '';
     }

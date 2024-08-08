@@ -1172,3 +1172,19 @@ app_dashboard_candidat_annonce_details :
 app_dashboard_moderateur_simulateur : 
     title : Simulations salaire
     dashboard_title : Simulations salaire
+
+app_v2_staff_prestation : 
+    title : Prestations
+    dashboard_title : Prestation de service
+
+app_v2_staff_create_prestation : 
+    title : Créer une prestation
+    dashboard_title : Prestation de service
+
+app_v2_staff_edit_prestation : 
+    title : Modifier une prestation
+    dashboard_title : Prestation de service
+
+app_v2_staff_view_prestation : 
+    title : Prestation
+    dashboard_title : Prestation de service

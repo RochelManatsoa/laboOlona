@@ -36,40 +36,32 @@ class IndexPrestationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $prestations = $this->em->getRepository(Prestation::class)->findAll();
+        $prestations = $this->em->getRepository(Prestation::class)->findValidPrestationsElastic();
 
         foreach ($prestations as $prestation) {
             $body = [
                 'titre'                 => $prestation->getTitre(),
                 'cleanDescription'      => $prestation->getCleanDescription(),
                 'competencesRequises'   => [],
-                'tarifsProposes'        => $prestation->getTarifsProposes(),
+                'secteurs'              => [],
+                'fileName'              => $prestation->getFileName(),
+                'tarifsProposes'        => $prestation->getTarifPrestation() ? ['value' => (string) $prestation->getTarifPrestation()] : ['value' => ''],
                 'modalitesPrestation'   => $prestation->getModalitesPrestation(),
                 'specialisations'       => [],
-                'medias'                => $prestation->getMedias(),
-                'evaluations'           => $prestation->getEvaluations(),
-                'disponibilites'        => [],
+                'disponibilites'        => $prestation->getAvailability() ? ['value' => (string) $prestation->getAvailability()] : ['value' => ''],
                 'createdAt'             => $prestation->getCreatedAt(),
                 'openai'                => $prestation->getOpenai(),
             ];
 
-            foreach ($prestation->getCompetencesRequises() as $competencesRequise) {
-                $body['competencesRequises'][] = [
-                    'nom' => $competencesRequise,
-                ];
-            }
-
-            foreach ($prestation->getSpecialisations() as $specialisation) {
+            foreach ($prestation->getCompetences() as $specialisation) {
                 $body['specialisations'][] = [
-                    'nom' => $specialisation,
+                    'nom' => $specialisation->getNom(),
                 ];
             }
 
-            foreach ($prestation->getDisponibilites() as $disponibilite) {
-                $body['disponibilites'][] = [
-                    'nom' => $disponibilite,
-                ];
-            }
+            $body['secteurs'][] = [
+                'nom' => $prestation->getSecteurs() ? $prestation->getSecteurs()->getNom() : 'non définie',
+            ];
 
             $this->elasticsearch->index([
                 'index' => 'prestation_index',

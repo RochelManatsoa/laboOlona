@@ -1,7 +1,7 @@
 {% extends 'base_v21.html.twig' %}
 
 {% block title %}
-  Mes rendez-vous | Olona Talents
+	Mes rendez-vous | Olona Talents
 {% endblock %}
 
 {% block meta %}
@@ -13,13 +13,76 @@
 {% endblock %}
 
 {% block sidebar %}
-  {% include "v2/dashboard/layout_candidat.html.twig" %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
 {% endblock %}
 
 {% block body %}
-    <section class="">
-      <div class="shadow p-2 p-sm-4">
+	<section class="">
+		<div class="shadow p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-calendar-week text-warning me-2"></i>
+				Organisation de mes Rendez-vous
+			</h2>
+			<p class="text-center">
+				Information importante pour vos rendez-vous : Tous nos rendez-vous se déroulent exclusivement sur la plateforme meet.olona-talents.com
+			</p>
 
-      </div>
-    </section>
+			{% if rendezvousList|length > 0 %}
+				<div
+					class="table-responsive">{# <table class="{{ tableClass }}">
+																		<thead>
+																			<tr>
+																				<td scope="col" class="h5">{{ knp_pagination_sortable(prestations, 'Titre', 'p.titre') }}</td>
+																				<td scope="col-2" class="h5">{{ knp_pagination_sortable(prestations, 'Statut', 'p.status') }}</td>
+																				<td scope="col-2" class=""></td>
+																			</tr>
+																		</thead>
+																		<tbody>
+																			{% for item in prestations %}
+																				<tr id="row_prestation_{{item.id}}">
+																					<td class="">
+																						<turbo-frame id="prestation_{{ item.id}}">
+																							<a href="{{ path('app_v2_candidate_edit_prestation', { 'prestation': item.id })}}">
+																								{{ item.titre }}
+																								<i class="bi bi-pencil-square"></i>
+																							</a>
+																						</turbo-frame>
+																						<br>
+																						<span class="fw-lighter small">Créé le
+																							{{ item.createdAt|date('d/m/Y') }}</span>
+																					</td>
+																					<td class="col-2">{{ item.status }}</td>
+																					<td class="col-2">
+																						<a href="{{ path('app_v2_candidate_view_prestation', { 'prestation': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
+																							<i class="bi bi-eye"></i>
+																						</a>
+																						<button type="button" id="delete-prestation" data-href="{{ path('app_v2_candidate_delete_prestation', { 'prestation': item.id })}}" class="btn btn-sm btn-danger rounded-pill">
+																							<i class="bi bi-trash"></i>
+																						</button>
+																					</td>
+																				</tr>
+																			{% endfor %}
+																		</tbody>
+																	</table>
+																	<div class="navigation mt-5">
+																		{{ knp_pagination_render(prestations, 'parts/_pagination.html.twig') }}
+																	</div> #}
+				</div>
+			{% else %}
+				<div class="mx-auto text-center">
+					<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+						<span class="">
+							<img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+						</span>
+						1ère chose à faire
+					</h3>
+					<a href="{{ path('app_v2_candidate_job_offer')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-search"></i>
+						Trouver une mission
+					</a>
+				</div>
+			{% endif %}
+
+		</div>
+	</section>
 {% endblock %}

@@ -45,7 +45,7 @@ class AIToolsCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Exécute la commande app:translate-tools avec des paramètres dynamiques.')
@@ -54,7 +54,7 @@ class AIToolsCommand extends Command
             ->addOption('option', null, InputOption::VALUE_REQUIRED, 'Option à passer à la commande app:translate-tools');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $startLoop = $input->getArgument('start'); // Cet argument détermine le début de la boucle
         $endLoop = $input->getArgument('end'); // Cet argument détermine la fin de la boucle

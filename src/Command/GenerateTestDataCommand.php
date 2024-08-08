@@ -2,41 +2,39 @@
 
 namespace App\Command;
 
+use Faker\Factory;
+use App\Entity\User;
+use Symfony\Component\Uid\Uuid;
+use App\Entity\EntrepriseProfile;
 use App\Entity\Candidate\Competences;
 use App\Entity\Entreprise\JobListing;
-use App\Entity\EntrepriseProfile;
-use App\Entity\Moderateur\TypeContrat;
-use App\Entity\User;
 use App\Repository\SecteurRepository;
-use App\Repository\EntrepriseProfileRepository;
+use App\Entity\Moderateur\TypeContrat;
 use Doctrine\ORM\EntityManagerInterface;
-use Faker\Factory;
 use Symfony\Component\Console\Command\Command;
+use App\Repository\EntrepriseProfileRepository;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+#[AsCommand(
+    name: 'app:generate-test-data',
+    description: 'Generate test data for Entreprise and Job Listings',
+    hidden: false,
+    aliases: ['app:generate-test-data']
+)]
 class GenerateTestDataCommand extends Command
 {
-    protected static $defaultName = 'app:generate-test-data';
-    protected static $defaultDescription = 'Generate test data for Entreprise and Job Listings';
-
-    private $entrepriseProfileRepository;
-    private $passwordHasher;
-    private $entityManager;
-    private $sluggerInterface;
-    private $secteurRepository;
-
     public function __construct(
-        EntrepriseProfileRepository $entrepriseProfileRepository,
-        UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface $entityManager,
-        SecteurRepository $secteurRepository,
-        SluggerInterface $sluggerInterface
+        private EntrepriseProfileRepository $entrepriseProfileRepository,
+        private UserPasswordHasherInterface $passwordHasher,
+        private EntityManagerInterface $entityManager,
+        private SecteurRepository $secteurRepository,
+        private SluggerInterface $sluggerInterface
     ) {
         parent::__construct();
         $this->entrepriseProfileRepository = $entrepriseProfileRepository;
@@ -49,7 +47,7 @@ class GenerateTestDataCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription(self::$defaultDescription)
+            ->setDescription('Generate test data for Entreprise and Job Listings')
             ->addArgument('entreprise-count', InputArgument::OPTIONAL, 'Number of entreprise profiles to generate', 5)
             ->addArgument('joblisting-count', InputArgument::OPTIONAL, 'Number of job listings to generate', 100);
     }

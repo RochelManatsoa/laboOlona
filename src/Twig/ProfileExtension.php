@@ -44,15 +44,8 @@ class ProfileExtension extends AbstractExtension
         )
     {
     }
-    
-    public function getFilters(): array
-    {
-        return [
-            new TwigFilter('contratStatusBadge', [$this, 'contratStatusBadge']),
-        ];
-    }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('getTarifByCompanyCurrency', [$this, 'getTarifByCompanyCurrency']),

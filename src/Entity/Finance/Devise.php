@@ -3,6 +3,7 @@
 namespace App\Entity\Finance;
 
 use App\Entity\EntrepriseProfile;
+use App\Entity\Prestation\TarifPrestation;
 use App\Repository\Finance\DeviseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -40,6 +41,9 @@ class Devise
     #[ORM\OneToMany(mappedBy: 'devise', targetEntity: EntrepriseProfile::class)]
     private Collection $entrepriseProfiles;
 
+    #[ORM\OneToMany(mappedBy: 'currency', targetEntity: TarifPrestation::class)]
+    private Collection $tarifPrestations;
+
     public function __toString()
     {
         return $this->nom .' ( '.$this->symbole.' )' ;
@@ -49,6 +53,7 @@ class Devise
     {
         $this->simulateurs = new ArrayCollection();
         $this->entrepriseProfiles = new ArrayCollection();
+        $this->tarifPrestations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -158,6 +163,36 @@ class Devise
             // set the owning side to null (unless already changed)
             if ($entrepriseProfile->getDevise() === $this) {
                 $entrepriseProfile->setDevise(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TarifPrestation>
+     */
+    public function getTarifPrestations(): Collection
+    {
+        return $this->tarifPrestations;
+    }
+
+    public function addTarifPrestation(TarifPrestation $tarifPrestation): static
+    {
+        if (!$this->tarifPrestations->contains($tarifPrestation)) {
+            $this->tarifPrestations->add($tarifPrestation);
+            $tarifPrestation->setCurrency($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTarifPrestation(TarifPrestation $tarifPrestation): static
+    {
+        if ($this->tarifPrestations->removeElement($tarifPrestation)) {
+            // set the owning side to null (unless already changed)
+            if ($tarifPrestation->getCurrency() === $this) {
+                $tarifPrestation->setCurrency(null);
             }
         }
 

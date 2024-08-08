@@ -72,35 +72,26 @@ class AnnonceController extends AbstractController
     #[Route('/api/openai/prestation/{id}', name: 'app_dashboard_moderateur_open_ai_short_description_prestation')]
     public function resumePrestation(Request $request, Prestation $prestation)
     {
-        // Fermer la connexion à la base de données avant d'exécuter les scripts Node.js
         $this->em->getConnection()->close();
         try {
             /** Generate OpenAI resume */
-            // $parsePdf = $this->pdfProcessor->processPdf($candidat);
             $openai = $this->openAITranslator->resumePrestation($prestation);
             [$short, $clean] = $this->openaiManager->extractCleanAndShortText($openai);
-            // dd($metaDescription, $resumeCandidat, $tools, $technologies, $text, $json);
 
-            // Rouvrir la connexion à la base de données après l'exécution des scripts
             $this->em->getConnection()->connect();
-
-            // Commencer une transaction
             $this->em->getConnection()->beginTransaction();
             
-            // Mettre à jour l'entité jobListing
             $prestation->setOpenai($short);
             $prestation->setCleanDescription($clean);
             $prestation->setIsGenerated(true);
 
-            // Persister les modifications dans la base de données
             $this->em->persist($prestation);
             $this->em->flush();
-            $this->em->getConnection()->commit(); // Confirmer la transaction
+            $this->em->getConnection()->commit(); 
 
-            // Utiliser un retour JSON pour transmettre le message de succès
             return $this->json(['status' => 'success', 'message' => 'Rapport généré par IA sauvegardé']);
+
         } catch (\Exception $e) {
-            // $this->em->getConnection()->rollBack();
             return $this->json(['status' => 'error', 'message' => 'Erreur lors de la génération du rapport par IA', 'error' => $e->getMessage()], 500);
         }
     }

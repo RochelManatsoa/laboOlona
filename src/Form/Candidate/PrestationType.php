@@ -3,11 +3,13 @@
 namespace App\Form\Candidate;
 
 use App\Entity\Prestation;
-use App\Form\DataTransformer\JsonToArrayTransformer;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use App\Form\DataTransformer\JsonToArrayTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class PrestationType extends AbstractType
 {
@@ -24,8 +26,8 @@ class PrestationType extends AbstractType
             ->add('titre', TextType::class, [
                 'required' => true,
             ])
-            ->add('description', TextType::class, [
-                'required' => true,
+            ->add('description', TextareaType::class, [
+                'required' => false,
             ])
             ->add(
                 $builder->create('competencesRequises', TextType::class, [
@@ -35,14 +37,8 @@ class PrestationType extends AbstractType
                     ]
                 ])->addModelTransformer($this->transformer)
             )
-            // ->add(
-            //     $builder->create('tarifsProposes', TextType::class, [
-            //         'required' => false,
-            //         'attr' => ['placeholder' => '[]']
-            //     ])->addModelTransformer($this->transformer)
-            // )
-            ->add('modalitesPrestation', TextType::class, [
-                'required' => false,
+            ->add('modalitesPrestation', ChoiceType::class, [
+                'choices' => Prestation::CHOICE_MODALITE
             ])
             ->add(
                 $builder->create('specialisations', TextType::class, [
@@ -52,18 +48,6 @@ class PrestationType extends AbstractType
                     ]
                 ])->addModelTransformer($this->transformer)
             )
-            // ->add(
-            //     $builder->create('medias', TextType::class, [
-            //         'required' => false,
-            //         'attr' => ['placeholder' => '[]']
-            //     ])->addModelTransformer($this->transformer)
-            // )
-            // ->add(
-            //     $builder->create('disponibilites', TextType::class, [
-            //         'required' => false,
-            //         'attr' => ['placeholder' => '[]']
-            //     ])->addModelTransformer($this->transformer)
-            // )
         ;
     }
 

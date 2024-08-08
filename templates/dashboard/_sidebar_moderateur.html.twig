@@ -55,6 +55,14 @@
 
       </li>
       <li>
+        <a href="{{ path('app_v2_staff_prestation')}}" 
+            class="nav-link {{ current_route == 'app_v2_staff_prestation' ? 'active' : 'text-white' }}">
+            <i class="bi bi-person-workspace mx-2 h5"></i>
+            Prestations   
+        </a>
+
+      </li>
+      <li>
         <a href="{{ path('app_dashboard_moderateur_invitation')}}" 
             class="nav-link {{ current_route == 'app_dashboard_moderateur_invitation' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-envelope-arrow-up"></i>

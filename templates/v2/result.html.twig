@@ -57,42 +57,29 @@
 
     $(document).ready(function () {
         $('.candidate-link').on('click', function (event) {
-
-            // Récupérer l'ID du candidat à partir de l'attribut data-id
+            event.preventDefault(); 
             var candidateId = $(this).data('id');
-            console.log(candidateId)
-
-            // Récupérer le contenu du <span> correspondant
             var candidateContent = $('span[data-candidate="' + candidateId + '"]').html();
-
-            // Injecter le contenu dans le conteneur de la carte
             $('#candidate-card-container').html(candidateContent);
         });
+
         $('.annonce-link').on('click', function (event) {
-
-            // Récupérer l'ID du candidat à partir de l'attribut data-id
+            event.preventDefault(); 
             var annonceId = $(this).data('id');
-            console.log(annonceId)
-
-            // Récupérer le contenu du <span> correspondant
-            var candidateContent = $('span[data-annonce="' + annonceId + '"]').html();
-
-            // Injecter le contenu dans le conteneur de la carte
-            $('#candidate-card-container').html(candidateContent);
+            var annonceContent = $('span[data-annonce="' + annonceId + '"]').html();
+            $('#candidate-card-container').html(annonceContent);
         });
+
         $('.prestation-link').on('click', function (event) {
-
-            // Récupérer l'ID du candidat à partir de l'attribut data-id
+            event.preventDefault(); 
             var prestationId = $(this).data('id');
-            console.log(prestationId)
-
-            // Récupérer le contenu du <span> correspondant
-            var candidateContent = $('span[data-prestation="' + prestationId + '"]').html();
-
-            // Injecter le contenu dans le conteneur de la carte
-            $('#candidate-card-container').html(candidateContent);
+            var prestationContent = $('span[data-prestation="' + prestationId + '"]').html();
+            $('#candidate-card-container').html(prestationContent);
         });
     });
 
 </script>
+{% endblock %}
+{% block main %}
+	{{ parent() }}
 {% endblock %}

@@ -16,6 +16,7 @@ use App\Entity\Entreprise\BudgetAnnonce;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Finance\Simulateur;
 use App\Entity\Moderateur\Metting;
+use App\Entity\Prestation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\ReferrerProfileRepository;
@@ -43,7 +44,7 @@ class StatusExtension extends AbstractExtension
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('arrayInverseDevise', [$this, 'arrayInverseDevise']),
@@ -53,6 +54,7 @@ class StatusExtension extends AbstractExtension
             new TwigFunction('satusEntreprise', [$this, 'satusEntreprise']),
             new TwigFunction('satusCandidate', [$this, 'satusCandidate']),
             new TwigFunction('satusMetting', [$this, 'satusMetting']),
+            new TwigFunction('satusPrestation', [$this, 'satusPrestation']),
             new TwigFunction('typeSimulateur', [$this, 'typeSimulateur']),
         ];
     }
@@ -132,6 +134,42 @@ class StatusExtension extends AbstractExtension
 
             case Metting::STATUS_RESCHEDULED :
                 $status = '<span class="badge text-bg-success">Valide</span>';
+                break;
+            
+            default:
+                $status = '<span class="badge text-bg-primary">En attente</span>';
+                break;
+        }
+        
+        return $status;
+    }
+
+    public function satusPrestation(Prestation $prestation)
+    {
+        $type = $prestation->getStatus() ?? '';
+        switch ($type) {
+            case Prestation::STATUS_VALID :
+                $status = '<span class="badge text-bg-danger">Validée</span>';
+                break;
+
+            case Prestation::STATUS_COMPLETED :
+                $status = '<span class="badge text-bg-info">Terminé</span>';
+                break;
+
+            case Prestation::STATUS_FEATURED :
+                $status = '<span class="badge text-bg-success">Boostée</span>';
+                break;
+
+            case Prestation::STATUS_DELETED :
+                $status = '<span class="badge text-bg-dark">Effacée</span>';
+                break;
+
+            case Prestation::STATUS_PENDING :
+                $status = '<span class="badge text-bg-primary">En attente</span>';
+                break;
+
+            case Prestation::STATUS_SUSPENDED :
+                $status = '<span class="badge text-bg-primary">Suspendue</span>';
                 break;
             
             default:

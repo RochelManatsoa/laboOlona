@@ -1,167 +1,155 @@
+<div class="text-small my-4">
+    {{ totalCandidatesResults }} resultat(s)
+</div>
+{% for item in candidats %}
+    <div class="d-flex w-100 align-items-center justify-content-between">
+        <!-- Avatar container -->
+        <div class="rounded-circle" style="
+            width: 40px;
+            height: 40px;
+            background-image: url('{{ item['_source'].fileName ? asset('uploads/experts/' ~ item['_source'].fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+            background-size: cover;
+            background-position: center;
+        ">
+        </div>
 
-                <div class="tab-content mt-3">
-                    <div class="tab-pane fade show active" id="pending">
-                        <div class="text-small my-4">
-                            {{ totalCandidatesResults }} resultat(s)
+        <!-- Text content -->
+        <div class="flex-grow-1 ms-3">
+            <a href="#" data-id="{{ item['_id'] }}" class="candidate-link"><strong class="mb-1">{{ generatePseudoById(item['_id']) }} </strong></a>
+            <div class="col-10 mb-1 small">{{ item['_source'].titre|upper }}</div>
+        </div>
+        <!-- Date or any other information -->
+        <span data-candidate="{{ item['_id'] }}" style="display:none">
+        
+            <div class="mb-4 mb-2">
+                <div class="">
+                    <div class="card-img-top bg-image-candidat" style="background-image: url('{{ asset('uploads/experts/' ~ item['_source'].fileName)}}');">
+                        <div class="titre-overlay position-absolute w-100">
+                            <h6 class="card-title m-0 p-2">{{ generatePseudoById(item['_id']) }}</h6>
                         </div>
-                        {% for item in candidats %}
-                            <div class="d-flex w-100 align-items-center justify-content-between">
-                                <!-- Avatar container -->
-                                <div class="rounded-circle" style="
-                                    width: 40px;
-                                    height: 40px;
-                                    background-image: url('{{ item['_source'].fileName ? asset('uploads/experts/' ~ item['_source'].fileName) : asset('uploads/experts/avatar-default.jpg') }}');
-                                    background-size: cover;
-                                    background-position: center;
-                                ">
-                                </div>
-
-                                <!-- Text content -->
-                                <div class="flex-grow-1 ms-3">
-                                    <a href="#" data-id="{{ item['_id'] }}" class="candidate-link"><strong class="mb-1">{{ generatePseudoById(item['_id']) }} </strong></a>
-                                    <div class="col-10 mb-1 small">{{ item['_source'].titre|upper }}</div>
-                                </div>
-                                <!-- Date or any other information -->
-                                <span data-candidate="{{ item['_id'] }}" style="display:none">
-                                
-                                    <div class="mb-4 mb-2">
-                                        <div class="">
-                                            <div class="card-img-top bg-image-candidat" style="background-image: url('{{ asset('uploads/experts/' ~ item['_source'].fileName)}}');">
-                                                <div class="titre-overlay position-absolute w-100">
-                                                    <h6 class="card-title m-0 p-2">{{ generatePseudoById(item['_id']) }}</h6>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">
-                                                    <span class="mb-1 fs-4">{{ item['_source'].titre|upper }} </span>
-                                                </p>
-                                                <p class="card-text small">
-                                                {{ item['_source'].metaDescription|raw}}
-                                                </p>
-                                                {% if item['_source'].competences|length > 0 %}
-                                                <p class="card-text fw-bold small">
-                                                    <span class="fs-5">Compétences</span><br>
-                                                    {% set count = 0 %}
-                                                    {% for skill in item['_source'].competences %}
-                                                        {% if count < 3 %}
-                                                            <span class="badge bg-info">{{ skill.nom }}</span>
-                                                            {% set count = count + 1 %}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                    {% if item['_source'].competences|length > 4 %}
-                                                        <span class="badge bg-dark rounded-pill">+{{ item['_source'].competences|length - 3 }}</span>
-                                                    {% endif %}
-                                                </p>
-                                                {% endif %}
-                                                {% if item['_source'].experiences|length > 0 %}
-                                                <p class="small">
-                                                    <span class="fw-bold fs-5">Expériences</span><br>
-                                                    <i class="mx-1 bi bi-trophy"></i> Missions réalisées: <span class="badge bg-success">5</span>
-                                                </p>
-                                                {% endif %}
-                                                {% if item['_source'].langages|length > 0 %}
-                                                <p class="small">
-                                                    <span class="fw-bold fs-5">Langues</span><br>
-                                                    {% for langue in item['_source'].langages %}
-                                                        {{ isoToEmoji(langue.code) }}
-                                                    {% endfor %}
-                                                </p>
-                                                {% endif %}
-                                                <p class="small">
-                                                    <span class="fw-bold fs-5">Disponibilité</span><br>
-                                                    <i class="bi bi-clock-history"></i> {{ item['_source'].availability }}</span>
-                                                </p>
-                                                {% if item['_source'].tarifCandidat is not empty %}
-                                                <p class="small">
-                                                    <span class="fw-bold fs-5">Tarif</span><br>
-                                                    <i class="bi bi-tag"></i> {{ item['_source'].tarifCandidat }}</span>
-                                                </p>
-                                                {% endif %}
-                                                <p class="fw-bold small">
-                                                    <span class="fs-5">Secteur d'activité</span><br>
-                                                    {% set countSecteurs = 0 %}
-                                                    {% for skill in item['_source'].secteurs %}
-                                                        {% if countSecteurs < 3 %}
-                                                            <span class="badge bg-warning">{{ skill.nom }}</span>
-                                                            {% set countSecteurs = countSecteurs + 1 %}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                    {% if item['_source'].secteurs|length > 4 %}
-                                                        <span class="badge bg-dark rounded-pill">+{{ item['_source'].secteurs|length - 3 }}</span>
-                                                    {% endif %}
-                                                </p>
-                                                <div class="text-center">
-                                                    <button type="button" class="fw-bold btn btn-primary rounded-pill my-3 px-4 mx-auto"><i class="bi bi-chat-right-text"></i> Discuter maintenant</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </span>
-                            </div>
-                            <div class="small fw-lighter">
-                                {% if item.highlight %}
-                                    {% set displayed = false %}
-                                    {% for field, fragments in item.highlight %}
-                                        {% if not displayed %}
-                                            {% if fragments|length > 1 %}
-                                                {{ fragments[1]|raw }} {# Affiche le deuxième fragment s’il existe #}
-                                                {% set displayed = true %}
-                                            {% elseif fragments|length > 0 %}
-                                                {{ fragments[0]|raw }} {# Affiche le premier fragment s’il n’existe qu’un seul #}
-                                                {% set displayed = true %}
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %} ...
-                                {% set cleanDescription = item['_source'].metaDescription | striptags %}
-                                {% set words = cleanDescription | split(' ') %}
-                                {% if words|length > 12 %}
-                                    {{ words|slice(0, 12)|join(' ') ~ '...' }}
-                                {% else %}
-                                    {{ cleanDescription }}
-                                {% endif %}
-                            </div>
-                            <div class="small mb-3 mb-sm-4">
-                                <span class="small me-3"><i class="bi bi-patch-check"></i> Certifié OLONA</span>
-                                <span class="small me-3"><i class="bi bi-trophy"></i> {{ item['_source'].experiences|length }} Projets réalisés</span>
-                                <span class="small me-3"><i class="bi bi-circle-fill text-success"></i> Disponibilité</span>
-                                <span class="small me-3"><a href="#" data-id="{{ item['_id'] }}" class="candidate-link">Plus d'informations <i class="bi bi-caret-down-fill"></i></a></span>
-                            </div>
-                        {% endfor %}
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination">
-                                {% if currentPage > 1 %}
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: currentPage - 1, size: size}) }}" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                {% endif %}
-
-                                {% for num in 1..totalPages %}
-                                <li class="page-item {{ currentPage == num ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: num, size: size}) }}">{{ num }}</a>
-                                </li>
-                                {% endfor %}
-
-                                {% if currentPage < totalPages %}
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: currentPage + 1, size: size}) }}" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
                     </div>
-            
-                    <div class="tab-pane fade" id="accepted">
-                    </div>
-            
-                    <div class="tab-pane fade" id="refused">
-                    </div>
-            
-                    <div class="tab-pane fade" id="archived">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <span class="mb-1 fs-4">{{ item['_source'].titre|upper }} </span>
+                        </p>
+                        <p class="card-text small">
+                        {{ item['_source'].metaDescription|raw}}
+                        </p>
+                        {% if item['_source'].competences|length > 0 %}
+                        <p class="card-text fw-bold small">
+                            <span class="fs-5">Compétences</span><br>
+                            {% set count = 0 %}
+                            {% for skill in item['_source'].competences %}
+                                {% if count < 3 %}
+                                    <span class="badge bg-info">{{ skill.nom }}</span>
+                                    {% set count = count + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if item['_source'].competences|length > 4 %}
+                                <span class="badge bg-dark rounded-pill">+{{ item['_source'].competences|length - 3 }}</span>
+                            {% endif %}
+                        </p>
+                        {% endif %}
+                        {% if item['_source'].experiences|length > 0 %}
+                        <p class="small">
+                            <span class="fw-bold fs-5">Expériences</span><br>
+                            <i class="mx-1 bi bi-trophy"></i> Missions réalisées: <span class="badge bg-success">5</span>
+                        </p>
+                        {% endif %}
+                        {% if item['_source'].langages|length > 0 %}
+                        <p class="small">
+                            <span class="fw-bold fs-5">Langues</span><br>
+                            {% for langue in item['_source'].langages %}
+                                {{ isoToEmoji(langue.code) }}
+                            {% endfor %}
+                        </p>
+                        {% endif %}
+                        <p class="small">
+                            <span class="fw-bold fs-5">Disponibilité</span><br>
+                            <i class="bi bi-clock-history"></i> {{ item['_source'].availability }}</span>
+                        </p>
+                        {% if item['_source'].tarifCandidat is not empty %}
+                        <p class="small">
+                            <span class="fw-bold fs-5">Tarif</span><br>
+                            <i class="bi bi-tag"></i> {{ item['_source'].tarifCandidat }}</span>
+                        </p>
+                        {% endif %}
+                        <p class="fw-bold small">
+                            <span class="fs-5">Secteur d'activité</span><br>
+                            {% set countSecteurs = 0 %}
+                            {% for skill in item['_source'].secteurs %}
+                                {% if countSecteurs < 3 %}
+                                    <span class="badge bg-warning">{{ skill.nom }}</span>
+                                    {% set countSecteurs = countSecteurs + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if item['_source'].secteurs|length > 4 %}
+                                <span class="badge bg-dark rounded-pill">+{{ item['_source'].secteurs|length - 3 }}</span>
+                            {% endif %}
+                        </p>
+                        <div class="text-center">
+                            <button type="button" class="fw-bold btn btn-primary rounded-pill my-3 px-4 mx-auto"><i class="bi bi-chat-right-text"></i> Discuter maintenant</button>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+        </span>
+    </div>
+    <div class="small fw-light">
+        {% if item.highlight %}
+            {% set displayed = false %}
+            {% for field, fragments in item.highlight %}
+                {% if not displayed %}
+                    {% if fragments|length > 1 %}
+                        {{ fragments[1]|raw }} {# Affiche le deuxième fragment s’il existe #}
+                        {% set displayed = true %}
+                    {% elseif fragments|length > 0 %}
+                        {{ fragments[0]|raw }} {# Affiche le premier fragment s’il n’existe qu’un seul #}
+                        {% set displayed = true %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %} ...
+        {% set cleanDescription = item['_source'].metaDescription | striptags %}
+        {% set words = cleanDescription | split(' ') %}
+        {% if words|length > 12 %}
+            {{ words|slice(0, 12)|join(' ') ~ '...' }}
+        {% else %}
+            {{ cleanDescription }}
+        {% endif %}
+    </div>
+    <div class="small mb-3 mb-sm-4">
+        <span class="small me-3"><i class="bi bi-patch-check"></i> Certifié OLONA</span>
+        <span class="small me-3"><i class="bi bi-trophy"></i> {{ item['_source'].experiences|length }} Projets réalisés</span>
+        <span class="small me-3"><i class="bi bi-circle-fill text-success"></i> Disponibilité</span>
+        <span class="small me-3"><a href="#" data-id="{{ item['_id'] }}" class="candidate-link">Plus d'informations <i class="bi bi-caret-down-fill"></i></a></span>
+    </div>
+{% endfor %}
+{% if totalCandidatesResults > 0 %}
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% if currentPage > 1 %}
+        <li class="page-item">
+            <a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: currentPage - 1, size: size}) }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% for num in 1..totalPages %}
+        <li class="page-item {{ currentPage == num ? 'active' : '' }}">
+            <a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: num, size: size}) }}">{{ num }}</a>
+        </li>
+        {% endfor %}
+
+        {% if currentPage < totalPages %}
+        <li class="page-item">
+            <a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: currentPage + 1, size: size}) }}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}

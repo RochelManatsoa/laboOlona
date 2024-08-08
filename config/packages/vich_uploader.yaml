@@ -8,3 +8,10 @@ vich_uploader:
            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
            delete_on_update: false
            delete_on_remove: false
+
+       medias_prestation:
+           uri_prefix: '%medias_prestation%'
+           upload_destination: '%kernel.project_dir%/public%medias_prestation%'
+           namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+           delete_on_update: false
+           delete_on_remove: false

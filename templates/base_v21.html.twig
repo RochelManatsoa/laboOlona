@@ -4,8 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>
-			{% block title %}Olona Talents
-			{% endblock %}
+			{% block title %}Olona Talents{% endblock %}
 		</title>
 		<link rel="icon" href="{{ asset('images/favicon.ico') }}">
 		{% block meta %}
@@ -13,72 +12,68 @@
 		{% endblock %}
 
 		{% block stylesheets %}
+			<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/42.0.2/ckeditor5.css">
 			<link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
 			<link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
+
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
 	</head>
-	<body
-		class="bootstrap-light">
-
-		<!-- Conteneur Swup -->
-		<div id="swup" class="transition-fade">
-			<main class="">
-				{% block header %}
-					<nav class="navbar navbar-expand-lg shadow-custom w-100">
-						<div class="container">
-							<a class="navbar-brand" href="{{ path('app_home') }}">
-								<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="100px" class="" alt="Logo">
-							</a>
-							<div class="collapse navbar-collapse" id="navbarNav">
-							{% set last_query = app.request.query.get('q', '') %}
-								<div class="col-12 col-sm-8 mx-auto">
-									<form action="{{ path('app_olona_talents_result') }}" class="input-group mb-3 rounded-pill w-100 mt-4">
-										<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
-										<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
-									</form>
-								</div>
-
-                                <div class="d-flex justify-content-end p-2">
-								{% if app.user %}
-									<div class="dropdown me-3">
-										<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
-											{% if app.user.gravatar is not null %}
-											<img src="{{ app.user.gravatar }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
-											{% else %}
-											<img src="{{ asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
-											{% endif %}
-										</button>
-										<ul class="dropdown-menu text-small shadow">
-											<li><a class="dropdown-item" href="#">Dashboard</a></li>
-											<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Mon profil</a></li>
-											<li><hr class="dropdown-divider"></li>
-											<li><a class="dropdown-item" href="{{ path('app_logout')}}">Se déconnecter</a></li>
-										</ul>
-									</div>
-								{% else %}
-                                    <a href="{{ path('app_login')}}" class="me-3 mt-2">Se connecter</a>
-								{% endif %}
-                                    <button id="switch-theme" class="btn btn-secondary btn-sm">
-                                        <i class="bi bi-moon-stars-fill"></i>
-                                    </button>
-                                </div>
+	<body class="bootstrap-light">
+		<div class="transition-fade">
+			{% block header %}
+				<nav class="navbar navbar-expand-lg shadow-custom w-100">
+					<div class="container">
+						<a class="navbar-brand" href="{{ path('app_home') }}">
+							<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="100px" class="" alt="Logo">
+						</a>
+						<div class="collapse navbar-collapse" id="navbarNav">
+						{% set last_query = app.request.query.get('q', '') %}
+							<div class="col-12 col-sm-8 mx-auto">
+								<form action="{{ path('app_olona_talents_result') }}" class="input-group mb-3 rounded-pill w-100 mt-4">
+									<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+									<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
+								</form>
 							</div>
-							<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-								<span class="navbar-toggler-icon"></span>
-							</button>
-						</div>
-					</nav>
-				{% endblock %}
-				<div class="container"> 
-				{% block sidebar %}{% endblock %}
-				{% block body %}{% endblock %}
-				</div>
-				</main>
-			</div>
 
-			{% block javascripts %}
-				{{ encore_entry_script_tags('app') }}
+							<div class="d-flex justify-content-end p-2">
+							{% if app.user %}
+								<div class="dropdown me-3">
+									<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
+										{% if app.user.gravatar is not null %}
+										<img src="{{ app.user.gravatar }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+										{% else %}
+										<img src="{{ asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+										{% endif %}
+									</button>
+									<ul class="dropdown-menu text-small shadow">
+										<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Dashboard</a></li>
+										<li><hr class="dropdown-divider"></li>
+										<li><a class="dropdown-item" href="{{ path('app_logout')}}">Se déconnecter</a></li>
+									</ul>
+								</div>
+							{% else %}
+								<a href="{{ path('app_login')}}" class="me-3 mt-2">Se connecter</a>
+							{% endif %}
+								<button id="switch-theme" class="btn btn-secondary btn-sm">
+									<i class="bi bi-moon-stars-fill"></i>
+								</button>
+							</div>
+						</div>
+						<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+					</div>
+				</nav>
 			{% endblock %}
-		</body>
-	</html>
+			<div class="container"> 
+			{% block sidebar %}{% endblock %}
+			{% block body %}{% endblock %}
+			</div>
+		</div>
+		{{ encore_entry_script_tags('main') }}
+	</body>
+</html>

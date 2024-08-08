@@ -1,0 +1,193 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Créer une prestation | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+  {% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endblock %}
+
+{% block body %}
+    <section class="">
+      <div class="shadow p-2 p-sm-4">
+        <div class="col-12 col-sm-8 mx-auto p-2 p-sm-4">
+          {{ form_start(form) }}
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.titre)}}
+											<label for="prestation_titre">Titre</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.description)}}
+											<label for="prestation_description">Description</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.tarifPrestation.typeTarif)}}
+											<label for="prestation_tarifPrestation_typeTarif">Type</label>
+										</div>
+									</div>
+									<div class="col-4">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.tarifPrestation.montant)}}
+											<label for="prestation_tarifPrestation_montant">Montant</label>
+										</div>
+									</div>
+									<div class="col-4">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.tarifPrestation.currency)}}
+											<label for="prestation_tarifPrestation_currency">Devise</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.secteurs)}}
+											<label for="prestation_secteurs">Secteurs d'activité</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.modalitesPrestation)}}
+											<label for="prestation_modalitesPrestation">Modalité de prestation</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.disponibilites)}}
+											<label for="prestation_disponibilites">Disponibilité</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.typeService)}}
+											<label for="prestation_typeService">Type de service</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.specialisations)}}
+											<label for="prestation_specialisations">Spécialisations</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.medias)}}
+											<label for="prestation_medias">Médias</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-6">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.contactEmail)}}
+											<label for="prestation_contactEmail">Email de contact</label>
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.contactTelephone)}}
+											<label for="prestation_contactTelephone">Téléphone</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.motsCles)}}
+											<label for="prestation_motsCles">Mots clés</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.conditionsParticulieres)}}
+											<label for="prestation_conditionsParticulieres">Conditions particulière</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.portfolioLinks)}}
+											<label for="prestation_portfolioLinks">Références</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.preferencesCommunication)}}
+											<label for="prestation_preferencesCommunication">Préférence communication</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.engagementQualite)}}
+											<label for="prestation_engagementQualite">Engagement qualité</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.contactReseauxSociaux)}}
+											<label for="prestation_contactReseauxSociaux">Contact Réseaux sociaux</label>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col">
+										<div class="form-floating mb-3">
+											{{ form_widget(form.termesConditionsAccepted)}}
+										</div>
+									</div>
+								</div>
+						<div style="display:none;">
+            {{ form_widget(form) }}
+						</div>
+          <button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+            <i class="bi bi-save"></i> Enregister
+          </button>
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </section>
+  <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+	<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+	<script>
+		ClassicEditor.create(document.querySelector('#prestation_description'))
+	</script>
+{% endblock %}

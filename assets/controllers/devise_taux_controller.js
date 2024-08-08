@@ -16,7 +16,7 @@ export default class extends Controller {
         const tauxElement = document.querySelector('[data-id="simulateur_taux"]');
         const symbole = document.querySelector('[data-id="simulateur_deviseSymbole"]');
         var spans = document.querySelectorAll('span.change-devise');
-    
+        console.log(spans)
         // Votre code pour récupérer le taux de change de la devise
         fetch('/ajax/devise/select/' + devise)
         .then(response => response.json())

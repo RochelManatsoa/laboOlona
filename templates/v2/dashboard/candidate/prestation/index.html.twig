@@ -1,7 +1,7 @@
 {% extends 'base_v21.html.twig' %}
 
 {% block title %}
-  Mes prestation | Olona Talents
+  Mes prestations | Olona Talents
 {% endblock %}
 
 {% block meta %}
@@ -17,117 +17,69 @@
 {% endblock %}
 
 {% block body %}
+{% set tableClass = 'table' %}
+{% if app.request.cookies.get('theme') == 'bootstrap-dark' %}
+    {% set tableClass = tableClass ~ ' table-dark' %}
+{% endif %}
     <section class="">
       <div class="shadow p-2 p-sm-4">
         <h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
-          <span class="">
-            <img src="{{ asset('v2/images/7108023.png')}}" alt="icone" style="width:30px;" >
-          </span> 
-          Mes prestations 
-          <span class="">
-            <img src="{{ asset('v2/images/7108023.png')}}" alt="icone" style="width:30px;" >
-          </span>
+          <i class="bi bi-person-workspace text-warning me-2"></i>
+          Mes Prestations Professionnelles
         </h2>
-
-        <p class="fw-lighter"> Afin de maximiser vos chances de trouver l'emploi de vos
-          rêves, veuillez remplir ce formulaire avec soin. Notre IA spécialisée dans le recrutement
-          analysera et optimisera votre profil en fonction des informations fournies.</p>
-        {% if prestations|length > 0 %}
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <td scope="col" class="">Titre</td>
-                <td scope="col" class="">...</td>
-                <td scope="col" class="">Action</td>
-              </tr>
-            </thead>
-            <tbody>
-          {% for item in prestations %}
-            <tr>
-              <td class="">{{ item.titre}}</td>
-              <td class="">...</td>
-              <td class=""><a href="{{ path('app_v2_candidate_edit_prestation', { 'prestation' : item.id })}}" class="btn btn-sm btn-primary rounded-pill"><i class="bi bi-pencil-square"></i></a></td>
-            </tr>
-          {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        
-        {% else %}
-            <h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
-              <span class="">
-              <img src="{{ asset('v2/images/6939131.png')}}" alt="icone" style="width:30px;">
-              </span>
-              1ère chose à faire
-            </h3>
-        {% endif %}
+        <p class="text-center"> 
+        Pour maximiser votre visibilité auprès des entreprises à la recherche de compétences uniques, nous vous invitons à créer votre prestation de service sur notre plateforme. En remplissant avec soin ce formulaire, notre système avancé mettra en valeur votre offre en l'alignant avec les besoins précis des entreprises. Cela augmentera vos chances de collaborer sur des projets qui correspondent vraiment à vos compétences et aspirations professionnelles. Profitez de notre outil de mise en relation pour faire valoir votre expertise et étendre votre réseau professionnel sur Olona Talents.
+        </p>
+        <div id="flash"></div>
 
         <p class="text-center">
-        <a href="{{ path('app_v2_candidate_create_prestation')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
-          <i class="bi bi-plus-lg"></i> Créer une prestation
-        </a>
+          <a href="{{ path('app_v2_candidate_create_prestation')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+            <i class="bi bi-plus-lg"></i> Créer une prestation
+          </a>
         </p>
-        <div class="">
-          <ul class="nav nav-underline justify-content-center">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" id="view-tab" data-bs-toggle="tab" href="#view">Voir le profil public</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="edit-tab" data-bs-toggle="tab" href="#edit">Modifier votre profil</a>
-            </li>
-          </ul>
+    {% if prestations|length > 0 %}
+      <div class="table-responsive">
+          <table class="{{ tableClass }}">
+              <thead>
+                  <tr>
+                      <td scope="col" class="h5">{{ knp_pagination_sortable(prestations, 'Titre', 'p.titre') }}</td>
+                      <td scope="col-2" class="h5">{{ knp_pagination_sortable(prestations, 'Statut', 'p.status') }}</td>
+                      <td scope="col-2" class=""></td>
+                  </tr>
+              </thead>
+              <tbody>
+              {% for item in prestations %}
+              <tr id="row_prestation_{{item.id}}">
+                  <td class="">
+                    <turbo-frame id="prestation_{{ item.id}}">
+                      <a href="{{ path('app_v2_candidate_edit_prestation', { 'prestation': item.id })}}">
+                        {{ item.titre }} <i class="bi bi-pencil-square"></i>
+                      </a>
+                    </turbo-frame>
+                    <br>
+                    <span class="fw-lighter small">Créé le {{ item.createdAt|date('d/m/Y') }}</span>
+                  </td>
+                  <td class="col-2">{{ satusPrestation(item)|raw }}</td>
+                  <td class="col-2">
+                    <a href="{{ path('app_v2_candidate_view_prestation', { 'prestation': item.id })}}" class="btn btn-sm btn-secondary rounded-pill"><i class="bi bi-eye"></i></a>
+                    <button type="button" id="delete-prestation" data-href="{{ path('app_v2_candidate_delete_prestation', { 'prestation': item.id })}}" class="btn btn-sm btn-danger rounded-pill"><i class="bi bi-trash"></i></button>
+                  </td>
+              </tr>
+              {% endfor %}
+              </tbody>
+          </table>
+        <div class="navigation mt-5">
+          {{ knp_pagination_render(prestations, 'parts/_pagination.html.twig') }}
         </div>
-          <div class="u-container-layout u-container-layout-3 custom-shadow">
-            <h3 class="fs-5 fw-bolder mt-3 mt-sm-5 text-center">
-              <span class="u-file-icon u-icon">
-                <img src="{{ asset('v2/images/3221746.png')}}" alt="icone" style="width:32px;">
-              </span>
-              Conseils pour Compléter Votre Profil
-            </h3>
-            <ul class="col-12 col-sm-8 mx-auto">
-                <li class="list-group-item mx-2">
-                    <div class="row mb-3">
-                        <div class="col-1">
-                            <i class="bi bi-check h5 text-danger"></i>
-                        </div>
-                        <div class="col-11">
-                            Prenez votre temps pour corrigez chaque section de manière détaillée et précise.
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item mx-2">
-                    <div class="row mb-3">
-                        <div class="col-1">
-                            <i class="bi bi-check h5 text-danger"></i>
-                        </div>
-                        <div class="col-11">
-                            Prenez votre temps pour corrigez chaque section de manière détaillée et précise.
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item mx-2">
-                    <div class="row mb-3">
-                        <div class="col-1">
-                            <i class="bi bi-check h5 text-danger"></i>
-                        </div>
-                        <div class="col-11">
-                            Relisez votre profil avant de le soumettre pour éviter les erreurs.
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item mx-2">
-                    <div class="row mb-3">
-                        <div class="col-1">
-                            <i class="bi bi-check h5 text-danger"></i>
-                        </div>
-                        <div class="col-11">
-                            Les modifications que vous apporterez seront soumis aux modérateurs pour validation.
-                        </div>
-                    </div>
-                </li>
-            </ul>
-          </div>
+      </div>
+    {% else %}
+      <h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+          <span class="">
+              <img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+          </span>
+          1ère chose à faire
+      </h3>
+    {% endif %}
       </div>
         </div>
       </div>

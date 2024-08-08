@@ -6,6 +6,7 @@ use App\Data\SearchData;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Entreprise\JobListing;
 use App\Data\Annonce\AnnonceSearchData;
+use App\Data\V2\JobOfferData;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -103,7 +104,6 @@ class JobListingRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-
     public function findJoblistingsForReport()
     {
         $queryBuilder = $this->createQueryBuilder('j');
@@ -129,8 +129,7 @@ class JobListingRepository extends ServiceEntityRepository
             ->getQuery();
             
         return $query->getResult();
-    }
-    
+    }    
 
     /**
      * @param EntrepriseProfile $entreprise
@@ -241,6 +240,53 @@ class JobListingRepository extends ServiceEntityRepository
         } elseif ($searchData->secteurs === 0) {
             $qb = $qb
                 ->andWhere('j.secteur IS EMPTY');
+        }
+
+        $query =  $qb->getQuery();
+        // dd($query->getResult());
+
+        return $this->paginator->paginate(
+            $query,
+            $searchData->page,
+            20
+        );
+    }
+
+    public function candidateSearch(JobOfferData $searchData): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('j');
+        $orConditions = $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->eq('j.status', ':statusValid'),
+            $queryBuilder->expr()->eq('j.status', ':statusFeatured')
+        );
+        
+        $qb = $queryBuilder
+            ->select('j, COUNT(DISTINCT a.id) AS nombreDeCandidatures')
+            ->leftJoin('j.competences', 's')
+            ->leftJoin('j.applications', 'a')
+            ->leftJoin('j.secteur', 'sect')
+            ->leftJoin('j.typeContrat', 't')
+            ->leftJoin('j.budgetAnnonce', 'b')
+            ->leftJoin('j.entreprise', 'e')
+            ->join('e.entreprise', 'u')
+            ->andWhere($orConditions)
+            ->setParameter('statusValid', JobListing::STATUS_PUBLISHED)
+            ->setParameter('statusFeatured', JobListing::STATUS_FEATURED)
+            ->groupBy('u.id')
+            ->orderBy('j.id', 'DESC')
+            ;
+
+
+        if (!empty($searchData->q)) {
+            $queryString = $searchData->q;
+            $words = explode(' ', $queryString);
+            foreach ($words as $word) {
+                $word = trim($word);
+                if (!empty($word)) {
+                    $qb->andWhere('s.nom LIKE :word OR sect.nom LIKE :word OR j.description LIKE :word OR j.titre LIKE :word')
+                        ->setParameter('word', "%{$word}%");
+                }
+            }
         }
 
         $query =  $qb->getQuery();

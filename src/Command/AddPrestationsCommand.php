@@ -2,22 +2,26 @@
 
 namespace App\Command;
 
+use Faker\Factory;
 use App\Entity\Prestation;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
 use Doctrine\ORM\EntityManagerInterface;
-use Faker\Factory;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'app:add-prestations',
+    description: 'Add prestation fixtures',
+    hidden: false,
+    aliases: ['app:add-prestations']
+)]
 class AddPrestationsCommand extends Command
 {
-    protected static $defaultName = 'app:add-prestations';
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
         parent::__construct();
         $this->entityManager = $entityManager;

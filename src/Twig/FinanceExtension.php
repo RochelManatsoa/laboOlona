@@ -48,7 +48,7 @@ class FinanceExtension extends AbstractExtension
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('getPeriod', [$this, 'getPeriod']),

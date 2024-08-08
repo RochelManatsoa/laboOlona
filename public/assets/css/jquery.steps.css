@@ -107,8 +107,6 @@
 .wizard > .steps .disabled a:hover,
 .wizard > .steps .disabled a:active
 {
-    background: #eee;
-    color: #aaa;
     cursor: default;
 }
 
@@ -139,10 +137,9 @@
 
 .wizard > .content
 {
-    background: #eee;
     display: block;
     margin: 0.5em;
-    /* min-height: 35em; */
+    min-height: 20em;
     overflow: hidden;
     position: relative;
     width: auto;
@@ -264,11 +261,11 @@
     border-radius: 5px;
 }
 
-.wizard > .actions .disabled a,
-.wizard > .actions .disabled a:hover,
-.wizard > .actions .disabled a:active
+body.dark-theme .wizard > .actions .disabled a,
+body.dark-theme .wizard > .actions .disabled a:hover,
+body.dark-theme .wizard > .actions .disabled a:active
 {
-    background: #eee;
+    background: rgba(0,0,0,0.1)!important;
     color: #aaa;
 }
 
