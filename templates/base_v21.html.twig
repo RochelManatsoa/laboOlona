@@ -12,7 +12,8 @@
 		{% endblock %}
 
 		{% block stylesheets %}
-			<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/42.0.2/ckeditor5.css">
+
+			<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 			<link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
 			<link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
 			{{ encore_entry_link_tags('app') }}
@@ -72,6 +73,7 @@
 			<div class="container"> 
 			{% block sidebar %}{% endblock %}
 			{% block body %}{% endblock %}
+        	<a href="javascript:history.back()" class="btn btn-info fw-semibold text-uppercase px-4 my-5 me-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 			</div>
 		</div>
 		{{ encore_entry_script_tags('main') }}

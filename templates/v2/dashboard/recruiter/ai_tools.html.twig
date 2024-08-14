@@ -1,0 +1,101 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Outils IA | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endblock %}
+
+{% block body %}
+	<section class="">
+		<div class="shadow p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-magic text-warning me-2"></i></span> 
+				Ai Tools
+			</h2>
+			<p class="text-center">
+				Pour rester compétitif dans le recrutement moderne, s'équiper des bons outils est indispensable. Chez Olona-Talents.com, nous proposons une bibliothèque complète d'outils d'IA conçus pour optimiser vos processus de recrutement et d'engagement des talents.
+			</p>
+
+				{{ form_start(form, {'attr': {'class': 'form-group mb-2 col-6', 'id':'moderateur-aitools-search-form'}}) }}
+				<div class="input-group">
+					{{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+				</div>
+				{{ form_end(form) }}
+				<div id="aitools-container">
+					{% include 'dashboard/moderateur/affiliate_tool/_aitools.html.twig' %}
+				</div>
+			<div class="">
+				<h3 class="fs-5 fw-bolder mt-3 mt-sm-5 text-center">
+					<span class="u-file-icon u-icon">
+						<img src="{{ asset('v2/images/3221746.png')}}" alt="icone" style="width:32px;">
+					</span>
+					Avantages des outils IA pour les recruteurs
+				</h3>
+				<ul class="col-12 col-sm-8 mx-auto">
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								<span class="fw-bold">Efficacité Accrue :</span> Automatisez et rationalisez les tâches de recrutement, réduisant ainsi le temps et les coûts associés.
+							</div>
+						</div>
+					</li>
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								<span class="fw-bold">Sélection Optimisée : </span> Utilisez des algorithmes avancés pour identifier les meilleurs candidats basés sur des analyses précises et objectives.
+							</div>
+						</div>
+					</li>
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								<span class="fw-bold">Engagement Amélioré :</span> Implémentez des solutions d'IA pour améliorer l'interaction avec les candidats et maintenir leur engagement.
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    function searchAnnonces() {
+        var formData = $('#moderateur-aitools-search-form').serialize();
+
+        $.ajax({
+            url: '{{ path('app_dashboard_moderateur_affiliate_tool') }}',
+            type: 'GET',
+            data: formData,
+            success: function(data) {
+                $('#aitools-container').html(data.content);
+            }
+        });
+    }
+    $('#moderateur-aitools-search-form input, #moderateur-aitools-search-form select').on('keyup change', function() {
+        searchAnnonces();
+    });
+});
+</script>
+{% endblock %}

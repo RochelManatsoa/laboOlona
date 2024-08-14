@@ -5,6 +5,7 @@ namespace App\Entity\Candidate;
 use Doctrine\DBAL\Types\Types;
 use App\Entity\CandidateProfile;
 use Doctrine\ORM\Mapping as ORM;
+use App\Form\Profile\Candidat\CompetencesType;
 use App\Repository\Candidate\ExperiencesRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 

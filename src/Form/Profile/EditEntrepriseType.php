@@ -33,7 +33,8 @@ class EditEntrepriseType extends AbstractType
             ->add('description', TextareaType::class, [
                 'required' => false,
                 'attr' => [
-                    'rows' => 10
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
                 ]
             ])
             ->add('secteurs', EntityType::class, [

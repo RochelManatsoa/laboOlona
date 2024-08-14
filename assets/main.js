@@ -6,21 +6,6 @@
  */
 
 import $ from 'jquery';
-import { BalloonEditor, AccessibilityHelp, Autosave, BlockToolbar, Bold, Essentials, Italic, Paragraph, SelectAll, Undo } from 'ckeditor5';
-import translations from 'ckeditor5/translations/fr.js';
-import 'ckeditor5/ckeditor5.css';
-
-const editorConfig = {
-	toolbar: {
-		items: ['undo', 'redo', '|', 'selectAll', '|', 'bold', 'italic', '|', 'accessibilityHelp'],
-		shouldNotGroupWhenFull: false
-	},
-	plugins: [AccessibilityHelp, Autosave, BlockToolbar, Bold, Essentials, Italic, Paragraph, SelectAll, Undo],
-    blockToolbar: ['bold', 'italic'],
-    language: 'fr',
-	placeholder: 'Tapez ou collez votre contenu ici !',
-	translations: [translations]
-};
 
 $(function() {
     document.addEventListener('turbo:load', handlePageLoad); // Attacher sur turbo:load pour le chargement initial
@@ -31,75 +16,61 @@ $(function() {
         setupEditors(event); 
         setupImageUpload(); 
         setupAvailabilityDropdown(); 
-        applyBootstrapStylesToBalloonEditors(context);
     }
 
     function handlePageLoad() {
         handleThemeChange();
         handleThemeInitialization();
-        initializeBalloonEditor(); // Setup Balloon Editor on initial load
+        setupCKEditors();
         updateLogo();
         setupDeletionConfirmation();
-        setupImageUpload(); // Setup Image Upload on initial load
-        setupAvailabilityDropdown(); // Setup Availability Dropdown on initial load
+        setupImageUpload(); 
+        setupAvailabilityDropdown();  
     }
 
     function setupEditors(event) {
         const context = event ? event.target : document;
-        const editors = context.querySelectorAll('.balloon-editor');
+        const editors = context.querySelectorAll('.ckeditor-textarea');
         
         editors.forEach(editorElement => {
-            const initialContent = editorElement.getAttribute('data-content') || ''; // Définir par défaut à une chaîne vide
-            const hiddenInputSelector = editorElement.getAttribute('data-hidden-input-selector');
-            const hiddenInput = document.querySelector(hiddenInputSelector);
-
-            if (editorElement.getAttribute('data-editor-initialized') !== 'true') {
-                BalloonEditor.create(editorElement, editorConfig)
-                .then(editor => {
-                    if (initialContent) {
-                        editor.setData(htmlDecode(initialContent));
+            if (editorElement) {
+                ClassicEditor.create(editorElement, {
+                    toolbar: {
+                        items: [
+                            'heading', '|',
+                            'bold', 'italic', 'link', '|',
+                            'bulletedList', 'numberedList', '|',
+                            'blockQuote', 'insertTable', '|',
+                            'undo', 'redo'
+                        ]
                     }
-                    editor.model.document.on('change:data', () => {
-                        if(hiddenInput){
-                            hiddenInput.value = editor.getData();
-                        }
-                    });
-
-                    editorElement.setAttribute('data-editor-initialized', 'true');
-                })
-                .catch(error => {
-                    console.error('Error initializing Balloon Editor:', error);
                 });
+                console.log('ckeditor turbo-frame')
             }
         });
     }
 
-    function htmlDecode(input){
-        const doc = new DOMParser().parseFromString(input, "text/html");
-        return doc.documentElement.innerHTML;
+    function setupCKEditors() {
+        const editors = document.querySelectorAll('.ckeditor-textarea');
+        
+        editors.forEach(editorElement => {
+            if (editorElement) {
+                ClassicEditor.create(editorElement, {
+                    toolbar: {
+                        items: [
+                            'heading', '|',
+                            'bold', 'italic', 'link', '|',
+                            'bulletedList', 'numberedList', '|',
+                            'blockQuote', 'insertTable', '|',
+                            'undo', 'redo'
+                        ]
+                    }
+                });
+                console.log('ckeditor document-load')
+            }
+        });
     }
 
-    function initializeBalloonEditor() {
-        const editorElement = document.querySelector('.balloon-editor');
-        const hiddenInput = document.querySelector('input[name="prestation[description]"]');
-        if (editorElement) {
-            let initialContent = editorElement.getAttribute('data-content');
-            initialContent = htmlDecode(initialContent);  // Décode les entités HTML
-    
-            BalloonEditor.create(editorElement, editorConfig)
-                .then(editor => {
-                    editor.setData(initialContent);
-                    editor.model.document.on('change:data', () => {
-                        if (hiddenInput) {
-                            hiddenInput.value = editor.getData();
-                        }
-                    });
-                })
-                .catch(error => {
-                    console.error('There was a problem initializing the Balloon Editor:', error);
-                });
-        }
-    }
 
     function setupDeletionConfirmation() {
         $('[data-bs-toggle="tooltip"]').tooltip();
@@ -186,10 +157,38 @@ $(function() {
         }
     }
 
-    function applyBootstrapStylesToBalloonEditors(context) {
-        const editors = context.querySelectorAll('.balloon-editor');
-        editors.forEach(editor => {
-            editor.classList.add('balloon-editor-bootstrap');
+    $('#experience').on('shown.bs.modal', function () {
+        // Fonction pour gérer la logique de chaque groupe de champs
+        function handleFieldGroup(baseId) {
+            for (let i = 0; i < 10; i++) {  // Ajustez le nombre selon vos besoins
+                const $currentlyCheckbox = $(`#${baseId}_${i}_enPoste`);
+                const $endDateFieldContainer = $(`#${baseId}_${i}_dateFin`).closest('div');
+    
+                if (!$currentlyCheckbox.length) {
+                    break; // Sortir si le checkbox n'existe pas
+                }
+    
+                // Afficher ou masquer le conteneur en fonction de l'état du checkbox
+                $endDateFieldContainer.parent().toggle(!$currentlyCheckbox.is(':checked'));
+    
+                // Gérer les changements d'état du checkbox
+                $currentlyCheckbox.off('change').change(function() {
+                    $endDateFieldContainer.parent().toggle(!$(this).is(':checked'));
+                });
+            }
+        }
+    
+        // Appeler la fonction pour chaque groupe de champs
+        handleFieldGroup('step_two_experiences');
+        handleFieldGroup('step_three_experiences');
+    });
+    
+
+    var modalIds = ['experience', 'technicalSkill', 'language'];
+
+    modalIds.forEach(function(modalId) {
+        $('#' + modalId).on('hidden.bs.modal', function () {
+            $(this).find('ul[data-form-collection-target="collectionContainer"]').empty();
         });
-    }
+    });
 });

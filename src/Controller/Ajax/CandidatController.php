@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\Candidate\CompetencesRepository;
 use App\Repository\Candidate\ExperiencesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\UX\Turbo\TurboBundle;
 
 class CandidatController extends AbstractController
 {
@@ -302,6 +303,10 @@ class CandidatController extends AbstractController
         if($competence instanceof Competences){
             $this->em->remove($competence);
             $this->em->flush();
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('v2/ajax/delete.html.twig', ['competenceId' => $competenceId ]);
+            }
             $success = true;
         }
 

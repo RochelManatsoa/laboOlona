@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class StepOneType extends AbstractType
 {
@@ -44,6 +45,13 @@ class StepOneType extends AbstractType
                 'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
                 'years' => range(1970, 2010),
                 'attr' => ['class' => 'rounded-pill'] 
+            ])
+            ->add('resume', TextType::class, [
+                'label' => 'app_identity_expert.aspiration',
+                'required' => false,
+                'attr' => [
+                    'rows' => 8
+                ]
             ])
         ;
     }

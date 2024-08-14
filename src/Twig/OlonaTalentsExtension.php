@@ -2,20 +2,21 @@
 
 namespace App\Twig;
 
-use App\Entity\Candidate\TarifCandidat;
-use App\Entity\CandidateProfile;
 use App\Entity\User;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\ReferrerProfile;
-use App\Entity\Referrer\Referral;
-use App\Entity\Entreprise\JobListing;
-use Twig\Extension\AbstractExtension;
-use App\Entity\Moderateur\Assignation;
-use App\Entity\Entreprise\BudgetAnnonce;
+use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Referrer\Referral;
 use App\Entity\Finance\Simulateur;
 use App\Entity\Moderateur\Metting;
+use App\Entity\Entreprise\JobListing;
+use Symfony\Component\Intl\Countries;
+use Twig\Extension\AbstractExtension;
+use App\Entity\Moderateur\Assignation;
+use App\Entity\Candidate\TarifCandidat;
+use App\Entity\Entreprise\BudgetAnnonce;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\ReferrerProfileRepository;
@@ -40,6 +41,7 @@ class OlonaTalentsExtension extends AbstractExtension
     {
         return [
             new TwigFilter('reffererStatusLabel', [$this, 'reffererStatusLabel']),
+            new TwigFilter('countryName', [$this, 'countryName']),
         ];
     }
 
@@ -50,6 +52,11 @@ class OlonaTalentsExtension extends AbstractExtension
             new TwigFunction('highlightKeywordsAnnonce', [$this, 'highlightKeywordsAnnonce']),
             new TwigFunction('generatePseudoById', [$this, 'generatePseudoById']),
         ];
+    }
+    
+    public function countryName($countryCode)
+    {
+        return Countries::getName($countryCode);
     }
     
     public function highlightKeywordsAnnonce(int $id, string $content): string

@@ -29,9 +29,10 @@
 				<i class="bi bi-printer text-warning me-2"></i>
 				Simulateur de Rémunération
 			</h2>
-				<div>
-					<a href="{{ path('app_v2_candidate_simulator')}}" class="btn btn-success rounded-pill px-4 px-sm-5">Nouvelle simulation</a>
-				</div>
+					<a href="{{ path('app_v2_candidate_simulator_create')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-hand-index"></i>
+						Simuler un salaire
+					</a>
 
 				<hr>
 				<div class="container">
@@ -194,7 +195,7 @@
 						{% if simulateur.contrat is defined and simulateur.contrat is not null %}
 							{{ simulateur.contrat|contratStatus|raw}}
 						{% else %}
-							<button type="submit" class="btn btn-lg shadow btn-outline-success rounded-pill my-3 px-3 px-sm-5">
+							<button type="submit" class="btn btn-secondary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
 								<i class="mx-2 bi bi-telephone"></i>
 								Appelez moi
 							</button>

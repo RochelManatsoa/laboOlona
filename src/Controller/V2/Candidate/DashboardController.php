@@ -4,15 +4,22 @@ namespace App\Controller\V2\Candidate;
 
 use App\Service\FileUploader;
 use App\Manager\ProfileManager;
+use App\Manager\CandidatManager;
 use App\Service\User\UserService;
+use App\Entity\Formation\Playlist;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\Formation\VideoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Formation\PlaylistRepository;
+use App\Form\Search\AffiliateTool\ToolSearchType;
 use App\Form\Profile\Candidat\CandidateUploadType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Controller\Dashboard\Moderateur\OpenAi\CandidatController;
-use App\Entity\Prestation;
+use App\Form\Profile\Candidat\Edit\EditCandidateProfile as EditStepOneType;
+use App\Manager\AffiliateToolManager;
 
 #[Route('/v2/candidate/dashboard')]
 class DashboardController extends AbstractController
@@ -23,6 +30,8 @@ class DashboardController extends AbstractController
         private FileUploader $fileUploader,
         private UserService $userService,
         private CandidatController $candidatController,
+        private CandidatManager $candidatManager,
+        private AffiliateToolManager $affiliateToolManager,
     ){}
     
     #[Route('/', name: 'app_v2_candidate_dashboard')]
@@ -30,6 +39,10 @@ class DashboardController extends AbstractController
     {
         $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $candidat = $this->userService->checkProfile();
+
+        $formOne = $this->createForm(EditStepOneType::class, $candidat);
+        $formOne->handleRequest($request);
+
         $form = $this->createForm(CandidateUploadType::class, $candidat);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
@@ -53,8 +66,69 @@ class DashboardController extends AbstractController
             
             return $this->redirectToRoute('app_v2_dashboard');
         }
+        if($formOne->isSubmitted() && $formOne->isValid()){
+            $this->em->persist($candidat);
+            $this->em->flush();
+
+            $this->addFlash('success', 'Informations enregistrées');
+        }
 
         return $this->render('v2/dashboard/candidate/index.html.twig', [
+            'form' => $form->createView(),
+            'form_one' => $formOne->createView(),
+            'candidat' => $candidat,
+            'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
+            'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
+            'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
+        ]);
+    }
+
+    #[Route('/centre-de-formation', name: 'app_v2_candidate_dashboard_formation')]
+    public function formation(PlaylistRepository $playlistRepository, VideoRepository $videoRepository): Response
+    {
+        return $this->render('v2/dashboard/candidate/formation.html.twig', [
+            'playlists' => $playlistRepository->findAll(),
+            'videos' => $videoRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/centre-de-formation/playlist/{id}', name: 'app_v2_candidate_dashboard_formation_playlist_view')]
+    public function viewPlaylist(Playlist $playlist): Response
+    {
+        return $this->render('v2/_playlist.html.twig', [
+            'playlist' => $playlist,
+        ]);
+    }
+
+    #[Route('/outils-ai', name: 'app_v2_candidate_dashboard_ai_tools')]
+    public function aiTools(Request $request, PaginatorInterface $paginatorInterface): Response
+    {
+        $form = $this->createForm(ToolSearchType::class);
+        $form->handleRequest($request);
+        $data = $this->affiliateToolManager->findAllAITools();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $nom = $form->get('nom')->getData();
+            $data = $this->affiliateToolManager->findSearchTools($nom);
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'content' => $this->renderView('dashboard/moderateur/affiliate_tool/_aitools.html.twig', [
+                        'aiTools' => $paginatorInterface->paginate(
+                            $data,
+                            $request->query->getInt('page', 1),
+                            10
+                        ),
+                        'result' => $data
+                    ])
+                ], 200);
+            }
+        }
+        return $this->render('v2/dashboard/candidate/ai_tools.html.twig', [
+            'aiTools' => $paginatorInterface->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            ),
+            'result' => $data,
             'form' => $form->createView(),
         ]);
     }

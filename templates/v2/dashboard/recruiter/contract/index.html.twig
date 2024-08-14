@@ -1,0 +1,84 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Mes contrats | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endblock %}
+
+{% block body %}
+	{% set tableClass = 'table' %}
+	{% if app.request.cookies.get('theme') == 'bootstrap-dark' %}
+		{% set tableClass = tableClass ~ ' table-dark' %}
+	{% endif %}
+	<section class="">
+    <div class="shadow p-2 p-sm-4">
+      <h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+        <i class="bi bi-bookmark-check text-warning me-2"></i></span> Mes contrats
+      </h2>
+      <p class="text-center"> 
+      Cette page vous permet de visualiser les détails de chaque contrat, y compris la durée, les conditions spécifiques, les parties impliquées, et les documents associés. Vous avez la possibilité de télécharger des copies des contrats, de suivre l'état des contrats en cours, et d'initier des renouvellements ou des modifications selon les besoins. Nous facilitons également la communication directe avec les employeurs pour toute clarification ou négociation requise. Gérez efficacement vos engagements contractuels et assurez-vous que vos droits et obligations sont clairement définis et respectés.
+      </p>
+			{% if contracts|length > 0 %}
+
+				<div class="table-responsive">
+					<table class="{{ tableClass }}">
+						<thead>
+							<tr>
+								<td scope="col" class="h5">{{ knp_pagination_sortable(contracts, 'Salaire net', '.salaireNet') }}</td>
+								<td scope="col-2" class="h5">{{ knp_pagination_sortable(contracts, 'Statut', 'p.status') }}</td>
+								<td scope="col-2" class=""></td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for item in contracts %}
+								<tr id="row_simulator_recruiter_{{item.simulateur.id}}">
+									<td class="">
+										{{ item.simulateur.salaireNet }} {{ item.simulateur.devise.symbole}}
+										<br>
+										<span class="fw-lighter small">Créé le
+											{{ item.simulateur.createdAt|date('d/m/Y') }}</span>
+									</td>
+									<td class="col-2">{{ satusContrat(item)|raw }}</td>
+									<td class="col-2">
+										<a href="{{ path('app_v2_recruiter_simulator_view', { 'id': item.simulateur.id })}}" class="btn btn-sm btn-secondary rounded-pill">
+											<i class="bi bi-eye"></i>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					<div class="navigation mt-5">
+						{{ knp_pagination_render(contracts, 'parts/_pagination.html.twig') }}
+					</div>
+				</div>
+
+			{% else %}
+				<div class="mx-auto text-center">
+					<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+						<span class="">
+							<img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+						</span>
+						1ère chose à faire
+					</h3>
+					<a href="{{ path('app_v2_recruiter_simulator_create')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-search"></i>
+						Trouver un candidat
+					</a>
+				</div>
+			{% endif %}
+		
+		</div>
+  </section>
+{% endblock %}

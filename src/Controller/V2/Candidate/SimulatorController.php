@@ -7,12 +7,15 @@ use App\Manager\MailManager;
 use App\Entity\Finance\Devise;
 use App\Entity\Finance\Contrat;
 use App\Entity\Finance\Employe;
+use App\Manager\SimulatorManager;
 use App\Service\User\UserService;
+use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Finance\Simulateur;
 use App\Form\Finance\SimulateurType;
 use App\Form\Finance\ContratHiddenType;
 use App\Manager\Finance\EmployeManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,14 +29,35 @@ class SimulatorController extends AbstractController
         private UserService $userService,
         private EmployeManager $employeManager,
         private MailManager $mailManager,
+        private SimulatorManager $simulatorManager,
+        private PaginatorInterface $paginator,
     ){}
     
     #[Route('/', name: 'app_v2_candidate_simulator')]
     public function index(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
-        $simulateur = (new Simulateur())->setCreatedAt(new \DateTime());
+        $simulations = $this->em->getRepository(Simulateur::class)->findSimulateursByUser($user);
+
+        return $this->render('v2/dashboard/candidate/simulator/index.html.twig', [
+            'simulations' => $this->paginator->paginate(
+                $simulations,
+                $request->query->getInt('page', 1),
+                20
+            )
+        ]);
+    }
+    
+    #[Route('/create', name: 'app_v2_candidate_simulator_create')]
+    public function create(Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $candidat = $this->userService->checkProfile();
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        $simulateur = $this->simulatorManager->init();
         $employe = $user->getEmploye();
         if(!$employe instanceof Employe){
             $employe = new Employe();
@@ -73,7 +97,7 @@ class SimulatorController extends AbstractController
 
             return $this->redirectToRoute('app_v2_candidate_simulator_view', ['id' => $simulateur->getId()]);
         }
-        return $this->render('v2/dashboard/candidate/simulator/index.html.twig', [
+        return $this->render('v2/dashboard/candidate/simulator/create.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -81,6 +105,8 @@ class SimulatorController extends AbstractController
     #[Route('/view/{id}', name: 'app_v2_candidate_simulator_view')]
     public function view(Request $request, Simulateur $simulateur): Response
     {
+        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $candidat = $this->userService->checkProfile();
         $results = $this->employeManager->simulate($simulateur);
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
@@ -106,5 +132,24 @@ class SimulatorController extends AbstractController
             'simulateur' => $simulateur,    
             'results' => $results,
         ]);
+    }
+    
+    #[Route('/delete/{simulator}', name: 'app_v2_candidate_simulator_delete')]
+    public function removeSimulator(Request $request, Simulateur $simulator): Response
+    {
+        $simulatorId = $simulator->getId();
+        $message = "La simulator a bien été supprimée";
+        $this->em->remove($simulator);
+        $this->em->flush();
+        if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('v2/dashboard/recruiter/simulator/delete.html.twig', [
+                'simulatorId' => $simulatorId,
+                'message' => $message,
+            ]);
+        }
+        $this->addFlash('success', $message);
+        return $this->redirectToRoute('app_v2_recuiter_prestation');
+
     }
 }

@@ -21,8 +21,13 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_candidate_simulator')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator' ? 'active' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_candidate_simulator_create')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator_create' ? 'active' : '' }}" aria-current="page">
             <i class="bi bi-printer me-2"></i></span> Simulateur de salaire
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_candidate_simulator')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator' ? 'active' : '' }}" aria-current="page">
+            <i class="bi bi-aspect-ratio me-2"></i></span> Mes simulations
           </a>
         </li>
         <li class="nav-item">
@@ -36,18 +41,18 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link" aria-current="page">
+          <a href="{{ path('app_v2_candidate_dashboard_ai_tools')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard_ai_tools' ? 'active' : '' }}" aria-current="page">
             <i class="bi bi-magic me-2"></i></span> Ai Tools
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link" aria-current="page">
+          <a href="{{ path('app_v2_candidate_dashboard_formation')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard_formation' ? 'active' : '' }}" aria-current="page">
             <i class="bi bi-layers me-2"></i></span> Centre de formations
           </a>
         </li>
         <hr>
         <li class="nav-item">
-          <a href="{{ path('app_v2_candidate_dashboard')}}" class="nav-link" aria-current="page">
+          <a href="{{ path('app_v2_candidate_dashboard')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard' ? 'active' : '' }}" aria-current="page">
             <i class="bi bi-person-badge me-2"></i></span> Mes informations
           </a>
         </li>

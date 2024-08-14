@@ -1,0 +1,93 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Mes annonces | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endblock %}
+
+{% block body %}
+	{% set tableClass = 'table' %}
+	{% if app.request.cookies.get('theme') == 'bootstrap-dark' %}
+		{% set tableClass = tableClass ~ ' table-dark' %}
+	{% endif %}
+	<section class="">
+		<div class="shadow p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-card-checklist text-warning me-2"></i></span> Gérer mes annonces
+			</h2>
+			<p class="text-center"> 
+				Ici, vous pouvez créer, modifier, et suivre le statut de vos annonces de recrutement. Notre plateforme vous offre des outils intuitifs pour optimiser vos offres d'emploi, atteindre les meilleurs candidats et gérer efficacement vos candidatures. Utilisez les filtres pour naviguer entre vos annonces actives, expirées ou en attente. Pour chaque annonce, vous avez la possibilité de voir le nombre de candidatures reçues, d'accéder aux profils des candidats et de mettre à jour le statut de l'offre. Notre objectif est de simplifier votre processus de recrutement et de vous aider à trouver les talents idéaux pour votre entreprise. Si vous avez des questions ou besoin d'assistance, n'hésitez pas à contacter notre support client.
+			</p>
+			<div id="flash"></div>
+
+			<p class="text-center">
+				<a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+					<i class="bi bi-plus-lg"></i>
+					Créer une annonce
+				</a>
+			</p>
+			{% if joblistings|length > 0 %}
+				<div class="table-responsive">
+					<table class="{{ tableClass }}">
+						<thead>
+							<tr>
+								<td scope="col" class="h5">{{ knp_pagination_sortable(joblistings, 'Titre', 'p.titre') }}</td>
+								<td scope="col-2" class="h5">{{ knp_pagination_sortable(joblistings, 'Statut', 'p.status') }}</td>
+								<td scope="col-2" class=""></td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for item in joblistings %}
+								<tr id="row_job_listing_recruiter_{{item.id}}">
+									<td class="">
+										<turbo-frame id="job_listing_{{ item.id}}">
+											<a href="{{ path('app_v2_recruiter_job_listing_edit', { 'jobListing': item.id })}}">
+												{{ item.titre }}
+												<i class="bi bi-pencil-square"></i>
+											</a>
+										</turbo-frame>
+										<br>
+										<span class="fw-lighter small">Créé le
+											{{ item.dateCreation|date('d/m/Y') }}</span>
+									</td>
+									<td class="col-2">{{ satusJobListing(item)|raw }}</td>
+									<td class="col-2">
+										<a href="{{ path('app_v2_recruiter_job_lisiting_view', { 'jobListing': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
+											<i class="bi bi-eye"></i>
+										</a>
+										<a id="delete-jobListing" href="{{ path('app_v2_recruiter_delete_job_listing', { 'jobListing': item.id })}}" class="btn btn-sm btn-danger rounded-pill">
+											<i class="bi bi-trash"></i>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					<div class="navigation mt-5">
+						{{ knp_pagination_render(joblistings, 'parts/_pagination.html.twig') }}
+					</div>
+				</div>
+			{% else %}
+				<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+					<span class="">
+						<img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+					</span>
+					1ère chose à faire
+				</h3>
+			{% endif %}
+
+		</div>
+    </section>
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+{% endblock %}

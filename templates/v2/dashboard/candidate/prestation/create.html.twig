@@ -41,10 +41,7 @@
 					<div class="col">
 						<div class="mb-3">
 							<label class="fw-bold small" for="prestation_description">Description</label>
-							<div class="balloon-editor balloon-editor-bootstrap" 
-							data-content="{{ form.vars.data.description|default('') }}"
-							data-hidden-input-selector="#prestation_description">
-							</div>
+							{{ form_widget(form.description)}}
 						</div>
 					</div>
 				</div>
@@ -205,9 +202,8 @@
 			</div>
 		</div>
 	</section>
-	<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5">
-		<i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
 		var imageInput = document.getElementById('{{ form.file.vars.id }}');

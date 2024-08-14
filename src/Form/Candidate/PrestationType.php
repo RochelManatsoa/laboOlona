@@ -28,6 +28,10 @@ class PrestationType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ]
             ])
             ->add(
                 $builder->create('competencesRequises', TextType::class, [

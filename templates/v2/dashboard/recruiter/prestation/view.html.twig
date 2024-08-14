@@ -92,16 +92,13 @@
       </p>
       {% endif %}
       <hr>
-      <a href="{{path('app_v2_recruiter_edit_prestation', {'prestation': prestation.id})}}" class="btn btn-outline-warning rounded-pill my-3 px-5">
+      <a href="{{path('app_v2_recruiter_edit_prestation', {'prestation': prestation.id})}}" class="btn btn-outline-warning  texte-uppercase  my-3 px-5">
         <i class="mx-2 bi bi-pencil"></i>Editer
       </a>
-      <button type="button" class="btn btn-dark rounded-pill my-3 px-5">
+      <button type="button" class="btn btn-dark  texte-uppercase  my-3 px-5">
         <i class="mx-2 bi bi-rocket-takeoff"></i>Booster
       </button>
     </div>
   </div>
 </section>
-<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5">
-  <i class="mx-2 bi bi-arrow-left"></i>Retour
-</a>
 {% endblock %}

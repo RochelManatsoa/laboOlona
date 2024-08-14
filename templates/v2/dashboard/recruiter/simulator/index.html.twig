@@ -1,0 +1,96 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Simulateur de budget | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endblock %}
+
+{% block body %}
+	{% set tableClass = 'table' %}
+	{% if app.request.cookies.get('theme') == 'bootstrap-dark' %}
+		{% set tableClass = tableClass ~ ' table-dark' %}
+	{% endif %}
+	<section class="">
+      <div class="shadow p-2 p-sm-4">
+        <h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+          <i class="bi bi-aspect-ratio text-warning me-2"></i></span> Mes simulations de budget
+        </h2>
+        <p class="text-center"> 
+        Vous êtes une entreprise cherchant à recruter des talents à travers le monde ? Notre simulateur de budget pour entreprises est l'outil idéal pour planifier efficacement vos coûts de recrutement. Cet outil vous aide à estimer les dépenses totales associées à l'embauche de freelancers, incluant les salaires bruts, les charges sociales, et les frais de gestion associés à notre service de portage salarial.
+        </p>
+			<div id="flash"></div>
+
+			{% if simulations|length > 0 %}
+
+				<p class="text-center">
+					<a href="{{ path('app_v2_recruiter_simulator_create')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-hand-index"></i>
+						Simuler un budget
+					</a>
+				</p>
+
+				<div class="table-responsive">
+					<table class="{{ tableClass }}">
+						<thead>
+							<tr>
+								<td scope="col" class="h5">{{ knp_pagination_sortable(simulations, 'Salaire net', 'p.salaireNet') }}</td>
+								<td scope="col-2" class="h5">{{ knp_pagination_sortable(simulations, 'Type', 'p.status') }}</td>
+								<td scope="col-2" class=""></td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for item in simulations %}
+								<tr id="row_simulator_recruiter_{{item.id}}">
+									<td class="">
+										{{ item.salaireNet }} {{ item.devise.symbole}}
+										<br>
+										<span class="fw-lighter small">Créé le
+											{{ item.createdAt|date('d/m/Y') }}</span>
+									</td>
+									<td class="col-2"><span class="badge bg-secondary">{{ item.status }}</span></td>
+									<td class="col-2">
+										<a href="{{ path('app_v2_recruiter_simulator_view', { 'id': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
+											<i class="bi bi-eye"></i>
+										</a>
+										<button type="button" id="delete-prestation" data-href="{{ path('app_v2_recruiter_delete_simulator', { 'simulator': item.id })}}" class="btn btn-sm btn-danger rounded-pill">
+											<i class="bi bi-trash"></i>
+										</button>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					<div class="navigation mt-5">
+						{{ knp_pagination_render(simulations, 'parts/_pagination.html.twig') }}
+					</div>
+				</div>
+
+			{% else %}
+				<div class="mx-auto text-center">
+					<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+						<span class="">
+							<img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+						</span>
+						1ère chose à faire
+					</h3>
+					<a href="{{ path('app_v2_recruiter_simulator_create')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-hand-index"></i>
+						Simuler un budget
+					</a>
+				</div>
+			{% endif %}
+		
+    </section>
+	
+{% endblock %}

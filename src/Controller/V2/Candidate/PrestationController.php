@@ -31,10 +31,9 @@ class PrestationController extends AbstractController
     public function index(Request $request): Response
     {
         $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
-        $candidat = $this->userService->checkProfile();
         $data = new PrestationData();
         $data->page = $request->get('page', 1);
-        $data->candidat = $candidat;
+        $data->candidat = $this->userService->checkProfile();
 
         return $this->render('v2/dashboard/candidate/prestation/index.html.twig', [
             'prestations' => $this->em->getRepository(Prestation::class)->findSearch($data)
@@ -57,9 +56,6 @@ class PrestationController extends AbstractController
         }
 
         return $this->render('v2/dashboard/candidate/prestation/create.html.twig', [
-            'prestations' => $this->em->getRepository(Prestation::class)->findBy([
-                'candidateProfile' => $candidat
-            ],['id' => 'DESC']),
             'form' => $form->createView(),
         ]);
     }
@@ -82,13 +78,13 @@ class PrestationController extends AbstractController
         return $this->render('v2/dashboard/candidate/prestation/edit.html.twig', [
             'prestation' => $prestation,
             'form' => $form->createView(),
-            'prestation_description' => $prestation->getDescription()
         ]);
     }
     
     #[Route('/view/{prestation}', name: 'app_v2_candidate_view_prestation')]
     public function viewPrestation(Prestation $prestation): Response
     {
+        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $candidat = $this->userService->checkProfile();
 
         return $this->render('v2/dashboard/candidate/prestation/view.html.twig', [

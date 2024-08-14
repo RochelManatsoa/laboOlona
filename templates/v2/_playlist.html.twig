@@ -1,0 +1,77 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Centre de formation | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endblock %}
+
+{% block body %}
+	<section class="">
+		<div class="shadow p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-layers text-warning me-2"></i></span> 
+				Centre de formations
+			</h2>
+			<p class="text-center">
+				En tant que recruteur, vous êtes constamment à la recherche de talents capables de naviguer dans l'univers complexe de l'intelligence artificielle. Notre formation sur ChatGPT chez Olona-Talents.com est conçue pour équiper vos candidats avec les compétences nécessaires pour exceller dans ce domaine dynamique.
+			</p>
+
+			<div id="videos-container">
+				{% include 'v2/_videos.html.twig' with { videos: playlist.videos} %}
+			</div>
+
+			<div class="">
+				<h3 class="fs-5 fw-bolder mt-3 mt-sm-5 text-center">
+					<span class="u-file-icon u-icon">
+						<img src="{{ asset('v2/images/3221746.png')}}" alt="icone" style="width:32px;">
+					</span>
+					Avantages de notre formation pour votre entreprise
+				</h3>
+				<ul class="col-12 col-sm-8 mx-auto">
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								<span class="fw-bold">Amélioration des compétences :</span> Vos employés apprendront à utiliser des technologies d'IA de pointe, augmentant ainsi leur productivité et leur efficacité.
+							</div>
+						</div>
+					</li>
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								<span class="fw-bold">Adaptabilité sectorielle :</span> Que vous soyez dans le marketing, la finance, la santé ou tout autre secteur, ChatGPT a des applications pratiques qui peuvent transformer vos opérations.
+							</div>
+						</div>
+					</li>
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								<span class="fw-bold">Retour sur investissement :</span> Investir dans la formation de vos employés est essentiel pour rester compétitif dans un marché en évolution rapide.
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}

@@ -16,178 +16,235 @@
   {% include "v2/dashboard/layout_entreprise.html.twig" %}
 {% endblock %}
 
-{% block body %}
-    <section class="">
-      <div class="shadow p-2 p-sm-4">
-        <div class="col-12 col-sm-8 mx-auto p-2 p-sm-4">
-          {{ form_start(form) }}
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.titre)}}
-											<label for="prestation_titre">Titre</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.description)}}
-											<label for="prestation_description">Description</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-4">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.tarifPrestation.typeTarif)}}
-											<label for="prestation_tarifPrestation_typeTarif">Type</label>
-										</div>
-									</div>
-									<div class="col-4">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.tarifPrestation.montant)}}
-											<label for="prestation_tarifPrestation_montant">Montant</label>
-										</div>
-									</div>
-									<div class="col-4">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.tarifPrestation.currency)}}
-											<label for="prestation_tarifPrestation_currency">Devise</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.secteurs)}}
-											<label for="prestation_secteurs">Secteurs d'activité</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.modalitesPrestation)}}
-											<label for="prestation_modalitesPrestation">Modalité de prestation</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.disponibilites)}}
-											<label for="prestation_disponibilites">Disponibilité</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.typeService)}}
-											<label for="prestation_typeService">Type de service</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.specialisations)}}
-											<label for="prestation_specialisations">Spécialisations</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.medias)}}
-											<label for="prestation_medias">Médias</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-6">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.contactEmail)}}
-											<label for="prestation_contactEmail">Email de contact</label>
-										</div>
-									</div>
-									<div class="col-6">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.contactTelephone)}}
-											<label for="prestation_contactTelephone">Téléphone</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.motsCles)}}
-											<label for="prestation_motsCles">Mots clés</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.conditionsParticulieres)}}
-											<label for="prestation_conditionsParticulieres">Conditions particulière</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.portfolioLinks)}}
-											<label for="prestation_portfolioLinks">Références</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.preferencesCommunication)}}
-											<label for="prestation_preferencesCommunication">Préférence communication</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.engagementQualite)}}
-											<label for="prestation_engagementQualite">Engagement qualité</label>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.contactReseauxSociaux)}}
-											<label for="prestation_contactReseauxSociaux">Contact Réseaux sociaux</label>
-										</div>
-									</div>
-								</div>
 
-								<div class="row">
-									<div class="col">
-										<div class="form-floating mb-3">
-											{{ form_widget(form.termesConditionsAccepted)}}
-										</div>
-									</div>
-								</div>
-						<div style="display:none;">
-            {{ form_widget(form) }}
+{% block body %}
+	<section class="">
+		<div class="shadow p-2 p-sm-4">
+			<div class="col-12 col-sm-8 mx-auto p-2 p-sm-4">
+				{{ form_start(form) }}
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_titre">Titre</label>
+							{{ form_widget(form.titre)}}
 						</div>
-          <button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
-            <i class="bi bi-save"></i> Enregister
-          </button>
-          {{ form_end(form) }}
-        </div>
-      </div>
-    </section>
-  <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-	<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
-	<script>
-		ClassicEditor.create(document.querySelector('#prestation_description'))
-	</script>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_secteurs">Secteurs d'activité</label>
+							{{ form_widget(form.secteurs)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_description">Description</label>
+							{{ form_widget(form.description)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-4">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_tarifPrestation_typeTarif">Tarif</label>
+							{{ form_widget(form.tarifPrestation.typeTarif)}}
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_tarifPrestation_montant">Montant</label>
+							{{ form_widget(form.tarifPrestation.montant)}}
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_tarifPrestation_currency">Devise</label>
+							{{ form_widget(form.tarifPrestation.currency)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_modalitesPrestation">Modalité de prestation</label>
+							{{ form_widget(form.modalitesPrestation)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_disponibilites">Disponibilité</label>
+							{# {{ form_widget(form.availability)}} #}
+							<div class="disponibilite-form">
+						
+								<div class="radio-options">
+									{{ form_widget(form.availability.nom) }}
+								</div>
+							
+								<div class="date-picker-container mt-2">
+									{{ form_widget(form.availability.dateFin) }}
+								</div>
+					
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_typeService">Type de service</label>
+							{{ form_widget(form.typeService)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="{{ form.competences.vars.id }}">Spécialisations</label>
+							{{ form_widget(form.competences, {'attr': {'class': 'form-control tom-select-custom', 'placeholder': ' '}}) }}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_medias">Médias</label>
+                    		<div class="profile-img" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/prestations/' ~ form.vars.data.fileName) : asset('images/prestation.jpg') }}');background-size: cover;background-position: center;width: 150px;height: 150px;" alt="Avatar"></div>
+							{{ form_widget(form.file)}}
+							{{ form_errors(form.file)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_contactEmail">Email de contact</label>
+							{{ form_widget(form.contactEmail)}}
+						</div>
+					</div>
+					<div class="col-6">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_contactTelephone">Téléphone</label>
+							{{ form_widget(form.contactTelephone)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_motsCles">Mots clés</label>
+							{{ form_widget(form.motsCles)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_conditionsParticulieres">Conditions particulière</label>
+							{{ form_widget(form.conditionsParticulieres)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_portfolioLinks">Références</label>
+							{{ form_widget(form.portfolioLinks)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_preferencesCommunication">Préférence communication</label>
+							{{ form_widget(form.preferencesCommunication)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_engagementQualite">Engagement qualité</label>
+							{{ form_widget(form.engagementQualite)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_contactReseauxSociaux">Contact Réseaux sociaux</label>
+							{{ form_widget(form.contactReseauxSociaux)}}
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							{{ form_widget(form.agreeTerms, {
+								'label': 'J\'accepte les Termes et Conditions',
+           						'label_attr': {'class': 'fw-bold small'},
+							})}}
+						</div>
+					</div>
+				</div>
+				<div style="display:none;">
+					{{ form_widget(form) }}
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+					<i class="bi bi-save"></i>
+					Enregister
+				</button>
+				{{ form_end(form) }}
+			</div>
+		</div>
+	</section>
+	<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5">
+		<i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		var imageInput = document.getElementById('{{ form.file.vars.id }}');
+		var profileImgDiv = document.querySelector('.profile-img');
+
+		imageInput.addEventListener('change', function(event) {
+			if (event.target.files && event.target.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					profileImgDiv.style.backgroundImage = 'url(' + e.target.result + ')';
+				};
+				reader.readAsDataURL(event.target.files[0]);
+			}
+		});
+
+		profileImgDiv.addEventListener('click', function() {
+			imageInput.click();
+		});
+	});
+
+	document.addEventListener("DOMContentLoaded", function() {
+		var availabilityDropdown = document.getElementById('prestation_availability_nom');
+		var dateField = document.getElementById('prestation_availability_dateFin');
+
+		if (availabilityDropdown && dateField) { // Vérifie si les éléments existent
+
+			function toggleDateInput() {
+				if (availabilityDropdown.value === 'from-date') {
+					dateField.style.display = 'block';  // Show the date field
+				} else {
+					dateField.style.display = 'none';  // Hide the date field
+				}
+			}
+
+			availabilityDropdown.addEventListener('change', toggleDateInput);
+
+			toggleDateInput();
+		}
+	});
+</script>
 {% endblock %}

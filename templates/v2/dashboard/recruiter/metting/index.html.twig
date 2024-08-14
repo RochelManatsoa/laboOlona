@@ -1,0 +1,48 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Mes rendez-vous | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endblock %}
+
+{% block body %}
+	<section class="">
+      <div class="shadow p-2 p-sm-4">
+        <h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+          <i class="bi bi-calendar-week text-warning me-2"></i>
+          Mes rendez-vous
+        </h2>
+        <p class="text-center"> 
+        Cette page est conçue pour vous aider à organiser et à suivre tous vos entretiens et réunions professionnels. Vous trouverez ici une vue d'ensemble de vos rendez-vous à venir, passés et en attente. Utilisez notre calendrier interactif pour planifier de nouveaux entretiens, modifier les rendez-vous existants ou annuler ceux qui ne sont plus nécessaires. Chaque rendez-vous inclut des détails tels que l'heure, la date, le contact du candidat, et le type d'interaction prévue (en personne, téléphone, vidéoconférence). Optimisez votre gestion de recrutement et assurez-vous de ne jamais manquer un rendez-vous important avec Olona-Talents.com.
+        </p>
+			{% if mettings|length > 0 %}
+
+			{{ dump(mettings)}}
+
+			{% else %}
+				<div class="mx-auto text-center">
+					<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+						<span class="">
+							<img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+						</span>
+						1ère chose à faire
+					</h3>
+					<a href="{{ path('app_v2_recruiter_simulator_create')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-search"></i>
+						Trouver un candidat
+					</a>
+				</div>
+			{% endif %}
+    </section>
+{% endblock %}

@@ -17,44 +17,48 @@ class ExperiencesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('nom', TextType::class, [
-            'label' => 'app_identity_expert_step_two.experience.title',
-        ])
-        ->add('entreprise', TextType::class, [
-            'label' => 'app_identity_expert_step_two.experience.company',
-        ])
-        ->add('enPoste', CheckboxType::class, [
-            'label' => 'app_identity_expert_step_two.experience.currently',
-            'required' => false,
-        ])
-        ->add('dateDebut', DateType::class,  [
-            'label' => 'app_identity_expert_step_two.experience.startDate',
-            'years' => range(1960, (new \DateTime('now'))->format("Y")),
-            'attr' => ['class' => 'rounded-pill'] 
-        ])
-        ->add('dateFin', DateType::class,  [
-            'label' => 'app_identity_expert_step_two.experience.endDate',
-            'placeholder' => [
-                'year' => 'Année', 'month' => 'Mois', 'day' => 'Jour'
-            ],
-            'years' => range(1960, 2100),
-            'attr' => ['class' => 'rounded-pill'] ,
-            'required' => false,
-        ])
-        ->add('description', TextareaType::class, [
-            'label' => 'app_identity_expert_step_two.experience.description',
-            'required' => false,
-            'attr' => [
-                'rows' => 6,
-                'class' => 'ckeditor-textarea'
-            ]
-        ])
-        ->add('submit', SubmitType::class, [
-            'label' => 'app_identity_expert_step_two.experience.submit',
-            'attr' => [
-                'class' => 'btn btn-dark rounded-pill'
-            ]
-        ])
+            ->add('nom', TextType::class, [
+                'label' => 'app_identity_expert_step_two.experience.title',
+                'attr' => ['class' => 'form-control experience-field', 'style' => 'width: 100%']
+            ])
+            ->add('entreprise', TextType::class, [
+                'label' => 'app_identity_expert_step_two.experience.company',
+                'attr' => ['class' => 'form-control experience-field', 'style' => 'width: 100%']
+            ])
+            ->add('enPoste', CheckboxType::class, [
+                'label' => 'app_identity_expert_step_two.experience.currently',
+                'required' => false,
+                'attr' => ['data-form-collection-target' => 'currentlyCheckbox', 'class' => 'form-check-input']
+            ])
+            ->add('dateDebut', DateType::class, [
+                'label' => 'Date de début',
+                'attr' => [
+                    'class' => 'form-control experience-field', 
+                    'style' => 'width: 50%'
+                ],
+                'widget' => 'single_text',  
+                'format' => 'yyyy-MM-dd', 
+            ])
+            ->add('dateFin', DateType::class, [
+                'label' => 'Date fin',
+                'attr' => [
+                    'class' => 'form-control experience-field',
+                    'data-form-collection-target' => 'endDate',
+                    'style' => 'width: 50%'
+                ],
+                'widget' => 'single_text',  
+                'format' => 'yyyy-MM-dd', 
+                'required' => false,
+            ])
+            ->add('description', TextareaType::class, [
+                'label' => 'app_identity_expert_step_two.experience.description',
+                'required' => false,
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea form-control',
+                    'style' => 'width: 100%'
+                ]
+            ])
         ;
     }
 

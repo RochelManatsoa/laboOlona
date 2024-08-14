@@ -27,7 +27,7 @@
 				Vous êtes un freelancer résidant à Madagascar et travaillez avec des clients internationaux ? Notre simulateur de portage salarial est conçu spécialement pour vous. Ce puissant outil vous aidera à calculer facilement le montant à facturer à vos clients pour garantir le salaire net souhaité après déduction des frais de portage salarial.
 			</p>
 
-			{% if contrats|length > 0 %}
+			{% if contracts|length > 0 %}
 				<div class="container d-none d-sm-block">
 					<div class="row text-strong">
 						<div class="col-3">Salaire Net</div>
@@ -36,7 +36,7 @@
 						<div class="col-2 text-center"></div>
 					</div>
 					<hr>
-					{% for item in contrats %}
+					{% for item in contracts %}
 						<div class="row text-muted">
 							<div class="col-3 small">
 								<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : item.simulateur.id })}}" class="">
@@ -61,7 +61,7 @@
 					<!-- Plus de lignes et colonnes ici -->
 				</div>
 				<div class="container d-block d-sm-none">
-					{% for item in contrats %}
+					{% for item in contracts %}
 						<div class="row text-muted">
 							<div class="col-12 ">
 								<span class="text-strong">Salaire Net</span>

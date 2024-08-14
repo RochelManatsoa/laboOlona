@@ -42,8 +42,12 @@ class PrestationType extends AbstractType
             ->add('titre', TextType::class, [
                 'required' => true,
             ])
-            ->add('description', HiddenType::class, [
+            ->add('description', TextareaType::class, [
                 'required' => false,
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ]
             ])
             // ->add('competencesRequises')
             // ->add('tarifsProposes')
@@ -67,9 +71,9 @@ class PrestationType extends AbstractType
             ])
             ->add('motsCles', TextareaType::class, [
                 'attr' => [
-                    'placeholder' => '',
-                    'rows' => 2,
-                ],
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ]
             ])
             ->add('typeService')
             ->add('portfolioLinks', TextType::class, [
@@ -88,15 +92,15 @@ class PrestationType extends AbstractType
             ->add('preferencesCommunication')
             ->add('conditionsParticulieres', TextareaType::class, [
                 'attr' => [
-                    'placeholder' => '',
-                    'rows' =>   5,
-                ],
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ]
             ])
             ->add('engagementQualite', TextareaType::class, [
                 'attr' => [
-                    'placeholder' => '',
-                    'rows' => 5,
-                ],
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ]
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => false,

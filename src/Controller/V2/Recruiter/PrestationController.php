@@ -3,12 +3,13 @@
 namespace App\Controller\V2\Recruiter;
 
 use App\Entity\Prestation;
+use App\Form\PrestationType;
 use App\Service\FileUploader;
 use App\Data\V2\PrestationData;
 use App\Manager\ProfileManager;
 use App\Service\User\UserService;
+use Symfony\UX\Turbo\TurboBundle;
 use App\Manager\PrestationManager;
-use App\Form\PrestationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,10 +69,15 @@ class PrestationController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $this->prestationManager->saveForm($form);
-            return $this->redirectToRoute('app_v2_recruiter_view_prestation', ['prestation' => $prestation->getId()]);
+            return $this->render('v2/dashboard/recruiter/prestation/edit.html.twig', [
+                'prestation' => $prestation,
+                'form' => $form->createView(),
+                'prestation_description' => $prestation->getDescription()
+            ]);
         }
 
-        return $this->render('v2/dashboard/recruiter/prestation/create.html.twig', [
+        return $this->render('v2/dashboard/recruiter/prestation/edit.html.twig', [
+            'prestation' => $prestation,
             'form' => $form->createView(),
         ]);
     }
@@ -85,5 +91,24 @@ class PrestationController extends AbstractController
         return $this->render('v2/dashboard/recruiter/prestation/view.html.twig', [
             'prestation' => $prestation,
         ]);
+    }
+    
+    #[Route('/delete/{prestation}', name: 'app_v2_recruiter_delete_prestation')]
+    public function removePrestation(Request $request, Prestation $prestation): Response
+    {
+        $prestationId = $prestation->getId();
+        $message = "La prestation a bien été supprimée";
+        $this->em->remove($prestation);
+        $this->em->flush();
+        if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('v2/dashboard/recruiter/prestation/delete.html.twig', [
+                'prestationId' => $prestationId,
+                'message' => $message,
+            ]);
+        }
+        $this->addFlash('success', $message);
+        return $this->redirectToRoute('app_v2_recruiter_prestation');
+
     }
 }

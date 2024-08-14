@@ -19,10 +19,10 @@ class LangagesType extends AbstractType
         $builder
             ->add('langue', EntityType::class, [
                 'class' => Langue::class,
-                'label' => 'app_identity_expert_step_two.language.label',
+                'label' => 'Langue',
             ])
             ->add('niveau', ChoiceType::class, [
-                'label' => 'app_identity_expert_step_two.skill.level',
+                'label' => 'Niveau',
                 'choices'  => [
                     'app_identity_expert_step_two.skill.one' => 1,
                     'app_identity_expert_step_two.skill.two' => 2,
@@ -30,12 +30,9 @@ class LangagesType extends AbstractType
                     'app_identity_expert_step_two.skill.four' => 4,
                     'app_identity_expert_step_two.skill.five' => 5,
                 ],
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'app_identity_expert_step_two.experience.submit',
-                'attr' => [
-                    'class' => 'btn btn-dark rounded-pill'
-                ]
+                'expanded' => true,
+                'multiple' => false,
+                'required' => true,
             ])
         ;
     }

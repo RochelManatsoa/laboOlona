@@ -2,6 +2,7 @@
 
 namespace App\Repository\Finance;
 
+use App\Entity\User;
 use App\Entity\Finance\Contrat;
 use App\Entity\Finance\Employe;
 use App\Data\Finance\SearchData;
@@ -23,6 +24,26 @@ class ContratRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginatorInterface)
     {
         parent::__construct($registry, Contrat::class);
+    }
+
+
+   /**
+    * @return Contrat[] Returns an array of Simulateur objects
+    */
+    public function findContractsByUser(User $user): array
+    {
+        if(!$user->getEmploye() instanceof Employe){
+            return [];
+        }
+
+        return $this->createQueryBuilder('c')
+            ->join('c.simulateur', 's')
+            ->andWhere('s.employe = :val')
+            ->setParameter('val', $user->getEmploye())
+            ->orderBy('c.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     public function findSearch(SearchData $searchData): PaginationInterface

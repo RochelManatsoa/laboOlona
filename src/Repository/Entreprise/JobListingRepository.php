@@ -196,6 +196,12 @@ class JobListingRepository extends ServiceEntityRepository
                 ->andWhere('j.secteur IS EMPTY');
         }
 
+        if ($searchData->entreprise instanceof EntrepriseProfile) {
+            $qb = $qb
+                ->andWhere('e.id = :id')
+                ->setParameter('id', "{$searchData->entreprise->getId()}");
+        }
+
         $query =  $qb->getQuery();
         // dd($query->getResult());
 
@@ -204,6 +210,18 @@ class JobListingRepository extends ServiceEntityRepository
             $searchData->page,
             20
         );
+    }
+
+    public function findJobListingsByEntreprise(EntrepriseProfile $recruiter)
+    {
+        return $this->createQueryBuilder('j')
+            ->where('j.entreprise = :entreprise')
+            ->andWhere('j.status != :deletedStatus')
+            ->setParameter('entreprise', $recruiter)
+            ->setParameter('deletedStatus', JobListing::STATUS_DELETED)
+            ->orderBy('j.id', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     public function findEngineSearch(SearchData $searchData): PaginationInterface

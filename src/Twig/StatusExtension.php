@@ -14,6 +14,7 @@ use Twig\Extension\AbstractExtension;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Entreprise\BudgetAnnonce;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Finance\Contrat;
 use App\Entity\Finance\Simulateur;
 use App\Entity\Moderateur\Metting;
 use App\Entity\Prestation;
@@ -51,10 +52,12 @@ class StatusExtension extends AbstractExtension
             new TwigFunction('arrayInverseCandidatTarifType', [$this, 'arrayInverseCandidatTarifType']),
             new TwigFunction('arrayInverseTarifType', [$this, 'arrayInverseTarifType']),
             new TwigFunction('satusSimulateur', [$this, 'satusSimulateur']),
+            new TwigFunction('satusContrat', [$this, 'satusContrat']),
             new TwigFunction('satusEntreprise', [$this, 'satusEntreprise']),
             new TwigFunction('satusCandidate', [$this, 'satusCandidate']),
             new TwigFunction('satusMetting', [$this, 'satusMetting']),
             new TwigFunction('satusPrestation', [$this, 'satusPrestation']),
+            new TwigFunction('satusJobListing', [$this, 'satusJobListing']),
             new TwigFunction('typeSimulateur', [$this, 'typeSimulateur']),
         ];
     }
@@ -102,6 +105,50 @@ class StatusExtension extends AbstractExtension
             
             default:
                 $status = '<span class="badge text-bg-success">Simulation libre</span>';
+                break;
+        }
+        
+        return $status;
+    }
+
+    public function satusContrat(Contrat $contrat)
+    {
+        $type = $contrat->getStatus() ?? '';
+        switch ($type) {
+            case Contrat::STATUS_PENDING :
+                $status = '<span class="badge text-bg-success">En attente</span>';
+                break;
+
+            case Contrat::STATUS_VALID :
+                $status = '<span class="badge text-bg-warning">Validée</span>';
+                break;
+
+            case Contrat::STATUS_CONTACT :
+                $status = '<span class="badge text-bg-info">Prise de contact</span>';
+                break;
+
+            case Contrat::STATUS_RELANCE :
+                $status = '<span class="badge text-bg-primary">Relance</span>';
+                break;
+
+            case Contrat::STATUS_APPROVED :
+                $status = '<span class="badge text-bg-danger">Approuvé</span>';
+                break;
+
+            case Contrat::STATUS_ARCHIVED :
+                $status = '<span class="badge text-bg-danger">Résilié</span>';
+                break;
+
+            case Contrat::STATUS_SUSPENDED :
+                $status = '<span class="badge text-bg-danger">Suspendu</span>';
+                break;
+
+            case Contrat::STATUS_UNFULFILLED :
+                $status = '<span class="badge text-bg-danger">Non exécuté</span>';
+                break;
+            
+            default:
+                $status = '<span class="badge text-bg-success">Non exécuté</span>';
                 break;
         }
         
@@ -170,6 +217,54 @@ class StatusExtension extends AbstractExtension
 
             case Prestation::STATUS_SUSPENDED :
                 $status = '<span class="badge text-bg-primary">Suspendue</span>';
+                break;
+            
+            default:
+                $status = '<span class="badge text-bg-primary">En attente</span>';
+                break;
+        }
+        
+        return $status;
+    }
+
+    public function satusJobListing(JobListing $jobListing)
+    {
+        $type = $jobListing->getStatus() ?? '';
+        switch ($type) {
+            case JobListing::STATUS_DRAFT :
+                $status = '<span class="badge text-bg-warning">Brouillon</span>';
+                break;
+
+            case JobListing::STATUS_PUBLISHED :
+                $status = '<span class="badge text-bg-success">Publié</span>';
+                break;
+
+            case JobListing::STATUS_FEATURED :
+                $status = '<span class="badge text-bg-dark">Boostée</span>';
+                break;
+
+            case JobListing::STATUS_DELETED :
+                $status = '<span class="badge text-bg-secondary">Effacée</span>';
+                break;
+
+            case JobListing::STATUS_PENDING :
+                $status = '<span class="badge text-bg-primary">En attente</span>';
+                break;
+
+            case JobListing::STATUS_REJECTED :
+                $status = '<span class="badge text-bg-danger">Rejetée</span>';
+                break;
+
+            case JobListing::STATUS_EXPIRED :
+                $status = '<span class="badge text-bg-info">Expirée</span>';
+                break;
+
+            case JobListing::STATUS_ARCHIVED :
+                $status = '<span class="badge text-bg-info">Archivée</span>';
+                break;
+
+            case JobListing::STATUS_UNPUBLISHED :
+                $status = '<span class="badge text-bg-danger">Non publiée</span>';
                 break;
             
             default:

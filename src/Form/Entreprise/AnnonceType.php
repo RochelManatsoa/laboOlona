@@ -2,23 +2,25 @@
 
 namespace App\Form\Entreprise;
 
-use App\Entity\Candidate\Competences;
 use App\Entity\Secteur;
-use App\Entity\Entreprise\JobListing;
 use App\Entity\EntrepriseProfile;
-use App\Entity\Moderateur\TypeContrat;
+use App\Entity\Candidate\Competences;
+use App\Entity\Entreprise\JobListing;
 use Symfony\Component\Form\FormEvent;
+use App\Entity\Moderateur\TypeContrat;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\IsTrue;
 use App\Form\DataTransformer\CompetencesTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class AnnonceType extends AbstractType
@@ -58,12 +60,25 @@ class AnnonceType extends AbstractType
                 'label' => 'app_dashboard_entreprise_posting_new.desc_form',
                 'required' => false,
                 'attr' => [
-                    'rows' => 8
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
                 ]
             ])
             ->add('salaire', HiddenType::class, [])
             ->add('budgetAnnonce', BudgetAnnonceType::class, [
                 'label' => 'Budget',
+            ])
+            ->add('agreeTerms', CheckboxType::class, [
+                'label' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new IsTrue([
+                        'message' => 'Vous devriez accepter nos conditions.',
+                    ]),
+                ],
+                'attr' => [
+                    'label' => 'J\'accepte les termes et conditions.',
+                ],
             ])
             ->add('lieu', TextType::class, ['label' => 'Lieu',])
             ->add('nombrePoste', null, ['label' => 'Nombre de personne à chercher',])

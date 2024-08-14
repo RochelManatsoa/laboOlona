@@ -102,7 +102,7 @@ class JobListing
     #[Groups(['annonce'])]
     private ?string $status = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     #[Groups(['annonce'])]
     private ?string $salaire = null;
 

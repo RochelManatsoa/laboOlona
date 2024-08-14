@@ -81,6 +81,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('invitation', [$this, 'invitation']),
             new TwigFunction('getTarifForfait', [$this, 'getTarifForfait']),
             new TwigFunction('getTarifCandidat', [$this, 'getTarifCandidat']),
+            new TwigFunction('generateReference', [$this, 'generateReference']),
             new TwigFunction('generatePseudo', [$this, 'generatePseudo']),
             new TwigFunction('getForfaitAssignation', [$this, 'getForfaitAssignation']),
             new TwigFunction('getStatusAssignation', [$this, 'getStatusAssignation']),
@@ -89,6 +90,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('findValidJobListing', [$this, 'findValidJobListing']),
             new TwigFunction('findPendingJobListing', [$this, 'findPendingJobListing']),
             new TwigFunction('countUnReadNotification', [$this, 'countUnReadNotification']),
+            new TwigFunction('tailleEntreprise', [$this, 'tailleEntreprise']),
         ];
     }
 
@@ -110,6 +112,17 @@ class AppExtension extends AbstractExtension
         ];
 
         return $statuses[$status];
+    }
+
+    public function tailleEntreprise(string $taille = NULL): string
+    {
+        $tailles = [
+            EntrepriseProfile::SIZE_SMALL => 'Petite (1-10 employés)',
+            EntrepriseProfile::SIZE_MEDIUM => 'Moyenne (11-100 employés)',
+            EntrepriseProfile::SIZE_LARGE => 'Grande (plus de 100 employés)',
+        ];
+
+        return $tailles[$taille];
     }
 
     public function getEntrepriseStatuses(string $status = NULL): string
@@ -713,6 +726,14 @@ class AppExtension extends AbstractExtension
     {
         $letters = 'OT';
         $paddedId = sprintf('%04d', $candidat->getId());
+
+        return $letters . $paddedId;
+    }
+
+    public function generateReference(EntrepriseProfile $entreprise)
+    {
+        $letters = 'OT-REC';
+        $paddedId = sprintf('%04d', $entreprise->getId());
 
         return $letters . $paddedId;
     }

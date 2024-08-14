@@ -56,58 +56,50 @@ a:hover {
     overflow: hidden;
 }
 
-// Styles pour CKEditor
-.ck .ck-editor__main p {
-    color: #000000 !important;
-    min-height: 200px !important;
-}
-/* Supprimer la bordure du champ Tom Select */
-.tom-select-custom .ts-control {
-    border: none; /* Supprimer la bordure */
-    background-color: #fff; /* S'assurer du fond blanc pour s'adapter au thème */
-    padding: 0; /* Supprimer le padding pour intégration fluide */
-    box-shadow: none; /* Supprimer les ombres */
-    box-sizing: border-box; /* Inclure le padding dans la hauteur totale */
+.no-list-style {
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0; 
 }
 
-/* Ajustements supplémentaires si nécessaire */
-.tom-select-custom .ts-dropdown {
-    background-color: #fff; /* Couleur de fond pour correspondre au thème */
-    border-radius: 0.25rem; /* Bordure radius conforme à Bootstrap */
-    margin-top: 0.25rem; /* Ajuster l'espacement */
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Ombre légère pour le dropdown */
-    z-index: 1000; /* Assurer l'affichage au-dessus des autres éléments */
+.no-list-style li {
+    padding: 0.5rem 0; 
 }
 
-/* Options dans le dropdown */
-.tom-select-custom .ts-dropdown .dropdown-item {
-    padding: 0.375rem 0.75rem; /* Padding conforme à Bootstrap */
-    cursor: pointer;
+.experience-form {
+    margin-top: 1rem;
 }
 
-.tom-select-custom .ts-dropdown .dropdown-item:hover {
-    background-color: #e9ecef; /* Couleur de fond au survol */
+.experience-form .form-control {
+    margin-bottom: 1rem;
+}
+
+.experience-form .row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.experience-form .row > .experience-field {
+    width: 100%;
+}
+
+.experience-form .my-2 {
+    margin: .5rem 0;
+}
+
+.experience-form {
+    margin-top: 1rem; /* Marges extérieures */
 }
 
 
-.balloon-editor-bootstrap .ck-editor__editable {
-    border: 1px solid #ced4da;
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.balloon-editor-bootstrap .ck-editor__editable:focus {
-    color: #495057;
-    background-color: #fff;
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+/* Cible uniquement les premiers fieldset enfants directs sous .experience-form */
+.experience-form fieldset {
+    margin-bottom: 1.5rem; /* Marge extérieure */
+    background: inherit; /* Arrière-plan hérité */
+    border: 2px solid #ddd; /* Bordure */
+    border-radius: 10px; /* Bordures arrondies */
+    padding: 1rem; /* Espacement intérieur */
 }
 // @import 'css/form.scss';
 // @import 'css/variables.scss';

@@ -1,14 +1,222 @@
 {% extends 'base_v21.html.twig' %}
 
-{% block title %}Dashboard | Olona Talents{% endblock %}
+{% block title %}Dashboard | Olona Talents
+{% endblock %}
 {% block meta %}
 	{{ parent() }}
 {% endblock %}
 
 {% block sidebar %}
-  {% include "v2/dashboard/layout_entreprise.html.twig" %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
 {% endblock %}
 
 {% block body %}
+	<section class="">
+		<div class="shadow p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<span class="">
+					<img src="{{ asset('v2/images/7108023.png')}}" alt="icone" style="width:30px;">
+				</span>
+				Bienvenue dans votre espace VIP Olona Talents
+				<span class="">
+					<img src="{{ asset('v2/images/7108023.png')}}" alt="icone" style="width:30px;">
+				</span>
+			</h2>
 
+			<p class="fw-light text-center">
+				Bienvenue dans votre espace VIP Olona Talents, conçu exclusivement pour optimiser votre expérience en tant qu'entreprise partenaire. Ici, vous avez un accès privilégié pour gérer efficacement vos recrutements, suivre vos candidatures et interagir directement avec des talents de premier plan.
+			</p>
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+			{% endfor %}
+			{% for message in app.flashes('danger') %}
+				<div class="alert alert-danger">
+					{{ message }}
+				</div>
+			{% endfor %}
+
+
+			<ul class="nav nav-underline justify-content-center">
+				<li class="nav-item">
+					<a class="nav-link px-3 active" id="view-tab" data-bs-toggle="tab" href="#view">Votre profil public</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link px-3" id="edit-tab" data-bs-toggle="tab" href="#edit">Modifier votre profil</a>
+				</li>
+			</ul>
+
+			<!-- Contenu des onglets -->
+			<div class="tab-content mt-3">
+				<div class="tab-pane fade show active" id="view">
+					<div class="row">
+
+						<div class="col-12 col-sm-6">
+							<h3 class="fs-5 text-uppercase my-3">
+								<i class="bi bi-person-circle"></i>
+								Informations générales
+							</h3>
+							<span class="fs-6 fw-bold lh-base">Nom de l'entreprise</span><br>
+							<div class="row mb-3">
+								<div class="col">
+									{{ recruiter.nom }}
+								</div>
+							</div>
+							<span class="fs-6 fw-bold lh-base">Site web</span><br>
+							<div class="row mb-3">
+								<div class="col">
+									{{ recruiter.siteweb }}
+								</div>
+							</div>
+
+							<span class="fs-6 fw-bold lh-base">Taille de l'entreprise</span><br>
+							<div class="row mb-3">
+								<div class="col-md-6 col-sm-12">
+									{{ tailleEntreprise(recruiter.taille) }}
+								</div>
+							</div>
+
+							<span class="fs-6 fw-bold lh-base">Adresse email</span><br>
+							<div class="row mb-3">
+								<div class="col">
+									{{ recruiter.entreprise.email }}
+								</div>
+							</div>
+							<span class="fs-6 fw-bold lh-base">Numéro de téléphone</span><br>
+							<div class="row mb-3">
+								<div class="col-md-6 col-sm-12">
+									{{ recruiter.entreprise.telephone }}
+								</div>
+							</div>
+							<span class="fs-6 fw-bold lh-base">Référence</span><br>
+							<div class="row mb-3">
+								<div class="col-md-6 col-sm-12">
+									{{ generateReference(recruiter) }}
+								</div>
+							</div>
+							<span class="fs-6 fw-bold lh-base">Localisation</span><br>
+							<div class="row mb-3">
+								<div class="col-md-6 col-sm-12">
+									{{ recruiter.localisation|countryName }}
+								</div>
+							</div>
+
+							<span class="fs-6 fw-bold lh-base">Secteur(s) d'activité</span><br>
+							<div class="row mb-3">
+								<div class="col-md-6 col-sm-12">
+									{% for item in recruiter.secteurs %}
+									<span class="badge rounded-pill bg-primary">
+										{{ item.nom }}
+									</span>
+									{% endfor %}
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col">
+									<span class="fs-6 fw-bold lh-base">Annonces créées</span><br>
+									<div class="row mb-3">
+										<div class="col-md-6 col-sm-12">
+											{{ recruiter.jobListings|length }}
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<span class="fs-6 fw-bold lh-base">Prestations créées</span><br>
+									<div class="row mb-3">
+										<div class="col-md-6 col-sm-12">
+											{{ recruiter.prestations|length }}
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="col-12 col-sm-6">
+							<div class="row my-4 justify-content-center">
+								<div class="col-auto">
+									<div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('/uploads/experts/company-default.jpg');" alt="Avatar"></div>
+								</div>
+							</div>
+							<div class="row my-4 align-items-center">
+								<div class="h-100 p-4 border rounded-3">
+									<span class="fs-5 fw-bold lh-base text-uppercase">A propos</span>
+									{{ recruiter.description|raw}}
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="tab-pane fade" id="edit">
+					<div class="col-10 mx-auto">
+						{{ form_start(form)}}
+						{{ form_widget(form)}}
+						<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+							<i class="bi bi-save"></i>
+							Enregister
+						</button>
+
+						{{ form_end(form)}}
+					</div>
+				</div>
+			</div>
+
+
+			<div class="">
+				<h3 class="fs-5 fw-bolder mt-3 mt-sm-5 text-center">
+					<span class="u-file-icon u-icon">
+						<img src="{{ asset('v2/images/3221746.png')}}" alt="icone" style="width:32px;">
+					</span>
+					Fonctionnalités clés de votre espace
+				</h3>
+				<ul class="col-12 col-sm-8 mx-auto">
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								Suivez en temps réel l'état de vos annonces, les réponses des candidats, et les statistiques clés pour évaluer l'efficacité de vos recrutements.
+							</div>
+						</div>
+					</li>
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								Créez et modifiez vos offres d'emploi en quelques clics. Utilisez nos outils pour cibler précisément les candidats les plus adéquats.
+							</div>
+						</div>
+					</li>
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								Engagez des conversations avec des candidats présélectionnés grâce à notre système de messagerie intégré.
+							</div>
+						</div>
+					</li>
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								Accédez à des rapports détaillés pour comprendre mieux les tendances du marché et ajuster vos stratégies de recrutement.
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+	<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 {% endblock %}
