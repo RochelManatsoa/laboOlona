@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\BusinessModel\Credit;
+use App\Entity\BusinessModel\History;
 use App\Entity\Finance\Employe;
 use App\Entity\Vues\VideoVues;
 use App\Repository\UserRepository;
@@ -137,12 +139,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Employe $employe = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Credit $credit = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: History::class)]
+    private Collection $histories;
+
     public function __construct()
     {
         $this->envois = new ArrayCollection();
         $this->recus = new ArrayCollection();
         $this->searchHistories = new ArrayCollection();
         $this->videoVues = new ArrayCollection();
+        $this->histories = new ArrayCollection();
     }
 
     public function __toString()
@@ -588,6 +597,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->employe = $employe;
+
+        return $this;
+    }
+
+    public function getCredit(): ?Credit
+    {
+        return $this->credit;
+    }
+
+    public function setCredit(?Credit $credit): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($credit === null && $this->credit !== null) {
+            $this->credit->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($credit !== null && $credit->getUser() !== $this) {
+            $credit->setUser($this);
+        }
+
+        $this->credit = $credit;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, History>
+     */
+    public function getHistories(): Collection
+    {
+        return $this->histories;
+    }
+
+    public function addHistory(History $history): static
+    {
+        if (!$this->histories->contains($history)) {
+            $this->histories->add($history);
+            $history->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistory(History $history): static
+    {
+        if ($this->histories->removeElement($history)) {
+            // set the owning side to null (unless already changed)
+            if ($history->getUser() === $this) {
+                $history->setUser(null);
+            }
+        }
 
         return $this;
     }

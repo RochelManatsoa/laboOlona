@@ -188,7 +188,7 @@ class OlonaTalentsController extends AbstractController
                             'secteur.nom', 
                             'langues.nom'
                         ],
-                        // 'fuzziness' => 'AUTO',
+                        'fuzziness' => 'AUTO',
                     ],
                 ],
                 'highlight' => [
@@ -248,7 +248,7 @@ class OlonaTalentsController extends AbstractController
                             'createdAt',
                             'openai',
                         ],
-                        // 'fuzziness' => 'AUTO',
+                        'fuzziness' => 'AUTO',
                     ],
                 ],
                 'highlight' => [

@@ -1,0 +1,31 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Nous contacter | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+  {% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endblock %}
+
+
+{% block body %}
+<section class="">
+  <div class="shadow p-2 p-sm-4">
+    <h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+      <i class="bi bi-bookmark-star text-warning me-2"></i></span> Toujours plus proche de vos réussites
+    </h2>
+    <p class="text-center"> 
+    Nous comprenons que chaque candidat et chaque entreprise a des besoins uniques. C'est pourquoi nous avons conçu une gamme de packs sur mesure pour vous aider à atteindre vos objectifs de carrière ou d'entreprise avec plus d'efficacité et de précision. Que vous cherchiez à accélérer votre recrutement ou à enrichir votre parcours professionnel, nos packs sont conçus pour vous offrir une expérience optimale.
+    </p>
+  </div>
+</section>
+{% endblock %}

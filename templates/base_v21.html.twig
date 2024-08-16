@@ -33,7 +33,7 @@
 						</a>
 						<div class="collapse navbar-collapse" id="navbarNav">
 						{% set last_query = app.request.query.get('q', '') %}
-							<div class="col-12 col-sm-8 mx-auto">
+							<div class="col-12 col-sm-6 mx-auto">
 								<form action="{{ path('app_olona_talents_result') }}" class="input-group mb-3 rounded-pill w-100 mt-4">
 									<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
 									<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
@@ -42,6 +42,9 @@
 
 							<div class="d-flex justify-content-end p-2">
 							{% if app.user %}
+								<div class="small my-auto text-center">
+									Vous avez 200 crédits <br> disponibles
+								</div>
 								<div class="dropdown me-3">
 									<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
 										{% if app.user.gravatar is not null %}
@@ -73,7 +76,9 @@
 			<div class="container"> 
 			{% block sidebar %}{% endblock %}
 			{% block body %}{% endblock %}
+			{% block preview %}
         	<a href="javascript:history.back()" class="btn btn-info fw-semibold text-uppercase px-4 my-5 me-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+			{% endblock %}
 			</div>
 		</div>
 		{{ encore_entry_script_tags('main') }}

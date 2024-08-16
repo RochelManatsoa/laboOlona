@@ -31,14 +31,15 @@
 				Pour maximiser votre visibilité auprès des entreprises à la recherche de compétences uniques, nous vous invitons à créer votre prestation de service sur notre plateforme. En remplissant avec soin ce formulaire, notre système avancé mettra en valeur votre offre en l'alignant avec les besoins précis des entreprises. Cela augmentera vos chances de collaborer sur des projets qui correspondent vraiment à vos compétences et aspirations professionnelles. Profitez de notre outil de mise en relation pour faire valoir votre expertise et étendre votre réseau professionnel sur Olona Talents.
 			</p>
 			<div id="flash"></div>
-
-			<p class="text-center">
-				<a href="{{ path('app_v2_recruiter_create_prestation')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
-					<i class="bi bi-plus-lg"></i>
-					Créer une prestation
-				</a>
-			</p>
 			{% if prestations|length > 0 %}
+
+				<p class="text-center">
+					<a href="{{ path('app_v2_recruiter_create_prestation')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-plus-lg"></i>
+						Créer une prestation (-10 crédits)
+					</a>
+				</p>
+				
 				<div class="table-responsive">
 					<table class="{{ tableClass }}">
 						<thead>
@@ -86,6 +87,13 @@
 					</span>
 					1ère chose à faire
 				</h3>
+
+				<p class="text-center">
+					<a href="{{ path('app_v2_recruiter_create_prestation')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-plus-lg"></i>
+						Créer une prestation (-10 crédits)
+					</a>
+				</p>
 			{% endif %}
 		</section>
 	<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>

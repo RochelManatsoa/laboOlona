@@ -62,7 +62,7 @@ class DashboardController extends AbstractController
     #[Route('/centre-de-formation/playlist/{id}', name: 'app_v2_recruiter_dashboard_formation_playlist_view')]
     public function viewPlaylist(Playlist $playlist): Response
     {
-        return $this->render('v2/_playlist.html.twig', [
+        return $this->render('v2/dashboard/recruiter/_playlist.html.twig', [
             'playlist' => $playlist,
         ]);
     }

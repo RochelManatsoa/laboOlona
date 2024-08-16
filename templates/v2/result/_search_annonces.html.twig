@@ -15,7 +15,7 @@
 			        "></div>
 		<!-- Text content -->
 		<div class="flex-grow-1 ms-3">
-			{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) or is_granted('ROLE_CANDIDAT') %}
+			{% if app.user and (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) or is_granted('ROLE_CANDIDAT')) %}
 				<a href="{{ path('app_v2_candidate_view_job_offer', {'id': item['_id']})}}">{{ item['_source'].titre|upper }}</a>
 			{% else %}
 				<a href="#" data-id="{{ item['_id'] }}" class="annonce-link">
@@ -81,9 +81,14 @@
 							{{ item['_source'].secteur }}
 						</p>
 						<div class="text-center">
-							<button type="button" class="fw-bold btn btn-primary rounded-pill my-3 px-4 mx-auto">
-								<i class="bi bi-chat-right-text"></i>
-								Discuter maintenant</button>
+							<button type="button" class="fw-bold btn btn-primary text-uppercase fw-semibold my-3 px-3 mx-auto">
+								<i class="bi bi-eye me-2"></i>
+								Voir contact entreprise ( -100 crédits)
+							</button>
+							<button type="button" class="fw-bold btn btn-secondary text-uppercase fw-semibold my-3 px-3 mx-auto">
+								<i class="bi bi-clipboard-check me-2"></i>
+								Postuler ( -15 crédits)
+							</button>
 						</div>
 					</div>
 				</div>
@@ -130,19 +135,23 @@
 			<i class="bi bi-bookmarks"></i>
 			{{ item['_source'].applications|length }}
 			Candidatures</span>
-		<span class="small me-3">
-
-			{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) or is_granted('ROLE_CANDIDAT') %}
-				<a href="{{ path('app_v2_candidate_view_job_offer', {'id': item['_id']})}}">Plus d'informations
-					<i class="bi bi-caret-down-fill"></i>
-				</a>
-			{% else %}
-				<a href="#" data-id="{{ item['_id'] }}" class="annonce-link">Plus d'informations
-					<i class="bi bi-caret-down-fill"></i>
-				</a>
-			{% endif %}
-
-		</span>
+        <span class="dropdown small me-3">
+            <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Plus d'informations 
+            </a>
+            <ul class="dropdown-menu dropdown-menu-lg-end">
+                <li><a class="dropdown-item annonce-link" data-id="{{ item['_id'] }}" href="#">Aperçu</a></li>
+				{% if app.user and (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) or is_granted('ROLE_CANDIDAT')) %}
+					<li>
+						<a href="{{ path('app_v2_candidate_view_job_offer', {'id': item['_id']})}}">
+							Voir l'offre
+						</a>
+					</li>
+				{% endif %}
+                <li><a class="dropdown-item" href="#">Ajouter comme favoris</a></li>
+                <li><a class="dropdown-item" href="#">Contacter l'entreprise</a></li>
+            </ul>
+        </span>
 	</div>
 {% endfor %}
 {% if totalJobListingsResults > 0 %}

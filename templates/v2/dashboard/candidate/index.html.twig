@@ -118,10 +118,14 @@
 				1ère chose à faire
 			</h3>
 			{{ form_start(form, {'attr': {'id': 'cvForm', 'class':'text-center'}})}}
-			{{ form_widget(form)}}
-			<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+			<div id="file-upload-container">
+				{{ form_widget(form.cv, {'attr': {'style': 'display:none;'}}) }}
+			</div>
+
+			<p id="file-name" class="my-2"></p>
+			<button id="upload-button" type="button" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
 				<i class="bi bi-download"></i>
-				Mettre en ligne un cv
+				Mettre en ligne un cv ( -15 Crédits)
 			</button>
 			{{ form_end(form)}}
 
@@ -136,6 +140,9 @@
 					</li>
 					<li class="nav-item">
 						<a class="nav-link px-3" id="edit-tab" data-bs-toggle="tab" href="#edit">Modifier votre profil</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-3" id="history-tab" data-bs-toggle="tab" href="#history">Historique d'activité</a>
 					</li>
 				</ul>
 
@@ -467,6 +474,11 @@
 										<div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
 									</div>
 								</div>
+								
+								<div class="text-center my-4">
+									<button class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon profil</button>
+								</div>
+
 								<div class="row my-4 align-items-center">
 									<div class="h-100 p-4 border rounded-3">
 										<span class="fs-5 fw-bold lh-base text-uppercase">Biographie</span>
@@ -476,6 +488,9 @@
 							</div>
 
 						</div>
+					</div>
+
+					<div class="tab-pane fade" id="history">
 					</div>
 				</div>
 
@@ -540,5 +555,23 @@
 		document.getElementById('cvForm').addEventListener('submit', function () {
         document.getElementById('cvModal').style.display = 'block';
         });
+		document.addEventListener('DOMContentLoaded', (event) => {
+			var fileInput = document.querySelector('#cvForm input[type="file"]');
+			var uploadButton = document.getElementById('upload-button');
+			var fileNameDisplay = document.getElementById('file-name');
+
+			uploadButton.addEventListener('click', function() {
+				// Ouvrir la fenêtre de sélection de fichier lorsque le bouton est cliqué
+				fileInput.click();
+			});
+
+			fileInput.addEventListener('change', function() {
+				var fileName = fileInput.files[0] ? fileInput.files[0].name : 'No file chosen';
+				fileNameDisplay.textContent = fileName;
+
+				uploadButton.innerHTML = '<i class="bi bi-download"></i> Soumettre';
+				uploadButton.setAttribute('type', 'submit');
+			});
+		});
 	</script>
 {% endblock %}

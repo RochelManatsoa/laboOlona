@@ -121,22 +121,57 @@
 					</div>
 				</div>
 
-				<div class="row">
-					<div class="col">
-						<div class="mb-3">
-							{{ form_widget(form.agreeTerms, {
-								'label': 'J\'accepte les Termes et Conditions',
-           						'label_attr': {'class': 'fw-bold small'},
-							})}}
+					<div class="mb-3 experience-form">
+						<fieldset>
+
+						<span class="fw-bolder text-uppercase fs-5 mb-3"> <i class="bi bi-rocket-takeoff me-2"></i> Booster</span>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault0" checked>
+							<label class="form-check-label" for="flexRadioDefault0">
+								Pas de boost
+							</label>
 						</div>
-					</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+							<label class="form-check-label" for="flexRadioDefault1">
+								1 jour (-100 crédits)
+							</label>
+						</div>
+
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+							<label class="form-check-label" for="flexRadioDefault2">
+								7 jour (-600 crédits)
+							</label>
+						</div>
+
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
+							<label class="form-check-label" for="flexRadioDefault3">
+								15 jour (-1000 crédits)
+							</label>
+						</div>
+
+				</fieldset>
+
+						<div class="row">
+							<div class="col">
+								<div class="mb-3">
+									{{ form_widget(form.agreeTerms, {
+										'label': 'J\'accepte les Termes et Conditions',
+										'label_attr': {'class': 'fw-bold small'},
+									})}}
+								</div>
+							</div>
+						</div>
 				</div>
+
 				<div style="display:none;">
 				{{ form_widget(form) }}
 				</div>
 				<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
 					<i class="bi bi-save"></i>
-					Enregister
+					Publier ( -10 crédits)
 				</button>
 				{{ form_end(form) }}
 			</div>

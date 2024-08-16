@@ -30,20 +30,21 @@
 				Ici, vous pouvez créer, modifier, et suivre le statut de vos annonces de recrutement. Notre plateforme vous offre des outils intuitifs pour optimiser vos offres d'emploi, atteindre les meilleurs candidats et gérer efficacement vos candidatures. Utilisez les filtres pour naviguer entre vos annonces actives, expirées ou en attente. Pour chaque annonce, vous avez la possibilité de voir le nombre de candidatures reçues, d'accéder aux profils des candidats et de mettre à jour le statut de l'offre. Notre objectif est de simplifier votre processus de recrutement et de vous aider à trouver les talents idéaux pour votre entreprise. Si vous avez des questions ou besoin d'assistance, n'hésitez pas à contacter notre support client.
 			</p>
 			<div id="flash"></div>
-
-			<p class="text-center">
-				<a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
-					<i class="bi bi-plus-lg"></i>
-					Créer une annonce
-				</a>
-			</p>
 			{% if joblistings|length > 0 %}
+
+				<p class="text-center">
+					<a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-plus-lg"></i>
+						Créer une annonce (-10 crédits)
+					</a>
+				</p>
 				<div class="table-responsive">
 					<table class="{{ tableClass }}">
 						<thead>
 							<tr>
 								<td scope="col" class="h5">{{ knp_pagination_sortable(joblistings, 'Titre', 'p.titre') }}</td>
-								<td scope="col-2" class="h5">{{ knp_pagination_sortable(joblistings, 'Statut', 'p.status') }}</td>
+								<td scope="col-2" class="h5">Boost</td>
+								<td scope="col-1" class="h5">{{ knp_pagination_sortable(joblistings, 'Statut', 'p.status') }}</td>
 								<td scope="col-2" class=""></td>
 							</tr>
 						</thead>
@@ -61,7 +62,8 @@
 										<span class="fw-lighter small">Créé le
 											{{ item.dateCreation|date('d/m/Y') }}</span>
 									</td>
-									<td class="col-2">{{ satusJobListing(item)|raw }}</td>
+									<td class="col-2"><button class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster</button></td>
+									<td class="col-1">{{ satusJobListing(item)|raw }}</td>
 									<td class="col-2">
 										<a href="{{ path('app_v2_recruiter_job_lisiting_view', { 'jobListing': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
 											<i class="bi bi-eye"></i>
@@ -85,6 +87,13 @@
 					</span>
 					1ère chose à faire
 				</h3>
+
+				<p class="text-center">
+					<a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-plus-lg"></i>
+						Créer une annonce (-10 crédits)
+					</a>
+				</p>
 			{% endif %}
 
 		</div>

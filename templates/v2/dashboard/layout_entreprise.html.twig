@@ -3,56 +3,57 @@
 <div class="row">
   <div class="col-12 col-sm-3">
     <div class="d-flex flex-column flex-shrink-0 p-3 " style="width: 280px;">
+    	<button class="btn btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff"></i> Booster mon entrprise</button>
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="nav-link {{ current_route == 'app_v2_recruiter_create_job_listing' ? 'active' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="nav-link {{ current_route == 'app_v2_recruiter_create_job_listing' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-megaphone me-2"></i></span> Publier une offre
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_prestation')}}" class="nav-link {{ current_route == 'app_v2_recruiter_prestation' ? 'active' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_recruiter_prestation')}}" class="nav-link {{ current_route == 'app_v2_recruiter_prestation' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-person-workspace me-2"></i></span> Mes préstations
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_job_listing')}}" class="nav-link {{ current_route == 'app_v2_recruiter_job_listing' ? 'active' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_recruiter_job_listing')}}" class="nav-link {{ current_route == 'app_v2_recruiter_job_listing' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-card-checklist me-2"></i></span> Gérer mes annonces
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_simulator_create')}}" class="nav-link {{ current_route == 'app_v2_recruiter_simulator_create' ? 'active' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_recruiter_simulator_create')}}" class="nav-link {{ current_route == 'app_v2_recruiter_simulator_create' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-printer me-2"></i></span> Simulateur de budget
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_simulator')}}" class="nav-link {{ current_route == 'app_v2_recruiter_simulator' ? 'active' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_recruiter_simulator')}}" class="nav-link {{ current_route == 'app_v2_recruiter_simulator' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-aspect-ratio me-2"></i></span> Mes simulations
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_metting')}}" class="nav-link {{ current_route == 'app_v2_recruiter_metting' ? 'active' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_recruiter_metting')}}" class="nav-link {{ current_route == 'app_v2_recruiter_metting' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-calendar-week me-2"></i></span> Mes rendez-vous
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_contract')}}" class="nav-link {{ current_route == 'app_v2_recruiter_contract' ? 'active' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_recruiter_contract')}}" class="nav-link {{ current_route == 'app_v2_recruiter_contract' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-bookmark-check me-2"></i></span> Mes contrats
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_dashboard_ai_tools')}}" class="nav-link {{ current_route == 'app_v2_recruiter_dashboard_ai_tools' ? 'active' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_recruiter_dashboard_ai_tools')}}" class="nav-link {{ current_route == 'app_v2_recruiter_dashboard_ai_tools' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-magic me-2"></i></span> Ai Tools
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_dashboard_formation')}}" class="nav-link {{ current_route == 'app_v2_recruiter_dashboard_formation' ? 'active' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_recruiter_dashboard_formation')}}" class="nav-link {{ current_route == 'app_v2_recruiter_dashboard_formation' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-layers me-2"></i></span> Centre de formations
           </a>
         </li>
         <hr>
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_dashboard')}}" class="nav-link {{ current_route == 'app_v2_recruiter_dashboard' ? 'active' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_recruiter_dashboard')}}" class="nav-link {{ current_route == 'app_v2_recruiter_dashboard' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-person-badge me-2"></i></span> Mes informations
           </a>
         </li>
@@ -62,6 +63,11 @@
           </a>
         </li>
       </ul>
+      <hr>
+      <a href="{{ path('app_v2_recruiter_credit')}}" class="btn-primary btn px-2 text-uppercase fw-semibold">
+        <i class="bi bi-bookmark-star fw-bold"></i>
+        Recharger mes crédits
+      </a>
     </div>
   </div>
   <div class="col-12 col-sm-9">
