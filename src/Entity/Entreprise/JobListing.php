@@ -2,6 +2,7 @@
 
 namespace App\Entity\Entreprise;
 
+use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Candidate\Applications;
 use App\Entity\Candidate\Competences;
 use App\Entity\EntrepriseProfile;
@@ -159,6 +160,9 @@ class JobListing
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $cleanDescription = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jobListing')]
+    private ?BoostVisibility $boostVisibility = null;
 
     public function __toString()
     {
@@ -638,6 +642,18 @@ class JobListing
     public function setCleanDescription(?string $cleanDescription): static
     {
         $this->cleanDescription = $cleanDescription;
+
+        return $this;
+    }
+
+    public function getBoostVisibility(): ?BoostVisibility
+    {
+        return $this->boostVisibility;
+    }
+
+    public function setBoostVisibility(?BoostVisibility $boostVisibility): static
+    {
+        $this->boostVisibility = $boostVisibility;
 
         return $this;
     }

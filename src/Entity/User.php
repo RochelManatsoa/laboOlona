@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\BusinessModel\Credit;
 use App\Entity\BusinessModel\History;
+use App\Entity\BusinessModel\Transaction;
 use App\Entity\Finance\Employe;
 use App\Entity\Vues\VideoVues;
 use App\Repository\UserRepository;
@@ -145,6 +146,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: History::class)]
     private Collection $histories;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Transaction::class)]
+    private Collection $transactions;
+
     public function __construct()
     {
         $this->envois = new ArrayCollection();
@@ -152,6 +156,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->searchHistories = new ArrayCollection();
         $this->videoVues = new ArrayCollection();
         $this->histories = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
     }
 
     public function __toString()
@@ -647,6 +652,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($history->getUser() === $this) {
                 $history->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Transaction>
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): static
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+            $transaction->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): static
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            // set the owning side to null (unless already changed)
+            if ($transaction->getUser() === $this) {
+                $transaction->setUser(null);
             }
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Finance\Devise;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -82,6 +83,9 @@ class EntrepriseProfile
 
     #[ORM\OneToMany(mappedBy: 'entrepriseProfile', targetEntity: Prestation::class)]
     private Collection $prestations;
+
+    #[ORM\ManyToOne(inversedBy: 'entrepriseProfile')]
+    private ?BoostVisibility $boostVisibility = null;
 
     public function __construct()
     {
@@ -362,6 +366,18 @@ class EntrepriseProfile
                 $prestation->setEntrepriseProfile(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBoostVisibility(): ?BoostVisibility
+    {
+        return $this->boostVisibility;
+    }
+
+    public function setBoostVisibility(?BoostVisibility $boostVisibility): static
+    {
+        $this->boostVisibility = $boostVisibility;
 
         return $this;
     }

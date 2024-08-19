@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\BusinessModel\BoostVisibility;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Candidate\Competences;
@@ -159,6 +160,9 @@ class Prestation
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'prestation')]
+    private ?BoostVisibility $boostVisibility = null;
 
     public function __construct()
     {
@@ -601,6 +605,18 @@ class Prestation
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getBoostVisibility(): ?BoostVisibility
+    {
+        return $this->boostVisibility;
+    }
+
+    public function setBoostVisibility(?BoostVisibility $boostVisibility): static
+    {
+        $this->boostVisibility = $boostVisibility;
 
         return $this;
     }

@@ -2,6 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\Package;
+use App\Entity\BusinessModel\TypeTransaction;
 use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\Finance\Devise;
@@ -124,6 +127,11 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Assignations', 'fas fa-sliders', Assignation::class),
                 MenuItem::linkToCrud('Mettings', 'fas fa-handshake', Metting::class),
                 MenuItem::linkToCrud('Invitation', 'fas fa-hand-holding-heart', Invitation::class),
+            ]),
+            MenuItem::subMenu('Modèle économique', 'fa fa-money-bill-transfer')->setSubItems([
+                MenuItem::linkToCrud('Packs', 'fas fa-cubes', Package::class),
+                MenuItem::linkToCrud('Boosts', 'fas fa-rocket', Boost::class),
+                MenuItem::linkToCrud('Type transaction', 'fas fa-money-bill-trend-up', TypeTransaction::class),
             ]),
             MenuItem::subMenu('Configuration', 'fa fa-gears')->setSubItems([
                 MenuItem::linkToCrud('Secteurs', 'fas fa-quote-right', Secteur::class),
