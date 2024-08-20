@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Entity\BusinessModel\Boost;
 use App\Entity\Candidate\TarifCandidat;
 use App\Entity\CandidateProfile;
 use App\Entity\User;
@@ -58,6 +59,8 @@ class StatusExtension extends AbstractExtension
             new TwigFunction('satusMetting', [$this, 'satusMetting']),
             new TwigFunction('satusPrestation', [$this, 'satusPrestation']),
             new TwigFunction('satusJobListing', [$this, 'satusJobListing']),
+            new TwigFunction('isPrestationBoosted', [$this, 'isPrestationBoosted']),
+            new TwigFunction('isJobOfferBoosted', [$this, 'isJobOfferBoosted']),
             new TwigFunction('typeSimulateur', [$this, 'typeSimulateur']),
         ];
     }
@@ -273,6 +276,60 @@ class StatusExtension extends AbstractExtension
         }
         
         return $status;
+    }
+
+    public function isPrestationBoosted(Prestation $prestation): string
+    {
+        $boost = $prestation->getBoost();
+        $info = '<button class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster</button>';
+        if($boost instanceof Boost){
+            switch ($boost->getSlug()) {
+                case 'boost-recruiter-prestation-7' :
+                    $info = '<span class="fw-semibold small">Boost 7 jour</span>';
+                    break;
+    
+                case 'boost-recruiter-prestation-15' :
+                    $info = '<span class="fw-semibold small">Boost 15 jour</span>';
+                    break;
+    
+                case 'boost-recruiter-prestation-30' :
+                    $info = '<span class="fw-semibold small">Boost 30 jour</span>';
+                    break;
+                
+                default:
+                    $status = '<span class="fw-semibold small">Boost 1 jour</span>';
+                    break;
+            }
+        }
+        
+        return $info;
+    }
+
+    public function isJobOfferBoosted(JobListing $jobListing)
+    {
+        $boost = $jobListing->getBoost();
+        $info = '<button class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster</button>';
+        if($boost instanceof Boost){
+            switch ($boost->getSlug()) {
+                case 'boost-joblisting-1' :
+                    $info = '<span class="fw-semibold small">Boost 1 jour</span>';
+                    break;
+    
+                case 'boost-joblisting-7' :
+                    $info = '<span class="fw-semibold small">Boost 7 jour</span>';
+                    break;
+    
+                case 'boost-joblisting-15' :
+                    $info = '<span class="fw-semibold small">Boost 15 jour</span>';
+                    break;
+                
+                default:
+                    $status = '<span class="fw-semibold small">Boost 1 jour</span>';
+                    break;
+            }
+        }
+        
+        return $info;
     }
 
     public function satusEntreprise(EntrepriseProfile $entreprise)

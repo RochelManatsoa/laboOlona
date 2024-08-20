@@ -2,7 +2,11 @@
 
 namespace App\Entity\BusinessModel;
 
+use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
+use App\Entity\Entreprise\JobListing;
 use App\Entity\ModerateurProfile;
+use App\Entity\Prestation;
 use App\Repository\BusinessModel\BoostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -50,9 +54,25 @@ class Boost
     #[ORM\Column(length: 50)]
     private ?string $type = null;
 
+    #[ORM\OneToMany(mappedBy: 'boost', targetEntity: JobListing::class)]
+    private Collection $jobListings;
+
+    #[ORM\OneToMany(mappedBy: 'boost', targetEntity: Prestation::class)]
+    private Collection $prestations;
+
+    #[ORM\OneToMany(mappedBy: 'boost', targetEntity: CandidateProfile::class)]
+    private Collection $candidateProfiles;
+
+    #[ORM\OneToMany(mappedBy: 'boost', targetEntity: EntrepriseProfile::class)]
+    private Collection $entrepriseProfiles;
+
     public function __construct()
     {
         $this->boostVisibilities = new ArrayCollection();
+        $this->jobListings = new ArrayCollection();
+        $this->prestations = new ArrayCollection();
+        $this->candidateProfiles = new ArrayCollection();
+        $this->entrepriseProfiles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -182,6 +202,126 @@ class Boost
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, JobListing>
+     */
+    public function getJobListings(): Collection
+    {
+        return $this->jobListings;
+    }
+
+    public function addJobListing(JobListing $jobListing): static
+    {
+        if (!$this->jobListings->contains($jobListing)) {
+            $this->jobListings->add($jobListing);
+            $jobListing->setBoost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJobListing(JobListing $jobListing): static
+    {
+        if ($this->jobListings->removeElement($jobListing)) {
+            // set the owning side to null (unless already changed)
+            if ($jobListing->getBoost() === $this) {
+                $jobListing->setBoost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Prestation>
+     */
+    public function getPrestations(): Collection
+    {
+        return $this->prestations;
+    }
+
+    public function addPrestation(Prestation $prestation): static
+    {
+        if (!$this->prestations->contains($prestation)) {
+            $this->prestations->add($prestation);
+            $prestation->setBoost($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrestation(Prestation $prestation): static
+    {
+        if ($this->prestations->removeElement($prestation)) {
+            // set the owning side to null (unless already changed)
+            if ($prestation->getBoost() === $this) {
+                $prestation->setBoost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CandidateProfile>
+     */
+    public function getCandidateProfiles(): Collection
+    {
+        return $this->candidateProfiles;
+    }
+
+    public function addCandidateProfile(CandidateProfile $candidateProfile): static
+    {
+        if (!$this->candidateProfiles->contains($candidateProfile)) {
+            $this->candidateProfiles->add($candidateProfile);
+            $candidateProfile->setBoost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCandidateProfile(CandidateProfile $candidateProfile): static
+    {
+        if ($this->candidateProfiles->removeElement($candidateProfile)) {
+            // set the owning side to null (unless already changed)
+            if ($candidateProfile->getBoost() === $this) {
+                $candidateProfile->setBoost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EntrepriseProfile>
+     */
+    public function getEntrepriseProfiles(): Collection
+    {
+        return $this->entrepriseProfiles;
+    }
+
+    public function addEntrepriseProfile(EntrepriseProfile $entrepriseProfile): static
+    {
+        if (!$this->entrepriseProfiles->contains($entrepriseProfile)) {
+            $this->entrepriseProfiles->add($entrepriseProfile);
+            $entrepriseProfile->setBoost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEntrepriseProfile(EntrepriseProfile $entrepriseProfile): static
+    {
+        if ($this->entrepriseProfiles->removeElement($entrepriseProfile)) {
+            // set the owning side to null (unless already changed)
+            if ($entrepriseProfile->getBoost() === $this) {
+                $entrepriseProfile->setBoost(null);
+            }
+        }
 
         return $this;
     }

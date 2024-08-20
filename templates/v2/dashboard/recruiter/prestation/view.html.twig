@@ -53,14 +53,14 @@
       {% if prestation.motsCles is not empty %}
       <h2 class="h5">Mots clés</h2>
       <p class="row">
-        {{prestation.motsCles}}
+        {{prestation.motsCles|raw}}
       </p>
       {% endif %}
 
       {% if prestation.conditionsParticulieres is not empty %}
       <h2 class="h5">Conditions particulière</h2>
       <p class="row">
-        {{prestation.conditionsParticulieres}}
+        {{prestation.conditionsParticulieres|raw}}
       </p>
       {% endif %}
 

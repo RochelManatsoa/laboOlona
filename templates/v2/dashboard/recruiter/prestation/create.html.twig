@@ -182,38 +182,14 @@
 					</div>
 				</div>
 
+				<div class="row">
 					<div class="mb-3 experience-form">
 						<fieldset>
-
-						<span class="fw-bolder text-uppercase fs-5 mb-3"> <i class="bi bi-rocket-takeoff me-2"></i> Booster</span>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault0" checked>
-							<label class="form-check-label" for="flexRadioDefault0">
-								Pas de boost
-							</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-							<label class="form-check-label" for="flexRadioDefault1">
-								1 jour (-1000 crédits)
-							</label>
-						</div>
-
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-							<label class="form-check-label" for="flexRadioDefault2">
-								7 jour (-2000 crédits)
-							</label>
-						</div>
-
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
-							<label class="form-check-label" for="flexRadioDefault3">
-								15 jour (-4000 crédits)
-							</label>
-						</div>
-
-				</fieldset>
+							<span class="fw-bolder text-uppercase fs-5 mb-3"> <i class="bi bi-rocket-takeoff me-2"></i> Booster</span>
+							{{ form_widget(form.boost)}}
+						</fieldset>
+					</div>
+				</div>
 
 				<div class="row">
 					<div class="col">
@@ -230,14 +206,12 @@
 				</div>
 				<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
 					<i class="bi bi-save"></i>
-					Publier ( -10 crédits)
+					Publier ( 10 crédits)
 				</button>
 				{{ form_end(form) }}
 			</div>
 		</div>
 	</section>
-	<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5">
-		<i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 
 <script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 <script>

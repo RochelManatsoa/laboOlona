@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Finance\Devise;
 use Doctrine\DBAL\Types\Types;
@@ -86,6 +87,9 @@ class EntrepriseProfile
 
     #[ORM\ManyToOne(inversedBy: 'entrepriseProfile')]
     private ?BoostVisibility $boostVisibility = null;
+
+    #[ORM\ManyToOne(inversedBy: 'entrepriseProfiles')]
+    private ?Boost $boost = null;
 
     public function __construct()
     {
@@ -378,6 +382,18 @@ class EntrepriseProfile
     public function setBoostVisibility(?BoostVisibility $boostVisibility): static
     {
         $this->boostVisibility = $boostVisibility;
+
+        return $this;
+    }
+
+    public function getBoost(): ?Boost
+    {
+        return $this->boost;
+    }
+
+    public function setBoost(?Boost $boost): static
+    {
+        $this->boost = $boost;
 
         return $this;
     }

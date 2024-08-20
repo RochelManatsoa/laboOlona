@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\BoostVisibility;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -163,6 +164,9 @@ class Prestation
 
     #[ORM\ManyToOne(inversedBy: 'prestation')]
     private ?BoostVisibility $boostVisibility = null;
+
+    #[ORM\ManyToOne(inversedBy: 'prestations')]
+    private ?Boost $boost = null;
 
     public function __construct()
     {
@@ -617,6 +621,18 @@ class Prestation
     public function setBoostVisibility(?BoostVisibility $boostVisibility): static
     {
         $this->boostVisibility = $boostVisibility;
+
+        return $this;
+    }
+
+    public function getBoost(): ?Boost
+    {
+        return $this->boost;
+    }
+
+    public function setBoost(?Boost $boost): static
+    {
+        $this->boost = $boost;
 
         return $this;
     }

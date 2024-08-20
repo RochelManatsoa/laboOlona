@@ -6,6 +6,7 @@ use App\Entity\Secteur;
 use App\Entity\Prestation;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
+use App\Entity\BusinessModel\Boost;
 use App\Entity\Candidate\Competences;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -24,8 +25,8 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class PrestationType extends AbstractType
@@ -51,6 +52,17 @@ class PrestationType extends AbstractType
             ])
             // ->add('competencesRequises')
             // ->add('tarifsProposes')
+            ->add('boost', EntityType::class, [
+                'class' => Boost::class,
+                'choices' => $this->entityManager->getRepository(Boost::class)->findBy(['type' => $options['boostType']]),
+                'choice_label' => function ($boost) {
+                    return $boost->getName(); 
+                },
+                'expanded' => true,  
+                'required' => false, 
+                'placeholder' => 'Pas de boost',
+                'label' => false
+            ])
             ->add('tarifPrestation', TarifPrestationType::class, [
                 'required' => false,
                 'label' => 'Tarif proposé',
@@ -70,6 +82,7 @@ class PrestationType extends AbstractType
                 'choices' => Prestation::CHOICE_STATUS
             ])
             ->add('motsCles', TextareaType::class, [
+                'required' => false, 
                 'attr' => [
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'
@@ -91,12 +104,14 @@ class PrestationType extends AbstractType
             ])
             ->add('preferencesCommunication')
             ->add('conditionsParticulieres', TextareaType::class, [
+                'required' => false, 
                 'attr' => [
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'
                 ]
             ])
             ->add('engagementQualite', TextareaType::class, [
+                'required' => false, 
                 'attr' => [
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'
@@ -203,6 +218,7 @@ class PrestationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Prestation::class,
+            'boostType' => "",
         ]);
     }
 

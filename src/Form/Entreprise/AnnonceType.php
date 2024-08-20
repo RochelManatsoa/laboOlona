@@ -4,6 +4,7 @@ namespace App\Form\Entreprise;
 
 use App\Entity\Secteur;
 use App\Entity\EntrepriseProfile;
+use App\Entity\BusinessModel\Boost;
 use App\Entity\Candidate\Competences;
 use App\Entity\Entreprise\JobListing;
 use Symfony\Component\Form\FormEvent;
@@ -19,7 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
@@ -64,7 +65,17 @@ class AnnonceType extends AbstractType
                     'class' => 'ckeditor-textarea'
                 ]
             ])
-            ->add('salaire', HiddenType::class, [])
+            ->add('boost', EntityType::class, [
+                'class' => Boost::class,
+                'choices' => $this->entityManager->getRepository(Boost::class)->findBy(['type' => 'JOB_LISTING']),
+                'choice_label' => function ($boost) {
+                    return $boost->getName(); 
+                },
+                'expanded' => true,  
+                'required' => false, 
+                'placeholder' => 'Pas de boost',
+                'label' => false
+            ])
             ->add('budgetAnnonce', BudgetAnnonceType::class, [
                 'label' => 'Budget',
             ])

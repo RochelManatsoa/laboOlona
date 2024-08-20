@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Candidate\CV;
 use App\Entity\Candidate\Langages;
@@ -199,6 +200,9 @@ class CandidateProfile
 
     #[ORM\ManyToOne(inversedBy: 'candidateProfile')]
     private ?BoostVisibility $boostVisibility = null;
+
+    #[ORM\ManyToOne(inversedBy: 'candidateProfiles')]
+    private ?Boost $boost = null;
 
     public function __construct()
     {
@@ -1039,6 +1043,18 @@ class CandidateProfile
     public function setBoostVisibility(?BoostVisibility $boostVisibility): static
     {
         $this->boostVisibility = $boostVisibility;
+
+        return $this;
+    }
+
+    public function getBoost(): ?Boost
+    {
+        return $this->boost;
+    }
+
+    public function setBoost(?Boost $boost): static
+    {
+        $this->boost = $boost;
 
         return $this;
     }

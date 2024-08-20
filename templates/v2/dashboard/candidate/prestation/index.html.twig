@@ -35,7 +35,7 @@
 			<p class="text-center">
 				<a href="{{ path('app_v2_candidate_create_prestation')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
 					<i class="bi bi-plus-lg"></i>
-					Créer une prestation ( -10 crédits)
+					Créer une prestation ( 10 crédits)
 				</a>
 			</p>
 			{% if prestations|length > 0 %}
@@ -44,6 +44,7 @@
 						<thead>
 							<tr>
 								<td scope="col" class="h5">{{ knp_pagination_sortable(prestations, 'Titre', 'p.titre') }}</td>
+								<td scope="col-2" class="h5">Boost</td>
 								<td scope="col-2" class="h5">{{ knp_pagination_sortable(prestations, 'Statut', 'p.status') }}</td>
 								<td scope="col-2" class=""></td>
 							</tr>
@@ -61,6 +62,9 @@
 										<br>
 										<span class="fw-lighter small">Créé le
 											{{ item.createdAt|date('d/m/Y') }}</span>
+									</td>
+									<td class="col-2">
+										{{ isPrestationBoosted(item)|raw }}
 									</td>
 									<td class="col-2">{{ satusPrestation(item)|raw }}</td>
 									<td class="col-2">

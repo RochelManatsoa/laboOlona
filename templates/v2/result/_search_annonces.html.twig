@@ -143,12 +143,11 @@
                 <li><a class="dropdown-item annonce-link" data-id="{{ item['_id'] }}" href="#">Aperçu</a></li>
 				{% if app.user and (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) or is_granted('ROLE_CANDIDAT')) %}
 					<li>
-						<a href="{{ path('app_v2_candidate_view_job_offer', {'id': item['_id']})}}">
+						<a class="dropdown-item annonce-link" href="{{ path('app_v2_candidate_view_job_offer', {'id': item['_id']})}}">
 							Voir l'offre
 						</a>
 					</li>
 				{% endif %}
-                <li><a class="dropdown-item" href="#">Ajouter comme favoris</a></li>
                 <li><a class="dropdown-item" href="#">Contacter l'entreprise</a></li>
             </ul>
         </span>

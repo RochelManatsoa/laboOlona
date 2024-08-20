@@ -53,14 +53,14 @@
       {% if prestation.motsCles is not empty %}
       <h2 class="h5">Mots clés</h2>
       <p class="row">
-        {{prestation.motsCles}}
+        {{prestation.motsCles|raw }}
       </p>
       {% endif %}
 
       {% if prestation.conditionsParticulieres is not empty %}
       <h2 class="h5">Conditions particulière</h2>
       <p class="row">
-        {{prestation.conditionsParticulieres}}
+        {{prestation.conditionsParticulieres|raw }}
       </p>
       {% endif %}
 
@@ -91,6 +91,13 @@
         {{prestation.preferencesCommunication}}
       </p>
       {% endif %}
+      <hr>
+      <a href="{{path('app_v2_candidate_edit_prestation', {'prestation': prestation.id})}}" class="btn btn-outline-warning fw-semibold text-uppercase my-3 px-5">
+        <i class="mx-2 bi bi-pencil"></i>Editer
+      </a>
+      <button type="button" class="btn btn-dark my-3 fw-semibold text-uppercase px-5">
+        <i class="mx-2 bi bi-rocket-takeoff"></i>Booster
+      </button>
     </div>
   </div>
 </section>

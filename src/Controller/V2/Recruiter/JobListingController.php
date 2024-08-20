@@ -2,14 +2,17 @@
 
 namespace App\Controller\V2\Recruiter;
 
-use App\Data\Annonce\AnnonceSearchData;
 use App\Data\V2\JobListingData;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Manager\EntrepriseManager;
 use App\Manager\JobListingManager;
+use App\Entity\BusinessModel\Boost;
 use App\Form\Entreprise\AnnonceType;
 use App\Entity\Entreprise\JobListing;
+use App\Data\Annonce\AnnonceSearchData;
+use App\Entity\BusinessModel\BoostVisibility;
+use App\Manager\BusinessModel\CreditManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +29,7 @@ class JobListingController extends AbstractController
         private JobListingManager $jobListingManager,
         private EntrepriseManager $entrepriseManager,
         private PaginatorInterface $paginator,
+        private CreditManager $creditManager,
     ){}
 
     #[Route('/', name: 'app_v2_recruiter_job_listing')]
@@ -61,6 +65,11 @@ class JobListingController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $jobListing = $form->getData();
+            $boost = $jobListing->getBoost();
+            if($boost instanceof Boost){
+                $this->creditManager->adjustCredits($recruiter->getEntreprise(), $boost->getCredit());
+            }
+            $this->creditManager->adjustCredits($recruiter->getEntreprise(), 10);
             $this->jobListingManager->saveForm($form);
             return $this->redirectToRoute('app_v2_recruiter_job_lisiting_view', ['jobListing' => $jobListing->getId()]);
         }
@@ -78,6 +87,10 @@ class JobListingController extends AbstractController
         $form = $this->createForm(AnnonceType::class, $jobListing, []);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            $boost = $jobListing->getBoost();
+            if($boost instanceof Boost){
+                $this->creditManager->adjustCredits($recruiter->getEntreprise(), $boost->getCredit());
+            }
             $this->jobListingManager->saveForm($form);
             return $this->render('v2/dashboard/recruiter/job_listing/edit.html.twig', [
                 'jobListing' => $jobListing,

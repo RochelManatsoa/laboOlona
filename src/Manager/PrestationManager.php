@@ -10,8 +10,7 @@ class PrestationManager
 {
     public function __construct(
         private EntityManagerInterface $em,
-    ){        
-    }
+    ){}
 
     public function init(): Prestation
     {
