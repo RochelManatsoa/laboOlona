@@ -266,7 +266,6 @@ $(document).ready(function() {
         console.log(response);
         button.html('<i class="bi bi-star text-warning"></i> Effacer');
         button.removeClass('add-to-favorites btn-success').addClass('remove-from-favorites btn-outline-success');
-        // Mettre à jour les attributs/data si nécessaire
       },
       error: function(xhr, status, error) {
         alert('Erreur lors de l\'ajout aux favoris');

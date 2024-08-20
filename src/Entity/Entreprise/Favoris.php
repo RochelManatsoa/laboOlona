@@ -5,6 +5,7 @@ namespace App\Entity\Entreprise;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
 use App\Repository\Entreprise\FavorisRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FavorisRepository::class)]
@@ -20,6 +21,9 @@ class Favoris
 
     #[ORM\ManyToOne(inversedBy: 'favoris')]
     private ?CandidateProfile $candidat = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
 
     public function getId(): ?int
     {
@@ -46,6 +50,18 @@ class Favoris
     public function setCandidat(?CandidateProfile $candidat): static
     {
         $this->candidat = $candidat;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

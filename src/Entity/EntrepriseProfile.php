@@ -85,10 +85,10 @@ class EntrepriseProfile
     #[ORM\OneToMany(mappedBy: 'entrepriseProfile', targetEntity: Prestation::class)]
     private Collection $prestations;
 
-    #[ORM\ManyToOne(inversedBy: 'entrepriseProfile')]
+    #[ORM\ManyToOne(inversedBy: 'entrepriseProfile', cascade: ['persist', 'remove'])]
     private ?BoostVisibility $boostVisibility = null;
 
-    #[ORM\ManyToOne(inversedBy: 'entrepriseProfiles')]
+    #[ORM\ManyToOne(inversedBy: 'entrepriseProfiles', cascade: ['persist', 'remove'])]
     private ?Boost $boost = null;
 
     public function __construct()

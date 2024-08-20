@@ -2,16 +2,19 @@
 
 namespace App\Manager;
 
+use DateTime;
+use App\Entity\User;
 use App\Entity\Candidate\CV;
 use Twig\Environment as Twig;
+use App\Entity\ReferrerProfile;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\CandidateProfile;
 use Symfony\Component\Form\Form;
 use App\Entity\EntrepriseProfile;
-use App\Entity\Moderateur\EditedCv;
 use App\Entity\ModerateurProfile;
-use App\Entity\ReferrerProfile;
-use DateTime;
+use App\Entity\BusinessModel\Boost;
+use App\Entity\Moderateur\EditedCv;
+use App\Entity\BusinessModel\Credit;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -149,5 +152,18 @@ class ProfileManager
         $formattedFileName = implode('-', $parts);
     
         return $formattedFileName;
+    }
+
+    public function canApplyBoost(User $user, Boost $boost): bool
+    {
+        $credit = $user->getCredit();
+        $amount = $boost->getCredit();
+        if ($credit instanceof Credit) {
+            if($credit->getTotal() > $amount){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

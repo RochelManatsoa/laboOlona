@@ -7,8 +7,12 @@ use App\Manager\ProfileManager;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use App\Entity\Formation\Playlist;
+use App\Manager\AffiliateToolManager;
+use App\Form\Boost\CandidateBoostType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Manager\BusinessModel\CreditManager;
+use App\Entity\BusinessModel\BoostVisibility;
 use App\Repository\Formation\VideoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,10 +20,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Formation\PlaylistRepository;
 use App\Form\Search\AffiliateTool\ToolSearchType;
 use App\Form\Profile\Candidat\CandidateUploadType;
+use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Controller\Dashboard\Moderateur\OpenAi\CandidatController;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile as EditStepOneType;
-use App\Manager\AffiliateToolManager;
 
 #[Route('/v2/candidate/dashboard')]
 class DashboardController extends AbstractController
@@ -27,6 +31,8 @@ class DashboardController extends AbstractController
     public function __construct(
         private EntityManagerInterface $em,
         private ProfileManager $profileManager,
+        private CreditManager $creditManager,
+        private BoostVisibilityManager $boostVisibilityManager,
         private FileUploader $fileUploader,
         private UserService $userService,
         private CandidatController $candidatController,
@@ -132,4 +138,39 @@ class DashboardController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/boost-profile', name: 'app_v2_candidate_boost_profile', methods: ['POST'])]
+    public function boostProfile(Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement.');
+
+        $candidat = $this->userService->checkProfile();
+        $form = $this->createForm(CandidateBoostType::class, $candidat); 
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $boostOption = $form->get('boost')->getData(); 
+
+            if ($this->profileManager->canApplyBoost($candidat->getCandidat(), $boostOption)) {
+                $visibilityBoost = $candidat->getBoostVisibility();
+                if(!$visibilityBoost instanceof BoostVisibility){
+                    $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
+                }
+                $candidat->setBoostVisibility($visibilityBoost);
+                $response = $this->creditManager->adjustCredits($candidat->getCandidat(), $boostOption->getCredit());
+                if(isset($response['success'])){
+                    $this->em->persist($candidat);
+                    $this->em->flush();
+                    return $this->json(['status' => 'success'], 200);
+                }else{
+                    return $this->json(['status' => 'error', 'message' => 'Une erreur s\'est produite.'], 400);
+                }
+            } else {
+                return $this->json(['status' => 'error', 'message' => 'Crédits insuffisants pour ce boost.'], 400);
+            }
+        }
+
+        return $this->json(['status' => 'error', 'message' => 'Erreur de formulaire.'], 400);
+    }
+
 }

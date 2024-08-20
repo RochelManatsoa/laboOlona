@@ -2,21 +2,12 @@
 
 namespace App\Twig;
 
-use App\Entity\User;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use App\Entity\ReferrerProfile;
-use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
-use App\Entity\Referrer\Referral;
-use App\Entity\Finance\Simulateur;
-use App\Entity\Moderateur\Metting;
 use App\Entity\Entreprise\JobListing;
 use Symfony\Component\Intl\Countries;
 use Twig\Extension\AbstractExtension;
-use App\Entity\Moderateur\Assignation;
-use App\Entity\Candidate\TarifCandidat;
-use App\Entity\Entreprise\BudgetAnnonce;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\ReferrerProfileRepository;
@@ -33,9 +24,7 @@ class OlonaTalentsExtension extends AbstractExtension
         private EntityManagerInterface $em,
         private UrlGeneratorInterface $urlGenerator,
         private ReferrerProfileRepository $referrerProfileRepository,
-        )
-    {
-    }
+    ){}
     
     public function getFilters(): array
     {

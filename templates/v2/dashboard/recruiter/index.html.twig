@@ -37,7 +37,7 @@
 				</div>
 			{% endfor %}
 			<div class="text-center my-4">
-				<button class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon entrprise</button>
+			{{ checkBoost(app.user)|raw }}
 			</div>
 
 			<ul class="nav nav-underline justify-content-center">
@@ -45,7 +45,7 @@
 					<a class="nav-link px-3 active" id="view-tab" data-bs-toggle="tab" href="#view">Votre profil public</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link px-3" id="edit-tab" data-bs-toggle="tab" href="#edit">Modifier votre profil ( -15 crédits)</a>
+					<a class="nav-link px-3" id="edit-tab" data-bs-toggle="tab" href="#edit">Modifier votre profil (15 crédits)</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link px-3" id="history-tab" data-bs-toggle="tab" href="#history">Historique d'activité</a>

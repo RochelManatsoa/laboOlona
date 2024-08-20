@@ -3,7 +3,7 @@
 <div class="row">
   <div class="col-12 col-sm-3">
     <div class="d-flex flex-column flex-shrink-0 p-3 " style="width: 280px;">
-			<button class="btn btn-danger text-uppercase fw-bold px-4"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon profil</button>
+			{{ checkBoost(app.user)|raw }}
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
@@ -71,3 +71,49 @@
     </div>
   </div>
   <div class="col-12 col-sm-9">
+
+<div class="modal fade" id="boostProfile" tabindex="-1" aria-labelledby="boostProfileLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form action="{{ path('app_v2_candidate_boost_profile') }}" method="post" id="boostProfileForm">
+      <div class="modal-header">
+        <h3 class="modal-title fs-5 text-uppercase fw-bold" id="boostProfileLabel"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon profil</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      Augmentez vos chances d'être vu et choisi par les recruteurs ! En boostant votre profil, vous vous assurez une visibilité accrue et une position de premier plan dans les résultats de recherche. 
+          <div class="my-3">
+            <div id="candidate_boost">
+              <fieldset class="mb-3">
+                <div id="candidate_boost_boost">
+                  <div class="form-check">
+                    <input type="radio" id="candidate_boost_boost_placeholder" name="candidate_boost[boost]" class="form-check-input" value="" checked="checked">
+                    <label class="form-check-label" for="candidate_boost_boost_placeholder">Pas de boost</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" id="candidate_boost_boost_1" name="candidate_boost[boost]" class="form-check-input" value="1">
+                    <label class="form-check-label" for="candidate_boost_boost_1">Boost 7 jours</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" id="candidate_boost_boost_2" name="candidate_boost[boost]" class="form-check-input" value="2">
+                    <label class="form-check-label" for="candidate_boost_boost_2">Boost 15 jours</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" id="candidate_boost_boost_3" name="candidate_boost[boost]" class="form-check-input" value="3">
+                    <label class="form-check-label" for="candidate_boost_boost_3">Boost 30 jours</label>
+                  </div>
+                </div>        
+              </fieldset>
+            </div>
+          </div>
+      En choisissant l'un de ces boosts, vous multipliez vos opportunités de contact et renforcez votre présence auprès des principales entreprises de votre secteur. Ne laissez pas passer votre chance de vous démarquer !
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary text-uppercase fw-bold" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-primary text-uppercase fw-bold">Prendre un boost</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+

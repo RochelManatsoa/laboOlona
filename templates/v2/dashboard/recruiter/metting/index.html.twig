@@ -38,10 +38,13 @@
 						</span>
 						1ère chose à faire
 					</h3>
-					<a href="{{ path('app_v2_recruiter_simulator_create')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
-						<i class="bi bi-search"></i>
-						Trouver un candidat
-					</a>
+					
+					<div class="col-12 col-sm-6 mx-auto">
+						<form action="{{ path('app_olona_talents_result') }}" class="input-group mb-3 rounded-pill w-100 mt-4">
+							<input class="form-control" type="search" name="q" placeholder="Rechercher des profils">
+							<button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+						</form>
+					</div>
 				</div>
 			{% endif %}
     </section>

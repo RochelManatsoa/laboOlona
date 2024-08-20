@@ -82,5 +82,32 @@
 			</div>
 		</div>
 		{{ encore_entry_script_tags('main') }}
+		<div aria-live="polite" aria-atomic="true" class="position-relative">
+			<div class="toast-container position-fixed bottom-0 end-0 p-3">
+				<!-- Toast pour le succès -->
+				<div id="successToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="toast-header">
+						<strong class="me-auto">Succès</strong>
+						<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+					<div class="toast-body">
+						Votre profil a été boosté avec succès!
+					</div>
+				</div>
+
+				<!-- Toast pour les erreurs -->
+				<div id="errorToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="toast-header">
+						<strong class="me-auto">Echec</strong>
+						<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+					<div class="toast-body">
+						Une erreur est survenue.
+					</div>
+				</div>
+
+			</div>
+		</div>
+
 	</body>
 </html>

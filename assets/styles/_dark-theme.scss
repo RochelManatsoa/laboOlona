@@ -87,5 +87,26 @@ body.bootstrap-dark {
         border: 1px solid #dddddd!important;
         background: #ffffff!important;
         color: #333333!important;
+    }.dropdown-menu {
+        background-color: #444c57; 
+        border-color: #444c57; 
+
+        .dropdown-item {
+            color: #f8f9fa; 
+
+            &:hover, &:focus {
+                background-color: darken(#444c57, 10%); 
+                color: #ffffff; 
+            }
+        }
+    }
+    .toast {
+        background-color: #343a40;
+        color: #f8f9fa;
+
+        .toast-header {
+            background-color: #444c57;
+            color: #ffffff;
+        }
     }
 }

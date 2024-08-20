@@ -79,4 +79,13 @@ body.bootstrap-light {
         background-color: white;
         color: black;
     }
+    .toast {
+        background-color: #f8f9fa;
+        color: #343a40;
+
+        .toast-header {
+            background-color: #e9ecef;
+            color: #343a40;
+        }
+    }
 }

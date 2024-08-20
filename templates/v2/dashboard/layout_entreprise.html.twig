@@ -3,17 +3,12 @@
 <div class="row">
   <div class="col-12 col-sm-3">
     <div class="d-flex flex-column flex-shrink-0 p-3 " style="width: 280px;">
-    	<button class="btn btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff"></i> Booster mon entrprise</button>
+			{{ checkBoost(app.user)|raw }}
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
           <a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="nav-link {{ current_route == 'app_v2_recruiter_create_job_listing' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-megaphone me-2"></i></span> Publier une offre
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_prestation')}}" class="nav-link {{ current_route == 'app_v2_recruiter_prestation' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-person-workspace me-2"></i></span> Mes préstations
           </a>
         </li>
         <li class="nav-item">
@@ -29,6 +24,16 @@
         <li class="nav-item">
           <a href="{{ path('app_v2_recruiter_simulator')}}" class="nav-link {{ current_route == 'app_v2_recruiter_simulator' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-aspect-ratio me-2"></i></span> Mes simulations
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_recruiter_prestation')}}" class="nav-link {{ current_route == 'app_v2_recruiter_prestation' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-person-workspace me-2"></i></span> Mes préstations
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_recruiter_favorite')}}" class="nav-link {{ current_route == 'app_v2_recruiter_favorite' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-star me-2"></i></span> Mes favoris
           </a>
         </li>
         <li class="nav-item">
@@ -71,3 +76,47 @@
     </div>
   </div>
   <div class="col-12 col-sm-9">
+
+<div class="modal fade" id="boostProfile" tabindex="-1" aria-labelledby="boostProfileLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form action="{{ path('app_v2_recuiter_boost_profile') }}" method="post" id="boostProfileForm">
+      <div class="modal-header">
+        <h3 class="modal-title fs-5 text-uppercase fw-bold" id="boostProfileLabel"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon entreprise</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      Maximisez la visibilité de votre entreprise et attirez plus de talents de qualité ! En boostant votre compte entreprise, vous bénéficiez d'une visibilité accrue auprès des candidats potentiels et améliorez vos chances de recruter les meilleurs profils.
+          <div class="my-3">
+            <div id="recuiter_boost">
+              <fieldset class="mb-3">
+                <div id="recruiter_boost_boost">
+                  <div class="form-check">
+                    <input type="radio" id="recruiter_boost_boost_placeholder" name="recruiter_boost[boost]" class="form-check-input" value="" checked="checked">
+                    <label class="form-check-label" for="recruiter_boost_boost_placeholder">Pas de boost</label>
+                  </div>
+                  <div class="form-check">
+                  <input type="radio" id="recruiter_boost_boost_10" name="recruiter_boost[boost]" class="form-check-input" value="10">
+                  <label class="form-check-label" for="recruiter_boost_boost_10">Boost 7 jours (300 crédits)</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" id="recruiter_boost_boost_11" name="recruiter_boost[boost]" class="form-check-input" value="11">
+                  <label class="form-check-label" for="recruiter_boost_boost_11">Boost 15 jours (500 crédits)</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" id="recruiter_boost_boost_12" name="recruiter_boost[boost]" class="form-check-input" value="12">
+                  <label class="form-check-label" for="recruiter_boost_boost_12">Boost 30 jours (800 crédits)</label>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+      En choisissant l'un de ces boosts, vous non seulement augmentez votre visibilité, mais vous créez également des opportunités d'engagement direct avec des talents de premier plan. Ne manquez pas cette chance de mettre en valeur votre entreprise !
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary text-uppercase fw-bold" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-primary text-uppercase fw-bold">Prendre un boost</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
