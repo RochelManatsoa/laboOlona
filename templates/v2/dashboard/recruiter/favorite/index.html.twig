@@ -1,7 +1,7 @@
 {% extends 'base_v21.html.twig' %}
 
 {% block title %}
-  Recharger mes crédits | Olona Talents
+  Mes favoris | Olona Talents
 {% endblock %}
 
 {% block meta %}
@@ -33,7 +33,7 @@
     
 			{% if favorites|length > 0 %}
 
-				<div class="table-responsive">
+				<div class="table-responsive mt-4">
 					<table class="{{ tableClass }}">
 						<thead>
 							<tr>
@@ -57,7 +57,7 @@
 									<td class="col-2">{{ getDefaultTarifCandidat(item.candidat) }}</td>
 									<td class="col-1">{{ getAvailabilityStr(item.candidat) }}</td>
 									<td class="col-2">
-										<a href="#" class="btn btn-sm btn-secondary rounded-pill">
+										<a href="{{ path('app_v2_recruiter_favorite_view', {'uid':item.candidat.uid})}}" class="btn btn-sm btn-secondary rounded-pill">
 											<i class="bi bi-eye"></i>
 										</a>
 										<a id="delete-jobListing" href="#" class="btn btn-sm btn-danger rounded-pill">

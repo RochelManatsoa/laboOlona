@@ -10,6 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: CreditRepository::class)]
 class Credit
 {
+    const ACTION_VIEW_CANDIDATE = 'VIEW_CANDIDATE';
+    const ACTION_VIEW_RECRUITER = 'VIEW_RECRUITER';
+    const ACTION_APPLY_JOB = 'APPLY_JOB';
+    const ACTION_APPLY_OFFER = 'APPLY_OFFER';
+    const ACTION_APPLY_PRESTATION_CANDIDATE = 'APPLY_PRESTATION_CANDIDATE';
+    const ACTION_APPLY_PRESTATION_RECRUITER = 'APPLY_PRESTATION_RECRUITER';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -26,6 +33,9 @@ class Credit
 
     #[ORM\OneToOne(inversedBy: 'credit', cascade: ['persist', 'remove'])]
     private ?User $user = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pass = null;
 
     public function getId(): ?int
     {
@@ -76,6 +86,18 @@ class Credit
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getPass(): ?string
+    {
+        return $this->pass;
+    }
+
+    public function setPass(?string $pass): static
+    {
+        $this->pass = $pass;
 
         return $this;
     }

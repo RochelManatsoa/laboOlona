@@ -238,22 +238,4 @@
       </div>
     </section>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-
-    $(document).ready(function () {
-        $('.candidate-link').on('click', function (event) {
-
-            // Récupérer l'ID du candidat à partir de l'attribut data-id
-            var candidateId = $(this).data('id');
-            console.log(candidateId)
-
-            // Récupérer le contenu du <span> correspondant
-            var candidateContent = $('span[data-candidate="' + candidateId + '"]').html();
-
-            // Injecter le contenu dans le conteneur de la carte
-            $('#candidate-card-container').html(candidateContent);
-        });
-    });
-</script>
 {% endblock %}

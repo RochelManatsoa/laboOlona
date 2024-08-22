@@ -166,4 +166,53 @@ class ProfileManager
 
         return false;
     }
+
+    public function canApplyAction(User $user, string $action): bool
+    {
+        $credit = $user->getCredit();
+        $amount = $this->getCreditAmount($action);
+
+        if ($credit instanceof Credit) {
+            if($credit->getTotal() > $amount){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getCreditAmount(string $action): float
+    {
+        switch ($action) {
+            case Credit::ACTION_VIEW_CANDIDATE :
+                $amount = 50;
+                break;
+
+            case Credit::ACTION_VIEW_RECRUITER :
+                $amount = 50;
+                break;
+                
+            case Credit::ACTION_APPLY_OFFER :
+                $amount = 15;
+                break;
+                
+            case Credit::ACTION_APPLY_JOB :
+                $amount = 10;
+                break;
+                
+            case Credit::ACTION_APPLY_PRESTATION_CANDIDATE :
+                $amount = 10;
+                break;
+                
+            case Credit::ACTION_APPLY_PRESTATION_RECRUITER :
+                $amount = 10;
+                break;
+            
+            default:
+                $amount = 0;
+                break;
+        }
+
+        return $amount;
+    }
 }

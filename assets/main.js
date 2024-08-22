@@ -6,6 +6,8 @@
  */
 
 import $ from 'jquery';
+import 'bootstrap';
+import { Tooltip, Toast, Popover, Modal } from 'bootstrap';
 
 $(function() {
     document.addEventListener('turbo:load', handlePageLoad); // Attacher sur turbo:load pour le chargement initial
@@ -13,7 +15,6 @@ $(function() {
 
     function handleFrameLoad(event) {
         const context = event ? event.target : document;
-        setupEditors(event); 
         setupImageUpload(); 
         setupAvailabilityDropdown(); 
     }
@@ -22,53 +23,34 @@ $(function() {
         handleThemeChange();
         handleThemeInitialization();
         setupCKEditors();
+        setupDynamicLinks();
         updateLogo();
         setupDeletionConfirmation();
         setupImageUpload(); 
         setupAvailabilityDropdown();  
     }
 
-    function setupEditors(event) {
-        const context = event ? event.target : document;
-        const editors = context.querySelectorAll('.ckeditor-textarea');
-        
-        editors.forEach(editorElement => {
-            if (editorElement) {
-                ClassicEditor.create(editorElement, {
-                    toolbar: {
-                        items: [
-                            'heading', '|',
-                            'bold', 'italic', 'link', '|',
-                            'bulletedList', 'numberedList', '|',
-                            'blockQuote', 'insertTable', '|',
-                            'undo', 'redo'
-                        ]
-                    }
-                });
-                console.log('ckeditor turbo-frame')
-            }
-        });
-    }
-
     function setupCKEditors() {
-        const editors = document.querySelectorAll('.ckeditor-textarea');
-        
-        editors.forEach(editorElement => {
-            if (editorElement) {
-                ClassicEditor.create(editorElement, {
-                    toolbar: {
-                        items: [
-                            'heading', '|',
-                            'bold', 'italic', 'link', '|',
-                            'bulletedList', 'numberedList', '|',
-                            'blockQuote', 'insertTable', '|',
-                            'undo', 'redo'
-                        ]
+        if (typeof ClassicEditor !== 'undefined') {
+            const editors = document.querySelectorAll('.ckeditor-textarea');
+            if (editors.length > 0) {
+                editors.forEach(editorElement => {
+                    if (editorElement) {
+                        ClassicEditor.create(editorElement, {
+                            toolbar: {
+                                items: [
+                                    'heading', '|',
+                                    'bold', 'italic', 'link', '|',
+                                    'bulletedList', 'numberedList', '|',
+                                    'blockQuote', 'insertTable', '|',
+                                    'undo', 'redo'
+                                ]
+                            }
+                        });
                     }
                 });
-                console.log('ckeditor document-load')
             }
-        });
+        }
     }
 
 
@@ -112,7 +94,6 @@ $(function() {
         const logoSrc = currentTheme === 'dark' ? '/images/logo-olona-talents-white600x200.png' : '/images/logo-olona-talents-black600x200.png';
         $('#logo').attr('src', logoSrc);
 
-        // Update switch theme icon
         const themeIcon = currentTheme === 'dark' ? 'bi-brightness-high' : 'bi-moon-stars-fill';
         $('#switch-theme i').removeClass();
         $('#switch-theme i').addClass(`bi ${themeIcon}`);
@@ -137,6 +118,68 @@ $(function() {
                 imageInput.click();
             });
         }
+        $('#contactDetails').on('click', function() {
+            var errorToast = $('#errorToast');
+            var toast = new Toast(errorToast[0]); 
+            setTimeout(function() {
+                toast.show();
+            }, 1500);
+        });
+        $('#boostProfileForm').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: this.action,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    if (data.status === 'success') {
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
+                        var boostProfileModal = Modal.getInstance($('#boostProfile')[0]) || new Modal($('#boostProfile')[0]);
+                        boostProfileModal.hide();
+                    } else {
+                        $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Toast($('#errorToast')[0]);
+                        errorToast.show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de la tentative de boost de votre profil.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
+    
+        $('.add-to-favorites').on('click', function(e) {
+            e.preventDefault();
+            var url = $(this).data('href');
+            $.ajax({
+                url: url,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'success') {
+                        $('#successToast').find('.toast-body').text(data.message);
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
+                    } else {
+                        $('#errorToast').find('.toast-body').text(data.message);
+                        var errorToast = new Toast($('#errorToast')[0]);
+                        errorToast.show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de l\'ajout du candidat dans vos favoris.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
     }
     
     function setupAvailabilityDropdown() {
@@ -154,6 +197,35 @@ $(function() {
     
             availabilityDropdown.addEventListener('change', toggleDateInput);
             toggleDateInput(); // Initial state
+        }
+    }
+
+    function setupDynamicLinks() {
+        if ($('.candidate-link').length) {
+            $('.candidate-link').on('click', function(event) {
+                event.preventDefault();
+                var candidateId = $(this).data('id');
+                var candidateContent = $('span[data-candidate="' + candidateId + '"]').html();
+                $('#candidate-card-container').html(candidateContent);
+            });
+        }
+    
+        if ($('.annonce-link').length) {
+            $('.annonce-link').on('click', function(event) {
+                event.preventDefault();
+                var annonceId = $(this).data('id');
+                var annonceContent = $('span[data-annonce="' + annonceId + '"]').html();
+                $('#candidate-card-container').html(annonceContent);
+            });
+        }
+    
+        if ($('.prestation-link').length) {
+            $('.prestation-link').on('click', function(event) {
+                event.preventDefault();
+                var prestationId = $(this).data('id');
+                var prestationContent = $('span[data-prestation="' + prestationId + '"]').html();
+                $('#candidate-card-container').html(prestationContent);
+            });
         }
     }
 

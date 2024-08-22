@@ -43,7 +43,7 @@
 							<div class="d-flex justify-content-end p-2">
 							{% if app.user %}
 								<div class="small my-auto text-center">
-									Vous avez {{ app.user.credit.total }} crédits <br> disponibles
+									Vous avez <span class="fw-bold" id="current-user-credit">{{ app.user.credit.total }}</span> crédits <br> disponibles
 								</div>
 								<div class="dropdown me-3">
 									<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">

@@ -2,11 +2,17 @@
 
 namespace App\Controller\V2\Recruiter;
 
+use App\Entity\User;
+use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
+use App\Manager\CandidatManager;
 use App\Service\User\UserService;
+use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Entreprise\Favoris;
+use App\Entity\BusinessModel\Credit;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,6 +27,9 @@ class FavoriteController extends AbstractController
         private UserService $userService,
         private FavorisRepository $favorisRepository,
         private PaginatorInterface $paginator,
+        private CandidatManager $candidatManager,
+        private ProfileManager $profileManager,
+        private CreditManager $creditManager,
     ){}
     
     #[Route('/', name: 'app_v2_recruiter_favorite')]
@@ -38,6 +47,21 @@ class FavoriteController extends AbstractController
                 $request->query->getInt('page', 1),
                 20
             )
+        ]);
+    }
+    
+    #[Route('/view/{uid}', name: 'app_v2_recruiter_favorite_view')]
+    public function view(Request $request, CandidateProfile $candidat): Response
+    {
+        $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $recruiter = $this->userService->checkProfile();
+
+        return $this->render('v2/dashboard/recruiter/favorite/view.html.twig', [
+            'candidat' => $candidat,
+            'recruiter' => $recruiter,
+            'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
+            'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
+            'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
         ]);
     }
     
@@ -93,8 +117,48 @@ class FavoriteController extends AbstractController
         $this->em->flush();
 
         return $this->json([
-            'status' => 'success',
+            'status' => 'succes',
             'message' => 'Candidat retiré des favoris avec succès'
         ], Response::HTTP_OK);
+    }
+
+    #[Route('/show-contact', name: 'app_v2_recruiter_favorite_show_contact_candidate', methods: ['POST', 'GET'])]
+    public function showContact(Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Accès restreint.');
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $candidatId = $request->request->get('candidatId');
+        $message = 'Contact du candidat affiché';
+        $success = true;
+        $status = 'Succès';
+    
+        $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
+        $response = $this->creditManager->adjustCredits($currentUser, $creditAmount);
+    
+        if (isset($response['error'])) {
+            $message = $response['error'];
+            $success = false;
+            $status = 'Echec';
+        }
+    
+        $candidat = $this->em->getRepository(CandidateProfile::class)->find($candidatId);
+        if (!$candidat) {
+            $message = 'Candidat non trouvé.';
+            $success = false;
+            $status = 'Echec';
+        }
+        
+        if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+            return $this->render('v2/turbo/live.html.twig', [
+                'message' => $message,
+                'success' => $success,
+                'status' => $status,
+                'user' => $candidat->getCandidat(),
+                'credit' => $currentUser->getCredit()->getTotal(),
+            ]);
+        }
     }
 }

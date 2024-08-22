@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Entity\CandidateProfile;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\EntrepriseProfile;
@@ -31,6 +32,7 @@ class OlonaTalentsExtension extends AbstractExtension
         return [
             new TwigFilter('reffererStatusLabel', [$this, 'reffererStatusLabel']),
             new TwigFilter('countryName', [$this, 'countryName']),
+            new TwigFilter('displayAge', [$this, 'displayAge']),
         ];
     }
 
@@ -46,6 +48,17 @@ class OlonaTalentsExtension extends AbstractExtension
     public function countryName($countryCode)
     {
         return Countries::getName($countryCode);
+    }
+    
+    public function displayAge(CandidateProfile $candidateProfile)
+    {
+        $now = new \DateTime();
+        $age = 'Non renseigné';
+        if ($candidateProfile->getBirthday() !== null) {
+            $age = $now->diff($candidateProfile->getBirthday())->y;
+        }
+
+        return $age;
     }
     
     public function highlightKeywordsAnnonce(int $id, string $content): string

@@ -53,32 +53,6 @@
 		</div>
 	</div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-
-    $(document).ready(function () {
-        $('.candidate-link').on('click', function (event) {
-            event.preventDefault(); 
-            var candidateId = $(this).data('id');
-            var candidateContent = $('span[data-candidate="' + candidateId + '"]').html();
-            $('#candidate-card-container').html(candidateContent);
-        });
-
-        $('.annonce-link').on('click', function (event) {
-            event.preventDefault(); 
-            var annonceId = $(this).data('id');
-            var annonceContent = $('span[data-annonce="' + annonceId + '"]').html();
-            $('#candidate-card-container').html(annonceContent);
-        });
-
-        $('.prestation-link').on('click', function (event) {
-            event.preventDefault(); 
-            var prestationId = $(this).data('id');
-            var prestationContent = $('span[data-prestation="' + prestationId + '"]').html();
-            $('#candidate-card-container').html(prestationContent);
-        });
-    });
-
-</script>
 {% endblock %}
 {% block main %}
 	{{ parent() }}

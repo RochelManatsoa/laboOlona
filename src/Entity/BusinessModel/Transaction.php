@@ -42,6 +42,9 @@ class Transaction
     #[ORM\ManyToOne(inversedBy: 'transaction')]
     private ?TypeTransaction $typeTransaction = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -151,6 +154,18 @@ class Transaction
     public function setTypeTransaction(?TypeTransaction $typeTransaction): static
     {
         $this->typeTransaction = $typeTransaction;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): static
+    {
+        $this->token = $token;
 
         return $this;
     }
