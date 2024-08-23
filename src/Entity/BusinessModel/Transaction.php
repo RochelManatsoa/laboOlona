@@ -10,6 +10,43 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 class Transaction
 {
+    const STATUS_PENDING = 'PENDING';
+    const STATUS_COMPLETED = 'COMPLETED';
+    const STATUS_FAILED = 'FAILED';
+    const STATUS_CANCELLED = 'CANCELLED';
+    const STATUS_ON_HOLD = 'ON_HOLD';
+    const STATUS_PROCESSING = 'PROCESSING';
+    const STATUS_AUTHORIZED = 'AUTHORIZED';
+    const STATUS_REFUNDED = 'REFUNDED';
+    const STATUS_DISPUTED = 'DISPUTED';
+
+    public static function getStatuses() {
+        return [
+            'En attente' => self::STATUS_PENDING ,
+            'Complétée' => self::STATUS_COMPLETED ,
+            'Échouée' => self::STATUS_FAILED ,
+            'Annulée' => self::STATUS_CANCELLED ,
+            'Ouverte' => self::STATUS_ON_HOLD ,
+            'En traitement' => self::STATUS_PROCESSING ,
+            'Autorisée' => self::STATUS_AUTHORIZED ,
+            'Remboursée' => self::STATUS_REFUNDED ,
+            'Contestée' => self::STATUS_DISPUTED ,
+        ];
+    }
+    public static function getLabels() {
+        return [
+            self::STATUS_PENDING =>         'En attente' ,
+            self::STATUS_COMPLETED =>       'Complétée' ,
+            self::STATUS_FAILED =>          'Échouée' ,
+            self::STATUS_CANCELLED =>       'Annulée' ,
+            self::STATUS_ON_HOLD =>         'Ouverte' ,
+            self::STATUS_PROCESSING =>      'En traitement' ,
+            self::STATUS_AUTHORIZED =>      'Autorisée' ,
+            self::STATUS_REFUNDED =>        'Remboursée' ,
+            self::STATUS_DISPUTED =>        'Contestée' ,
+        ];
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

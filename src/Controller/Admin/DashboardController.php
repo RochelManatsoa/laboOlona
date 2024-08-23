@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\Package;
+use App\Entity\BusinessModel\Transaction;
 use App\Entity\BusinessModel\TypeTransaction;
 use App\Entity\User;
 use App\Entity\Secteur;
@@ -133,6 +134,7 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Boosts', 'fas fa-rocket', Boost::class),
                 MenuItem::linkToCrud('Type transaction', 'fas fa-money-bill-trend-up', TypeTransaction::class),
             ]),
+            MenuItem::linkToCrud('Transaction', 'fas fa-money-check-dollar', Transaction::class),
             MenuItem::subMenu('Configuration', 'fa fa-gears')->setSubItems([
                 MenuItem::linkToCrud('Secteurs', 'fas fa-quote-right', Secteur::class),
                 MenuItem::linkToCrud('Type de contrat', 'fas fa-layer-group', TypeContrat::class),

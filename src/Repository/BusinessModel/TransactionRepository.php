@@ -3,8 +3,11 @@
 namespace App\Repository\BusinessModel;
 
 use App\Entity\BusinessModel\Transaction;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Google\Service\AnalyticsReporting\TransactionData;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Transaction>
@@ -16,33 +19,32 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TransactionRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator,)
     {
         parent::__construct($registry, Transaction::class);
     }
 
-//    /**
-//     * @return Transaction[] Returns an array of Transaction objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   /**
+    * @return Transaction[] Returns an array of Transaction objects
+    */
+   public function findSearch(TransactionData $searchData): PaginationInterface
+   {
+        $qb = $this
+            ->createQueryBuilder('t')
+            ->select('t')
+            ->leftJoin('t.typeTransaction', 'type')
+            ->leftJoin('t.package', 'p')
+            ->leftJoin('t.user', 'u')
+            ->groupBy('u.id')
+            ->orderBy('t.id', 'DESC')
+        ;
+       
+        $query =  $qb->getQuery();
 
-//    public function findOneBySomeField($value): ?Transaction
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $this->paginator->paginate(
+            $query,
+            $searchData->page,
+            20
+        );
+    }
 }

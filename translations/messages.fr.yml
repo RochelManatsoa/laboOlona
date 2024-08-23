@@ -1188,3 +1188,11 @@ app_v2_staff_edit_prestation :
 app_v2_staff_view_prestation : 
     title : Prestation
     dashboard_title : Prestation de service
+
+app_dashboard_moderateur_business_model_transaction : 
+    title : Gestion des transactions
+    dashboard_title : Gestion des transactions
+
+app_dashboard_moderateur_business_model_transaction_view : 
+    title : Détails transaction
+    dashboard_title : Détails transaction

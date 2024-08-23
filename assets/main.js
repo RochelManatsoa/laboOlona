@@ -125,6 +125,7 @@ $(function() {
                 toast.show();
             }, 1500);
         });
+
         $('#boostProfileForm').on('submit', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
@@ -180,6 +181,35 @@ $(function() {
                 }
             });
         });
+
+        $('#package').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var modal = $(this);
+            var packageName = button.data('bs-package');
+            var packagePrice = button.data('bs-price');
+            var packageId = button.data('bs-id');
+
+            var modalTitle = modal.find('.modal-title');
+            var modalButton = modal.find('#submitModal');
+            var modalBodySelect = modal.find('#transaction_package');
+
+            modalTitle.text(`Achat sécurisé : ${packagePrice} Ariary | ${packageName} `);
+            modalBodySelect.val(packageId);
+            
+            $('#pointMarchand').hide();
+            $('input[name="transaction[typeTransaction]"]').on('change', function() {
+                $('#pointMarchand').show();
+            })
+            modalButton.on('click', function() {
+                modal.modal('hide');
+                var errorToast = $('#errorToast');
+                var toast = new Toast(errorToast[0]); 
+                setTimeout(function() {
+                    toast.show();
+                }, 1500);
+            });
+            
+        });
     }
     
     function setupAvailabilityDropdown() {
@@ -196,7 +226,7 @@ $(function() {
             }
     
             availabilityDropdown.addEventListener('change', toggleDateInput);
-            toggleDateInput(); // Initial state
+            toggleDateInput(); 
         }
     }
 
@@ -230,27 +260,23 @@ $(function() {
     }
 
     $('#experience').on('shown.bs.modal', function () {
-        // Fonction pour gérer la logique de chaque groupe de champs
         function handleFieldGroup(baseId) {
-            for (let i = 0; i < 10; i++) {  // Ajustez le nombre selon vos besoins
+            for (let i = 0; i < 10; i++) {  
                 const $currentlyCheckbox = $(`#${baseId}_${i}_enPoste`);
                 const $endDateFieldContainer = $(`#${baseId}_${i}_dateFin`).closest('div');
     
                 if (!$currentlyCheckbox.length) {
-                    break; // Sortir si le checkbox n'existe pas
+                    break; 
                 }
     
-                // Afficher ou masquer le conteneur en fonction de l'état du checkbox
                 $endDateFieldContainer.parent().toggle(!$currentlyCheckbox.is(':checked'));
     
-                // Gérer les changements d'état du checkbox
                 $currentlyCheckbox.off('change').change(function() {
                     $endDateFieldContainer.parent().toggle(!$(this).is(':checked'));
                 });
             }
         }
     
-        // Appeler la fonction pour chaque groupe de champs
         handleFieldGroup('step_two_experiences');
         handleFieldGroup('step_three_experiences');
     });

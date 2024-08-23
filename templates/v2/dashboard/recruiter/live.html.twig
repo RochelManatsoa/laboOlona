@@ -1,0 +1,16 @@
+<turbo-stream action="update" target="current-user-credit">
+  <template>
+    {{ credit }}
+  </template>
+</turbo-stream>
+<turbo-stream action="update" target="errorToast">
+    <template>
+        <div class="toast-header">
+            <strong class="me-auto">{{ status }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            {{ message }}
+        </div>
+    </template>
+</turbo-stream>

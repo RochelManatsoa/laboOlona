@@ -1,0 +1,82 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Gestion des transactions</h2>
+
+    {% include "dashboard/moderateur/business_model/_filter_transaction.html.twig" with {form:form} %}
+    
+			{% if transactions|length > 0 %}
+			<span class="text-muted small">Votre recherche renvoie <span class="text-strong">{{ transactions.getTotalItemCount }}</span> résultats.</span>
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<td scope="col" class="h5">
+					    		{{ knp_pagination_sortable(transactions, 'Référence', 't.reference') }}
+								</td>
+								<td scope="col-2" class="h5">
+								{{ knp_pagination_sortable(transactions, 'Pack', 'p.name') }}
+								</td>
+								<td scope="col-2" class="h5">
+								{{ knp_pagination_sortable(transactions, 'Statut', 't.status') }}
+								</td>
+								<td scope="col-2" class="h5">
+								{{ knp_pagination_sortable(transactions, 'Date', 't.dateTransaction') }}
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for item in transactions %}
+								<tr id="row_transaction_{{item.id}}">
+									<td class="">
+										<turbo-frame id="transaction_{{ item.id}}">
+											<a href="{{ path('app_v2_candidate_edit_prestation', { 'prestation': item.id })}}">
+												{{ item.reference}}
+												<i class="bi bi-pencil-square"></i>
+											</a>
+										</turbo-frame>
+										<br>
+										<span class="fw-lighter small">
+											{{ item.amount }} Ar sur {{ item.typeTransaction.name }}
+										</span>
+									</td>
+									<td class="col-2">
+										<span class="fw-light small">{{ item.package.name }} </span>
+									</td>
+									<td class="col-2">
+										{{ statusTransaction(item)|raw }}
+									</td>
+									<td class="col-2">
+										<span class="fw-light small">
+											{{ item.transactionDate|date('d/m/Y h:m:i') }}
+										</span>
+									</td>
+									<td class="col-2">
+										<a href="{{ path('app_dashboard_moderateur_business_model_transaction_view', { 'transaction': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
+											<i class="bi bi-eye"></i>
+										</a>
+										<a id="delete-transaction" href="{{ path('app_dashboard_moderateur_business_model_transaction_delete', { 'transaction': item.id })}}" class="btn btn-sm btn-danger rounded-pill"
+										onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette transaction ?');" >
+											<i class="bi bi-trash"></i>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					<div class="navigation mt-5">
+						{{ knp_pagination_render(transactions, 'parts/_pagination.html.twig') }}
+					</div>
+				</div>
+			{% else %}
+				<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+					<span class="">
+						<img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+					</span>
+					1ère chose à faire
+				</h3>
+			{% endif %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,37 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Détail transaction Ref:{{transaction.reference}}</h2>
+
+    <hr>
+
+    <p>
+    <span class="fw-bold">Crééé le</span>
+    {{transaction.transactionDate|date('d/m/y h:m:i')}}<br>
+    <span class="fw-bold">Type</span>
+    {{transaction.typeTransaction.name}}<br>
+    <span class="fw-bold">Utilisateur</span>
+    {{transaction.user.nom}} {{transaction.user.prenom}}<br>
+    <span class="fw-bold">Numéro</span>
+    {{transaction.user.telephone}}<br>
+    </p>
+
+
+    {{ form_start(form)}}
+    <div class="input-group">
+        {{ form_row(form.amount, {'attr': {'class': 'form-control'}}) }}
+        {{ form_row(form.reference, {'attr': {'class': 'form-control', 'readonly':'true'}}) }}
+        {{ form_row(form.status, {'attr': {'class': 'form-control w-100'}}) }}
+    </div>
+        {{ form_row(form.details, {'attr': {'class': 'form-control'}}) }}
+        <button class="btn btn-dark px-5" type="submit"><i class="mx-2 h5 bi bi-save"></i> Mettre à jour</button>
+    {{ form_end(form)}}
+</div>
+
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#transaction_staff_details' ) )
+</script>
+{% endblock %}
+
