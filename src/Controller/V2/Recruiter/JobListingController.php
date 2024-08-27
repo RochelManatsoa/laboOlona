@@ -2,19 +2,18 @@
 
 namespace App\Controller\V2\Recruiter;
 
-use App\Data\V2\JobListingData;
+use App\Manager\ProfileManager;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Manager\EntrepriseManager;
 use App\Manager\JobListingManager;
 use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\Credit;
 use App\Form\Entreprise\AnnonceType;
 use App\Entity\Entreprise\JobListing;
-use App\Data\Annonce\AnnonceSearchData;
-use App\Entity\BusinessModel\BoostVisibility;
-use App\Manager\BusinessModel\CreditManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +29,7 @@ class JobListingController extends AbstractController
         private EntrepriseManager $entrepriseManager,
         private PaginatorInterface $paginator,
         private CreditManager $creditManager,
+        private ProfileManager $profileManager,
     ){}
 
     #[Route('/', name: 'app_v2_recruiter_job_listing')]
@@ -53,6 +53,8 @@ class JobListingController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $recruiter = $this->userService->checkProfile();
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
         /** @var JobListing $jobListing */
         $jobListing = $this->jobListingManager->init();
         $devise = $this->entrepriseManager->getEntrepriseDevise($recruiter);
@@ -67,10 +69,37 @@ class JobListingController extends AbstractController
             $jobListing = $form->getData();
             $boost = $jobListing->getBoost();
             if($boost instanceof Boost){
-                $this->creditManager->adjustCredits($recruiter->getEntreprise(), $boost->getCredit());
+                $responseBoost = $this->creditManager->adjustCredits($recruiter->getEntreprise(), $boost->getCredit());
             }
-            $this->creditManager->adjustCredits($recruiter->getEntreprise(), 10);
-            $this->jobListingManager->saveForm($form);
+
+            $message = 'Annonce sauvegardée avec succès';
+            $success = true;
+            $status = 'Succès';
+        
+            $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_APPLY_OFFER);
+            $response = $this->creditManager->adjustCredits($this->userService->getCurrentUser(), $creditAmount);
+            
+            if (isset($response['error']) || isset($responseBoost['error'])) {
+                $message = $response['error'];
+                $success = false;
+                $status = 'Echec';
+            }
+
+            if (isset($response['success']) && isset($responseBoost['success'])) {
+                $this->jobListingManager->saveForm($form);
+            }
+
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+    
+                return $this->render('v2/dashboard/recruiter/live.html.twig', [
+                    'message' => $message,
+                    'success' => $success,
+                    'status' => $status,
+                    'credit' => $currentUser->getCredit()->getTotal(),
+                ]);
+            }
+
             return $this->redirectToRoute('app_v2_recruiter_job_lisiting_view', ['jobListing' => $jobListing->getId()]);
         }
 

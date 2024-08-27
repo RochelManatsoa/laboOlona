@@ -1,0 +1,29 @@
+<ul class="nav nav-underline">
+	<li class="nav-item">
+		<a class="nav-link active" id="annonces-tab" data-bs-toggle="tab" href="#annonces">Offre d'emploi</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" aria-current="page" id="candidats-tab" data-bs-toggle="tab" href="#candidats">Candidats</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="services-tab" data-bs-toggle="tab" href="#services">Services</a>
+	</li>
+</ul>
+
+<div class="tab-content">
+	<div
+		class="tab-pane fade" id="candidats" role="tabpanel" aria-labelledby="candidats-tab" tabindex="0">
+		{% include "v2/result/premium_candidats.html.twig" with {'top_candidats': top_candidats} %}
+		{% include "v2/result/_search_candidats.html.twig" with {'candidats': candidats} %}
+	</div>
+	<div
+		class="tab-pane fade show active" id="annonces" role="tabpanel" aria-labelledby="annonces-tab" tabindex="0">
+		{% include "v2/result/premium_annonces.html.twig" with {'top_annonces': top_annonces} %}
+		{% include "v2/result/_search_annonces.html.twig" with {'annonces': annonces} %}
+	</div>
+	<div
+		class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab" tabindex="0">
+		{# {% include "v2/result/premium_services.html.twig" with {'top_entreprises': top_entreprises} %} #}
+		{% include "v2/result/_search_prestations.html.twig" with {'prestations': prestations} %}
+	</div>
+</div>

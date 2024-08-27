@@ -10,66 +10,6 @@
 
 {% block stylesheets %}
 	{{ parent() }}
-	<style>
-		.load {
-			display: none; /* Hidden by default */
-			position: fixed; /* Stay in place */
-			z-index: 1; /* Sit on top */
-			left: 0;
-			top: 0;
-			width: 100%; /* Full width */
-			height: 100%; /* Full height */
-			overflow: auto; /* Enable scroll if needed */
-			background-color: rgb(0, 0, 0); /* Fallback color */
-			background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-		}
-
-		.load-content {
-			margin: 15% auto; /* 15% from the top and centered */
-			padding: 20px;
-			width: 80%; /* Could be more or less, deview on screen size */
-			text-align: center;
-			background: #000;
-		}
-
-		.loader {
-			font-size: 24px;
-			font-weight: bold;
-		}
-
-		.dot {
-			display: inline-block;
-			width: 8px;
-			height: 8px;
-			margin: 0 2px;
-			background-color: #000;
-			border-radius: 50%;
-			animation: blink 1.4s infinite both;
-		}
-
-		.dot:nth-child(1) {
-			animation-delay: 0.2s;
-		}
-
-		.dot:nth-child(2) {
-			animation-delay: 0.4s;
-		}
-
-		.dot:nth-child(3) {
-			animation-delay: 0.6s;
-		}
-
-		@keyframes blink {
-			0,
-			80%,
-			100% {
-				opacity: 0;
-			}
-			40% {
-				opacity: 1;
-			}
-		}
-	</style>
 {% endblock %}
 
 {% block sidebar %}
@@ -100,6 +40,7 @@
 			<p class="fw-light">
 				Afin de maximiser vos chances de trouver l'emploi de vos rêves, veuillez remplir ce formulaire avec soin. Notre IA spécialisée dans le recrutement analysera et optimisera votre profil en fonction des informations fournies.
 			</p>
+			<div id="alert-application">
 			{% for message in app.flashes('success') %}
 				<div class="alert alert-success">
 					{{ message }}
@@ -110,6 +51,7 @@
 					{{ message }}
 				</div>
 			{% endfor %}
+			</div>
 
 			<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
 				<span class="">
@@ -117,7 +59,7 @@
 				</span>
 				1ère chose à faire
 			</h3>
-			{{ form_start(form, {'attr': {'id': 'cvForm', 'class':'text-center'}})}}
+			{{ form_start(form, {'attr': {'id': 'cvForm', 'class':'text-center', 'data-action': path('app_v2_candidate_dashboard')}})}}
 			<div id="file-upload-container">
 				{{ form_widget(form.cv, {'attr': {'style': 'display:none;'}}) }}
 			</div>
@@ -126,6 +68,10 @@
 			<button id="upload-button" type="button" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
 				<i class="bi bi-download"></i>
 				Mettre en ligne un cv ( 15 Crédits)
+			</button>
+			<button id="submit-button" type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase" style="display:none;">
+				<i class="bi bi-save"></i>
+				Soumettre
 			</button>
 			{{ form_end(form)}}
 
@@ -550,28 +496,4 @@
 	</section>
 
 
-	<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
-	<script>
-		document.getElementById('cvForm').addEventListener('submit', function () {
-        document.getElementById('cvModal').style.display = 'block';
-        });
-		document.addEventListener('DOMContentLoaded', (event) => {
-			var fileInput = document.querySelector('#cvForm input[type="file"]');
-			var uploadButton = document.getElementById('upload-button');
-			var fileNameDisplay = document.getElementById('file-name');
-
-			uploadButton.addEventListener('click', function() {
-				// Ouvrir la fenêtre de sélection de fichier lorsque le bouton est cliqué
-				fileInput.click();
-			});
-
-			fileInput.addEventListener('change', function() {
-				var fileName = fileInput.files[0] ? fileInput.files[0].name : 'No file chosen';
-				fileNameDisplay.textContent = fileName;
-
-				uploadButton.innerHTML = '<i class="bi bi-download"></i> Soumettre';
-				uploadButton.setAttribute('type', 'submit');
-			});
-		});
-	</script>
 {% endblock %}

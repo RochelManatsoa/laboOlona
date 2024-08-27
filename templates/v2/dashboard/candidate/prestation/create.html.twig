@@ -20,7 +20,7 @@
 	<section class="">
 		<div class="shadow p-2 p-sm-4">
 			<div class="col-12 col-sm-8 mx-auto p-2 p-sm-4">
-				{{ form_start(form) }}
+				{{ form_start(form, {'attr': {'id': 'createJob'}}) }}
 				<div class="row">
 					<div class="col">
 						<div class="mb-3">
@@ -212,7 +212,6 @@
 		</div>
 	</section>
 
-<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
 		var imageInput = document.getElementById('{{ form.file.vars.id }}');

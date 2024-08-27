@@ -4,6 +4,7 @@ namespace App\Controller\Dashboard\Moderateur\OpenAi;
 
 use App\Entity\Candidate\Competences;
 use DateTime;
+use Exception;
 use App\Service\PdfProcessor;
 use App\Manager\OpenaiManager;
 use App\Entity\CandidateProfile;
@@ -11,6 +12,7 @@ use App\Manager\CandidatManager;
 use App\Service\OpenAITranslator;
 use App\Service\User\UserService;
 use App\Entity\Candidate\Experiences;
+use App\Repository\Candidate\CompetencesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +29,8 @@ class CandidatController extends AbstractController
         private CandidatManager $candidatManager,
         private OpenAITranslator $openAITranslator,
         private PdfProcessor $pdfProcessor,
+        private SluggerInterface $sluggerInterface,
+        private CompetencesRepository $competencesRepository,
     ) {}
     
     #[Route('/api/openai/candidat/{id}', name: 'app_dashboard_moderateur_open_ai_candidat')]
@@ -98,11 +102,9 @@ class CandidatController extends AbstractController
     #[Route('/api/openai/analyse/{id}', name: 'app_dashboard_moderateur_open_ai_analyse_candidat')]
     public function analyse(Request $request, CandidateProfile $candidat)
     {
-        // Fermer la connexion à la base de données avant d'exécuter les scripts Node.js
         $this->em->getConnection()->close();
         try {
             /** Generate OpenAI analyse */
-            // $parsePdf = $this->pdfProcessor->processPdf($candidat);
             $parsePdf = $this->openAITranslator->parse($candidat);
             $report = $this->openAITranslator->report($candidat);
             [$text, $json] = $this->openaiManager->extractJsonAndText($report);
@@ -134,7 +136,6 @@ class CandidatController extends AbstractController
                     }
                 }
             
-                // Création de l'objet expérience et ajout au candidat
                 if ($dateStart || $dateEnd) {
                     $experience = new Experiences();
                     $experience
@@ -148,15 +149,20 @@ class CandidatController extends AbstractController
                     $candidat->addExperience($experience);
                 }
             }
-            
-            
-            // Rouvrir la connexion à la base de données après l'exécution des scripts
-            $this->em->getConnection()->connect();
 
-            // Commencer une transaction
-            $this->em->getConnection()->beginTransaction();
+            foreach ($json['technologies'] as $key => $value) {            
+                if (isset($value['name'])) {
+                    $competence = new Competences();
+                    $competence->setNom($value['name']);
+                    $competence->setSlug($this->sluggerInterface->slug($value['name']));
+                    $competence->setNote(1);
             
-            // Mettre à jour l'entité candidat
+                    $candidat->addCompetence($competence);
+                }
+            }
+
+            $this->em->getConnection()->connect();
+            $this->em->getConnection()->beginTransaction();
             $candidat->setTesseractResult($report);
             $candidat->setResultFree($text);
             $candidat->setTraductionEn($traduction);
@@ -167,12 +173,10 @@ class CandidatController extends AbstractController
             $candidat->setBadKeywords($keywords);
             $candidat->setIsGeneretated(true);
 
-            // Persister les modifications dans la base de données
             $this->em->persist($candidat);
             $this->em->flush();
-            $this->em->getConnection()->commit(); // Confirmer la transaction
+            $this->em->getConnection()->commit(); 
 
-            // Utiliser un retour JSON pour transmettre le message de succès
             return $this->json(['status' => 'success', 'message' => 'Rapport généré par IA sauvegardé']);
         } catch (\Exception $e) {
             // $this->em->getConnection()->rollBack();
@@ -242,13 +246,17 @@ class CandidatController extends AbstractController
         
         return $result;
     }
-            
-    private function getDateFromString($dateStr) {
+    
+    private function getDateFromString($dateStr) 
+    {
         if (empty($dateStr)) {
             return null;
         }
     
-        // Détecter le format et créer la date
+        if (strtolower($dateStr) === 'present') {
+            return new DateTime(); 
+        }
+    
         if (strpos($dateStr, '-') !== false) {
             $parts = explode('-', $dateStr);
             if (count($parts) == 2) {
@@ -260,7 +268,12 @@ class CandidatController extends AbstractController
             }
         }
     
-        // Format YYYY
-        return new DateTime($dateStr . '-01-01');  // Ajoutez "-01-01" pour compléter mois et jour
+        try {
+            return new DateTime($dateStr . '-01-01');  // Ajoutez "-01-01" pour compléter mois et jour
+        } catch (Exception $e) {
+            error_log('Date parsing failed for: ' . $dateStr . ' with error: ' . $e->getMessage());
+            return null;
+        }
     }
+    
 }

@@ -1,0 +1,104 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Mon réseau professionnel | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endblock %}
+
+{% block body %}
+	{% set tableClass = 'table' %}
+	{% if app.request.cookies.get('theme') == 'bootstrap-dark' %}
+		{% set tableClass = tableClass ~ ' table-dark' %}
+	{% endif %}
+	<section class="">
+		<div class="shadow p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-journal-check me-to"></i>
+				Mon réseau professionnel
+			</h2>
+			<p class="text-center">
+				Bienvenue sur votre page de gestion de contacts. Ici, vous pouvez consulter et gérer toutes vos connexions professionnelles. Utilisez les fonctionnalités ci-dessous pour optimiser votre réseau.
+			</p>
+
+			{% if contacts|length > 0 %}
+				<div class="container d-none d-sm-block">
+					<div class="row text-strong">
+						<div class="col-3">Salaire Net</div>
+						<div class="col-4 text-center">Statut</div>
+						<div class="col-3 text-center">Date</div>
+						<div class="col-2 text-center"></div>
+					</div>
+					<hr>
+					{% for item in contacts %}
+						<div class="row text-muted">
+							<div class="col-3 small">
+								
+							</div>
+							<div class="col-4 text-center">
+								
+							</div>
+							<div class="col-3 small text-center">
+								{{ item.purchaseDate|date('d/m/Y') }}
+							</div>
+							<div class="col-2 small text-center">
+
+							</div>
+						</div>
+						<hr>
+					{% endfor %}
+					<!-- Plus de lignes et colonnes ici -->
+				</div>
+				<div class="container d-block d-sm-none">
+					{% for item in contacts %}
+						<div class="row text-muted">
+							<div class="col-12 ">
+								<span class="text-strong">Salaire Net</span>
+								:
+								
+							</div>
+							<div class="col-12">
+								<span class="text-strong">Statut</span>
+								:
+							</div>
+							<div class="col-12 ">
+								<span class="text-strong">Créé le</span>
+								:
+								{{ item.purchaseDate|date('d/m/Y') }}
+							</div>
+							<div class="col-12 ">
+							
+							</div>
+						</div>
+						<hr>
+					{% endfor %}
+					<!-- Plus de lignes et colonnes ici -->
+				</div>
+			{% else %}
+				<div class="mx-auto text-center">
+					<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+						<span class="">
+							<img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+						</span>
+						1ère chose à faire
+					</h3>
+					<a href="{{ path('app_v2_candidate_job_offer')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-search"></i>
+						Trouver une mission
+					</a>
+				</div>
+			{% endif %}
+
+		</div>
+	</section>
+{% endblock %}

@@ -192,6 +192,10 @@ class ProfileManager
                 $amount = 50;
                 break;
                 
+            case Credit::ACTION_UPLOAD_CV :
+                $amount = 15;
+                break;
+                
             case Credit::ACTION_APPLY_OFFER :
                 $amount = 15;
                 break;

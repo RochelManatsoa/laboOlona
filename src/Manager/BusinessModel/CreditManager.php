@@ -126,11 +126,8 @@ class CreditManager
         return $this->handleCreditPackagePurchase($user, $packageId, $userType === 'recruiter');
     }
 
-    public function validateTransaction(int $transactionId): bool
+    public function validateTransaction(Transaction $transaction): bool
     {
-        $transactionRepository = $this->em->getRepository(Transaction::class);
-        $transaction = $transactionRepository->find($transactionId);
-
         if (!$transaction) {
             return false;
         }
@@ -148,7 +145,6 @@ class CreditManager
         $credit->setTotal($credit->getTotal() + $creditsToAdd);
         $this->em->persist($credit);
 
-        $transaction->setTransactionDetails('Transaction validée');
         $this->em->persist($transaction);
         $this->em->flush();
 

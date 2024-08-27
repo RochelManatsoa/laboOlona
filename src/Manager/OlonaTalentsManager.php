@@ -72,4 +72,55 @@ class OlonaTalentsManager
             ],
         ];
     }
+
+
+    public function getParamsCandidates(int $from, int $size, string $query): array
+    {
+        return [
+            'index' => 'candidate_profile_index',
+            'body'  => [
+                'from' => $from,
+                'size' => $size,
+                'query' => [
+                    'multi_match' => [
+                        'query'  => $query,
+                        'fields' => [
+                            'titre', 
+                            'resume', 
+                            'localisation', 
+                            'technologies', 
+                            'tools', 
+                            'resultFree', 
+                            'metaDescription', 
+                            'traductionEn', 
+                            'competences.nom', 
+                            'experiences.titre', 
+                            'experiences.description',
+                            'secteurs.nom', 
+                            'langages.nom'
+                        ],
+                        'fuzziness' => 'AUTO',
+                    ],
+                ],
+                'highlight' => [
+                    'fields' => [
+                        'titre' => new \stdClass(),
+                        'resume' => new \stdClass(),
+                        'localisation' => new \stdClass(),
+                        'technologies' => new \stdClass(),
+                        'tools' => new \stdClass(),
+                        'resultFree' => new \stdClass(),
+                        'metaDescription' => new \stdClass(),
+                        'traductionEn' => new \stdClass(),
+                        'competences' => new \stdClass(),
+                        'experiences' => new \stdClass(),
+                        'secteurs' => new \stdClass(),
+                        'langages' => new \stdClass(),
+                    ],
+                    'pre_tags' => ['<strong>'],
+                    'post_tags' => ['</strong>']
+                ]
+            ],
+        ];
+    }
 }

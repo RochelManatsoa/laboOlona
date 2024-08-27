@@ -4,8 +4,8 @@ namespace App\Form\Moderateur\BusinessModel;
 
 use Symfony\Component\Form\AbstractType;
 use App\Entity\BusinessModel\Transaction;
+use App\Data\BusinessModel\TransactionData;
 use Symfony\Component\Form\FormBuilderInterface;
-use Google\Service\AnalyticsReporting\TransactionData;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

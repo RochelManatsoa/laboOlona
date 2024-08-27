@@ -5,6 +5,7 @@ namespace App\Form\BusinessModel;
 use App\Entity\BusinessModel\Transaction;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -31,6 +32,10 @@ class TransactionStaffType extends AbstractType
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'
                 ]
+            ])
+            ->add('token', HiddenType::class, [
+                'label' => false,
+                'data' => $options['data']->getToken(),
             ])
         ;
     }

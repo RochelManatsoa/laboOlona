@@ -39,6 +39,7 @@ use App\Entity\Moderateur\Assignation;
 use App\Form\Candidat\AvailabilityType;
 use App\Form\Moderateur\InvitationType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\BusinessModel\Transaction;
 use App\Manager\Referrer\ReferenceManager;
 use App\Repository\NotificationRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -61,6 +62,7 @@ use App\Repository\Moderateur\InvitationRepository;
 use App\Repository\Candidate\ApplicationsRepository;
 use App\Repository\Moderateur\AssignationRepository;
 use App\Repository\Moderateur\TypeContratRepository;
+use App\Repository\BusinessModel\TransactionRepository;
 use App\Form\Search\Candidat\ModerateurCandidatSearchType;
 use App\Form\Moderateur\EntrepriseType as NewEntrepriseType;
 use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
@@ -95,6 +97,7 @@ class ModerateurController extends AbstractController
         private AssignationRepository $assignationRepository,
         private InvitationRepository $invitationRepository,
         private SimulateurRepository $simulateurRepository,
+        private TransactionRepository $transactionRepository,
         private AssignationManager $assignationManager,
         private PdfProcessor $pdfProcessor,
         private OpenAITranslator $openAITranslator,
@@ -126,6 +129,8 @@ class ModerateurController extends AbstractController
             'candidatures' => $this->moderateurManager->findAllOrderDesc($this->applicationsRepository),
             'candidatures_new' => $this->applicationsRepository->findBy(['status' => Applications::STATUS_PENDING], ['id' => 'DESC']),
             'invitations' => $this->moderateurManager->findAllOrderDesc($this->invitationRepository),
+            'transactions' => $this->moderateurManager->findAllOrderDesc($this->transactionRepository),
+            'transactions_new' => $this->transactionRepository->findBy(['status' => Transaction::STATUS_PENDING], ['id' => 'DESC']),
         ]);
     }
 

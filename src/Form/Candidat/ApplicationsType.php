@@ -21,11 +21,9 @@ class ApplicationsType extends AbstractType
                 'label' =>  false,
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Bonjour,
-je suis intéressé.e par votre offre.
-Je vous remercie d\'avance de considérer ma candidature pour le poste de…',
-                    'rows' => 8,
-                ],
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ]
             ])
             // ->add('pretentionSalariale')
         ;

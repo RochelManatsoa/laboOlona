@@ -5,7 +5,7 @@ namespace App\Repository\BusinessModel;
 use App\Entity\BusinessModel\Transaction;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
-use Google\Service\AnalyticsReporting\TransactionData;
+use App\Data\BusinessModel\TransactionData;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -35,9 +35,20 @@ class TransactionRepository extends ServiceEntityRepository
             ->leftJoin('t.typeTransaction', 'type')
             ->leftJoin('t.package', 'p')
             ->leftJoin('t.user', 'u')
-            ->groupBy('u.id')
             ->orderBy('t.id', 'DESC')
         ;
+
+        if (!empty($searchData->status)) {
+            $qb = $qb
+                ->andWhere('t.status LIKE :status')
+                ->setParameter('status', "%{$searchData->status}%");
+        }
+
+        if (!empty($searchData->reference)) {
+            $qb = $qb
+                ->andWhere('t.reference = :reference')
+                ->setParameter('reference', "{$searchData->reference}");
+        }
        
         $query =  $qb->getQuery();
 

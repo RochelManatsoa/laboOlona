@@ -3,6 +3,7 @@
 namespace App\Data\V2;
 
 use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
 
 class JobOfferData
 {

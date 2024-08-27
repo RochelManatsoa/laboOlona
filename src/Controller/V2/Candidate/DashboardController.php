@@ -6,7 +6,9 @@ use App\Service\FileUploader;
 use App\Manager\ProfileManager;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
+use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Formation\Playlist;
+use App\Entity\BusinessModel\Credit;
 use App\Manager\AffiliateToolManager;
 use App\Form\Boost\CandidateBoostType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,7 +47,8 @@ class DashboardController extends AbstractController
     {
         $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $candidat = $this->userService->checkProfile();
-
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
         $formOne = $this->createForm(EditStepOneType::class, $candidat);
         $formOne->handleRequest($request);
 
@@ -53,24 +56,59 @@ class DashboardController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $cvFile = $form->get('cv')->getData();
-            $this->em->persist($candidat);
-            $this->em->flush();
             if ($cvFile) {
                 $fileName = $this->fileUploader->upload($cvFile, $candidat);
                 $candidat->setCv($fileName[0]);
                 $this->profileManager->saveCV($fileName, $candidat);
             }
+            $this->em->persist($candidat);
+            $this->em->flush();
+            $this->em->getConnection()->close();
+            
+            $message = 'Analyse de CV effectué avec succès';
+            $success = true;
+            $status = 'Succès';
+        
+            $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_UPLOAD_CV);
+            $response = $this->creditManager->adjustCredits($this->userService->getCurrentUser(), $creditAmount);
+            
+            if (isset($response['error'])) {
+                $message = $response['error'];
+                $success = false;
+                $status = 'Echec';
+            }
 
-            $response = $this->candidatController->analyse(new \Symfony\Component\HttpFoundation\Request(), $candidat);
-            $content = $response->getContent(); 
-            $data = json_decode($content, true);
-            if ($data['status'] == 'success') {
-                $this->addFlash('success', 'Analyse effectué avec succès');
-            } else {
-                $this->addFlash('danger', 'Une erreur s\'est produite lors de l\'analyse de votre cv');
+            if (isset($response['success'])) {
+                $response = $this->candidatController->analyse(new \Symfony\Component\HttpFoundation\Request(), $candidat);
+                $content = $response->getContent(); 
+                $data = json_decode($content, true);
+                // dd($data);
+                if($data['status'] === 'error'){
+                    $success = false;
+                    $status = 'Echec';
+                }
+                $message = $data['message'];
+                $success = true;
+                $status = 'Succès';
+            }
+
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+    
+                return $this->render('v2/dashboard/candidate/live.html.twig', [
+                    'message' => $message,
+                    'success' => $success,
+                    'status' => $status,
+                    'credit' => $currentUser->getCredit()->getTotal(),
+                ]);
             }
             
-            return $this->redirectToRoute('app_v2_dashboard');
+            return $this->json([
+                'message' => $message,
+                'success' => $success,
+                'status' => $status,
+                'credit' => $currentUser->getCredit()->getTotal(),
+            ], 200);
         }
         if($formOne->isSubmitted() && $formOne->isValid()){
             $this->em->persist($candidat);

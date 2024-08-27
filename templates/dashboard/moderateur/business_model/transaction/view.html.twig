@@ -7,22 +7,31 @@
     <hr>
 
     <p>
-    <span class="fw-bold">Crééé le</span>
+    <span class="fw-bold">Créée le :</span>
     {{transaction.transactionDate|date('d/m/y h:m:i')}}<br>
-    <span class="fw-bold">Type</span>
+    <span class="fw-bold">Type :</span>
     {{transaction.typeTransaction.name}}<br>
-    <span class="fw-bold">Utilisateur</span>
+    <span class="fw-bold">Utilisateur :</span>
     {{transaction.user.nom}} {{transaction.user.prenom}}<br>
-    <span class="fw-bold">Numéro</span>
+    <span class="fw-bold">Numéro :</span>
     {{transaction.user.telephone}}<br>
     </p>
 
 
     {{ form_start(form)}}
-    <div class="input-group">
-        {{ form_row(form.amount, {'attr': {'class': 'form-control'}}) }}
-        {{ form_row(form.reference, {'attr': {'class': 'form-control', 'readonly':'true'}}) }}
-        {{ form_row(form.status, {'attr': {'class': 'form-control w-100'}}) }}
+    <div class="input-group mb-3">
+        <div class="form-floating mb-3">
+            {{ form_widget(form.amount, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.amount)}}
+        </div>
+        <div class="form-floating mb-3">
+            {{ form_widget(form.reference, {'attr': {'class': 'form-control', 'readonly':'true'}}) }}
+            {{ form_label(form.reference)}}
+        </div>
+        <div class="form-floating mb-3">
+            {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.status)}}
+        </div>
     </div>
         {{ form_row(form.details, {'attr': {'class': 'form-control'}}) }}
         <button class="btn btn-dark px-5" type="submit"><i class="mx-2 h5 bi bi-save"></i> Mettre à jour</button>

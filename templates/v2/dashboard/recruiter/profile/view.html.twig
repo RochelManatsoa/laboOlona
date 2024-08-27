@@ -1,0 +1,158 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Candidat {{ generatePseudo(candidat)}} | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+  {% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endblock %}
+
+
+{% block body %}
+<section class="">
+  <div class="shadow p-2 p-sm-4">
+    <h1 class="fs-4 fw-bolder text-center mt-3 mt-sm-5">
+      </span> Candidat {{ generatePseudo(candidat)}}
+    </h1>
+    <h2 class="fs-5 fw-semibold text-center text-uppercase">
+      {{ candidat.titre}}
+    </h2>
+      <div class="col-12 col-sm-6 mx-auto text-center mb-4">
+        <img src="{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" class="rounded-circle img-fluid mx-auto object-fit-cover" style="width:150px;height:150px;">
+        <p>{{ candidat.metaDescription|raw}}</p>
+      </div>
+    <div class="row mt-4">
+
+      <div class="col-12 col-sm-4">
+        <h4 class="fs-5 text-uppercase">Informations générales</h4>
+          <p>
+          <strong>Date d'inscription :</strong> <span class="">{{ candidat.createdAt|date('d/m/Y') }}</span><br>
+          <strong>Dernière connexion :</strong> <span class="">{{ candidat.candidat.lastLogin|time_ago }}</span><br>
+          <i class="bi bi-geo-alt-fill"></i> {{ candidat.localisation|countryName }}</span><br>
+          <strong>Âge :</strong> <span class="">{{ candidat|displayAge }}</span><br>
+          <strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-dark' : 'bg-danger' }}">{{ candidat.isValid ? 'Non' : 'Oui' }}</span><br>
+          <strong>Diponibilité :</strong> 
+              <span class="text-dark">
+                  {% if candidat.availability is not null %}
+                      {{ checkAvailability(candidat.candidat)|raw}}
+                  {% else %}
+                      <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                  {% endif %} 
+              </span>
+          <br><!-- Button trigger modal -->
+          {% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+          
+            <strong>Coût total sur base mensuel :</strong>
+            <span class="mx-4 ">{{ candidat.tarifCandidat.simulation.salaireNet }} {{ candidat.tarifCandidat.simulation.devise.symbole }} </span>
+            <span class="small">
+              <a href="{{ path('app_dashboard_entreprise_simulation_candidat', {'id' : candidat.id })}}" class="">
+                <i class="bi bi-box-arrow-up-right"></i> Détails
+              </a>
+            </span>
+          {% endif %}
+          </p>
+
+      </div>
+
+      <div class="col-12 col-sm-4 text-center">
+        <h4 class="fs-5 text-uppercase">Contact</h4>
+        {% if purchasedContact is defined and purchasedContact is not null %}
+            <div class="experience-form">
+                <fieldset>
+                    <strong>Email:</strong> {{ purchasedContact.contact.email }}<br>
+                    <strong>Téléphone:</strong> {{ purchasedContact.contact.telephone }}<br>
+                    <strong>Nom complet:</strong> {{ purchasedContact.contact.nom }} {{ purchasedContact.contact.prenom }}
+                </fieldset>
+            </div>
+        {% else %}
+        <div id="contactDetails">
+          <form action="{{ path('app_v2_recruiter_favorite_show_contact_candidate')}}" method="post" id="view-candidate-profile">
+            <input type="hidden" name="candidatId" value="{{ candidat.id }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
+            <button type="submit" class="align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact (50 crédit)</button>
+          </form>
+        </div>
+        {% endif %}       
+
+      </div>
+
+      <div class="col-12 col-sm-4 text-center">
+          {% if candidat.editedCvs|length > 0 and (recruiter.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_VALID')) or recruiter.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_PREMIUM') )) %}
+            <h4 class="fs-5 text-uppercase">CV</h4>
+            <button type="button" class="btn btn-outline-primary text-upercase fw-semibold" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+            </button>
+          {% endif %}
+      </div>
+
+    </div>
+    
+    {% if competences|length > 0 %}
+      <h2 class="fs-5 text-uppercase">Compétences({{ competences|length}})</h2>
+      <ul class="mb-4">
+          {% for competence in competences %}
+              <li class="">{{ competence.nom }} 
+                      <span class="p-1 lh-1">
+                          {% for i in 1..5 %}
+                              {% if i <= competence.note %}
+                                  <i class="small bi bi-star-fill text-warning"></i>
+                              {% else %}
+                                  <i class="small bi bi-star text-dark"></i>
+                              {% endif %}
+                          {% endfor %}
+                      </span>
+
+                  {% if competence.description %}
+                      <ul class="list-group mb-4">
+                          <li class="no-list-style"><span>{{ competence.description|raw }} </span></li>
+                      </ul>
+                  {% endif %} 
+              </li>
+          {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if experiences|length > 0 %}
+      <h2 class="fs-5 text-uppercase">Expériences ({{ experiences|length}})</h2>
+      <ul class="mb-4">
+          {% for experience in experiences %}
+              <li class=""><strong>{{ experience.nom|upper }} </strong> : 
+                  <ul class="list-group mb-4">
+                      <li class="no-list-style"><span>{{ experience.dateDebut|date('d/m/Y') }} - {{ experience.dateFin|date('d/m/Y') }}</span></li>
+                      <li class="no-list-style"><span>{{ experience.description|raw }} </span></li>
+                  </ul>
+              </li>
+          {% endfor %}
+      </ul>
+    {% endif %}
+
+    <h2 class="fs-5 text-uppercase">Résumé</h2>
+    <p class=""> 
+    {{ candidat.resultFree|raw}}
+    </p>
+
+  </div>
+</section>
+{% if candidat.editedCvs|length > 0 %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <iframe class="embed-responsive-item w-100" style="height: 600px;" src="{{ asset('uploads/cv/olona/' ~ candidat.cvs[0].edited.cvLink) }}" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

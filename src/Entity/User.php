@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\BusinessModel\Credit;
 use App\Entity\BusinessModel\History;
+use App\Entity\BusinessModel\PurchasedContact;
 use App\Entity\BusinessModel\Transaction;
 use App\Entity\Finance\Employe;
 use App\Entity\Vues\VideoVues;
@@ -149,6 +150,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Transaction::class)]
     private Collection $transactions;
 
+    #[ORM\OneToMany(mappedBy: 'buyer', targetEntity: PurchasedContact::class)]
+    private Collection $purchasedContacts;
+
     public function __construct()
     {
         $this->envois = new ArrayCollection();
@@ -157,6 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->videoVues = new ArrayCollection();
         $this->histories = new ArrayCollection();
         $this->transactions = new ArrayCollection();
+        $this->purchasedContacts = new ArrayCollection();
     }
 
     public function __toString()
@@ -682,6 +687,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($transaction->getUser() === $this) {
                 $transaction->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PurchasedContact>
+     */
+    public function getPurchasedContacts(): Collection
+    {
+        return $this->purchasedContacts;
+    }
+
+    public function addPurchasedContact(PurchasedContact $purchasedContact): static
+    {
+        if (!$this->purchasedContacts->contains($purchasedContact)) {
+            $this->purchasedContacts->add($purchasedContact);
+            $purchasedContact->setBuyer($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchasedContact(PurchasedContact $purchasedContact): static
+    {
+        if ($this->purchasedContacts->removeElement($purchasedContact)) {
+            // set the owning side to null (unless already changed)
+            if ($purchasedContact->getBuyer() === $this) {
+                $purchasedContact->setBuyer(null);
             }
         }
 

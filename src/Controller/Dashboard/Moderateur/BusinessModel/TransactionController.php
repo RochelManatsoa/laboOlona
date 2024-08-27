@@ -6,15 +6,19 @@ use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
+use App\Data\BusinessModel\TransactionData;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\BusinessModel\TransactionStaffType;
 use App\Manager\BusinessModel\TransactionManager;
-use Google\Service\AnalyticsReporting\TransactionData;
 use App\Repository\BusinessModel\TransactionRepository;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use App\Form\Moderateur\BusinessModel\TransactionSearchFormType;
+use App\Manager\BusinessModel\CreditManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 
 #[Route('/dashboard/moderateur/business-model/transaction')]
 class TransactionController extends AbstractController
@@ -24,6 +28,8 @@ class TransactionController extends AbstractController
         private UserService $userService,
         private TransactionRepository $transactionRepository,
         private TransactionManager $transactionManager,
+        private CsrfTokenManagerInterface $csrfTokenManager,
+        private CreditManager $creditManager,
     ){}
 
     #[Route('/', name: 'app_dashboard_moderateur_business_model_transaction')]
@@ -32,6 +38,7 @@ class TransactionController extends AbstractController
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux administrateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $data = new TransactionData();
         $data->page = $request->get('page', 1);
+        $data->status = $request->query->get('status');
         $form = $this->createForm(TransactionSearchFormType::class, $data);
         $form->handleRequest($request);
         $transactions = $this->transactionRepository->findSearch($data);
@@ -45,10 +52,25 @@ class TransactionController extends AbstractController
     #[Route('/view/{transaction}', name: 'app_dashboard_moderateur_business_model_transaction_view')]
     public function view(Request $request, Transaction $transaction): Response
     {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux administrateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $transactionToken = $this->csrfTokenManager->getToken('transaction'.$transaction->getId())->getValue();
+        $transaction->setToken($transactionToken);
         $form = $this->createForm(TransactionStaffType::class, $transaction);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            dd($form->getData());
+            $submittedToken = $form->get('token')->getData();
+            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('transaction'.$transaction->getId(), $submittedToken))) {
+                throw new InvalidCsrfTokenException('Invalid CSRF token.');
+            }
+            $this->transactionManager->saveForm($form);
+            if($this->creditManager->validateTransaction($form->getData())){
+                $this->addFlash('success', 'Transaction mis à jour');
+            }else{
+                $this->addFlash('danger', 'Une erreur s\'est produite lors de la mis à jour');
+            }
+
+            $referer = $request->headers->get('referer');
+            return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_business_model_transaction');
         }
         
         return $this->render('dashboard/moderateur/business_model/transaction/view.html.twig', [

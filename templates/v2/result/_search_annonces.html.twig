@@ -7,12 +7,12 @@
 		class="d-flex w-100 align-items-center justify-content-between">
 		<!-- Avatar container -->
 		<div class="rounded-circle" style="
-			            width: 40px;
-			            height: 40px;
-			            background-image: url('{{ asset('images/annonce.png') }}');
-			            background-size: cover;
-			            background-position: center;
-			        "></div>
+			width: 40px;
+			height: 40px;
+			background-image: url('{{ asset('images/annonce.png') }}');
+			background-size: cover;
+			background-position: center;
+		"></div>
 		<!-- Text content -->
 		<div class="flex-grow-1 ms-3">
 			{% if app.user and (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) or is_granted('ROLE_CANDIDAT')) %}

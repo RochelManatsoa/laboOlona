@@ -12,6 +12,7 @@ use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Manager\PrestationManager;
 use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\Credit;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,23 +50,48 @@ class PrestationController extends AbstractController
     {
         $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $candidat = $this->userService->checkProfile();
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
         /** @var Prestation $prestation */
         $prestation = $this->prestationManager->init();
         $prestation->setCandidateProfile($candidat);
-        $prestation->setContactEmail($user->getEmail());
-        $prestation->setContactTelephone($user->getTelephone());
+        $prestation->setContactEmail($currentUser->getEmail());
+        $prestation->setContactTelephone($currentUser->getTelephone());
         $form = $this->createForm(PrestationType::class, $prestation, ['boostType' => 'PRESTATION_RECRUITER']);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $prestation = $form->getData();
             $boost = $prestation->getBoost();
             if($boost instanceof Boost){
-                $this->creditManager->adjustCredits($user, $boost->getCredit());
+                $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit());
             }
-            $this->creditManager->adjustCredits($user, 10);
-            $this->prestationManager->saveForm($form);
+            $message = 'Préstation créée avec succès';
+            $success = true;
+            $status = 'Succès';
+        
+            $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_APPLY_PRESTATION_CANDIDATE);
+            $response = $this->creditManager->adjustCredits($this->userService->getCurrentUser(), $creditAmount);
+            
+            if (isset($response['error']) || isset($responseBoost['error'])) {
+                $message = $response['error'];
+                $success = false;
+                $status = 'Echec';
+            }
+
+            if (isset($response['success']) && isset($responseBoost['success'])) {
+                $this->prestationManager->saveForm($form);
+            }
+
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+    
+                return $this->render('v2/dashboard/candidate/live.html.twig', [
+                    'message' => $message,
+                    'success' => $success,
+                    'status' => $status,
+                    'credit' => $currentUser->getCredit()->getTotal(),
+                ]);
+            }
 
             return $this->redirectToRoute('app_v2_candidate_view_prestation', ['prestation' => $prestation->getId()]);
         }else {

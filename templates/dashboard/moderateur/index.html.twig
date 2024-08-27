@@ -196,7 +196,30 @@
                     </div>
                 </div>
             </div>
-        </div>   
+        </div>    
+        <div class="col-md-4">
+            <div class="card text-white bg-secondary mb-3">
+                <div class="row">
+                    <div class="col">
+                        <div class="card-body">
+                        <a href="{{ path('app_dashboard_moderateur_business_model_transaction') }}" class="text-decoration-none text-white">
+                            <h2 class="card-title">{{ transactions|length }}</h2>
+                            <p class="card-text small">Transactions</p>
+                        </a>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card-body">
+                        <a href="{{ path('app_dashboard_moderateur_business_model_transaction', {'status':'PENDING'}) }}" class="text-decoration-none">
+                        {% if transactions_new|length > 0 %}
+                            <p class="card-text"> <span class="badge text-bg-dark rounded-pill">Nouvelles <span class="fs-6">{{ transactions_new|length }}</span></span></p>
+                        {% endif %}
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
     </div>
 </div>
 

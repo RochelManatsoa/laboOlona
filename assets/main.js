@@ -17,6 +17,7 @@ $(function() {
         const context = event ? event.target : document;
         setupImageUpload(); 
         setupAvailabilityDropdown(); 
+        setupCKEditors();
     }
 
     function handlePageLoad() {
@@ -155,6 +156,18 @@ $(function() {
                 }
             });
         });
+        
+        const ids = ['#applyJob', '#createJob', '#createPrestation']; 
+        ids.forEach(function(id) {
+            $(id).on('submit', function(e) {
+                var successToast = new Toast($('#errorToast')[0]);
+                setTimeout(function() {
+                    successToast.show();
+                }, 1500);
+                var modal = Modal.getInstance($(this).find('#submitBtn')[0]) || new Modal($(this).find('#submitBtn')[0]);
+                modal.hide();
+            });
+        });
     
         $('.add-to-favorites').on('click', function(e) {
             e.preventDefault();
@@ -209,6 +222,61 @@ $(function() {
                 }, 1500);
             });
             
+        });
+
+        $('#cvForm').on('submit', function(e) {
+            e.preventDefault();
+            var toast = new Toast($('#loadingToast')[0], {
+                autohide: false 
+            });
+            toast.show();
+            var formData = new FormData(this);
+            var actionUrl = $(this).data('action');
+            $.ajax({
+                url: actionUrl,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    console.log(data)
+                    if (data.success) {
+                        $('#successToast').find('.toast-body').text(data.message);
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
+                    } else {
+                        $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Toast($('#errorToast')[0]);
+                        errorToast.show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de la tentative de boost de votre profil.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                },
+                complete: function() {
+                    toast.hide();
+                }
+            });
+        });
+
+        var fileInput = $('#cvForm input[type="file"]');
+        var uploadButton = $('#upload-button');
+        var submitButton = $('#submit-button');
+        var fileNameDisplay = $('#file-name');
+
+        uploadButton.on('click', function() {
+            fileInput.click();
+        });
+
+        fileInput.on('change', function() {
+            var fileName = fileInput[0].files[0] ? fileInput[0].files[0].name : 'No file chosen';
+            fileNameDisplay.text(fileName);
+
+            uploadButton.hide()
+            submitButton.show()
         });
     }
     

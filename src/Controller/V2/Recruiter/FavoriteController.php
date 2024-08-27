@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Entreprise\FavorisRepository;
@@ -148,6 +149,14 @@ class FavoriteController extends AbstractController
             $success = false;
             $status = 'Echec';
         }
+
+        $purchasedContact = new PurchasedContact();
+        $purchasedContact->setBuyer($currentUser);
+        $purchasedContact->setPurchaseDate(new \DateTime());
+        $purchasedContact->setContact($candidat->getCandidat());
+        $purchasedContact->setPrice($creditAmount);
+        $this->em->persist($purchasedContact);
+        $this->em->flush();
         
         if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);

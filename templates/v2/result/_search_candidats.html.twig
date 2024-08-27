@@ -15,7 +15,11 @@
 
         <!-- Text content -->
         <div class="flex-grow-1 ms-3">
-            <a href="#" data-id="{{ item['_id'] }}" class="candidate-link"><strong class="mb-1">{{ generatePseudoById(item['_id']) }} </strong></a>
+			{% if app.user and (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) or is_granted('ROLE_ENTREPRISE')) %}
+				<a href="{{ path('app_v2_candidate_view_profile', {'id': item['_id']})}}">{{ item['_source'].titre|upper }}</a>
+			{% else %}
+                <a href="#" data-id="{{ item['_id'] }}" class="candidate-link"><strong class="mb-1">{{ generatePseudoById(item['_id']) }} </strong></a>
+            {% endif %}
             <div class="col-10 mb-1 small">{{ item['_source'].titre|upper }}</div>
         </div>
         <!-- Date or any other information -->
@@ -135,6 +139,7 @@
         </span>
     </div>
 {% endfor %}
+
 {% if totalCandidatesResults > 0 %}
 <nav aria-label="Page navigation">
     <ul class="pagination">

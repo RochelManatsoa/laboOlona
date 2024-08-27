@@ -1,0 +1,42 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Résultat de recherche | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+ {% if type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT'))  %}
+  {% include "v2/dashboard/layout_candidat.html.twig" %}
+ {% endif %}
+
+ {% if type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE'))  %}
+  {% include "v2/dashboard/layout_entreprise.html.twig" %}
+ {% endif %}
+ 
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row mt-3 mt-sm-5">
+
+            {% if type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT'))  %}
+            {% include "v2/dashboard/result/_candidat.html.twig" %}
+            {% endif %}
+
+            {% if type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE'))  %}
+            {% include "v2/dashboard/result/_entreprise.html.twig" %}
+            {% endif %}
+
+        </div>
+    </div>
+ 
+{% endblock %}

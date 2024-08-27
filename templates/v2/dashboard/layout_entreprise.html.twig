@@ -7,6 +7,21 @@
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
+          <a href="{{ path('app_v2_recruiter_profile')}}" class="nav-link {{ current_route == 'app_v2_recruiter_profile' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-search me-2"></i></span> Trouver un profil
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_recruiter_favorite')}}" class="nav-link {{ current_route == 'app_v2_recruiter_favorite' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-star me-2"></i></span> Mes favoris
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_recruiter_contact')}}" class="nav-link {{ current_route == 'app_v2_recruiter_contact' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-journal-check me-2"></i></i></span> Mon réseau professionnel
+          </a>
+        </li>
+        <li class="nav-item">
           <a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="nav-link {{ current_route == 'app_v2_recruiter_create_job_listing' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-megaphone me-2"></i></span> Publier une offre
           </a>
@@ -30,22 +45,6 @@
           <a href="{{ path('app_v2_recruiter_prestation')}}" class="nav-link {{ current_route == 'app_v2_recruiter_prestation' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-person-workspace me-2"></i></span> Mes préstations
           </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_favorite')}}" class="nav-link {{ current_route == 'app_v2_recruiter_favorite' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-star me-2"></i></span> Mes favoris
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_metting')}}" class="nav-link {{ current_route == 'app_v2_recruiter_metting' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-calendar-week me-2"></i></span> Mes rendez-vous
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_contract')}}" class="nav-link {{ current_route == 'app_v2_recruiter_contract' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-bookmark-check me-2"></i></span> Mes contrats
-          </a>
-        </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_recruiter_dashboard_ai_tools')}}" class="nav-link {{ current_route == 'app_v2_recruiter_dashboard_ai_tools' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-magic me-2"></i></span> Ai Tools

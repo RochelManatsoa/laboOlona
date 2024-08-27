@@ -70,6 +70,13 @@
         </a>
       </li>
       <li>
+        <a href="{{ path('app_dashboard_moderateur_business_model_transaction')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_business_model_transaction' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-credit-card-fill"></i>
+            Transactions  
+        </a>
+      </li>
+      <li>
         <a href="{{ path('app_dashboard_moderateur_candidatures')}}" 
             class="nav-link {{ current_route == 'app_dashboard_moderateur_candidatures' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-person-bounding-box"></i>
@@ -113,7 +120,7 @@
         </a>
       </li>
 
-      {% if 'ROLE_ADMIN' in app.user.roles %}
+      {# {% if 'ROLE_ADMIN' in app.user.roles %}
       <li>
         <a href="{{ path('app_dashboard_moderateur_csv_upload')}}" 
             class="nav-link {{ current_route == 'app_dashboard_moderateur_csv_upload' ? 'active' : 'text-white' }}">
@@ -121,7 +128,7 @@
             Import CSV 
         </a>
       </li>
-      {% endif %}
+      {% endif %} #}
     </ul>
 
     <hr>

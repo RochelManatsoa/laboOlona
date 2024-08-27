@@ -13,14 +13,13 @@ use App\Service\ElasticsearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use App\Repository\Formation\VideoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\Formation\PlaylistRepository;
 use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class OlonaTalentsController extends AbstractController
@@ -32,6 +31,7 @@ class OlonaTalentsController extends AbstractController
         private ElasticsearchService $elasticsearch,
         private OlonaTalentsManager $olonaTalentsManager,
         private PaginatorInterface $paginatorInterface,
+        private Security $security,
     ) {}
 
     #[Route('/', name: 'app_home')]
@@ -101,6 +101,10 @@ class OlonaTalentsController extends AbstractController
         $size = $request->query->getInt('size', 10);
         $from = ($page - 1) * $size;
         $params = [];
+        $currentUser = $this->security->getUser();
+        if($currentUser instanceof User){
+            $params['type'] = $currentUser->getType();
+        }
         $params['currentPage'] = $page;
         $params['size'] = $size;
         $params['searchQuery'] = $query;
@@ -308,6 +312,9 @@ class OlonaTalentsController extends AbstractController
 
         // dd($params);
         // dd($candidates, $joblistings, $entreprises);
+        if($currentUser){
+            return $this->render('v2/dashboard/result.html.twig', $params);
+        }
 
         return $this->render('v2/result.html.twig', $params);
     }

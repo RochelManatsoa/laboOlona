@@ -4,7 +4,7 @@ namespace App\Data\BusinessModel;
 
 use App\Entity\User;
 
-class SearchData
+class TransactionData
 {
 
     /**

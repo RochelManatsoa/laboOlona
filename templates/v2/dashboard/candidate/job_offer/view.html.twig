@@ -42,19 +42,6 @@
 				{{ annonce.annonceVues|length }}
 				vues
 			</p>
-			{% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) %}
-				{% if applied %}
-					<button type="button" name="submitBtn" value="quick_apply" class="btn btn-md btn-outline-primary rounded-pill px-3 px-sm-5 my-2 mx-3">Postuler</button>
-				{% endif %}
-			{% else %}
-				<div class="alert alert-info d-flex align-items-center" role="alert">
-					<i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
-					<div>
-						Vous profil doit être validé par un moderateur avant de pouvoir postuler à cette annonce.<br>
-						Veuillez vérifier régulièrement votre mail
-					</div>
-				</div>
-			{% endif %}
 			<h2 class="fs-5">Description du poste</h2>
 			<p>{{ annonce.description|raw }}</p>
 
@@ -96,6 +83,63 @@
 					</span>
 				</p>
 			</div>
+			
+			{% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) %}
+				{% if applied %}
+				<div id="alert-application">
+					<button type="button" data-bs-toggle="modal" data-bs-target="#submitBtn" class="btn btn-md btn-primary fw-semibold text-uppercase my-2 mx-3">Postuler (15 crédits)</button>
+				</div>
+				{% else %}
+				<div class="alert alert-light-primary d-flex align-items-center" role="alert">
+					<i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
+					<div>
+						Vous avez déjà postuler à cette offre 
+						<a href="{{ path('app_v2_candidate_application')}}" class="mx-4 btn btn-primary" class="">Mes candidatures</a>
+					</div>
+				</div>
+				{% endif %}
+			{% else %}
+				<div class="alert alert-info d-flex align-items-center" role="alert">
+					<i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
+					<div>
+						Vous profil doit être validé par un moderateur avant de pouvoir postuler à cette annonce.<br>
+						Veuillez vérifier régulièrement votre mail
+					</div>
+				</div>
+			{% endif %}
 		</div>
 	</section>
+<!-- Modal -->
+<div class="modal fade" id="submitBtn" tabindex="-1" aria-labelledby="submitBtnLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      {{ form_start(form, {'attr': {'id':'applyJob'}}) }}
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-center fw-bold" id="submitBtnLabel">Rédigez votre lettre de motivation</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+		<p>Prenez un moment pour nous parler de vous et de ce qui vous rend unique. Utilisez cet espace pour mettre en avant vos compétences, votre expérience et votre enthousiasme pour le poste auquel vous postulez. Une bonne lettre de motivation peut faire toute la différence ! Voici quelques conseils pour vous aider :</p>
+		<ul>
+			<li><span class="fw-semibold">Personnalisez votre lettre :</span>Adressez-vous spécifiquement à l'entreprise et au poste.</li>
+			<li><span class="fw-semibold">Soyez précis :</span>Donnez des exemples concrets qui démontrent vos compétences et réalisations.</li>
+			<li><span class="fw-semibold">Restez concis :</span>Une lettre claire et directe est souvent la plus efficace.</li>
+		</ul>
+		<p>Une fois votre lettre rédigée, relisez-la attentivement avant de soumettre votre candidature. Bonne chance !</p>
+        <div class="col-11 mx-auto">
+
+          <div class="row">
+          {{ form_widget(form)}}
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary fw-semibold text-uppercase" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-primary fw-semibold text-uppercase" id="submitModal">Envoyer</button>
+      </div>
+      {{ form_end(form) }}
+    </div>
+  </div>
+</div>
 {% endblock %}
