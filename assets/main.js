@@ -119,12 +119,55 @@ $(function() {
                 imageInput.click();
             });
         }
-        $('#contactDetails').on('click', function() {
-            var errorToast = $('#errorToast');
-            var toast = new Toast(errorToast[0]); 
-            setTimeout(function() {
-                toast.show();
-            }, 1500);
+        // $('#contactDetails').on('click', function() {
+        //     var errorToast = $('#errorToast');
+        //     var toast = new Toast(errorToast[0]); 
+        //     setTimeout(function() {
+        //         toast.show();
+        //     }, 1500);
+        // });
+
+
+        $('#confirmationModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var form = button.closest('form'); 
+            var modal = $(this);
+            var packagePrice = button.data('bs-price');
+
+            var modalBody = modal.find('.modal-body');
+            var confirmButton = modal.find('#confirmButton');
+
+            modalBody.text(`Voulez-vous vraiment dépenser ${packagePrice} ?`);
+            
+            confirmButton.on('click', function() {
+                form.trigger("submit")
+                modal.modal('hide'); 
+                // $.ajax({
+                //     url: form.attr('action'),
+                //     method: 'POST',
+                //     data: form.serialize(),
+                //     success: function(data) {
+                //         if (data.success) {
+                //             $('#successToast').find('.toast-body').text(data.message);
+                //             var successToast = new Toast($('#successToast')[0]);
+                //             successToast.show();
+                //         } else {
+                //             $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
+                //             var errorToast = new Toast($('#errorToast')[0]);
+                //             errorToast.show();
+                //         }
+                //     },
+                //     error: function(xhr, status, error) {
+                //         console.log('Erreur lors de la soumission : ', error);
+                //     }
+                // });
+                // var errorToast = $('#errorToast');
+                // var toast = new Toast(errorToast[0]); 
+                // setTimeout(function() {
+                //     toast.show();
+                // }, 1500);
+            });
+            
         });
 
         $('#boostProfileForm').on('submit', function(e) {

@@ -21,7 +21,7 @@
 	{% if app.request.cookies.get('theme') == 'bootstrap-dark' %}
 		{% set tableClass = tableClass ~ ' table-dark' %}
 	{% endif %}
-	<section class="">
+	<section class="" id="content">
 		<div class="shadow p-2 p-sm-4">
 			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
 				<i class="bi bi-journal-check me-to"></i>
@@ -30,59 +30,91 @@
 			<p class="text-center">
 				Bienvenue sur votre page de gestion de contacts. Ici, vous pouvez consulter et gérer toutes vos connexions professionnelles. Utilisez les fonctionnalités ci-dessous pour optimiser votre réseau.
 			</p>
+			<div id="flash"></div>
+
 
 			{% if contacts|length > 0 %}
-				<div class="container d-none d-sm-block">
-					<div class="row text-strong">
-						<div class="col-3">Salaire Net</div>
-						<div class="col-4 text-center">Statut</div>
-						<div class="col-3 text-center">Date</div>
-						<div class="col-2 text-center"></div>
-					</div>
-					<hr>
-					{% for item in contacts %}
-						<div class="row text-muted">
-							<div class="col-3 small">
-								
-							</div>
-							<div class="col-4 text-center">
-								
-							</div>
-							<div class="col-3 small text-center">
-								{{ item.purchaseDate|date('d/m/Y') }}
-							</div>
-							<div class="col-2 small text-center">
 
-							</div>
-						</div>
-						<hr>
-					{% endfor %}
-					<!-- Plus de lignes et colonnes ici -->
-				</div>
-				<div class="container d-block d-sm-none">
+				<div class="table-responsive mt-4">
+					<table class="{{ tableClass }}">
+						<thead>
+							<tr>
+								<td scope="col" class="h6">{{ knp_pagination_sortable(contacts, 'Contact', 'p.contact') }}</td>
+								<td scope="col-1" class="h6 text-center">{{ knp_pagination_sortable(contacts, 'Compte', 'p.contact.type') }}</td>
+								<td scope="col-1" class="h6 text-center">{{ knp_pagination_sortable(contacts, 'Date', 'p.purchaseDate') }}</td>
+								<td scope="col-2" class=""></td>
+							</tr>
+						</thead>
+						<tbody>
 					{% for item in contacts %}
-						<div class="row text-muted">
-							<div class="col-12 ">
-								<span class="text-strong">Salaire Net</span>
-								:
-								
-							</div>
-							<div class="col-12">
-								<span class="text-strong">Statut</span>
-								:
-							</div>
-							<div class="col-12 ">
-								<span class="text-strong">Créé le</span>
-								:
-								{{ item.purchaseDate|date('d/m/Y') }}
-							</div>
-							<div class="col-12 ">
-							
-							</div>
-						</div>
-						<hr>
+						<tr id="row_contact_candidate_{{item.id}}">
+						{% if item.contact.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+							<td class="">
+								{{ item.contact.nom }} {{ item.contact.prenom }}<br>
+								<span class="small fw-lighter">{{ item.contact.email }}</span>
+							</td>
+							<td class="text-center">
+								<span class="badge badge-lg bg-secondary rounded-pill">Candidat</span><br>
+								<span class="small fw-lighter">{{ generatePseudo(item.contact.candidateProfile)}}</span>
+							</td>
+							<td class="text-center">
+								{{ item.purchaseDate|date('d/m/Y') }}<br>
+								<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+							</td>
+							<td class="text-center">
+								<a href="{{ path('app_v2_candidate_contact_view', {'purchasedContact': item.id})}}" class="btn btn-sm btn-secondary rounded-pill">
+									<i class="bi bi-eye"></i>
+								</a>
+								<button id="delete-contact" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce contact ?');" href="{{ path('app_v2_candidate_contact_delete', {'contact': item.id})}}" class="btn btn-sm btn-danger rounded-pill">
+									<i class="bi bi-trash"></i>
+								</button>
+							</td>
+						{% elseif item.contact.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+							<td class="">
+								{{ item.contact.entrepriseProfile.nom }}<br>
+								<span class="small fw-lighter">{{ item.contact.email }}</span>
+							</td>
+							<td class="text-center">
+								<span class="badge badge-lg bg-info rounded-pill">Entreprise</span><br>
+								<span class="small fw-lighter">{{ generateReference(item.contact.entrepriseProfile)}}</span>
+							</td>
+							<td class="text-center">
+								{{ item.purchaseDate|date('d/m/Y') }}<br>
+								<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+							</td>
+							<td class="text-center">
+								<a href="{{ path('app_v2_candidate_contact_view', {'purchasedContact': item.id})}}" class="btn btn-sm btn-secondary rounded-pill">
+									<i class="bi bi-eye"></i>
+								</a>
+								<button id="delete-contact" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce contact ?');" href="{{ path('app_v2_candidate_contact_delete', {'contact': item.id})}}" class="btn btn-sm btn-danger rounded-pill">
+									<i class="bi bi-trash"></i>
+								</button>
+							</td>
+						{% else %}
+							<td class="">
+								{{ item.contact.nom }} {{ item.contact.prenom }}<br>
+								<span class="small fw-lighter">{{ item.contact.email }}</span>
+							</td>
+							<td class="text-center">
+								<span class="badge badge-lg bg-primary rounded-pill">Utilisateur</span>
+							</td>
+							<td class="text-center">
+								{{ item.purchaseDate|date('d/m/Y') }}<br>
+								<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+							</td>
+							<td class="text-center">
+								<a href="{{ path('app_v2_candidate_contact_view', {'purchasedContact': item.id})}}" class="btn btn-sm btn-secondary rounded-pill">
+									<i class="bi bi-eye"></i>
+								</a>
+								<button id="delete-contact" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce contact ?');" href="{{ path('app_v2_candidate_contact_delete', {'contact': item.id})}}" class="btn btn-sm btn-danger rounded-pill">
+									<i class="bi bi-trash"></i>
+								</button>
+							</td>
+						{% endif %}					
+						</tr>
 					{% endfor %}
 					<!-- Plus de lignes et colonnes ici -->
+					</table>
 				</div>
 			{% else %}
 				<div class="mx-auto text-center">

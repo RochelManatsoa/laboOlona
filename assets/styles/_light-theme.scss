@@ -3,8 +3,11 @@
 body.bootstrap-light {
     background-color: $light-bg;
     color: $light-text;
-    a {
+    a:not(.btn-primary) {
         color: $link-light !important;
+    }
+    a .btn-primary{
+        color: #ffffff !important;
     }
 
     // Personnalisez d'autres éléments spécifiquement pour le thème clair ici
@@ -41,6 +44,9 @@ body.bootstrap-light {
     .table {
         background-color: #f8f9fa !important;
         color: #343a40 !important;
+    }
+    .table td, .table th {
+        vertical-align: middle;
     }
 
     .table-striped > tbody > tr:nth-of-type(odd) {

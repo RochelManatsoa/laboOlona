@@ -3,8 +3,11 @@
 body.bootstrap-dark {
     background-color: $dark-bg;
     color: $dark-text;
-    a {
+    a:not(.btn-primary) {
         color: $link-dark !important;
+    }
+    a .btn-primary{
+        color: #ffffff !important;
     }
 
     // Personnalisez d'autres éléments spécifiquement pour le thème sombre ici
@@ -41,6 +44,9 @@ body.bootstrap-dark {
     .table {
         background-color: #343a40 !important;
         color: #f8f9fa !important;
+    }
+    .table td, .table th {
+        vertical-align: middle;
     }
 
     .table-striped > tbody > tr:nth-of-type(odd) {

@@ -68,7 +68,7 @@ class JobApplicationController extends AbstractController
             }
             $this->creditManager->adjustCredits($recruiter->getEntreprise(), 10);
             $this->jobListingManager->saveForm($form);
-            return $this->redirectToRoute('app_v2_recruiter_job_lisiting_view', ['jobListing' => $jobListing->getId()]);
+            return $this->redirectToRoute('app_v2_recruiter_job_lisiting_view', ['id' => $jobListing->getId()]);
         }
 
         return $this->render('v2/dashboard/recruiter/job_application/create.html.twig', [

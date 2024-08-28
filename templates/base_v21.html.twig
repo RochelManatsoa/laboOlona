@@ -42,9 +42,7 @@
 
 							<div class="d-flex justify-content-end p-2">
 							{% if app.user %}
-								<div class="small my-auto text-center">
-									Vous avez <span class="fw-bold" id="current-user-credit">{{ app.user.credit.total }}</span> crédits <br> disponibles
-								</div>
+								{{ component('credit_user_component') }}
 								<div class="dropdown me-3">
 									<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
 										{% if app.user.gravatar is not null %}
@@ -121,6 +119,24 @@
 					</div>
 					</div>
 
+			</div>
+		</div>
+		<!-- Modal confirmation depense crédits -->
+		<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="confirmationModalLabel">Modal title</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					...
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="button" class="btn btn-primary" id="confirmButton">Confirmer</button>
+				</div>
+				</div>
 			</div>
 		</div>
 

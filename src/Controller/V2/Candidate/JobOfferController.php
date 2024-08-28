@@ -20,6 +20,7 @@ use App\Form\Candidat\ApplicationsType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Candidate\ApplicationsRepository;
@@ -88,6 +89,12 @@ class JobOfferController extends AbstractController
         $application = $this->applicationsRepository->findOneBy([
             'candidat' => $candidat,
             'annonce' => $annonce
+        ]);
+
+        $contactRepository = $this->em->getRepository(PurchasedContact::class);
+        $purchasedContact = $contactRepository->findOneBy([
+            'buyer' => $currentUser,
+            'contact' => $recruiter->getEntreprise(),
         ]);
 
         $applied = false;
@@ -206,6 +213,7 @@ class JobOfferController extends AbstractController
             'annonce' => $annonce,
             'candidat' => $candidat,
             'applied' => $applied,
+            'purchasedContact' => $purchasedContact,
             'form' => $form,
         ]);
     }

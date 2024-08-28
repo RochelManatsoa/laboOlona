@@ -15,8 +15,10 @@
 		"></div>
 		<!-- Text content -->
 		<div class="flex-grow-1 ms-3">
-			{% if app.user and (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) or is_granted('ROLE_CANDIDAT')) %}
+			{% if app.user and (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT'))) %}
 				<a href="{{ path('app_v2_candidate_view_job_offer', {'id': item['_id']})}}">{{ item['_source'].titre|upper }}</a>
+			{% elseif app.user and (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE'))) %}
+				<a href="{{ path('app_v2_recruiter_job_lisiting_view', {'id': item['_id']})}}">{{ item['_source'].titre|upper }}</a>
 			{% else %}
 				<a href="#" data-id="{{ item['_id'] }}" class="annonce-link">
 					<strong class="mb-1">{{ item['_source'].titre|upper }}</strong>
