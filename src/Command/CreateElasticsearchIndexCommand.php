@@ -195,6 +195,13 @@ class CreateElasticsearchIndexCommand extends Command
             $io->error('Error creating index: ' . $e->getMessage());
         }
 
+        try {
+            $this->elasticsearch->createIndex('prestation_premium_index', $settings, $mappingsPrestation);
+            $io->success('Index "prestation_premium_index" created successfully.');
+        } catch (\Exception $e) {
+            $io->error('Error creating index: ' . $e->getMessage());
+        }
+
         return Command::SUCCESS;
     }
 }

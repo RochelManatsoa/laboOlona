@@ -15,8 +15,8 @@
 
         <!-- Text content -->
         <div class="flex-grow-1 ms-3">
-			{% if app.user and (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) or is_granted('ROLE_ENTREPRISE')) %}
-				<a href="{{ path('app_v2_candidate_view_profile', {'id': item['_id']})}}">{{ item['_source'].titre|upper }}</a>
+			{% if app.user %}
+				<a href="{{ path('app_v2_recruiter_view_profile', {'id': item['_id']})}}">{{ item['_source'].titre|upper }}</a>
 			{% else %}
                 <a href="#" data-id="{{ item['_id'] }}" class="candidate-link"><strong class="mb-1">{{ generatePseudoById(item['_id']) }} </strong></a>
             {% endif %}
@@ -92,7 +92,13 @@
                             {% endif %}
                         </p>
                         <div class="text-center">
-                            <button type="button" class="fw-bold btn btn-primary text-uppercase fw-semibold my-3 px-3 mx-auto"><i class="bi bi-eye me-2"></i> Voir contact ( -50 CRÉDITS)</button>
+                            {% if app.user %}
+                                <a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact</a>
+                                <a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#">Ajouter comme favoris</a>
+                            {% else %}
+                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir contact (50 crédits)</button>
+                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Ajouter comme favoris</button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -128,13 +134,22 @@
         <span class="small me-3"><i class="bi bi-trophy"></i> {{ item['_source'].experiences|length }} Projets réalisés</span>
         <span class="small me-3"><i class="bi bi-circle-fill text-success"></i> Disponibilité</span>
         <span class="dropdown small me-3">
-            <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
                 Plus d'informations 
             </a>
             <ul class="dropdown-menu dropdown-menu-lg-end">
-                <li><a class="dropdown-item candidate-link" data-id="{{ item['_id'] }}" href="#">Aperçu</a></li>
+                {% if app.user %}
+                <li><a class="dropdown-item" data-id="{{ item['_id'] }}" href="{{ path('app_v2_recruiter_view_profile', {'id': item['_id']})}}">Aperçu</a></li>
+                {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
                 <li><a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#">Ajouter comme favoris</a></li>
-                <li><a class="dropdown-item" href="#">Voir le contact</a></li>
+                {% endif %}
+                <li><a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact</a></li>
+                {% else %}
+                <li><a class="dropdown-item candidate-link" data-id="{{ item['_id'] }}" href="#">Aperçu</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Ajouter comme favoris</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact</a></li>
+                {% endif %}
+                
             </ul>
         </span>
     </div>

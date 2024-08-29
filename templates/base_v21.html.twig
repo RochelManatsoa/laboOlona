@@ -126,7 +126,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="confirmationModalLabel">Modal title</h1>
+					<h1 class="modal-title fs-5" id="confirmationModalLabel">Confirmation</h1>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
@@ -136,6 +136,62 @@
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
 					<button type="button" class="btn btn-primary" id="confirmButton">Confirmer</button>
 				</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal porte d'entrée -->
+		<div class="modal fade" id="connectingModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<div class="modal-content">
+					<div class="">
+						<div class="row">
+							<div class="col-4" style="
+								background-image:url('{{ asset('images/home/annexe/etape-2.webp')}}');
+								background-repeat: no-repeat;
+								background-size: cover;
+								background-position-x: left;
+								border-top-left-radius: 10px;
+								border-bottom-left-radius: 10px;">
+							</div>
+							<div class="col-8 p-3 p-sm-5">
+								<h3 class="">Pour accéder à cette page, inscrivez-vous gratuitement</h3>
+								<p class="">Choisissez votre profil :</p>
+								<a href="{{ path('app_olona_talents_register', {'typology': 'recuiter'})}}">
+								<div class="row border rounded mb-3">
+									<div class="col-4" style="
+										background-image:url('{{ asset('images/Entreprise.png')}}');
+										background-repeat: no-repeat;
+										background-size: cover;
+										background-position-x: left;
+										border-top-left-radius: 5px;
+										border-bottom-left-radius: 5px;">
+									</div>
+									<div class="col-8 py-4">
+										<span class="fw-bold">Client</span><br>
+										<span class="">J'ai un projet</span>
+									</div>
+								</div>
+								</a>
+								<a href="{{ path('app_olona_talents_register', {'typology': 'candidate'})}}">
+								<div class="row border rounded mb-3">
+									<div class="col-4" style="
+										background-image:url('{{ asset('images/Candidat.png')}}');
+										background-repeat: no-repeat;
+										background-size: cover;
+										background-position-x: left;
+										border-top-left-radius: 5px;
+										border-bottom-left-radius: 5px;">
+									</div>
+									<div class="col-8 py-4">
+										<span class="fw-bold">Prestataire</span><br>
+										<span class="">Je cherche des projets</span>
+									</div>
+								</div>
+								</a>
+								<p class="">Déjà inscrit sur olona-talents.com ? <a href="{{ path('app_login')}}">Se connecter</a></p>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

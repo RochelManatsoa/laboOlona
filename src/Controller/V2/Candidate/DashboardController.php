@@ -194,12 +194,16 @@ class DashboardController extends AbstractController
                 if(!$visibilityBoost instanceof BoostVisibility){
                     $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
                 }
-                $candidat->setBoostVisibility($visibilityBoost);
                 $response = $this->creditManager->adjustCredits($candidat->getCandidat(), $boostOption->getCredit());
                 if(isset($response['success'])){
+                    $candidat->setBoostVisibility($visibilityBoost);
                     $this->em->persist($candidat);
                     $this->em->flush();
-                    return $this->json(['status' => 'success'], 200);
+                    return $this->json([
+                        'status' => 'success', 
+                        'message' => 'Votre profil est maintenant boosté',
+                        'candidat' => $candidat
+                    ], 200, [], ['groups' => 'boost']);
                 }else{
                     return $this->json(['status' => 'error', 'message' => 'Une erreur s\'est produite.'], 400);
                 }

@@ -126,7 +126,6 @@ class FavoriteController extends AbstractController
     #[Route('/show-contact', name: 'app_v2_recruiter_favorite_show_contact_candidate', methods: ['POST', 'GET'])]
     public function showContact(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Accès restreint.');
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $candidatId = $request->request->get('candidatId');
@@ -169,5 +168,8 @@ class FavoriteController extends AbstractController
                 'credit' => $currentUser->getCredit()->getTotal(),
             ]);
         }
+        
+        $referer = $request->headers->get('referer');
+        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_connect');
     }
 }

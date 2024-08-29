@@ -127,47 +127,38 @@ $(function() {
         //     }, 1500);
         // });
 
+        var selectedValue = '';
 
+        $('input[name="candidate_boost[boost]"]').on('change', function() {
+            selectedValue = $(this).data('value');
+            console.log(selectedValue);
+            $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
+        });
+    
         $('#confirmationModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
-            var form = button.closest('form'); 
             var modal = $(this);
-            var packagePrice = button.data('bs-price');
-
+            var packagePrice = button.attr('data-bs-price');
+            var packageType = button.attr('data-bs-type');
+    
             var modalBody = modal.find('.modal-body');
-            var confirmButton = modal.find('#confirmButton');
-
+            var submitButton = modal.find('#confirmButton');
             modalBody.text(`Voulez-vous vraiment dépenser ${packagePrice} ?`);
-            
-            confirmButton.on('click', function() {
-                form.trigger("submit")
-                modal.modal('hide'); 
-                // $.ajax({
-                //     url: form.attr('action'),
-                //     method: 'POST',
-                //     data: form.serialize(),
-                //     success: function(data) {
-                //         if (data.success) {
-                //             $('#successToast').find('.toast-body').text(data.message);
-                //             var successToast = new Toast($('#successToast')[0]);
-                //             successToast.show();
-                //         } else {
-                //             $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
-                //             var errorToast = new Toast($('#errorToast')[0]);
-                //             errorToast.show();
-                //         }
-                //     },
-                //     error: function(xhr, status, error) {
-                //         console.log('Erreur lors de la soumission : ', error);
-                //     }
-                // });
-                // var errorToast = $('#errorToast');
-                // var toast = new Toast(errorToast[0]); 
-                // setTimeout(function() {
-                //     toast.show();
-                // }, 1500);
-            });
-            
+            submitButton.attr('data-id', packageType)
+        });
+    
+        $(document).on('click', 'button[data-id="boost-profile"]', function() {
+            var form = $('button[data-bs-type="boost-profile"]').closest('form');
+            console.log(form.length)
+            form.trigger("submit");
+            $('#confirmationModal').modal('hide');
+        });
+    
+        $(document).on('click', 'button[data-id="upload-cv"]', function() {
+            var form = $('button[data-bs-type="upload-cv"').closest('form');
+            console.log(form.length)
+            form.trigger("submit");
+            $('#confirmationModal').modal('hide');
         });
 
         $('#boostProfileForm').on('submit', function(e) {
@@ -180,7 +171,9 @@ $(function() {
                 contentType: false,
                 processData: false,
                 success: function(data) {
+                    console.log(data)
                     if (data.status === 'success') {
+                        $('#successToast').find('.toast-body').text(data.message);
                         var successToast = new Toast($('#successToast')[0]);
                         successToast.show();
                         var boostProfileModal = Modal.getInstance($('#boostProfile')[0]) || new Modal($('#boostProfile')[0]);

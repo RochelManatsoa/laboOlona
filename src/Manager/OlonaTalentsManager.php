@@ -72,7 +72,27 @@ class OlonaTalentsManager
             ],
         ];
     }
-
+    
+    public function getParamsPremiumJoblisting(int $from, int $size, string $query): array
+    {
+        return [
+            'index' => 'joblisting_premium_index',
+            'body'  => [
+                'from' => $from,
+                'size' => $size,
+                'query' => [
+                    'multi_match' => [
+                        'query'  => $query,
+                        'fields' => [
+                            'titre', 'description', 'lieu', 'shortDescription', 'typeContrat', 'budgetAnnonce', 
+                            'competences.nom', 'secteur.nom', 'langues.nom'
+                        ],
+                        'fuzziness' => 'AUTO',
+                    ],
+                ],
+            ],
+        ];
+    }
 
     public function getParamsCandidates(int $from, int $size, string $query): array
     {
@@ -116,6 +136,113 @@ class OlonaTalentsManager
                         'experiences' => new \stdClass(),
                         'secteurs' => new \stdClass(),
                         'langages' => new \stdClass(),
+                    ],
+                    'pre_tags' => ['<strong>'],
+                    'post_tags' => ['</strong>']
+                ]
+            ],
+        ];
+    }
+    
+    public function getParamsPremiumCandidates(int $from, int $size, string $query): array
+    {
+        return [
+            'index' => 'candidate_premium_index',
+            'body'  => [
+                'from' => $from,
+                'size' => $size,
+                'query' => [
+                    'multi_match' => [
+                        'query'  => $query,
+                        'fields' => [
+                            'titre', 'resume', 'localisation', 'technologies', 'tools', 'badKeywords', 'resultFree', 'metaDescription', 'traductionEn', 
+                            'competences.nom', 'experiences.titre', 'experiences.description','secteurs.nom', 'langages.nom'
+                        ],
+                        'fuzziness' => 'AUTO',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    public function getParamsPrestations(int $from, int $size, string $query): array
+    {
+        return [
+            'index' => 'prestation_index',
+            'body'  => [
+                'from' => $from,
+                'size' => $size,
+                'query' => [
+                    'multi_match' => [
+                        'query'  => $query,
+                        'fields' => [
+                            'titre',
+                            'cleanDescription',
+                            'competencesRequises.nom',
+                            'tarifsProposes',
+                            'modalitesPrestation',
+                            'specialisations.nom',
+                            'evaluations.note',
+                            'disponibilites',
+                            'createdAt',
+                            'openai',
+                        ],
+                        'fuzziness' => 'AUTO',
+                    ],
+                ],
+                'highlight' => [
+                    'fields' => [
+                        'titre'                 => new \stdClass(),
+                        'cleanDescription'      => new \stdClass(),
+                        'competencesRequises'   => new \stdClass(),
+                        'tarifsProposes'        => new \stdClass(),
+                        'modalitesPrestation'   => new \stdClass(),
+                        'specialisations'       => new \stdClass(),
+                        'createdAt'             => new \stdClass(),
+                        'openai'                => new \stdClass(),
+                    ],
+                    'pre_tags' => ['<strong>'],
+                    'post_tags' => ['</strong>']
+                ]
+            ],
+        ];
+    }
+    
+    public function getParamsPremiumPrestations(int $from, int $size, string $query): array
+    {
+        return [
+            'index' => 'prestation_premium_index',
+            'body'  => [
+                'from' => $from,
+                'size' => $size,
+                'query' => [
+                    'multi_match' => [
+                        'query'  => $query,
+                        'fields' => [
+                            'titre',
+                            'cleanDescription',
+                            'competencesRequises.nom',
+                            'tarifsProposes',
+                            'modalitesPrestation',
+                            'specialisations.nom',
+                            'evaluations.note',
+                            'disponibilites',
+                            'createdAt',
+                            'openai',
+                        ],
+                        'fuzziness' => 'AUTO',
+                    ],
+                ],
+                'highlight' => [
+                    'fields' => [
+                        'titre'                 => new \stdClass(),
+                        'cleanDescription'      => new \stdClass(),
+                        'competencesRequises'   => new \stdClass(),
+                        'tarifsProposes'        => new \stdClass(),
+                        'modalitesPrestation'   => new \stdClass(),
+                        'specialisations'       => new \stdClass(),
+                        'createdAt'             => new \stdClass(),
+                        'openai'                => new \stdClass(),
                     ],
                     'pre_tags' => ['<strong>'],
                     'post_tags' => ['</strong>']

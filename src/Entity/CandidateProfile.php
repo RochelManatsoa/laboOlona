@@ -198,9 +198,11 @@ class CandidateProfile
     #[ORM\OneToMany(mappedBy: 'candidateProfile', targetEntity: Prestation::class)]
     private Collection $prestations;
 
+    #[Groups(['boost'])]
     #[ORM\ManyToOne(inversedBy: 'candidateProfile', cascade: ['persist', 'remove'])]
     private ?BoostVisibility $boostVisibility = null;
 
+    #[Groups(['boost'])]
     #[ORM\ManyToOne(inversedBy: 'candidateProfiles', cascade: ['persist', 'remove'])]
     private ?Boost $boost = null;
 

@@ -23,7 +23,7 @@ class CandidateBoostType extends AbstractType
                 'class' => Boost::class,
                 'choices' => $this->entityManager->getRepository(Boost::class)->findBy(['type' => 'PROFILE_CANDIDATE']),
                 'choice_label' => function ($boost) {
-                    return $boost->getName(); 
+                    return $boost->getName().' ('.$boost->getCredit().' crédits)'; 
                 },
                 'expanded' => true,  
                 'required' => false, 

@@ -5,6 +5,7 @@ namespace App\Controller\V2\Recruiter;
 use App\Data\V2\ProfileData;
 use App\Entity\BusinessModel\PurchasedContact;
 use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
 use App\Entity\Vues\CandidatVues;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
@@ -60,14 +61,16 @@ class ProfileController extends AbstractController
         return $this->render('v2/dashboard/recruiter/profile/index.html.twig', $params);
     }
     
-    #[Route('/view/{id}', name: 'app_v2_candidate_view_profile')]
-    public function viewJobOffer(Request $request, int $id): Response
+    #[Route('/view/{id}', name: 'app_v2_recruiter_view_profile')]
+    public function viewProfile(Request $request, int $id): Response
     {
-        $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $candidat = $this->em->getRepository(CandidateProfile::class)->find($id);
-        $recruiter = $this->userService->checkProfile();
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
+        $recruiter = $this->userService->checkProfile();
+        if(!$recruiter instanceof EntrepriseProfile){
+            $recruiter = null;
+        }
 
         $ipAddress = $request->getClientIp();
         $viewRepository = $this->em->getRepository(CandidatVues::class);
@@ -95,6 +98,7 @@ class ProfileController extends AbstractController
         
         return $this->render('v2/dashboard/recruiter/profile/view.html.twig', [
             'candidat' => $candidat,
+            'type' => $currentUser->getType(),
             'recruiter' => $recruiter,
             'purchasedContact' => $purchasedContact,
             'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),

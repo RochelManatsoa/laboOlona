@@ -69,6 +69,32 @@ class PrestationRepository extends ServiceEntityRepository
             
         return $query->getResult();
     }
+    
+    public function findStatusValid()
+    {
+        $query = $this->createQueryBuilder('p')
+            ->andWhere('p.isGenerated = :isGenerated')
+            ->andWhere('p.status = :statusValid')
+            ->setParameter('statusValid', Prestation::STATUS_VALID)
+            ->setParameter('isGenerated', true)
+            ->orderBy('p.id', 'DESC')
+            ->getQuery();
+            
+        return $query->getResult();
+    }
+    
+    public function findStatusPremium()
+    {
+        $query = $this->createQueryBuilder('p')
+            ->andWhere('p.isGenerated = :isGenerated')
+            ->andWhere('p.status = :statusFeatured')
+            ->setParameter('statusFeatured', Prestation::STATUS_FEATURED)
+            ->setParameter('isGenerated', true)
+            ->orderBy('p.id', 'DESC')
+            ->getQuery();
+            
+        return $query->getResult();
+    }
 
     public function findSearch(PrestationData $searchData): PaginationInterface
     {

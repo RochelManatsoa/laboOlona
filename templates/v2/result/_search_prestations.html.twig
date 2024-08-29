@@ -15,8 +15,13 @@
 
         <!-- Text content -->
         <div class="flex-grow-1 ms-3">
-            <a href="#" data-id="{{ item['_id'] }}" class="prestation-link"><strong class="mb-1"></strong></a>
-            <div class="col-10 mb-1 small">{{ item['_source'].titre }}</div>
+            {% if app.user %}
+                <a href="{{ path('app_olona_talents_view_prestation', {'id': item['_id']})}}"><strong class="mb-1">{{ item['_source'].titre }}</strong></a>
+            {% else %}
+                <a data-id="{{ item['_id'] }}" class="prestation-link" style="cursor:pointer;"><strong class="mb-1">{{ item['_source'].titre }}</strong></a>
+            {% endif %}
+        
+            <div class="col-10 mb-1 small"></div>
         </div>
         <!-- Date or any other information -->
         <span data-prestation="{{ item['_id'] }}" style="display:none">
@@ -120,7 +125,21 @@
     <div class="small mb-3 mb-sm-4">
         <span class="small me-3"><i class="bi bi-patch-check"></i> Spécialisations {{item['_source'].specialisations|length}}</span>
         <span class="small me-3"><i class="bi bi-bookmarks"></i> Compétences {{item['_source'].competencesRequises|length}}</span>
-        <span class="small me-3"><a href="#" data-id="{{ item['_id'] }}" class="prestation-link">Plus d'informations <i class="bi bi-caret-down-fill"></i></a></span>
+        <span class="small me-3">
+            <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                Plus d'informations 
+            </a>
+            <ul class="dropdown-menu dropdown-menu-lg-end">
+				{% if app.user %}
+                <li><a class="dropdown-item" data-id="{{ item['_id'] }}" href="{{ path('app_olona_talents_view_prestation', {'id': item['_id']})}}">Voir l'offre</a></li>
+				<li><a class="dropdown-item annonce-link" href="{{ path('app_olona_talents_view_prestation', {'id': item['_id']})}}">Contacter le prestataire</a></li>
+				{% else %}
+                <li><a class="dropdown-item prestation-link" data-id="{{ item['_id'] }}" href="#">Aperçu</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" style="cursor:pointer;">Ajouter comme favoris</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" style="cursor:pointer;">Contacter l'entreprise</a></li>
+				{% endif %}
+            </ul>
+        </span>
     </div>
 {% endfor %}
 {% if totalPrestationsResults > 0 %}

@@ -6,6 +6,7 @@ use DateTime;
 use App\Entity\User;
 use App\Security\EmailVerifier;
 use App\Entity\CandidateProfile;
+use App\Entity\Prestation;
 use App\Form\RegistrationFormType;
 use Symfony\Component\Mime\Address;
 use App\Manager\OlonaTalentsManager;
@@ -109,168 +110,14 @@ class OlonaTalentsController extends AbstractController
         $params['size'] = $size;
         $params['searchQuery'] = $query;
 
-        $paramsCandidate = [
-            'index' => 'candidate_profile_index',
-            'body'  => [
-                'from' => $from,
-                'size' => $size,
-                'query' => [
-                    'multi_match' => [
-                        'query'  => $query,
-                        'fields' => [
-                            'titre', 
-                            'resume', 
-                            'localisation', 
-                            'technologies', 
-                            'tools', 
-                            'resultFree', 
-                            'metaDescription', 
-                            'traductionEn', 
-                            'competences.nom', 
-                            'experiences.titre', 
-                            'experiences.description',
-                            'secteurs.nom', 
-                            'langages.nom'
-                        ],
-                        'fuzziness' => 'AUTO',
-                    ],
-                ],
-                'highlight' => [
-                    'fields' => [
-                        'titre' => new \stdClass(),
-                        'resume' => new \stdClass(),
-                        'localisation' => new \stdClass(),
-                        'technologies' => new \stdClass(),
-                        'tools' => new \stdClass(),
-                        'resultFree' => new \stdClass(),
-                        'metaDescription' => new \stdClass(),
-                        'traductionEn' => new \stdClass(),
-                        'competences' => new \stdClass(),
-                        'experiences' => new \stdClass(),
-                        'secteurs' => new \stdClass(),
-                        'langages' => new \stdClass(),
-                    ],
-                    'pre_tags' => ['<strong>'],
-                    'post_tags' => ['</strong>']
-                ]
-            ],
-        ];
-        $paramsCandidatePremium = [
-            'index' => 'candidate_premium_index',
-            'body'  => [
-                'from' => $from,
-                'size' => $size,
-                'query' => [
-                    'multi_match' => [
-                        'query'  => $query,
-                        'fields' => [
-                            'titre', 'resume', 'localisation', 'technologies', 'tools', 'badKeywords', 'resultFree', 'metaDescription', 'traductionEn', 
-                            'competences.nom', 'experiences.titre', 'experiences.description','secteurs.nom', 'langages.nom'
-                        ],
-                        'fuzziness' => 'AUTO',
-                    ],
-                ],
-            ],
-        ];
+        $paramsCandidate = $this->olonaTalentsManager->getParamsCandidates($from, $size, $query);
+        $paramsCandidatePremium = $this->olonaTalentsManager->getParamsPremiumCandidates($from, $size, $query);
 
-        $paramsJoblisting = [
-            'index' => 'joblisting_index',
-            'body'  => [
-                'from' => $from,
-                'size' => $size,
-                'query' => [
-                    'multi_match' => [
-                        'query'  => $query,
-                        'fields' => [
-                            'titre', 
-                            'cleanDescription', 
-                            'lieu', 
-                            'shortDescription', 
-                            'typeContrat', 
-                            'budgetAnnonce', 
-                            'competences.nom', 
-                            'secteur.nom', 
-                            'langues.nom'
-                        ],
-                        'fuzziness' => 'AUTO',
-                    ],
-                ],
-                'highlight' => [
-                    'fields' => [
-                        'titre' => new \stdClass(),
-                        'cleanDescription' => new \stdClass(),
-                        'lieu' => new \stdClass(),
-                        'shortDescription' => new \stdClass(),
-                        'typeContrat' => new \stdClass(),
-                        'budgetAnnonce' => new \stdClass(),
-                        'metaDescription' => new \stdClass(),
-                        'traductionEn' => new \stdClass(),
-                        'competences' => new \stdClass(),
-                        'secteur' => new \stdClass(),
-                        'langues' => new \stdClass(),
-                    ],
-                    'pre_tags' => ['<strong>'],
-                    'post_tags' => ['</strong>']
-                ]
-            ],
-        ];
-        $paramsJoblistingPremium = [
-            'index' => 'joblisting_premium_index',
-            'body'  => [
-                'from' => $from,
-                'size' => $size,
-                'query' => [
-                    'multi_match' => [
-                        'query'  => $query,
-                        'fields' => [
-                            'titre', 'description', 'lieu', 'shortDescription', 'typeContrat', 'budgetAnnonce', 
-                            'competences.nom', 'secteur.nom', 'langues.nom'
-                        ],
-                        'fuzziness' => 'AUTO',
-                    ],
-                ],
-            ],
-        ];
+        $paramsJoblisting = $this->olonaTalentsManager->getParamsJoblisting($from, $size, $query);
+        $paramsJoblistingPremium = $this->olonaTalentsManager->getParamsPremiumJoblisting($from, $size, $query);
 
-        $paramsPrestation = [
-            'index' => 'prestation_index',
-            'body'  => [
-                'from' => $from,
-                'size' => $size,
-                'query' => [
-                    'multi_match' => [
-                        'query'  => $query,
-                        'fields' => [
-                            'titre',
-                            'cleanDescription',
-                            'competencesRequises.nom',
-                            'tarifsProposes',
-                            'modalitesPrestation',
-                            'specialisations.nom',
-                            'evaluations.note',
-                            'disponibilites',
-                            'createdAt',
-                            'openai',
-                        ],
-                        'fuzziness' => 'AUTO',
-                    ],
-                ],
-                'highlight' => [
-                    'fields' => [
-                        'titre'                 => new \stdClass(),
-                        'cleanDescription'      => new \stdClass(),
-                        'competencesRequises'   => new \stdClass(),
-                        'tarifsProposes'        => new \stdClass(),
-                        'modalitesPrestation'   => new \stdClass(),
-                        'specialisations'       => new \stdClass(),
-                        'createdAt'             => new \stdClass(),
-                        'openai'                => new \stdClass(),
-                    ],
-                    'pre_tags' => ['<strong>'],
-                    'post_tags' => ['</strong>']
-                ]
-            ],
-        ];
+        $paramsPrestation = $this->olonaTalentsManager->getParamsPrestations($from, $size, $query);
+        $paramsPrestationPremium = $this->olonaTalentsManager->getParamsPremiumPrestations($from, $size, $query);
 
         $candidates = $this->elasticsearch->search($paramsCandidate);
         $totalCandidatesResults = $candidates['hits']['total']['value'];
@@ -306,9 +153,13 @@ class OlonaTalentsController extends AbstractController
         $totalPrestationsPages = ceil($totalPrestationsResults / $size);
         $params['totalPrestationsPages'] = $totalPrestationsPages;
         $params['totalPrestationsResults'] = $totalPrestationsResults;
-
-        $params['entreprises'] = [];
-        $params['top_entreprises'] = [];
+        
+        $premiumPrestations = $this->elasticsearch->search($paramsPrestationPremium);
+        $params['top_prestations'] = $this->paginatorInterface->paginate(
+            $premiumPrestations['hits']['hits'], 
+            $page, 
+            8
+        );
 
         // dd($params);
         // dd($candidates, $joblistings, $entreprises);
@@ -317,5 +168,29 @@ class OlonaTalentsController extends AbstractController
         }
 
         return $this->render('v2/result.html.twig', $params);
+    }
+
+    #[Route('/view/prestation/{id}', name: 'app_olona_talents_view_prestation')]
+    public function viewprestation(int $id): Response
+    {
+        $currentUser = $this->security->getUser();
+        $prestation = $this->em->getRepository(Prestation::class)->find($id);
+        if($currentUser instanceof User){
+            if($currentUser->getType() === User::ACCOUNT_CANDIDAT){
+                return $this->redirectToRoute('app_v2_candidate_view_prestation', ['prestation' => $prestation->getId()]);
+            }
+            if($currentUser->getType() === User::ACCOUNT_ENTREPRISE){
+                return $this->redirectToRoute('app_v2_recruiter_view_prestation', ['prestation' => $prestation->getId()]);
+            }
+            return $this->redirectToRoute('app_connect', []);
+        }
+        
+        return $this->redirectToRoute('app_connect', []);
+    }
+
+    #[Route('/view/recuiter/{id}', name: 'app_olona_talents_view_recuiter')]
+    public function viewRecruiter(int $id): Response
+    {
+        return $this->render('v2/upgrade.html.twig', []);
     }
 }
