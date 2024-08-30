@@ -10,73 +10,6 @@
 
 {% block stylesheets %}
 	{{ parent() }}
-	<style>
-	.loader-container {
-		position: fixed;  /* Utilisez fixed pour couvrir toute la page */
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		display: flex;  /* Utilisez flex pour centrer facilement le contenu */
-		justify-content: center;  /* Centre horizontalement */
-		align-items: center;  /* Centre verticalement */
-		background-color: rgba(0, 0, 0, 0.5);  /* Fond semi-transparent noir */
-		}
-	.loader {
-		width: 48px;
-		height: 48px;
-		border-radius: 50%;
-		display: inline-block;
-		position: relative;
-		border: 3px solid;
-		border-color: #FFF #FFF transparent transparent;
-		box-sizing: border-box;
-		animation: rotation 1s linear infinite;
-		}
-		.loader::after,
-		.loader::before {
-		content: '';  
-		box-sizing: border-box;
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: 0;
-		bottom: 0;
-		margin: auto;
-		border: 3px solid;
-		border-color: transparent transparent #FF3D00 #FF3D00;
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		box-sizing: border-box;
-		animation: rotationBack 0.5s linear infinite;
-		transform-origin: center center;
-		}
-		.loader::before {
-		width: 32px;
-		height: 32px;
-		border-color: #FFF #FFF transparent transparent;
-		animation: rotation 1.5s linear infinite;
-		}
-			
-		@keyframes rotation {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(360deg);
-		}
-		} 
-		@keyframes rotationBack {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(-360deg);
-		}
-		}
-			
-	</style>
 {% endblock %}
 
 {% block sidebar %}
@@ -84,7 +17,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="loader-container" style="display:none;">
+<div class="loader-container" id="loader-container" style="display:none;">
 	<span class="loader"></span>
 </div>
 	<section class="">
@@ -131,9 +64,9 @@
 				<i class="bi bi-download"></i>
 				Mettre en ligne un cv ( 15 Crédits)
 			</button>
-			<button id="submit-button" type="button" data-bs-toggle="modal" data-bs-type="upload-cv" data-bs-target="#confirmationModal" data-bs-price="50 crédits" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase" style="display:none;">
+			<button id="submit-button" type="button" data-bs-toggle="modal" data-bs-type="upload-cv" data-bs-target="#confirmationModal" data-bs-price="15 crédits" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase" style="display:none;">
 				<i class="bi bi-save"></i>
-				Soumettre
+				Soumettre ( 15 Crédits)
 			</button>
 			{{ form_end(form)}}
 
@@ -388,65 +321,66 @@
 									Informations liées à votre CV
 								</h3>
 
-								<h4 class="fs-6 mt-5 fw-bolder">- Experiences</h4>
-								{% if experiences|length > 0 %}
-									{% for experience in experiences %}
-										<div class="experience" data-experience-id="{{ experience.id }}">
-											<span class="justify-content-between align-items-center">
-												{% if experience.enPoste %}
-													Depuis
-													{{ experience.dateDebut|date('M Y')}}
-												{% else %}
-													{{ experience.dateDebut|date('M Y')}}
-													-
-													{{ experience.dateFin|date('M Y')}}
-												{% endif %}
-											</span>
-											<p class="small d-flex justify-content-between align-items-center">
-												<span>
-													<strong>{{ experience.nom }}</strong>
-													chez
-													<strong>{{ experience.entreprise }}</strong>
-													{% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
-														({{ date_difference(experience.dateFin, experience.dateDebut) }})
+								<div id="experience-skill">
+									<h4 class="fs-6 mt-5 fw-bolder">- Experiences</h4>
+									{% if experiences|length > 0 %}
+										{% for experience in experiences %}
+											<div class="experience" data-experience-id="{{ experience.id }}">
+												<span class="justify-content-between align-items-center">
+													{% if experience.enPoste %}
+														Depuis
+														{{ experience.dateDebut|date('M Y')}}
+													{% else %}
+														{{ experience.dateDebut|date('M Y')}}
+														-
+														{{ experience.dateFin|date('M Y')}}
 													{% endif %}
-
 												</span>
-											</p>
-										</div>
-									{% endfor %}
-								{% else %}
-									<div class="alert alert-primary" role="alert">
-										<i class="bi bi-info"></i>
-										Aucune expérience renseignée.
-									</div>
-								{% endif %}
-
-								<h4 class="fs-6 mt-5 fw-bolder">- Compétences</h4>
-								{% if competences|length > 0 %}
-									{% for competence in competences %}
-										<div class="competence" data-competence-id="{{ competence.id }}">
-											<p class="small">
-												{{ competence.nom }}
-												<span class="">
-													{% for i in 1..5 %}
-														{% if i <= competence.note %}
-															<i class="small bi bi-star-fill text-warning"></i>
-														{% else %}
-															<i class="small bi bi-star "></i>
+												<p class="small d-flex justify-content-between align-items-center">
+													<span>
+														<strong>{{ experience.nom }}</strong>
+														chez
+														<strong>{{ experience.entreprise }}</strong>
+														{% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
+															({{ date_difference(experience.dateFin, experience.dateDebut) }})
 														{% endif %}
-													{% endfor %}
-												</span>
-											</p>
-										</div>
-									{% endfor %}
-								{% else %}
-									<div class="alert alert-primary" role="alert">
-										<i class="bi bi-info"></i>
-										Aucune compétence renseignée.
-									</div>
-								{% endif %}
 
+													</span>
+												</p>
+											</div>
+										{% endfor %}
+									{% else %}
+										<div class="alert fw-lighter" role="alert">
+											<i class="bi bi-info-circle"></i>
+											Aucune expérience renseignée.
+										</div>
+									{% endif %}
+
+									<h4 class="fs-6 mt-5 fw-bolder">- Compétences</h4>
+									{% if competences|length > 0 %}
+										{% for competence in competences %}
+											<div class="competence" data-competence-id="{{ competence.id }}">
+												<p class="small">
+													{{ competence.nom }}
+													<span class="">
+														{% for i in 1..5 %}
+															{% if i <= competence.note %}
+																<i class="small bi bi-star-fill text-warning"></i>
+															{% else %}
+																<i class="small bi bi-star "></i>
+															{% endif %}
+														{% endfor %}
+													</span>
+												</p>
+											</div>
+										{% endfor %}
+									{% else %}
+										<div class="alert fw-lighter" role="alert">
+											<i class="bi bi-info-circle"></i>
+											Aucune expérience renseignée.
+										</div>
+									{% endif %}
+								</div>
 
 								<h4 class="fs-6 mt-5 fw-bolder">- Langues</h4>
 								{% if langages|length > 0 %}
@@ -468,9 +402,9 @@
 										{% endfor %}
 									</div>
 								{% else %}
-									<div class="alert alert-primary" role="alert">
-										<i class="bi bi-info"></i>
-										Aucune langues renseignée.
+									<div class="alert fw-lighter" role="alert">
+										<i class="bi bi-info-circle"></i>
+										Aucune expérience renseignée.
 									</div>
 								{% endif %}
 
@@ -483,7 +417,7 @@
 									</div>
 								</div>
 								
-								<div class="text-center my-4">
+								<div class="text-center my-4" id="checkBoostProfile">
 									{{ checkBoost(app.user)|raw }}
 								</div>
 

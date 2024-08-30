@@ -36,7 +36,6 @@ class IndexPrestationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // $prestations = $this->em->getRepository(Prestation::class)->findValidPrestationsElastic();
         $prestations = $this->em->getRepository(Prestation::class)->findStatusValid();
         $premiums = $this->em->getRepository(Prestation::class)->findStatusPremium();
 

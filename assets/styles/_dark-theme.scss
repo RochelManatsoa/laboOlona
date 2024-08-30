@@ -10,7 +10,6 @@ body.bootstrap-dark {
         color: #ffffff !important;
     }
 
-    // Personnalisez d'autres éléments spécifiquement pour le thème sombre ici
     .card {
         background-color: $dark-bg;
         color: $dark-text;
@@ -26,12 +25,10 @@ body.bootstrap-dark {
         border-color: #375a7f;
     }
 
-    // Ombre pour le thème sombre
     .shadow-custom {
         box-shadow: 0 .5rem 1rem rgba(255, 255, 255, 0.1);
     }
 
-    // Styles spécifiques pour le thème sombre
     .carousel-indicators button {
         background-color: #adb5bd;
     }
@@ -40,7 +37,6 @@ body.bootstrap-dark {
         background-color: #375a7f;
     }
 
-    // Styles spécifiques pour les tables dans le thème sombre
     .table {
         background-color: #343a40 !important;
         color: #f8f9fa !important;
@@ -62,7 +58,7 @@ body.bootstrap-dark {
 
     .pagination {
         .page-link {
-            color: #adb5bd !important; // Texte en gris clair du thème sombre
+            color: #adb5bd !important;
             background-color: #1e1e2d;
             border-color: #444c57;
 
@@ -114,5 +110,8 @@ body.bootstrap-dark {
             background-color: #444c57;
             color: #ffffff;
         }
+    }
+    .loader-container {    
+        background-color: rgba(255, 255, 255, 0.5);
     }
 }

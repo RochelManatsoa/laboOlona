@@ -3,7 +3,9 @@
 namespace App\Controller\V2\Recruiter;
 
 use App\Manager\ProfileManager;
+use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
+use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Formation\Playlist;
 use App\Manager\AffiliateToolManager;
 use App\Form\Boost\RecruiterBoostType;
@@ -112,32 +114,64 @@ class DashboardController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $recruiter = $this->userService->checkProfile();
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
 
         $form = $this->createForm(RecruiterBoostType::class, $recruiter); 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $boostOption = $form->get('boost')->getData(); 
+            $recruiter = $form->getData();
+            $message = 'Erreur sur le formulaire';
+            $success = false;
+            $status = 'Echec';
 
             if ($this->profileManager->canApplyBoost($recruiter->getEntreprise(), $boostOption)) {
                 $visibilityBoost = $recruiter->getBoostVisibility();
                 if(!$visibilityBoost instanceof BoostVisibility){
                     $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
                 }
-                $recruiter->setBoostVisibility($visibilityBoost);
+                $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
                 $response = $this->creditManager->adjustCredits($recruiter->getEntreprise(), $boostOption->getCredit());
+
                 if(isset($response['success'])){
+                    $recruiter->setBoostVisibility($visibilityBoost);
+                    $recruiter->setStatus(EntrepriseProfile::STATUS_PREMIUM);
                     $this->em->persist($recruiter);
                     $this->em->flush();
-                    return $this->json(['status' => 'success'], 200);
+                    $message = 'Votre entreprise est maintenant boosté';
+                    $success = true;
+                    $status = 'Succès';
                 }else{
-                    return $this->json(['status' => 'error', 'message' => 'Une erreur s\'est produite.'], 400);
+                    $message = 'Une erreur s\'est produite.';
+                    $success = false;
+                    $status = 'Echec';
                 }
             } else {
-                return $this->json(['status' => 'error', 'message' => 'Crédits insuffisants pour ce boost.'], 400);
+                $message = 'Crédits insuffisants pour ce boost.';
+                $success = false;
+                $status = 'Echec';
             }
         }
-        
-        return $this->json(['status' => 'error', 'message' => 'Erreur de formulaire.'], 400);
+
+        if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+            return $this->render('v2/dashboard/candidate/update.html.twig', [
+                'message' => $message,
+                'success' => $success,
+                'status' => $status,
+                'visibilityBoost' => $visibilityBoost,
+                'credit' => $currentUser->getCredit()->getTotal(),
+            ]);
+        }
+
+        return $this->json([
+            'message' => $message,
+            'success' => $success,
+            'status' => $status,
+            'credit' => $currentUser->getCredit()->getTotal(),
+        ], 200);        
     }
 }

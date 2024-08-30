@@ -1,0 +1,110 @@
+<turbo-stream action="update" target="current-user-credit">
+  <template>
+    {{ credit }}
+  </template>
+</turbo-stream>
+<turbo-stream action="update" target="errorToast">
+    <template>
+        <div class="toast-header">
+            <strong class="me-auto">{{ status }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            {{ message }}
+        </div>
+    </template>
+</turbo-stream>
+{% if upload is defined and upload %}
+  <turbo-stream action="replace" target="experience-skill">
+    <template>
+      <h4 class="fs-6 mt-5 fw-bolder">- Experiences</h4>
+      {% if experiences|length > 0 %}
+        {% for experience in experiences %}
+          <div class="experience" data-experience-id="{{ experience.id }}">
+            <span class="justify-content-between align-items-center">
+              {% if experience.enPoste %}
+                Depuis
+                {{ experience.dateDebut|date('M Y')}}
+              {% else %}
+                {{ experience.dateDebut|date('M Y')}}
+                -
+                {{ experience.dateFin|date('M Y')}}
+              {% endif %}
+            </span>
+            <p class="small d-flex justify-content-between align-items-center">
+              <span>
+                <strong>{{ experience.nom }}</strong>
+                chez
+                <strong>{{ experience.entreprise }}</strong>
+                {% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
+                  ({{ date_difference(experience.dateFin, experience.dateDebut) }})
+                {% endif %}
+
+              </span>
+            </p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="alert alert-primary" role="alert">
+          <i class="bi bi-info"></i>
+          Aucune expérience renseignée.
+        </div>
+      {% endif %}
+
+      <h4 class="fs-6 mt-5 fw-bolder">- Compétences</h4>
+      {% if competences|length > 0 %}
+        {% for competence in competences %}
+          <div class="competence" data-competence-id="{{ competence.id }}">
+            <p class="small">
+              {{ competence.nom }}
+              <span class="">
+                {% for i in 1..5 %}
+                  {% if i <= competence.note %}
+                    <i class="small bi bi-star-fill text-warning"></i>
+                  {% else %}
+                    <i class="small bi bi-star "></i>
+                  {% endif %}
+                {% endfor %}
+              </span>
+            </p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="alert alert-primary" role="alert">
+          <i class="bi bi-info"></i>
+          Aucune compétence renseignée.
+        </div>
+      {% endif %}
+    </template>
+  </turbo-stream>
+{% endif %}
+{% if visibilityBoost is defined and visibilityBoost is not null %}
+  <turbo-stream action="replace" target="checkBoost">
+    <template>
+      <span class="text-center">
+        <span class="fs-5 fw-bold text-uppercase">
+          <i class="bi bi-rocket me-2"></i> 
+          Profil boosté
+        </span>
+        <br>
+        <span class="small fw-light"> 
+          Jusqu'au {{ visibilityBoost.endDate|date('d-m-Y \à H:i')}} 
+        </span>
+      </span>
+    </template>
+  </turbo-stream>
+  <turbo-stream action="replace" target="checkBoostProfile">
+    <template>
+      <span class="text-center">
+        <span class="fs-5 fw-bold text-uppercase">
+          <i class="bi bi-rocket me-2"></i> 
+          Profil boosté
+        </span>
+        <br>
+        <span class="small fw-light"> 
+          Jusqu'au {{ visibilityBoost.endDate|date('d-m-Y \à H:i')}} 
+        </span>
+      </span>
+    </template>
+  </turbo-stream>
+{% endif %}

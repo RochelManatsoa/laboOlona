@@ -80,7 +80,6 @@ class ContactController extends AbstractController
     #[Route('/show-contact', name: 'app_v2_candidate_contact_show_recruiter', methods: ['POST', 'GET'])]
     public function showContact(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $recruiterId = $request->request->get('recruiterId');
@@ -115,26 +114,21 @@ class ContactController extends AbstractController
         if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
 
-            return $this->render('v2/dashboard/candidate/live.html.twig', [
+            return $this->render('v2/turbo/live.html.twig', [
                 'message' => $message,
                 'success' => $success,
                 'status' => $status,
+                'recruiter' => $recruiter,
                 'user' => $recruiter->getEntreprise(),
                 'credit' => $currentUser->getCredit()->getTotal(),
             ]);
         }
 
-        // if ($request->isXmlHttpRequest()) {
-        //     return $this->json([
-        //         'message' => $message,
-        //         'success' => $success,
-        //         'status' => $status,
-        //         'user' => $recruiter->getEntreprise(),
-        //         'credit' => $currentUser->getCredit()->getTotal(),
-        //     ], 200, [], ['groups' => 'user']);
-        // }
-
-        $referer = $request->headers->get('referer');
-        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_v2_candidate_contact');
+        return $this->json([
+            'message' => $message,
+            'success' => $success,
+            'status' => $status,
+            'credit' => $currentUser->getCredit()->getTotal(),
+        ], 200); 
     }
 }

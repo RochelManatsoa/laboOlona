@@ -2,6 +2,7 @@
 
 namespace App\Controller\V2\Candidate;
 
+use App\Entity\User;
 use App\Service\FileUploader;
 use App\Manager\ProfileManager;
 use App\Manager\CandidatManager;
@@ -25,6 +26,7 @@ use App\Form\Profile\Candidat\CandidateUploadType;
 use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Controller\Dashboard\Moderateur\OpenAi\CandidatController;
+use App\Entity\CandidateProfile;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile as EditStepOneType;
 
 #[Route('/v2/candidate/dashboard')]
@@ -68,6 +70,7 @@ class DashboardController extends AbstractController
             $message = 'Analyse de CV effectué avec succès';
             $success = true;
             $status = 'Succès';
+            $upload = false;
         
             $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_UPLOAD_CV);
             $response = $this->creditManager->adjustCredits($this->userService->getCurrentUser(), $creditAmount);
@@ -76,30 +79,36 @@ class DashboardController extends AbstractController
                 $message = $response['error'];
                 $success = false;
                 $status = 'Echec';
+                $upload = false;
             }
 
             if (isset($response['success'])) {
                 $response = $this->candidatController->analyse(new \Symfony\Component\HttpFoundation\Request(), $candidat);
                 $content = $response->getContent(); 
                 $data = json_decode($content, true);
-                // dd($data);
                 if($data['status'] === 'error'){
                     $success = false;
                     $status = 'Echec';
+                    $upload = false;
                 }
                 $message = $data['message'];
                 $success = true;
+                $upload = true;
                 $status = 'Succès';
             }
 
             if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
                 $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
     
-                return $this->render('v2/dashboard/candidate/live.html.twig', [
+                return $this->render('v2/dashboard/candidate/update.html.twig', [
                     'message' => $message,
                     'success' => $success,
                     'status' => $status,
+                    'upload' => $upload,
                     'credit' => $currentUser->getCredit()->getTotal(),
+                    'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
+                    'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
+                    'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
                 ]);
             }
             
@@ -181,38 +190,71 @@ class DashboardController extends AbstractController
     public function boostProfile(Request $request): Response
     {
         $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement.');
-
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
         $candidat = $this->userService->checkProfile();
         $form = $this->createForm(CandidateBoostType::class, $candidat); 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $boostOption = $form->get('boost')->getData(); 
+            $candidat = $form->getData();
 
-            if ($this->profileManager->canApplyBoost($candidat->getCandidat(), $boostOption)) {
+            if ($this->profileManager->canApplyBoost($currentUser, $boostOption)) {
                 $visibilityBoost = $candidat->getBoostVisibility();
                 if(!$visibilityBoost instanceof BoostVisibility){
                     $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
                 }
+                $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
                 $response = $this->creditManager->adjustCredits($candidat->getCandidat(), $boostOption->getCredit());
+                
+                $message = 'Analyse de CV effectué avec succès';
+                $success = true;
+                $status = 'Succès';
+            
                 if(isset($response['success'])){
                     $candidat->setBoostVisibility($visibilityBoost);
+                    $candidat->setStatus(CandidateProfile::STATUS_FEATURED);
                     $this->em->persist($candidat);
                     $this->em->flush();
-                    return $this->json([
-                        'status' => 'success', 
-                        'message' => 'Votre profil est maintenant boosté',
-                        'candidat' => $candidat
-                    ], 200, [], ['groups' => 'boost']);
+                    $message = 'Votre profil est maintenant boosté';
+                    $success = true;
+                    $status = 'Succès';
                 }else{
-                    return $this->json(['status' => 'error', 'message' => 'Une erreur s\'est produite.'], 400);
+                    $message = 'Une erreur s\'est produite.';
+                    $success = false;
+                    $status = 'Echec';
                 }
             } else {
-                return $this->json(['status' => 'error', 'message' => 'Crédits insuffisants pour ce boost.'], 400);
+                $message = 'Crédits insuffisants pour ce boost.';
+                $success = false;
+                $status = 'Echec';
             }
+
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+    
+                return $this->render('v2/dashboard/candidate/update.html.twig', [
+                    'message' => $message,
+                    'success' => $success,
+                    'status' => $status,
+                    'visibilityBoost' => $visibilityBoost,
+                    'credit' => $currentUser->getCredit()->getTotal(),
+                ]);
+            }
+
+            return $this->json([
+                'message' => $message,
+                'success' => $success,
+                'status' => $status,
+                'credit' => $currentUser->getCredit()->getTotal(),
+            ], 200);
         }
 
-        return $this->json(['status' => 'error', 'message' => 'Erreur de formulaire.'], 400);
+        return $this->json([
+            'status' => 'error', 
+            'message' => 'Erreur de formulaire.'
+        ], 400);
     }
 
 }

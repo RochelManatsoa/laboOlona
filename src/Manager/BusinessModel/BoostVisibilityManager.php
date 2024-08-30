@@ -3,11 +3,15 @@
 namespace App\Manager\BusinessModel;
 
 use App\Entity\User;
+use App\Entity\Prestation;
 use Twig\Environment as Twig;
+use App\Entity\CandidateProfile;
 use Symfony\Component\Form\Form;
+use App\Entity\EntrepriseProfile;
 use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\Credit;
 use App\Entity\BusinessModel\Package;
+use App\Entity\Entreprise\JobListing;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -29,6 +33,19 @@ class BoostVisibilityManager
         $visibilityBoost->setStartDate(new \DateTime());
         $visibilityBoost->setEndDate((new \DateTime())->modify('+'.$boost->getDurationDays().' days'));
         $visibilityBoost->setType($boost->getType());
+        $visibilityBoost->setBoost($boost);
+        $visibilityBoost->setDurationDays($boost->getDurationDays());
+
+        return $visibilityBoost;
+    }
+
+    public function update(BoostVisibility $visibilityBoost, Boost $boost): BoostVisibility
+    {
+        $visibilityBoost->setStartDate(new \DateTime());
+        $visibilityBoost->setEndDate((new \DateTime())->modify('+'.$boost->getDurationDays().' days'));
+        $visibilityBoost->setType($boost->getType());
+        $visibilityBoost->setBoost($boost);
+        $visibilityBoost->setDurationDays($boost->getDurationDays());
 
         return $visibilityBoost;
     }
@@ -36,6 +53,28 @@ class BoostVisibilityManager
     public function isExpired(BoostVisibility $boostVisibility): bool
     {
         if ($boostVisibility->getEndDate() < new \DateTime()) {
+            $prestation = $boostVisibility->getPrestation();
+            if($prestation instanceof Prestation){
+                $prestation->setStatus(Prestation::STATUS_VALID);
+                $this->em->persist($prestation);
+            }
+            $candidateProfile = $boostVisibility->getCandidateProfile();
+            if($candidateProfile instanceof CandidateProfile){
+                $candidateProfile->setStatus(CandidateProfile::STATUS_VALID);
+                $this->em->persist($candidateProfile);
+            }
+            $jobListing = $boostVisibility->getJobListing();
+            if($jobListing instanceof JobListing){
+                $jobListing->setStatus(JobListing::STATUS_PUBLISHED);
+                $this->em->persist($jobListing);
+            }
+            $entrepriseProfile = $boostVisibility->getEntrepriseProfile();
+            if($entrepriseProfile instanceof EntrepriseProfile){
+                $entrepriseProfile->setStatus(EntrepriseProfile::STATUS_VALID);
+                $this->em->persist($entrepriseProfile);
+            }
+            $this->em->flush();
+
             return true;
         }
         return false;

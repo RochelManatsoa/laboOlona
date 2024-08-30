@@ -164,12 +164,17 @@ class FavoriteController extends AbstractController
                 'message' => $message,
                 'success' => $success,
                 'status' => $status,
+                'candidat' => $candidat,
                 'user' => $candidat->getCandidat(),
                 'credit' => $currentUser->getCredit()->getTotal(),
             ]);
         }
-        
-        $referer = $request->headers->get('referer');
-        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_connect');
+
+        return $this->json([
+            'message' => $message,
+            'success' => $success,
+            'status' => $status,
+            'credit' => $currentUser->getCredit()->getTotal(),
+        ], 200); 
     }
 }

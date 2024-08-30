@@ -91,12 +91,13 @@ a:hover {
     border-radius: 10px; /* Bordures arrondies */
     padding: 1rem; /* Espacement intérieur */
 }
+@import 'css/sections.scss';
+@import 'css/loader.scss';
 // @import 'css/form.scss';
 // @import 'css/variables.scss';
 // @import 'css/radio.scss';
 // @import 'css/media-queries.scss';
 // @import 'css/navbar.scss';
 // @import 'css/body.scss';
-@import 'css/sections.scss';
 // @import 'css/perso.scss';
 // @import 'css/profile.scss';

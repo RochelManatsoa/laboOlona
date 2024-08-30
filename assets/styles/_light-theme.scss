@@ -10,7 +10,6 @@ body.bootstrap-light {
         color: #ffffff !important;
     }
 
-    // Personnalisez d'autres éléments spécifiquement pour le thème clair ici
     .card {
         background-color: #ffffff;
         color: $link-light;
@@ -26,12 +25,10 @@ body.bootstrap-light {
         border-color: #0d6efd;
     }
 
-    // Ombre pour le thème clair
     .shadow-custom {
         box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.1);
     }
 
-    // Styles spécifiques pour le thème clair
     .carousel-indicators button {
         background-color: #343a40;
     }
@@ -40,7 +37,6 @@ body.bootstrap-light {
         background-color: #0d6efd;
     }
 
-    // Styles spécifiques pour les tables dans le thème clair
     .table {
         background-color: #f8f9fa !important;
         color: #343a40 !important;
@@ -93,5 +89,8 @@ body.bootstrap-light {
             background-color: #e9ecef;
             color: #343a40;
         }
+    }
+    .loader-container {    
+        background-color: rgba(0, 0, 0, 0.5);
     }
 }

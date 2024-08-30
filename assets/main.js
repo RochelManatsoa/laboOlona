@@ -134,6 +134,12 @@ $(function() {
             console.log(selectedValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
         });
+
+        $('input[name="recruiter_boost[boost]"]').on('change', function() {
+            selectedValue = $(this).data('value');
+            console.log(selectedValue);
+            $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
+        });
     
         $('#confirmationModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
@@ -145,18 +151,29 @@ $(function() {
             var submitButton = modal.find('#confirmButton');
             modalBody.text(`Voulez-vous vraiment dépenser ${packagePrice} ?`);
             submitButton.attr('data-id', packageType)
+            console.log(packageType, packagePrice)
         });
     
         $(document).on('click', 'button[data-id="boost-profile"]', function() {
             var form = $('button[data-bs-type="boost-profile"]').closest('form');
-            console.log(form.length)
             form.trigger("submit");
             $('#confirmationModal').modal('hide');
         });
     
         $(document).on('click', 'button[data-id="upload-cv"]', function() {
             var form = $('button[data-bs-type="upload-cv"').closest('form');
-            console.log(form.length)
+            form.trigger("submit");
+            $('#confirmationModal').modal('hide');
+        });
+    
+        $(document).on('click', 'button[data-id="show-recruiter-contact"]', function() {
+            var form = $('button[data-bs-type="show-recruiter-contact"]').closest('form');
+            form.trigger("submit");
+            $('#confirmationModal').modal('hide');
+        });
+    
+        $(document).on('click', 'button[data-id="show-candidate-contact"]', function() {
+            var form = $('button[data-bs-type="show-candidate-contact"]').closest('form');
             form.trigger("submit");
             $('#confirmationModal').modal('hide');
         });
@@ -170,14 +187,86 @@ $(function() {
                 data: formData,
                 contentType: false,
                 processData: false,
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
                 success: function(data) {
+                    Turbo.renderStreamMessage(data);
                     console.log(data)
-                    if (data.status === 'success') {
+                    if (data.success) {
                         $('#successToast').find('.toast-body').text(data.message);
                         var successToast = new Toast($('#successToast')[0]);
                         successToast.show();
                         var boostProfileModal = Modal.getInstance($('#boostProfile')[0]) || new Modal($('#boostProfile')[0]);
                         boostProfileModal.hide();
+                    } else {
+                        $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Toast($('#errorToast')[0]);
+                        errorToast.show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de la tentative de boost de votre profil.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
+
+        $('#show-recruiter-contact').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: this.action,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
+                success: function(data) {
+                    Turbo.renderStreamMessage(data);
+                    console.log(data)
+                    if (data.success) {
+                        $('#successToast').find('.toast-body').text(data.message);
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
+                    } else {
+                        $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Toast($('#errorToast')[0]);
+                        errorToast.show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de la tentative de boost de votre profil.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
+
+        $('#show-candidate-contact').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: this.action,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
+                success: function(data) {
+                    Turbo.renderStreamMessage(data);
+                    console.log(data)
+                    if (data.success) {
+                        $('#successToast').find('.toast-body').text(data.message);
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
                     } else {
                         $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
                         var errorToast = new Toast($('#errorToast')[0]);
@@ -265,6 +354,7 @@ $(function() {
             var toast = new Toast($('#loadingToast')[0], {
                 autohide: false 
             });
+            $('#loader-container').show()
             toast.show();
             var formData = new FormData(this);
             var actionUrl = $(this).data('action');
@@ -274,8 +364,11 @@ $(function() {
                 data: formData,
                 contentType: false,
                 processData: false,
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
                 success: function(data) {
-                    console.log(data)
+                    Turbo.renderStreamMessage(data);
                     if (data.success) {
                         $('#successToast').find('.toast-body').text(data.message);
                         var successToast = new Toast($('#successToast')[0]);
@@ -294,6 +387,7 @@ $(function() {
                 },
                 complete: function() {
                     toast.hide();
+                    $('#loader-container').hide()
                 }
             });
         });

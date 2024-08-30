@@ -3,7 +3,9 @@
 <div class="row">
   <div class="col-12 col-sm-3">
     <div class="d-flex flex-column flex-shrink-0 p-3 " style="width: 280px;">
+      <div id="checkBoost">
 			{{ checkBoost(app.user)|raw }}
+      </div>
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
@@ -95,15 +97,15 @@
                     <label class="form-check-label" for="recruiter_boost_boost_placeholder">Pas de boost</label>
                   </div>
                   <div class="form-check">
-                  <input type="radio" id="recruiter_boost_boost_10" name="recruiter_boost[boost]" class="form-check-input" value="10">
+                  <input type="radio" id="recruiter_boost_boost_10" name="recruiter_boost[boost]" class="form-check-input" value="10" data-value="300 crédits">
                   <label class="form-check-label" for="recruiter_boost_boost_10">Boost 7 jours (300 crédits)</label>
                 </div>
                 <div class="form-check">
-                  <input type="radio" id="recruiter_boost_boost_11" name="recruiter_boost[boost]" class="form-check-input" value="11">
+                  <input type="radio" id="recruiter_boost_boost_11" name="recruiter_boost[boost]" class="form-check-input" value="11" data-value="500 crédits">
                   <label class="form-check-label" for="recruiter_boost_boost_11">Boost 15 jours (500 crédits)</label>
                 </div>
                 <div class="form-check">
-                  <input type="radio" id="recruiter_boost_boost_12" name="recruiter_boost[boost]" class="form-check-input" value="12">
+                  <input type="radio" id="recruiter_boost_boost_12" name="recruiter_boost[boost]" class="form-check-input" value="12" data-value="800 crédits">
                   <label class="form-check-label" for="recruiter_boost_boost_12">Boost 30 jours (800 crédits)</label>
                 </div>
               </fieldset>
@@ -113,7 +115,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary text-uppercase fw-bold" data-bs-dismiss="modal">Annuler</button>
-        <button type="submit" class="btn btn-primary text-uppercase fw-bold">Prendre un boost</button>
+        <button type="button" data-bs-toggle="modal" data-bs-type="boost-profile" data-bs-target="#confirmationModal" data-bs-price="50 crédits" class="btn btn-primary text-uppercase fw-bold">Prendre un boost</button>
       </div>
       </form>
     </div>
