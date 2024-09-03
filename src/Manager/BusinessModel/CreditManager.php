@@ -65,6 +65,24 @@ class CreditManager
         return ['success' => $newCredits];
     }
 
+    public function restablishCredits(User $user, int $creditsToAdd): array
+    {
+        $credit = $user->getCredit();
+
+        if (!$credit) {
+            return ['error' => 'Aucun crédit trouvé pour cet utilisateur.'];
+        }
+
+        $currentCredits = $credit->getTotal();
+
+        $newCredits = $currentCredits + $creditsToAdd;
+        $credit->setTotal($newCredits);
+        $this->em->persist($credit);
+        $this->em->flush();
+
+        return ['success' => $newCredits];
+    }
+
     public function ajouterCreditsBienvenue(User $user, int $welcomeCredits)
     {
         $credit = $user->getCredit();

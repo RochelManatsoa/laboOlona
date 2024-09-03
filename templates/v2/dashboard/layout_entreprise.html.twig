@@ -19,11 +19,6 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_contact')}}" class="nav-link {{ current_route == 'app_v2_recruiter_contact' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-journal-check me-2"></i></i></span> Mon réseau professionnel
-          </a>
-        </li>
-        <li class="nav-item">
           <a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="nav-link {{ current_route == 'app_v2_recruiter_create_job_listing' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-megaphone me-2"></i></span> Publier une offre
           </a>
@@ -47,6 +42,18 @@
           <a href="{{ path('app_v2_recruiter_prestation')}}" class="nav-link {{ current_route == 'app_v2_recruiter_prestation' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-person-workspace me-2"></i></span> Mes préstations
           </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_contacts')}}" class="nav-link {{ current_route == 'app_v2_contacts' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-journal-check me-2"></i></i></span> Mon réseau professionnel
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_dashboard_notification')}}" class="nav-link {{ current_route == 'app_v2_dashboard_notification' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-bell me-2"></i></i></span> Mes notifications
+            {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
+          </a>
+        </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_recruiter_dashboard_ai_tools')}}" class="nav-link {{ current_route == 'app_v2_recruiter_dashboard_ai_tools' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-magic me-2"></i></span> Ai Tools
@@ -81,7 +88,7 @@
 <div class="modal fade" id="boostProfile" tabindex="-1" aria-labelledby="boostProfileLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ path('app_v2_recuiter_boost_profile') }}" method="post" id="boostProfileForm">
+      <form action="{{ path('app_v2_recruiter_boost_profile') }}" method="post" id="boostProfileForm">
       <div class="modal-header">
         <h3 class="modal-title fs-5 text-uppercase fw-bold" id="boostProfileLabel"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon entreprise</h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -89,7 +96,7 @@
       <div class="modal-body">
       Maximisez la visibilité de votre entreprise et attirez plus de talents de qualité ! En boostant votre compte entreprise, vous bénéficiez d'une visibilité accrue auprès des candidats potentiels et améliorez vos chances de recruter les meilleurs profils.
           <div class="my-3">
-            <div id="recuiter_boost">
+            <div id="recruiter_boost">
               <fieldset class="mb-3">
                 <div id="recruiter_boost_boost">
                   <div class="form-check">

@@ -188,7 +188,7 @@ class OlonaTalentsController extends AbstractController
         return $this->redirectToRoute('app_connect', []);
     }
 
-    #[Route('/view/recuiter/{id}', name: 'app_olona_talents_view_recuiter')]
+    #[Route('/view/recruiter/{id}', name: 'app_olona_talents_view_recruiter')]
     public function viewRecruiter(int $id): Response
     {
         return $this->render('v2/upgrade.html.twig', []);

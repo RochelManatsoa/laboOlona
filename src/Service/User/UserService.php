@@ -19,8 +19,7 @@ class UserService
         private RequestStack $requestStack,
         private EntityManagerInterface $em,
         private UserPasswordHasherInterface $encoder,
-    ){
-    }
+    ){}
 
     public function getCurrentUser()
     {
@@ -31,6 +30,33 @@ class UserService
     {
         /** @var User $user */
         $user = $this->getCurrentUser();
+        switch ($user->getType()) {
+            case User::ACCOUNT_REFERRER :
+                $profile = $user->getReferrerProfile();
+                break;
+
+            case User::ACCOUNT_CANDIDAT :
+                $profile = $user->getCandidateProfile();
+                break;
+
+            case User::ACCOUNT_ENTREPRISE :
+                $profile = $user->getEntrepriseProfile();
+                break;
+
+            case User::ACCOUNT_MODERATEUR :
+                $profile = $user->getModerateurProfile();
+                break;
+            
+            default:
+                $profile = null;
+                break;
+        }
+
+        return $profile;
+    }
+
+    public function checkUserProfile(User $user)
+    {
         switch ($user->getType()) {
             case User::ACCOUNT_REFERRER :
                 $profile = $user->getReferrerProfile();

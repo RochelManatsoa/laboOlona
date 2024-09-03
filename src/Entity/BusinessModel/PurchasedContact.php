@@ -27,6 +27,12 @@ class PurchasedContact
     #[ORM\Column(nullable: true)]
     private ?float $price = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isAccepted = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $acceptedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +82,30 @@ class PurchasedContact
     public function setPrice(?float $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function isIsAccepted(): ?bool
+    {
+        return $this->isAccepted;
+    }
+
+    public function setIsAccepted(?bool $isAccepted): static
+    {
+        $this->isAccepted = $isAccepted;
+
+        return $this;
+    }
+
+    public function getAcceptedAt(): ?\DateTimeInterface
+    {
+        return $this->acceptedAt;
+    }
+
+    public function setAcceptedAt(?\DateTimeInterface $acceptedAt): static
+    {
+        $this->acceptedAt = $acceptedAt;
 
         return $this;
     }

@@ -1,0 +1,124 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Mes notifications | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% else %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+	{% set tableClass = 'table' %}
+	{% if app.request.cookies.get('theme') == 'bootstrap-dark' %}
+		{% set tableClass = tableClass ~ ' table-dark' %}
+	{% endif %}
+
+	<section class="">
+		<div class="shadow p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-bell text-warning me-2"></i>
+				Mes Notifications 
+			</h2>
+			<p class="text-center">
+				Bienvenue dans votre centre de notifications ! Ici, vous trouverez toutes les alertes importantes concernant votre activité sur Olona-Talents.com. Restez informé des dernières mises à jour pour ne rien manquer !
+			</p>
+			<div id="flash"></div>
+			{% if notifications|length > 0 %}
+				<div class="table-responsive">
+					<table class="{{ tableClass }}">
+						<thead>
+							<tr>
+								<td scope="col" class="h5">{{ knp_pagination_sortable(notifications, 'Titre', 'n.titre') }}</td>
+								<td scope="col-4" class="h5">{{ knp_pagination_sortable(notifications, 'Expéditeur', 'n.expediteur.nom') }}</td>
+								<td scope="col-1" class="h5">{{ knp_pagination_sortable(notifications, 'Statut', 'n.isRead') }}</td>
+								<td scope="col-1" class=""></td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for item in notifications %}
+                                {% set class = "fw-semibold" %}
+                                {% set icone = "bi-bell-fill" %}
+                                {% set status = '<span class="badge bg-primary"> Nouveau </span>' %}
+                                {% if item.isRead %}
+                                    {% set class = "fw-lighter" %}
+                                    {% set icone = "bi-bell" %}
+                                    {% set status = '<span class="badge bg-success px-3"><i class="bi bi-check2-square"></i> Lu </span>' %}
+                                {% endif %}
+								<tr id="row_notification_{{item.id}}" class="{{ class }}">
+									<td class="icone">
+                                        <i class="bi {{ icone }}"></i> {{ item.titre }}
+										<br>
+										<span class="small">
+                                            Reçue {{item.dateMessage|time_ago}}
+                                        </span>
+									</td>
+									<td class="col-4">
+										{{ item.expediteur.nom | slice(0, 1) | upper }}. {{ item.expediteur.prenom }}
+									</td>
+									<td class="col-1 status">{{ status|raw }}</td>
+									<td class="col-1">
+										<button 
+                                            type="button" 
+                                            class="btn btn-sm btn-secondary rounded-pill" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#notification"
+                                            data-bs-id="{{ item.id }}"
+                                            data-bs-title='<i class="bi {{ icone }}"></i> {{ item.titre }}'
+                                            data-bs-content="{{ item.contenu }}"
+                                            data-bs-expediteur="{{ item.expediteur.nom | slice(0, 1) | upper }}. {{ item.expediteur.prenom }}"
+                                        >
+											<i class="bi bi-eye"></i>
+										</button>
+                                        <form action="{{ path('app_v2_dashboard_notification_delete', {'id': item.id})}}" method="post" id="delete-contact">
+                                            <button type="submit" class="btn btn-sm btn-danger rounded-pill">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					<div class="navigation mt-5">
+						{{ knp_pagination_render(notifications, 'parts/_pagination.html.twig') }}
+					</div>
+				</div>
+			{% else %}
+				<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+					<span class="">
+						<img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+					</span>
+					Vous n'avez aucune notification pour l'instant.
+				</h3>
+			{% endif %}
+		</div>
+	</section>
+    <!-- Modal -->
+    <div class="modal fade" id="notification" tabindex="-1" aria-labelledby="notificationLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title fs-5" id="notificationLabel">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

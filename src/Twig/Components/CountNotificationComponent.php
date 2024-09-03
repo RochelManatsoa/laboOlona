@@ -5,11 +5,14 @@ namespace App\Twig\Components;
 use App\Entity\Notification;
 use App\Repository\NotificationRepository;
 use App\Service\User\UserService;
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
-#[AsTwigComponent('count_notification_component')]
+#[AsLiveComponent('count_notification_component')]
 class CountNotificationComponent
 {
+    use DefaultActionTrait;
+    
     public function __construct(
         private NotificationRepository $notificationRepository,
         private UserService $userService,

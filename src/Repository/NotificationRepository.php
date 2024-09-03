@@ -21,7 +21,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  */
 class NotificationRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
+    public function __construct(
+        ManagerRegistry $registry, 
+        private PaginatorInterface $paginator)
     {
         parent::__construct($registry, Notification::class);
     }
@@ -54,6 +56,38 @@ class NotificationRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+
+    public function findByDestAndStatusNot(User $user, array $orderBy, string $statusNot, ?int $isRead, int $page = 1): PaginationInterface
+    {
+        $qb = $this->createQueryBuilder('n')
+                ->where('n.destinataire = :destinataire')
+                ->setParameter('destinataire', $user);
+
+        if ($statusNot !== null) {
+            $qb->andWhere('n.status != :statusNot')
+            ->setParameter('statusNot', $statusNot);
+        }
+
+        if ($isRead !== null) {
+            $qb->andWhere('n.isRead = :isRead')
+            ->setParameter('isRead', $isRead);
+        }
+
+        foreach ($orderBy as $field => $direction) {
+            $qb->addOrderBy('n.' . $field, $direction);
+        }
+
+        $query =  $qb->getQuery();
+
+        return $this->paginator->paginate(
+            $query,
+            $page,
+            10
+        );
+    }
+
+
     public function findSearch(StatSearchData $searchData): array
     {
         $qb = $this->createQueryBuilder('n')

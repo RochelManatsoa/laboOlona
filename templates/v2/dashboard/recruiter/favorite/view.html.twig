@@ -66,8 +66,8 @@
       <div class="col-12 col-sm-4 text-center">
         <h4 class="fs-5 text-uppercase">Contact</h4>
         <div id="contactDetails">
-          <form action="{{ path('app_v2_recruiter_favorite_show_contact_candidate')}}" method="post" id="view-candidate-profile">
-            <input type="hidden" name="candidatId" value="{{ candidat.id }}">
+          <form action="{{ path('app_v2_contact_show')}}" method="post" id="view-candidate-profile">
+            <input type="hidden" name="contactId" value="{{ candidat.candidat.id }}">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
             <button type="submit" class="align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact (50 crédit)</button>
           </form>

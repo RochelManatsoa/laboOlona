@@ -16,13 +16,13 @@
 		<!-- Text content -->
 		<div class="flex-grow-1 ms-3">
 			{% if app.user %}
-				<a href="{{ path('app_v2_candidate_view_job_offer', {'id': item['_id']})}}">{{ item['_source'].titre|upper }}</a>
+				<a href="{{ path('app_v2_job_offer_view', {'id': item['_id']})}}">{{ generateJobReference(item['_id'])}}</a>
 			{% else %}
 				<a href="#" data-id="{{ item['_id'] }}" class="annonce-link">
-					<strong class="mb-1">{{ item['_source'].titre|upper }}</strong>
+					<strong class="mb-1">{{ generateJobReference(item['_id'])}}</strong>
 				</a>
 			{% endif %}
-			<div class="col-10 mb-1 small"></div>
+            <div class="col-10 mb-1 fw-semibold">{{ item['_source'].titre|upper }}</div>
 		</div>
 		<!-- Date or any other information -->
 		<span data-annonce="{{ item['_id'] }}" style="display:none">
@@ -82,11 +82,11 @@
 						</p>
 						<div class="text-center">
                             {% if app.user %}
-                                <a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact</a>
+                                <a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact (100 crédits)</a>
                                 <a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#">Ajouter comme favoris</a>
                             {% else %}
-                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir contact (100 crédits)</button>
-                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Postuler (15 crédits)</button>
+                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir contact</button>
+                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Postuler</button>
                             {% endif %}
 						</div>
 					</div>
@@ -140,8 +140,8 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-lg-end">
 				{% if app.user %}
-                <li><a class="dropdown-item" data-id="{{ item['_id'] }}" href="{{ path('app_v2_candidate_view_job_offer', {'id': item['_id']})}}">Voir l'offre</a></li>
-				<li><a class="dropdown-item annonce-link" href="{{ path('app_v2_candidate_view_job_offer', {'id': item['_id']})}}">Contacter l'entreprise</a></li>
+                <li><a class="dropdown-item" data-id="{{ item['_id'] }}" href="{{ path('app_v2_job_offer_view', {'id': item['_id']})}}">Voir l'offre</a></li>
+				<li><a class="dropdown-item annonce-link" href="{{ path('app_v2_job_offer_view', {'id': item['_id']})}}">Contacter l'entreprise</a></li>
 				{% else %}
                 <li><a class="dropdown-item annonce-link" data-id="{{ item['_id'] }}" href="#">Aperçu</a></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Ajouter comme favoris</a></li>

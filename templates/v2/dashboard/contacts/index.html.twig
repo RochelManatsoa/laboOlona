@@ -13,7 +13,13 @@
 {% endblock %}
 
 {% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% else %}
 	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
 {% endblock %}
 
 {% block body %}
@@ -60,12 +66,14 @@
 								<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
 							</td>
 							<td class="text-center">
-								<a href="{{ path('app_v2_recruiter_contact_view', {'purchasedContact': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
+								<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
 									<i class="bi bi-eye"></i>
 								</a>
-								<button id="delete-contact" href="{{ path('app_v2_recruiter_contact_delete', {'contact': item.id})}}" class="btn btn-sm btn-danger rounded-pill">
-									<i class="bi bi-trash"></i>
-								</button>
+								<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+									<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+										<i class="bi bi-trash"></i>
+									</button>
+								</form>
 							</td>
 						{% elseif item.contact.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
 							<td class="">
@@ -81,12 +89,14 @@
 								<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
 							</td>
 							<td class="text-center">
-								<a href="{{ path('app_v2_recruiter_contact_view', {'purchasedContact': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
+								<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
 									<i class="bi bi-eye"></i>
 								</a>
-								<button id="delete-contact" href="{{ path('app_v2_recruiter_contact_delete', {'contact': item.id})}}" class="btn btn-sm btn-danger rounded-pill">
-									<i class="bi bi-trash"></i>
-								</button>
+								<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+									<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+										<i class="bi bi-trash"></i>
+									</button>
+								</form>
 							</td>
 						{% else %}
 							<td class="">
@@ -101,12 +111,15 @@
 								<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
 							</td>
 							<td class="text-center">
-								<a href="{{ path('app_v2_recruiter_contact_view', {'purchasedContact': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
+								<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
 									<i class="bi bi-eye"></i>
 								</a>
-								<button id="delete-contact" href="{{ path('app_v2_recruiter_contact_delete', {'contact': item.id})}}" class="btn btn-sm btn-danger rounded-pill">
-									<i class="bi bi-trash"></i>
-								</button>
+								<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+									<input type="hidden" value="{{ item.id}}" name="contactId">
+									<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+										<i class="bi bi-trash"></i>
+									</button>
+								</form>
 							</td>
 						{% endif %}					
 						</tr>
@@ -114,6 +127,10 @@
 					<!-- Plus de lignes et colonnes ici -->
 					</table>
 				</div>
+
+			<div class="pagination">
+				{{ knp_pagination_render(contacts, 'parts/_pagination.html.twig') }}
+			</div>
 			{% else %}
 				<div class="mx-auto text-center">
 					<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">

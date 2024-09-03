@@ -109,7 +109,7 @@ class DashboardController extends AbstractController
 
     }
 
-    #[Route('/boost-profile', name: 'app_v2_recuiter_boost_profile', methods: ['POST'])]
+    #[Route('/boost-profile', name: 'app_v2_recruiter_boost_profile', methods: ['POST'])]
     public function boostProfile(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');

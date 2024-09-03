@@ -149,7 +149,7 @@ class SimulatorController extends AbstractController
             ]);
         }
         $this->addFlash('success', $message);
-        return $this->redirectToRoute('app_v2_recuiter_prestation');
+        return $this->redirectToRoute('app_v2_candidate_simulator');
 
     }
 }

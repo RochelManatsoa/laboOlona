@@ -3,8 +3,8 @@
 namespace App\Twig\Components;
 
 use App\Service\User\UserService;
-use Symfony\UX\LiveComponent\DefaultActionTrait;
 use App\Repository\BusinessModel\CreditRepository;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
 #[AsLiveComponent('credit_user_component')]

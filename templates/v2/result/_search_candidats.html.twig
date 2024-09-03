@@ -16,11 +16,11 @@
         <!-- Text content -->
         <div class="flex-grow-1 ms-3">
 			{% if app.user %}
-				<a href="{{ path('app_v2_recruiter_view_profile', {'id': item['_id']})}}">{{ item['_source'].titre|upper }}</a>
+				<a href="{{ path('app_v2_recruiter_view_profile', {'id': item['_id']})}}">{{ generatePseudoById(item['_id']) }} </a>
 			{% else %}
                 <a href="#" data-id="{{ item['_id'] }}" class="candidate-link"><strong class="mb-1">{{ generatePseudoById(item['_id']) }} </strong></a>
             {% endif %}
-            <div class="col-10 mb-1 small">{{ item['_source'].titre|upper }}</div>
+            <div class="col-10 mb-1 fw-semibold">{{ item['_source'].titre|upper }}</div>
         </div>
         <!-- Date or any other information -->
         <span data-candidate="{{ item['_id'] }}" style="display:none">
@@ -93,10 +93,10 @@
                         </p>
                         <div class="text-center">
                             {% if app.user %}
-                                <a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact</a>
+                                <a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact (50 crédits)</a>
                                 <a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#">Ajouter comme favoris</a>
                             {% else %}
-                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir contact (50 crédits)</button>
+                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir contact</button>
                                 <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Ajouter comme favoris</button>
                             {% endif %}
                         </div>
@@ -137,17 +137,17 @@
             <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
                 Plus d'informations 
             </a>
-            <ul class="dropdown-menu dropdown-menu-lg-end">
+            <ul class="dropdown-menu dropdown-menu-lg-end" style="cursor:pointer;">
                 {% if app.user %}
-                <li><a class="dropdown-item" data-id="{{ item['_id'] }}" href="{{ path('app_v2_recruiter_view_profile', {'id': item['_id']})}}">Aperçu</a></li>
-                {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
-                <li><a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#">Ajouter comme favoris</a></li>
-                {% endif %}
-                <li><a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact</a></li>
+                    <li><a class="dropdown-item" data-id="{{ item['_id'] }}" href="{{ path('app_v2_recruiter_view_profile', {'id': item['_id']})}}">Aperçu</a></li>
+                    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+                        <li><a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#" style="cursor:pointer;">Ajouter comme favoris</a></li>
+                    {% endif %}
+                    <li><a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" style="cursor:pointer;">Voir le contact</a></li>
                 {% else %}
                 <li><a class="dropdown-item candidate-link" data-id="{{ item['_id'] }}" href="#">Aperçu</a></li>
-                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Ajouter comme favoris</a></li>
-                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#" style="cursor:pointer;">Ajouter comme favoris</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#" style="cursor:pointer;">Voir le contact</a></li>
                 {% endif %}
                 
             </ul>

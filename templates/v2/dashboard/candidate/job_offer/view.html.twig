@@ -22,7 +22,7 @@
 		<div class="shadow p-2 p-sm-4">
 			<h2 class="fs-4 fw-bolder my-2 my-sm-3">
 				<i class="bi bi-megaphone text-warning me-2"></i>
-				{{ annonce.titre }}
+				{{ annonce.titre }} Réf:{{ generateJobReference(annonce.id) }}
 			</h2>
 			<hr>
 			<p class="small fw-light">
@@ -87,7 +87,7 @@
 				</p>
 			</div>
 			
-			{% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) %}
+			{% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) or candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_FEATURED')) %}
 				{% if applied %}
 				<div id="alert-application" class="my-4">
 					<button type="button" data-bs-toggle="modal" data-bs-target="#submitBtn" class="btn btn-md btn-primary fw-semibold text-uppercase my-2 mx-3">Postuler (15 crédits)</button>
@@ -112,25 +112,29 @@
 			{% endif %}
 			<div class="h-100 p-5 border rounded-3">
 			{% if purchasedContact is defined and purchasedContact is not null %}
-				<h2 class="fs-4">Information client</h2>
-				<div class="row my-4 align-items-center">
-					<div class="col-12 col-md-3">
-						<div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('/uploads/experts/company-default.jpg');" alt="Avatar"></div>
+                {% if purchasedContact.isAccepted %}
+					<h2 class="fs-4">Information client</h2>
+					<div class="row my-4 align-items-center">
+						<div class="col-12 col-md-3">
+							<div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('/uploads/experts/company-default.jpg');" alt="Avatar"></div>
+						</div>
+						<div class="col-12 col-md-6">
+							<strong>Entreprise:</strong> {{ purchasedContact.contact.entrepriseProfile.nom }}<br>
+							<strong>Email:</strong> {{ purchasedContact.contact.email }}<br>
+							<strong>Téléphone:</strong> {{ purchasedContact.contact.telephone }}<br>
+						</div>
 					</div>
-					<div class="col-12 col-md-6">
-						<strong>Entreprise:</strong> {{ purchasedContact.contact.entrepriseProfile.nom }}<br>
-						<strong>Email:</strong> {{ purchasedContact.contact.email }}<br>
-						<strong>Téléphone:</strong> {{ purchasedContact.contact.telephone }}<br>
-					</div>
-				</div>
+				{% else %}
+                    Votre demande de contact a été envoyée au candidat et est en attente de son approbation. Vos crédits ne seront débités qu'une fois la demande approuvée.
+                {% endif %}
 			{% else %}
 				<div id="contactDetails">
 					<h2 class="fs-4">Contacter le client</h2>
 					<p>Vous pouvez contacter directement l'entreprise et l'ajouter à votre réseau professionnel pour explorer les opportunités et collaborations possibles.</p>
-					<form action="{{ path('app_v2_candidate_contact_show_recruiter')}}" method="post">
-						<input type="hidden" name="recruiterId" value="{{ annonce.entreprise.id }}">
+					<form action="{{ path('app_v2_contact_show')}}" method="post" id="show-recruiter-contact">
+						<input type="hidden" name="contactId" value="{{ annonce.entreprise.entreprise.id }}">
 						<input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
-						<button data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-price="50 crédits" class="btn btn-primary text-uppercase fw-semibold" type="button">Voir le contact (50 crédits)</button>
+            			<button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-price="50 crédits" data-bs-type="show-recruiter-contact" class="align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact (50 crédit)</button>
 					</form>
 				</div>
 			</div>

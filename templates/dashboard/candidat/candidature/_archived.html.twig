@@ -20,7 +20,7 @@
                     </small>
                     <!-- Type de contrat -->
                     <h5>
-                        {{ application.annonce.titre }}
+                        {{ application.annonce.titre }} | Réf: {{ generateJobReference(application.annonce.id)}}
                     </h5>
                     <!-- Titre du job -->
                     <a href="{{ path('app_dashboard_candidat_annonce_show', {'jobId': application.annonce.jobId}) }}" class="btn btn-link">

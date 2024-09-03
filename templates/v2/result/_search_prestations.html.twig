@@ -16,12 +16,12 @@
         <!-- Text content -->
         <div class="flex-grow-1 ms-3">
             {% if app.user %}
-                <a href="{{ path('app_olona_talents_view_prestation', {'id': item['_id']})}}"><strong class="mb-1">{{ item['_source'].titre }}</strong></a>
+                <a href="{{ path('app_olona_talents_view_prestation', {'id': item['_id']})}}"><strong class="mb-1">{{ generateprestationReference(item['_id']) }}</strong></a>
             {% else %}
-                <a data-id="{{ item['_id'] }}" class="prestation-link" style="cursor:pointer;"><strong class="mb-1">{{ item['_source'].titre }}</strong></a>
+                <a data-id="{{ item['_id'] }}" class="prestation-link" style="cursor:pointer;"><strong class="mb-1">{{ generateprestationReference(item['_id']) }}</strong></a>
             {% endif %}
         
-            <div class="col-10 mb-1 small"></div>
+            <div class="col-10 mb-1 fw-semibold">{{ item['_source'].titre }}</div>
         </div>
         <!-- Date or any other information -->
         <span data-prestation="{{ item['_id'] }}" style="display:none">

@@ -29,6 +29,7 @@ $(function() {
         setupDeletionConfirmation();
         setupImageUpload(); 
         setupAvailabilityDropdown();  
+        handleLoading();
     }
 
     function setupCKEditors() {
@@ -119,13 +120,56 @@ $(function() {
                 imageInput.click();
             });
         }
-        // $('#contactDetails').on('click', function() {
-        //     var errorToast = $('#errorToast');
-        //     var toast = new Toast(errorToast[0]); 
-        //     setTimeout(function() {
-        //         toast.show();
-        //     }, 1500);
-        // });
+    }
+    
+    function setupAvailabilityDropdown() {
+        const availabilityDropdown = document.getElementById('prestation_availability_nom');
+        const dateField = document.getElementById('prestation_availability_dateFin');
+    
+        if (availabilityDropdown && dateField) {
+            function toggleDateInput() {
+                if (availabilityDropdown.value === 'from-date') {
+                    dateField.style.display = 'block';  // Show the date field
+                } else {
+                    dateField.style.display = 'none';  // Hide the date field
+                }
+            }
+    
+            availabilityDropdown.addEventListener('change', toggleDateInput);
+            toggleDateInput(); 
+        }
+    }
+
+    function setupDynamicLinks() {
+        if ($('.candidate-link').length) {
+            $('.candidate-link').on('click', function(event) {
+                event.preventDefault();
+                var candidateId = $(this).data('id');
+                var candidateContent = $('span[data-candidate="' + candidateId + '"]').html();
+                $('#candidate-card-container').html(candidateContent);
+            });
+        }
+    
+        if ($('.annonce-link').length) {
+            $('.annonce-link').on('click', function(event) {
+                event.preventDefault();
+                var annonceId = $(this).data('id');
+                var annonceContent = $('span[data-annonce="' + annonceId + '"]').html();
+                $('#candidate-card-container').html(annonceContent);
+            });
+        }
+    
+        if ($('.prestation-link').length) {
+            $('.prestation-link').on('click', function(event) {
+                event.preventDefault();
+                var prestationId = $(this).data('id');
+                var prestationContent = $('span[data-prestation="' + prestationId + '"]').html();
+                $('#candidate-card-container').html(prestationContent);
+            });
+        }
+    }
+
+    function handleLoading() {
 
         var selectedValue = '';
 
@@ -140,42 +184,70 @@ $(function() {
             console.log(selectedValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
         });
-    
+        
+        // Attach event listener to the confirmation button only once
+        $('#confirmButton').off('click').on('click', function() {
+            var buttonType = $(this).attr('data-id');
+            if (buttonType === "show-candidate-contact") {
+                var form = $('button[data-bs-type="show-candidate-contact"]').closest('form');
+                form.trigger("submit");
+            } else if (buttonType === "show-recruiter-contact") {
+                var form = $('button[data-bs-type="show-recruiter-contact"]').closest('form');
+                form.trigger("submit");
+            } else if (buttonType === "upload-cv") {
+                var form = $('button[data-bs-type="upload-cv"').closest('form');
+                form.trigger("submit");
+            } else if (buttonType === "boost-profile") {
+                var form = $('button[data-bs-type="boost-profile"]').closest('form');
+                form.trigger("submit");
+            }
+            $('#confirmationModal').modal('hide');
+        });
+
         $('#confirmationModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
-            var modal = $(this);
-            var packagePrice = button.attr('data-bs-price');
-            var packageType = button.attr('data-bs-type');
-    
-            var modalBody = modal.find('.modal-body');
-            var submitButton = modal.find('#confirmButton');
+            var packagePrice = button.data('bs-price');
+            var packageType = button.data('bs-type');
+            var modalBody = $(this).find('.modal-body');
+            var submitButton = $(this).find('#confirmButton');
             modalBody.text(`Voulez-vous vraiment dépenser ${packagePrice} ?`);
-            submitButton.attr('data-id', packageType)
-            console.log(packageType, packagePrice)
+            submitButton.attr('data-id', packageType);
         });
     
-        $(document).on('click', 'button[data-id="boost-profile"]', function() {
-            var form = $('button[data-bs-type="boost-profile"]').closest('form');
-            form.trigger("submit");
-            $('#confirmationModal').modal('hide');
-        });
+        $('#notification').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var modal = $(this);
+            var id = button.attr('data-bs-id');
+            var title = button.attr('data-bs-title');
+            var content = button.attr('data-bs-content');
+            var expediteur = button.attr('data-bs-expediteur');
     
-        $(document).on('click', 'button[data-id="upload-cv"]', function() {
-            var form = $('button[data-bs-type="upload-cv"').closest('form');
-            form.trigger("submit");
-            $('#confirmationModal').modal('hide');
-        });
-    
-        $(document).on('click', 'button[data-id="show-recruiter-contact"]', function() {
-            var form = $('button[data-bs-type="show-recruiter-contact"]').closest('form');
-            form.trigger("submit");
-            $('#confirmationModal').modal('hide');
-        });
-    
-        $(document).on('click', 'button[data-id="show-candidate-contact"]', function() {
-            var form = $('button[data-bs-type="show-candidate-contact"]').closest('form');
-            form.trigger("submit");
-            $('#confirmationModal').modal('hide');
+            var modalHeader = modal.find('.modal-header');
+            var modalBody = modal.find('.modal-body');
+            modalHeader.html(`<h4 class="modal-title fs-5" id="notificationLabel"> ${title} </h4>`);
+            modalBody.html(` ${content} <br> <small class="">De : ${expediteur} </small>`);
+            $.ajax({
+                url: '/v2/dashboard/notification/view/' + id,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    console.log(data)
+                    if (data.success) {
+                        var trow = $('#row_notification_' + data.id )
+                        var status = trow.find('.status');
+                        var icone = trow.find('.icone i');
+                        trow.removeClass('fw-semibold fw-lighter');
+                        trow.addClass('fw-lighter');
+                        icone.removeClass('bi-bell-fill bi-bell');
+                        icone.addClass('bi-bell');
+                        status.html('<span class="badge bg-success px-3"><i class="bi bi-check2-square"></i> Lu </span>')
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                }
+            });
         });
 
         $('#boostProfileForm').on('submit', function(e) {
@@ -249,6 +321,40 @@ $(function() {
         });
 
         $('#show-candidate-contact').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: this.action,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
+                success: function(data) {
+                    Turbo.renderStreamMessage(data);
+                    console.log(data)
+                    if (data.success) {
+                        $('#successToast').find('.toast-body').text(data.message);
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
+                    } else {
+                        $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Toast($('#errorToast')[0]);
+                        errorToast.show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de la tentative de boost de votre profil.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
+
+        $('#delete-contact').on('submit', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
             $.ajax({
@@ -408,53 +514,6 @@ $(function() {
             uploadButton.hide()
             submitButton.show()
         });
-    }
-    
-    function setupAvailabilityDropdown() {
-        const availabilityDropdown = document.getElementById('prestation_availability_nom');
-        const dateField = document.getElementById('prestation_availability_dateFin');
-    
-        if (availabilityDropdown && dateField) {
-            function toggleDateInput() {
-                if (availabilityDropdown.value === 'from-date') {
-                    dateField.style.display = 'block';  // Show the date field
-                } else {
-                    dateField.style.display = 'none';  // Hide the date field
-                }
-            }
-    
-            availabilityDropdown.addEventListener('change', toggleDateInput);
-            toggleDateInput(); 
-        }
-    }
-
-    function setupDynamicLinks() {
-        if ($('.candidate-link').length) {
-            $('.candidate-link').on('click', function(event) {
-                event.preventDefault();
-                var candidateId = $(this).data('id');
-                var candidateContent = $('span[data-candidate="' + candidateId + '"]').html();
-                $('#candidate-card-container').html(candidateContent);
-            });
-        }
-    
-        if ($('.annonce-link').length) {
-            $('.annonce-link').on('click', function(event) {
-                event.preventDefault();
-                var annonceId = $(this).data('id');
-                var annonceContent = $('span[data-annonce="' + annonceId + '"]').html();
-                $('#candidate-card-container').html(annonceContent);
-            });
-        }
-    
-        if ($('.prestation-link').length) {
-            $('.prestation-link').on('click', function(event) {
-                event.preventDefault();
-                var prestationId = $(this).data('id');
-                var prestationContent = $('span[data-prestation="' + prestationId + '"]').html();
-                $('#candidate-card-container').html(prestationContent);
-            });
-        }
     }
 
     $('#experience').on('shown.bs.modal', function () {

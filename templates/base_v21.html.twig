@@ -42,6 +42,13 @@
 
 							<div class="d-flex justify-content-end p-2">
 							{% if app.user %}
+								<a href="{{ path('app_v2_dashboard_notification', {'isRead':'0'}) }}" class="position-relative me-4">
+									<i class="bi bi-bell fs-4 "></i>
+									<span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
+									{{ component('count_notification_component')}}
+									<span class="visually-hidden">unread messages</span>
+									</span>
+								</a>
 								{{ component('credit_user_component') }}
 								<div class="dropdown me-3">
 									<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
@@ -156,7 +163,7 @@
 							<div class="col-8 p-3 p-sm-5">
 								<h3 class="">Pour accéder à cette page, inscrivez-vous gratuitement</h3>
 								<p class="">Choisissez votre profil :</p>
-								<a href="{{ path('app_olona_talents_register', {'typology': 'recuiter'})}}">
+								<a href="{{ path('app_olona_talents_register', {'typology': 'recruiter'})}}">
 								<div class="row border rounded mb-3">
 									<div class="col-4" style="
 										background-image:url('{{ asset('images/Entreprise.png')}}');

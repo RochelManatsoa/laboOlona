@@ -154,7 +154,7 @@ class JobListingController extends AbstractController
         $this->em->flush();
         if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-            return $this->render('v2/dashboard/recuiter/job_listing/delete.html.twig', [
+            return $this->render('v2/dashboard/recruiter/job_listing/delete.html.twig', [
                 'jobListingId' => $jobListingId,
                 'message' => $message,
             ]);

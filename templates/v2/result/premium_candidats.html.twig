@@ -22,7 +22,8 @@
                                                     <div class="" style="height:120px; background-image: url('{{ candidat['_source'].fileName ? asset('uploads/experts/' ~ candidat['_source'].fileName) : asset('uploads/experts/avatar-default.jpg') }}'); background-position: center; background-size: cover; background-repeat: no-repeat;" alt="{{ generatePseudoById(candidat['_id']) }}"></div>
                                                     <p class="card-title h6 bg-dark text-white text-center py-2">{{ generatePseudoById(candidat['_id']) }}</p>
                                                     <div class="card-body-candidat">
-                                                        <small class="mt-auto">
+                                                        <span class="fw-bold text-uppercase">{{ candidat['_source'].titre }}</span>
+                                                        <small class="mx-auto">
                                                             <small class="card-text"></small><br>
                                                             <small class="card-text"><i class="mx-1 bi bi-trophy"></i>{{ candidat['_source'].experiences|length}} {{ 'app_catalog_expert.realised'|trans }}</small><br>
                                                             <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>

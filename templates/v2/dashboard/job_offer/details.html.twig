@@ -22,7 +22,7 @@
 		<div class="shadow p-2 p-sm-4">
 			<h2 class="fs-4 fw-bolder my-2 my-sm-3">
 				<i class="bi bi-megaphone text-warning me-2"></i>
-				{{ annonce.titre }}
+				{{ annonce.titre }} Réf:{{ generateJobReference(annonce.id) }}
 			</h2>
 			<hr>
 			<p class="small fw-light">
@@ -104,7 +104,7 @@
 				<div id="contactDetails">
 					<h2 class="fs-4">Contacter le client</h2>
 					<p>Vous pouvez contacter directement l'entreprise et l'ajouter à votre réseau professionnel pour explorer les opportunités et collaborations possibles.</p>
-					<form action="{{ path('app_v2_candidate_contact_show_recruiter')}}" method="post" id="show-recruiter-contact">
+					<form action="{{ path('app_v2_contact_show')}}" method="post" id="show-recruiter-contact">
 						<input type="hidden" name="recruiterId" value="{{ annonce.entreprise.id }}">
 						<input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
 						<button data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-price="50 crédits" data-bs-type="show-recruiter-contact" class="btn btn-primary text-uppercase fw-semibold" type="button">Voir le contact (50 crédits)</button>

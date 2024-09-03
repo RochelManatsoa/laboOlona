@@ -74,36 +74,13 @@ class JobOfferController extends AbstractController
         return $this->render('v2/dashboard/candidate/job_offer/index.html.twig', $params);
     }
     
-    #[Route('/view-details/{id}', name: 'app_v2_view_job_offer')]
-    public function details(Request $request, int $id): Response
-    {
-        /** @var User $currentUser */
-        $currentUser = $this->userService->getCurrentUser();
-        $annonce = $this->em->getRepository(JobListing::class)->find($id);
-        if(!$annonce instanceof JobListing){
-            $this->addFlash('error', 'Annonce introuvable.');
-            return $this->redirectToRoute('app_v2_candidate_job_offer');
-        }
-
-        $contactRepository = $this->em->getRepository(PurchasedContact::class);
-        $purchasedContact = $contactRepository->findOneBy([
-            'buyer' => $currentUser,
-            'contact' => $annonce->getEntreprise()->getEntreprise(),
-        ]);
-
-        return $this->render('v2/dashboard/candidate/job_offer/details.html.twig', [
-            'annonce' => $annonce,
-            'purchasedContact' => $purchasedContact,
-        ]);
-    }
-    
     #[Route('/view/{id}', name: 'app_v2_candidate_view_job_offer')]
     public function viewJobOffer(Request $request, int $id): Response
     {
         $annonce = $this->em->getRepository(JobListing::class)->find($id);
         $candidat = $this->userService->checkProfile();
         if(!$candidat instanceof CandidateProfile){
-            return $this->redirectToRoute('app_v2_view_job_offer', ['id' => $id]);
+            return $this->redirectToRoute('app_v2_job_offer_view', ['id' => $id]);
         }
         $recruiter = $annonce->getEntreprise();
         /** @var User $currentUser */

@@ -20,6 +20,7 @@ use App\Entity\Moderateur\Assignation;
 use App\Entity\Candidate\TarifCandidat;
 use App\Entity\Finance\Devise;
 use App\Entity\Moderateur\Forfait;
+use App\Entity\Prestation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -82,6 +83,8 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getTarifForfait', [$this, 'getTarifForfait']),
             new TwigFunction('getTarifCandidat', [$this, 'getTarifCandidat']),
             new TwigFunction('generateReference', [$this, 'generateReference']),
+            new TwigFunction('generateJobReference', [$this, 'generateJobReference']),
+            new TwigFunction('generateprestationReference', [$this, 'generateprestationReference']),
             new TwigFunction('generatePseudo', [$this, 'generatePseudo']),
             new TwigFunction('getForfaitAssignation', [$this, 'getForfaitAssignation']),
             new TwigFunction('getStatusAssignation', [$this, 'getStatusAssignation']),
@@ -734,6 +737,24 @@ class AppExtension extends AbstractExtension
     {
         $letters = 'OT-REC';
         $paddedId = sprintf('%04d', $entreprise->getId());
+
+        return $letters . $paddedId;
+    }
+
+    public function generateJobReference(int $id)
+    {
+        $letters = 'OE-';
+        $jobListing = $this->em->getRepository(JobListing::class)->find($id);
+        $paddedId = sprintf('%04d', $jobListing->getId());
+
+        return $letters . $paddedId;
+    }
+
+    public function generateprestationReference(int $id)
+    {
+        $letters = 'OP-';
+        $prestation = $this->em->getRepository(Prestation::class)->find($id);
+        $paddedId = sprintf('%04d', $prestation->getId());
 
         return $letters . $paddedId;
     }

@@ -20,14 +20,22 @@
                                                         <div class="card position-relative text-center">
                                                             <!-- Badge -->
                                                             <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3">URGENT</span>
-                                                            <p class="card-title h6 bg-dark text-white text-center py-2" style="height:120px; display: flex; align-items: center; justify-content: center;">{{ posting['_source'].titre|upper }}</p>
+                                                            <p class="card-title h6 bg-dark text-white text-center py-2" style="height:120px; display: flex; align-items: center; justify-content: center;">{{ posting['_source'].titre|upper }} Réf:{{ generateJobReference(posting['_id']) }}</p>
                                                             <div class="card-body-candidat">
                                                                 <small class="mt-auto">
                                                                     <small class="card-text"><i class="bi bi-eye"></i> {{ posting['_source'].annonceVues|length }} vues</small> |
                                                                     <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ posting['_source'].applications|length }} offres</small>
+                                                                </small><br>
+                                                                <small class="">
+                                                                    Contrat : <span class="badge bg-info">{{ posting['_source'].typeContrat }}</span><br>
+                                                                    Date limite : <br>{{ posting['_source'].dateExpiration|date('d/m/Y') }}<br>
                                                                 </small>
                                                             </div>
-                                                            <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto">Consulter</button>
+                                                            {% if app.user %}
+                                                                <a href="{{ path('app_v2_candidate_view_job_offer', {'id': posting['_id']})}}" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto">Consulter</a>
+                                                            {% else %}
+                                                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_candidate_view_job_offer', {'id':posting['_id']}) }}">Contacter</button>
+                                                            {% endif %}
                                                         </div>
                                                     </div>
 
@@ -45,5 +53,5 @@
                 {% endfor %}
             </div> #}
         </div>
-{% endif %}
+    {% endif %}
 </div>
