@@ -4,13 +4,11 @@ namespace App\Form\Profile\Candidat;
 
 use App\Entity\Langue;
 use App\Entity\Candidate\Langages;
-use App\Repository\LangueRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class LangagesType extends AbstractType
 {
@@ -30,7 +28,7 @@ class LangagesType extends AbstractType
                     'app_identity_expert_step_two.skill.four' => 4,
                     'app_identity_expert_step_two.skill.five' => 5,
                 ],
-                'expanded' => true,
+                'expanded' => false,
                 'multiple' => false,
                 'required' => true,
             ])

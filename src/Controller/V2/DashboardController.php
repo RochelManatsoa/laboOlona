@@ -13,6 +13,9 @@ use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\BusinessModel\Credit;
 use App\Manager\NotificationManager;
 use App\Entity\Entreprise\JobListing;
+use App\Service\Mailer\MailerService;
+use App\Entity\Moderateur\ContactForm;
+use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Manager\BusinessModel\CreditManager;
@@ -33,6 +36,7 @@ class DashboardController extends AbstractController
         private ProfileManager $profileManager,
         private NotificationManager $notificationManager,
         private CreditManager $creditManager,
+        private MailerService $mailerService,
         private UrlGeneratorInterface $urlGenerator,
     ){}
 
@@ -211,6 +215,33 @@ class DashboardController extends AbstractController
         return $this->render('v2/dashboard/job_offer/details.html.twig', [
             'annonce' => $annonce,
             'purchasedContact' => $purchasedContact,
+        ]);
+    }
+
+    #[Route('/contact', name: 'app_v2_contact')]
+    public function support(Request $request): Response
+    {
+        $contactForm = new ContactForm;
+        $contactForm->setCreatedAt(new \DateTime());
+        $form = $this->createForm(ContactFormType::class, $contactForm);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contactForm = $form->getData();
+            $this->em->persist($contactForm);
+            $this->em->flush();
+            $this->mailerService->sendMultiple(
+                ["contact@olona-talents.com", "nirinarocheldev@gmail.com", "techniques@olona-talents.com"],
+                "Nouvelle entrée sur le formulaire de contact",
+                "contact.html.twig",
+                [
+                    'user' => $contactForm,
+                ]
+            );
+            $this->addFlash('success', 'Votre message a été bien envoyé. Nous vous repondrons dans le plus bref delais');
+        }
+
+        return $this->render('v2/dashboard/support.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

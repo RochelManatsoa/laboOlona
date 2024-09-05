@@ -16,22 +16,22 @@ export default class extends Controller {
 
         const btn = document.createElement('button');
         btn.setAttribute('class', 'btn btn-secondary my-2 rounded-pill px-5');
+        console.log(this.addLabelValue, this.addLabelValue)
         btn.innerText = this.addLabelValue || 'Ajouter un élément';
         btn.setAttribute('type', 'button');
         btn.addEventListener('click', this.addElement);
 
         Array.from(this.element.querySelectorAll('fieldset')).forEach(child => {
-            if (!child.dataset.processed) {  // évite la duplication du bouton supprimer
-                this.cleanExistingDeleteButtons(child); // clean up existing delete buttons
+            if (!child.dataset.processed) {  
+                this.cleanExistingDeleteButtons(child); 
                 this.addDeleteButton(child);
                 this.addToggleEventListener(child);
-                child.dataset.processed = true;  // marque cet élément comme traité
+                child.dataset.processed = true;  
             }
         });
 
-        this.element.append(btn);  // ajouter le bouton après le traitement des enfants
+        this.element.append(btn);  
 
-        // Initialiser la datepicker pour les éléments existants
         this.initializeDatepickers();
     }
 
@@ -41,8 +41,6 @@ export default class extends Controller {
     }
 
     initializeDatepickers() {
-        // Utiliser jQuery pour initialiser les datepickers
-        console.log("Initialization Datepicker Called");
         if (typeof $.fn.datepicker === 'function') {
             console.log("Initializing datepickers for .datepicker elements");
             $('.datepicker').datepicker({
@@ -111,7 +109,7 @@ export default class extends Controller {
      */
     addDeleteButton = (item) => {
         const existingBtn = item.querySelector('.btn-danger');
-        if (!existingBtn) { // vérifie s'il n'y a pas déjà un bouton de suppression
+        if (!existingBtn) { 
             const btn = document.createElement('button');
             btn.setAttribute('class', 'btn btn-danger my-2 rounded-pill px-5 float-end');
             btn.innerText = this.deleteLabelValue || 'Supprimer';
@@ -124,58 +122,3 @@ export default class extends Controller {
         }
     }
 }
-    // addCollectionElement(event)
-    // {
-    //     event.preventDefault();
-    //     const item = document.createElement('li');
-    //     item.innerHTML = this.prototypeValue.replace(/__name__/g, this.indexValue);
-    //     this.collectionContainerTarget.appendChild(item);
-    //     this.indexValue++;
-
-    //     // Initialisez CKEditor pour les champs de texte nouvellement ajoutés
-    //     const textArea = item.querySelector('.ckeditor-textarea'); // Remplacez '.ckeditor-textarea' par la classe appropriée de votre champ de texte
-    //     if (textArea) {
-    //         ClassicEditor.create(textArea, {
-    //             toolbar: {
-    //                 items: [
-    //                     'heading', '|',
-    //                     'bold', 'italic', 'link', '|',
-    //                     'bulletedList', 'numberedList', '|',
-    //                     'blockQuote', '|',
-    //                     'undo', 'redo'
-    //                 ]
-    //             }
-    //         });
-    //     }
-    // }
-
-    // handleFormSubmission(event) {
-    //     event.preventDefault();
-    //     const form = event.target;
-    //     console.log(form)
-
-    //     fetch(form.action, {
-    //         method: 'POST',
-    //         body: new FormData(form),
-    //         headers: {
-    //             'X-Requested-With': 'XMLHttpRequest',
-    //         },
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         if (data.redirect_url) {
-    //             window.location.href = data.redirect_url;
-    //         } else if (data.errors) {
-    //             // Gérer les erreurs si nécessaire
-    //             console.error(data.errors);
-    //         }
-    //     })
-    //     .catch(error => console.error('Erreur:', error));
-    // }
-
-    // connect() {
-    //     this.element.querySelectorAll('form').forEach(form => {
-    //         form.addEventListener('submit', this.handleFormSubmission.bind(this));
-    //     });
-    // }
-// }

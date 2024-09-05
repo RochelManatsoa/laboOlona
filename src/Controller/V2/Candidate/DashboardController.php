@@ -71,8 +71,10 @@ class DashboardController extends AbstractController
             $success = true;
             $status = 'Succès';
             $upload = false;
-        
-            $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_UPLOAD_CV);
+            $creditAmount = 0;
+            if($candidat->isIsGeneretated()){
+                $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_UPLOAD_CV);
+            }
             $response = $this->creditManager->adjustCredits($this->userService->getCurrentUser(), $creditAmount);
             
             if (isset($response['error'])) {

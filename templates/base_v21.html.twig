@@ -86,8 +86,21 @@
 			{% endblock %}
 			</div>
 		</div>
-		<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
-		{{ encore_entry_script_tags('main') }}
+		<script>
+
+			function loadCKEditor() {
+				if (typeof ClassicEditor === 'undefined') {
+					var scriptTag = document.createElement('script');
+					scriptTag.src = "{{ asset('assets/ckeditor5/ckeditor.js') }}";
+					document.body.appendChild(scriptTag);
+				}
+			}
+
+			loadCKEditor();
+			document.addEventListener('turbo:load', loadCKEditor);
+
+		</script>
+
 		<div aria-live="polite" aria-atomic="true" class="position-relative">
 			<div class="toast-container position-fixed bottom-0 end-0 p-3">
 				<!-- Toast pour le succès -->
@@ -204,4 +217,5 @@
 		</div>
 
 	</body>
+	{{ encore_entry_script_tags('main') }}
 </html>

@@ -8,7 +8,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class CompetencesType extends AbstractType
@@ -30,7 +29,7 @@ class CompetencesType extends AbstractType
                     'app_identity_expert_step_two.skill.four' => 4,
                     'app_identity_expert_step_two.skill.five' => 5,
                 ],
-                'expanded' => true,
+                'expanded' => false,
                 'multiple' => false,
             ])
             ->add('description', TextareaType::class, [

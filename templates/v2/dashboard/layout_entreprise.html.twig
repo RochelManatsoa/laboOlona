@@ -71,13 +71,13 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link" aria-current="page">
+          <a href="{{ path('app_v2_contact')}}" class="nav-link {{ current_route == 'app_v2_contact' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-envelope-at me-2"></i></span> Contacter le support
           </a>
         </li>
       </ul>
       <hr>
-      <a href="{{ path('app_v2_recruiter_credit')}}" class="btn-primary btn px-2 text-uppercase fw-semibold">
+      <a href="{{ path('app_v2_credit')}}" class="btn-primary btn px-2 text-uppercase fw-semibold">
         <i class="bi bi-bookmark-star fw-bold"></i>
         Recharger mes crédits
       </a>

@@ -1,0 +1,111 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Contacter le support | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% else %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+
+	<section class="">
+		<div class="shadow p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-envelope-at text-warning me-2"></i>
+				Contacter le support
+			</h2>
+			<p class="text-center">
+				Nous sommes là pour vous aider! Que vous ayez une question sur votre compte, besoin d'assistance pour une fonctionnalité de la plateforme, ou que vous souhaitiez signaler un problème, notre équipe de support est prête à vous fournir l'assistance nécessaire.
+			</p>
+			<p class="text-center">
+                Veuillez remplir le formulaire ci-dessous avec les détails de votre demande, et nous vous répondrons dans les plus brefs délais.
+			</p>
+
+                <div class="col-lg-6 col-md-10 col-sm-12 mx-auto">
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-primary">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {{ form_start(form) }}
+
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                {{ form_label(form.titre) }}
+                                {{ form_widget(form.titre)}}
+                                {{ form_errors(form.titre)}}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                {{ form_label(form.email) }}
+                                {{ form_widget(form.email)}}
+                                {{ form_errors(form.email)}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                {{ form_label(form.numero) }}
+                                {{ form_widget(form.numero)}}
+                                {{ form_errors(form.numero)}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                {{ form_label(form.message) }}
+                                {{ form_widget(form.message)}}
+                                {{ form_errors(form.message)}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                {{ form_widget(form.agreeTerms, {
+                                    'label': 'J\'accepte les Termes et Conditions',
+                                    'label_attr': {'class': 'fw-bold small'},
+                                })}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6 mx-auto">
+                        <button type="submit" class="btn btn-primary w-100 my-3 ">{{ 'app_home.contact.button'|trans }}</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            
+			<p class="text-center fw-lighter">
+                Pour les questions urgentes, vous pouvez également nous contacter par téléphone au [Numéro de téléphone du support], disponible de 09h à 18h, du lundi au vendredi.
+			</p>
+		</div>
+	</section>
+{% endblock %}

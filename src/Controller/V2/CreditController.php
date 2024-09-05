@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\V2\Candidate;
+namespace App\Controller\V2;
 
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
@@ -13,7 +13,7 @@ use App\Manager\BusinessModel\TransactionManager;
 use App\Repository\BusinessModel\PackageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/v2/candidate/credit')]
+#[Route('/v2/dashboard/credit')]
 class CreditController extends AbstractController
 {
     public function __construct(
@@ -23,11 +23,9 @@ class CreditController extends AbstractController
         private TransactionManager $transactionManager,
     ){}
     
-    #[Route('/', name: 'app_v2_candidate_credit')]
+    #[Route('/', name: 'app_v2_credit')]
     public function index(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
-        $candidat = $this->userService->checkProfile();
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $transaction = $this->transactionManager->init();
@@ -47,7 +45,7 @@ class CreditController extends AbstractController
             }
         }
 
-        return $this->render('v2/dashboard/candidate/credit/index.html.twig', [
+        return $this->render('v2/dashboard/credit/index.html.twig', [
             'packages' => $this->packageRepository->findBy([], ['id' => 'DESC']),
             'form' => $form->createView()
         ]);

@@ -115,6 +115,20 @@ class CandidatController extends AbstractController
             $technologies = $this->arrayToString($json['technologies']);
             $keywords = $json['keywords'];
             $experiences = $json['experiences'];
+
+            // Effacer les expériences actuelles si elles existent
+            if (count($json['experiences']) > 0) {
+                foreach ($candidat->getExperiences() as $existingExperience) {
+                    $candidat->removeExperience($existingExperience);
+                }
+            }
+            
+            // Effacer les compétences actuelles si elles existent
+            if (count($json['technologies']) > 0) {
+                foreach ($candidat->getCompetences() as $existingCompetence) {
+                    $candidat->removeCompetence($existingCompetence);
+                }
+            }
             
             foreach ($experiences as $key => $value) {
                 // Passer à l'itération suivante si les dates de début et de fin ne sont pas fournies

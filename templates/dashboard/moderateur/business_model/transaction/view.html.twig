@@ -1,21 +1,42 @@
 {% extends 'dashboard/base.html.twig' %}
 
 {% block body %}
-<div class="container mt-5">
+<div class="container my-5">
     <h2>Détail transaction Ref:{{transaction.reference}}</h2>
 
     <hr>
+    <div class="row">
+        <div class="col">
+            <p>
+            <span class="fw-bold">Créée le :</span>
+            {{transaction.transactionDate|date('d/m/y h:m:i')}}<br>
+            <span class="fw-bold">Type :</span>
+            {{transaction.typeTransaction.name}}<br>
+            <span class="fw-bold">Utilisateur :</span>
+            {{transaction.user.nom}} {{transaction.user.prenom}}<br>
+            <span class="fw-bold">Email :</span>
+            {{transaction.user.email}}<br>
+            <span class="fw-bold">Numéro :</span>
+            {{transaction.user.telephone}}<br>
+            <span class="fw-bold">Compte :</span>
+            {{transaction.user.type}}<br>
+            </p>
+        </div>
+        <div class="col">
+            <p>
+            {% if transaction.transactionReferences|length > 0 %}
+            <div class="p-3 border rounded">
+                <span class="fw-bold">Paiement multiple :</span>
+                <span class="badge bg-danger fs-7">Oui</span> <br>
+                {% for transactionReference in transaction.transactionReferences %}
+                    Référence : {{ transactionReference.reference }} | <span class="badge bg-info fs-7">{{ transactionReference.typeTransaction.name}}</span> | {{ transactionReference.montant }} Ar
+                {% endfor %}
+            </div>
+            {% endif %}
+            </p>
+        </div>
+    </div>
 
-    <p>
-    <span class="fw-bold">Créée le :</span>
-    {{transaction.transactionDate|date('d/m/y h:m:i')}}<br>
-    <span class="fw-bold">Type :</span>
-    {{transaction.typeTransaction.name}}<br>
-    <span class="fw-bold">Utilisateur :</span>
-    {{transaction.user.nom}} {{transaction.user.prenom}}<br>
-    <span class="fw-bold">Numéro :</span>
-    {{transaction.user.telephone}}<br>
-    </p>
 
 
     {{ form_start(form)}}
@@ -36,6 +57,10 @@
         {{ form_row(form.details, {'attr': {'class': 'form-control'}}) }}
         <button class="btn btn-dark px-5" type="submit"><i class="mx-2 h5 bi bi-save"></i> Mettre à jour</button>
     {{ form_end(form)}}
+
+    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
+        <i class="mx-2 bi bi-arrow-left"></i>Retour
+    </a>
 </div>
 
 <script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>

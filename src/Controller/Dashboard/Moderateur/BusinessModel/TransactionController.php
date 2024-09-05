@@ -42,6 +42,7 @@ class TransactionController extends AbstractController
         $form = $this->createForm(TransactionSearchFormType::class, $data);
         $form->handleRequest($request);
         $transactions = $this->transactionRepository->findSearch($data);
+        // dd($transactions);
 
         return $this->render('dashboard/moderateur/business_model/transaction/index.html.twig', [
             'transactions' => $transactions,
@@ -94,6 +95,6 @@ class TransactionController extends AbstractController
             ]);
         }
         $this->addFlash('success', $message);
-        return $this->redirectToRoute('app_v2_recruiter_prestation');
+        return $this->redirectToRoute('app_dashboard_moderateur_business_model_transaction');
     }
 }

@@ -161,8 +161,6 @@ class OlonaTalentsController extends AbstractController
             8
         );
 
-        // dd($params);
-        // dd($candidates, $joblistings, $entreprises);
         if($currentUser){
             return $this->render('v2/dashboard/result.html.twig', $params);
         }

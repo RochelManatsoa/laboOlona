@@ -34,9 +34,13 @@ class TypeTransaction
     #[ORM\OneToMany(mappedBy: 'typeTransaction', targetEntity: Transaction::class)]
     private Collection $transaction;
 
+    #[ORM\OneToMany(mappedBy: 'typeTransaction', targetEntity: TransactionReference::class)]
+    private Collection $transactionReferences;
+
     public function __construct()
     {
         $this->transaction = new ArrayCollection();
+        $this->transactionReferences = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -128,6 +132,36 @@ class TypeTransaction
             // set the owning side to null (unless already changed)
             if ($transaction->getTypeTransaction() === $this) {
                 $transaction->setTypeTransaction(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TransactionReference>
+     */
+    public function getTransactionReferences(): Collection
+    {
+        return $this->transactionReferences;
+    }
+
+    public function addTransactionReference(TransactionReference $transactionReference): static
+    {
+        if (!$this->transactionReferences->contains($transactionReference)) {
+            $this->transactionReferences->add($transactionReference);
+            $transactionReference->setTypeTransaction($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransactionReference(TransactionReference $transactionReference): static
+    {
+        if ($this->transactionReferences->removeElement($transactionReference)) {
+            // set the owning side to null (unless already changed)
+            if ($transactionReference->getTypeTransaction() === $this) {
+                $transactionReference->setTypeTransaction(null);
             }
         }
 

@@ -33,25 +33,26 @@ $(function() {
     }
 
     function setupCKEditors() {
-        if (typeof ClassicEditor !== 'undefined') {
-            const editors = document.querySelectorAll('.ckeditor-textarea');
-            if (editors.length > 0) {
-                editors.forEach(editorElement => {
-                    if (editorElement) {
-                        ClassicEditor.create(editorElement, {
-                            toolbar: {
-                                items: [
-                                    'heading', '|',
-                                    'bold', 'italic', 'link', '|',
-                                    'bulletedList', 'numberedList', '|',
-                                    'blockQuote', 'insertTable', '|',
-                                    'undo', 'redo'
-                                ]
-                            }
-                        });
-                    }
-                });
-            }
+        const editors = document.querySelectorAll('.ckeditor-textarea');
+        if (editors.length > 0) {
+            editors.forEach(editorElement => {
+                if (editorElement) {
+                    ClassicEditor.create(editorElement, {
+                        toolbar: {
+                            items: [
+                                'heading', '|',
+                                'bold', 'italic', 'link', '|',
+                                'bulletedList', 'numberedList', '|',
+                                'blockQuote', 'insertTable', '|',
+                                'undo', 'redo'
+                            ]
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+            });
         }
     }
 
@@ -185,7 +186,6 @@ $(function() {
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
         });
         
-        // Attach event listener to the confirmation button only once
         $('#confirmButton').off('click').on('click', function() {
             var buttonType = $(this).attr('data-id');
             if (buttonType === "show-candidate-contact") {
@@ -434,25 +434,73 @@ $(function() {
             var packageId = button.data('bs-id');
 
             var modalTitle = modal.find('.modal-title');
-            var modalButton = modal.find('#submitModal');
             var modalBodySelect = modal.find('#transaction_package');
 
             modalTitle.text(`Achat sécurisé : ${packagePrice} Ariary | ${packageName} `);
             modalBodySelect.val(packageId);
             
             $('#pointMarchand').hide();
+            $('#bankApi').hide();
             $('input[name="transaction[typeTransaction]"]').on('change', function() {
-                $('#pointMarchand').show();
-            })
-            modalButton.on('click', function() {
-                modal.modal('hide');
-                var errorToast = $('#errorToast');
-                var toast = new Toast(errorToast[0]); 
-                setTimeout(function() {
-                    toast.show();
-                }, 1500);
+                var value = parseInt($(this).val(), 10);
+                if (value <= 3) {
+                    $('#pointMarchand').show();
+                    $('#bankCard').hide();
+                    $('#bankApi').hide();
+                } else {
+                    $('#bankApi').show();
+                    $('#mobileMoney').hide();
+                    $('#pointMarchand').hide();
+                }
+            })            
+        });
+
+        $('#package').on('hide.bs.modal', function (event) {
+            $('#bankCard').show();
+            $('#mobileMoney').show();
+        })
+
+        $('#transactionForm').on('submit', function(e) {
+            e.preventDefault();
+            var url = $(this).data('action');
+            var formData = new FormData(this);
+            var packageModal = Modal.getInstance($('#package')[0]);
+            if (!packageModal) {
+                packageModal = new Modal($('#package')[0]);
+            }
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
+                success: function(data) {
+                    console.log(data.success)
+                    Turbo.renderStreamMessage(data);
+                    packageModal.hide()
+                    if (data.success) {
+                        $('#successToast').find('.toast-body').text(data.message);
+                        var successToast = new Toast($('#successToast')[0]);
+                        packageModal.hide();
+                        setTimeout(function() {
+                            successToast.show();
+                        }, 1500);
+                    } else {
+                        $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Toast($('#errorToast')[0]);
+                        errorToast.show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de l\'ajout du candidat dans vos favoris.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
             });
-            
         });
 
         $('#cvForm').on('submit', function(e) {

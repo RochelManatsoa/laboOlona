@@ -33,8 +33,8 @@ class ContactFormType extends AbstractType
             ->add('message', TextareaType::class, [
                 'label' => 'app_home.contact.message',
                 'attr' => [
-                    'rows' => 8,
-                    'placeholder' => 'app_home.contact.placeholder.message'
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
                 ]
             ])
             ->add('email', EmailType::class, [
@@ -56,11 +56,11 @@ class ContactFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Vous devriez accepter nos conditions.',
                     ]),
                 ],
                 'attr' => [
-                    'label' => 'app_home.contact.agree_terms',
+                    'label' => 'J\'accepte les termes et conditions.',
                 ],
             ])
         ;

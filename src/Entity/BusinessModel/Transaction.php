@@ -4,6 +4,8 @@ namespace App\Entity\BusinessModel;
 
 use App\Entity\User;
 use App\Repository\BusinessModel\TransactionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -81,6 +83,14 @@ class Transaction
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $token = null;
+
+    #[ORM\OneToMany(mappedBy: 'transaction', targetEntity: TransactionReference::class, cascade: ['persist', 'remove'])]
+    private Collection $transactionReferences;
+
+    public function __construct()
+    {
+        $this->transactionReferences = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -203,6 +213,36 @@ class Transaction
     public function setToken(?string $token): static
     {
         $this->token = $token;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TransactionReference>
+     */
+    public function getTransactionReferences(): Collection
+    {
+        return $this->transactionReferences;
+    }
+
+    public function addTransactionReference(TransactionReference $transactionReference): static
+    {
+        if (!$this->transactionReferences->contains($transactionReference)) {
+            $this->transactionReferences->add($transactionReference);
+            $transactionReference->setTransaction($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransactionReference(TransactionReference $transactionReference): static
+    {
+        if ($this->transactionReferences->removeElement($transactionReference)) {
+            // set the owning side to null (unless already changed)
+            if ($transactionReference->getTransaction() === $this) {
+                $transactionReference->setTransaction(null);
+            }
+        }
 
         return $this;
     }

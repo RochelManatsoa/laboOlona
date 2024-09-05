@@ -32,7 +32,6 @@
 									<td class="">
 										<a href="{{ path('app_dashboard_moderateur_business_model_transaction_view', { 'transaction': item.id })}}">
 											{{ item.reference}}
-											<i class="bi bi-pencil-square"></i>
 										</a>
 										<br>
 										<span class="fw-lighter small">
@@ -41,6 +40,9 @@
 									</td>
 									<td class="col-2">
 										<span class="fw-light small">{{ item.package.name }} </span>
+										{% if item.transactionReferences|length > 0 %}
+											<br><span class="badge badge-sm bg-info small"><i class="bi bi-info-circle"></i> Multiple </span>
+										{% endif %}
 									</td>
 									<td class="col-2">
 										{{ statusTransaction(item)|raw }}
@@ -75,6 +77,10 @@
 					1ère chose à faire
 				</h3>
 			{% endif %}
+
+    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
+        <i class="mx-2 bi bi-arrow-left"></i>Retour
+    </a>
 </div>
 {% endblock %}
 
