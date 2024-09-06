@@ -4,15 +4,18 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\User;
+use App\Entity\Prestation;
 use App\Security\EmailVerifier;
 use App\Entity\CandidateProfile;
-use App\Entity\Prestation;
 use App\Form\RegistrationFormType;
+use App\Security\AppAuthenticator;
 use Symfony\Component\Mime\Address;
 use App\Manager\OlonaTalentsManager;
 use App\Service\ElasticsearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+use App\Manager\BusinessModel\CreditManager;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
@@ -20,8 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class OlonaTalentsController extends AbstractController
 {
@@ -31,6 +34,7 @@ class OlonaTalentsController extends AbstractController
         private JobListingRepository $annonceRepository,
         private ElasticsearchService $elasticsearch,
         private OlonaTalentsManager $olonaTalentsManager,
+        private CreditManager $creditManager,
         private PaginatorInterface $paginatorInterface,
         private Security $security,
     ) {}
@@ -60,7 +64,13 @@ class OlonaTalentsController extends AbstractController
     }
 
     #[Route('/v2/olona-register', name: 'app_olona_talents_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EmailVerifier $emailVerifier): Response
+    public function register(
+        Request $request, 
+        UserPasswordHasherInterface $userPasswordHasher, 
+        EmailVerifier $emailVerifier,
+        UserAuthenticatorInterface $userAuthenticator, 
+        AppAuthenticator $authenticator,
+    ): Response
     {
         $user = new User();
         $user->setDateInscription(new DateTime());
@@ -76,6 +86,7 @@ class OlonaTalentsController extends AbstractController
             );
             $this->em->persist($user);
             $this->em->flush();
+            $this->creditManager->ajouterCreditsBienvenue($user, 200);
 
             $emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
@@ -86,7 +97,13 @@ class OlonaTalentsController extends AbstractController
                     ->context(['user' => $user])
             );
 
-            return $this->redirectToRoute('app_email_sending');
+            return $userAuthenticator->authenticateUser(
+                $user,
+                $authenticator,
+                $request
+            );
+
+            // return $this->redirectToRoute('app_v2_dashboard');
         }
 
         return $this->render('v2/olona_register.html.twig', [

@@ -56,10 +56,13 @@
 										<a href="{{ path('app_dashboard_moderateur_business_model_transaction_view', { 'transaction': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
 											<i class="bi bi-eye"></i>
 										</a>
-										<a id="delete-transaction" href="{{ path('app_dashboard_moderateur_business_model_transaction_delete', { 'transaction': item.id })}}" class="btn btn-sm btn-danger rounded-pill"
-										onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette transaction ?');" >
-											<i class="bi bi-trash"></i>
-										</a>
+										<form action="{{ path('app_dashboard_moderateur_business_model_transaction_delete')}}" method="post">
+											<input type="hidden" name="transactionId" value="{{item.id}}">
+											<button type="submit" class="btn btn-sm btn-danger rounded-pill"
+											onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette transaction ?');" >
+												<i class="bi bi-trash"></i>
+											</button>
+										</form>
 									</td>
 								</tr>
 							{% endfor %}

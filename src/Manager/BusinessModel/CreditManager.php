@@ -168,7 +168,6 @@ class CreditManager
         $this->em->persist($credit);
         $this->em->persist($transaction);
         $this->em->flush();
-        $this->notifyTransaction($transaction);
 
         return true;
     }

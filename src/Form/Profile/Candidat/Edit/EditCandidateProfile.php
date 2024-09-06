@@ -88,8 +88,8 @@ class EditCandidateProfile extends AbstractType
                 'entry_options' => ['label' => false],
                 'attr' => [
                     'data-controller' => 'form-collection',
-                    'data-form-controller-add-label-value' => 'Ajouter une compétence',
-                    'data-form-controller-delete-label-value' => 'Supprimer'
+                    'data-form-collection-add-label-value' => 'Ajouter une compétence',
+                    'data-form-collection-delete-label-value' => 'Supprimer'
                 ]
             ])
             ->add('experiences', CollectionType::class, [
@@ -100,8 +100,8 @@ class EditCandidateProfile extends AbstractType
                 'entry_options' => ['label' => false],
                 'attr' => [
                     'data-controller' => 'form-collection',
-                    'data-form-controller-add-label-value' => 'Ajouter une expérience',
-                    'data-form-controller-delete-label-value' => 'Supprimer'
+                    'data-form-collection-add-label-value' => 'Ajouter une expérience',
+                    'data-form-collection-delete-label-value' => 'Supprimer'
                 ]
             ])
             ->add('langages', CollectionType::class, [
@@ -112,8 +112,8 @@ class EditCandidateProfile extends AbstractType
                 'entry_options' => ['label' => false],
                 'attr' => [
                     'data-controller' => 'form-collection',
-                    'data-form-controller-add-label-value' => 'Ajouter une langue',
-                    'data-form-controller-delete-label-value' => 'Supprimer',
+                    'data-form-collection-add-label-value' => 'Ajouter une langue',
+                    'data-form-collection-delete-label-value' => 'Supprimer',
                 ]
             ])
         ;

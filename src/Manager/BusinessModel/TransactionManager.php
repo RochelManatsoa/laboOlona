@@ -42,7 +42,7 @@ class TransactionManager
         /** @var Transaction $transaction */
         $transaction = $form->getData();
         $package = $transaction->getPackage();
-        $transaction->setAmount($package->getPrice());
+        // $transaction->setAmount($package->getPrice());
         $transaction->setCreditsAdded($package->getCredit());
         $this->save($transaction);
 

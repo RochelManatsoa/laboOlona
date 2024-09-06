@@ -4,6 +4,7 @@ namespace App\Entity\BusinessModel;
 
 use App\Repository\BusinessModel\TransactionReferenceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TransactionReferenceRepository::class)]
 class TransactionReference
@@ -14,6 +15,11 @@ class TransactionReference
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Sequentially([
+        new Assert\NotNull,
+        new Assert\Length(min:10, minMessage:'La référence est trop courte.'),
+        new Assert\Regex(pattern: '/^[a-zA-Z0-9]*$/', message: 'La référence ne doit contenir que des chiffres et des lettres.'),
+    ])]
     private ?string $reference = null;
 
     #[ORM\ManyToOne(inversedBy: 'transactionReferences')]
@@ -23,6 +29,11 @@ class TransactionReference
     private ?Transaction $transaction = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Sequentially([
+        new Assert\NotNull,
+        new Assert\Length(min:2, minMessage:'Le montant est trop courte.'),
+        new Assert\Regex(pattern: '/^-?[0-9]+(\.[0-9]+)?$/', message: 'Le montant doit être un nombre décimal valide.'),
+    ])]
     private ?float $montant = null;
 
     public function getId(): ?int

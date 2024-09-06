@@ -29,7 +29,7 @@
                 <span class="fw-bold">Paiement multiple :</span>
                 <span class="badge bg-danger fs-7">Oui</span> <br>
                 {% for transactionReference in transaction.transactionReferences %}
-                    Référence : {{ transactionReference.reference }} | <span class="badge bg-info fs-7">{{ transactionReference.typeTransaction.name}}</span> | {{ transactionReference.montant }} Ar
+                    Référence : {{ transactionReference.reference }} | <span class="badge bg-info fs-7">{{ transactionReference.typeTransaction.name}}</span> | {{ transactionReference.montant }} Ar<br>
                 {% endfor %}
             </div>
             {% endif %}
@@ -40,14 +40,43 @@
 
 
     {{ form_start(form)}}
-    <div class="input-group mb-3">
-        <div class="form-floating mb-3">
-            {{ form_widget(form.amount, {'attr': {'class': 'form-control'}}) }}
+    <div class="input-group">
+        <div class="form-floating">
+            {{ form_widget(form.amount, {'attr': {'class': 'form-control', 'readonly':'true'}}) }}
             {{ form_label(form.amount)}}
         </div>
-        <div class="form-floating mb-3">
+        <div class="form-floating">
             {{ form_widget(form.reference, {'attr': {'class': 'form-control', 'readonly':'true'}}) }}
             {{ form_label(form.reference)}}
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" readonly id="" placeholder="name@example.com" value="{{transaction.typeTransaction.name}}">
+            <label for="">Plateforme</label>
+        </div>
+    </div>
+    {% if transaction.transactionReferences|length > 0 %}
+        {% for item in transaction.transactionReferences %}
+        <div class="input-group mb-3">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" readonly id="" placeholder="name@example.com" value="{{ item.montant }}">
+                <label for="">Montant</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" readonly id="" placeholder="name@example.com" value="{{ item.reference }}">
+                <label for="">Référence</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" readonly id="" placeholder="name@example.com" value="{{ item.typeTransaction.name}}">
+                <label for="">Plateforme</label>
+            </div>
+        </div>
+            
+        {% endfor %}
+    {% endif %}
+    <div class="input-group mb-3">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" readonly id="floatingInputInvalid" placeholder="name@example.com" value="{{total}}">
+            <label for="floatingInputInvalid">Total</label>
         </div>
         <div class="form-floating mb-3">
             {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}

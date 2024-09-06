@@ -1,0 +1,149 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Création de profil Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+	<section class="mt-5">
+		<div class="row">
+			<div class="col-12 col-sm-8">
+				<div class="p-2 p-sm-5">
+					<h1 class="fs-2">
+						Création de votre profil public
+					</h1>
+					{{ form_start(form, {'attr':{'id':'myFormT'}})}}
+					{{ form_errors(form)}}
+					<div class="col-md-10">
+						<hr class="my-4">
+						<div class="row">
+							<h2 class="fs-3">Votre statut</h2>
+							{% for account in form.type %}
+							
+							<div class="col-md-4 text-center">
+								<div class="custom-control custom-radio image-checkbox photo-gris">
+									{{ form_widget(account, {'attr': {'class': 'custom-control-input'}}) }}
+									<label class="custom-control-label" for="{{ account.vars.id }}">
+										<div class="text-center mt-2"> 
+											<h3 class="fs-5 fw-bold">{{account_label(account.vars.label|upper)}}</h3>
+										</div>
+										<img src="{{ asset('/images/' ~ account.vars.label ~ '.png') }}" class="img-fluid border" alt="{{ account.vars.label }}">
+									</label>
+								</div>
+							</div>
+
+							{% endfor %}
+						</div>
+
+						<hr class="my-4">
+						
+						<div class="row" id="profile">
+							<h2 class="fs-3">Vos secteurs d'activité</h2>
+							
+							<div id="candidateProfileSectors">
+								{{ form_row(form.candidateProfile.secteurs) }}
+							</div>
+							<div id="entrepriseProfileSectors">
+								{{ form_row(form.entrepriseProfile.secteurs) }}
+							</div>
+							{# <div id="referrerProfileSectors">
+								{{ form_row(form.referrerProfile) }}
+							</div>								 #}
+						</div>
+						
+						<div class="row" id="profile">
+							<h2 class="fs-3">Votre présentation</h2>
+							
+							<div id="candidateProfileSectors">
+								{{ form_row(form.candidateProfile.resume) }}
+							</div>
+							<div id="entrepriseProfileSectors">
+								{{ form_row(form.entrepriseProfile.description) }}
+							</div>
+							{# <div id="referrerProfileSectors">
+								{{ form_row(form.referrerProfile) }}
+							</div>								 #}
+						</div>
+{# 						
+						<div class="row" id="profile">
+							<h2 class="fs-3">Votre Profil</h2>
+							
+							<div id="candidateProfileSectors">
+								{{ form_row(form.candidateProfile) }}
+							</div>
+							<div id="entrepriseProfileSectors">
+								{{ form_row(form.entrepriseProfile) }}
+							</div>
+							<div id="referrerProfileSectors">
+								{{ form_row(form.referrerProfile) }}
+							</div>								
+						</div> #}
+						
+						<div class="row" id="resume">
+							<h2 class="fs-3">Votre présentation (obligatoire)</h2>
+							<!-- Vous pouvez ajouter d'autres champs ici -->
+						</div>
+						
+						<div style="display:none;">
+							{{ form_widget(form) }}
+						</div>
+					</div>
+					{{ form_end(form) }}
+				</div>
+			</div>
+			<div class="col-12 col-sm-4">
+				<div class="text-center p-2 p-sm-5">
+					<h1 class="fs-4">
+						Création de votre profil public
+					</h1>
+					<p class="">
+						Commencez à feuilleter les profils qui vous interresse pour nous aider à vous proposer une sélection qui vous plaira.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileContainers = {
+                'Candidat': document.getElementById('candidateProfileSectors'),
+                'Entreprise': document.getElementById('entrepriseProfileSectors'),
+                'Coopteur': document.getElementById('referrerProfileSectors')
+            };
+            
+            const radios = document.querySelectorAll('input[name="profile[type]"]');
+            radios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Hide all profile containers
+                    for (const key in profileContainers) {
+                        profileContainers[key].style.display = 'none';
+                    }
+                    
+                    // Show the selected profile container
+                    const selectedLabel = this.nextElementSibling.querySelector('.custom-control-label').textContent.trim();
+                    if (profileContainers[selectedLabel]) {
+                        profileContainers[selectedLabel].style.display = 'block';
+                    }
+                });
+            });
+
+            // Trigger change event on page load to display the correct form if a type is pre-selected
+            radios.forEach(radio => {
+                if (radio.checked) {
+                    radio.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block preview %}{% endblock %}

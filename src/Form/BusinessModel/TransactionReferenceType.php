@@ -8,9 +8,13 @@ use App\Entity\BusinessModel\TypeTransaction;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\BusinessModel\TransactionReference;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\Sequentially;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class TransactionReferenceType extends AbstractType
 {
@@ -31,21 +35,11 @@ class TransactionReferenceType extends AbstractType
                 },
                 'label' => 'Plateforme',
             ])
-            ->add('reference', TextType::class, [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'La référence ne doit pas être vide.',
-                    ]),
-                ],
-                'label' => 'Référence de transaction (*)',
+            ->add('montant', NumberType::class, [
+                'label' => 'Montant de la transaction (*)',
             ])
-            ->add('montant', TextType::class, [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Le montant ne doit pas être vide.',
-                    ]),
-                ],
-                'label' => 'Montant (*)',
+            ->add('reference', TextType::class, [
+                'label' => 'Référence de la transaction (*)',
             ]);
         ;
     }

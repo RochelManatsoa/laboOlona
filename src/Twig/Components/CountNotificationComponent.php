@@ -4,7 +4,7 @@ namespace App\Twig\Components;
 
 use App\Entity\Notification;
 use App\Repository\NotificationRepository;
-use App\Service\User\UserService;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
@@ -15,17 +15,22 @@ class CountNotificationComponent
     
     public function __construct(
         private NotificationRepository $notificationRepository,
-        private UserService $userService,
+        private Security $security,
     ){
     }
 
     public function getAllNotification(): int
     {
-        return count($this->notificationRepository->findByDestinataireAndStatusNot(
-            $this->userService->getCurrentUser(), 
-            ['id' => 'DESC'], 
-            Notification::STATUS_DELETED,
-            0
-        ));
+        $count = 0;
+        if($this->security->getUser()){
+            $count = count($this->notificationRepository->findByDestinataireAndStatusNot(
+                $this->security->getUser(), 
+                ['id' => 'DESC'], 
+                Notification::STATUS_DELETED,
+                0
+            ));
+        }
+
+        return $count;
     }
 }

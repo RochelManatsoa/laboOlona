@@ -438,30 +438,41 @@ $(function() {
 
             modalTitle.text(`Achat sécurisé : ${packagePrice} Ariary | ${packageName} `);
             modalBodySelect.val(packageId);
-            
-            $('#pointMarchand').hide();
-            $('#bankApi').hide();
-            $('input[name="transaction[typeTransaction]"]').on('change', function() {
-                var value = parseInt($(this).val(), 10);
-                if (value <= 3) {
-                    $('#pointMarchand').show();
-                    $('#bankCard').hide();
-                    $('#bankApi').hide();
-                } else {
-                    $('#bankApi').show();
-                    $('#mobileMoney').hide();
-                    $('#pointMarchand').hide();
-                }
-            })            
+                      
         });
 
+        $('input[name="transaction[typeTransaction]"]').on('change', function() {
+            var value = parseInt($(this).val(), 10);
+            if (value <= 3) {
+                console.log($('#pointMarchand'))
+                $('#pointMarchand').show();
+                $('#bankCard').hide();
+                $('#bankApi').hide();
+            } else {
+                $('#bankApi').show();
+                $('#mobileMoney').hide();
+                $('#pointMarchand').hide();
+            }
+        })  
+
         $('#package').on('hide.bs.modal', function (event) {
-            $('#bankCard').show();
-            $('#mobileMoney').show();
+            setTimeout(function() {
+                $('#bankCard').show();
+                $('#mobileMoney').show();
+                $('input[name="transaction[typeTransaction]"]').prop('checked', false); 
+                $('input[name="transaction[reference]"]').val('');
+                $('input[name="transaction[amount]"]').val('');
+                $('#pointMarchand').hide();
+                $('#bankApi').hide();
+                $('.invalid-feedback').remove();
+                $('.is-invalid').removeClass('is-invalid');
+            }, 500);
         })
 
         $('#transactionForm').on('submit', function(e) {
             e.preventDefault();
+            $('.invalid-feedback').remove();
+            $('.is-invalid').removeClass('is-invalid');
             var url = $(this).data('action');
             var formData = new FormData(this);
             var packageModal = Modal.getInstance($('#package')[0]);
@@ -474,29 +485,28 @@ $(function() {
                 data: formData,
                 contentType: false,
                 processData: false,
+                dataType: 'html', 
                 headers: {
                     'Accept': 'text/vnd.turbo-stream.html'
                 },
                 success: function(data) {
-                    console.log(data.success)
+                    console.log('Response processed by Turbo:', data);
                     Turbo.renderStreamMessage(data);
-                    packageModal.hide()
-                    if (data.success) {
-                        $('#successToast').find('.toast-body').text(data.message);
+        
+                    // Vérifiez si la réponse contient le target 'successToast'
+                    if (data.includes('target="successToast"')) {
                         var successToast = new Toast($('#successToast')[0]);
+                        var packageModal = Modal.getInstance($('#package')[0]) || new Modal($('#package')[0]);
                         packageModal.hide();
+                
                         setTimeout(function() {
                             successToast.show();
                         }, 1500);
-                    } else {
-                        $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
-                        var errorToast = new Toast($('#errorToast')[0]);
-                        errorToast.show();
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.error('Erreur:', textStatus, errorThrown);
-                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de l\'ajout du candidat dans vos favoris.');
+                    $('#errorToast').find('.toast-body').text('Une erreur s\'est produite. Veuillez recommencer');
                     var errorToast = new Toast($('#errorToast')[0]);
                     errorToast.show();
                 }

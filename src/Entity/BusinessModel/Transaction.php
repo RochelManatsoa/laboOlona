@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 class Transaction
@@ -55,6 +56,11 @@ class Transaction
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Sequentially([
+        new Assert\NotNull,
+        new Assert\Length(min:2, minMessage:'Le montant est trop courte.'),
+        new Assert\Regex(pattern: '/^-?[0-9]+(\.[0-9]+)?$/', message: 'Le montant doit être un nombre décimal valide.'),
+    ])]
     private ?float $amount = null;
 
     #[ORM\Column(nullable: true)]
@@ -64,6 +70,11 @@ class Transaction
     private ?\DateTimeInterface $transactionDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Sequentially([
+        new Assert\NotNull,
+        new Assert\Length(min:10, minMessage:'La référence est trop courte.'),
+        new Assert\Regex(pattern: '/^[a-zA-Z0-9]*$/', message: 'La référence ne doit contenir que des chiffres et des lettres.'),
+    ])]
     private ?string $reference = null;
 
     #[ORM\Column(length: 50, nullable: true)]
@@ -85,6 +96,7 @@ class Transaction
     private ?string $token = null;
 
     #[ORM\OneToMany(mappedBy: 'transaction', targetEntity: TransactionReference::class, cascade: ['persist', 'remove'])]
+    #[Assert\Valid()]
     private Collection $transactionReferences;
 
     public function __construct()

@@ -42,7 +42,6 @@ class TransactionController extends AbstractController
         $form = $this->createForm(TransactionSearchFormType::class, $data);
         $form->handleRequest($request);
         $transactions = $this->transactionRepository->findSearch($data);
-        // dd($transactions);
 
         return $this->render('dashboard/moderateur/business_model/transaction/index.html.twig', [
             'transactions' => $transactions,
@@ -58,17 +57,21 @@ class TransactionController extends AbstractController
         $transaction->setToken($transactionToken);
         $form = $this->createForm(TransactionStaffType::class, $transaction);
         $form->handleRequest($request);
+        $total = $transaction->getAmount();
+        foreach($transaction->getTransactionReferences() as $value){
+            $total = $total + $value->getMontant();
+        }
         if($form->isSubmitted() && $form->isValid()){
             $submittedToken = $form->get('token')->getData();
             if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('transaction'.$transaction->getId(), $submittedToken))) {
                 throw new InvalidCsrfTokenException('Invalid CSRF token.');
             }
             $this->transactionManager->saveForm($form);
-            if($this->creditManager->validateTransaction($form->getData())){
-                $this->addFlash('success', 'Transaction mis à jour');
-            }else{
-                $this->addFlash('danger', 'Une erreur s\'est produite lors de la mis à jour');
+            $this->creditManager->notifyTransaction($form->getData());
+            if($form->getData()->getStatus() === Transaction::STATUS_AUTHORIZED){
+                $this->creditManager->validateTransaction($form->getData());
             }
+            $this->addFlash('success', 'Transaction mis à jour');
 
             $referer = $request->headers->get('referer');
             return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_dashboard_moderateur_business_model_transaction');
@@ -77,19 +80,21 @@ class TransactionController extends AbstractController
         return $this->render('dashboard/moderateur/business_model/transaction/view.html.twig', [
             'transaction' => $transaction,
             'form' => $form->createView(),
+            'total' => $total,
         ]);
     }
 
-    #[Route('/delete/{transaction}', name: 'app_dashboard_moderateur_business_model_transaction_delete')]
-    public function delete(Request $request, Transaction $transaction): Response
+    #[Route('/delete/transaction', name: 'app_dashboard_moderateur_business_model_transaction_delete', methods:['POST'])]
+    public function delete(Request $request): Response
     {
-        $transactionId = $transaction->getId();
+        $transactionId = $request->request->get('transactionId');
+        $transaction = $this->em->getRepository(Transaction::class)->find($transactionId);
         $message = "La transaction a bien été supprimée";
         $this->em->remove($transaction);
         $this->em->flush();
         if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-            return $this->render('v2/dashboard/recruiter/transaction/delete.html.twig', [
+            return $this->render('dashboard/moderateur/business_model/transaction/delete.html.twig', [
                 'transactionId' => $transactionId,
                 'message' => $message,
             ]);

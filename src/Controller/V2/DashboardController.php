@@ -4,6 +4,7 @@ namespace App\Controller\V2;
 
 use App\Entity\User;
 use App\Entity\Notification;
+use App\Form\V2\ProfileType;
 use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
@@ -54,7 +55,26 @@ class DashboardController extends AbstractController
             return $this->redirectToRoute('app_dashboard_moderateur');
         }
 
-        return $this->render('v2/dashboard/index.html.twig', []);
+        return $this->redirectToRoute('app_v2_dashboard_create_profile');
+    }
+
+    #[Route('/providers/create', name: 'app_v2_dashboard_create_profile')]
+    public function provider(Request $request): Response
+    {
+        /** @var User $user */
+        $user = $this->userService->getCurrentUser();
+        
+        $form = $this->createForm(ProfileType::class, $user,[]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            $this->em->persist($user);
+            $this->em->flush();
+        }
+        
+        return $this->render('v2/dashboard/profile/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
     
     #[Route('/contacts', name: 'app_v2_contacts')]

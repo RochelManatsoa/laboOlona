@@ -8,10 +8,14 @@ use App\Entity\BusinessModel\Transaction;
 use App\Entity\BusinessModel\TypeTransaction;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Length;
 use App\Form\BusinessModel\TransactionReferenceType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\Sequentially;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class TransactionType extends AbstractType
@@ -30,13 +34,11 @@ class TransactionType extends AbstractType
                 'required' => true, 
                 'label' => false
             ])
+            ->add('amount', NumberType::class, [
+                'label' => 'Montant de la transaction (*)',
+            ])
             ->add('reference', TextType::class, [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'La référence ne doit pas être vide.',
-                    ]),
-                ],
-                'label' => 'Référence de transaction (*)',
+                'label' => 'Référence de la transaction (*)',
             ])
             ->add('transactionReferences', CollectionType::class, [
                 'entry_type' => TransactionReferenceType::class,
@@ -47,8 +49,8 @@ class TransactionType extends AbstractType
                 'entry_options' => ['label' => false],
                 'attr' => [
                     'data-controller' => 'form-collection',
-                    'data-form-controller-add-label-value' => 'Ajouter une référence',
-                    'data-form-controller-delete-label-value' => 'Supprimer'
+                    'data-form-collection-add-label-value' => 'Ajouter une référence',
+                    'data-form-collection-delete-label-value' => 'Supprimer'
                 ]
             ]);
         ;

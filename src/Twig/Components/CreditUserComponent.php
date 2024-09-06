@@ -2,7 +2,7 @@
 
 namespace App\Twig\Components;
 
-use App\Service\User\UserService;
+use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\BusinessModel\CreditRepository;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -14,11 +14,16 @@ class CreditUserComponent
     
     public function __construct(
         private CreditRepository $creditRepository,
-        private UserService $userService,
+        private Security $security,
     ){}
 
     public function getCreditUser(): int
     {
-        return $this->creditRepository->findOneBy(['user' => $this->userService->getCurrentUser()])->getTotal();
+        $credit = 0;
+        if($this->security->getUser()){
+            $credit = $this->creditRepository->findOneBy(['user' => $this->security->getUser()])->getTotal();
+        }
+
+        return $credit;
     }
 }
