@@ -54,6 +54,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'Coopteur' => self::ACCOUNT_REFERRER ,
         ];
     }
+   
+    public static function getProfileAccount() {
+        return [
+            'Candidat' => self::ACCOUNT_CANDIDAT ,
+            'Entreprise' => self::ACCOUNT_ENTREPRISE ,
+        ];
+    }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -152,6 +159,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'buyer', targetEntity: PurchasedContact::class)]
     private Collection $purchasedContacts;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $postalCode = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $city = null;
 
     public function __construct()
     {
@@ -719,6 +732,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $purchasedContact->setBuyer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): static
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): static
+    {
+        $this->city = $city;
 
         return $this;
     }

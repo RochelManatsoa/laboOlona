@@ -2,16 +2,17 @@
 
 namespace App\Twig;
 
-use App\Entity\BusinessModel\BoostVisibility;
-use App\Entity\CandidateProfile;
-use App\Entity\EntrepriseProfile;
 use App\Entity\User;
-use App\Manager\BusinessModel\BoostVisibilityManager;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
+use App\Entity\BusinessModel\Boost;
 use Twig\Extension\AbstractExtension;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Entity\BusinessModel\BoostVisibility;
+use App\Manager\BusinessModel\BoostVisibilityManager;
 
 class BoostExtension extends AbstractExtension
 {
@@ -32,6 +33,7 @@ class BoostExtension extends AbstractExtension
     {
         return [
             new TwigFunction('checkBoost', [$this, 'checkBoost']),
+            new TwigFunction('getBoostInfo', [$this, 'getBoostInfo']),
         ];
     }
 
@@ -60,6 +62,15 @@ class BoostExtension extends AbstractExtension
         }
 
         return $userBoost;
+    }
+
+    public function getBoostInfo(string $boostStrId): ?Boost
+    {
+        if (preg_match('/\d+$/', $boostStrId, $matches)) {
+            $boostId = $matches[0];
+        }
+
+        return $this->em->getRepository(Boost::class)->find($boostId);
     }
 
 }

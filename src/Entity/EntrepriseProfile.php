@@ -51,7 +51,7 @@ class EntrepriseProfile
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $taille = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $localisation = null;
 
     #[ORM\Column(length: 255, nullable: true)]

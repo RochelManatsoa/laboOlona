@@ -19,11 +19,14 @@ use App\Entity\Moderateur\ContactForm;
 use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Form\Boost\CreateCandidateBoostType;
+use App\Form\Boost\CreateRecruiterBoostType;
 use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -44,6 +47,8 @@ class DashboardController extends AbstractController
     #[Route('/', name: 'app_v2_dashboard')]
     public function index(): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
         $profile = $this->userService->checkProfile();
         if($profile instanceof EntrepriseProfile){
             return $this->redirectToRoute('app_v2_recruiter_dashboard');
@@ -55,24 +60,107 @@ class DashboardController extends AbstractController
             return $this->redirectToRoute('app_dashboard_moderateur');
         }
 
-        return $this->redirectToRoute('app_v2_dashboard_create_profile');
+        return $this->redirectToRoute('app_v2_dashboard_create_profile', ['id' => $currentUser->getId()]);
     }
 
-    #[Route('/providers/create', name: 'app_v2_dashboard_create_profile')]
-    public function provider(Request $request): Response
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
+    #[Route('/providers/{id}/create', name: 'app_v2_dashboard_create_profile')]
+    public function profileInfo(Request $request, User $user): Response
+    {        
+        $typology = $request->query->get('typology', 'Candidat');
+        $form = $this->createForm(ProfileType::class, $user,[]);
+        $form->add('type', ChoiceType::class, [
+            'choices' => User::getProfileAccount(),
+            'required' => true,
+            'expanded' => true,
+            'multiple' => false,
+            'label' => false,
+            'data' => User::getProfileAccount()[$typology],
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            if($user->getType() === User::ACCOUNT_CANDIDAT){
+                $user->setEntrepriseProfile(null);
+            }
+            if($user->getType() === User::ACCOUNT_ENTREPRISE){
+                $user->setCandidateProfile(null);
+            }
+            $this->em->persist($user);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_v2_dashboard_contact_profile', ['id' => $form->getData()->getId()]);
+        }else {
+
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('v2/dashboard/profile/form_errors.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+        }
         
+        return $this->render('v2/dashboard/profile/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/providers/{id}/contact', name: 'app_v2_dashboard_contact_profile')]
+    public function contactInfo(Request $request, User $user): Response
+    {
         $form = $this->createForm(ProfileType::class, $user,[]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
+            $candidat = $user->getCandidateProfile();
+            $recruiter = $user->getEntrepriseProfile();
+            if($user->getType() === User::ACCOUNT_CANDIDAT){
+                $user->setEntrepriseProfile(null);
+                $this->em->persist($candidat);
+            }
+            if($user->getType() === User::ACCOUNT_ENTREPRISE){
+                $user->setCandidateProfile(null);
+                $this->em->persist($recruiter);
+            }
             $this->em->persist($user);
             $this->em->flush();
+
+            return $this->redirectToRoute('app_v2_dashboard_boost_profile', ['id' => $user->getId()]);
         }
         
-        return $this->render('v2/dashboard/profile/create.html.twig', [
+        return $this->render('v2/dashboard/profile/contact.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/providers/{id}/boost', name: 'app_v2_dashboard_boost_profile')]
+    public function userboost(Request $request, User $user): Response
+    {        
+        if($user->getType() === User::ACCOUNT_CANDIDAT){
+            $form = $this->createForm(CreateCandidateBoostType::class, $user->getCandidateProfile()); 
+        }     
+        if($user->getType() === User::ACCOUNT_ENTREPRISE){
+            $form = $this->createForm(CreateRecruiterBoostType::class, $user->getEntrepriseProfile()); 
+        }
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            dd($form->getData());
+            $this->em->persist($user);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_v2_dashboard');
+        }else {
+
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('v2/dashboard/profile/form_errors.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+        }
+        
+        return $this->render('v2/dashboard/profile/boost.html.twig', [
             'form' => $form->createView(),
         ]);
     }

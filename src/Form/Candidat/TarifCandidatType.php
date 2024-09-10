@@ -20,15 +20,14 @@ class TarifCandidatType extends AbstractType
         $builder
             ->add('montant', IntegerType::class, [
                 'required' => false,
-                'constraints' => new NotBlank(['message' => 'Vous devez remplir ce champ.']),
-                'label' => false,
+                'label' => 'Montant',
             ])
             ->add('typeTarif', ChoiceType::class, [
                 'choices' => TarifCandidat::arrayTarifType(),
-                'label' => false,
+                'label' => 'Type',
             ])
             ->add('currency', EntityType::class, [
-                'label' => false,
+                'label' => 'Devise',
                 'mapped' => true,
                 'class' => Devise::class, 
                 'attr' => [

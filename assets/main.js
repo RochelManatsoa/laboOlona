@@ -121,6 +121,23 @@ $(function() {
                 imageInput.click();
             });
         }
+        
+        const ids = ['#applyJob', '#createJob', '#createPrestation']; 
+        ids.forEach(function(id) {
+            $(id).on('submit', function(e) {
+
+                var successToast = new Toast($('#errorToast')[0]);
+                setTimeout(function() {
+                    successToast.show(); 
+                }, 1500);
+
+                var modalElement = $(this).closest('.modal').get(0); 
+                if (modalElement) {
+                    var modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+                    modal.hide(); 
+                }
+            });
+        });
     }
     
     function setupAvailabilityDropdown() {
@@ -387,18 +404,6 @@ $(function() {
                 }
             });
         });
-        
-        const ids = ['#applyJob', '#createJob', '#createPrestation']; 
-        ids.forEach(function(id) {
-            $(id).on('submit', function(e) {
-                var successToast = new Toast($('#errorToast')[0]);
-                setTimeout(function() {
-                    successToast.show();
-                }, 1500);
-                var modal = Modal.getInstance($(this).find('#submitBtn')[0]) || new Modal($(this).find('#submitBtn')[0]);
-                modal.hide();
-            });
-        });
     
         $('.add-to-favorites').on('click', function(e) {
             e.preventDefault();
@@ -603,5 +608,29 @@ $(function() {
         $('#' + modalId).on('hidden.bs.modal', function () {
             $(this).find('ul[data-form-collection-target="collectionContainer"]').empty();
         });
+    });
+    
+    function toggleProfileSections() {
+        var accountType = $("input[name='profile[type]']:checked").val();
+        console.log(accountType);
+        if (accountType) {
+            var lowerCaseType = accountType.toLowerCase();
+            $('.candidateProfile, .recruiterProfile').hide();
+    
+            if (lowerCaseType === 'candidat') {
+                $('.candidateProfile').show();
+            } else if (lowerCaseType === 'entreprise') {
+                $('.recruiterProfile').show();
+            }
+    
+        }
+    }
+    // Initial call to set correct visibility on page load
+    toggleProfileSections();
+
+    // Bind the change event to form radio buttons
+    $('input[name="profile[type]"]').on('change', function() {
+        toggleProfileSections();
+        console.log('toogleProfileSelection')
     });
 });

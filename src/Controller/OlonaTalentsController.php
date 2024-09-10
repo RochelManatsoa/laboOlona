@@ -103,7 +103,6 @@ class OlonaTalentsController extends AbstractController
                 $request
             );
 
-            // return $this->redirectToRoute('app_v2_dashboard');
         }
 
         return $this->render('v2/olona_register.html.twig', [

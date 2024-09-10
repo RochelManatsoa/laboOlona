@@ -19,21 +19,19 @@ class ProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('type', ChoiceType::class, [
-                'choices' => User::getTypeAccount(),
-                'required' => true,
-                'expanded' => true,
-                'multiple' => false,
-                'label' => false,
-            ])
-            ->add('email')
+            ->add('email', null, ['label' => 'Email (obligatoire)'])
             ->add('nom')
             ->add('prenom')
-            ->add('telephone')
-            ->add('adress')
-            ->add('candidateProfile', CandidateType::class, [])
-            ->add('entrepriseProfile', RecruiterType::class, [])
-            ->add('referrerProfile', ReferrerType::class, [])
+            ->add('telephone', null, ['label' => 'Téléphone (obligatoire)'])
+            ->add('adress', null, ['label' => 'Adresse (obligatoire)'])
+            ->add('postalCode', null, ['label' => 'Code postal (obligatoire)'])
+            ->add('city', null, ['label' => 'Ville (obligatoire)'])
+            ->add('candidateProfile', CandidateType::class, [
+                'label' => false,
+            ])
+            ->add('entrepriseProfile', RecruiterType::class, [
+                'label' => false,
+            ])
         ;
     }
 

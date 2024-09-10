@@ -23,10 +23,10 @@
 					</h1>
 					{{ form_start(form, {'attr':{'id':'myFormT'}})}}
 					{{ form_errors(form)}}
-					<div class="col-md-10">
+					<div class="col">
 						<hr class="my-4">
 						<div class="row">
-							<h2 class="fs-3">Votre statut</h2>
+							<h2 class="fs-3 mt-5">Votre statut</h2>
 							{% for account in form.type %}
 							
 							<div class="col-md-4 text-center">
@@ -46,104 +46,130 @@
 
 						<hr class="my-4">
 						
-						<div class="row" id="profile">
-							<h2 class="fs-3">Vos secteurs d'activité</h2>
-							
-							<div id="candidateProfileSectors">
-								{{ form_row(form.candidateProfile.secteurs) }}
+						<div class="row" id="">
+							<h2 class="fs-3 mt-5">Vos secteurs d'activité</h2>
+							<div id="" class="candidateProfile">
+							<p class="">
+							Indiquez le domaine dans lequel vous excellez. Choisissez celui qui reflète le mieux votre parcours professionnel et vos compétences.
+							</p>
+							<div class="form-floating">
+								{{ form_widget(form.candidateProfile.secteurs) }}
+								{{ form_label(form.candidateProfile.secteurs) }}
+								{{ form_errors(form.candidateProfile.secteurs) }}
 							</div>
-							<div id="entrepriseProfileSectors">
-								{{ form_row(form.entrepriseProfile.secteurs) }}
 							</div>
-							{# <div id="referrerProfileSectors">
-								{{ form_row(form.referrerProfile) }}
-							</div>								 #}
+							<div id="" class="recruiterProfile">
+							<p class="">
+							Sélectionnez le secteur d'activité de votre entreprise. Cela aidera les candidats à identifier les opportunités d'emploi pertinentes.
+							</p>
+							<div class="form-floating">
+								{{ form_widget(form.entrepriseProfile.secteurs) }}
+								{{ form_label(form.entrepriseProfile.secteurs) }}
+								{{ form_errors(form.entrepriseProfile.secteurs) }}
+							</div>							
+							</div>							
 						</div>
 						
-						<div class="row" id="profile">
-							<h2 class="fs-3">Votre présentation</h2>
+						<div class="row" id="">
 							
-							<div id="candidateProfileSectors">
-								{{ form_row(form.candidateProfile.resume) }}
+							<div id="" class="candidateProfile">
+							<h2 class="fs-3 mt-5">Titre professionnel</h2>
+								<p class="">
+								Indiquez votre titre professionnel actuel. Cela aidera les recruteurs à comprendre rapidement votre rôle et niveau d'expertise.
+								</p>
+								<div id="profile_candidateProfile_titre_row" class="">
+									<div class="form-floating">
+										{{ form_widget(form.candidateProfile.titre) }}
+										{{ form_label(form.candidateProfile.titre) }}
+									</div>
+								</div>
 							</div>
-							<div id="entrepriseProfileSectors">
-								{{ form_row(form.entrepriseProfile.description) }}
-							</div>
-							{# <div id="referrerProfileSectors">
-								{{ form_row(form.referrerProfile) }}
-							</div>								 #}
+							<div id="" class="recruiterProfile">
+								<h2 class="fs-3 mt-5">Nom de l'entreprise</h2>
+								<p class="">
+								Saisissez le nom officiel de votre entreprise. Ce nom sera visible sur les offres d'emploi et profils d'entreprise.
+								</p>
+								<div id="profile_entrepriseProfile_nom_row" class="">
+									<div class="form-floating">
+										{{ form_widget(form.entrepriseProfile.nom) }}
+										{{ form_label(form.entrepriseProfile.nom) }}
+									</div>							 
+								</div>							 
+							</div>							 
 						</div>
-{# 						
-						<div class="row" id="profile">
-							<h2 class="fs-3">Votre Profil</h2>
-							
-							<div id="candidateProfileSectors">
-								{{ form_row(form.candidateProfile) }}
-							</div>
-							<div id="entrepriseProfileSectors">
-								{{ form_row(form.entrepriseProfile) }}
-							</div>
-							<div id="referrerProfileSectors">
-								{{ form_row(form.referrerProfile) }}
-							</div>								
-						</div> #}
 						
-						<div class="row" id="resume">
-							<h2 class="fs-3">Votre présentation (obligatoire)</h2>
-							<!-- Vous pouvez ajouter d'autres champs ici -->
+						<div class="row" id="">
+							<h2 class="fs-3 mt-5">Votre présentation (obligatoire)</h2>
+							
+							<div id="" class="candidateProfile">
+								<p class="">
+								Présentez-vous brièvement. Partagez votre parcours éducatif, vos expériences significatives et ce qui vous motive dans votre carrière.
+								</p>
+								<div id="profile_candidateProfile_resume_row" class="">
+									{{ form_widget(form.candidateProfile.resume) }}
+								</div>
+							</div>
+							<div id="" class="recruiterProfile">
+								<p class="">
+								Décrivez votre entreprise. Mentionnez votre mission, vos valeurs, les principaux marchés que vous servez, et ce qui vous distingue de vos concurrents.
+								</p>
+								<div id="profile_entrepriseProfile_description_row" class="">
+									{{ form_widget(form.entrepriseProfile.description) }}
+								</div>							 
+							</div>							 
+						</div>
+						<div class="row" id="">
+							<div id="" class="candidateProfile">
+								<h2 class="fs-3 mt-5">Votre tarif (obligatoire)</h2>
+								<p class="">
+								Proposez votre tarif préférentiel pour une consultation ou un projet. Pensez à votre niveau d'expérience et à la valeur que vous apportez.
+								</p>
+								<div id="profile_candidateProfile_tarifCandidat_row" class="">
+									<div class="input-group mb-3">
+										<div class="form-floating">
+											{{ form_widget(form.candidateProfile.tarifCandidat.montant) }}
+											<label for="">Montant</label>
+										</div>
+										<div class="form-floating">
+											{{ form_widget(form.candidateProfile.tarifCandidat.typeTarif) }}
+											<label for="">Type</label>
+										</div>
+										<div class="form-floating">
+											{{ form_widget(form.candidateProfile.tarifCandidat.currency) }}
+											<label for="">Devise</label>
+										</div>
+									</div>
+								</div>
+							</div>	
+							<div id="" class="recruiterProfile">
+								<h2 class="fs-3 mt-5">Taille de votre entreprise</h2>
+								<p class="">
+								Décrivez votre entreprise. Mentionnez votre mission, vos valeurs, les principaux marchés que vous servez, et ce qui vous distingue de vos concurrents.
+								</p>
+								<div id="profile_entrepriseProfile_taille_row" class="">
+									<div class="input-group mb-3">
+										<div class="form-floating">
+										{{ form_widget(form.entrepriseProfile.taille) }}
+										{{ form_label(form.entrepriseProfile.taille) }}
+										</div>							 
+									</div>							 
+								</div>							 
+							</div>						
 						</div>
 						
 						<div style="display:none;">
 							{{ form_widget(form) }}
 						</div>
+						<button type="submit" class="btn btn-primary my-3 my-sm-5 float-end">Suivant</button>
 					</div>
 					{{ form_end(form) }}
 				</div>
 			</div>
 			<div class="col-12 col-sm-4">
-				<div class="text-center p-2 p-sm-5">
-					<h1 class="fs-4">
-						Création de votre profil public
-					</h1>
-					<p class="">
-						Commencez à feuilleter les profils qui vous interresse pour nous aider à vous proposer une sélection qui vous plaira.
-					</p>
-				</div>
+			{% include "v2/dashboard/profile/_sticky_sidebar.html.twig" %}
 			</div>
 		</div>
 	</section>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const profileContainers = {
-                'Candidat': document.getElementById('candidateProfileSectors'),
-                'Entreprise': document.getElementById('entrepriseProfileSectors'),
-                'Coopteur': document.getElementById('referrerProfileSectors')
-            };
-            
-            const radios = document.querySelectorAll('input[name="profile[type]"]');
-            radios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    // Hide all profile containers
-                    for (const key in profileContainers) {
-                        profileContainers[key].style.display = 'none';
-                    }
-                    
-                    // Show the selected profile container
-                    const selectedLabel = this.nextElementSibling.querySelector('.custom-control-label').textContent.trim();
-                    if (profileContainers[selectedLabel]) {
-                        profileContainers[selectedLabel].style.display = 'block';
-                    }
-                });
-            });
-
-            // Trigger change event on page load to display the correct form if a type is pre-selected
-            radios.forEach(radio => {
-                if (radio.checked) {
-                    radio.dispatchEvent(new Event('change'));
-                }
-            });
-        });
-    </script>
 {% endblock %}
 
 {% block preview %}{% endblock %}

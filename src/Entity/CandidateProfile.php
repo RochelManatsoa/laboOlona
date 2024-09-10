@@ -221,6 +221,9 @@ class CandidateProfile
         $this->assignations = new ArrayCollection();
         $this->favoris = new ArrayCollection();
         $this->prestations = new ArrayCollection();
+        $this->uid = new Uuid(Uuid::v4());
+        $this->isValid = false;
+        $this->status = self::STATUS_PENDING;
     }
 
     public function __toString()
