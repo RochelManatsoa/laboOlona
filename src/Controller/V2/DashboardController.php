@@ -7,8 +7,10 @@ use App\Entity\Notification;
 use App\Form\V2\ProfileType;
 use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
+use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
 use App\Entity\ModerateurProfile;
+use App\Entity\Vues\CandidatVues;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\BusinessModel\Credit;
@@ -29,6 +31,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 #[Route('/v2/dashboard')]
 class DashboardController extends AbstractController
@@ -39,9 +42,11 @@ class DashboardController extends AbstractController
         private PaginatorInterface $paginator,
         private ProfileManager $profileManager,
         private NotificationManager $notificationManager,
+        private CandidatManager $candidatManager,
         private CreditManager $creditManager,
         private MailerService $mailerService,
         private UrlGeneratorInterface $urlGenerator,
+        private RequestStack $requestStack,
     ){}
 
     #[Route('/', name: 'app_v2_dashboard')]
@@ -65,8 +70,8 @@ class DashboardController extends AbstractController
 
     #[Route('/providers/{id}/create', name: 'app_v2_dashboard_create_profile')]
     public function profileInfo(Request $request, User $user): Response
-    {        
-        $typology = $request->query->get('typology', 'Candidat');
+    {                
+        $typology = ucfirst($this->requestStack->getSession()->get('typology', 'Candidat'));
         $form = $this->createForm(ProfileType::class, $user,[]);
         $form->add('type', ChoiceType::class, [
             'choices' => User::getProfileAccount(),
@@ -282,20 +287,48 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/profile/view/{id}', name: 'app_v2_profile_view')]
-    public function viewProfile(int $id): Response
+    public function viewProfile(Request $request, int $id): Response
     {
-        /** @var User @user */
-        $user = $this->em->getRepository(User::class)->find($id);
-        $profile = $this->userService->checkUserProfile($user);
-        $recruiter = $this->userService->checkProfile();
-        if(!$recruiter instanceof EntrepriseProfile){
-            $recruiter = null;
+        $candidat = $this->em->getRepository(CandidateProfile::class)->find($id);
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $profile = $this->userService->checkProfile();
+        if(!$profile instanceof EntrepriseProfile){
+            $profile = null;
         }
 
-        return $this->render('v2/dashboard/profile/view.html.twig', [
-            'profile' => $profile,
-            'user' => $user,
-            'recruiter' => $recruiter,
+        $ipAddress = $request->getClientIp();
+        $viewRepository = $this->em->getRepository(CandidatVues::class);
+        $existingView = $viewRepository->findOneBy([
+            'candidat' => $candidat,
+            'ipAddress' => $ipAddress,
+        ]);
+
+        $contactRepository = $this->em->getRepository(PurchasedContact::class);
+        $purchasedContact = $contactRepository->findOneBy([
+            'buyer' => $currentUser,
+            'contact' => $candidat->getCandidat(),
+        ]);
+
+        if (!$existingView) {
+            $view = new CandidatVues();
+            $view->setCandidat($candidat);
+            $view->setIpAddress($ipAddress);
+            $view->setCreatedAt(new \DateTime());
+
+            $this->em->persist($view);
+            $candidat->addVue($view);
+            $this->em->flush();
+        }
+        
+        return $this->render('v2/dashboard/recruiter/profile/view.html.twig', [
+            'candidat' => $candidat,
+            'type' => $currentUser->getType(),
+            'recruiter' => $profile,
+            'purchasedContact' => $purchasedContact,
+            'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
+            'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
+            'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
         ]);
     }
 

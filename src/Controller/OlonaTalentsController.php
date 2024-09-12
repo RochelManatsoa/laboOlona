@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
@@ -37,6 +38,7 @@ class OlonaTalentsController extends AbstractController
         private CreditManager $creditManager,
         private PaginatorInterface $paginatorInterface,
         private Security $security,
+        private RequestStack $requestStack,
     ) {}
 
     #[Route('/', name: 'app_home')]
@@ -72,6 +74,8 @@ class OlonaTalentsController extends AbstractController
         AppAuthenticator $authenticator,
     ): Response
     {
+        $typology = $request->query->get('typology', null);
+        $this->requestStack->getSession()->set('typology', $typology);
         $user = new User();
         $user->setDateInscription(new DateTime());
         $form = $this->createForm(RegistrationFormType::class, $user);

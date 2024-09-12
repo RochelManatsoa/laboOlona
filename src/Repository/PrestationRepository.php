@@ -103,6 +103,8 @@ class PrestationRepository extends ServiceEntityRepository
             ->select('p', 'c', 'e')
             ->leftJoin('p.candidateProfile', 'c')
             ->leftJoin('p.entrepriseProfile', 'e')
+            ->where('p.status != :status')
+            ->setParameter('status', Prestation::STATUS_DELETED)
             ->orderBy('p.id', 'DESC');
 
         if (!empty($searchData->q)) {

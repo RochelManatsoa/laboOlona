@@ -24,6 +24,7 @@ use App\Entity\Moderateur\Invitation;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
 use App\Entity\Prestation;
+use App\Entity\Prestation\TypePrestation;
 use App\Entity\TemplateEmail;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -138,6 +139,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::subMenu('Configuration', 'fa fa-gears')->setSubItems([
                 MenuItem::linkToCrud('Secteurs', 'fas fa-quote-right', Secteur::class),
                 MenuItem::linkToCrud('Type de contrat', 'fas fa-layer-group', TypeContrat::class),
+                MenuItem::linkToCrud('Type de Service', 'fas fa-layer-group', TypePrestation::class),
                 MenuItem::linkToCrud('Devise', 'fas fa-circle-dollar-to-slot', Devise::class),
             ]),
             MenuItem::linkToCrud('Simulations', 'fas fa-vial-virus', Simulateur::class),

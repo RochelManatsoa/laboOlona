@@ -28,7 +28,6 @@ class CreditManager
     {
         $credit = new Credit();
         $credit->setUpdatedAt(new \DateTime());
-        $credit->setTotal(200);
 
         return $credit;
     }

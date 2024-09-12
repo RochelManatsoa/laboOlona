@@ -1,0 +1,270 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Créer une prestation | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endif %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+
+{% block body %}
+	<section class="">
+		<div class="shadow p-2 p-sm-4">
+			<div class="col-12 col-sm-8 mx-auto p-2 p-sm-4">
+				{{ form_start(form, {'attr': {'id': 'createPrestation'}}) }}
+				{{ form_errors(form)}}
+				<div class="row mb-3">
+					<div id="prestation_titre_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.titre) }}
+							{{ form_label(form.titre) }}
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div id="prestation_secteurs_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.secteurs) }}
+							{{ form_label(form.secteurs) }}
+							{{ form_errors(form.secteurs) }}
+						</div>	
+					</div>	
+				</div>
+				<div class="row mb-3">
+					<div id="prestation_description_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.description) }}
+							{{ form_label(form.description) }}
+							{{ form_errors(form.description) }}
+						</div>	
+					</div>	
+				</div>
+				<div id="prestation_tarifPrestation_row" class="">
+					<div class="input-group mb-3">
+						<div class="form-floating">
+							{{ form_widget(form.tarifPrestation.typeTarif) }}
+							<label for="">Montant</label>
+						</div>
+						<div class="form-floating">
+							{{ form_widget(form.tarifPrestation.montant) }}
+							<label for="">Type</label>
+						</div>
+						<div class="form-floating">
+							{{ form_widget(form.tarifPrestation.currency) }}
+							<label for="">Devise</label>
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div id="prestation_modalitesPrestation_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.modalitesPrestation) }}
+							{{ form_label(form.modalitesPrestation) }}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_disponibilites">Disponibilité</label>
+							<div class="disponibilite-form">
+						
+								<div class="radio-options">
+									{{ form_widget(form.availability.nom) }}
+								</div>
+							
+								<div class="date-picker-container mt-2">
+									{{ form_widget(form.availability.dateFin) }}
+								</div>
+					
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div id="prestation_typePrestation_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.typePrestation) }}
+							{{ form_label(form.typePrestation) }}
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div id="prestation_competences_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.competences) }}
+							{{ form_label(form.competences) }}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<label class="fw-bold small" for="prestation_medias">Médias</label>
+                    		<div class="profile-img" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/prestations/' ~ form.vars.data.fileName) : asset('images/prestation.jpg') }}');background-size: cover;background-position: center;width: 150px;height: 150px;" alt="Avatar"></div>
+							{{ form_widget(form.file)}}
+							{{ form_errors(form.file)}}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6">
+						<div class="row mb-3">
+							<div id="prestation_contactEmail_row" class="">
+								<div class="form-floating">
+									{{ form_widget(form.contactEmail) }}
+									{{ form_label(form.contactEmail) }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-6">
+						<div class="row mb-3">
+							<div id="prestation_contactTelephone_row" class="">
+								<div class="form-floating">
+									{{ form_widget(form.contactTelephone) }}
+									{{ form_label(form.contactTelephone) }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div id="prestation_motsCles_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.motsCles) }}
+							{{ form_label(form.motsCles) }}
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div id="prestation_conditionsParticulieres_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.conditionsParticulieres) }}
+							{{ form_label(form.conditionsParticulieres) }}
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div id="prestation_portfolioLinks_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.portfolioLinks) }}
+							{{ form_label(form.portfolioLinks) }}
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div id="prestation_preferencesCommunication_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.preferencesCommunication) }}
+							{{ form_label(form.preferencesCommunication) }}
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div id="prestation_engagementQualite_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.engagementQualite) }}
+							{{ form_label(form.engagementQualite) }}
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div id="prestation_contactReseauxSociaux_row" class="">
+						<div class="form-floating">
+							{{ form_widget(form.contactReseauxSociaux) }}
+							{{ form_label(form.contactReseauxSociaux) }}
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="mb-3 experience-form">
+						<fieldset>
+							<span class="fw-bolder text-uppercase fs-5 mb-3"> <i class="bi bi-rocket-takeoff me-2"></i> Booster</span>
+							{{ form_widget(form.boost)}}
+						</fieldset>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							{{ form_widget(form.agreeTerms, {
+								'label': 'J\'accepte les Termes et Conditions',
+           						'label_attr': {'class': 'fw-bold small'},
+							})}}
+						</div>
+					</div>
+				</div>
+				<div style="display:none;">
+					{{ form_widget(form) }}
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+					<i class="bi bi-save"></i>
+					Publier ( 10 crédits)
+				</button>
+				{{ form_end(form) }}
+			</div>
+		</div>
+	</section>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		var imageInput = document.getElementById('{{ form.file.vars.id }}');
+		var profileImgDiv = document.querySelector('.profile-img');
+
+		imageInput.addEventListener('change', function(event) {
+			if (event.target.files && event.target.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					profileImgDiv.style.backgroundImage = 'url(' + e.target.result + ')';
+				};
+				reader.readAsDataURL(event.target.files[0]);
+			}
+		});
+
+		profileImgDiv.addEventListener('click', function() {
+			imageInput.click();
+		});
+	});
+
+	document.addEventListener("DOMContentLoaded", function() {
+		var availabilityDropdown = document.getElementById('prestation_availability_nom');
+		var dateField = document.getElementById('prestation_availability_dateFin');
+
+		if (availabilityDropdown && dateField) { // Vérifie si les éléments existent
+
+			function toggleDateInput() {
+				if (availabilityDropdown.value === 'from-date') {
+					dateField.style.display = 'block';  // Show the date field
+				} else {
+					dateField.style.display = 'none';  // Hide the date field
+				}
+			}
+
+			availabilityDropdown.addEventListener('change', toggleDateInput);
+
+			toggleDateInput();
+		}
+	});
+</script>
+{% endblock %}

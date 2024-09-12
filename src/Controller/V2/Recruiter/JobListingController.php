@@ -69,7 +69,7 @@ class JobListingController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $response = $this->handleJobListingSubmission($jobListing, $currentUser);
+            $response = $this->handleJobListingSubmission($form->getData(), $currentUser);
             
             if ($response['success']) {
                 $this->jobListingManager->saveForm($form);
@@ -170,13 +170,16 @@ class JobListingController extends AbstractController
         ]);
     }
     
-    #[Route('/delete/{jobListing}', name: 'app_v2_recruiter_delete_job_listing')]
-    public function removeJobListing(Request $request, JobListing $jobListing): Response
+    #[Route('/delete', name: 'app_v2_recruiter_delete_job_listing', methods: ['POST'])]
+    public function removeJobListing(Request $request): Response
     {
-        $jobListingId = $jobListing->getId();
+        $jobListingId = $request->request->get('jobListingId');
+        $jobListing = $this->em->getRepository(JobListing::class)->find($jobListingId);
         $message = "L'annonce a bien été supprimée";
-        $this->em->remove($jobListing);
+        $jobListing->setStatus(JobListing::STATUS_DELETED);
+        $this->em->persist($jobListing);
         $this->em->flush();
+        
         if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
             return $this->render('v2/dashboard/recruiter/job_listing/delete.html.twig', [

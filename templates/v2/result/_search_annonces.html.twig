@@ -102,11 +102,9 @@
 				{% if not displayed %}
 					{% if fragments|length > 1 %}
 						{{ fragments[1]|raw }}
-						{# Affiche le deuxième fragment s’il existe #}
 						{% set displayed = true %}
 					{% elseif fragments|length > 0 %}
 						{{ fragments[0]|raw }}
-						{# Affiche le premier fragment s’il n’existe qu’un seul #}
 						{% set displayed = true %}
 					{% endif %}
 				{% endif %}

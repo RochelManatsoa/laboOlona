@@ -336,7 +336,8 @@ class StatusExtension extends AbstractExtension
     public function isPrestationBoosted(Prestation $prestation): string
     {
         $boost = $prestation->getBoost();
-        $info = '<button class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster</button>';
+        $url = $this->urlGenerator->generate('app_v2_edit_prestation', ['prestation' => $prestation->getId()]);
+        $info = '<a href="'.$url.'" class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster</a>';
         if($boost instanceof Boost){
             switch ($boost->getSlug()) {
                 case 'boost-recruiter-prestation-7' :

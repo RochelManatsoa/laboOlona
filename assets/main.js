@@ -126,6 +126,8 @@ $(function() {
         ids.forEach(function(id) {
             $(id).on('submit', function(e) {
 
+                $('.invalid-feedback').remove();
+                $('.is-invalid').removeClass('is-invalid');
                 var successToast = new Toast($('#errorToast')[0]);
                 setTimeout(function() {
                     successToast.show(); 
@@ -498,15 +500,15 @@ $(function() {
                     console.log('Response processed by Turbo:', data);
                     Turbo.renderStreamMessage(data);
         
-                    // Vérifiez si la réponse contient le target 'successToast'
-                    if (data.includes('target="successToast"')) {
-                        var successToast = new Toast($('#successToast')[0]);
+                    // Vérifiez si la réponse contient le target 'errorToast'
+                    if (data.includes('target="errorToast"')) {
+                        var errorToast = new Toast($('#errorToast')[0]);
                         var packageModal = Modal.getInstance($('#package')[0]) || new Modal($('#package')[0]);
                         packageModal.hide();
                 
                         setTimeout(function() {
-                            successToast.show();
-                        }, 1500);
+                            errorToast.show();
+                        }, 500);
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {

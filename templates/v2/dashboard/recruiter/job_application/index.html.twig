@@ -70,9 +70,12 @@
 										<a href="{{ path('app_v2_recruiter_job_listing_view', { 'id': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
 											<i class="bi bi-eye"></i>
 										</a>
-										<a id="delete-jobListing" href="{{ path('app_v2_recruiter_delete_job_listing', { 'jobListing': item.id })}}" class="btn btn-sm btn-danger rounded-pill">
-											<i class="bi bi-trash"></i>
-										</a>
+										<form method="POST" action="{{ path('app_v2_recruiter_delete_job_listing')}}">
+											<input type="hidden" name="jobListingId" value="{{item.id}}">
+											<button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce?');" id="delete-jobListing" class="btn btn-sm btn-danger rounded-pill">
+												<i class="bi bi-trash"></i>
+											</button>
+										</form>
 									</td>
 								</tr>
 							{% endfor %}

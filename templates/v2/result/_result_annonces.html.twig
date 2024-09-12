@@ -1,0 +1,10 @@
+<div class="text-small my-4">
+	{{ totalJobListingsResults }}
+	resultat(s)
+</div>
+{% for item in annonces %}
+
+{# {{ generateJobReference(item['_id'])}} #}
+{{ dump(item['_id'])}}
+
+{% endfor %}

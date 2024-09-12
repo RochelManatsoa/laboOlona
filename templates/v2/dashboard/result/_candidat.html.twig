@@ -12,14 +12,14 @@
 
 <div class="tab-content">
 	<div
-		class="tab-pane fade" id="candidats" role="tabpanel" aria-labelledby="candidats-tab" tabindex="0">
-		{% include "v2/result/premium_candidats.html.twig" with {'top_candidats': top_candidats} %}
-		{% include "v2/result/_search_candidats.html.twig" with {'candidats': candidats} %}
-	</div>
-	<div
 		class="tab-pane fade show active" id="annonces" role="tabpanel" aria-labelledby="annonces-tab" tabindex="0">
 		{% include "v2/result/premium_annonces.html.twig" with {'top_annonces': top_annonces} %}
 		{% include "v2/result/_search_annonces.html.twig" with {'annonces': annonces} %}
+	</div>
+	<div
+		class="tab-pane fade" id="candidats" role="tabpanel" aria-labelledby="candidats-tab" tabindex="0">
+		{% include "v2/result/premium_candidats.html.twig" with {'top_candidats': top_candidats} %}
+		{% include "v2/result/_search_candidats.html.twig" with {'candidats': candidats} %}
 	</div>
 	<div
 		class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab" tabindex="0">

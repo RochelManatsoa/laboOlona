@@ -12,18 +12,22 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
+use App\Entity\Prestation\TypePrestation;
 use App\Form\Prestation\AvailabilityType;
 use App\Form\Prestation\TarifPrestationType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\Constraints\Length;
 use App\Form\DataTransformer\CompetencesTransformer;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Validator\Constraints\Sequentially;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -41,17 +45,31 @@ class PrestationType extends AbstractType
     {
         $builder
             ->add('titre', TextType::class, [
-                'required' => true,
+                'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Le titre est obligatoire.'),
+                    new Length(
+                        min: 2,
+                        max: 50,
+                        minMessage: 'Le titre est trop court',
+                        maxMessage: 'Le titre ne doit pas depasser 50 characters',
+                    ),
+                ]),
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'La description est obligatoire.'),
+                    new Length(
+                        min: 2,
+                        minMessage: 'La description est trop court',
+                    ),
+                ]),
                 'attr' => [
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'
                 ]
             ])
-            // ->add('competencesRequises')
-            // ->add('tarifsProposes')
             ->add('boost', EntityType::class, [
                 'class' => Boost::class,
                 'choices' => $this->entityManager->getRepository(Boost::class)->findBy(['type' => $options['boostType']]),
@@ -88,21 +106,39 @@ class PrestationType extends AbstractType
                     'class' => 'ckeditor-textarea'
                 ]
             ])
-            ->add('typeService')
+            ->add('typePrestation', EntityType::class, [
+                'class' => TypePrestation::class,
+                'choice_label' => 'name',
+                'label' => 'Type de service',
+                'autocomplete' => true,
+                'expanded' => false,
+                'multiple' => false,
+            ])
             ->add('portfolioLinks', TextType::class, [
                 'required' => false,
             ])
             ->add('temoignages')
             ->add('contactTelephone', TextType::class, [
                 'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Le contact est obligatoire.'),
+                ]),
             ])
             ->add('contactEmail', EmailType::class, [
                 'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Le mail est obligatoire.'),
+                ]),
             ])
             ->add('contactReseauxSociaux', TextType::class, [
                 'required' => false,
             ])
-            ->add('preferencesCommunication')
+            ->add('preferencesCommunication', TextType::class, [
+                'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Champ obligatoire.'),
+                ]),
+            ])
             ->add('conditionsParticulieres', TextareaType::class, [
                 'required' => false, 
                 'attr' => [
@@ -130,7 +166,7 @@ class PrestationType extends AbstractType
                 ],
             ])
             ->add('competences', TextType::class, [
-                'label' => false,
+                'label' => 'Spécialisations',
                 'autocomplete' => true,
                 'attr' => [
                     'data-controller' => 'technical-add-autocomplete',
@@ -158,6 +194,11 @@ class PrestationType extends AbstractType
                 },
                 'placeholder' => 'Choisir un secteur', 
                 'required' => false,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Vous devriez choisir un secteur.',
+                    ]),
+                ],
             ])
             ->add('file', FileType::class, [
                 'required' => false,
