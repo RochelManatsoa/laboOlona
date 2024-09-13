@@ -181,6 +181,19 @@ class ProfileManager
         return false;
     }
 
+    public function canBuy(User $user, int $amount): bool
+    {
+        $credit = $user->getCredit();
+
+        if ($credit instanceof Credit) {
+            if($credit->getTotal() > $amount){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getCreditAmount(string $action): float
     {
         switch ($action) {

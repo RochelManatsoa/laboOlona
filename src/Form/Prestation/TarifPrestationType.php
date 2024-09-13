@@ -10,8 +10,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Sequentially;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
 
 class TarifPrestationType extends AbstractType
 {
@@ -20,7 +22,10 @@ class TarifPrestationType extends AbstractType
         $builder
             ->add('montant', IntegerType::class, [
                 'required' => false,
-                'constraints' => new NotBlank(['message' => 'Vous devez remplir ce champ.']),
+                'constraints' =>  new Sequentially([
+                    new NotBlank(message:'Le montant est obligatoire.'),
+                    new PositiveOrZero(message:'Format invalide.'),
+                ]),
                 'label' => false,
             ])
             ->add('currency', EntityType::class, [

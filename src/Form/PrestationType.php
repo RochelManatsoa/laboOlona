@@ -61,7 +61,7 @@ class PrestationType extends AbstractType
                 'constraints' => new Sequentially([
                     new NotBlank(message:'La description est obligatoire.'),
                     new Length(
-                        min: 2,
+                        min: 3,
                         minMessage: 'La description est trop court',
                     ),
                 ]),
@@ -74,7 +74,7 @@ class PrestationType extends AbstractType
                 'class' => Boost::class,
                 'choices' => $this->entityManager->getRepository(Boost::class)->findBy(['type' => $options['boostType']]),
                 'choice_label' => function ($boost) {
-                    return $boost->getName(); 
+                    return $boost->getName().' ('.$boost->getCredit().' crédits)'; 
                 },
                 'expanded' => true,  
                 'required' => false, 

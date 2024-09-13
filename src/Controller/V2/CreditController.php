@@ -33,28 +33,25 @@ class CreditController extends AbstractController
         $form = $this->createForm(TransactionType::class, $transaction);
         $form->handleRequest($request);
         
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $this->transactionManager->saveForm($form);
-                $response = [
-                    'message' => 'Votre commande a été bien enregistré',
-                    'success' => true,
-                    'status' => 'Succès',
-                    'credit' => $currentUser->getCredit()->getTotal(),
-                ];
-    
-                if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
-                    $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-                    return $this->render('v2/dashboard/recruiter/live.html.twig', $response);
-                }
-            } else {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->transactionManager->saveForm($form);
+            $response = [
+                'message' => 'Votre commande a été bien enregistré',
+                'success' => true,
+                'status' => '<i class="bi bi-check-lg me-2"></i> Succès',
+                'credit' => $currentUser->getCredit()->getTotal(),
+            ];
 
-                if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
-                    $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-                    return $this->render('v2/turbo/form_errors.html.twig', [
-                        'form' => $form->createView(),
-                    ]);
-                }
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('v2/dashboard/recruiter/live.html.twig', $response);
+            }
+        }else {
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('v2/turbo/form_errors.html.twig', [
+                    'form' => $form->createView(),
+                ]);
             }
         }
 
@@ -79,7 +76,7 @@ class CreditController extends AbstractController
             $response = [
                 'message' => 'Votre commande a été bien enregistré',
                 'success' => true,
-                'status' => 'Succès',
+                'status' => '<i class="bi bi-check-lg me-2"></i> Succès',
                 'credit' => $currentUser->getCredit()->getTotal(),
             ];
 

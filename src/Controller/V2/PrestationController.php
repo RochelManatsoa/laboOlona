@@ -104,7 +104,11 @@ class PrestationController extends AbstractController
         $responseBoost = [];
         
         if ($boost instanceof Boost) {
-            $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit());
+            if($this->profileManager->canBuy($currentUser, $boost->getCredit())){
+                $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit());
+            }else{
+                return ['error' => 'Crédits insuffisants. Veuillez charger votre compte'];
+            }
         }
         
         $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_APPLY_PRESTATION_RECRUITER);
@@ -112,7 +116,7 @@ class PrestationController extends AbstractController
     
         if (!empty($response['error']) || !empty($responseBoost['error'])) {
             $error = $response['error'] ?? $responseBoost['error'];
-            return ['success' => false, 'message' => $error, 'status' => 'Echec'];
+            return ['success' => false, 'message' => $error, 'status' => '<i class="bi bi-exclamation-octagon me-2"></i> Echec'];
         }
     
         return ['success' => true];
@@ -155,13 +159,17 @@ class PrestationController extends AbstractController
     {
         $boost = $prestation->getBoost();
         if ($boost instanceof Boost) {
-            $response = $this->creditManager->adjustCredits($currentUser, $boost->getCredit());
+            if($this->profileManager->canBuy($currentUser, $boost->getCredit())){
+                $response = $this->creditManager->adjustCredits($currentUser, $boost->getCredit());
+            }else{
+                return ['success' => false, 'message' => 'Crédits insuffisants. Veuillez charger votre compte', 'status' => '<i class="bi bi-exclamation-octagon me-2"></i> Echec'];
+            }
             if (!empty($response['error'])) {
-                return ['success' => false, 'message' => $response['error'], 'status' => 'Echec'];
+                return ['success' => false, 'message' => $response['error'], 'status' => '<i class="bi bi-exclamation-octagon me-2"></i> Echec'];
             }
         }
 
-        return ['success' => true, 'message' => 'Modification sauvegardée avec succès', 'status' => 'Succès'];
+        return ['success' => true, 'message' => 'Modification sauvegardée avec succès', 'status' => '<i class="bi bi-check-lg me-2"></i> Succès'];
     }
     
     #[Route('/view/{prestation}', name: 'app_v2_view_prestation')]

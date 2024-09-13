@@ -60,6 +60,7 @@ class Transaction
         new Assert\NotNull,
         new Assert\Length(min:2, minMessage:'Le montant est trop courte.'),
         new Assert\Regex(pattern: '/^-?[0-9]+(\.[0-9]+)?$/', message: 'Le montant doit être un nombre décimal valide.'),
+        new Assert\Positive(message: "Le montant doit être supérieur à zéro.")
     ])]
     private ?float $amount = null;
 

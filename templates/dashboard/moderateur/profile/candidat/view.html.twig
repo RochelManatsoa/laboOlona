@@ -104,25 +104,10 @@
                 </div>
             </div>
         </div>
-<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    ClassicEditor.create( document.querySelector( '#candidat_resume' ) )
     document.querySelector('.profile-img').addEventListener('click', function() {
         document.getElementById('{{ formCandidate.file.vars.id }}').click();
-    });
-    let globalEditorInstance;
-    document.addEventListener('DOMContentLoaded', function() {
-        ClassicEditor.create(document.querySelector('#notification_profile_contenu'))
-            .then(editor => {
-                globalEditorInstance = editor;
-                document.querySelector('form').addEventListener('submit', function() {
-                    document.querySelector('#notification_profile_contenu').value = globalEditorInstance.getData();
-                });
-            })
-            .catch(error => {
-                console.error(error);
-            });
     });
     document.getElementById('submitButton').addEventListener('click', function() {
         document.getElementById('formCandidate').submit();

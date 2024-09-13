@@ -59,7 +59,11 @@
 										{% endif %}
 									</button>
 									<ul class="dropdown-menu text-small shadow">
-										<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Dashboard</a></li>
+										<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Tableau de bord</a></li>
+										<li><a class="dropdown-item" href="{{ path('app_v2_prestation')}}">Mes prestations</a></li>
+										<li><a class="dropdown-item" href="{{ path('app_v2_dashboard_notification')}}">Mes notifications</a></li>
+										<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Mon profil</a></li>
+										<li><a class="dropdown-item" href="{{ path('app_v2_contacts')}}">Mon réseau</a></li>
 										<li><hr class="dropdown-divider"></li>
 										<li><a class="dropdown-item" href="{{ path('app_logout')}}">Se déconnecter</a></li>
 									</ul>
@@ -106,7 +110,7 @@
 				<!-- Toast pour le succès -->
 				<div id="successToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
 					<div class="toast-header">
-						<strong class="me-auto">Succès</strong>
+						<strong class="me-auto"><i class="bi bi-check-lg me-2"></i> Succès</strong>
 						<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 					</div>
 					<div class="toast-body">
@@ -117,7 +121,7 @@
 				<!-- Toast pour les erreurs -->
 				<div id="errorToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
 					<div class="toast-header">
-						<strong class="me-auto">Echec</strong>
+						<strong class="me-auto"><i class="bi bi-exclamation-octagon me-2"></i> Echec</strong>
 						<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 					</div>
 					<div class="toast-body">

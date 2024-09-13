@@ -139,7 +139,15 @@ $(function() {
                     modal.hide(); 
                 }
             });
-        });
+        });        
+
+        $('a[role="menuitem"][href="#finish"]').on('click', function(){
+            console.log('click')
+            var successToast = new Toast($('#errorToast')[0]);
+            setTimeout(function() {
+                successToast.show(); 
+            }, 1000);
+        })
     }
     
     function setupAvailabilityDropdown() {
@@ -569,7 +577,7 @@ $(function() {
         var fileNameDisplay = $('#file-name');
 
         uploadButton.on('click', function() {
-            fileInput.click();
+            fileInput.trigger("click");
         });
 
         fileInput.on('change', function() {
@@ -614,7 +622,6 @@ $(function() {
     
     function toggleProfileSections() {
         var accountType = $("input[name='profile[type]']:checked").val();
-        console.log(accountType);
         if (accountType) {
             var lowerCaseType = accountType.toLowerCase();
             $('.candidateProfile, .recruiterProfile').hide();

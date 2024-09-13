@@ -29,9 +29,9 @@
                             Déjà membre ? <a href="{{ path('app_login') }}" class="text-primary">Connectez-vous dès maintenant</a> et profitez des avantages de Olona-talents.
                         </p>
                         <div class="mb-4 text-center">
-                            <button data-href="{{ path('connect_google_start') }}" type="button" class="btn btn-outline-primary btn-block">
+                            <a href="{{ path('connect_google_start') }}" class="btn btn-outline-primary btn-block">
                                 Se connecter avec <i class="bi bi-google"></i>
-                            </button>
+                            </a>
                         </div>
                         
                         {% if app.user %}

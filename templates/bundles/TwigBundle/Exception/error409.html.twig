@@ -1,5 +1,5 @@
 
-{% extends 'base.html.twig' %}
+{% extends 'base_v21.html.twig' %}
 
 {% block title %}Lien expiré{% endblock %}
 
@@ -7,9 +7,9 @@
 <div class="d-flex justify-content-center align-items-center py-5 my-5">
     <div class="text-center">
         <div class="container">
-            <div class="p-5 text-center bg-dark rounded-3">
-                <h1 class="text-light">
-                
+            <div class="p-5 text-center shadow-lg rounded-3">
+                <h1 class="display-5">
+                <i class="bi bi-exclamation-octagon me-2"></i>
                 {% if message is defined %}
                     {{ message }}
                 {% else %}
@@ -17,18 +17,20 @@
                 {% endif %}
 
                 </h1>
-                <p class="col-lg-8 mx-auto fs-5 text-light">
+                <p class="col-lg-8 mx-auto fs-5 ">
                     Désolé, la page que vous souhaitez consulter n'existe plus.
                 </p>
-
-                <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 my-5">
-
-                    <a class="d-inline-flex align-items-center btn btn-primary btn-md px-4 rounded-pill mb-2 mb-sm-0" href="{{ path('app_home')}}">
-                        Retour à l'accueil
-                    </a>
-                    <a class="btn btn-outline-light btn-md px-4 rounded-pill" href="{{ path('app_home_contact')}}">
-                        Nous contacter
-                    </a>
+                
+                <!-- Centrez les boutons en ajoutant un nouveau div ici -->
+                <div class="d-flex justify-content-center gap-2 my-5">
+                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+                        <a class="btn btn-primary btn-lg fw-bold text-uppercase mb-2 mb-sm-0" href="{{ path('app_home')}}">
+                            <i class="bi bi-house me-2"></i> Retour à l'accueil
+                        </a>
+                        <a class="btn btn-outline-primary btn-lg fw-bold text-uppercase mb-2 mb-sm-0" href="{{ path('app_v2_contact')}}">
+                            <i class="bi bi-envelope-at me-2"></i> Nous contacter
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -36,3 +38,4 @@
     </div>
 </div>
 {% endblock %}
+{% block preview %}{% endblock %}

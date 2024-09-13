@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class CandidatType extends AbstractType
 {
@@ -32,7 +32,13 @@ class CandidatType extends AbstractType
                 'label' => 'Titre *',
             ])
             ->add('candidat', InfoUserType::class, ['label' => false])
-            ->add('resume')
+            ->add('resume', TextareaType::class, [
+                'required' => false ,
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ]
+            ])
             ->add('file', FileType::class, [
                 'required' => false,
                 'label' => 'app_identity_expert_step_one.avatar_desc',

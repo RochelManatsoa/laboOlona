@@ -75,28 +75,34 @@ class DashboardController extends AbstractController
             if($candidat->isIsGeneretated()){
                 $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_UPLOAD_CV);
             }
-            $response = $this->creditManager->adjustCredits($this->userService->getCurrentUser(), $creditAmount);
-            
-            if (isset($response['error'])) {
-                $message = $response['error'];
-                $success = false;
-                $status = 'Echec';
-                $upload = false;
-            }
 
-            if (isset($response['success'])) {
-                $response = $this->candidatController->analyse(new \Symfony\Component\HttpFoundation\Request(), $candidat);
-                $content = $response->getContent(); 
+            if($this->profileManager->canApplyAction($currentUser, Credit::ACTION_UPLOAD_CV)){
+                $responseOpenai = $this->candidatController->analyse(new \Symfony\Component\HttpFoundation\Request(), $candidat);
+                $content = $responseOpenai->getContent(); 
                 $data = json_decode($content, true);
                 if($data['status'] === 'error'){
+                    $message = "Une erreur s'est produite. Notre IA n'arrive pas à acceder à votre CV";
                     $success = false;
                     $status = 'Echec';
                     $upload = false;
+                }else{
+                    $response = $this->creditManager->adjustCredits($this->userService->getCurrentUser(), $creditAmount);
+                    if (isset($response['error'])) {
+                        $message = $response['error'];
+                        $success = false;
+                        $status = 'Echec';
+                        $upload = false;
+                    }
+                    $message = $data['message'];
+                    $success = true;
+                    $upload = true;
+                    $status = 'Succès';
                 }
-                $message = $data['message'];
-                $success = true;
-                $upload = true;
-                $status = 'Succès';
+            }else{
+                $message = "Crédits insuffisant. Veuillez recharger votre compte.";
+                $success = false;
+                $status = 'Echec';
+                $upload = false;
             }
 
             if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){

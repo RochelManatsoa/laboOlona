@@ -17,9 +17,10 @@ class NotificationProfileType extends AbstractType
             // ->add('isRead')
             ->add('titre')
             ->add('contenu', TextareaType::class, [
-                'required' => false,
+                'required' => false ,
                 'attr' => [
-                    'rows' => 8
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
                 ]
             ])
             // ->add('type')

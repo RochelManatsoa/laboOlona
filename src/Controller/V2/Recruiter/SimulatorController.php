@@ -7,6 +7,7 @@ use App\Manager\MailManager;
 use App\Entity\Finance\Devise;
 use App\Entity\Finance\Contrat;
 use App\Entity\Finance\Employe;
+use App\Manager\ProfileManager;
 use App\Manager\SimulatorManager;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
@@ -15,6 +16,7 @@ use App\Form\Finance\ContratHiddenType;
 use App\Manager\Finance\EmployeManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\Finance\SimulateurEntrepriseType;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,6 +31,8 @@ class SimulatorController extends AbstractController
         private UserService $userService,
         private SimulatorManager $simulatorManager,
         private EmployeManager $employeManager,
+        private ProfileManager $profileManager,
+        private CreditManager $creditManager,
         private MailManager $mailManager,
         private PaginatorInterface $paginator,
     ){}
@@ -66,34 +70,42 @@ class SimulatorController extends AbstractController
         $form = $this->createForm(SimulateurEntrepriseType::class, $simulateur, ['default_devise' => $defaultDevise]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->employeManager->simulate($simulateur);
-            $simulateur = $form->getData();
-            $employe = $simulateur->getEmploye();
-            $user = $simulateur->getEmploye()->getUser();
-            $existingUser = $this->em->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
-            if($existingUser instanceof User){
-                $currentRoles = $existingUser->getRoles();
-                if (!in_array('ROLE_EMPLOYE', $currentRoles)) {
-                    $currentRoles[] = 'ROLE_EMPLOYE'; 
-                }
-                $existingUser->setRoles($currentRoles);
-                $this->em->persist($existingUser);
+            $message = "Simulation de salaire effectué";
+            $success = true;
+            $status = '<i class="bi bi-check-lg me-2"></i> Succès';
+            $simulateur = null;
+            $results = [];
+            if($this->profileManager->canBuy($user, 10)){
+                $simulateur = $form->getData();
+                $employe = $simulateur->getEmploye();
+                $user = $simulateur->getEmploye()->getUser();
+                $results = $this->employeManager->simulate($simulateur);
+                $employe->setNombreEnfants($form->get('nombreEnfant')->getData());
+                $employe->setSalaireBase($results['salaire_de_base_ariary']);
+    
+                $this->em->persist($employe);
+                $this->em->persist($simulateur);
+                $this->em->flush();
+                $this->creditManager->adjustCredits($user, 10);
             }else{
-                $currentRoles = $user->getRoles();
-                if (!in_array('ROLE_EMPLOYE', $currentRoles)) {
-                    $currentRoles[] = 'ROLE_EMPLOYE'; 
-                }
-                $user->setRoles($currentRoles);
-                $this->em->persist($user);
+                $message = "Crédits insuffisant. Veuillez recharger votre compte.";
+                $success = false;
+                $status = '<i class="bi bi-exclamation-octagon me-2"></i> Echec';
             }
-            $employe->setNombreEnfants($form->get('nombreEnfant')->getData());
-            $employe->setSalaireBase($result['salaire_de_base_ariary']);
 
-            $this->em->persist($employe);
-            $this->em->persist($simulateur);
-            $this->em->flush();
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+    
+                return $this->render('v2/dashboard/simulator/live.html.twig', [
+                    'message' => $message,
+                    'success' => $success,
+                    'status' => $status,
+                    'credit' => $user->getCredit()->getTotal(),
+                    'simulateur' => $simulateur,    
+                    'results' => $results,
+                ]);
+            }
 
-            return $this->redirectToRoute('app_v2_recruiter_simulator_view', ['id' => $simulateur->getId()]);
         }
         
         return $this->render('v2/dashboard/recruiter/simulator/create.html.twig', [
