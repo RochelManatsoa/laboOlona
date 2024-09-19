@@ -43,6 +43,7 @@ class AttributeCreditCommand extends Command
         foreach ($users as $key => $user) {
             if(!$user->getCredit() instanceof Credit){
                 $credit = $this->creditManager->init();
+                $credit->setTotal(200);
                 $user->setCredit($credit);
                 $this->em->persist($user);
             }

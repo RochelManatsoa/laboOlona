@@ -57,6 +57,7 @@ class ReportProfileCommand extends Command
                         $output->writeln(' - Report failed for '.$this->appExtension->generatePseudo($profile).' ' . $data['error']);
                     }
                     $output->writeln(' - Report saved for '.$this->appExtension->generatePseudo($profile));
+                    $emailsSent ++;
 
                 } catch (\Exception $e) {
                     $output->writeln('Erreur de génération du rapport par IA pour le profil ID: ' . $this->appExtension->generatePseudo($profile));

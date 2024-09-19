@@ -8,7 +8,7 @@
 
 {% block body %}
 
-<section class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #f8f9fa;">
+<section class="d-flex justify-content-center align-items-center" style="background-color: #f8f9fa;">
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-6 d-none d-md-block text-center">
@@ -17,7 +17,7 @@
             <div class="col-md-6 col-lg-5">
                 <div class="card shadow-lg border-0 rounded">
                     <div class="card-body p-4">
-                        <h2 class="text-center mb-4">Inscription à Olona-talents.com</h2>
+                        <h2 class="text-center mb-4">Inscription</h2>
 
                         {% for flash_error in app.flashes('verify_email_error') %}
                             <div class="alert alert-light" role="alert">
@@ -29,7 +29,7 @@
                             Déjà membre ? <a href="{{ path('app_login') }}" class="text-primary">Connectez-vous dès maintenant</a> et profitez des avantages de Olona-talents.
                         </p>
                         <div class="mb-4 text-center">
-                            <a href="{{ path('connect_google_start') }}" class="btn btn-outline-primary btn-block">
+                            <a href="{{ path('connect_google_start') }}" class="btn btn-outline-primary btn-block rounded-pill px-5">
                                 Se connecter avec <i class="bi bi-google"></i>
                             </a>
                         </div>
@@ -68,7 +68,7 @@
 
                         </div>
 
-                        <button class="btn btn-lg btn-primary rounded-pill px-5" type="submit" id="register-submit">
+                        <button class="btn btn-primary rounded-pill px-5" type="submit" id="register-submit">
                             {{ 'app_register.menu'|trans }}                
                         </button>
                         {{ form_end(registrationForm) }}

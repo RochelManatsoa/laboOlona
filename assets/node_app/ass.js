@@ -1,4 +1,5 @@
 const dotenv = require('dotenv');
+require('dotenv').config();
 dotenv.config();
 const fs = require('fs');
 const OpenAI = require('openai');
@@ -20,8 +21,10 @@ const httpsAgent = new https.Agent({
 });
 
 const fetchPdfText = async (candidatId) => {
+  const url = `https://develop.olona-talents.com/api/ocr/${candidatId}`;
+  console.log("Requesting URL:", url);
   try {
-    const response = await axios.get(`https://preprod.olona-talents.com/api/ocr/${candidatId}`, {
+    const response = await axios.get(url, {
       httpsAgent: httpsAgent
     });
     const pdfText = response.data.text;
@@ -58,7 +61,7 @@ const main = async () => {
     console.log('Texte PDF récupéré.');
 
     // Créez un fichier texte avec le contenu extrait du PDF
-    const textFilePath = path.join('/home/mast9834/laboOlona/public/uploads/cv/', 'resume.txt');
+    const textFilePath = path.join('/var/www/olonaTalents/laboOlona/public/uploads/cv/', 'resume.txt');
     await createTextFile(pdfText, textFilePath);
     console.log('Fichier texte créé.');
 
@@ -118,7 +121,7 @@ const main = async () => {
     do {
       await new Promise(resolve => setTimeout(resolve, 5000)); // Attendre 5 secondes avant de vérifier le statut
       runStatus = await checkRunStatus(threadId, run.id);
-      console.log('Current run status:', runStatus.status);
+      // console.log('Current run status:', runStatus.status);
     } while (runStatus.status !== 'completed');
 
     // Listez les messages du thread après la complétion du run

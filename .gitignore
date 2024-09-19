@@ -6,6 +6,7 @@
 /public/bundles/
 /public/uploads/*
 /public/video/*
+/public/assets/ckeditor5/
 /assets/node_app/node_modules/
 /assets/node_app/.env
 /assets/node_app/.env.*

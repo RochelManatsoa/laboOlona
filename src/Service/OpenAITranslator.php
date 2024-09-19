@@ -149,8 +149,8 @@ class OpenAITranslator
 
     public function trans($text) {
         $scriptPath = $this->projectDir . '/assets/node_app/index.js';
-        $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
-        $command = sprintf('%s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($text), escapeshellarg($this->apiKey));
+        $nodePath = '/root/.nvm/versions/node/v18.17.0/bin/node';  
+        $command = sprintf('sudo %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($text), escapeshellarg($this->apiKey));
 
         exec($command, $output, $return_var);
 
@@ -168,8 +168,8 @@ class OpenAITranslator
             return "CV manquant";
         }
         $scriptPath = $this->projectDir . '/assets/node_app/test1.js';
-        $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
-        $command = sprintf('%s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getCv()), escapeshellarg($this->apiKey));
+        $nodePath = '/root/.nvm/versions/node/v18.17.0/bin/node';  
+        $command = sprintf('sudo %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getCv()), escapeshellarg($this->apiKey));
         exec($command, $output, $return_var);
 
         if ($return_var === 0) {
@@ -181,23 +181,23 @@ class OpenAITranslator
 
     public function report(CandidateProfile $candidateProfile)
     {
-        $scriptPath = $this->projectDir . '/assets/node_app/ass.js';
-        $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
-        $command = sprintf('%s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getCv()), escapeshellarg($this->apiKey), escapeshellarg($candidateProfile->getId()));
+        $scriptPath = $this->projectDir . '/assets/node_app/assistant.js';
+        $nodePath = '/root/.nvm/versions/node/v18.17.0/bin/node';  
+        $command = sprintf('sudo %s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getCv()), escapeshellarg($this->apiKey), escapeshellarg($candidateProfile->getId()));
         
         exec($command, $output, $return_var);
         if ($return_var === 0) {
             return implode("\n", $output);
         } else {
-            return "Erreur lors de l'exécution du script ass.js";
+            return "Erreur lors de l'exécution du script assistant.js";
         }
     }
 
     public function metaDescription(JobListing $annonce)
     {
         $scriptPath = $this->projectDir . '/assets/node_app/shortdesc.js';
-        $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
-        $command = sprintf('%s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($annonce->getDescription()), escapeshellarg($this->apiKey), escapeshellarg($annonce->getId()));
+        $nodePath = '/root/.nvm/versions/node/v18.17.0/bin/node';  
+        $command = sprintf('sudo %s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($annonce->getDescription()), escapeshellarg($this->apiKey), escapeshellarg($annonce->getId()));
         
         exec($command, $output, $return_var);
         if ($return_var === 0) {
@@ -210,8 +210,8 @@ class OpenAITranslator
     public function resumePrestation(Prestation $prestation)
     {
         $scriptPath = $this->projectDir . '/assets/node_app/prestation.js';
-        $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
-        $command = sprintf('%s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($prestation->getDescription()), escapeshellarg($this->apiKey), escapeshellarg($prestation->getTitre()));
+        $nodePath = '/root/.nvm/versions/node/v18.17.0/bin/node';  
+        $command = sprintf('sudo %s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($prestation->getDescription()), escapeshellarg($this->apiKey), escapeshellarg($prestation->getTitre()));
         
         exec($command, $output, $return_var);
         if ($return_var === 0) {

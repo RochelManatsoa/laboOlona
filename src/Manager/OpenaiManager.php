@@ -80,10 +80,7 @@ class OpenaiManager
         $jsonString = trim($parts[1], " \t\n\r\0\x0B`");
         $jsonData = json_decode($jsonString, true);
     
-        return [
-            $formattedText,
-            $jsonData
-        ];
+        return $jsonData;
     }
 
     public function extractCleanAndShortText(string $text): array

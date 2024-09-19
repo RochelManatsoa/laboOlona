@@ -481,7 +481,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-
+    
     public function findProfilesForReport()
     {
         $queryBuilder = $this->createQueryBuilder('c');
@@ -491,12 +491,18 @@ class CandidateProfileRepository extends ServiceEntityRepository
             $queryBuilder->expr()->eq('c.status', ':statusFeatured')
         );
 
+        // Créer une condition qui vérifie si isGeneretated est false ou null
+        $generatedCondition = $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->eq('c.isGeneretated', ':isGeneretated'),
+            $queryBuilder->expr()->isNull('c.isGeneretated')
+        );
+
         $query = $queryBuilder
-            ->andWhere('c.isGeneretated = :isGenerated')
+            ->andWhere($generatedCondition)
             ->andWhere($orConditions)
             ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
             ->setParameter('statusFeatured', CandidateProfile::STATUS_FEATURED)
-            ->setParameter('isGenerated', false)
+            ->setParameter('isGeneretated', false)
             ->setMaxResults(5)
             ->orderBy('c.id', 'DESC')
             ->getQuery();

@@ -18,7 +18,7 @@ const openai = new OpenAI({
   apiKey
 });
 
-const pdfPath = path.join('/home/mast9834/laboOlona/public/uploads/cv/', process.argv[2]);
+const pdfPath = path.join('/var/www/olonaTalents/laboOlona/public/uploads/cv/', process.argv[2]);
 
 if (!fs.existsSync(pdfPath)) {
   console.error(`File not found: ${pdfPath}`);
