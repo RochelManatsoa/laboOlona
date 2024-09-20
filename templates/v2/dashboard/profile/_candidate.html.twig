@@ -59,7 +59,7 @@
           <form action="{{ path('app_v2_contact_show')}}" method="post" id="show-candidate-contact">
             <input type="hidden" name="contactId" value="{{ profile.candidat.id }}">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
-            <button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-price="50 crédits" data-bs-type="show-candidate-contact" class="align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact (50 crédit)</button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-price="50 crédits" data-bs-type="show-candidate-contact" class="align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact (50 crédits)</button>
           </form>
         </div>
         {% endif %}       
