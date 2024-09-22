@@ -55,18 +55,16 @@ class CandidatController extends AbstractController
         $this->em->getConnection()->close();
         try {
             /** Generate OpenAI resume */
-            // $parsePdf = $this->pdfProcessor->processPdf($candidat);
-            $parsePdf = $this->openAITranslator->parse($candidat);
             $report = $this->openAITranslator->report($candidat);
-            [$text, $json] = $this->openaiManager->extractJsonAndText($report);
-            $traduction = $this->openAITranslator->trans($text);
+            $json = $this->openaiManager->extractJsonAndText($report);
+            $text = isset($json['frenchSummary']) ? $json['frenchSummary'] : null;
+            $traduction = isset($json['englishSummary']) ? $json['englishSummary'] : null;
             $metaDescription = $json['professionalSummary'];
             $resumeCandidat = $this->arrayToStringResume($json);
             $fullResume = $this->arrayToString($json);
             $tools = $this->arrayToString($json['tools']);
-            $keywords = $json['keywords'];
+            $keywords = isset($json['keywords']) ? $json['keywords'] : null;
             $technologies = $this->arrayToString($json['technologies']);
-            // dd($metaDescription, $resumeCandidat, $tools, $technologies, $text, $json);
 
             // Rouvrir la connexion à la base de données après l'exécution des scripts
             $this->em->getConnection()->connect();
@@ -105,15 +103,15 @@ class CandidatController extends AbstractController
         $this->em->getConnection()->close();
         try {
             /** Generate OpenAI analyse */
-            $parsePdf = $this->openAITranslator->parse($candidat);
             $report = $this->openAITranslator->report($candidat);
-            [$text, $json] = $this->openaiManager->extractJsonAndText($report);
-            $traduction = $this->openAITranslator->trans($text);
+            $json = $this->openaiManager->extractJsonAndText($report);
+            $traduction = isset($json['englishSummary']) ? $json['englishSummary'] : null;
+            $text = isset($json['frenchSummary']) ? $json['frenchSummary'] : null;
             $metaDescription = $json['professionalSummary'];
             $resumeCandidat = $this->arrayToStringResume($json);
             $tools = $this->arrayToString($json['tools']);
             $technologies = $this->arrayToString($json['technologies']);
-            $keywords = $json['keywords'];
+            $keywords = isset($json['keywords']) ? isset($json['keywords']) : null;
             $experiences = $json['experiences'];
 
             // Effacer les expériences actuelles si elles existent

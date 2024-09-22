@@ -11,8 +11,9 @@
       <h1 class="card-title">{{ prestation.titre }}</h1>
       <hr>
       <p class="small">
-      <span class="">{{ prestation.createdAt|date('d/m/Y') }}</span> | 
-      <span class="">{{ prestation.status }}</span> | 
+      <span class="">{{ satusPrestation(prestation)|raw }}</span> | 
+      <span class="">Créée le {{ prestation.createdAt|date('d/m/Y') }}</span> | 
+      <span class="">Par {{ ownerPrestation(prestation)|raw }}</span> | 
       </p>
       <h2 class="h5">Description</h2>
       <p>{{ prestation.description|raw }}</p>
@@ -31,35 +32,16 @@
       <h2 class="h5">Tarifs Proposés</h2>
       <dl class="row">
         <dt class="col-sm-3">Par Heure</dt>
-        <dd class="col-sm-9">{{ prestation.tarifsProposes.par_heure }}€</dd>
+        <dd class="col-sm-9">€</dd>
         <dt class="col-sm-3">Par Projet</dt>
-        <dd class="col-sm-9">{{ prestation.tarifsProposes.par_projet }}€</dd>
+        <dd class="col-sm-9">€</dd>
       </dl>
       {% endif %}
 
       <h2 class="h5">Modalités de Prestation</h2>
       <p>{{ prestation.modalitesPrestation }}</p>
 
-      {% if prestation.medias is not empty %}
-      <h2 class="h5">Médias</h2>
-      <div class="row">
-        <div class="col-md-6">
-          <h3>Images</h3>
-          {% for image in prestation.medias.images %}
-            <img src="{{ image }}" class="img-fluid rounded mb-2" alt="Image de prestation">
-          {% endfor %}
-        </div>
-        <div class="col-md-6">
-          <h3>Vidéos</h3>
-          {% for video in prestation.medias.videos %}
-            <video controls class="w-100">
-              <source src="{{ video }}" type="video/mp4">
-              Votre navigateur ne supporte pas la balise vidéo.
-            </video>
-          {% endfor %}
-        </div>
-      </div>
-      {% endif %}
+      
     </div>
   </div>
 </section>

@@ -9,6 +9,11 @@ use App\Entity\EntrepriseProfile;
 use App\Entity\Candidate\Competences;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use App\Entity\Prestation\TypePrestation;
+use Symfony\Component\Validator\Constraints\Sequentially;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Prestation\AvailabilityType;
@@ -35,7 +40,16 @@ class PrestationStaffType extends AbstractType
     {
         $builder
             ->add('titre', TextType::class, [
-                'required' => true,
+                'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Le titre est obligatoire.'),
+                    new Length(
+                        min: 2,
+                        max: 50,
+                        minMessage: 'Le titre est trop court',
+                        maxMessage: 'Le titre ne doit pas depasser 50 characters',
+                    ),
+                ]),
             ])
             ->add('secteurs', EntityType::class, [
                 'class' => Secteur::class,
@@ -50,6 +64,13 @@ class PrestationStaffType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'La description est obligatoire.'),
+                    new Length(
+                        min: 3,
+                        minMessage: 'La description est trop court',
+                    ),
+                ]),
                 'attr' => [
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'
@@ -73,16 +94,34 @@ class PrestationStaffType extends AbstractType
                 'required' => false,
             ])
             ->add('motsCles')
-            ->add('typeService')
+            ->add('typePrestation', EntityType::class, [
+                'class' => TypePrestation::class,
+                'choice_label' => 'name',
+                'label' => 'Type de service',
+                'autocomplete' => true,
+                'expanded' => false,
+                'multiple' => false,
+            ])
             ->add('portfolioLinks')
             ->add('contactTelephone', TextType::class, [
                 'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Le contact est obligatoire.'),
+                ]),
             ])
-            ->add('contactEmail', TextType::class, [
+            ->add('contactEmail', EmailType::class, [
                 'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Le mail est obligatoire.'),
+                ]),
             ])
             ->add('contactReseauxSociaux')
-            ->add('preferencesCommunication')
+            ->add('preferencesCommunication', TextType::class, [
+                'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Champ obligatoire.'),
+                ]),
+            ])
             ->add('conditionsParticulieres')
             ->add('engagementQualite')
             ->add('candidateProfile', EntityType::class, [

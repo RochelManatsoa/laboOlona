@@ -31,8 +31,8 @@
       <h1 class="card-title">{{ prestation.titre }}</h1>
       <hr>
       <p class="small">
-      <span class="">{{ prestation.createdAt|date('d/m/Y') }}</span> | 
-      <span class="">{{ prestation.status }}</span> | 
+      <span class="">{{ satusPrestation(prestation)|raw }}</span> | 
+      <span class="">Publié {{ prestation.createdAt|time_ago }}</span> | 
       </p>
       <h2 class="h5">Description</h2>
       <p>{{ prestation.description|raw }}</p>
@@ -40,11 +40,13 @@
       <h2 class="h5">Secteur</h2>
       <i class="mx-2 bi bi-tag"></i><span class="badge text-bg-primary rounded-pill mb-4">{{ prestation.secteurs.nom }}</span>
       
-      {% if prestation.specialisations is not empty %}
+      {% if prestation.competences is not empty %}
       <h2 class="h5">Spécialisation</h2>
-      <p class="row">
-        {{prestation.specialisations}}
-      </p>
+      {% for item in prestation.competences %}
+      <span class="mx-5">
+        {{ item.nom }}
+      </span>
+      {% endfor %}
       {% endif %}
 
       
@@ -69,20 +71,6 @@
       <h2 class="h5">Conditions particulière</h2>
       <p class="row">
         {{prestation.conditionsParticulieres|raw}}
-      </p>
-      {% endif %}
-
-      {% if prestation.medias is not empty %}
-      <h2 class="h5">Médias</h2>
-      <p class="row">
-        {{prestation.medias}}
-      </p>
-      {% endif %}
-
-      {% if prestation.disponibilites is not empty %}
-      <h2 class="h5">Disponibilités</h2>
-      <p class="row">
-        {{prestation.disponibilites}}
       </p>
       {% endif %}
 

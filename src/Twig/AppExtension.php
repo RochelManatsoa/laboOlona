@@ -80,6 +80,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getAge', [$this, 'getAge']),
             new TwigFunction('getPseudo', [$this, 'getPseudo']),
             new TwigFunction('invitation', [$this, 'invitation']),
+            new TwigFunction('ownerPrestation', [$this, 'ownerPrestation']),
             new TwigFunction('getTarifForfait', [$this, 'getTarifForfait']),
             new TwigFunction('getTarifCandidat', [$this, 'getTarifCandidat']),
             new TwigFunction('generateReference', [$this, 'generateReference']),
@@ -98,6 +99,16 @@ class AppExtension extends AbstractExtension
     }
 
 
+    public function ownerPrestation(Prestation $prestation): string
+    {        
+        if($prestation->getCandidateProfile() instanceof CandidateProfile){
+            return $this->generatePseudo($prestation->getCandidateProfile());
+        }
+        if($prestation->getEntrepriseProfile() instanceof EntrepriseProfile){
+            return $this->generateReference($prestation->getEntrepriseProfile());
+        }
+        return "";
+    }
 
     public function getStatuses(string $status = NULL): string
     {

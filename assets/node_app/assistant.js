@@ -12,7 +12,7 @@ const openai = new OpenAI({
 });
 
 const pdfPath = '/home/mast9834/laboOlona/public/uploads/cv/' + process.argv[2];
-const assistantId = 'asst_hRTwdXWSJWUfZyrB7NDFby2E'; 
+const assistantId = 'asst_FVlPdIFoQh6UzFp5qjee1brC'; 
 
 // Fonction pour vérifier le statut du run
 const checkRunStatus = async (threadId, runId) => {
@@ -42,7 +42,7 @@ const main = async () => {
     // Télécharge le fichier PDF au thread
     const fileResponse = await openai.files.create({
       file: fs.createReadStream(pdfPath),
-      purpose: 'fine-tune'
+      purpose: 'assistants'
     });
 
     await openai.beta.threads.messages.create(threadId, {

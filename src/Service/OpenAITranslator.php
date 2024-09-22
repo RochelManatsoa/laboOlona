@@ -181,7 +181,7 @@ class OpenAITranslator
 
     public function report(CandidateProfile $candidateProfile)
     {
-        $scriptPath = $this->projectDir . '/assets/node_app/ass.js';
+        $scriptPath = $this->projectDir . '/assets/node_app/assistant.js';
         $nodePath = '/opt/alt/alt-nodejs16/root/usr/bin/node';  
         $command = sprintf('%s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getCv()), escapeshellarg($this->apiKey), escapeshellarg($candidateProfile->getId()));
         
@@ -189,7 +189,7 @@ class OpenAITranslator
         if ($return_var === 0) {
             return implode("\n", $output);
         } else {
-            return "Erreur lors de l'exécution du script ass.js";
+            return "Erreur lors de l'exécution du script assistant.js";
         }
     }
 
