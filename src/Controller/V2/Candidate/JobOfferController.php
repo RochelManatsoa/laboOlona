@@ -118,7 +118,7 @@ class JobOfferController extends AbstractController
                 $refered->setStep(4);
                 $this->em->persist($refered);
             }
-            $message = 'Contact du candidat affiché';
+            $message = 'Candidature envoyée';
             $success = true;
             $status = 'Succès';
         
@@ -135,48 +135,48 @@ class JobOfferController extends AbstractController
                 $this->applicationManager->saveForm($form);
             }
     
-            /** Envoi email moderateur */
-            $this->mailerService->sendMultiple(
-                $this->moderateurManager->getModerateurEmails(),
-                "Une nouvelle candidature sur Olona Talents",
-                "moderateur/notification_candidature.html.twig",
-                [
-                    'user' => $candidat->getCandidat(),
-                    'candidature' => $application,
-                    'objet' => "mise à jour",
-                    'details_annonce' => $annonce,
-                    'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidature_view', ['id' => $application->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-                ]
-            );
+            // /** Envoi email moderateur */
+            // $this->mailerService->sendMultiple(
+            //     $this->moderateurManager->getModerateurEmails(),
+            //     "Une nouvelle candidature sur Olona Talents",
+            //     "moderateur/notification_candidature.html.twig",
+            //     [
+            //         'user' => $candidat->getCandidat(),
+            //         'candidature' => $application,
+            //         'objet' => "mise à jour",
+            //         'details_annonce' => $annonce,
+            //         'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidature_view', ['id' => $application->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+            //     ]
+            // );
     
-            /** Envoi email candidat */
-            $this->mailerService->send(
-                $currentUser->getEmail(),
-                "Votre candidature a été prise en compte sur Olona Talents",
-                "candidat/notification_candidature.html.twig",
-                [
-                    'user' => $candidat->getCandidat(),
-                    'candidature' => $application,
-                    'objet' => "mise à jour",
-                    'details_annonce' => $annonce,
-                    'dashboard_url' => $this->urlGenerator->generate('app_v2_candidate_application', ['id' => $application->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-                ]
-            );
+            // /** Envoi email candidat */
+            // $this->mailerService->send(
+            //     $currentUser->getEmail(),
+            //     "Votre candidature a été prise en compte sur Olona Talents",
+            //     "candidat/notification_candidature.html.twig",
+            //     [
+            //         'user' => $candidat->getCandidat(),
+            //         'candidature' => $application,
+            //         'objet' => "mise à jour",
+            //         'details_annonce' => $annonce,
+            //         'dashboard_url' => $this->urlGenerator->generate('app_v2_candidate_application', ['id' => $application->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+            //     ]
+            // );
     
-            /** Envoi email entreprise */
-            $this->mailerService->send(
-                $recruiter->getEntreprise()->getEmail(),
-                "Nouvelle candidature reçue sur votre annonce Olona-talents.com",
-                "entreprise/notification_candidature.html.twig",
-                [
-                    'user' => $recruiter->getEntreprise(),
-                    'candidature' => $application,
-                    'candidat' => $candidat,
-                    'objet' => "mise à jour",
-                    'details_annonce' => $annonce,
-                    'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidature_annonce_view_default', ['id' => $annonce->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-                ]
-            );
+            // /** Envoi email entreprise */
+            // $this->mailerService->send(
+            //     $recruiter->getEntreprise()->getEmail(),
+            //     "Nouvelle candidature reçue sur votre annonce Olona-talents.com",
+            //     "entreprise/notification_candidature.html.twig",
+            //     [
+            //         'user' => $recruiter->getEntreprise(),
+            //         'candidature' => $application,
+            //         'candidat' => $candidat,
+            //         'objet' => "mise à jour",
+            //         'details_annonce' => $annonce,
+            //         'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidature_annonce_view_default', ['id' => $annonce->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+            //     ]
+            // );
 
             if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
                 $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
@@ -190,7 +190,7 @@ class JobOfferController extends AbstractController
             }
 
 
-            return $this->redirectToRoute('app_dashboard_candidat_annonce');
+            return $this->redirectToRoute('app_v2_candidate_application');
         }
 
         if ($annonce) {

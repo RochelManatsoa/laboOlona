@@ -227,6 +227,9 @@ $(function() {
             } else if (buttonType === "boost-profile") {
                 var form = $('button[data-bs-type="boost-profile"]').closest('form');
                 form.trigger("submit");
+            } else if (buttonType === "apply-job") {
+                var form = $('button[data-bs-type="apply-job"]').closest('form');
+                form.trigger("submit");
             }
             $('#confirmationModal').modal('hide');
         });
@@ -278,6 +281,42 @@ $(function() {
         });
 
         $('#boostProfileForm').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: this.action,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
+                success: function(data) {
+                    Turbo.renderStreamMessage(data);
+                    console.log(data)
+                    if (data.success) {
+                        $('#successToast').find('.toast-body').text(data.message);
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
+                        var boostProfileModal = Modal.getInstance($('#boostProfile')[0]) || new Modal($('#boostProfile')[0]);
+                        boostProfileModal.hide();
+                    } else {
+                        $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Toast($('#errorToast')[0]);
+                        errorToast.show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de la tentative de boost de votre profil.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
+
+        $('#applyJob').on('submit', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
             $.ajax({
