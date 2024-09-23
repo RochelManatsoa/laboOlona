@@ -185,6 +185,18 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
             required: true,
             number: true,
           },
+          'simulateur[nombreEnfant]': {
+            number: true,
+            max: 12
+          },
+          'simulateur[jourRepas]': {
+            number: true,
+            max: 22
+          },
+          'simulateur[jourDeplacement]': {
+            number: true,
+            max: 22
+          },
           'simulateur[avantage][primeFonction]': {
             number: true,
           },
@@ -214,6 +226,18 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
           'simulateur[salaireNet]': {
             required: 'Champs obligatoire',
             number: 'Le montant doit être un nombre décimal',
+          },
+          'simulateur[nombreEnfant]': {
+            number: 'Entrez un nombre valide',
+            max: 'Maximum 12'
+          },
+          'simulateur[jourRepas]': {
+            number: 'Entrez un nombre valide',
+            max: 'Maximum 22 jours'
+          },
+          'simulateur[jourDeplacement]': {
+            number: 'Entrez un nombre valide',
+            max: 'Maximum 22 jours'
           },
           'simulateur[avantage][primeFonction]': {
             number: 'Le montant doit être en chiffres',
@@ -424,6 +448,18 @@ function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connecte
           required: true,
           number: true,
         },
+        'simulateur_entreprise[nombreEnfant]': {
+          number: true,
+          max: 12
+        },
+        'simulateur_entreprise[jourRepas]': {
+          number: true,
+          max: 22
+        },
+        'simulateur_entreprise[jourDeplacement]': {
+          number: true,
+          max: 22
+        },
         'simulateur_entreprise[avantage][primeFonction]': {
           number: true,
         },
@@ -457,6 +493,18 @@ function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connecte
         'simulateur_entreprise[salaireNet]': {
           required: 'Champs obligatoire',
           number: 'Le montant doit être un nombre décimal',
+        },
+        'simulateur_entreprise[nombreEnfant]': {
+          number: 'Entrez un nombre valide',
+          max: 'Maximum 12'
+        },
+        'simulateur_entreprise[jourRepas]': {
+          number: 'Entrez un nombre valide',
+          max: 'Maximum 22 jours'
+        },
+        'simulateur_entreprise[jourDeplacement]': {
+          number: 'Entrez un nombre valide',
+          max: 'Maximum 22 jours'
         },
         'simulateur_entreprise[avantage][primeFonction]': {
           number: 'Le montant doit être en chiffres',
