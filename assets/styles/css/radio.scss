@@ -136,4 +136,10 @@
   input:checked + .switch-slider .switch-label-off {
     display: none;
   }
-  
+.card-selected {
+    border: 2px solid #4CAF50; 
+    background-color: #f0f0f0; 
+    transform: scale(1.05); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    box-shadow: 0 0 15px rgba(0,0,0,0.6); 
+}
