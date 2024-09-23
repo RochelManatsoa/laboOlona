@@ -24,14 +24,16 @@ use Knp\Component\Pager\PaginatorInterface;
 use App\Form\Boost\CreateCandidateBoostType;
 use App\Form\Boost\CreateRecruiterBoostType;
 use App\Manager\BusinessModel\CreditManager;
+use App\Entity\BusinessModel\BoostVisibility;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RequestStack;
+use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 #[Route('/v2/dashboard')]
 class DashboardController extends AbstractController
@@ -47,6 +49,7 @@ class DashboardController extends AbstractController
         private MailerService $mailerService,
         private UrlGeneratorInterface $urlGenerator,
         private RequestStack $requestStack,
+        private BoostVisibilityManager $boostVisibilityManager,
     ){}
 
     #[Route('/', name: 'app_v2_dashboard')]
@@ -148,21 +151,60 @@ class DashboardController extends AbstractController
         }
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user = $form->getData();
-            dd($form->getData());
-            $this->em->persist($user);
-            $this->em->flush();
 
-            return $this->redirectToRoute('app_v2_dashboard');
-        }else {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $boostOption = $form->get('boost')->getData(); 
+            $profile = $form->getData();
+
+            if ($this->profileManager->canApplyBoost($user, $boostOption)) {
+                $visibilityBoost = $profile->getBoostVisibility();
+                if(!$visibilityBoost instanceof BoostVisibility){
+                    $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
+                }
+                $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
+                $response = $this->creditManager->adjustCredits($user, $boostOption->getCredit());
+                
+                $message = 'Analyse de CV effectué avec succès';
+                $success = true;
+                $status = 'Succès';
+            
+                if(isset($response['success'])){
+                    $profile->setBoostVisibility($visibilityBoost);
+                    $profile->setStatus(CandidateProfile::STATUS_FEATURED);
+                    $this->em->persist($profile);
+                    $this->em->flush();
+                    $message = 'Votre profil est maintenant boosté';
+                    $success = true;
+                    $status = 'Succès';
+                }else{
+                    $message = 'Une erreur s\'est produite.';
+                    $success = false;
+                    $status = 'Echec';
+                }
+            } else {
+                $message = 'Crédits insuffisants pour ce boost.';
+                $success = false;
+                $status = 'Echec';
+            }
 
             if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
                 $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-                return $this->render('v2/dashboard/profile/form_errors.html.twig', [
-                    'form' => $form->createView(),
+    
+                return $this->render('v2/dashboard/candidate/update.html.twig', [
+                    'message' => $message,
+                    'success' => $success,
+                    'status' => $status,
+                    'visibilityBoost' => $visibilityBoost,
+                    'credit' => $user->getCredit()->getTotal(),
                 ]);
             }
+
+            return $this->json([
+                'message' => $message,
+                'success' => $success,
+                'status' => $status,
+                'credit' => $user->getCredit()->getTotal(),
+            ], 200);
         }
         
         return $this->render('v2/dashboard/profile/boost.html.twig', [

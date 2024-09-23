@@ -24,7 +24,7 @@
 					<p>
 					Augmentez vos chances d'être vu et choisi par les recruteurs ! En boostant votre profil, vous vous assurez une visibilité accrue et une position de premier plan dans les résultats de recherche.
 					</p>
-					{{ form_start(form)}}
+					{{ form_start(form, {'attr':{'action': path('app_v2_dashboard_boost_profile', {'id':app.user.id}), 'id':'boostProfileForm'}})}}
 
 						<div class="row row-cols-1 row-cols-md-3 my-4">
 
@@ -33,15 +33,15 @@
 								
 								<div class="col">
 									<div class="custom-control custom-radio image-checkbox photo-gris">
-										{{ form_widget(boost, {'attr': {'class': 'custom-control-input'}}) }}
+										{{ form_widget(boost, {'attr': {'style': 'display:none'}}) }}
 										<label class="custom-control-label" for="{{ boost.vars.id }}">
 											<div class="card mb-4 rounded-3 shadow-sm">
 												<div class="card-header py-3 bg-primary text-center">
-													<h4 class="my-0 fw-normal">{{ boost.vars.label }}</h4>
+													<h2 class="my-0 fw-normal fs-5" data-label="{{ getBoostInfo(boost.vars.id).credit }} crédits">{{ boost.vars.label }}</h2>
 												</div>
 												<div class="card-body">
 													<h3 class="card-title pricing-card-title text-center">{{ getBoostInfo(boost.vars.id).credit }}<small class="fw-light">crédits</small></h3>
-													<ul class="list-unstyled mt-3 mb-4">
+													<ul class="list-unstyled small my-3">
 													<li><i class="bi bi-check h5 text-danger"></i>Badge Olona Talent</li>
 													<li><i class="bi bi-check h5 text-danger"></i>Optimisation de votre profil</li>
 													<li><i class="bi bi-check h5 text-danger"></i>Analyse avancée de votre CV par notre IA spécialisée dans le recrutement</li>
@@ -58,7 +58,7 @@
 					<p>
 					En choisissant l'un de ces boosts, vous multipliez vos opportunités de contact et renforcez votre présence auprès des principales entreprises de votre secteur. Ne laissez pas passer votre chance de vous démarquer !
 					</p>
-						<button type="submit" class="btn btn-primary my-3 my-sm-5 float-end">Suivant</button>
+						<button type="button" class="btn btn-primary my-3 my-sm-5 float-end" id="boostProfileButton" data-toast="true">Suivant</button>
 						<a href="{{ path('app_v2_dashboard')}}" class="btn btn-outline-primary px-3 my-3 my-sm-5 float-end">Continuer sans BOOST</a>
 					{{ form_end(form) }}
 				</div>
@@ -68,6 +68,8 @@
 			</div>
 		</div>
 	</section>
+
+
 {% endblock %}
 
 {% block preview %}{% endblock %}
