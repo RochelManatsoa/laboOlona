@@ -34,14 +34,9 @@ class CandidateType extends AbstractType
             ->add('localisation', CountryType::class, [
                 'required' => false,
                 'label' => 'Pays de résidence (obligatoire)',
+                'placeholder' => 'Sélectionner votre pays', 
             ])
-            // ->add('birthday')
             ->add('titre')
-            // ->add('competences', EntityType::class, [
-            //     'class' => Competences::class,
-            //     'choice_label' => 'nom',
-            //     'multiple' => true,
-            // ])
             ->add('secteurs', EntityType::class, [
                 'required' => false,
                 'class' => Secteur::class,
@@ -50,10 +45,6 @@ class CandidateType extends AbstractType
                 'autocomplete' => true,
                 'multiple' => true,
             ])
-            // ->add('availability', EntityType::class, [
-            //     'class' => Availability::class,
-            //     'choice_label' => 'id',
-            // ])
             ->add('tarifCandidat', TarifCandidatType::class, [
                 'required' => false,
                 'label' => false,

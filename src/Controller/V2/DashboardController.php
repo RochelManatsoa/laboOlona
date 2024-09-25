@@ -73,8 +73,10 @@ class DashboardController extends AbstractController
 
     #[Route('/providers/{id}/create', name: 'app_v2_dashboard_create_profile')]
     public function profileInfo(Request $request, User $user): Response
-    {                
-        $typology = ucfirst($this->requestStack->getSession()->get('typology', 'Candidat'));
+    {             
+        $session = $this->requestStack->getSession();
+        $typology = $session->has('typology') && $session->get('typology') !== null ? $session->get('typology') : 'Candidat';
+        $typology = ucfirst($typology);   
         $form = $this->createForm(ProfileType::class, $user,[]);
         $form->add('type', ChoiceType::class, [
             'choices' => User::getProfileAccount(),
