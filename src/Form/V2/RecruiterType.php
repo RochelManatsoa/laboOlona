@@ -27,6 +27,7 @@ class RecruiterType extends AbstractType
             ->add('localisation', CountryType::class, [
                 'required' => false,
                 'label' => 'Pays de résidence (obligatoire)',
+                'placeholder' => 'Sélectionner votre pays', 
             ])
             ->add('siteWeb', null, ['required' => false])
             ->add('description', TextareaType::class, [
@@ -36,11 +37,13 @@ class RecruiterType extends AbstractType
                     'class' => 'ckeditor-textarea'
                 ]
             ])
-            ->add('nom', null, ['required' => false])
+            ->add('nom', null, [
+                'required' => false,
+            ])
             ->add('secteurs', EntityType::class, [
                 'required' => false,
                 'class' => Secteur::class,
-                'label' => 'Secteur d\'expertise *',
+                'label' => 'Secteurs d\'activité *',
                 'choice_label' => 'nom',
                 'autocomplete' => true,
                 'multiple' => true,

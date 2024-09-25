@@ -28,11 +28,11 @@
 						<div class="row">
 							<div class="input-group mb-3">
 								<div class="form-floating">
-									{{ form_widget(form.nom) }}
+									{{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
 									<label for="">Votre nom</label>
 								</div>
 								<div class="form-floating">
-									{{ form_widget(form.prenom) }}
+									{{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
 									<label for="">Votre prénom</label>
 								</div>
 							</div>
@@ -40,7 +40,7 @@
 						<div class="row">
 							<div class="input-group mb-3">
 								<div class="form-floating">
-									{{ form_widget(form.email) }}
+									{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
 									{{ form_label(form.email) }}
 								</div>
 							</div>
@@ -48,7 +48,7 @@
 						<div class="row">
 							<div class="input-group mb-3">
 								<div class="form-floating">
-									{{ form_widget(form.telephone) }}
+									{{ form_widget(form.telephone, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
 									{{ form_label(form.telephone) }}
 								</div>
 							</div>
@@ -56,7 +56,7 @@
 						<div class="row">
 							<div class="input-group mb-3">
 								<div class="form-floating">
-									{{ form_widget(form.adress) }}
+									{{ form_widget(form.adress, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
 									{{ form_label(form.adress) }}
 								</div>
 							</div>
@@ -64,11 +64,11 @@
 						<div class="row">
 							<div class="input-group mb-3">
 								<div class="form-floating">
-									{{ form_widget(form.postalCode) }}
+									{{ form_widget(form.postalCode, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
 									{{ form_label(form.postalCode) }}
 								</div>
 								<div class="form-floating">
-									{{ form_widget(form.city) }}
+									{{ form_widget(form.city, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
 									{{ form_label(form.city) }}
 								</div>
 							</div>
@@ -78,7 +78,7 @@
 						{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
 							<div id="" class="candidateProfile">
 								<div class="form-floating">
-									{{ form_widget(form.candidateProfile.localisation) }}
+									{{ form_widget(form.candidateProfile.localisation, {'attr': {'class': 'form-control', 'placeholder': ' Sélectionner votre pays'}}) }}
 									{{ form_label(form.candidateProfile.localisation) }}
 								</div>
 							</div>
@@ -86,7 +86,7 @@
 						{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
 							<div id="" class="recruiterProfile">
 								<div class="form-floating">
-									{{ form_widget(form.entrepriseProfile.localisation) }}
+									{{ form_widget(form.entrepriseProfile.localisation, {'attr': {'class': 'form-control', 'placeholder': ' Sélectionner votre pays'}}) }}
 									{{ form_label(form.entrepriseProfile.localisation) }}
 								</div>							 
 							</div>							 

@@ -53,7 +53,7 @@
 							Indiquez le domaine dans lequel vous excellez. Choisissez celui qui reflète le mieux votre parcours professionnel et vos compétences.
 							</p>
 							<div class="form-floating">
-								{{ form_widget(form.candidateProfile.secteurs) }}
+								{{ form_widget(form.candidateProfile.secteurs, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
 								{{ form_label(form.candidateProfile.secteurs) }}
 								{{ form_errors(form.candidateProfile.secteurs) }}
 							</div>
@@ -63,7 +63,7 @@
 							Sélectionnez le secteur d'activité de votre entreprise. Cela aidera les candidats à identifier les opportunités d'emploi pertinentes.
 							</p>
 							<div class="form-floating">
-								{{ form_widget(form.entrepriseProfile.secteurs) }}
+								{{ form_widget(form.entrepriseProfile.secteurs, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
 								{{ form_label(form.entrepriseProfile.secteurs) }}
 								{{ form_errors(form.entrepriseProfile.secteurs) }}
 							</div>							
@@ -79,7 +79,7 @@
 								</p>
 								<div id="profile_candidateProfile_titre_row" class="">
 									<div class="form-floating">
-										{{ form_widget(form.candidateProfile.titre) }}
+										{{ form_widget(form.candidateProfile.titre, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
 										{{ form_label(form.candidateProfile.titre) }}
 									</div>
 								</div>
@@ -91,7 +91,7 @@
 								</p>
 								<div id="profile_entrepriseProfile_nom_row" class="">
 									<div class="form-floating">
-										{{ form_widget(form.entrepriseProfile.nom) }}
+										{{ form_widget(form.entrepriseProfile.nom, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
 										{{ form_label(form.entrepriseProfile.nom) }}
 									</div>							 
 								</div>							 
