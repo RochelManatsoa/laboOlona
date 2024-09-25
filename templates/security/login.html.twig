@@ -41,12 +41,20 @@
                         {% endif %}
                         
                         <form method="post">
-                            <div class="mb-3">
-                                <input type="email" name="email" id="email" value="{{ last_username }}" class="form-control" placeholder="Adresse e-mail" required autofocus>
-                            </div>
 
-                            <div class="mb-3">
-                                <input type="password" name="password" id="password" class="form-control" placeholder="Votre mot de passe" required>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" name="email" required autofocus placeholder="Email">
+                            <label for="email">Adresse email</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                            <label for="password">Mot de passe</label>
+                        </div>
+
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-end">
+                                    <a href="{{ path('app_forgot_password_request') }}" class="fw-light text-end small">Mot de passe oublié</a>
+                                </div>
                             </div>
 
                             <div class="form-check form-check-inline">
@@ -66,7 +74,7 @@
                             </div>
 
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                            <div class="text-center ">
+                            <div class="text-center my-3">
                               <button type="submit" class="btn btn-primary rounded-pill px-5 mx-auto">Connexion</button>
                             </div>
                         </form>

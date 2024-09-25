@@ -20,19 +20,16 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => false,
-                'row_attr' => ['class' => 'col-md-12 mb-3'],
+                'label' => 'Adresse email *',
+                'attr' => ['class' => 'form-control', 'placeholder' => 'app_register.email']
+                ])
+            ->add('nom', null, [
+                'label' => 'Nom *',
                 'attr' => ['class' => 'form-control', 'placeholder' => 'app_register.email']
             ])
-            ->add('nom', null, [
-                'label' => false,
-                'row_attr' => ['class' => 'col-md-6 mb-3'],
-                'attr' => ['class' => 'form-control', 'placeholder' => 'app_register.first_name']
-            ])
             ->add('prenom', null, [
-                'label' => false,
-                'row_attr' => ['class' => 'col-md-6 mb-3'],
-                'attr' => ['class' => 'form-control', 'placeholder' => 'app_register.last_name']
+                'label' => 'Prénom(s) *',
+                'attr' => ['class' => 'form-control', 'placeholder' => 'app_register.email']
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => false,
@@ -48,13 +45,11 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'invalid_message' => 'The password fields must match.',
                 'options' => ['attr' => ['class' => '']],
                 'required' => true,
-                'first_options'  => [ 'label' => false, 'attr' => ['placeholder' => 'app_register.password']],
-                'second_options' => [ 'label' => false, 'attr' => ['placeholder' => 'app_register.repeat_password']],
+                'first_options'  => [ 'label' => 'Mot de passe', 'attr' => ['placeholder' => 'app_register.password']],
+                'second_options' => [ 'label' => 'Repeter le mot de passe', 'attr' => ['placeholder' => 'app_register.repeat_password']],
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
@@ -64,7 +59,6 @@ class RegistrationFormType extends AbstractType
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
                 ],
