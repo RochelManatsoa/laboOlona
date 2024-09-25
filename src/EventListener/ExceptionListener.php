@@ -31,9 +31,11 @@ class ExceptionListener
                 $template = 'bundles/TwigBundle/Exception/error403.html.twig';
                 break;
             case Response::HTTP_INTERNAL_SERVER_ERROR:
+                $template = 'bundles/TwigBundle/Exception/error500.html.twig';
+                break;
             default:
                 $template = 'bundles/TwigBundle/Exception/error500.html.twig';
-            break;
+                break;
         }
 
         $html = $this->twig->render($template, [

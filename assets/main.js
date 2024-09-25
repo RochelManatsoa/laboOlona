@@ -212,24 +212,32 @@ $(function() {
             console.log(selectedValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
         });
+        
+        var boosts = [
+            { name: 'create_candidate_boost[boost]', type: 'boost-profile' },
+            { name: 'create_recruiter_boost[boost]', type: 'boost-profile' }
+        ];
 
-        $('input[type="radio"][name="create_candidate_boost[boost]"]').on('change', function() {
-            $('.card').removeClass('card-selected');
-            var cardElement = $(this).closest('.col').find('.card');
-            if ($(this).is(':checked') && cardElement.length) {
-                cardElement.addClass('card-selected');
-            }
-            var dataLabel = $(this).closest('.col').find('h2').data('label');
-            console.log(dataLabel)
+        boosts.forEach(function(boost) {
+            $('input[type="radio"][name="' + boost.name + '"]').on('change', function() {
+                $('.card').removeClass('card-selected');
+                var cardElement = $(this).closest('.col').find('.card');
+                if ($(this).is(':checked') && cardElement.length) {
+                    cardElement.addClass('card-selected');
+                }
+                var dataLabel = $(this).closest('.col').find('h2').data('label');
+                console.log(dataLabel);
 
-            var nextButton = $('#boostProfileButton'); 
-            nextButton.attr('data-bs-toggle', 'modal');
-            nextButton.attr('data-bs-target', '#confirmationModal');
-            nextButton.attr('data-bs-price', dataLabel); 
-            nextButton.attr('data-bs-type', 'boost-profile');
-            nextButton.attr('data-toast', 'false');
-            $('#confirmationModal .modal-body').text("Voulez-vous vraiment dépenser " + dataLabel);
+                var nextButton = $('#boostProfileButton'); 
+                nextButton.attr('data-bs-toggle', 'modal');
+                nextButton.attr('data-bs-target', '#confirmationModal');
+                nextButton.attr('data-bs-price', dataLabel);
+                nextButton.attr('data-bs-type', boost.type);
+                nextButton.attr('data-toast', 'false');
+                $('#confirmationModal .modal-body').text("Voulez-vous vraiment dépenser " + dataLabel);
+            });
         });
+
 
         $('#boostProfileButton').on('click', function(){
             var dataToast = $(this).attr('data-toast');
