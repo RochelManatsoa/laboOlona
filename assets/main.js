@@ -33,6 +33,45 @@ $(function() {
     }
 
     function setupCKEditors() {
+        $('input[name="account[type]"]').on('change', function() {
+            $('#myFormT').trigger('submit');
+        });
+    
+        $('#myFormT').on('submit', function(e) {
+            e.preventDefault();
+            console.log('submit')
+            var url = $(this).data('action');
+            var formData = new FormData(this);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                dataType: 'html', 
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
+                success: function(data) {
+                    Turbo.renderStreamMessage(data);
+                    console.log('success')
+                    // Vérifiez si la réponse contient le target 'errorToast'
+                    if (data.includes('target="errorToast"')) {
+                        var errorToast = new Toast($('#errorToast')[0]);
+                
+                        setTimeout(function() {
+                            errorToast.show();
+                        }, 500);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur s\'est produite. Veuillez recommencer');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
         const editors = document.querySelectorAll('.ckeditor-textarea');
         if (editors.length > 0) {
             editors.forEach(editorElement => {
@@ -692,28 +731,5 @@ $(function() {
         $('#' + modalId).on('hidden.bs.modal', function () {
             $(this).find('ul[data-form-collection-target="collectionContainer"]').empty();
         });
-    });
-    
-    function toggleProfileSections() {
-        var accountType = $("input[name='profile[type]']:checked").val();
-        if (accountType) {
-            var lowerCaseType = accountType.toLowerCase();
-            $('.candidateProfile, .recruiterProfile').hide();
-    
-            if (lowerCaseType === 'candidat') {
-                $('.candidateProfile').show();
-            } else if (lowerCaseType === 'entreprise') {
-                $('.recruiterProfile').show();
-            }
-    
-        }
-    }
-    // Initial call to set correct visibility on page load
-    toggleProfileSections();
-
-    // Bind the change event to form radio buttons
-    $('input[name="profile[type]"]').on('change', function() {
-        toggleProfileSections();
-        console.log('toogleProfileSelection')
     });
 });

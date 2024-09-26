@@ -27,11 +27,13 @@ use App\Manager\BusinessModel\CreditManager;
 use App\Entity\BusinessModel\BoostVisibility;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
+use App\Form\V2\AccountType;
+use App\Form\V2\CandidateType;
+use App\Form\V2\RecruiterType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Manager\BusinessModel\BoostVisibilityManager;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -70,47 +72,93 @@ class DashboardController extends AbstractController
 
         return $this->redirectToRoute('app_v2_dashboard_create_profile', ['id' => $currentUser->getId()]);
     }
-
+    
     #[Route('/providers/{id}/create', name: 'app_v2_dashboard_create_profile')]
     public function profileInfo(Request $request, User $user): Response
     {             
-        $session = $this->requestStack->getSession();
+        $session = $this->requestStack->getSession();        
         $typology = $session->has('typology') && $session->get('typology') !== null ? $session->get('typology') : 'Candidat';
-        $typology = ucfirst($typology);   
-        $form = $this->createForm(ProfileType::class, $user,[]);
-        $form->add('type', ChoiceType::class, [
-            'choices' => User::getProfileAccount(),
-            'required' => true,
-            'expanded' => true,
-            'multiple' => false,
-            'label' => false,
-            'data' => User::getProfileAccount()[$typology],
-        ]);
+        $typology = ucfirst($typology);  
+        $user->setType(strtoupper($typology));
+        $this->userService->save($user);
+        if($user->getType() === User::ACCOUNT_ENTREPRISE || $typology === 'Entreprise'){
+            $recruiter = $user->getEntrepriseProfile();
+            if($recruiter instanceof EntrepriseProfile){
+                return $this->redirectToRoute('app_v2_dashboard_contact_profile', ['id' => $user->getId()]);
+            }
+            $recruiter = $this->profileManager->createCompany($user); 
+            $formProfileUser = $this->createForm(RecruiterType::class, $recruiter); 
+        }else{
+            $candidat = $user->getCandidateProfile();
+            if($candidat instanceof CandidateProfile){
+                return $this->redirectToRoute('app_v2_dashboard_contact_profile', ['id' => $user->getId()]);
+            }
+            $candidat = $this->profileManager->createCandidat($user); 
+            $formProfileUser = $this->createForm(CandidateType::class, $candidat); 
+        }
+
+        $form = $this->createForm(AccountType::class, $user, ['typology' => $typology]);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user = $form->getData();
-            if($user->getType() === User::ACCOUNT_CANDIDAT){
-                $user->setEntrepriseProfile(null);
-            }
-            if($user->getType() === User::ACCOUNT_ENTREPRISE){
-                $user->setCandidateProfile(null);
-            }
-            $this->em->persist($user);
+        $formProfileUser->handleRequest($request);
+
+        if($formProfileUser->isSubmitted() && $formProfileUser->isValid()){
+            $profile = $formProfileUser->getData();
+            $this->em->persist($profile);
             $this->em->flush();
 
-            return $this->redirectToRoute('app_v2_dashboard_contact_profile', ['id' => $form->getData()->getId()]);
-        }else {
-
-            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+            return $this->redirectToRoute('app_v2_dashboard_contact_profile', ['id' => $user->getId()]);
+        }else{
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
                 $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-                return $this->render('v2/dashboard/profile/form_errors.html.twig', [
-                    'form' => $form->createView(),
+
+                return $this->render('v2/dashboard/profile/update.html.twig', [
+                    'formProfileUser' => $formProfileUser->createView(),
+                    'success' => false,
                 ]);
             }
         }
-        
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $success = false;
+            $user = $form->getData();
+
+            if ($user->getType() === User::ACCOUNT_CANDIDAT) {
+                $user->setEntrepriseProfile(null); 
+                $candidat = $this->profileManager->createCandidat($user); 
+                $formProfileUser = $this->createForm(CandidateType::class, $candidat); 
+            }
+
+            if ($user->getType() === User::ACCOUNT_ENTREPRISE) {
+                $user->setCandidateProfile(null); 
+                $recruiter = $this->profileManager->createCompany($user); 
+                $formProfileUser = $this->createForm(RecruiterType::class, $recruiter);
+            }
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+            $session->set('typology', ucfirst(strtolower($user->getType())));
+
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+                return $this->render('v2/dashboard/profile/update.html.twig', [
+                    'formProfileUser' => $formProfileUser->createView(),
+                    'success' => $success,
+                ]);
+            }
+            $success = true;
+
+            return $this->json([
+                'message' => 'Formulaire invalide',
+                'status' => 'Echec',
+                'success' => $success,
+            ], 200);
+        }
+
         return $this->render('v2/dashboard/profile/create.html.twig', [
             'form' => $form->createView(),
+            'formProfileUser' => $formProfileUser->createView(),
         ]);
     }
 
