@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Sequentially;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -21,6 +22,9 @@ class TarifCandidatType extends AbstractType
             ->add('montant', IntegerType::class, [
                 'required' => false,
                 'label' => 'Montant',
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Champ est obligatoire.'),
+                ]),
             ])
             ->add('typeTarif', ChoiceType::class, [
                 'choices' => TarifCandidat::arrayTarifType(),
@@ -39,7 +43,7 @@ class TarifCandidatType extends AbstractType
                 'attr' =>  [
                     'data-id' => 'tarif_symbole',
                 ],
-                'data' => '€',  // Assurez-vous que la valeur par défaut est définie ici
+                'data' => '€',  
                 'required' => true,
                 'empty_data' => '€', 
             ])

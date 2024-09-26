@@ -1,0 +1,5 @@
+{% block form_help %}
+    {% if help is not empty %}
+        <small class="fw-lighter">{{ help|raw }}</small>
+    {% endif %}
+{% endblock %}
