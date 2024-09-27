@@ -63,13 +63,15 @@
 					<p>
 						En choisissant l'un de ces boosts, vous multipliez vos opportunités de contact et renforcez votre présence auprès des principales entreprises de votre secteur. Ne laissez pas passer votre chance de vous démarquer !
 					</p>
-					<button type="button" class="btn btn-primary my-3 my-sm-5 px-4 float-end fw-bold" id="boostProfileButton" data-toast="true">
-						Booster mon profil
-						<i class="bi bi-rocket ms-2"></i>
-					</button>
-					<a href="{{ path('app_v2_dashboard')}}" class="btn btn-outline-primary my-3 my-sm-5 px-4 float-end fw-bold me-2">
-						Continuer sans Boost
-					</a>
+					<div id="dashboardButton">
+						<button type="button" class="btn btn-primary my-3 my-sm-5 px-4 float-end fw-bold" id="boostProfileButton" data-toast="true">
+							Booster mon profil
+							<i class="bi bi-rocket ms-2"></i>
+						</button>
+						<a href="{{ path('app_v2_dashboard')}}" class="btn btn-outline-primary my-3 my-sm-5 px-4 float-end fw-bold me-2">
+							Continuer sans Boost
+						</a>
+					</div>
 					{{ form_end(form) }}
 				</div>
 			</div>

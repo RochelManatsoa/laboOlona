@@ -368,7 +368,7 @@ $(function() {
                 },
                 success: function(data) {
                     Turbo.renderStreamMessage(data);
-                    console.log(data)
+                    console.log(data.succes)
                     if (data.success) {
                         $('#successToast').find('.toast-body').text(data.message);
                         var successToast = new Toast($('#successToast')[0]);
@@ -383,7 +383,7 @@ $(function() {
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.error('Erreur:', textStatus, errorThrown);
-                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de la tentative de boost de votre profil.');
+                    $('#errorToast').find('.toast-body').text('Une erreur s\'est produite.');
                     var errorToast = new Toast($('#errorToast')[0]);
                     errorToast.show();
                 }

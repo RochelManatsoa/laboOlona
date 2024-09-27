@@ -195,8 +195,7 @@ class DashboardController extends AbstractController
     {        
         if($user->getType() === User::ACCOUNT_CANDIDAT){
             $form = $this->createForm(CreateCandidateBoostType::class, $user->getCandidateProfile()); 
-        }     
-        if($user->getType() === User::ACCOUNT_ENTREPRISE){
+        }else{
             $form = $this->createForm(CreateRecruiterBoostType::class, $user->getEntrepriseProfile()); 
         }
 
@@ -205,16 +204,16 @@ class DashboardController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $boostOption = $form->get('boost')->getData(); 
             $profile = $form->getData();
+            $visibilityBoost = $profile->getBoostVisibility();
 
             if ($this->profileManager->canApplyBoost($user, $boostOption)) {
-                $visibilityBoost = $profile->getBoostVisibility();
                 if(!$visibilityBoost instanceof BoostVisibility){
                     $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
                 }
                 $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
                 $response = $this->creditManager->adjustCredits($user, $boostOption->getCredit());
                 
-                $message = 'Analyse de CV effectué avec succès';
+                $message = 'Crédits insuffisants pour ce boost.';
                 $success = true;
                 $status = 'Succès';
             
@@ -239,8 +238,9 @@ class DashboardController extends AbstractController
 
             if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
                 $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                // dd($message, $status, $success);
     
-                return $this->render('v2/dashboard/candidate/update.html.twig', [
+                return $this->render('v2/dashboard/profile/update.html.twig', [
                     'message' => $message,
                     'success' => $success,
                     'status' => $status,
