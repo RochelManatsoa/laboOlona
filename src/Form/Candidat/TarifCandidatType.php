@@ -23,7 +23,7 @@ class TarifCandidatType extends AbstractType
                 'required' => false,
                 'label' => 'Montant',
                 'constraints' => new Sequentially([
-                    new NotBlank(message:'Champ est obligatoire.'),
+                    new NotBlank(message:'Champ obligatoire.'),
                 ]),
             ])
             ->add('typeTarif', ChoiceType::class, [

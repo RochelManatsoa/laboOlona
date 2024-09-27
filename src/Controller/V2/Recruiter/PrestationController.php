@@ -65,7 +65,7 @@ class PrestationController extends AbstractController
             if($boost instanceof Boost){
                 $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit());
             }
-            $message = 'Préstation créée avec succès';
+            $message = 'Prestation créée avec succès';
             $success = true;
             $status = 'Succès';
         

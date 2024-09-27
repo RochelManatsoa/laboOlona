@@ -1,3 +1,5 @@
+
+{% if formProfileUser is defined %}
 <turbo-stream action="update" target="formProfileId">
 	<template>
 		{{ form_start(formProfileUser) }}
@@ -50,16 +52,60 @@
 		{{ form_end(formProfileUser) }}
 	</template>
 </turbo-stream>
+{% endif %}
 {% if success %}
-	<turbo-stream action="update" target="errorToast">
+	<turbo-stream action="update" target="current-user-credit">
 		<template>
-			<div class="toast-header">
-				<strong class="me-auto">{{ status|raw }}</strong>
-				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-			</div>
-			<div class="toast-body">
-				{{ message }}
-			</div>
+			{{ credit }}
+		</template>
+	</turbo-stream>
+	<turbo-stream action="update" target="dashboardButton">
+		<template>
+			<a href="{{ path('app_v2_candidate_dashboard')}}" class="btn btn-success my-3 my-sm-5 px-4 float-end fw-bold me-2">
+				<i class="bi bi-speedometer me-2"></i>
+				Accéder au tableau de bord
+			</a>
 		</template>
 	</turbo-stream>
 {% endif %}
+{% if visibilityBoost is defined and visibilityBoost is not null %}
+  <turbo-stream action="replace" target="checkBoost">
+    <template>
+      <span class="text-center">
+        <span class="fs-5 fw-bold text-uppercase">
+          <i class="bi bi-rocket me-2"></i> 
+          Profil boosté
+        </span>
+        <br>
+        <span class="small fw-light"> 
+          Jusqu'au {{ visibilityBoost.endDate|date('d-m-Y \à H:i')}} 
+        </span>
+      </span>
+    </template>
+  </turbo-stream>
+  <turbo-stream action="replace" target="checkBoostProfile">
+    <template>
+      <span class="text-center">
+        <span class="fs-5 fw-bold text-uppercase">
+          <i class="bi bi-rocket me-2"></i> 
+          Profil boosté
+        </span>
+        <br>
+        <span class="small fw-light"> 
+          Jusqu'au {{ visibilityBoost.endDate|date('d-m-Y \à H:i')}} 
+        </span>
+      </span>
+    </template>
+  </turbo-stream>
+{% endif %}
+<turbo-stream action="update" target="errorToast">
+    <template>
+        <div class="toast-header">
+            <strong class="me-auto">{{ status|raw }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            {{ message }}
+        </div>
+    </template>
+</turbo-stream>

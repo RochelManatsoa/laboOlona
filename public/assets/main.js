@@ -10,7 +10,7 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
         labels: {
           current: 'current step:',
           pagination: 'Pagination',
-          finish: 'Résultat ( -10 CRÉDITS)',
+          finish: 'Résultat (10 Crédits)',
           next: 'Suivant',
           previous: 'Précédent',
           loading: 'Chargement ...',
@@ -272,7 +272,7 @@ function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connecte
       labels: {
         current: 'current step:',
         pagination: 'Pagination',
-        finish: 'Résultat ( -10 CRÉDITS)',
+        finish: 'Résultat (10 Crédits)',
         next: 'Suivant',
         previous: 'Précédent',
         loading: 'Chargement ...',
