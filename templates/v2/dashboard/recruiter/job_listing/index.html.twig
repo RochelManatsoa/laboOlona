@@ -64,7 +64,7 @@
 									</td>
 									<td class="col-3 text-center">
 										{{ isJobOfferBoosted(item)|raw }}<br>
-										<i class="bi bi-eye"></i> <span class="small">{{ item.annonceVues|length }} vues </span>
+										<i class="bi bi-eye"></i> <span class="small">{{ component('count_joblisting_views_component', {'jobListing': item })}} vues </span>
 									</td>
 									<td class="col-1 text-center">{{ satusJobListing(item)|raw }}</td>
 									<td class="col-1">

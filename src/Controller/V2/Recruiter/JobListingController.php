@@ -147,6 +147,19 @@ class JobListingController extends AbstractController
             $response = $this->handleJobListingEdit($jobListing, $currentUser);
             
             if ($response['success']) {
+                $boostOption = $form->get('boost')->getData(); 
+                $jobListing = $form->getData();
+                $visibilityBoost = $jobListing->getBoostVisibility();
+                if($boostOption instanceof Boost){
+                    if(!$visibilityBoost instanceof BoostVisibility){
+                        $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
+                    }
+                    $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
+                    $visibilityBoost->addJobListing($jobListing);
+                    $jobListing->setStatus(JobListing::STATUS_FEATURED);
+                    $this->em->persist($visibilityBoost);
+                    $this->em->flush();
+                }
                 $this->jobListingManager->saveForm($form);
             }
             
