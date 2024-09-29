@@ -55,6 +55,12 @@ class BoostVisibility
         $this->jobListing = new ArrayCollection();
     }
 
+    public function isExpired(): bool
+    {
+        $now = new \DateTime();
+        return $this->endDate !== null && $now > $this->endDate;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

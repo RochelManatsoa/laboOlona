@@ -370,22 +370,24 @@ class StatusExtension extends AbstractExtension
         $info = '<a href="'.$url.'" class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster</a>';
         if($boost instanceof Boost){
             $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findLatestBoostVisibilityByBoost($boost);
-            switch ($boost->getSlug()) {
-                case 'boost-joblisting-1' :
-                    $info = '<span class="fw-bold">Boost 1 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
-                    break;
-    
-                case 'boost-joblisting-7' :
-                    $info = '<span class="fw-bold">Boost 7 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
-                    break;
-    
-                case 'boost-joblisting-15' :
-                    $info = '<span class="fw-bold">Boost 15 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
-                    break;
-                
-                default:
-                    $status = '<span class="fw-bold">Boost 1 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
-                    break;
+            if($boostVisibility instanceof BoostVisibility && !$boostVisibility->isExpired() ){
+                switch ($boost->getSlug()) {
+                    case 'boost-joblisting-1' :
+                        $info = '<span class="fw-bold">Boost 1 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        break;
+        
+                    case 'boost-joblisting-7' :
+                        $info = '<span class="fw-bold">Boost 7 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        break;
+        
+                    case 'boost-joblisting-15' :
+                        $info = '<span class="fw-bold">Boost 15 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        break;
+                    
+                    default:
+                        $status = '<span class="fw-bold">Boost 1 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        break;
+                }
             }
         }
         
