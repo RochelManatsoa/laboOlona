@@ -1,0 +1,35 @@
+/* Reset and style adjustments for the input group and elements */
+.input-group {
+    position: relative;
+    border-radius: 50px; /* Full round edges */
+    overflow: hidden; /* Clips contents to the rounded border */
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px; /* Subtle shadow */
+    border: solid 1px #a0a0a08e; /* Explicitly defining a border */
+}
+
+.input-group .form-control {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    width: 100%;
+    padding: 8px 48px 8px 20px; /* Adjusted padding to avoid text overlapping with the button */
+    font-size: 16px; /* Set the font size as needed */
+    background: transparent; /* Ensures no background interferes with visibility */
+}
+
+.input-group .btn {
+    position: absolute;
+    right: 10px; /* Fine-tune this to adjust the icon's horizontal position */
+    /* top: 50%;  Centers the button vertically */
+    /* transform: translateY(-50%);  Ensures the button is perfectly centered in the vertical axis */
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer; /* Makes it clear the button is clickable */
+}
+
+/* Focus styles for form control */
+.input-group .form-control:focus {
+    border-color: transparent;
+    box-shadow: none; /* Removes any focus glow or border changes */
+}

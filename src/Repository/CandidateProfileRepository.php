@@ -490,6 +490,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
             $queryBuilder->expr()->eq('c.status', ':statusValid'),
             $queryBuilder->expr()->eq('c.status', ':statusFeatured')
         );
+        $cvCondition = $queryBuilder->expr()->isNotNull('c.cv');
 
         // Créer une condition qui vérifie si isGeneretated est false ou null
         $generatedCondition = $queryBuilder->expr()->orX(
@@ -500,6 +501,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
         $query = $queryBuilder
             ->andWhere($generatedCondition)
             ->andWhere($orConditions)
+            ->andWhere($cvCondition)
             ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
             ->setParameter('statusFeatured', CandidateProfile::STATUS_FEATURED)
             ->setParameter('isGeneretated', false)
