@@ -16,6 +16,8 @@ use App\Entity\Entreprise\JobListing;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Manager\BusinessModel\CreditManager;
+use App\Entity\BusinessModel\BoostVisibility;
+use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +32,7 @@ class JobListingController extends AbstractController
         private JobListingManager $jobListingManager,
         private EntrepriseManager $entrepriseManager,
         private PaginatorInterface $paginator,
+        private BoostVisibilityManager $boostVisibilityManager,
         private CreditManager $creditManager,
         private ProfileManager $profileManager,
     ){}
@@ -72,6 +75,19 @@ class JobListingController extends AbstractController
             $response = $this->handleJobListingSubmission($form->getData(), $currentUser);
             
             if ($response['success']) {
+                $boostOption = $form->get('boost')->getData(); 
+                $jobListing = $form->getData();
+                $visibilityBoost = $jobListing->getBoostVisibility();
+                if($boostOption instanceof Boost){
+                    if(!$visibilityBoost instanceof BoostVisibility){
+                        $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
+                    }
+                    $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
+                    $visibilityBoost->addJobListing($jobListing);
+                    $jobListing->setStatus(JobListing::STATUS_FEATURED);
+                    $this->em->persist($visibilityBoost);
+                    $this->em->flush();
+                }
                 $this->jobListingManager->saveForm($form);
                 return $this->redirectToRoute('app_v2_recruiter_job_listing_view', ['id' => $jobListing->getId()]);
             } else {
@@ -79,6 +95,15 @@ class JobListingController extends AbstractController
                     $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
                     return $this->render('v2/dashboard/recruiter/live.html.twig', $response);
                 }
+            }
+        }else{
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+                return $this->render('v2/dashboard/recruiter/update.html.twig', [
+                    'form' => $form->createView(),
+                    'success' => false,
+                ]);
             }
         }
     
