@@ -41,7 +41,7 @@ class BoostVisibility
     #[ORM\OneToMany(mappedBy: 'boostVisibility', targetEntity: EntrepriseProfile::class)]
     private Collection $entrepriseProfile;
 
-    #[ORM\OneToMany(mappedBy: 'boostVisibility', targetEntity: JobListing::class)]
+    #[ORM\OneToMany(mappedBy: 'boostVisibility', targetEntity: JobListing::class, cascade: ['remove', 'persist'])]
     private Collection $jobListing;
 
     #[ORM\ManyToOne(inversedBy: 'boostVisibilities')]

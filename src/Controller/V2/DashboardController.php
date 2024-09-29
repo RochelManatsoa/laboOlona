@@ -78,22 +78,20 @@ class DashboardController extends AbstractController
     {             
         $session = $this->requestStack->getSession();        
         $typology = $session->has('typology') && $session->get('typology') !== null ? $session->get('typology') : 'Candidat';
-        $typology = ucfirst($typology);  
+        $typology = ucfirst($typology); 
         $user->setType(strtoupper($typology));
-        $this->userService->save($user);
+        $this->userService->save($user); 
         if($user->getType() === User::ACCOUNT_ENTREPRISE || $typology === 'Entreprise'){
             $recruiter = $user->getEntrepriseProfile();
-            if($recruiter instanceof EntrepriseProfile){
-                return $this->redirectToRoute('app_v2_dashboard_contact_profile', ['id' => $user->getId()]);
+            if(!$recruiter instanceof EntrepriseProfile){
+                $recruiter = $this->profileManager->createCompany($user); 
             }
-            $recruiter = $this->profileManager->createCompany($user); 
             $formProfileUser = $this->createForm(RecruiterType::class, $recruiter); 
         }else{
             $candidat = $user->getCandidateProfile();
-            if($candidat instanceof CandidateProfile){
-                return $this->redirectToRoute('app_v2_dashboard_contact_profile', ['id' => $user->getId()]);
+            if(!$candidat instanceof CandidateProfile){
+                $candidat = $this->profileManager->createCandidat($user); 
             }
-            $candidat = $this->profileManager->createCandidat($user); 
             $formProfileUser = $this->createForm(CandidateType::class, $candidat); 
         }
 
@@ -101,22 +99,6 @@ class DashboardController extends AbstractController
         $form->handleRequest($request);
         $formProfileUser->handleRequest($request);
 
-        if($formProfileUser->isSubmitted() && $formProfileUser->isValid()){
-            $profile = $formProfileUser->getData();
-            $this->em->persist($profile);
-            $this->em->flush();
-
-            return $this->redirectToRoute('app_v2_dashboard_contact_profile', ['id' => $user->getId()]);
-        }else{
-            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
-                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-
-                return $this->render('v2/dashboard/profile/update.html.twig', [
-                    'formProfileUser' => $formProfileUser->createView(),
-                    'success' => false,
-                ]);
-            }
-        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $success = false;
@@ -154,6 +136,23 @@ class DashboardController extends AbstractController
                 'status' => 'Echec',
                 'success' => $success,
             ], 200);
+        }
+
+        if($formProfileUser->isSubmitted() && $formProfileUser->isValid()){
+            $profile = $formProfileUser->getData();
+            $this->em->persist($profile);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_v2_dashboard_contact_profile', ['id' => $user->getId()]);
+        }else{
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+                return $this->render('v2/dashboard/profile/update.html.twig', [
+                    'formProfileUser' => $formProfileUser->createView(),
+                    'success' => false,
+                ]);
+            }
         }
 
         return $this->render('v2/dashboard/profile/create.html.twig', [

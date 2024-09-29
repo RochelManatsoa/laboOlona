@@ -1,4 +1,18 @@
-
+{% if success %}
+	<turbo-stream action="update" target="current-user-credit">
+		<template>
+			{{ credit }}
+		</template>
+	</turbo-stream>
+	<turbo-stream action="update" target="dashboardButton">
+		<template>
+			<a href="{{ path('app_v2_candidate_dashboard')}}" class="btn btn-success my-3 my-sm-5 px-4 float-end fw-bold me-2">
+				<i class="bi bi-speedometer me-2"></i>
+				Accéder au tableau de bord
+			</a>
+		</template>
+	</turbo-stream>
+{% endif %}
 {% if formProfileUser is defined %}
 <turbo-stream action="update" target="formProfileId">
 	<template>
@@ -53,21 +67,6 @@
 	</template>
 </turbo-stream>
 {% endif %}
-{% if success %}
-	<turbo-stream action="update" target="current-user-credit">
-		<template>
-			{{ credit }}
-		</template>
-	</turbo-stream>
-	<turbo-stream action="update" target="dashboardButton">
-		<template>
-			<a href="{{ path('app_v2_candidate_dashboard')}}" class="btn btn-success my-3 my-sm-5 px-4 float-end fw-bold me-2">
-				<i class="bi bi-speedometer me-2"></i>
-				Accéder au tableau de bord
-			</a>
-		</template>
-	</turbo-stream>
-{% endif %}
 {% if visibilityBoost is defined and visibilityBoost is not null %}
   <turbo-stream action="replace" target="checkBoost">
     <template>
@@ -98,6 +97,7 @@
     </template>
   </turbo-stream>
 {% endif %}
+{% if status is defined %}
 <turbo-stream action="update" target="errorToast">
     <template>
         <div class="toast-header">
@@ -109,3 +109,4 @@
         </div>
     </template>
 </turbo-stream>
+{% endif %}
