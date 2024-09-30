@@ -152,7 +152,7 @@
 
   </div>
 </section>
-{% if candidat.editedCvs|length > 0 %}
+{% if candidat.editedCvs|length > 0 and candidat.cvs[0].edited is defined and candidat.cvs[0].edited is not null %}
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
