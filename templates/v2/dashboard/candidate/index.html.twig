@@ -59,8 +59,8 @@
 				{{ form_widget(form.cv, {'attr': {'style': 'display:none;'}}) }}
 			</div>
 
-			<p id="file-name" class="my-2"></p>
-			<button id="upload-button" type="button" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+			<p id="file-name" class="mt-2"></p>
+			<button id="upload-button" type="button" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
 				<i class="bi bi-download"></i>
 				Mettre en ligne un cv {% if candidat.isGeneretated %}( 15 Crédits){% endif %}
 			</button>
@@ -71,7 +71,15 @@
 			{{ form_end(form)}}
 
 			<p class="text-center">
-				Exemple de texte. Cliquez pour sélectionner l'élément de texte.
+				{% if candidat.cv is defined and candidat.cv is not null %}
+					<a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" title="Ouvrir" target="_blank">
+						<i class="bi bi-filetype-pdf" style="font-size: 2rem;"></i>
+						<span class="small fw-light">{{ candidat.cv }}</span>
+					</a>
+				{% else %}
+					<i class="bi bi-info-circle" style="font-size: 1.2rem; color: red;"></i>
+					<span class="small fw-light">Vous n'avez pas encore envoyé de CV. <br>Veuillez télécharger votre CV pour améliorer vos chances de sélection.</span>
+				{% endif %}
 			</p>
 			<div class="mt-4">
 
@@ -167,7 +175,9 @@
 							<div class="col-12 col-sm-6">
 								<div class="row my-4 justify-content-center">
 									<div class="col-auto">
-										<div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form_one.vars.data.fileName ? asset('uploads/experts/' ~ form_one.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
+										<div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form_one.vars.data.fileName ? asset('uploads/experts/' ~ form_one.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}');cursor:pointer;" alt="Avatar">
+											<div class="overlay-text">Changer la photo</div>
+										</div>
 										{{ form_widget(form_one.file) }}
 										{{ form_errors(form_one.file) }}
 									</div>
@@ -179,13 +189,13 @@
 							</div>
 
 							<div class="row my-3">
-								<div class="col-12 col-sm-6">
+								<div class="col-md-6 col-sm-12">
 									<h5 class="fs-4 fw-bold">
 										<i class="bi bi-graph-up"></i>
 										Experiences ({{ experiences|length }})
                                     </h5>
 								</div>
-								<div class="col-12 col-sm-6">
+								<div class="col-md-6 col-sm-12">
 
 								</div>
 							</div>
@@ -196,12 +206,12 @@
 							</div>
 
 							<div class="row my-3">
-								<div class="col-12 col-sm-6">
+								<div class="col-md-6 col-sm-12">
 									<h5 class="fs-4 fw-bold">
 										<i class="bi bi-person-fill-gear mx-2 h5"></i>
 										Competences ({{ competences|length }})</h5>
 								</div>
-								<div class="col-12 col-sm-6">
+								<div class="col-md-6 col-sm-12">
 
 								</div>
 							</div>
@@ -211,12 +221,12 @@
 							{{ form_widget(form_one.competences) }} 
 							</div>
 							<div class="row my-3">
-								<div class="col-12 col-sm-6">
+								<div class="col-md-6 col-sm-12">
 									<h5 class="fs-4 fw-bold">
 										<i class="bi bi-globe-europe-africa mx-2 h5"></i>
 										Langues ({{ langages|length }})</h5>
 								</div>
-								<div class="col-12 col-sm-6">
+								<div class="col-md-6 col-sm-12">
 									<div class="">
 									</div>
 								</div>
@@ -452,17 +462,7 @@
 								<i class="bi bi-check h5 text-danger"></i>
 							</div>
 							<div class="col-11">
-								Prenez votre temps pour corrigez chaque section de manière détaillée et précise.
-							</div>
-						</div>
-					</li>
-					<li class="list-group-item mx-2">
-						<div class="row mb-3">
-							<div class="col-1">
-								<i class="bi bi-check h5 text-danger"></i>
-							</div>
-							<div class="col-11">
-								Prenez votre temps pour corrigez chaque section de manière détaillée et précise.
+								Prenez votre temps pour corriger chaque section de manière détaillée et précise.
 							</div>
 						</div>
 					</li>
@@ -490,6 +490,22 @@
 			</div>
 		</div>
 	</section>
+
+<script>
+    document.querySelector('.profile-img').addEventListener('click', function() {
+        document.getElementById('{{ form_one.file.vars.id }}').click();
+    });
+
+    document.getElementById('{{ form_one.file.vars.id }}').addEventListener('change', function(event) {
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.profile-img').style.backgroundImage = 'url(' + e.target.result + ')';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    });
+</script>
 
 
 {% endblock %}

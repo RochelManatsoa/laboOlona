@@ -118,7 +118,7 @@ class JobOfferController extends AbstractController
                 $refered->setStep(4);
                 $this->em->persist($refered);
             }
-            $message = 'Contact du candidat affiché';
+            $message = 'Candidature envoyée';
             $success = true;
             $status = 'Succès';
         
@@ -190,7 +190,7 @@ class JobOfferController extends AbstractController
             }
 
 
-            return $this->redirectToRoute('app_dashboard_candidat_annonce');
+            return $this->redirectToRoute('app_v2_candidate_application');
         }
 
         if ($annonce) {

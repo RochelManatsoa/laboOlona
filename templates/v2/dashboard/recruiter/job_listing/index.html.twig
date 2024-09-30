@@ -43,9 +43,9 @@
 						<thead>
 							<tr>
 								<td scope="col" class="h5">{{ knp_pagination_sortable(joblistings, 'Titre', 'p.titre') }}</td>
-								<td scope="col-2" class="h5">Boost</td>
-								<td scope="col-1" class="h5">{{ knp_pagination_sortable(joblistings, 'Statut', 'p.status') }}</td>
-								<td scope="col-2" class=""></td>
+								<td scope="col-2" class="h5 text-center">Boost</td>
+								<td scope="col-3" class="h5 text-center">{{ knp_pagination_sortable(joblistings, 'Statut', 'p.status') }}</td>
+								<td scope="col-1" class=""></td>
 							</tr>
 						</thead>
 						<tbody>
@@ -62,11 +62,12 @@
 										<span class="fw-lighter small">Créé le
 											{{ item.dateCreation|date('d/m/Y') }}</span>
 									</td>
-									<td class="col-2">
-										{{ isJobOfferBoosted(item)|raw }}
+									<td class="col-3 text-center">
+										{{ isJobOfferBoosted(item)|raw }}<br>
+										<i class="bi bi-eye"></i> <span class="small">{{ component('count_joblisting_views_component', {'jobListing': item })}} vues </span>
 									</td>
-									<td class="col-1">{{ satusJobListing(item)|raw }}</td>
-									<td class="col-2">
+									<td class="col-1 text-center">{{ satusJobListing(item)|raw }}</td>
+									<td class="col-1">
 										<a href="{{ path('app_v2_recruiter_job_listing_view', { 'id': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
 											<i class="bi bi-eye"></i>
 										</a>

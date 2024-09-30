@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\BusinessModel\Transaction;
 use App\Entity\Candidate\TarifCandidat;
 use App\Entity\CandidateProfile;
@@ -34,6 +35,7 @@ class StatusExtension extends AbstractExtension
         private TranslatorInterface $translator,
         private Security $security,
         private EntityManagerInterface $em,
+        private AppExtension $appExtension,
         private UrlGeneratorInterface $urlGenerator,
         private ReferrerProfileRepository $referrerProfileRepository,
         )
@@ -298,7 +300,7 @@ class StatusExtension extends AbstractExtension
                 break;
 
             case JobListing::STATUS_FEATURED :
-                $status = '<span class="badge text-bg-dark">Boostée</span>';
+                $status = '<span class="badge text-bg-info">Boostée</span>';
                 break;
 
             case JobListing::STATUS_DELETED :
@@ -367,22 +369,25 @@ class StatusExtension extends AbstractExtension
         $url = $this->urlGenerator->generate('app_v2_recruiter_job_listing_edit', ['jobListing' => $jobListing->getId()]);
         $info = '<a href="'.$url.'" class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster</a>';
         if($boost instanceof Boost){
-            switch ($boost->getSlug()) {
-                case 'boost-joblisting-1' :
-                    $info = '<span class="fw-semibold small">Boost 1 jour</span>';
-                    break;
-    
-                case 'boost-joblisting-7' :
-                    $info = '<span class="fw-semibold small">Boost 7 jour</span>';
-                    break;
-    
-                case 'boost-joblisting-15' :
-                    $info = '<span class="fw-semibold small">Boost 15 jour</span>';
-                    break;
-                
-                default:
-                    $status = '<span class="fw-semibold small">Boost 1 jour</span>';
-                    break;
+            $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findLatestBoostVisibilityByBoost($boost);
+            if($boostVisibility instanceof BoostVisibility && !$boostVisibility->isExpired() ){
+                switch ($boost->getSlug()) {
+                    case 'boost-joblisting-1' :
+                        $info = '<span class="fw-bold">Boost 1 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        break;
+        
+                    case 'boost-joblisting-7' :
+                        $info = '<span class="fw-bold">Boost 7 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        break;
+        
+                    case 'boost-joblisting-15' :
+                        $info = '<span class="fw-bold">Boost 15 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        break;
+                    
+                    default:
+                        $status = '<span class="fw-bold">Boost 1 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        break;
+                }
             }
         }
         

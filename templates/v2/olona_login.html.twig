@@ -8,7 +8,7 @@
 
 {% block body %}
 
-<section class="d-flex justify-content-center align-items-center" style="background-color: #f8f9fa;">
+<section class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #f8f9fa;">
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-6 d-none d-md-block text-center">
@@ -19,7 +19,7 @@
                     <div class="card-body p-4">
                         <h2 class="text-center mb-4">Se connecter</h2>
                         <p class="text-center mb-4">
-                            Pas encore membre ? <a href="{{ path('app_olona_talents_register') }}" class="text-primary">Inscrivez-vous dès maintenant</a> et rejoignez la communauté Olona-talents.
+                            Pas encore membre ? <a href="{{ path('app_olona_talents_premium') }}" class="text-primary">Inscrivez-vous dès maintenant</a> et rejoignez la communauté Olona-talents.
                         </p>
                         <div class="mb-4 text-center">
                             <a href="{{ path('connect_google_start') }}" class="btn btn-outline-primary btn-block">

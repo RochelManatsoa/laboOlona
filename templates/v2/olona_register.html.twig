@@ -26,7 +26,7 @@
                         {% endfor %}
 
                         <p class="text-center mb-4">
-                            Déjà membre ? <a href="{{ path('app_login') }}" class="text-primary">Connectez-vous dès maintenant</a> et profitez des avantages de Olona-talents.
+                            Déjà membre ? <a href="{{ path('app_login') }}" class="text-primary fw-bolder">Connectez-vous dès maintenant</a> et profitez des avantages de Olona-talents.
                         </p>
                         <div class="mb-4 text-center">
                             <a href="{{ path('connect_google_start') }}" class="btn btn-outline-primary btn-block rounded-pill px-5">
@@ -41,14 +41,30 @@
                         </div>
                         {% endif %}
 
-                        {{ form_start(registrationForm, {'attr': {'class': 'row', 'data-turbo': 'false'}}) }}
+                        {{ form_start(registrationForm, {'attr': {'data-turbo': 'false'}}) }}
 
                         {{ form_errors(registrationForm) }}
 
-                        {{ form_row(registrationForm.nom) }}
-                        {{ form_row(registrationForm.prenom) }}
-                        {{ form_row(registrationForm.email) }}
-                        {{ form_row(registrationForm.plainPassword) }}
+                        <div class="form-floating mb-3">
+                            {{ form_widget(registrationForm.nom) }}
+                            {{ form_label(registrationForm.nom) }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form_widget(registrationForm.prenom) }}
+                            {{ form_label(registrationForm.prenom) }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form_widget(registrationForm.email) }}
+                            {{ form_label(registrationForm.email) }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form_widget(registrationForm.plainPassword.first) }}
+                            {{ form_label(registrationForm.plainPassword.first) }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form_widget(registrationForm.plainPassword.second) }}
+                            {{ form_label(registrationForm.plainPassword.second) }}
+                        </div>
                         <div class="form-check form-check-inline">
                             <div class="row">
                                 <div class="col-1 m-0 p-0">
@@ -67,10 +83,11 @@
                             </div>
 
                         </div>
-
-                        <button class="btn btn-primary rounded-pill px-5" type="submit" id="register-submit">
-                            {{ 'app_register.menu'|trans }}                
-                        </button>
+                        <div class="text-center my-3">
+                            <button class="btn btn-primary rounded-pill px-5 mx-auto" type="submit" id="register-submit">
+                                {{ 'app_register.menu'|trans }}                
+                            </button>
+                        </div>
                         {{ form_end(registrationForm) }}
                     </div>
                 </div>

@@ -126,9 +126,9 @@ class DashboardController extends AbstractController
             $message = 'Erreur sur le formulaire';
             $success = false;
             $status = 'Echec';
+            $visibilityBoost = $recruiter->getBoostVisibility();
 
             if ($this->profileManager->canApplyBoost($recruiter->getEntreprise(), $boostOption)) {
-                $visibilityBoost = $recruiter->getBoostVisibility();
                 if(!$visibilityBoost instanceof BoostVisibility){
                     $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
                 }

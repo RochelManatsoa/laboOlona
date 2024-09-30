@@ -1,4 +1,4 @@
-{% extends 'base_v21.html.twig' %}
+	{% extends 'base_v21.html.twig' %}
 
 {% block title %}
 	{{ annonce.titre }}
@@ -90,7 +90,7 @@
 			{% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) or candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_FEATURED')) %}
 				{% if applied %}
 				<div id="alert-application" class="my-4">
-					<button type="button" data-bs-toggle="modal" data-bs-target="#submitBtn" class="btn btn-md btn-primary fw-semibold text-uppercase my-2 mx-3">Postuler (15 crédits)</button>
+					<button type="button" data-bs-toggle="modal" data-bs-target="#submitBtn" class="btn btn-md btn-primary fw-semibold text-uppercase my-2 mx-3">Postuler (10 crédits)</button>
 				</div>
 				{% else %}
 				<div class="alert alert-light-primary d-flex align-items-center" role="alert">
@@ -134,7 +134,7 @@
 					<form action="{{ path('app_v2_contact_show')}}" method="post" id="show-recruiter-contact">
 						<input type="hidden" name="contactId" value="{{ annonce.entreprise.entreprise.id }}">
 						<input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
-            			<button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-price="50 crédits" data-bs-type="show-recruiter-contact" class="align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact (50 crédit)</button>
+            			<button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-price="50 crédits" data-bs-type="show-recruiter-contact" class="align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact (50 crédits)</button>
 					</form>
 				</div>
 			</div>
@@ -145,7 +145,7 @@
 <div class="modal fade" id="submitBtn" tabindex="-1" aria-labelledby="submitBtnLabel" aria-hidden="true">
   <div class="modal-dialog  modal-dialog-centered modal-lg">
     <div class="modal-content">
-      {{ form_start(form, {'attr': {'id':'applyJob'}}) }}
+      {{ form_start(form, {'attr': {'id':'applyJob', 'action': path('app_v2_candidate_view_job_offer',  {'id': annonce.id })}}) }}
       <div class="modal-header">
         <h1 class="modal-title fs-5 text-center fw-bold" id="submitBtnLabel">Rédigez votre lettre de motivation</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -168,7 +168,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary fw-semibold text-uppercase" data-bs-dismiss="modal">Annuler</button>
-        <button type="button" class="btn btn-primary fw-semibold text-uppercase" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-price="15 crédits">Envoyer</button>
+        <button type="button" class="btn btn-primary fw-semibold text-uppercase" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-price="10 crédits" data-bs-type="apply-job">Envoyer</button>
       </div>
       {{ form_end(form) }}
     </div>
