@@ -1,0 +1,112 @@
+{% if success %}
+	<turbo-stream action="update" target="current-user-credit">
+		<template>
+			{{ credit }}
+		</template>
+	</turbo-stream>
+	<turbo-stream action="update" target="dashboardButton">
+		<template>
+			<a href="{{ path('app_v2_candidate_dashboard')}}" class="btn btn-success my-3 my-sm-5 px-4 float-end fw-bold me-2">
+				<i class="bi bi-speedometer me-2"></i>
+				Accéder au tableau de bord
+			</a>
+		</template>
+	</turbo-stream>
+{% endif %}
+{% if formProfileUser is defined %}
+<turbo-stream action="update" target="formProfileId">
+	<template>
+		{{ form_start(formProfileUser) }}
+		{{ form_row(formProfileUser.secteurs) }}
+		{% if formProfileUser.titre is defined %}
+			{{ form_row(formProfileUser.titre) }}
+		{% endif %}
+		{% if formProfileUser.tarifCandidat is defined %}
+			{{ form_label(formProfileUser.tarifCandidat) }}
+			<div class="row mb-3">
+				<div class="col">
+					{{ form_row(formProfileUser.tarifCandidat.typeTarif) }}
+				</div>
+				<div class="col">
+					{{ form_row(formProfileUser.tarifCandidat.montant, {'attr':{'placeholder':'10'}}) }}
+				</div>
+				<div class="col">
+					{{ form_row(formProfileUser.tarifCandidat.currency) }}
+				</div>
+				{{ form_help(formProfileUser.tarifCandidat) }}
+			</div>
+		{% endif %}
+		{% if formProfileUser.localisation is defined %}
+			{{ form_row(formProfileUser.localisation) }}
+		{% endif %}
+		{% if formProfileUser.resume is defined %}
+			{{ form_row(formProfileUser.resume) }}
+		{% endif %}
+		{% if formProfileUser.nom is defined %}
+			{{ form_row(formProfileUser.nom) }}
+		{% endif %}
+		{% if formProfileUser.taille is defined %}
+			{{ form_row(formProfileUser.taille) }}
+		{% endif %}
+		{% if formProfileUser.siteWeb is defined %}
+			{{ form_row(formProfileUser.siteWeb) }}
+		{% endif %}
+		{% if formProfileUser.devise is defined %}
+			{{ form_row(formProfileUser.devise) }}
+		{% endif %}
+		{% if formProfileUser.description is defined %}
+			{{ form_row(formProfileUser.description) }}
+		{% endif %}
+		<div style="display:none;">
+			{{ form_widget(formProfileUser) }}
+		</div>
+		<button type="submit" class="btn btn-primary my-3 my-sm-5 px-4 float-end fw-bold">Suivant
+			<i class="bi bi-arrow-right ms-2"></i>
+		</button>
+		{{ form_end(formProfileUser) }}
+	</template>
+</turbo-stream>
+{% endif %}
+{% if visibilityBoost is defined and visibilityBoost is not null %}
+  <turbo-stream action="replace" target="checkBoost">
+    <template>
+      <span class="text-center">
+        <span class="fs-5 fw-bold text-uppercase">
+          <i class="bi bi-rocket me-2"></i> 
+          Profil boosté
+        </span>
+        <br>
+        <span class="small fw-light"> 
+          Jusqu'au {{ visibilityBoost.endDate|date('d-m-Y \à H:i')}} 
+        </span>
+      </span>
+    </template>
+  </turbo-stream>
+  <turbo-stream action="replace" target="checkBoostProfile">
+    <template>
+      <span class="text-center">
+        <span class="fs-5 fw-bold text-uppercase">
+          <i class="bi bi-rocket me-2"></i> 
+          Profil boosté
+        </span>
+        <br>
+        <span class="small fw-light"> 
+          Jusqu'au {{ visibilityBoost.endDate|date('d-m-Y \à H:i')}} 
+        </span>
+      </span>
+    </template>
+  </turbo-stream>
+{% endif %}
+{% if status is defined %}
+<turbo-stream action="update" target="errorToast">
+    <template>
+        <div class="toast-header">
+            <strong class="me-auto">{{ status|raw }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            {{ message }}
+        </div>
+    </template>
+</turbo-stream>
+{% endif %}

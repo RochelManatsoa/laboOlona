@@ -33,6 +33,45 @@ $(function() {
     }
 
     function setupCKEditors() {
+        $('input[name="account[type]"]').on('change', function() {
+            $('#myFormT').trigger('submit');
+        });
+    
+        $('#myFormT').on('submit', function(e) {
+            e.preventDefault();
+            console.log('submit')
+            var url = $(this).data('action');
+            var formData = new FormData(this);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                dataType: 'html', 
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
+                success: function(data) {
+                    Turbo.renderStreamMessage(data);
+                    console.log('success')
+                    // Vérifiez si la réponse contient le target 'errorToast'
+                    if (data.includes('target="errorToast"')) {
+                        var errorToast = new Toast($('#errorToast')[0]);
+                
+                        setTimeout(function() {
+                            errorToast.show();
+                        }, 500);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur s\'est produite. Veuillez recommencer');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
         const editors = document.querySelectorAll('.ckeditor-textarea');
         if (editors.length > 0) {
             editors.forEach(editorElement => {
@@ -213,6 +252,41 @@ $(function() {
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
         });
         
+        var boosts = [
+            { name: 'create_candidate_boost[boost]', type: 'boost-profile' },
+            { name: 'create_recruiter_boost[boost]', type: 'boost-profile' }
+        ];
+
+        boosts.forEach(function(boost) {
+            $('input[type="radio"][name="' + boost.name + '"]').on('change', function() {
+                $('.card').removeClass('card-selected');
+                var cardElement = $(this).closest('.col').find('.card');
+                if ($(this).is(':checked') && cardElement.length) {
+                    cardElement.addClass('card-selected');
+                }
+                var dataLabel = $(this).closest('.col').find('h2').data('label');
+                console.log(dataLabel);
+
+                var nextButton = $('#boostProfileButton'); 
+                nextButton.attr('data-bs-toggle', 'modal');
+                nextButton.attr('data-bs-target', '#confirmationModal');
+                nextButton.attr('data-bs-price', dataLabel);
+                nextButton.attr('data-bs-type', boost.type);
+                nextButton.attr('data-toast', 'false');
+                $('#confirmationModal .modal-body').text("Voulez-vous vraiment dépenser " + dataLabel);
+            });
+        });
+
+
+        $('#boostProfileButton').on('click', function(){
+            var dataToast = $(this).attr('data-toast');
+            if (dataToast === "true") {
+                $('#errorToast').find('.toast-body').text('Vous devez selectionner un boost');
+                var errorToast = new Toast($('#errorToast')[0]);
+                errorToast.show();
+            }
+        })
+        
         $('#confirmButton').off('click').on('click', function() {
             var buttonType = $(this).attr('data-id');
             if (buttonType === "show-candidate-contact") {
@@ -227,6 +301,9 @@ $(function() {
             } else if (buttonType === "boost-profile") {
                 var form = $('button[data-bs-type="boost-profile"]').closest('form');
                 form.trigger("submit");
+            } else if (buttonType === "apply-job") {
+                var form = $('button[data-bs-type="apply-job"]').closest('form');
+                form.trigger("submit");
             }
             $('#confirmationModal').modal('hide');
         });
@@ -240,7 +317,6 @@ $(function() {
             modalBody.text(`Voulez-vous vraiment dépenser ${packagePrice} ?`);
             submitButton.attr('data-id', packageType);
         });
-    
         $('#notification').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var modal = $(this);
@@ -278,6 +354,42 @@ $(function() {
         });
 
         $('#boostProfileForm').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: this.action,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
+                success: function(data) {
+                    Turbo.renderStreamMessage(data);
+                    console.log(data.succes)
+                    if (data.success) {
+                        $('#successToast').find('.toast-body').text(data.message);
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
+                        var boostProfileModal = Modal.getInstance($('#boostProfile')[0]) || new Modal($('#boostProfile')[0]);
+                        boostProfileModal.hide();
+                    } else {
+                        $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Toast($('#errorToast')[0]);
+                        errorToast.show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur s\'est produite.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
+
+        $('#applyJob').on('submit', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
             $.ajax({
@@ -618,28 +730,5 @@ $(function() {
         $('#' + modalId).on('hidden.bs.modal', function () {
             $(this).find('ul[data-form-collection-target="collectionContainer"]').empty();
         });
-    });
-    
-    function toggleProfileSections() {
-        var accountType = $("input[name='profile[type]']:checked").val();
-        if (accountType) {
-            var lowerCaseType = accountType.toLowerCase();
-            $('.candidateProfile, .recruiterProfile').hide();
-    
-            if (lowerCaseType === 'candidat') {
-                $('.candidateProfile').show();
-            } else if (lowerCaseType === 'entreprise') {
-                $('.recruiterProfile').show();
-            }
-    
-        }
-    }
-    // Initial call to set correct visibility on page load
-    toggleProfileSections();
-
-    // Bind the change event to form radio buttons
-    $('input[name="profile[type]"]').on('change', function() {
-        toggleProfileSections();
-        console.log('toogleProfileSelection')
     });
 });

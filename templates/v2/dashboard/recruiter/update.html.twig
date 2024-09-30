@@ -1,0 +1,83 @@
+{% if form is defined %}
+
+<turbo-stream action="update" target="jobListingForm">
+    <template>
+    
+	{{ form_start(form, {'attr': {'id': 'createJob'}}) }}
+		<div class="row">
+			<div class="col">
+				<div class="mb-3">
+					{{ form_row(form.titre)}}
+					{{ form_row(form.secteur)}}
+					{{ form_row(form.typeContrat)}}
+					{{ form_row(form.lieu)}}
+					{{ form_row(form.nombrePoste)}}
+					{{ form_row(form.dateExpiration)}}
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-4">
+				<div class="mb-3">
+					<label class="fw-bold small" for="prestation_tarifPrestation_typeTarif">Tarif</label>
+					{{ form_widget(form.budgetAnnonce.typeBudget)}}
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="mb-3">
+					<label class="fw-bold small" for="prestation_tarifPrestation_montant">Montant</label>
+					{{ form_widget(form.budgetAnnonce.montant)}}
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="mb-3">
+					<label class="fw-bold small" for="prestation_tarifPrestation_currency">Devise</label>
+					{{ form_widget(form.budgetAnnonce.currency)}}
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			{{ form_row(form.description)}}
+			{{ form_row(form.competences)}}
+		</div>
+
+		<div class="row">
+			<div class="mb-3 experience-form">
+				<fieldset>
+					<span class="fw-bolder text-uppercase fs-5 mb-3">
+						<i class="bi bi-rocket-takeoff me-2"></i>
+						Booster</span>
+					{{ form_row(form.boost)}}
+				</fieldset>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<div class="mb-3">
+					{{ form_widget(form.agreeTerms, {
+								'label': 'J\'accepte les Termes et Conditions',
+								'label_attr': {'class': 'fw-bold small'},
+							})}}
+						</div>
+					</div>
+				</div>
+
+				<div style="display:none;">
+				{{ form_widget(form) }}
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+					<i class="bi bi-save"></i>
+					Publier ( 10 crédits)
+				</button>
+			</div>
+		
+		</div>
+	{{ form_end(form) }}
+
+    </template>
+</turbo-stream>
+
+{% endif %}

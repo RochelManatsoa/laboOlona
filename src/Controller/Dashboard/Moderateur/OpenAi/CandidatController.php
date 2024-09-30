@@ -103,7 +103,6 @@ class CandidatController extends AbstractController
         $this->em->getConnection()->close();
         try {
             /** Generate OpenAI analyse */
-            $parsePdf = $this->openAITranslator->parse($candidat);
             $report = $this->openAITranslator->report($candidat);
             $json = $this->openaiManager->extractJsonAndText($report);
             $traduction = isset($json['englishSummary']) ? $json['englishSummary'] : null;

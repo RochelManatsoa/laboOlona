@@ -2,9 +2,10 @@
 
 namespace App\Repository\BusinessModel;
 
+use App\Entity\BusinessModel\Boost;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\BusinessModel\BoostVisibility;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<BoostVisibility>
@@ -21,28 +22,14 @@ class BoostVisibilityRepository extends ServiceEntityRepository
         parent::__construct($registry, BoostVisibility::class);
     }
 
-//    /**
-//     * @return BoostVisibility[] Returns an array of BoostVisibility objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('b.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?BoostVisibility
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findLatestBoostVisibilityByBoost(Boost $boost)
+    {
+        return $this->createQueryBuilder('bv')
+            ->andWhere('bv.boost = :boost')
+            ->setParameter('boost', $boost)
+            ->orderBy('bv.startDate', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

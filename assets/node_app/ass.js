@@ -21,10 +21,8 @@ const httpsAgent = new https.Agent({
 });
 
 const fetchPdfText = async (candidatId) => {
-  const url = `https://develop.olona-talents.com/api/ocr/${candidatId}`;
-  console.log("Requesting URL:", url);
   try {
-    const response = await axios.get(url, {
+    const response = await axios.get(`https://preprod.olona-talents.com/api/ocr/${candidatId}`, {
       httpsAgent: httpsAgent
     });
     const pdfText = response.data.text;

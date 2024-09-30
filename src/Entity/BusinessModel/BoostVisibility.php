@@ -41,7 +41,7 @@ class BoostVisibility
     #[ORM\OneToMany(mappedBy: 'boostVisibility', targetEntity: EntrepriseProfile::class)]
     private Collection $entrepriseProfile;
 
-    #[ORM\OneToMany(mappedBy: 'boostVisibility', targetEntity: JobListing::class)]
+    #[ORM\OneToMany(mappedBy: 'boostVisibility', targetEntity: JobListing::class, cascade: ['remove', 'persist'])]
     private Collection $jobListing;
 
     #[ORM\ManyToOne(inversedBy: 'boostVisibilities')]
@@ -53,6 +53,12 @@ class BoostVisibility
         $this->candidateProfile = new ArrayCollection();
         $this->entrepriseProfile = new ArrayCollection();
         $this->jobListing = new ArrayCollection();
+    }
+
+    public function isExpired(): bool
+    {
+        $now = new \DateTime();
+        return $this->endDate !== null && $now > $this->endDate;
     }
 
     public function getId(): ?int

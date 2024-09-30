@@ -49,14 +49,13 @@
 							</div>
 
 							<div class="row">
-								<div class="col-12 col-sm-6 text-strong">Salaire de base:</div>
-								<div class="col-12 col-sm-6 text-right">{{ results.salaire_de_base_euro|number_format(2, '.', '') }}</div>
+								<div class="col-12 col-sm-8 text-strong">Salaire de base:</div>
+								<div class="col-12 col-sm-4 text-right">{{ results.salaire_de_base_euro|number_format(2, '.', '') }}</div>
 							</div>
 							<div class="row">
-								<div class="col-12 col-sm-6 text-strong">Nombre d'enfants :</div>
-								<div class="col-12 col-sm-6">
+								<div class="col-12 col-sm-8 text-strong">Nombre d'enfants :</div>
+								<div class="col-12 col-sm-4">
 									<div class="row">
-										<div class="col-6"></div>
 										<div class="col-6 text-right">{{ results.nbrEnfant }}</div>
 									</div>
 								</div>
@@ -66,8 +65,8 @@
 								<div class="col-12 col-sm-4 text-right">{{ convertToDevise(results.fraisProfessionnels, simulateur)|number_format(2, '.', '')}}</div>
 							</div>
 							<div class="row">
-								<div class="col-12 col-sm-6 text-strong">Connexion :</div>
-								<div class="col-12 col-sm-6 text-right">{{ convertToDevise(results.fraisConnexion, simulateur)|number_format(2, '.', '')}}</div>
+								<div class="col-12 col-sm-8 text-strong">Connexion :</div>
+								<div class="col-12 col-sm-4 text-right">{{ convertToDevise(results.fraisConnexion, simulateur)|number_format(2, '.', '')}}</div>
 							</div>
 							<div class="row">
 								<div class="col-12 col-sm-6 text-strong">Repas :</div>
@@ -125,7 +124,7 @@
 								</div>
 							</div>
 							<hr>
-							<div class="row bg-info">
+							<div class="row text-dark bg-info">
 								<div class="col-12 col-sm-6 text-strong">Salaire brut :</div>
 								<div class="col-12 col-sm-6 text-right text-strong">{{ results.salaire_brut_estime_euro|number_format(2, '.', '') }}
 									{{ simulateur.devise.symbole }}</div>
@@ -177,7 +176,7 @@
 							
 							<br>
 							<br>
-							<div class="row bg-warning shadow p-2 px-sm-3 mx-1 mx-sm-2">
+							<div class="row bg-warning text-dark shadow p-2 px-sm-3 mx-1 mx-sm-2">
 								<div class="row text-strong mx-2">Coût total à envoyer au client :</div>
 								<div class="row text-right h3 mx-2">{{ results.facture_total_a_envoyer_euro|number_format(2, '.', '') }}
 									{{ simulateur.devise.symbole }}</div>

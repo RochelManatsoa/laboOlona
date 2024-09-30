@@ -18,155 +18,94 @@
 		<div class="row">
 			<div class="col-12 col-sm-8">
 				<div class="p-2 p-sm-5">
-					<h1 class="fs-2">
+					<h1 class="fs-2 text-center">
 						Création de votre profil public
 					</h1>
-					{{ form_start(form, {'attr':{'id':'myFormT'}})}}
-					{{ form_errors(form)}}
 					<div class="col">
 						<hr class="my-4">
+						<h2 class="fs-5 text-center fw-light">
+							Sélectionez votre orientation
+						</h2>
+						{{ form_start(form, {'attr':{'id':'myFormT', 'action': path('app_v2_dashboard_create_profile', {'id': app.user.id})}})}}
+						{{ form_errors(form)}}
+						
 						<div class="row">
-							<h2 class="fs-3 mt-5">Votre statut</h2>
 							{% for account in form.type %}
-							
-							<div class="col-md-4 text-center">
-								<div class="custom-control custom-radio image-checkbox photo-gris">
-									{{ form_widget(account, {'attr': {'class': 'custom-control-input'}}) }}
-									<label class="custom-control-label" for="{{ account.vars.id }}">
-										<div class="text-center mt-2"> 
-											<h3 class="fs-5 fw-bold">{{account_label(account.vars.label|upper)}}</h3>
-										</div>
-										<img src="{{ asset('/images/' ~ account.vars.label ~ '.png') }}" class="img-fluid border" alt="{{ account.vars.label }}">
-									</label>
+
+								<div class="col-md-6 mx-auto text-center">
+									<div class="custom-control custom-radio image-checkbox photo-gris">
+										{{ form_widget(account, {'attr': {'class': 'custom-control-input'}}) }}
+										<label class="custom-control-label" for="{{ account.vars.id }}">
+											<div class="text-center mt-2">
+												<h3 class="fs-5 fw-bold">{{account_label(account.vars.label|upper)}}</h3>
+											</div>
+											<img src="{{ asset('/images/' ~ account.vars.label ~ '.png') }}" class="img-fluid border" alt="{{ account.vars.label }}">
+										</label>
+									</div>
 								</div>
-							</div>
 
 							{% endfor %}
 						</div>
 
+						{{ form_end(form) }}
 						<hr class="my-4">
-						
-						<div class="row" id="">
-							<h2 class="fs-3 mt-5">Vos secteurs d'activité</h2>
-							<div id="" class="candidateProfile">
-							<p class="">
-							Indiquez le domaine dans lequel vous excellez. Choisissez celui qui reflète le mieux votre parcours professionnel et vos compétences.
-							</p>
-							<div class="form-floating">
-								{{ form_widget(form.candidateProfile.secteurs) }}
-								{{ form_label(form.candidateProfile.secteurs) }}
-								{{ form_errors(form.candidateProfile.secteurs) }}
-							</div>
-							</div>
-							<div id="" class="recruiterProfile">
-							<p class="">
-							Sélectionnez le secteur d'activité de votre entreprise. Cela aidera les candidats à identifier les opportunités d'emploi pertinentes.
-							</p>
-							<div class="form-floating">
-								{{ form_widget(form.entrepriseProfile.secteurs) }}
-								{{ form_label(form.entrepriseProfile.secteurs) }}
-								{{ form_errors(form.entrepriseProfile.secteurs) }}
-							</div>							
-							</div>							
-						</div>
-						
-						<div class="row" id="">
-							
-							<div id="" class="candidateProfile">
-							<h2 class="fs-3 mt-5">Titre professionnel</h2>
-								<p class="">
-								Indiquez votre titre professionnel actuel. Cela aidera les recruteurs à comprendre rapidement votre rôle et niveau d'expertise.
-								</p>
-								<div id="profile_candidateProfile_titre_row" class="">
-									<div class="form-floating">
-										{{ form_widget(form.candidateProfile.titre) }}
-										{{ form_label(form.candidateProfile.titre) }}
+
+						<div id="formProfileId">
+							{{ form_start(formProfileUser) }}
+							{{ form_row(formProfileUser.secteurs) }}
+							{% if formProfileUser.titre is defined %}
+								{{ form_row(formProfileUser.titre) }}
+							{% endif %}
+							{% if formProfileUser.tarifCandidat is defined %}
+								{{ form_label(formProfileUser.tarifCandidat) }}
+								<div class="row mb-3">
+									<div class="col">
+										{{ form_row(formProfileUser.tarifCandidat.typeTarif) }}
 									</div>
-								</div>
-							</div>
-							<div id="" class="recruiterProfile">
-								<h2 class="fs-3 mt-5">Nom de l'entreprise</h2>
-								<p class="">
-								Saisissez le nom officiel de votre entreprise. Ce nom sera visible sur les offres d'emploi et profils d'entreprise.
-								</p>
-								<div id="profile_entrepriseProfile_nom_row" class="">
-									<div class="form-floating">
-										{{ form_widget(form.entrepriseProfile.nom) }}
-										{{ form_label(form.entrepriseProfile.nom) }}
-									</div>							 
-								</div>							 
-							</div>							 
-						</div>
-						
-						<div class="row" id="">
-							<h2 class="fs-3 mt-5">Votre présentation (obligatoire)</h2>
-							
-							<div id="" class="candidateProfile">
-								<p class="">
-								Présentez-vous brièvement. Partagez votre parcours éducatif, vos expériences significatives et ce qui vous motive dans votre carrière.
-								</p>
-								<div id="profile_candidateProfile_resume_row" class="">
-									{{ form_widget(form.candidateProfile.resume) }}
-								</div>
-							</div>
-							<div id="" class="recruiterProfile">
-								<p class="">
-								Décrivez votre entreprise. Mentionnez votre mission, vos valeurs, les principaux marchés que vous servez, et ce qui vous distingue de vos concurrents.
-								</p>
-								<div id="profile_entrepriseProfile_description_row" class="">
-									{{ form_widget(form.entrepriseProfile.description) }}
-								</div>							 
-							</div>							 
-						</div>
-						<div class="row" id="">
-							<div id="" class="candidateProfile">
-								<h2 class="fs-3 mt-5">Votre tarif (obligatoire)</h2>
-								<p class="">
-								Proposez votre tarif préférentiel pour une consultation ou un projet. Pensez à votre niveau d'expérience et à la valeur que vous apportez.
-								</p>
-								<div id="profile_candidateProfile_tarifCandidat_row" class="">
-									<div class="input-group mb-3">
-										<div class="form-floating">
-											{{ form_widget(form.candidateProfile.tarifCandidat.montant) }}
-											<label for="">Montant</label>
-										</div>
-										<div class="form-floating">
-											{{ form_widget(form.candidateProfile.tarifCandidat.typeTarif) }}
-											<label for="">Type</label>
-										</div>
-										<div class="form-floating">
-											{{ form_widget(form.candidateProfile.tarifCandidat.currency) }}
-											<label for="">Devise</label>
-										</div>
+									<div class="col">
+										{{ form_row(formProfileUser.tarifCandidat.montant, {'attr':{'placeholder':'10'}}) }}
 									</div>
+									<div class="col">
+										{{ form_row(formProfileUser.tarifCandidat.currency) }}
+									</div>
+									{{ form_help(formProfileUser.tarifCandidat) }}
 								</div>
-							</div>	
-							<div id="" class="recruiterProfile">
-								<h2 class="fs-3 mt-5">Taille de votre entreprise</h2>
-								<p class="">
-								Décrivez votre entreprise. Mentionnez votre mission, vos valeurs, les principaux marchés que vous servez, et ce qui vous distingue de vos concurrents.
-								</p>
-								<div id="profile_entrepriseProfile_taille_row" class="">
-									<div class="input-group mb-3">
-										<div class="form-floating">
-										{{ form_widget(form.entrepriseProfile.taille) }}
-										{{ form_label(form.entrepriseProfile.taille) }}
-										</div>							 
-									</div>							 
-								</div>							 
-							</div>						
+							{% endif %}
+							{% if formProfileUser.localisation is defined %}
+								{{ form_row(formProfileUser.localisation) }}
+							{% endif %}
+							{% if formProfileUser.resume is defined %}
+								{{ form_row(formProfileUser.resume) }}
+							{% endif %}
+							{% if formProfileUser.nom is defined %}
+								{{ form_row(formProfileUser.nom) }}
+							{% endif %}
+							{% if formProfileUser.taille is defined %}
+								{{ form_row(formProfileUser.taille) }}
+							{% endif %}
+							{% if formProfileUser.siteWeb is defined %}
+								{{ form_row(formProfileUser.siteWeb) }}
+							{% endif %}
+							{% if formProfileUser.devise is defined %}
+								{{ form_row(formProfileUser.devise) }}
+							{% endif %}
+							{% if formProfileUser.description is defined %}
+								{{ form_row(formProfileUser.description) }}
+							{% endif %}
+							<div style="display:none;">
+							{{ form_widget(formProfileUser) }}
+							</div>
+							<button type="submit" class="btn btn-primary my-3 my-sm-5 px-4 float-end fw-bold">Suivant
+								<i class="bi bi-arrow-right ms-2"></i>
+							</button>
+							{{ form_end(formProfileUser) }}
 						</div>
-						
-						<div style="display:none;">
-							{{ form_widget(form) }}
-						</div>
-						<button type="submit" class="btn btn-primary my-3 my-sm-5 float-end">Suivant</button>
+
 					</div>
-					{{ form_end(form) }}
 				</div>
 			</div>
 			<div class="col-12 col-sm-4">
-			{% include "v2/dashboard/profile/_sticky_sidebar.html.twig" %}
+				{% include "v2/dashboard/profile/_sticky_sidebar.html.twig" %}
 			</div>
 		</div>
 	</section>

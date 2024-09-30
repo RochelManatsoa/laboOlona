@@ -168,41 +168,51 @@ class CandidatManager
     public function getPendingApplications(CandidateProfile $candidat): array
     {
         return $this->applicationsRepository->findBy([
-            'candidat' => $candidat,
-            'status' => Applications::STATUS_PENDING
-        ]);
+                'candidat' => $candidat,
+                'status' => Applications::STATUS_PENDING
+            ],
+            ['id' => 'DESC']
+        );
     }
 
     public function getAcceptedApplications(CandidateProfile $candidat): array
     {
         return $this->applicationsRepository->findBy([
-            'candidat' => $candidat,
-            'status' => Applications::STATUS_ACCEPTED
-        ]);
+                'candidat' => $candidat,
+                'status' => Applications::STATUS_ACCEPTED
+            ],
+            ['id' => 'DESC']
+        );
     }
 
     public function getRefusedApplications(CandidateProfile $candidat): array
     {
         return $this->applicationsRepository->findBy([
-            'candidat' => $candidat,
-            'status' => Applications::STATUS_REJECTED
-        ]);
+                'candidat' => $candidat,
+                'status' => Applications::STATUS_REJECTED
+            ],
+            ['id' => 'DESC']
+        );
     }
 
     public function getArchivedApplications(CandidateProfile $candidat): array
     {
         return $this->applicationsRepository->findBy([
-            'candidat' => $candidat,
-            'status' => Applications::STATUS_ARCHIVED
-        ]);
+                'candidat' => $candidat,
+                'status' => Applications::STATUS_ARCHIVED
+            ],
+            ['id' => 'DESC']
+        );
     }
 
     public function getMettingApplications(CandidateProfile $candidat): array
     {
         return $this->applicationsRepository->findBy([
-            'candidat' => $candidat,
-            'status' => Applications::STATUS_METTING
-        ]);
+                'candidat' => $candidat,
+                'status' => Applications::STATUS_METTING
+            ],
+            ['id' => 'DESC']
+        );
     }
 
     public function initAvailability(CandidateProfile $candidat): Availability

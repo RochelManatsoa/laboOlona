@@ -155,8 +155,34 @@
     background-position: center;
     width: 150px;
     height: 150px;
-    border-radius: 50%; /* Pour rendre l'élément circulaire */
+    border-radius: 50%; 
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; 
 }
+
+.overlay-text {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); 
+    color: white; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0; 
+    transition: opacity 0.3s; 
+    font-size: 14px; 
+    text-align: center;
+    padding: 10px; 
+}
+
+.bg-image-candidat-account:hover .overlay-text {
+    opacity: 1; 
+}
+
 .bg-image-candidat-view {
     background-size: cover;
     background-position: center;

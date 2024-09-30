@@ -19,7 +19,7 @@
                     <div class="card-body p-4">
                         <h2 class="text-center mb-4">Se connecter</h2>
                         <p class="text-center mb-4">
-                            Pas encore membre ? <a href="{{ path('app_olona_talents_register') }}" class="text-primary">Inscrivez-vous dès maintenant</a> et rejoignez la communauté Olona-talents.
+                            Pas encore membre ? <a href="{{ path('app_olona_talents_register') }}" class="text-primary fw-bolder">Inscrivez-vous dès maintenant</a> et rejoignez la communauté Olona-talents.
                         </p>
                         <div class="mb-4 text-center">
                             <a href="{{ path('connect_google_start') }}" class="btn btn-outline-primary btn-block rounded-pill px-5">
@@ -41,24 +41,42 @@
                         {% endif %}
                         
                         <form method="post">
-                            <div class="mb-3">
-                                <input type="email" name="email" id="email" value="{{ last_username }}" class="form-control" placeholder="Adresse e-mail" required autofocus>
+
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" name="email" required autofocus placeholder="Email">
+                            <label for="email">Adresse email</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                            <label for="password">Mot de passe</label>
+                        </div>
+
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-end">
+                                    <a href="{{ path('app_forgot_password_request') }}" class="fw-light text-end small">Mot de passe oublié</a>
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <input type="password" name="password" id="password" class="form-control" placeholder="Votre mot de passe" required>
-                            </div>
+                            <div class="form-check form-check-inline">
+                                <div class="row">
+                                    <div class="col-1 m-0 p-0">
+                                        <div class="form-check form-check-inline">
+                                          <input type="checkbox" class="form-check-input" id="terms">
+                                        </div>
+                                    </div>
+                                    <div class="col-11 m-0 pl-0">
+                                        <label class="form-check-label fs-6" for="terms">
+                                          <small class="ml-3 pt-sans">En vous connectant sur Olona Talents, vous acceptez nos <a class="fw-bolder" href="/terms-and-conditions">Conditions Générales d'Utilisation</a>. </small>
+                                        </label>
+                                    </div>
+                                </div>
 
-                            <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" id="terms">
-                                <label class="form-check-label" for="terms">
-                                    En vous connectant sur Olona Talents, vous acceptez nos conditions générales d'utilisation
-                                </label>
                             </div>
 
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                            
-                            <button type="submit" class="btn btn-primary btn-block rounded-pill px-5">Connexion</button>
+                            <div class="text-center my-3">
+                              <button type="submit" class="btn btn-primary rounded-pill px-5 mx-auto">Connexion</button>
+                            </div>
                         </form>
                     </div>
                 </div>
