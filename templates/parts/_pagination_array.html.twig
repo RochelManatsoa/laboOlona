@@ -1,0 +1,54 @@
+
+
+{% if totalCandidatesResults > 0 %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {# Précédent #}
+        {% if currentPage > 1 %}
+        <li class="page-item">
+            <a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: currentPage - 1, size: size}) }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+
+        {# Affichage des pages avec gestion des "..." pour les écarts importants #}
+        {% if currentPage > 3 %}
+        <li class="page-item">
+            <a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: 1, size: size}) }}">1</a>
+        </li>
+        <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+        {% endif %}
+
+        {% for page in range(max(1, currentPage - 2), min(currentPage + 2, totalPages)) %}
+        <li class="page-item {{ currentPage == page ? 'active' : '' }}">
+            <a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: page, size: size}) }}">{{ page }}</a>
+        </li>
+        {% endfor %}
+
+        {% if currentPage < totalPages - 2 %}
+        <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+        <li class="page-item">
+            <a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: totalPages, size: size}) }}">{{ totalPages }}</a>
+        </li>
+        {% endif %}
+
+        {# Suivant #}
+        {% if currentPage < totalPages %}
+        <li class="page-item">
+            <a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: currentPage + 1, size: size}) }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
