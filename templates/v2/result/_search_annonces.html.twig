@@ -149,31 +149,7 @@
         </span>
 	</div>
 {% endfor %}
+
 {% if totalJobListingsResults > 0 %}
-
-<nav aria-label="Page navigation">
-	<ul class="pagination">
-		{% if currentPage > 1 %}
-			<li class="page-item">
-				<a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: currentPage - 1, size: size}) }}" aria-label="Previous">
-					<span aria-hidden="true">&laquo;</span>
-				</a>
-			</li>
-		{% endif %}
-
-		{% for num in 1..totalAnnoncesPages %}
-			<li class="page-item {{ currentPage == num ? 'active' : '' }}">
-				<a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: num, size: size}) }}">{{ num }}</a>
-			</li>
-		{% endfor %}
-
-		{% if currentPage < totalAnnoncesPages %}
-			<li class="page-item">
-				<a class="page-link" href="{{ path('app_olona_talents_result', {q: searchQuery, page: currentPage + 1, size: size}) }}" aria-label="Next">
-					<span aria-hidden="true">&raquo;</span>
-				</a>
-			</li>
-		{% endif %}
-	</ul>
-</nav>
+{% include "parts/_pagination_array.html.twig" with {'total': totalJobListingsResults} %}
 {% endif %}
