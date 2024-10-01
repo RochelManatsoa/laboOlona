@@ -266,17 +266,28 @@ class DashboardController extends AbstractController
     {
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
-        $purchasedContacts = $this->em->getRepository(PurchasedContact::class)->findBy([
+        $purchasedContacts = $this->em->getRepository(PurchasedContact::class)->findContactsByBuyerAndStatus($currentUser, true);
+        $pendingContacts = $this->em->getRepository(PurchasedContact::class)->findContactsByBuyerAndStatus($currentUser, false);
+        $allContacts = $this->em->getRepository(PurchasedContact::class)->findBy([
             'buyer' => $currentUser,
-            'isAccepted'  => true,
         ], ['id' => 'DESC']);
         
         return $this->render('v2/dashboard/contacts/index.html.twig', [
+            'allContacts' => $this->paginator->paginate(
+                $allContacts,
+                $request->query->getInt('page', 1),
+                10
+            ),
             'contacts' => $this->paginator->paginate(
                 $purchasedContacts,
                 $request->query->getInt('page', 1),
                 10
-            )
+            ),
+            'pendingContacts' => $this->paginator->paginate(
+                $pendingContacts,
+                $request->query->getInt('page', 1),
+                10
+            ),
         ]);
     }
 

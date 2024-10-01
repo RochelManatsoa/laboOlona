@@ -151,5 +151,5 @@
 {% endfor %}
 
 {% if totalJobListingsResults > 0 %}
-{% include "parts/_pagination_array.html.twig" with {'total': totalJobListingsResults} %}
+{% include "parts/_pagination_array.html.twig" with {'total': totalJobListingsResults, 'totalPages': totalAnnoncesPages} %}
 {% endif %}

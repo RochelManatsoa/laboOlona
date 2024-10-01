@@ -2,9 +2,11 @@
 
 namespace App\Repository\BusinessModel;
 
+use App\Entity\User;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\BusinessModel\PurchasedContact;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @extends ServiceEntityRepository<PurchasedContact>
@@ -21,28 +23,24 @@ class PurchasedContactRepository extends ServiceEntityRepository
         parent::__construct($registry, PurchasedContact::class);
     }
 
-//    /**
-//     * @return PurchasedContact[] Returns an array of PurchasedContact objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   /**
+    * @return PurchasedContact[] Returns an array of PurchasedContact objects
+    */
+    public function findContactsByBuyerAndStatus(User $currentUser, bool $isAccepted)
+    {
+        $queryBuilder = $this->createQueryBuilder('pc')
+            ->where('pc.buyer = :buyer')
+            ->setParameter('buyer', $currentUser)
+            ->orderBy('pc.id', 'DESC');
 
-//    public function findOneBySomeField($value): ?PurchasedContact
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if (!$isAccepted) {
+            $queryBuilder->andWhere('pc.isAccepted IS NULL OR pc.isAccepted = :accepted')
+                         ->setParameter('accepted', false);
+        } else {
+            $queryBuilder->andWhere('pc.isAccepted = :accepted')
+                         ->setParameter('accepted', $isAccepted);
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
