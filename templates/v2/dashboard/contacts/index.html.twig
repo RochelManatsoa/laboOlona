@@ -602,10 +602,18 @@
 						</span>
 						1ère chose à faire
 					</h3>
-					<a href="{{ path('app_v2_recruiter_profile')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
-						<i class="bi bi-search"></i>
-						Trouver un profil
-					</a>
+					{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+						<a href="{{ path('app_v2_candidate_job_offer')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+							<i class="bi bi-search"></i>
+							Trouver une mission
+						</a>
+					{% else %}
+						<a href="{{ path('app_v2_recruiter_profile')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+							<i class="bi bi-search"></i>
+							Trouver un profil
+						</a>
+					{% endif %}
+					
 				</div>
 			{% endif %}
 
