@@ -102,7 +102,7 @@
     <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 </div>
 
-{% if candidat.editedCvs|length > 0 %}
+{% if candidat.editedCvs|length > 0 and (entreprise.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_VALID')) or entreprise.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_PREMIUM') )) %}
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">

@@ -132,7 +132,7 @@
 
   </div>
 </section>
-{% if candidat.editedCvs|length > 0 %}
+{% if candidat.editedCvs|length > 0 and (recruiter.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_VALID')) or recruiter.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_PREMIUM') ))%}
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">

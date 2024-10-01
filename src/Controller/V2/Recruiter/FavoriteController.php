@@ -2,19 +2,16 @@
 
 namespace App\Controller\V2\Recruiter;
 
-use App\Entity\User;
 use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Entreprise\Favoris;
-use App\Entity\BusinessModel\Credit;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Entreprise\FavorisRepository;
@@ -67,7 +64,7 @@ class FavoriteController extends AbstractController
     }
     
     #[Route('/add/candidate/{id}', name: 'app_v2_recruiter_favorite_add_candidate')]
-    public function add(int $id)
+    public function add(Request $request, int $id)
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $recruiter = $this->userService->checkProfile();
@@ -92,20 +89,32 @@ class FavoriteController extends AbstractController
     
         $this->em->persist($favori);
         $this->em->flush();
+        $favoriteId = $candidat->getId();
+        $message = 'Candidat ajouté aux favoris avec succès';
+        
+        if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+            return $this->render('v2/dashboard/recruiter/favorite/update.html.twig', [
+                'message' => $message,
+                'add' => true,
+                'favoriteId' => $favoriteId,
+            ]);
+        }
     
         return $this->json([
             'status' => 'success',
-            'message' => 'Candidat ajouté aux favoris avec succès'
+            'message' => $message,
         ], Response::HTTP_OK);
     }
     
     #[Route('/delete/candidate/{id}', name: 'app_v2_recruiter_favorite_delete_candidate')]
-    public function remove(int $id)
+    public function remove(Request $request, int $id)
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $recruiter = $this->userService->checkProfile();
         $candidat = $this->em->getRepository(CandidateProfile::class)->find($id);
-        if($candidat){
+        if(!$candidat){
             return $this->json(['status' => 'error', 'message' => 'Une erreur est survenue lors de l\'ajout de ce candidat'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -113,9 +122,20 @@ class FavoriteController extends AbstractController
             'entreprise' => $recruiter,
             'candidat' => $candidat
         ]);
+        $favoriteId = $favori->getId();
+        $candidateId = $candidat->getId();
 
         $this->em->remove($favori);
         $this->em->flush();
+
+        if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('v2/dashboard/recruiter/favorite/delete.html.twig', [
+                'favoriteId' => $favoriteId,
+                'candidateId' => $candidateId,
+                'message' => "Candidat effacé de vos favoris",
+            ]);
+        }
 
         return $this->json([
             'status' => 'succes',

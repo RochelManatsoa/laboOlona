@@ -22,6 +22,15 @@
             {% endif %}
             <div class="col-10 mb-1 fw-semibold">{{ item['_source'].titre|upper }}</div>
         </div>
+
+            <div id="row_favorite_{{ item['_id'] }}">
+            {% if isLikedByRecruiter(app.user.entrepriseProfile, item['_id']) %}
+                <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':item['_id']}) }}"><i class="bi bi-star-fill me-2"></i>Favori</button>
+            {% else %}
+                <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}"><i class="bi bi-star me-2"></i>Ajouter</button>
+            {% endif %}
+            </div>
+            
         <!-- Date or any other information -->
         <span data-candidate="{{ item['_id'] }}" style="display:none">
         
@@ -143,7 +152,6 @@
                     {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
                         <li><a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#" style="cursor:pointer;">Ajouter comme favoris</a></li>
                     {% endif %}
-                    <li><a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" style="cursor:pointer;">Voir le contact</a></li>
                 {% else %}
                 <li><a class="dropdown-item candidate-link" data-id="{{ item['_id'] }}" href="#">Aperçu</a></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#" style="cursor:pointer;">Ajouter comme favoris</a></li>
