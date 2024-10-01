@@ -1,0 +1,5 @@
+<turbo-stream action="update" target="row_favorite_{{favoriteId}}">
+  <template>
+    <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':favoriteId}) }}"><i class="bi bi-star-fill me-2"></i>Favori</button>
+  </template>
+</turbo-stream>

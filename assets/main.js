@@ -72,6 +72,66 @@ $(function() {
                 }
             });
         });
+
+        $(document).on('click', '.add-to-favorites', function(e) {
+            e.preventDefault();
+            var url = $(this).data('href');
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                dataType: 'html', 
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
+                success: function(data) {
+                    Turbo.renderStreamMessage(data);
+                    if (data.status === 'success') {
+                        $('#successToast').find('.toast-body').text(data.message);
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
+                    } 
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de l\'ajout du candidat dans vos favoris.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
+        
+        $(document).on('click', '.remove-from-favorites', function(e) {
+            e.preventDefault();
+            var url = $(this).data('href');
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                dataType: 'html', 
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
+                success: function(data) {
+                    Turbo.renderStreamMessage(data);
+                    if (data.status === 'success') {
+                        $('#successToast').find('.toast-body').text(data.message);
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
+                    } 
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de l\'ajout du candidat dans vos favoris.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
+        
+
         const editors = document.querySelectorAll('.ckeditor-textarea');
         if (editors.length > 0) {
             editors.forEach(editorElement => {
@@ -521,32 +581,6 @@ $(function() {
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.error('Erreur:', textStatus, errorThrown);
                     $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de la tentative de boost de votre profil.');
-                    var errorToast = new Toast($('#errorToast')[0]);
-                    errorToast.show();
-                }
-            });
-        });
-    
-        $('.add-to-favorites').on('click', function(e) {
-            e.preventDefault();
-            var url = $(this).data('href');
-            $.ajax({
-                url: url,
-                type: 'POST',
-                success: function(data) {
-                    if (data.status === 'success') {
-                        $('#successToast').find('.toast-body').text(data.message);
-                        var successToast = new Toast($('#successToast')[0]);
-                        successToast.show();
-                    } else {
-                        $('#errorToast').find('.toast-body').text(data.message);
-                        var errorToast = new Toast($('#errorToast')[0]);
-                        errorToast.show();
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error('Erreur:', textStatus, errorThrown);
-                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de l\'ajout du candidat dans vos favoris.');
                     var errorToast = new Toast($('#errorToast')[0]);
                     errorToast.show();
                 }

@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Entity\CandidateProfile;
+use App\Entity\Entreprise\Favoris;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\EntrepriseProfile;
@@ -42,6 +43,7 @@ class OlonaTalentsExtension extends AbstractExtension
             new TwigFunction('highlightKeywordsEntreprise', [$this, 'highlightKeywordsEntreprise']),
             new TwigFunction('highlightKeywordsAnnonce', [$this, 'highlightKeywordsAnnonce']),
             new TwigFunction('generatePseudoById', [$this, 'generatePseudoById']),
+            new TwigFunction('isLikedByRecruiter', [$this, 'isLikedByRecruiter']),
         ];
     }
     
@@ -122,6 +124,24 @@ class OlonaTalentsExtension extends AbstractExtension
         $paddedId = sprintf('%04d', $id);
 
         return $letters . $paddedId;
+    }
+
+
+    public function isLikedByRecruiter(EntrepriseProfile $recruiter, int $id):bool
+    {
+        $candidat = $this->em->getRepository(CandidateProfile::class)->find($id);
+        if($candidat){
+            $liked = $this->em->getRepository(Favoris::class)->findOneBy([
+                'entreprise' => $recruiter,
+                'candidat' => $candidat
+            ]);
+            if($liked){
+                return true;
+            }
+            return false;
+        }
+
+        return false;
     }
 
 }

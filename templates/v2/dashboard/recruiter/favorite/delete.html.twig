@@ -1,0 +1,13 @@
+<turbo-stream action="remove" target="row_favorite_recruiter_{{favoriteId}}"></turbo-stream>
+<turbo-stream action="append" target="flash">
+  <template>
+    <div class="alert alert-success">
+      {{ message}}
+    </div>
+  </template>
+</turbo-stream>
+<turbo-stream action="update" target="row_favorite_{{candidateId}}">
+  <template>
+    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':candidateId}) }}"><i class="bi bi-star me-2"></i>Ajouter</button>
+  </template>
+</turbo-stream>
