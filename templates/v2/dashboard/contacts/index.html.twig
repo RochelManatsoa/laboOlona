@@ -37,107 +37,563 @@
 				Bienvenue sur votre page de gestion de contacts. Ici, vous pouvez consulter et gérer toutes vos connexions professionnelles. Utilisez les fonctionnalités ci-dessous pour optimiser votre réseau.
 			</p>
 
-			{% if contacts|length > 0 %}
+			{% if allContacts|length > 0 %}
 
-				<div class="table-responsive mt-4">
-					<table class="{{ tableClass }}">
-						<thead>
-							<tr>
-								<td scope="col" class="h6">{{ knp_pagination_sortable(contacts, 'Contact', 'p.contact') }}</td>
-								<td scope="col-3" class="h6">Titre</td>
-								<td scope="col-1" class="h6 text-center">{{ knp_pagination_sortable(contacts, 'Compte', 'p.contact.type') }}</td>
-								<td scope="col-1" class="h6 text-center">{{ knp_pagination_sortable(contacts, 'Date', 'p.purchaseDate') }}</td>
-								<td scope="col-1" class=""></td>
-							</tr>
-						</thead>
-						<tbody>
-					{% for item in contacts %}
-						<tr id="row_contact_recruiter_{{item.id}}">
-						{% if item.contact.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
-							<td class="">
-								{{ item.contact.nom }} {{ item.contact.prenom }}<br>
-								<span class="small fw-lighter">{{ item.contact.email }}</span>
-							</td>
-							<td class="">
-								<span class="small fw-bold">{{ item.contact.candidateProfile.titre}}</span>
-							</td>
-							<td class="text-center">
-								<span class="badge badge-lg bg-secondary rounded-pill">Candidat</span><br>
-								<span class="small fw-lighter">{{ generatePseudo(item.contact.candidateProfile)}}</span>
-							</td>
-							<td class="text-center">
-								{{ item.purchaseDate|date('d/m/Y') }}<br>
-								<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
-							</td>
-							<td class="text-center">
-								<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
-									<i class="bi bi-eye"></i>
-								</a>
-								<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
-									<button type="submit" class="btn btn-sm btn-danger rounded-pill">
-										<i class="bi bi-trash"></i>
-									</button>
-								</form>
-							</td>
-						{% elseif item.contact.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
-							<td class="">
-								{{ item.contact.nom }} {{ item.contact.prenom }}<br>
-								<span class="small fw-lighter">{{ item.contact.email }}</span>
-							</td>
-							<td class="">
-								<span class="small fw-bold"><i class="bi bi-ban"></i></span>
-							</td>
-							<td class="text-center">
-								<span class="badge badge-lg bg-info rounded-pill">Entreprise</span><br>
-								<span class="small fw-lighter">{{ generateReference(item.contact.entrepriseProfile)}}</span>
-							</td>
-							<td class="text-center">
-								{{ item.purchaseDate|date('d/m/Y') }}<br>
-								<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
-							</td>
-							<td class="text-center">
-								<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
-									<i class="bi bi-eye"></i>
-								</a>
-								<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
-									<button type="submit" class="btn btn-sm btn-danger rounded-pill">
-										<i class="bi bi-trash"></i>
-									</button>
-								</form>
-							</td>
+				<!-- Onglets -->
+				<ul class="nav nav-underline justify-content-center">
+					<li class="nav-item">
+						<a class="nav-link px-4 active" id="allContact-tab" data-bs-toggle="tab" href="#allContact">Tous</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-4" id="accepted-tab" data-bs-toggle="tab" href="#accepted">Acceptées</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-4" id="pending-tab" data-bs-toggle="tab" href="#pending">En attente</a>
+					</li>
+				</ul>
+
+				<!-- Contenu des onglets -->
+				<div class="tab-content mt-3">
+					<div class="tab-pane fade show active" id="allContact">
+						
+						<div class="table-responsive mt-4">
+							<table class="{{ tableClass }}">
+								<thead>
+									<tr>
+										<td scope="col" class="h6">{{ knp_pagination_sortable(allContacts, 'Contact', 'p.contact') }}</td>
+										<td scope="col-3" class="h6 text-center">Titre</td>
+										<td scope="col-1" class="h6 text-center">{{ knp_pagination_sortable(allContacts, 'Compte', 'p.contact.type') }}</td>
+										<td scope="col-1" class="h6 text-center">{{ knp_pagination_sortable(allContacts, 'Date', 'p.purchaseDate') }}</td>
+										<td scope="col-1" class=""></td>
+									</tr>
+								</thead>
+								<tbody>
+									{% for item in allContacts %}
+										<tr id="row_contact_recruiter_{{item.id}}">
+										{% if item.contact.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+											<td class="">
+												<div class="row">
+													<div class="col-2 text-center align-items-center justify-content-center">
+														<div class="rounded-circle" style="
+															width: 40px;
+															height: 40px;
+															background-image: url('{{ item.contact.candidateProfile.fileName ? asset('uploads/experts/' ~ item.contact.candidateProfile.fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+															background-size: cover;
+															background-position: center;
+														">
+														</div>
+													</div>
+													<div class="col">
+														{% if item.isAccepted %}
+															{{ item.contact.nom }} {{ item.contact.prenom }}<br>
+															<span class="small fw-lighter">{{ item.contact.email }}</span>
+														{% else %}
+															<span class="small fw-bold">{{ generatePseudo(item.contact.candidateProfile)}}</span><br>
+															<span class="small fw-lighter">Candidat</span>
+														{% endif %}
+													</div>
+												</div>
+											</td>
+											<td class="text-center">
+												<span class="small fw-bold">{{ item.contact.candidateProfile.titre}}</span>
+											</td>
+											<td class="text-center">
+												<span class="badge badge-lg bg-secondary rounded-pill">Candidat</span><br>
+												<span class="small fw-lighter">{{ generatePseudo(item.contact.candidateProfile)}}</span>
+											</td>
+											<td class="text-center">
+												{{ item.purchaseDate|date('d/m/Y') }}<br>
+												<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+											</td>
+											<td class="text-center">
+												{% if not item.isAccepted %}
+													<span class="btn btn-sm btn-secondary rounded-pill disabled" aria-disabled="true">
+														<i class="bi bi-eye"></i>
+													</span>
+												{% else %}
+													<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id }) }}" class="btn btn-sm btn-secondary rounded-pill">
+														<i class="bi bi-eye"></i>
+													</a>
+												{% endif %}
+												<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+													<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+														<i class="bi bi-trash"></i>
+													</button>
+												</form>
+											</td>
+										{% elseif item.contact.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+											<td class="">
+												<div class="row">
+													<div class="col-2 text-center align-items-center justify-content-center">
+														<div class="rounded-circle" style="
+															width: 40px;
+															height: 40px;
+															background-image: url('{{asset('uploads/experts/company-default.jpg') }}');
+															background-size: cover;
+															background-position: center;
+														">
+														</div>
+													</div>
+													<div class="col">
+														{% if item.isAccepted %}
+															{{ item.contact.nom }} {{ item.contact.prenom }}<br>
+															<span class="small fw-lighter">{{ item.contact.email }}</span>
+														{% else %}
+															<span class="small fw-bold">{{ generateReference(item.contact.entrepriseProfile)}}</span><br>
+															<span class="small fw-lighter">Candidat</span>
+														{% endif %}
+													</div>
+												</div>
+											</td>
+											<td class="text-center">
+												<span class="small fw-bold"><i class="bi bi-ban"></i></span>
+											</td>
+											<td class="text-center">
+												<span class="badge badge-lg bg-info rounded-pill">Entreprise</span><br>
+												<span class="small fw-lighter">{{ generateReference(item.contact.entrepriseProfile)}}</span>
+											</td>
+											<td class="text-center">
+												{{ item.purchaseDate|date('d/m/Y') }}<br>
+												<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+											</td>
+											<td class="text-center">
+												{% if not item.isAccepted %}
+													<span class="btn btn-sm btn-secondary rounded-pill disabled" aria-disabled="true">
+														<i class="bi bi-eye"></i>
+													</span>
+												{% else %}
+													<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id }) }}" class="btn btn-sm btn-secondary rounded-pill">
+														<i class="bi bi-eye"></i>
+													</a>
+												{% endif %}
+												<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+													<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+														<i class="bi bi-trash"></i>
+													</button>
+												</form>
+											</td>
+										{% else %}
+											<td class="">
+												<div class="row">
+													<div class="col-2 text-center align-items-center justify-content-center">
+														<div class="rounded-circle" style="
+															width: 40px;
+															height: 40px;
+															background-image: url('{{asset('uploads/experts/avatar-default.jpg') }}');
+															background-size: cover;
+															background-position: center;
+														">
+														</div>
+													</div>
+													<div class="col">
+														{{ item.contact.nom }} {{ item.contact.prenom }}<br>
+														<span class="small fw-lighter">{{ item.contact.email }}</span>
+													</div>
+												</div>
+											</td>
+											<td class="text-center"><i class="bi bi-ban"></i>
+											</td>
+											<td class="text-center">
+												<span class="badge badge-lg bg-primary rounded-pill">Utilisateur</span>
+											</td>
+											<td class="text-center">
+												{{ item.purchaseDate|date('d/m/Y') }}<br>
+												<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+											</td>
+											<td class="text-center">
+												{% if not item.isAccepted %}
+													<span class="btn btn-sm btn-secondary rounded-pill disabled" aria-disabled="true">
+														<i class="bi bi-eye"></i>
+													</span>
+												{% else %}
+													<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id }) }}" class="btn btn-sm btn-secondary rounded-pill">
+														<i class="bi bi-eye"></i>
+													</a>
+												{% endif %}
+												<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+													<input type="hidden" value="{{ item.id}}" name="contactId">
+													<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+														<i class="bi bi-trash"></i>
+													</button>
+												</form>
+											</td>
+										{% endif %}				
+										</tr>
+									{% endfor %}
+								</tbody>
+							<!-- Plus de lignes et colonnes ici -->
+							</table>
+						</div>
+
+						<div class="pagination">
+							{{ knp_pagination_render(allContacts, 'parts/_pagination.html.twig') }}
+						</div>
+
+					</div>
+
+					<div class="tab-pane fade" id="accepted">
+						{% if contacts|length > 0 %}
+
+						<div class="table-responsive mt-4">
+							<table class="{{ tableClass }}">
+								<thead>
+									<tr>
+										<td scope="col" class="h6">{{ knp_pagination_sortable(contacts, 'Contact', 'p.contact') }}</td>
+										<td scope="col-3" class="h6 text-center">Titre</td>
+										<td scope="col-1" class="h6 text-center">{{ knp_pagination_sortable(contacts, 'Compte', 'p.contact.type') }}</td>
+										<td scope="col-1" class="h6 text-center">{{ knp_pagination_sortable(contacts, 'Date', 'p.purchaseDate') }}</td>
+										<td scope="col-1" class=""></td>
+									</tr>
+								</thead>
+								<tbody>
+									{% for item in contacts %}
+										<tr id="row_contact_recruiter_{{item.id}}">
+										{% if item.contact.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+											<td class="">
+												<div class="row">
+													<div class="col-2 text-center align-items-center justify-content-center">
+														<div class="rounded-circle" style="
+															width: 40px;
+															height: 40px;
+															background-image: url('{{ item.contact.candidateProfile.fileName ? asset('uploads/experts/' ~ item.contact.candidateProfile.fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+															background-size: cover;
+															background-position: center;
+														">
+														</div>
+													</div>
+													<div class="col">
+														{% if item.isAccepted %}
+															{{ item.contact.nom }} {{ item.contact.prenom }}<br>
+															<span class="small fw-lighter">{{ item.contact.email }}</span>
+														{% else %}
+															<span class="small fw-bold">{{ generatePseudo(item.contact.candidateProfile)}}</span><br>
+															<span class="small fw-lighter">Candidat</span>
+														{% endif %}
+													</div>
+												</div>
+											</td>
+											<td class="">
+												<span class="small fw-bold">{{ item.contact.candidateProfile.titre}}</span>
+											</td>
+											<td class="text-center">
+												<span class="badge badge-lg bg-secondary rounded-pill">Candidat</span><br>
+												<span class="small fw-lighter">{{ generatePseudo(item.contact.candidateProfile)}}</span>
+											</td>
+											<td class="text-center">
+												{{ item.purchaseDate|date('d/m/Y') }}<br>
+												<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+											</td>
+											<td class="text-center">
+												{% if not item.isAccepted %}
+													<span class="btn btn-sm btn-secondary rounded-pill disabled" aria-disabled="true">
+														<i class="bi bi-eye"></i>
+													</span>
+												{% else %}
+													<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id }) }}" class="btn btn-sm btn-secondary rounded-pill">
+														<i class="bi bi-eye"></i>
+													</a>
+												{% endif %}
+												<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+													<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+														<i class="bi bi-trash"></i>
+													</button>
+												</form>
+											</td>
+										{% elseif item.contact.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+											<td class="">
+												<div class="row">
+													<div class="col-2 text-center align-items-center justify-content-center">
+														<div class="rounded-circle" style="
+															width: 40px;
+															height: 40px;
+															background-image: url('{{asset('uploads/experts/company-default.jpg') }}');
+															background-size: cover;
+															background-position: center;
+														">
+														</div>
+													</div>
+													<div class="col">
+														{{ item.contact.nom }} {{ item.contact.prenom }}<br>
+														<span class="small fw-lighter">{{ item.contact.email }}</span>
+													</div>
+												</div>
+											</td>
+											<td class="">
+												<span class="small fw-bold"><i class="bi bi-ban"></i></span>
+											</td>
+											<td class="text-center">
+												<span class="badge badge-lg bg-info rounded-pill">Entreprise</span><br>
+												<span class="small fw-lighter">{{ generateReference(item.contact.entrepriseProfile)}}</span>
+											</td>
+											<td class="text-center">
+												{{ item.purchaseDate|date('d/m/Y') }}<br>
+												<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+											</td>
+											<td class="text-center">
+												{% if not item.isAccepted %}
+													<span class="btn btn-sm btn-secondary rounded-pill disabled" aria-disabled="true">
+														<i class="bi bi-eye"></i>
+													</span>
+												{% else %}
+													<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id }) }}" class="btn btn-sm btn-secondary rounded-pill">
+														<i class="bi bi-eye"></i>
+													</a>
+												{% endif %}
+												<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+													<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+														<i class="bi bi-trash"></i>
+													</button>
+												</form>
+											</td>
+										{% else %}
+											<td class="">
+												<div class="row">
+													<div class="col-2 text-center align-items-center justify-content-center">
+														<div class="rounded-circle" style="
+															width: 40px;
+															height: 40px;
+															background-image: url('{{asset('uploads/experts/avatar-default.jpg') }}');
+															background-size: cover;
+															background-position: center;
+														">
+														</div>
+													</div>
+													<div class="col">
+														{{ item.contact.nom }} {{ item.contact.prenom }}<br>
+														<span class="small fw-lighter">{{ item.contact.email }}</span>
+													</div>
+												</div>
+											</td>
+											<td class="text-center"><i class="bi bi-ban"></i>
+											</td>
+											<td class="text-center">
+												<span class="badge badge-lg bg-primary rounded-pill">Utilisateur</span>
+											</td>
+											<td class="text-center">
+												{{ item.purchaseDate|date('d/m/Y') }}<br>
+												<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+											</td>
+											<td class="text-center">
+												{% if item.isAccepted %}
+													<span class="btn btn-sm btn-secondary rounded-pill disabled" aria-disabled="true">
+														<i class="bi bi-eye"></i>
+													</span>
+												{% else %}
+													<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id }) }}" class="btn btn-sm btn-secondary rounded-pill">
+														<i class="bi bi-eye"></i>
+													</a>
+												{% endif %}
+
+												<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+													<input type="hidden" value="{{ item.id}}" name="contactId">
+													<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+														<i class="bi bi-trash"></i>
+													</button>
+												</form>
+											</td>
+										{% endif %}					
+										</tr>
+									{% endfor %}
+								</tbody>
+							<!-- Plus de lignes et colonnes ici -->
+							</table>
+						</div>
+
+						<div class="pagination">
+							{{ knp_pagination_render(contacts, 'parts/_pagination.html.twig') }}
+						</div>
+
 						{% else %}
-							<td class="">
-								{{ item.contact.nom }} {{ item.contact.prenom }}<br>
-								<span class="small fw-lighter">{{ item.contact.email }}</span>
-							</td>
-							<td class="text-center">
-								<span class="badge badge-lg bg-primary rounded-pill">Utilisateur</span>
-							</td>
-							<td class="text-center">
-								{{ item.purchaseDate|date('d/m/Y') }}<br>
-								<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
-							</td>
-							<td class="text-center">
-								<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
-									<i class="bi bi-eye"></i>
-								</a>
-								<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
-									<input type="hidden" value="{{ item.id}}" name="contactId">
-									<button type="submit" class="btn btn-sm btn-danger rounded-pill">
-										<i class="bi bi-trash"></i>
-									</button>
-								</form>
-							</td>
-						{% endif %}					
-						</tr>
-					{% endfor %}
-					<!-- Plus de lignes et colonnes ici -->
-					</table>
-				</div>
+						<div class="text-center col-4 mx-auto">
+							<img src="/images/register-banned.png" class="img-fluid">
+						</div>
+						{% endif %}
 
-			<div class="pagination">
-				{{ knp_pagination_render(contacts, 'parts/_pagination.html.twig') }}
-			</div>
+					</div>
+
+					<div class="tab-pane fade" id="pending">
+						{% if pendingContacts|length > 0 %}
+
+						<div class="table-responsive mt-4">
+							<table class="{{ tableClass }}">
+								<thead>
+									<tr>
+										<td scope="col" class="h6">{{ knp_pagination_sortable(pendingContacts, 'Contact', 'p.contact') }}</td>
+										<td scope="col-3" class="h6 text-center">Titre</td>
+										<td scope="col-1" class="h6 text-center">{{ knp_pagination_sortable(pendingContacts, 'Compte', 'p.contact.type') }}</td>
+										<td scope="col-1" class="h6 text-center">{{ knp_pagination_sortable(pendingContacts, 'Date', 'p.purchaseDate') }}</td>
+										<td scope="col-1" class=""></td>
+									</tr>
+								</thead>
+								<tbody>
+									{% for item in pendingContacts %}
+										<tr id="row_contact_recruiter_{{item.id}}">
+										{% if item.contact.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+											<td class="">
+												<div class="row">
+													<div class="col-2 text-center align-items-center justify-content-center">
+														<div class="rounded-circle" style="
+															width: 40px;
+															height: 40px;
+															background-image: url('{{ item.contact.candidateProfile.fileName ? asset('uploads/experts/' ~ item.contact.candidateProfile.fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+															background-size: cover;
+															background-position: center;
+														">
+														</div>
+													</div>
+													<div class="col">
+														{% if item.isAccepted %}
+															{{ item.contact.nom }} {{ item.contact.prenom }}<br>
+															<span class="small fw-lighter">{{ item.contact.email }}</span>
+														{% else %}
+															<span class="small fw-bold">{{ generatePseudo(item.contact.candidateProfile)}}</span><br>
+															<span class="small fw-lighter">Candidat</span>
+														{% endif %}
+													</div>
+												</div>
+											</td>
+											<td class="text-center">
+												<span class="small fw-bold">{{ item.contact.candidateProfile.titre}}</span>
+											</td>
+											<td class="text-center">
+												<span class="badge badge-lg bg-secondary rounded-pill">Candidat</span><br>
+												<span class="small fw-lighter">{{ generatePseudo(item.contact.candidateProfile)}}</span>
+											</td>
+											<td class="text-center">
+												{{ item.purchaseDate|date('d/m/Y') }}<br>
+												<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+											</td>
+											<td class="text-center">
+												{% if not item.isAccepted %}
+													<span class="btn btn-sm btn-secondary rounded-pill disabled" aria-disabled="true">
+														<i class="bi bi-eye"></i>
+													</span>
+												{% else %}
+													<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id }) }}" class="btn btn-sm btn-secondary rounded-pill">
+														<i class="bi bi-eye"></i>
+													</a>
+												{% endif %}
+												<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+													<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+														<i class="bi bi-trash"></i>
+													</button>
+												</form>
+											</td>
+										{% elseif item.contact.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+											<td class="">
+												<div class="row">
+													<div class="col-2 text-center align-items-center justify-content-center">
+														<div class="rounded-circle" style="
+															width: 40px;
+															height: 40px;
+															background-image: url('{{asset('uploads/experts/company-default.jpg') }}');
+															background-size: cover;
+															background-position: center;
+														">
+														</div>
+													</div>
+													<div class="col">
+														{% if item.isAccepted %}
+															{{ item.contact.nom }} {{ item.contact.prenom }}<br>
+															<span class="small fw-lighter">{{ item.contact.email }}</span>
+														{% else %}
+															<span class="small fw-bold">{{ generateReference(item.contact.entrepriseProfile)}}</span><br>
+															<span class="small fw-lighter">Entreprise</span>
+														{% endif %}
+													</div>
+												</div>
+											</td>
+											<td class="text-center">
+												<span class="small fw-bold"><i class="bi bi-ban"></i></span>
+											</td>
+											<td class="text-center">
+												<span class="badge badge-lg bg-info rounded-pill">Entreprise</span><br>
+												<span class="small fw-lighter">{{ generateReference(item.contact.entrepriseProfile)}}</span>
+											</td>
+											<td class="text-center">
+												{{ item.purchaseDate|date('d/m/Y') }}<br>
+												<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+											</td>
+											<td class="text-center">
+												{% if not item.isAccepted %}
+													<span class="btn btn-sm btn-secondary rounded-pill disabled" aria-disabled="true">
+														<i class="bi bi-eye"></i>
+													</span>
+												{% else %}
+													<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id }) }}" class="btn btn-sm btn-secondary rounded-pill">
+														<i class="bi bi-eye"></i>
+													</a>
+												{% endif %}
+												<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+													<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+														<i class="bi bi-trash"></i>
+													</button>
+												</form>
+											</td>
+										{% else %}
+											<td class="">
+												<div class="row">
+													<div class="col-2 text-center align-items-center justify-content-center">
+														<div class="rounded-circle" style="
+															width: 40px;
+															height: 40px;
+															background-image: url('{{asset('uploads/experts/avatar-default.jpg') }}');
+															background-size: cover;
+															background-position: center;
+														">
+														</div>
+													</div>
+													<div class="col">
+														{{ item.contact.nom }} {{ item.contact.prenom }}<br>
+														<span class="small fw-lighter">{{ item.contact.email }}</span>
+													</div>
+												</div>
+											</td>
+											<td class="text-center"><i class="bi bi-ban"></i>
+											</td>
+											<td class="text-center">
+												<span class="badge badge-lg bg-primary rounded-pill">Utilisateur</span>
+											</td>
+											<td class="text-center">
+												{{ item.purchaseDate|date('d/m/Y') }}<br>
+												<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
+											</td>
+											<td class="text-center">
+												{% if not item.isAccepted %}
+													<span class="btn btn-sm btn-secondary rounded-pill disabled" aria-disabled="true">
+														<i class="bi bi-eye"></i>
+													</span>
+												{% else %}
+													<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id }) }}" class="btn btn-sm btn-secondary rounded-pill">
+														<i class="bi bi-eye"></i>
+													</a>
+												{% endif %}
+												<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
+													<input type="hidden" value="{{ item.id}}" name="contactId">
+													<button type="submit" class="btn btn-sm btn-danger rounded-pill">
+														<i class="bi bi-trash"></i>
+													</button>
+												</form>
+											</td>
+										{% endif %}				
+										</tr>
+									{% endfor %}
+								</tbody>
+							<!-- Plus de lignes et colonnes ici -->
+							</table>
+						</div>
+
+						<div class="pagination">
+							{{ knp_pagination_render(pendingContacts, 'parts/_pagination.html.twig') }}
+						</div>
+						{% else %}
+						<div class="text-center col-4 mx-auto">
+							<img src="/images/register-banned.png" class="img-fluid">
+						</div>
+						{% endif %}
+					
+					</div>
+				</div>
 			{% else %}
 				<div class="mx-auto text-center">
 					<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
@@ -146,9 +602,9 @@
 						</span>
 						1ère chose à faire
 					</h3>
-					<a href="{{ path('app_v2_candidate_job_offer')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+					<a href="{{ path('app_v2_recruiter_profile')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
 						<i class="bi bi-search"></i>
-						Trouver une mission
+						Trouver un profil
 					</a>
 				</div>
 			{% endif %}

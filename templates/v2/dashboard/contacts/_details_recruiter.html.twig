@@ -1,0 +1,38 @@
+<h1 class="fs-4 fw-bolder text-center mt-3 mt-sm-5">
+      <i class="bi bi-journal-check me"></i> Recruteur {{ generateReference(recruiter)}}
+    </h1>
+    <h2 class="fs-5 fw-semibold text-center text-uppercase">
+      {{ recruiter.nom}}
+    </h2>
+
+    <div class="col-12 col-sm-6 mx-auto text-center mb-4">
+        <img src="{{ asset('uploads/experts/company-default.jpg') }}" alt="Avatar" class="rounded-circle img-fluid mx-auto object-fit-cover" style="width:150px;height:150px;">
+        <p>{{ recruiter.description|raw}}</p>
+    </div>
+    
+    <div class="row mt-4">
+
+    <div class="col-12 col-sm-4">
+        <h4 class="fs-5 text-uppercase">Informations générales</h4>
+        <p>
+        <strong>Date d'inscription :</strong> <span class="">{{ recruiter.entreprise.dateInscription|date('d/m/Y') }}</span><br>
+        <strong>Dernière connexion :</strong> <span class="">{{ recruiter.entreprise.lastLogin|time_ago }}</span><br>
+        <i class="bi bi-geo-alt-fill"></i> {{ recruiter.localisation|countryName }}</span><br>
+        <strong>Site Web :</strong> <span class="">{{ recruiter.siteWeb }}</span><br>
+        <strong>Profil Certifié :</strong> <span class="badge {{ recruiter.status ? 'bg-dark' : 'bg-danger' }}">{{ recruiter.status ? 'Non' : 'Oui' }}</span><br>
+        <br><!-- Button trigger modal -->
+        </p>
+
+    </div>
+
+    <div class="col-12 col-sm-4 text-center">
+        <h4 class="fs-5 text-uppercase">Contact</h4>
+        {{ recruiter.entreprise.nom }} {{ recruiter.entreprise.prenom }} <br>
+        {{ recruiter.entreprise.email }} <br>
+        {{ recruiter.entreprise.telephone }}
+    </div>
+
+    <div class="col-12 col-sm-4 text-center">
+    </div>
+
+    </div>
