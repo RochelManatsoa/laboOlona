@@ -14,7 +14,7 @@
 
                 {{ form_start(requestForm, {'attr': {'class': 'col-md-6 mx-auto'}}) }}
                         <div class="form-floating mb-3">
-                            {{ form_widget(requestForm.email) }}
+                            {{ form_widget(requestForm.email, {'attr': {'placeholder': 'email@olona-talents.com'}}) }}
                             {{ form_label(requestForm.email) }}
                         </div>
                     <div>

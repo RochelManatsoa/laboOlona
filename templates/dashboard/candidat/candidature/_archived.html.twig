@@ -1,61 +1,35 @@
-
 <div class="navigation">
 {{ knp_pagination_render(archiveds, 'parts/_pagination.html.twig') }}
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col" class="col-5"></th>
-            <th scope="col" class="col-5"></th>
-            <th scope="col" class="col-2"></th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for application in archiveds %}
-            <tr>
-                <!-- Colonne de gauche (Détails de l'offre) -->
-                <td>
-                    <small class="text-white px-2 bg-dark rounded">
-                        {{ application.annonce.typeContrat }}
-                    </small>
-                    <!-- Type de contrat -->
-                    <h5>
-                        {{ application.annonce.titre }} | Réf: {{ generateJobReference(application.annonce.id)}}
-                    </h5>
-                    <!-- Titre du job -->
-                    <a href="{{ path('app_dashboard_candidat_annonce_show', {'jobId': application.annonce.jobId}) }}" class="btn btn-link">
-                        Voir l'offre
-                    </a>
+<div class="responsive-table">
+    {% for application in archiveds %}
+    <div class="d-flex flex-wrap justify-content-between mb-3 border-bottom pb-2">
+        <!-- Détails de l'offre -->
+        <div class="p-2 flex-fill">
+            <span class="fs-7 fw-bold">
+                {{ application.annonce.titre }}
+            </span> | Réf: {{ generateJobReference(application.annonce.id)}}
+            <a href="{{ path('app_v2_candidate_view_job_offer', {'id': application.annonce.id}) }}" class="btn btn-link small">
+                Voir l'offre
+            </a>
+            <br>
+            <span class="small">
+                <i class="bi bi-calendar-event"></i>
+                {{ application.dateCandidature|date('d/m/Y') }} <span class="small text-center mx-1 mx-sm-3">|</span> 
+                <i class="bi bi-geo-alt"></i>
+                {{ application.annonce.lieu }} <span class="small text-center mx-1 mx-sm-3">|</span> 
+            </span>
+            <span class="badge bg-success">
+                {{ application.annonce.typeContrat }}
+            </span>
+            <br>
+            <span class="fw-lighter small">Déposé {{ application.dateCandidature|time_ago }}</span>
+        </div>
+        
+        <!-- Informations du Candidat -->
+        <div class="px-2">
+        </div>
+    </div>
+    {% endfor %}
+</div>
 
-                </td>
-                <td>
-                    <small class="">
-                        {{ application.annonce.description|length > 150 ? application.annonce.description|slice(0, 147)|raw ~ '...' : application.annonce.description|raw }}
-                    </small>
-                <!-- Type de contrat -->
-                </td>
-
-                <!-- Colonne de droite (Informations du Candidat) -->
-                <td>
-                    <ul class="list-unstyled">
-                        <li>
-                            <i class="bi bi-geo-alt"></i>
-                            {{ application.annonce.lieu }}
-                        </li>
-                        <!-- Nom du candidat -->
-                        <li>
-                            <i class="bi bi-calendar-event"></i>
-                            {{ application.dateCandidature|date('d/m/Y') }}
-                        </li>
-                        <!-- Date de candidature -->
-                        <li>
-                            <i class="bi bi-cash-stack"></i>
-                            {{ application.pretentionSalariale }}
-                        </li>
-                    <!-- Prétention salariale -->
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
