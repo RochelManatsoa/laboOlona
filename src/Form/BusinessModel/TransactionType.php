@@ -35,10 +35,20 @@ class TransactionType extends AbstractType
                 'label' => false
             ])
             ->add('amount', NumberType::class, [
+                'required' => false,
                 'label' => 'Montant de la transaction (*)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Entrez le montant de la transaction.',
             ])
             ->add('reference', TextType::class, [
+                'required' => false,
                 'label' => 'Référence de la transaction (*)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Référence reçue par SMS après votre paiement Mobile Money.',
             ])
             ->add('transactionReferences', CollectionType::class, [
                 'entry_type' => TransactionReferenceType::class,
@@ -51,7 +61,11 @@ class TransactionType extends AbstractType
                     'data-controller' => 'form-collection',
                     'data-form-collection-add-label-value' => 'Ajouter une référence',
                     'data-form-collection-delete-label-value' => 'Supprimer'
-                ]
+                ],
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => '',
             ]);
         ;
     }

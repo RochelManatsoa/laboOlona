@@ -3,17 +3,11 @@
 namespace App\Twig;
 
 use App\Entity\CandidateProfile;
-use App\Entity\Entreprise\Favoris;
 use DateTime;
-use App\Entity\User;
 use Twig\TwigFilter;
 use DateTimeInterface;
 use IntlDateFormatter;
 use Twig\TwigFunction;
-use App\Entity\ReferrerProfile;
-use App\Entity\Referrer\Referral;
-use App\Entity\Entreprise\JobListing;
-use App\Entity\EntrepriseProfile;
 use App\Entity\Finance\Contrat;
 use App\Entity\Finance\Employe;
 use App\Entity\Finance\Simulateur;

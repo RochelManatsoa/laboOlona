@@ -37,10 +37,14 @@ class TypeTransaction
     #[ORM\OneToMany(mappedBy: 'typeTransaction', targetEntity: TransactionReference::class)]
     private Collection $transactionReferences;
 
+    #[ORM\OneToMany(mappedBy: 'paymentMethod', targetEntity: Order::class)]
+    private Collection $orders;
+
     public function __construct()
     {
         $this->transaction = new ArrayCollection();
         $this->transactionReferences = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -162,6 +166,36 @@ class TypeTransaction
             // set the owning side to null (unless already changed)
             if ($transactionReference->getTypeTransaction() === $this) {
                 $transactionReference->setTypeTransaction(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setPaymentMethod($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getPaymentMethod() === $this) {
+                $order->setPaymentMethod(null);
             }
         }
 

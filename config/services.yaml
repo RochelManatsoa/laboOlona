@@ -68,3 +68,9 @@ services:
 
     App\Service\ElasticsearchService:
         arguments: []
+        
+    App\Service\PaymentService:
+        arguments:
+            $clientId: '%env(PAYPAL_CLIENT_ID)%'
+            $clientSecret: '%env(PAYPAL_CLIENT_SECRET)%'
+            $mode: '%env(PAYPAL_MODE)%'

@@ -57,7 +57,6 @@ class Transaction
 
     #[ORM\Column(nullable: true)]
     #[Assert\Sequentially([
-        new Assert\NotNull,
         new Assert\Length(min:2, minMessage:'Le montant est trop courte.'),
         new Assert\Regex(pattern: '/^-?[0-9]+(\.[0-9]+)?$/', message: 'Le montant doit être un nombre décimal valide.'),
         new Assert\Positive(message: "Le montant doit être supérieur à zéro.")
@@ -72,7 +71,6 @@ class Transaction
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Sequentially([
-        new Assert\NotNull,
         new Assert\Length(min:10, minMessage:'La référence est trop courte.'),
         new Assert\Regex(pattern: '/^[a-zA-Z0-9]*$/', message: 'La référence ne doit contenir que des chiffres et des lettres.'),
     ])]
@@ -99,6 +97,9 @@ class Transaction
     #[ORM\OneToMany(mappedBy: 'transaction', targetEntity: TransactionReference::class, cascade: ['persist', 'remove'])]
     #[Assert\Valid()]
     private Collection $transactionReferences;
+
+    #[ORM\OneToOne(mappedBy: 'transaction', cascade: ['persist', 'remove'])]
+    private ?Order $command = null;
 
     public function __construct()
     {
@@ -256,6 +257,28 @@ class Transaction
                 $transactionReference->setTransaction(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCommand(): ?Order
+    {
+        return $this->command;
+    }
+
+    public function setCommand(?Order $command): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($command === null && $this->command !== null) {
+            $this->command->setTransaction(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($command !== null && $command->getTransaction() !== $this) {
+            $command->setTransaction($this);
+        }
+
+        $this->command = $command;
 
         return $this;
     }

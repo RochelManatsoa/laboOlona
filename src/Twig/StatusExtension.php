@@ -4,6 +4,7 @@ namespace App\Twig;
 
 use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\Transaction;
 use App\Entity\Candidate\TarifCandidat;
 use App\Entity\CandidateProfile;
@@ -61,6 +62,7 @@ class StatusExtension extends AbstractExtension
             new TwigFunction('satusCandidate', [$this, 'satusCandidate']),
             new TwigFunction('satusMetting', [$this, 'satusMetting']),
             new TwigFunction('satusPrestation', [$this, 'satusPrestation']),
+            new TwigFunction('statusOrder', [$this, 'statusOrder']),
             new TwigFunction('statusTransaction', [$this, 'statusTransaction']),
             new TwigFunction('satusJobListing', [$this, 'satusJobListing']),
             new TwigFunction('isPrestationBoosted', [$this, 'isPrestationBoosted']),
@@ -199,6 +201,54 @@ class StatusExtension extends AbstractExtension
     }
 
     public function statusTransaction(Transaction $transaction)
+    {
+        $type = $transaction->getStatus() ?? '';
+        switch ($type) {
+            case Transaction::STATUS_PENDING :
+                $status = '<span class="badge text-bg-danger">'.$this->getLabels(Transaction::STATUS_PENDING).'</span>';
+                break;
+
+            case Transaction::STATUS_COMPLETED :
+                $status = '<span class="badge text-bg-info">'.$this->getLabels(Transaction::STATUS_COMPLETED).'</span>';
+                break;
+
+            case Transaction::STATUS_FAILED :
+                $status = '<span class="badge text-bg-success">'.$this->getLabels(Transaction::STATUS_FAILED).'</span>';
+                break;
+
+            case Transaction::STATUS_CANCELLED :
+                $status = '<span class="badge text-bg-dark">'.$this->getLabels(Transaction::STATUS_CANCELLED).'</span>';
+                break;
+
+            case Transaction::STATUS_ON_HOLD :
+                $status = '<span class="badge text-bg-primary">'.$this->getLabels(Transaction::STATUS_ON_HOLD).'</span>';
+                break;
+
+            case Transaction::STATUS_PROCESSING :
+                $status = '<span class="badge text-bg-primary">'.$this->getLabels(Transaction::STATUS_PROCESSING).'</span>';
+                break;
+
+            case Transaction::STATUS_AUTHORIZED :
+                $status = '<span class="badge text-bg-primary">'.$this->getLabels(Transaction::STATUS_AUTHORIZED).'</span>';
+                break;
+
+            case Transaction::STATUS_REFUNDED :
+                $status = '<span class="badge text-bg-primary">'.$this->getLabels(Transaction::STATUS_REFUNDED).'</span>';
+                break;
+
+            case Transaction::STATUS_DISPUTED :
+                $status = '<span class="badge text-bg-primary">'.$this->getLabels(Transaction::STATUS_DISPUTED).'</span>';
+                break;
+            
+            default:
+                $status = '<span class="badge text-bg-primary">'.$this->getLabels(Transaction::STATUS_PENDING).'</span>';
+                break;
+        }
+        
+        return $status;
+    }
+
+    public function statusOrder(Order $transaction)
     {
         $type = $transaction->getStatus() ?? '';
         switch ($type) {
