@@ -7,6 +7,7 @@ use Symfony\UX\Turbo\TurboBundle;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
 use App\Data\BusinessModel\TransactionData;
+use App\Entity\BusinessModel\Order;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -17,6 +18,7 @@ use App\Repository\BusinessModel\TransactionRepository;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use App\Form\Moderateur\BusinessModel\TransactionSearchFormType;
 use App\Manager\BusinessModel\CreditManager;
+use App\Manager\BusinessModel\OrderManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 
@@ -28,6 +30,7 @@ class TransactionController extends AbstractController
         private UserService $userService,
         private TransactionRepository $transactionRepository,
         private TransactionManager $transactionManager,
+        private OrderManager $orderManager,
         private CsrfTokenManagerInterface $csrfTokenManager,
         private CreditManager $creditManager,
     ){}
@@ -66,10 +69,20 @@ class TransactionController extends AbstractController
             if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('transaction'.$transaction->getId(), $submittedToken))) {
                 throw new InvalidCsrfTokenException('Invalid CSRF token.');
             }
-            $this->transactionManager->saveForm($form);
-            $this->creditManager->notifyTransaction($form->getData());
-            if($form->getData()->getStatus() === Transaction::STATUS_AUTHORIZED){
-                $this->creditManager->validateTransaction($form->getData());
+            $transaction = $this->transactionManager->saveForm($form);
+            $order = $transaction->getCommand();
+            if(!$order instanceof Order){
+                $order = new Order();
+                $order->setTransaction($transaction);
+            }
+            $order->setStatus($transaction->getStatus());
+            $order->setPaymentId($transaction->getReference()); 
+            $order->setPayerId($transaction->getUser()->getId());
+            $order->setTotalAmount($transaction->getPackage()->getPrice()); 
+            $this->orderManager->save($order);
+            $this->creditManager->notifyTransaction($transaction);
+            if($transaction->getStatus() === Transaction::STATUS_AUTHORIZED){
+                $this->creditManager->validateTransaction($transaction);
             }
             $this->addFlash('success', 'Transaction mis à jour');
 

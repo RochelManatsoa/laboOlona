@@ -596,25 +596,29 @@ $(function() {
 
             var modalTitle = modal.find('.modal-title');
             var modalBodySelect = modal.find('#transaction_package');
-
-            modalTitle.text(`Achat sécurisé : ${packagePrice} Ariary | ${packageName} `);
+            var modalBodyRecap = modal.find('#recapCommand');
+            var modalBodyRecapPrice = modal.find('#recapCommandPrice');
+            var packagePriceNumber = parseFloat(packagePrice.replace(/\./g, ''));
+            modalTitle.text(`Achat sécurisé : ${packagePrice} Ariary (${(packagePriceNumber / 5072.95).toFixed(2)} €) | ${packageName} `);
+            modalBodyRecap.html(`<span class="fw-light fs-6">Produit :</span> <span class="fw-bold fs-5">${packageName}</span> `);
+            modalBodyRecapPrice.html(`<span class="fw-light fs-6">Prix :</span> <span class="fw-bold fs-5">${(packagePriceNumber / 5072.95).toFixed(2)} €</span>`);
             modalBodySelect.val(packageId);
                       
         });
 
-        $('input[name="transaction[typeTransaction]"]').on('change', function() {
-            var value = parseInt($(this).val(), 10);
-            if (value <= 3) {
-                console.log($('#pointMarchand'))
-                $('#pointMarchand').show();
-                $('#bankCard').hide();
-                $('#bankApi').hide();
-            } else {
-                $('#bankApi').show();
-                $('#mobileMoney').hide();
-                $('#pointMarchand').hide();
-            }
-        })  
+        // $('input[name="transaction[typeTransaction]"]').on('change', function() {
+        //     var value = parseInt($(this).val(), 10);
+        //     if (value <= 3) {
+        //         console.log($('#pointMarchand'))
+        //         $('#pointMarchand').show();
+        //         $('#bankCard').hide();
+        //         $('#bankApi').hide();
+        //     } else {
+        //         $('#bankApi').show();
+        //         $('#mobileMoney').hide();
+        //         $('#pointMarchand').hide();
+        //     }
+        // })  
 
         $('#package').on('hide.bs.modal', function (event) {
             setTimeout(function() {

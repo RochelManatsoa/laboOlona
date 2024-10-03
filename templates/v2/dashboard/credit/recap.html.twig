@@ -1,0 +1,93 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Recharger mes crédits | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% else %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+
+{% block body %}
+<section class="">
+  <div class="shadow p-3 p-sm-5">
+    <h2 class="mb-4">Recapitulatif de la commande</h2>
+    <div class="my-3 p-5 border rounded row">
+      <h3 class="mb-4 fw-bold">{{ pack.name }}</h3>
+      <div class="col-3">
+        <span class="fs-5">Produit</span> :<br>
+        <span class="fs-5">Prix</span> :<br>
+        <span class="fs-5">Crédits</span> : <br>
+      </div>
+      <div class="col-9">
+        <span class="fw-bold fs-5">{{ pack.name }}</span><br>
+        <span class="fw-bold fs-5">{{ pack.price }} Ar ( {{ price }} € )</span><br>
+        <span class="fw-bold fs-5">{{ pack.credit }}</span><br>
+      </div>
+    </div>
+    <h3 class="mb-4 fw-bold">Mode de paiement :</h3>
+
+    {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+
+    
+          <div class="row mt-4" id="mobileMoney">
+            <div class="col-12">
+              <h3 class="fs-5 fw-bolder">Mobile Money</h3>
+            </div>
+            {% for type in form.paymentMethod %}
+                {% if loop.index <= 3 %}
+                    <div class="col-md-3">
+                        <div class="custom-control custom-radio image-checkbox photo-gris">
+                            {{ form_widget(type, {'attr': {'class': 'custom-control-input'}}) }}
+                              <h3 class="fs-6">{{type.vars.label|upper}}</h3>
+                            <label class="custom-control-label" for="{{ type.vars.id }}">
+                                <img src="{{ asset('/images/' ~ type.vars.id ~ '.png') }}" class="img-fluid border" alt="{{ type.vars.label }}">
+                            </label>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if loop.index == 4 %}
+                        </div> 
+                        <div class="row mt-4" id="bankCard">
+                          <div class="col-12">
+                            <h3 class="fs-5 fw-bolder">Carte Bancaire</h3>
+                          </div> 
+                    {% endif %}
+                    <div class="col-md-3">
+                        <div class="custom-control custom-radio image-checkbox photo-gris">
+                            {{ form_widget(type, {'attr': {'class': 'custom-control-input'}}) }}
+                            <h3 class="fs-6">{{type.vars.label|upper}}</h3>
+                            <label class="custom-control-label" for="{{ type.vars.id }}">
+                                <img src="{{ asset('/images/' ~ type.vars.id ~ '.png') }}" class="img-fluid border" alt="{{ type.vars.label }}">
+                            </label>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+          </div> 
+    <div style="display:none;">
+    {{ form_widget(form)}}
+    </div>
+      <div class=" text-center mx-auto">
+        <button type="submit" class="btn btn-lg btn-primary fw-semibold text-uppercase px-5 my-5">Valider ma commande</button>
+      </div>
+    {{ form_end(form) }}
+  </div>
+
+</section>
+{% endblock %}

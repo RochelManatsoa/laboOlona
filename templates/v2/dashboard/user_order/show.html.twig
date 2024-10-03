@@ -1,0 +1,87 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Commande {{ order.orderNumber }} | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+	{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+		{% include "v2/dashboard/layout_candidat.html.twig" %}
+	{% else %}
+		{% include "v2/dashboard/layout_entreprise.html.twig" %}
+	{% endif %}
+
+{% endblock %}
+
+
+{% block body %}
+{% if order.paymentMethod.slug == 'paypal' %}
+    {% set amount = order.totalAmount ~ ' ' ~ order.currency.symbole %} 
+{% else %}
+    {% set amount = order.package.price ~ ' Ar' %}
+{% endif %}
+	<section class="">
+		<div class="shadow p-2 p-sm-4">
+
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-10">
+                        <!-- Entête de la commande -->
+                        <div class="card mb-4 shadow">
+                            <div class="card-header bg-primary text-white">
+                                <h2 class="mb-0">Détails de la commande</h2>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Numéro de commande :</strong> {{ order.orderNumber }}</p>
+                                <p><strong>Date de commande :</strong> {{ order.createdAt|date('d/m/Y à h:m') }}</p>
+                                <p><strong>Statut :</strong> {{ statusOrder(order)|raw }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Articles de la commande -->
+                        <div class="card mb-4 shadow">
+                            <div class="card-header bg-primary text-white">
+                                <h2 class="mb-0">Achat</h2>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Nom :</strong> {{ order.package.name}}</p>
+                                <!-- Si applicable, ajoutez des taxes ou frais d'expédition -->
+                                <p><strong>Prix :</strong> {{ amount }}</p>
+                                <p><strong>Mode de paiement :</strong> <span class="fw-bold">{{ order.paymentMethod.name }}</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Total de la commande -->
+                        <div class="card mb-4 shadow">
+                            <div class="card-header bg-primary text-white">
+                                <h2 class="mb-0">Total</h2>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Total des articles :</strong> {{ amount }}</p>
+                                <!-- Si applicable, ajoutez des taxes ou frais d'expédition -->
+                                <p><strong>Frais d'expédition :</strong> Gratuit</p>
+                                <p><strong>Montant total :</strong> <span class="fw-bolder">{{ amount }}</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="d-flex justify-content-center">
+                            <a href="{{ path('app_v2_credit') }}" class="btn btn-primary me-2">Continuer les achats</a>
+                            <a href="{{ path('app_v2_contact') }}" class="btn btn-secondary">Contactez le support</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Paiement | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endif %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+{% endblock %}
+
+
+{% block body %}
+	<section class="">
+		<div class="shadow p-2 p-sm-5">
+      <h1 class="text-center my-4">Paiement par {{ mobileMoney.name }}</h1>
+      {{ form_start(form)}}   
+      <div class="row">
+        <div class="col">
+          <div class="row align-items-center p-3" >
+            <div class="col-3">
+              <img src="{{ asset('/images/' ~ mobileMoney.slug ~ '.png') }}" class="img-fluid border" alt="{{ mobileMoney.name }}">
+            </div>
+            <div class="col text-center">
+              <span class="fw-light h5">Numéro</span><br>
+              <span class="fw-bolder h2">{{ mobileMoney.number }}</span>
+            </div>
+          </div>
+          <p class="">Veuillez envoyer le montant exact sur le numéro de mobile money indiqué ci-dessous. Une fois le paiement effectué, entrez la référence de transaction dans le champ prévu à cet effet et cliquez sur le bouton <span class="fw-bold">"Soumettre"</span> pour finaliser votre achat.</p>
+          <p class=" fw-lighter"><strong><i class="bi bi-info-circle"></i></strong> Assurez-vous d'utiliser la même référence indiquée lors de votre paiement pour éviter tout retard dans le traitement de votre commande.</p>      
+        </div>
+        <div class="col">
+          {{ form_row(form.amount, {'attr': {'value': order.package.price}})}}   
+          {{ form_row(form.reference)}}   
+          <hr>
+          {{ form_row(form.transactionReferences)}}   
+          <div style="display:none">   
+          {{ form_widget(form)}}      
+          </div>
+        </div>
+      </div>
+      <div class=" text-center mx-auto">
+        <button type="submit" class="btn btn-lg text-uppercase fw-bold btn-primary px-5 my-4">Soumettre</button>
+      </div>
+      {{ form_end(form)}}      
+    </div>
+  </section>
+{% endblock %}

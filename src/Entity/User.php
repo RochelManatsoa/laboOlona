@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\BusinessModel\Credit;
 use App\Entity\BusinessModel\History;
+use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\PurchasedContact;
 use App\Entity\BusinessModel\Transaction;
 use App\Entity\Finance\Employe;
@@ -166,6 +167,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $city = null;
 
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class)]
+    private Collection $orders;
+
     public function __construct()
     {
         $this->envois = new ArrayCollection();
@@ -175,6 +179,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->histories = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->purchasedContacts = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function __toString()
@@ -756,6 +761,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCity(?string $city): static
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getCustomer() === $this) {
+                $order->setCustomer(null);
+            }
+        }
 
         return $this;
     }

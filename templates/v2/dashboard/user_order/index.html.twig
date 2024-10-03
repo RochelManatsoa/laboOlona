@@ -1,0 +1,84 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Mes commandes | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+	{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+		{% include "v2/dashboard/layout_candidat.html.twig" %}
+	{% else %}
+		{% include "v2/dashboard/layout_entreprise.html.twig" %}
+	{% endif %}
+
+{% endblock %}
+
+
+{% block body %}
+	{% set tableClass = 'table' %}
+	{% if app.request.cookies.get('theme') == 'bootstrap-dark' %}
+		{% set tableClass = tableClass ~ ' table-dark' %}
+	{% endif %}
+	<section class="">
+		<div class="shadow p-2 p-sm-5">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-4">
+				<i class="bi bi-bookmark-star text-warning me-2"></i>
+				Mes commandes
+			</h2>
+
+			<div class="table-responsive">
+				<table class="{{ tableClass }}">
+					<thead>
+						<tr>
+							<td scope="col" class="fw-bolder">{{ knp_pagination_sortable(orders, 'Produit', 'p.name') }}</td>
+							<td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Paiement', 'type.name') }}</td>
+							<td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Date', 'o.createdAt') }}</td>
+							<td scope="col-2" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Statut', 'o.status') }}</td>
+							<td scope="col-1" class="text-center"></td>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in orders %}
+							<tr id="row_prestation_recruiter_{{item.id}}">
+								<td class="">
+									{{ item.package.name }}
+									<br>
+									<span class="fw-lighter small">
+									    {{ item.orderNumber }}
+                                    </span>
+								</td>
+								<td class="col-1 text-center">
+                                    <img src="{{ asset('/images/' ~ item.paymentMethod.slug ~ '.png') }}" class="img-fluid border" alt="{{ item.paymentMethod.name }}">
+								</td>
+								<td class="col-1 text-center small">
+									{{ item.createdAt|date('d/m/Y') }}<br>
+									{{ item.createdAt|date('à h:i') }}
+								</td>
+								<td class="col-2 text-center">
+                                    {{ statusOrder(item)|raw }}
+                                </td>
+								<td class="col-1 text-center">
+									<a href="{{ path('app_v2_user_order_show', {'orderNumber': item.orderNumber })}}" class="btn btn-sm btn-secondary rounded-pill">
+										<i class="bi bi-eye"></i>
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				<div class="navigation mt-5">
+					{{ knp_pagination_render(orders, 'parts/_pagination.html.twig') }}
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

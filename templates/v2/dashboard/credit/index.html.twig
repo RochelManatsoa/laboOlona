@@ -25,7 +25,7 @@
 
 {% block body %}
 <section class="">
-  <div class="shadow p-2 p-sm-4">
+  <div class="shadow p-2 p-sm-5">
     <h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
       <i class="bi bi-bookmark-star text-warning me-2"></i></span> Toujours plus proche de vos réussites
     </h2>
@@ -43,7 +43,7 @@
               
               <div class="{{ col_size }} mx-auto">
                   <div class="card shadow">
-                      <a href="#" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#package" data-bs-package="{{ package.name }}" data-bs-price="{{ package.price|number_format(0, ',', '.') }}" data-bs-id="{{ package.id }}">
+                      <a href="{{ path('app_v2_credit_view', {'slug': package.slug})}}" class="btn btn-light" data-bs-toggle="" data-bs-target="#package" data-bs-package="{{ package.name }}" data-bs-price="{{ package.price|number_format(0, ',', '.') }}" data-bs-id="{{ package.id }}">
                           <div class="card-body text-center">
                               <i class="bi bi-rocket fs-1 text-warning"></i><br>
                               <span class="card-title h5 mt-5">{{ package.name }} <br><span class="fw-bolder fs-2"> {{ package.credit }} </span>crédits</span>
@@ -108,7 +108,7 @@
                     </div>
                 {% endif %}
             {% endfor %}
-        </div> 
+          </div> 
 
           <div id="pointMarchand" style="display:none;">
               <div class="my-3">
@@ -146,8 +146,10 @@
           </div>
 
           <div id="bankApi" style="display:none;">
-              <div class="my-3">
-                <p>Information API de la banque</p>
+              <div class="my-3 p-5 border rounded">
+                <h2 class="mb-4">Recapitulatif de la commande</h2>
+                <p id="recapCommand"></p>
+                <p id="recapCommandPrice"></p>
               </div>
           </div>
 

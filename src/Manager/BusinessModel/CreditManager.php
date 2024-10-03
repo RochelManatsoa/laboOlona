@@ -231,7 +231,7 @@ class CreditManager
         }
         
         return $this->notificationManager->createNotification(
-            $this->security->getUser(), 
+            $this->em->getRepository(User::class)->findOneBy(['email' => 'moderateur@olona.com']), 
             $transaction->getUser(), 
             Notification::TYPE_MESSAGE,
             $titre,

@@ -29,8 +29,8 @@ class CandidateType extends AbstractType
                 'multiple' => true,
                 'label_attr' => [
                     'class' => 'fw-bold fs-5' 
-                ]
-                ,'help' => 'Sélectionnez un ou plusieurs secteurs correspondant à vos compétences professionnelles.',
+                ],
+                'help' => 'Sélectionnez un ou plusieurs secteurs correspondant à vos compétences professionnelles.',
             ])
             ->add('titre', TextType::class, [
                 'label' => 'Titre professionnel *',
