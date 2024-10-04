@@ -23,9 +23,66 @@
             <i class="bi bi-search text-warning me-2"></i>
             Projets dans mes secteurs d'activité
           </h2>
-        <div class="col">
-          {% include "v2/result/_search_annonces.html.twig" with {'annonces': annonces} %}
-        </div>
+          <div class="row">
+            <div class="col-12 col-sm-8" id="jobs-container">
+            {% include "v2/dashboard/candidate/job_offer/_job_offer_list.html.twig" %}
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="d-flex flex-column flex-shrink-0 py-3 text-white position-sticky top-0">
+                    <div class="card mb-3">
+                      <div class="card-body small">
+                          <h3 class="card-title h5 mb-3">Statistiques</h3>
+                          <span class="fw-bolder me-2">{{ app.user.credit.total }}</span> <span class="fw-light">crédits disponibles</span><br>
+                          <span class="fw-bolder me-2">{{ candidat.vues|length}}</span> <span class="fw-light">vues de votre profil</span><br>
+                          <span class="fw-bolder me-2">{{ candidat.applications|length}}</span> <span class="fw-light">candidatures</span><br>
+                          <span class="fw-bolder me-2">{{ candidat.prestations|length}}</span> <span class="fw-light">prestations</span><br>
+                      </div>
+                    </div>
+                    <div class="card mb-3" id="candidate-card-container">
+                        <img src="{{ asset('images/mailing/thumbnail.png')}}" class="" alt="Premium Olona Talents">
+                        <div class="card-body small">
+                            <h3 class="card-title h5">Passez à la Version Premium!</h3>
+                            <p class="card-text">Profitez d'un accès illimité aux contacts candidats, de la mise en avant de vos annonces et bien plus encore.</p>
+                            <div id="checkBoost">
+                            <button class="btn btn-sm btn-danger text-uppercase fw-bold px-3" data-bs-toggle="modal" data-bs-target="#boostProfile" data-bs-whatever="@mdo"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon profil</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
       </div>
     </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script> 
+    
+    var currentPage = 1;
+    var allDataLoaded = false;
+
+    $(window).scroll(function() {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !allDataLoaded) {
+            loadMoreJobs();
+        }
+    });
+
+    function loadMoreJobs() {
+        currentPage++;
+        var url = `{{ path('api_job_offers') }}?page=${currentPage}`;
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(html) {
+                if (html.trim() === "") {
+                    allDataLoaded = true;
+                } else {
+                    $('#jobs-container').append(html);
+                }
+            }
+        });
+    }
+    </script>
 {% endblock %}

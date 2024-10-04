@@ -2,7 +2,6 @@
 
 namespace App\Controller\V2\Candidate;
 
-use App\Data\V2\JobOfferData;
 use App\Manager\ProfileManager;
 use App\Entity\Vues\AnnonceVues;
 use App\Entity\Referrer\Referral;
@@ -44,35 +43,61 @@ class JobOfferController extends AbstractController
         private UrlGeneratorInterface $urlGenerator,
         private MailerService $mailerService,
     ){}
-    
+
     #[Route('/', name: 'app_v2_candidate_job_offer')]
     public function index(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Accès réservé aux candidats.');
+        /** @var CandidateProfile $candidat */
         $candidat = $this->userService->checkProfile();
-        $data = new JobOfferData();
-        $data->page = $request->get('page', 1);
-        $data->candidat = $candidat;
-        $params = [];
+        $secteurs = $candidat->getSecteurs();
+        $page = $request->query->get('page', 1);
+        $limit = 10;
+        $qb = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
+        $qb->where('j.status = :status')
+            ->setParameter('status', JobListing::STATUS_PUBLISHED)
+            ->andWhere('j.secteur IN (:secteurs)')
+            ->setParameter('secteurs', $secteurs)
+            ->orderBy('j.id', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult(($page - 1) * $limit);
 
-        $query = $request->query->get('q', $candidat->getSecteurs()[0]->getNom());
-        $page = $request->query->getInt('page', 1);
-        $size = $request->query->getInt('size', 10);
-        $from = ($page - 1) * $size;
-        $params['currentPage'] = $page;
-        $params['size'] = $size;
-        $params['searchQuery'] = $query;
-        $paramsJoblisting = $this->olonaTalentsManager->getParamsJoblisting($from, $size, $query);
+        $jobOffers = $qb->getQuery()->getResult();
         
-        $joblistings = $this->elasticsearch->search($paramsJoblisting);
-        $totalJobListingsResults = $joblistings['hits']['total']['value'];
-        $totalAnnoncesPages = ceil($totalJobListingsResults / $size);
-        $params['totalAnnoncesPages'] = $totalAnnoncesPages;
-        $params['annonces'] = $joblistings['hits']['hits'];
-        $params['totalJobListingsResults'] = $totalJobListingsResults;
-
-        return $this->render('v2/dashboard/candidate/job_offer/index.html.twig', $params);
+        return $this->render('v2/dashboard/candidate/job_offer/index.html.twig', [
+            'candidat' => $candidat,
+            'jobOffers' => $jobOffers,
+            'nextPage' => $page + 1,
+            'hasMore' => count($jobOffers) == $limit
+        ]);
     }
+
+    #[Route('/api/job-offers', name: 'api_job_offers')]
+    public function apiJobOffers(Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $candidat = $this->userService->checkProfile(); 
+        $secteurs = $candidat->getSecteurs();
+        $page = $request->query->getInt('page', 1);
+        $limit = 10;
+
+        $qb = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
+        $qb->where('j.status = :status')
+            ->setParameter('status', 'published')
+            ->andWhere('j.secteur IN (:secteurs)')
+            ->setParameter('secteurs', $secteurs)
+            ->orderBy('j.id', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult(($page - 1) * $limit);
+
+        $jobOffers = $qb->getQuery()->getResult();
+
+        return $this->render('v2/dashboard/candidate/job_offer/_job_offer_list.html.twig', [
+            'jobOffers' => $jobOffers,
+        ]);
+    }
+
     
     #[Route('/view/{id}', name: 'app_v2_candidate_view_job_offer')]
     public function viewJobOffer(Request $request, int $id): Response

@@ -34,31 +34,58 @@ class ProfileController extends AbstractController
     public function index(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $entreprise = $this->userService->checkProfile();
-        $data = new ProfileData();
-        $data->page = $request->get('page', 1);
-        $data->entreprise = $entreprise;
-        $params = [];
+        /** @var EntrepriseProfile $recruiter */
+        $recruiter = $this->userService->checkProfile();
+        $secteurs = $recruiter->getSecteurs();
+        $page = $request->query->get('page', 1);
+        $limit = 10;
+        $qb = $this->em->getRepository(CandidateProfile::class)->createQueryBuilder('c');
 
-        $query = $request->query->get('q', $entreprise->getSecteurs()[0]->getNom());
+        $qb->join('c.secteurs', 's') 
+        ->where('c.status = :status')
+        ->setParameter('status', CandidateProfile::STATUS_VALID)
+        ->andWhere('s IN (:secteurs)') 
+        ->setParameter('secteurs', $secteurs)
+        ->orderBy('c.id', 'DESC')
+        ->setMaxResults($limit)
+        ->setFirstResult(($page - 1) * $limit);
+
+        $candidates = $qb->getQuery()->getResult();
+        
+        return $this->render('v2/dashboard/recruiter/profile/index.html.twig', [
+            'recruiter' => $recruiter,
+            'candidates' => $candidates,
+            'nextPage' => $page + 1,
+            'hasMore' => count($candidates) == $limit
+        ]);
+    }
+
+    #[Route('/api/candidate-secteurs', name: 'api_candidate_secteurs')]
+    public function apiCandidates(Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $recruiter = $this->userService->checkProfile(); 
+        $secteurs = $recruiter->getSecteurs();
         $page = $request->query->getInt('page', 1);
-        $size = $request->query->getInt('size', 10);
-        $from = ($page - 1) * $size;
-        $params['currentPage'] = $page;
-        $params['size'] = $size;
-        $params['searchQuery'] = $query;
-        $paramsCandidates = $this->olonaTalentsManager->getParamsCandidates($from, $size, $query);
-        
-        $candidates = $this->elasticsearch->search($paramsCandidates);
-        $totalCandidatesResults = $candidates['hits']['total']['value'];
-        $totalProfilePages = ceil($totalCandidatesResults / $size);
-        $params['totalPages'] = $totalProfilePages;
-        $params['candidats'] = $candidates['hits']['hits'];
-        $params['totalCandidatesResults'] = $totalCandidatesResults;
-        
-        return $this->render('v2/dashboard/recruiter/profile/index.html.twig', $params);
+        $limit = 10;
+
+        $qb = $this->em->getRepository(CandidateProfile::class)->createQueryBuilder('c');
+        $qb->join('c.secteurs', 's') 
+        ->where('c.status = :status')
+        ->setParameter('status', CandidateProfile::STATUS_VALID)
+        ->andWhere('s IN (:secteurs)') 
+        ->setParameter('secteurs', $secteurs)
+        ->orderBy('c.id', 'DESC')
+        ->setMaxResults($limit)
+        ->setFirstResult(($page - 1) * $limit);
+
+        $candidates = $qb->getQuery()->getResult();
+
+        return $this->render('v2/dashboard/recruiter/profile/_candidates_list.html.twig', [
+            'candidates' => $candidates,
+            'recruiter' => $recruiter,
+        ]);
     }
     
     #[Route('/view/{id}', name: 'app_v2_recruiter_view_profile')]
