@@ -1,0 +1,32 @@
+{% for candidate in candidates %}
+	<div class="card my-3 small px-5 py-4">
+		<div class="row">
+            <div class="col-1 me-3">
+                <div class="rounded-circle" style="
+                    width: 45px;
+                    height: 45px;
+                    background-image: url('{{ candidate.fileName ? asset('uploads/experts/' ~ candidate.fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+                    background-size: cover;
+                    background-position: center;
+                ">
+                </div>
+            </div>
+            <div class="col">
+                <span class="fs-6">
+                    <a href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}">
+                        {{ candidate.titre }}
+                    </a>
+                </span><br>
+                <span class="small fw-lighter">{{ generatePseudo(candidate)}}</span>
+            </div>
+		</div>
+		<div class="small">
+			{{ candidate.metaDescription|raw }}
+		</div>
+		<div class="">
+            <span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
+                <i class="bi bi-tags"></i> {{ candidate.secteurs|getFirstCommonSecteur(recruiter.secteurs)}}
+            </span>
+		</div>
+	</div>
+{% endfor %}

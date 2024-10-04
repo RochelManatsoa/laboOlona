@@ -1,0 +1,15 @@
+{% for job in jobOffers %}
+	<div class="card my-3 small px-5 py-4">
+		<h2 class="fs-6">
+        <a href="{{ path('app_v2_candidate_view_job_offer', {'id': job.id })}}">
+			{{ job.titre }}
+        </a>
+		</h2>
+		<div class="small">
+			{{ job.shortDescription }}
+		</div>
+		<div class="">
+        <span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill"><i class="bi bi-tags"></i> {{ job.secteur.nom}}</span>
+		</div>
+	</div>
+{% endfor %}

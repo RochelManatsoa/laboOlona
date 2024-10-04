@@ -2,15 +2,16 @@
 
 namespace App\Twig;
 
-use App\Entity\CandidateProfile;
-use App\Entity\Entreprise\Favoris;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Entreprise\Favoris;
 use App\Entity\Entreprise\JobListing;
 use Symfony\Component\Intl\Countries;
 use Twig\Extension\AbstractExtension;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\ReferrerProfileRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -35,6 +36,7 @@ class OlonaTalentsExtension extends AbstractExtension
             new TwigFilter('countryName', [$this, 'countryName']),
             new TwigFilter('displayAge', [$this, 'displayAge']),
             new TwigFilter('stripDivP', [$this, 'stripDivP'], ['is_safe' => ['html']]),
+            new TwigFilter('getFirstCommonSecteur', [$this, 'getFirstCommonSecteur']),
         ];
     }
 
@@ -149,6 +151,14 @@ class OlonaTalentsExtension extends AbstractExtension
     {
         // Enlever les balises <div> et <p>
         return preg_replace('#<(div|p)[^>]*>(.*?)</\1>|<div[^>]*>|</div>|<p[^>]*>|</p>#si', '$2', $content);
+    }
+
+    public function getFirstCommonSecteur($secteurs1, $secteurs2)
+    {
+        $secteurs1 = $secteurs1 instanceof Collection ? $secteurs1->toArray() : $secteurs1;
+        $secteurs2 = $secteurs2 instanceof Collection ? $secteurs2->toArray() : $secteurs2;
+        $common = array_intersect($secteurs1, $secteurs2);
+        return !empty($common) ? reset($common) : 'Aucun secteur commun';
     }
 
 }

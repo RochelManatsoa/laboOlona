@@ -23,9 +23,65 @@
             <i class="bi bi-search text-warning me-2"></i>
             Trouvez le profil idéal, parcourez par mot-clé, titre ou compétences.
           </h2>
-        <div class="col">
-          {% include "v2/result/_search_candidats.html.twig" with {'candidats': candidats} %}
-        </div>
+          <div class="row">
+            <div class="col-12 col-sm-8" id="candidates-container">
+            {% include "v2/dashboard/recruiter/profile/_candidates_list.html.twig" %}
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="d-flex flex-column flex-shrink-0 py-3 text-white position-sticky top-0">
+                    <div class="card mb-3">
+                      <div class="card-body small">
+                          <h3 class="card-title h5 mb-3">Statistiques</h3>
+                          <span class="fw-bolder me-2">{{ app.user.credit.total }}</span> <span class="fw-light">crédits disponibles</span><br>
+                          <span class="fw-bolder me-2">{{ recruiter.jobListings|length}}</span> <span class="fw-light">annonces publiées</span><br>
+                          <span class="fw-bolder me-2">{{ recruiter.favoris|length}}</span> <span class="fw-light">favoris</span><br>
+                          <span class="fw-bolder me-2">{{ recruiter.prestations|length}}</span> <span class="fw-light">prestations</span><br>
+                      </div>
+                    </div>
+                    <div class="card mb-3" id="candidate-card-container">
+                        <img src="{{ asset('images/mailing/thumbnail.png')}}" class="" alt="Premium Olona Talents">
+                        <div class="card-body small">
+                            <h3 class="card-title h5">Passez à la Version Premium!</h3>
+                            <p class="card-text">Profitez d'un accès illimité aux contacts candidats, de la mise en avant de vos annonces et bien plus encore.</p>
+                            <div id="checkBoost">
+                            <button class="btn btn-sm btn-danger text-uppercase fw-bold px-2" data-bs-toggle="modal" data-bs-target="#boostProfile" data-bs-whatever="@mdo"><i class="bi bi-rocket-takeoff me-2"></i> Booster l'entreprise</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
       </div>
     </section>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script> 
+    
+    var currentPage = 1;
+    var allDataLoaded = false;
+
+    $(window).scroll(function() {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !allDataLoaded) {
+            loadMoreJobs();
+        }
+    });
+
+    function loadMoreJobs() {
+        currentPage++;
+        var url = `{{ path('api_candidate_secteurs') }}?page=${currentPage}`;
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(html) {
+                if (html.trim() === "") {
+                    allDataLoaded = true;
+                } else {
+                    $('#candidates-container').append(html);
+                }
+            }
+        });
+    }
+    </script>
 {% endblock %}
