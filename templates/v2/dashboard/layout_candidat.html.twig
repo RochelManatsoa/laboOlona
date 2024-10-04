@@ -13,11 +13,13 @@
             <i class="bi bi-search me-2"></i></span> Trouver une mission
           </a>
         </li>
+        {% if app.user.candidateProfile is defined and app.user.candidateProfile.prestations|length > 0 %}
         <li class="nav-item">
           <a href="{{ path('app_v2_prestation')}}" class="nav-link {{ current_route == 'app_v2_candidate_prestation' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-person-workspace me-2"></i></span> Mes prestations
           </a>
         </li>
+        {% endif %}
         <li class="nav-item">
           <a href="{{ path('app_v2_candidate_application')}}" class="nav-link {{ current_route == 'app_v2_candidate_application' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-card-checklist me-2"></i></span> Mes candidatures
@@ -42,6 +44,11 @@
           <a href="{{ path('app_v2_dashboard_notification')}}" class="nav-link {{ current_route == 'app_v2_dashboard_notification' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-bell me-2"></i></i></span> Mes notifications
             {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_user_order')}}" class="nav-link {{ current_route == 'app_v2_user_order' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-bookmark-star me-2"></i></span> Mes commandes
           </a>
         </li>
         <li class="nav-item">

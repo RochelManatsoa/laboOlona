@@ -123,10 +123,10 @@
             {% for field, fragments in item.highlight %}
                 {% if not displayed %}
                     {% if fragments|length > 1 %}
-                        {{ fragments[1]|raw }} {# Affiche le deuxième fragment s’il existe #}
+                        {{ fragments[1]|stripDivP|raw }} 
                         {% set displayed = true %}
                     {% elseif fragments|length > 0 %}
-                        {{ fragments[0]|raw }} {# Affiche le premier fragment s’il n’existe qu’un seul #}
+                        {{ fragments[0]|stripDivP|raw }} 
                         {% set displayed = true %}
                     {% endif %}
                 {% endif %}

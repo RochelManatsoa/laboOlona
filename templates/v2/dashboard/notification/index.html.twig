@@ -101,12 +101,10 @@
 					</div>
 				</div>
 			{% else %}
-				<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
-					<span class="">
-						<img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
-					</span>
-					Vous n'avez aucune notification pour l'instant.
-				</h3>
+				<div class="text-center col-lg-6 col-sm-12 mx-auto">
+					<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+    				<p class="text-center">Vous n'avez pas encore de notification.</p>
+				</div>
 			{% endif %}
 		</div>
 	</section>
