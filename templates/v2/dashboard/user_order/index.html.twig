@@ -34,20 +34,28 @@
 				<i class="bi bi-bookmark-star text-warning me-2"></i>
 				Mes commandes
 			</h2>
-
-			<div class="table-responsive">
+			<p class="text-center mb-4">Retrouvez ici tous les détails de vos commandes passées sur Olona-Talents.com.</p>
+			
+			{% if orders|length > 0 %}
+			<div class="table-responsive mt-4">
 				<table class="{{ tableClass }}">
 					<thead>
 						<tr>
 							<td scope="col" class="fw-bolder">{{ knp_pagination_sortable(orders, 'Produit', 'p.name') }}</td>
+							<td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Montant', 'o.totalAmount') }}</td>
 							<td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Paiement', 'type.name') }}</td>
 							<td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Date', 'o.createdAt') }}</td>
-							<td scope="col-2" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Statut', 'o.status') }}</td>
+							<td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Statut', 'o.status') }}</td>
 							<td scope="col-1" class="text-center"></td>
 						</tr>
 					</thead>
 					<tbody>
 						{% for item in orders %}
+							{% if item.paymentMethod.slug == 'paypal' %}
+								{% set amount = item.totalAmount ~ ' ' ~ item.currency.symbole %} 
+							{% else %}
+								{% set amount = item.package.price ~ ' Ar' %}
+							{% endif %}
 							<tr id="row_prestation_recruiter_{{item.id}}">
 								<td class="">
 									{{ item.package.name }}
@@ -56,6 +64,9 @@
 									    {{ item.orderNumber }}
                                     </span>
 								</td>
+								<td class="col-1 small text-center">
+                                    {{ amount }}
+								</td>
 								<td class="col-1 text-center">
                                     <img src="{{ asset('/images/' ~ item.paymentMethod.slug ~ '.png') }}" class="img-fluid border" alt="{{ item.paymentMethod.name }}">
 								</td>
@@ -63,7 +74,7 @@
 									{{ item.createdAt|date('d/m/Y') }}<br>
 									{{ item.createdAt|date('à h:i') }}
 								</td>
-								<td class="col-2 text-center">
+								<td class="col-1 text-center">
                                     {{ statusOrder(item)|raw }}
                                 </td>
 								<td class="col-1 text-center">
@@ -79,6 +90,12 @@
 					{{ knp_pagination_render(orders, 'parts/_pagination.html.twig') }}
 				</div>
 			</div>
+			{% else %}
+				<div class="text-center col-lg-6 col-sm-12 mx-auto">
+					<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+    				<p class="text-center">Vous n'avez pas encore effectué de commande.</p>
+				</div>
+			{% endif %}
 		</div>
 	</section>
 {% endblock %}

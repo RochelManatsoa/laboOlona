@@ -34,6 +34,7 @@ class OlonaTalentsExtension extends AbstractExtension
             new TwigFilter('reffererStatusLabel', [$this, 'reffererStatusLabel']),
             new TwigFilter('countryName', [$this, 'countryName']),
             new TwigFilter('displayAge', [$this, 'displayAge']),
+            new TwigFilter('stripDivP', [$this, 'stripDivP'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -142,6 +143,12 @@ class OlonaTalentsExtension extends AbstractExtension
         }
 
         return false;
+    }
+
+    public function stripDivP(string $content): string
+    {
+        // Enlever les balises <div> et <p>
+        return preg_replace('#<(div|p)[^>]*>(.*?)</\1>|<div[^>]*>|</div>|<p[^>]*>|</p>#si', '$2', $content);
     }
 
 }

@@ -87,12 +87,10 @@
 					</div>
 				</div>
 			{% else %}
-				<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
-					<span class="">
-						<img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
-					</span>
-					1ère chose à faire
-				</h3>
+				<div class="text-center col-lg-6 col-sm-12 mx-auto">
+					<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+    				<p class="text-center">Vous n'avez pas encore d'annonce'.</p>
+				</div>
 
 				<p class="text-center">
 					<a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">

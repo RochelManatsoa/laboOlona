@@ -9,10 +9,21 @@
             <div class="col d-flex flex-column justify-content-center">
                 <h1 class="text-center display-4">Réinitialiser mot de passe</h1>
 
+                <p class="text-center my-4">Entrez votre nouveau mot de passe ci-dessous. Assurez-vous qu'il est sécurisé et unique pour ce site.</p>
                 {{ form_start(resetForm, {'attr': {'class': 'col-md-6 mx-auto'}}) }}
-                    {{ form_row(resetForm.plainPassword) }}
-                    <button class="btn btn-primary">Réinitialiser le mot de passe</button>
+                    <div class="form-floating mb-3">
+                        {{ form_widget(resetForm.plainPassword.first) }}
+                        {{ form_label(resetForm.plainPassword.first) }}
+                        <div class="small fw-lighter mb-2">Votre mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial.</div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        {{ form_widget(resetForm.plainPassword.second) }}
+                        {{ form_label(resetForm.plainPassword.second) }}
+                        <div class="small fw-lighter mb-2">Réentrez votre mot de passe pour confirmer.</div>
+                    </div>
+                    <button class="btn btn-primary px-5 btn-lg text-uppercase fw-bold my-4">Réinitialiser le mot de passe</button>
                 {{ form_end(resetForm) }}
+                <p class="text-center mt-3">Si vous avez des questions ou besoin d'aide, n'hésitez pas à contacter notre support technique.</p>
             </div>
         </div>
     </div>

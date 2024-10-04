@@ -34,8 +34,10 @@ class ChangePasswordFormType extends AbstractType
                         ]),
                     ],
                     'label' => 'Nouveau mot de passe',
+                    'attr' =>['placeholder' => 'Nouveau mot de passe'],
                 ],
                 'second_options' => [
+                    'attr' =>['placeholder' => 'Nouveau mot de passe'],
                     'label' => 'Répétez le mot de passe',
                 ],
                 'invalid_message' => 'Les champs du mot de passe doivent correspondre.',

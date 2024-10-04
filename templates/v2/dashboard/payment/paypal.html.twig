@@ -36,7 +36,7 @@
 			{% if payment %}
 			<div class="container">
 				<div class="row justify-content-center">
-					<div class="col-md-8">
+					<div class="col-md-10">
 						<!-- Message d'erreur principal -->
 						<div class="alert mt-5" role="alert">
 							<h4 class="alert-heading">Paiement réussi</h4>
@@ -66,8 +66,8 @@
 
 						<!-- Boutons d'action -->
 						<div class="d-flex justify-content-center">
-							<a href="{{ path('app_v2_user_order')}}" class="btn btn-primary me-2 px-5">Mes commandes</a>
-							<a href="{{ path('app_v2_user_order_show', {'orderNumber': order.orderNumber})}}" class="btn btn-secondary px-5">Détails de la commande</a>
+							<a href="{{ path('app_v2_user_order')}}" class="btn btn-primary me-2 px-4">Mes commandes</a>
+							<a href="{{ path('app_v2_user_order_show', {'orderNumber': order.orderNumber})}}" class="btn btn-secondary px-4">Détails de la commande</a>
 						</div>
 					</div>
 				</div>
@@ -75,7 +75,7 @@
 			{% else %}
 			<div class="container">
 				<div class="row justify-content-center">
-					<div class="col-md-8">
+					<div class="col-md-10">
 						<!-- Message d'erreur principal -->
 						<div class="alert mt-5" role="alert">
 							<h4 class="alert-heading">Échec du paiement</h4>
@@ -105,8 +105,8 @@
 
 						<!-- Boutons d'action -->
 						<div class="d-flex justify-content-center">
-							<a href="{{ path('app_v2_credit_view', {'slug': order.package.slug}) }}" class="btn btn-primary me-2 px-5">Réessayer le paiement</a>
-							<a href="{{ path('app_v2_contact') }}" class="btn btn-secondary px-5">Contacter le support</a>
+							<a href="{{ path('app_v2_credit_view', {'slug': order.package.slug}) }}" class="btn btn-primary me-2 px-4">Réessayer le paiement</a>
+							<a href="{{ path('app_v2_contact') }}" class="btn btn-secondary px-4">Contacter le support</a>
 						</div>
 					</div>
 				</div>
