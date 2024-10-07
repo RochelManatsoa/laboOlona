@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Prestation\TypePrestation;
+use App\Entity\Vues\PrestationVues;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Candidate\Competences;
@@ -172,9 +173,13 @@ class Prestation
     #[ORM\ManyToOne(inversedBy: 'prestation')]
     private ?TypePrestation $typePrestation = null;
 
+    #[ORM\OneToMany(mappedBy: 'prestation', targetEntity: PrestationVues::class)]
+    private Collection $prestationVues;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
+        $this->prestationVues = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -649,6 +654,36 @@ class Prestation
     public function setTypePrestation(?TypePrestation $typePrestation): static
     {
         $this->typePrestation = $typePrestation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PrestationVues>
+     */
+    public function getPrestationVues(): Collection
+    {
+        return $this->prestationVues;
+    }
+
+    public function addPrestationVue(PrestationVues $prestationVue): static
+    {
+        if (!$this->prestationVues->contains($prestationVue)) {
+            $this->prestationVues->add($prestationVue);
+            $prestationVue->setPrestation($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrestationVue(PrestationVues $prestationVue): static
+    {
+        if ($this->prestationVues->removeElement($prestationVue)) {
+            // set the owning side to null (unless already changed)
+            if ($prestationVue->getPrestation() === $this) {
+                $prestationVue->setPrestation(null);
+            }
+        }
 
         return $this;
     }

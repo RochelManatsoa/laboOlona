@@ -303,7 +303,9 @@
 								<span class="fs-6 fw-bold lh-base">Secteur(s) d'activité</span><br>
 								<div class="row mb-4">
 									<div class="col">
-										{{ candidat.titre }}
+									{% for secteur in candidat.secteurs %}
+										<span class="badge bg-primary">{{ secteur.nom }}</span>
+									{% endfor %}
 									</div>
 								</div>
 

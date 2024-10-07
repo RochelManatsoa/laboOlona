@@ -27,175 +27,144 @@
 {% block body %}
 	<section class="">
 		<div class="shadow p-2 p-sm-4">
-			<div class="col-12 col-sm-8 mx-auto p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-person-workspace text-warning me-2"></i>
+				Modification de votre prestation
+			</h2>
+			<p class="text-center">
+				Bienvenue sur la page de modification de prestation. Ici, vous pouvez ajuster les détails de votre service pour mieux répondre aux attentes de vos clients et améliorer la visibilité de votre offre. Veuillez noter que toute modification apportée sera soumise à une validation par notre équipe de modération afin de garantir la conformité avec nos standards de qualité et d'exactitude. Assurez-vous de remplir tous les champs avec des informations précises et détaillées. Après soumission, le processus de validation peut prendre jusqu'à 48 heures. Merci de votre collaboration pour maintenir l'excellence de notre plateforme.
+			</p>
+			<div class="col-12 col-sm-10 mx-auto p-2 p-sm-4">
                 <turbo-frame id="prestation_{{ prestation.id}}">
 					{{ form_start(form, { 
 						'action' : path('app_v2_edit_prestation', { prestation : prestation.id }), 
 						'attr': {'id': 'createPrestation'}
 						})
 					}}
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_titre_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.titre) }}
-							{{ form_label(form.titre) }}
-						</div>
+						{{ form_row(form.titre) }}
 					</div>
 				</div>
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_secteurs_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.secteurs) }}
-							{{ form_label(form.secteurs) }}
-							{{ form_errors(form.secteurs) }}
-						</div>	
+						{{ form_row(form.secteurs) }}
 					</div>	
 				</div>
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_description_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.description) }}
-							{{ form_label(form.description) }}
-							{{ form_errors(form.description) }}
-						</div>	
+						{{ form_row(form.description) }}
 					</div>	
 				</div>
 				<div id="prestation_tarifPrestation_row" class="">
-					<div class="input-group mb-3">
-						<div class="form-floating">
-							{{ form_widget(form.tarifPrestation.typeTarif) }}
-							<label for="">Type</label>
+
+					<div class="row">
+						<div class="col-4">
+							<div class="mb-3">
+								<label class="fw-bold small" for="prestation_tarifPrestation_typeTarif">Tarif</label>
+								{{ form_widget(form.tarifPrestation.typeTarif)}}
+							</div>
 						</div>
-						<div class="form-floating">
-							{{ form_widget(form.tarifPrestation.montant) }}
-							<label for="">Montant</label>
+						<div class="col-4">
+							<div class="mb-3">
+								<label class="fw-bold small" for="prestation_tarifPrestation_montant">Montant</label>
+								{{ form_widget(form.tarifPrestation.montant)}}
+							</div>
 						</div>
-						<div class="form-floating">
-							{{ form_widget(form.tarifPrestation.currency) }}
-							<label for="">Devise</label>
+						<div class="col-4">
+							<div class="mb-3">
+								<label class="fw-bold small" for="prestation_tarifPrestation_currency">Devise</label>
+								{{ form_widget(form.tarifPrestation.currency)}}
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_modalitesPrestation_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.modalitesPrestation) }}
-							{{ form_label(form.modalitesPrestation) }}
-						</div>
+						{{ form_row(form.modalitesPrestation) }}
 					</div>
 				</div>
 				<div class="row">
 					<div class="col">
 						<div class="mb-3">
-							<label class="fw-bold small" for="prestation_disponibilites">Disponibilité</label>
 							<div class="disponibilite-form">
 						
 								<div class="radio-options">
-									{{ form_widget(form.availability.nom) }}
+									{{ form_row(form.availability.nom) }}
 								</div>
 							
 								<div class="date-picker-container mt-2">
-									{{ form_widget(form.availability.dateFin) }}
+									{{ form_row(form.availability.dateFin) }}
 								</div>
 					
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_typePrestation_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.typePrestation) }}
-							{{ form_label(form.typePrestation) }}
-						</div>
+						{{ form_row(form.typePrestation) }}
 					</div>
 				</div>
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_competences_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.competences) }}
-							{{ form_label(form.competences) }}
-						</div>
+						{{ form_row(form.competences) }}
 					</div>
 				</div>
-				<div class="row">
-					<div class="col">
-						<div class="mb-3">
-							<label class="fw-bold small" for="prestation_medias">Médias</label>
-                    		<div class="profile-img" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/prestations/' ~ form.vars.data.fileName) : asset('images/prestation.jpg') }}');background-size: cover;background-position: center;width: 150px;height: 150px;" alt="Avatar"></div>
-							{{ form_widget(form.file)}}
-							{{ form_errors(form.file)}}
+				<div class="row my-4 text-center">
+					<div class="col mx-auto">
+						<label class="fw-bold fs-6 form-label" for="prestation_file">Ajouter votre logo ici</label>
+						<div class="rounded-circle profile-img bg-image-candidat-account mx-auto" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/prestations/' ~ form.vars.data.fileName) : asset('images/prestation.jpg') }}');cursor:pointer;" alt="Avatar">
+							<div class="overlay-text">Changer le logo</div>
 						</div>
+						{{ form_widget(form.file) }}
+						{{ form_help(form.file) }}
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-6">
-						<div class="row mb-3">
+						<div class="row">
 							<div id="prestation_contactEmail_row" class="">
-								<div class="form-floating">
-									{{ form_widget(form.contactEmail) }}
-									{{ form_label(form.contactEmail) }}
-								</div>
+								{{ form_row(form.contactEmail) }}
 							</div>
 						</div>
 					</div>
 					<div class="col-6">
-						<div class="row mb-3">
+						<div class="row">
 							<div id="prestation_contactTelephone_row" class="">
-								<div class="form-floating">
-									{{ form_widget(form.contactTelephone) }}
-									{{ form_label(form.contactTelephone) }}
-								</div>
+								{{ form_row(form.contactTelephone) }}
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_motsCles_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.motsCles) }}
-							{{ form_label(form.motsCles) }}
-						</div>
+						{{ form_row(form.motsCles) }}
 					</div>
 				</div>
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_conditionsParticulieres_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.conditionsParticulieres) }}
-							{{ form_label(form.conditionsParticulieres) }}
-						</div>
+						{{ form_row(form.conditionsParticulieres) }}
 					</div>
 				</div>
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_portfolioLinks_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.portfolioLinks) }}
-							{{ form_label(form.portfolioLinks) }}
-						</div>
+						{{ form_row(form.portfolioLinks) }}
 					</div>
 				</div>
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_preferencesCommunication_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.preferencesCommunication) }}
-							{{ form_label(form.preferencesCommunication) }}
-						</div>
+						{{ form_row(form.preferencesCommunication) }}
 					</div>
 				</div>
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_engagementQualite_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.engagementQualite) }}
-							{{ form_label(form.engagementQualite) }}
-						</div>
+						{{ form_row(form.engagementQualite) }}
 					</div>
 				</div>
-				<div class="row mb-3">
+				<div class="row">
 					<div id="prestation_contactReseauxSociaux_row" class="">
-						<div class="form-floating">
-							{{ form_widget(form.contactReseauxSociaux) }}
-							{{ form_label(form.contactReseauxSociaux) }}
-						</div>
+						{{ form_row(form.contactReseauxSociaux) }}
 					</div>
 				</div>
 

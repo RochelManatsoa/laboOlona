@@ -22,16 +22,33 @@ class EditEntrepriseType extends AbstractType
         $builder
             ->add('devise', EntityType::class, [
                 'class' => Devise::class,
-                'label' => 'Séléctionner votre devise'
+                'label' => 'Séléctionner votre devise',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Choisissez la devise que vous utilisez pour les transactions.',
             ])
             ->add('nom', TextType::class, [
-                'label' => 'Raison sociale'
+                'label' => 'Raison sociale (*)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Indiquez la raison sociale complète de votre entreprise.',
             ])
             ->add('taille', ChoiceType::class, [
                 'choices' => EntrepriseProfile::CHOICE_SIZE,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Sélectionnez la taille approximative de votre entreprise.',
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
+                'label' => 'Description (*)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Décrivez brièvement votre entreprise et ses activités.',
                 'attr' => [
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'
@@ -40,18 +57,30 @@ class EditEntrepriseType extends AbstractType
             ->add('secteurs', EntityType::class, [
                     'class' => Secteur::class,
                     'choice_label' => 'nom',
-                    'label' => 'app_identity_company.sector_multiple',
+                    'label_attr' => [
+                        'class' => 'fw-bold fs-5' 
+                    ],
+                    'label' => 'Secteur(s) d\'expertise (*)',
                     'autocomplete' => true,
                     'multiple' => true,
+                    'help' => 'Sélectionnez un ou plusieurs secteurs dans lesquels votre entreprise est active.',
             ])
             ->add('siteWeb', TextType::class, [
-                'label' => 'Site Internet'
+                'label' => 'Site Internet (facultatif)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Entrez l\'URL complète de votre site web (ex: https://www.monsite.com).',
             ])
             ->add('entreprise', ContactType::class, [
-                'label' => false
+                'label' => false,
             ])
             ->add('localisation', CountryType::class, [
-                'label' => 'Pays'
+                'label' => 'Pays (*)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Sélectionnez le pays où est située votre entreprise.',
             ])
         ;
     }

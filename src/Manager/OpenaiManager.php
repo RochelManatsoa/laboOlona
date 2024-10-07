@@ -88,12 +88,12 @@ class OpenaiManager
         $delimiter = "####";
         $parts = explode($delimiter, $text);
         
-        $cleanDescription = trim($parts[1]);
-        $shortDescription = trim($parts[2]);
+        $cleanDescription = str_replace("cleanDescription", "", trim($parts[2]));
+        $shortDescription = str_replace("shortDescription", "", trim($parts[1]));
         
         return [
-            $shortDescription,
             $cleanDescription,
+            $shortDescription,
         ];
     }
 }
