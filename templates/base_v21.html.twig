@@ -168,6 +168,24 @@
 				</div>
 			</div>
 		</div>
+		<!-- Modal crédits insufisant -->
+		<div class="modal fade" id="lowCreditModal" tabindex="-1" aria-labelledby="lowCreditModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header bg-danger">
+						<h1 class="modal-title fs-5" id="lowCreditModalLabel">Crédits Insuffisants</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						Il semble que vous n'ayez pas assez de crédits pour réaliser cette action. Pour continuer à utiliser nos services sans interruption, veuillez recharger votre compte.
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<a href="{{ path('app_v2_credit')}}" class="btn btn-primary" id="confirmButton">Recharger Maintenant</a>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!-- Modal porte d'entrée -->
 		<div class="modal fade" id="connectingModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered modal-lg">

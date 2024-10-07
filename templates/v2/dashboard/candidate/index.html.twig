@@ -64,7 +64,11 @@
 				<i class="bi bi-download"></i>
 				Mettre en ligne un cv {% if candidat.isGeneretated %}( 15 Crédits){% endif %}
 			</button>
-			<button id="submit-button" type="button" data-bs-toggle="modal" data-bs-type="upload-cv" data-bs-target="#confirmationModal" data-bs-price="15 crédits" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase" style="display:none;">
+				{% set modalId = 'confirmationModal' %}
+				{% if app.user.credit.total < 50 %}
+				{% set modalId = 'lowCreditModal' %}
+				{% endif %}
+			<button id="submit-button" type="button" data-bs-toggle="modal" data-bs-type="upload-cv" data-bs-target="#{{ modalId }}" data-bs-price="15 crédits" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase" style="display:none;">
 				<i class="bi bi-save"></i>
 				Soumettre {% if candidat.isGeneretated %}( 15 Crédits){% endif %}
 			</button>
