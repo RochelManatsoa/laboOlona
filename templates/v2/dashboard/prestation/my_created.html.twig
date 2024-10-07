@@ -30,46 +30,7 @@
 		{% set tableClass = tableClass ~ ' table-dark' %}
 	{% endif %}
 	<section class="">
-
 		<div class="shadow p-2 p-sm-4">
-			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
-				<i class="bi bi-journals text-warning me-2"></i>
-				Annuaire de services
-			</h2>
-				<p class="text-center"> 
-				Bienvenue dans notre Annuaire de services, où entreprises et candidats peuvent découvrir et créer une vaste gamme de solutions professionnelles adaptées à chaque besoin. Explorez nos prestations pour booster votre entreprise ou avancer dans votre carrière, et n’hésitez pas à ajouter votre propre offre pour mettre en valeur vos compétences et services. Trouvez ou proposez le partenaire ou l'outil idéal pour accompagner votre croissance et réussite professionnelle.
-				</p>
-			<div class="row">
-				<div class="col-12 col-sm-8" id="prestations-container">
-				{% include "v2/dashboard/prestation/_prestations_list.html.twig" %}
-				</div>
-				<div class="col-12 col-sm-4">
-					<div class="d-flex flex-column flex-shrink-0 py-3 text-white position-sticky top-0">
-						<div class="card mb-3">
-						<div class="card-body small">
-
-							<h3 class="card-title h5 mb-3">Mes prestations</h3>
-							<a href="{{ path('app_v2_prestation_my_created')}}" class="my-3 text-center">
-								<span class="fw-bolder me-2">{{ getTotalCount(app.user)}}</span> <span class="fw-light">prestations</span><br>
-							</a>
-							<a href="{{ path('app_v2_create_prestation')}}" class="btn btn-info btn-sm my-2 px-3">Créer une prestation</a><br>
-						</div>
-						</div>
-						<div class="card mb-3" id="candidate-card-container">
-							<img src="{{ asset('images/mailing/thumbnail.png')}}" class="" alt="Premium Olona Talents">
-							<div class="card-body small">
-								<h3 class="card-title h5">Passez à la Version Premium!</h3>
-								<p class="card-text">Profitez d'un accès illimité aux contacts candidats, de la mise en avant de vos annonces et bien plus encore.</p>
-								<div id="checkBoost">
-								<button class="btn btn-sm btn-danger text-uppercase fw-bold px-2" data-bs-toggle="modal" data-bs-target="#boostProfile" data-bs-whatever="@mdo"><i class="bi bi-rocket-takeoff me-2"></i> Booster l'entreprise</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		{# <div class="shadow p-2 p-sm-4">
 			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
 				<i class="bi bi-person-workspace text-warning me-2"></i>
 				Mes Prestations 
@@ -149,6 +110,5 @@
 					</a>
 				</p>
 			{% endif %}
-		</div> #}
-	</section>
+		</section>
 	{% endblock %}

@@ -20,6 +20,11 @@
 {% block body %}
 	<section class="">
 		<div class="shadow p-2 p-sm-4">
+			<div class="">
+				<span class="position-absolute top-0 start-25 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
+					<i class="bi bi-person-workspace me-2"></i> Prestation
+				</span>
+			</div>
 			<h2 class="fs-4 fw-bolder my-2 my-sm-3">
 				<i class="bi bi-megaphone text-warning me-2"></i>
 				{{ annonce.titre }} Réf:{{ generateJobReference(annonce.id) }}

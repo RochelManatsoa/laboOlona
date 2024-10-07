@@ -7,6 +7,7 @@ use App\Entity\Finance\Devise;
 use App\Entity\BusinessModel\Order;
 use Symfony\Component\Form\AbstractType;
 use App\Entity\BusinessModel\TypeTransaction;
+use App\Repository\BusinessModel\TypeTransactionRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,7 +23,13 @@ class OrderType extends AbstractType
                 'choice_label' => 'name',
                 'expanded' => true,  
                 'required' => true, 
-                'label' => false
+                'label' => false,
+                'query_builder' => function (TypeTransactionRepository $er) {
+                    return $er->createQueryBuilder('t')
+                        ->where('t.isValid = :isValid')
+                        ->setParameter('isValid', true)
+                        ->orderBy('t.id', 'ASC');
+                },
             ])
         ;
     }

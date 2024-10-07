@@ -21,6 +21,10 @@ class AvailabilityType extends AbstractType
                 'label_attr' => [ 'class' => 'd-flex align-items-center'],
                 'multiple' => false,
                 'label' => 'Disponibilité',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Choisissez les jours et heures où vous êtes disponible pour cette prestation.',
             ])
             ->add('dateFin', DateType::class, [
                 'placeholder' => [
@@ -30,6 +34,9 @@ class AvailabilityType extends AbstractType
                 'attr' => ['class' => 'date-picker'],
                 'label' => false,
                 'years' => range($yearNow, $yearEnd),
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
             ])
         ;
     }

@@ -15,13 +15,25 @@ class ContactType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'Adresse éléctronique',
+                'label' => 'Adresse éléctronique (*)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Veuillez entrer une adresse e-mail valide. Exemple : contact@exemple.com.',
             ])
             ->add('telephone', TextType::class, [
-                'label' => 'Téléphone'
+                'label' => 'Téléphone (*)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Entrez un numéro de téléphone valide avec l\'indicatif international si nécessaire.',
             ])
             ->add('adress', TextType::class, [
-                'label' => 'Adresse'
+                'label' => 'Adresse (*)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Indiquez l’adresse postale complète de votre entreprise.',
             ])
         ;
     }

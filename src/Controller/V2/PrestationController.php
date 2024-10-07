@@ -15,6 +15,7 @@ use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\Credit;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Vues\PrestationVues;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +48,70 @@ class PrestationController extends AbstractController
             $data->entreprise = $profile;
         }
 
+        $secteurs = $profile->getSecteurs();
+        $page = $request->query->get('page', 1);
+        $limit = 10;
+        $qb = $this->em->getRepository(Prestation::class)->createQueryBuilder('p');
+
+        $qb->join('p.secteurs', 's') 
+        ->where('p.status = :status')
+        ->setParameter('status', Prestation::STATUS_VALID)
+        ->andWhere('s IN (:secteurs)') 
+        ->setParameter('secteurs', $secteurs)
+        ->orderBy('p.id', 'DESC')
+        ->setMaxResults($limit)
+        ->setFirstResult(($page - 1) * $limit);
+
+        $prestations = $qb->getQuery()->getResult();
+
         return $this->render('v2/dashboard/prestation/index.html.twig', [
+            'prestations' => $prestations,
+            'profile' => $profile
+        ]);
+    }
+    
+    #[Route('/api/prestations', name: 'app_v2_prestation_scroll')]
+    public function scroll(Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $profile = $this->userService->checkProfile(); 
+        $secteurs = $profile->getSecteurs();
+        $page = $request->query->getInt('page', 1);
+        $limit = 10;
+        $qb = $this->em->getRepository(Prestation::class)->createQueryBuilder('p');
+
+        $qb->join('p.secteurs', 's') 
+        ->where('p.status = :status')
+        ->setParameter('status', Prestation::STATUS_VALID)
+        ->andWhere('s IN (:secteurs)') 
+        ->setParameter('secteurs', $secteurs)
+        ->orderBy('p.id', 'DESC')
+        ->setMaxResults($limit)
+        ->setFirstResult(($page - 1) * $limit);
+
+        $prestations = $qb->getQuery()->getResult();
+
+        return $this->render('v2/dashboard/prestation/_prestations_list.html.twig', [
+            'prestations' => $prestations,
+            'profile' => $profile,
+        ]);
+    }
+    
+    #[Route('/my-created', name: 'app_v2_prestation_my_created')]
+    public function myCreated(Request $request): Response
+    {
+        $data = new PrestationData();
+        $data->page = $request->get('page', 1);
+        $profile = $this->userService->checkProfile();
+        if($profile instanceof CandidateProfile){
+            $data->candidat = $profile;
+        }
+        if($profile instanceof EntrepriseProfile){
+            $data->entreprise = $profile;
+        }
+
+        return $this->render('v2/dashboard/prestation/my_created.html.twig', [
             'prestations' => $this->em->getRepository(Prestation::class)->findSearch($data)
         ]);
     }
@@ -175,6 +239,24 @@ class PrestationController extends AbstractController
     #[Route('/view/{prestation}', name: 'app_v2_view_prestation')]
     public function viewPrestation(Request $request, Prestation $prestation): Response
     {
+        $ipAddress = $request->getClientIp();
+        $viewRepository = $this->em->getRepository(PrestationVues::class);
+        $existingView = $viewRepository->findOneBy([
+            'prestation' => $prestation,
+            'ipAddress' => $ipAddress,
+        ]);
+
+        if (!$existingView) {
+            $view = new PrestationVues();
+            $view->setPrestation($prestation);
+            $view->setIpAddress($ipAddress);
+            $view->setCreatedAt(new \DateTime());
+
+            $this->em->persist($view);
+            $prestation->addPrestationVue($view);
+            $this->em->flush();
+        }
+
         return $this->render('v2/dashboard/prestation/view.html.twig', [
             'prestation' => $prestation,
         ]);
