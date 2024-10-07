@@ -23,7 +23,7 @@
 
 {% block body %}
 <section class="">
-  <div class="shadow p-2 p-sm-4">
+  <div class="shadow p-2 p-sm-5">
     <h1 class="fs-4 fw-bolder text-center mt-3 mt-sm-5">
       </span> Candidat {{ generatePseudo(candidat)}}
     </h1>
@@ -36,7 +36,7 @@
       </div>
     <div class="row mt-4">
 
-      <div class="col-12 col-sm-4">
+      <div class="col-12 col-sm-6">
         <h4 class="fs-5 text-uppercase">Informations générales</h4>
           <p>
           <strong>Date d'inscription :</strong> <span class="">{{ candidat.createdAt|date('d/m/Y') }}</span><br>
@@ -45,7 +45,7 @@
           <strong>Âge :</strong> <span class="">{{ candidat|displayAge }}</span><br>
           <strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-dark' : 'bg-danger' }}">{{ candidat.isValid ? 'Non' : 'Oui' }}</span><br>
           <strong>Diponibilité :</strong> 
-              <span class="text-dark">
+              <span class="">
                   {% if candidat.availability is not null %}
                       {{ checkAvailability(candidat.candidat)|raw}}
                   {% else %}
@@ -67,7 +67,7 @@
 
       </div>
 
-      <div class="col-12 col-sm-4 text-center">
+      <div class="col-12 col-sm-6 text-center">
         <h4 class="fs-5 text-uppercase">Contact</h4>
         {% if purchasedContact is defined and purchasedContact is not null %}
             <div class="experience-form">
@@ -89,19 +89,18 @@
             <button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-price="50 crédits" data-bs-type="show-candidate-contact" class="align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact (50 crédits)</button>
           </form>
         </div>
-        {% endif %}       
-
-      </div>
-
-      <div class="col-12 col-sm-4 text-center">
-        {% if recruiter is defined and recruiter is not null %}
-          {% if candidat.editedCvs|length > 0 and (recruiter.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_VALID')) or recruiter.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_PREMIUM') )) %}
-            <h4 class="fs-5 text-uppercase">CV</h4>
-            <button type="button" class="btn btn-outline-primary text-upercase fw-semibold" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
-            </button>
+        {% endif %}    
+        <div class="text-center my-3">
+          {% if recruiter is defined and recruiter is not null %}
+            {% if candidat.editedCvs|length > 0 and (recruiter.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_VALID')) or recruiter.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_PREMIUM') )) %}
+              <h4 class="fs-5 text-uppercase">CV</h4>
+              <button type="button" class="btn btn-outline-primary text-upercase fw-semibold" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+              </button>
+            {% endif %}
           {% endif %}
-        {% endif %}
+        </div>   
+
       </div>
 
     </div>
@@ -145,10 +144,10 @@
       </ul>
     {% endif %}
 
-    <h2 class="fs-5 text-uppercase">Résumé</h2>
-    <p class=""> 
+    <div class="p-5 border rounded"> 
+    <h2 class="fs-5 text-uppercase">Résumé Olona Talents</h2>
     {{ candidat.resultFree|raw}}
-    </p>
+    </div>
 
   </div>
 </section>
