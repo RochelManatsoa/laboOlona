@@ -79,7 +79,6 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getAge', [$this, 'getAge']),
             new TwigFunction('getPseudo', [$this, 'getPseudo']),
             new TwigFunction('invitation', [$this, 'invitation']),
-            new TwigFunction('ownerPrestation', [$this, 'ownerPrestation']),
             new TwigFunction('getTarifForfait', [$this, 'getTarifForfait']),
             new TwigFunction('getTarifCandidat', [$this, 'getTarifCandidat']),
             new TwigFunction('generateReference', [$this, 'generateReference']),
@@ -94,19 +93,17 @@ class AppExtension extends AbstractExtension
             new TwigFunction('findPendingJobListing', [$this, 'findPendingJobListing']),
             new TwigFunction('countUnReadNotification', [$this, 'countUnReadNotification']),
             new TwigFunction('tailleEntreprise', [$this, 'tailleEntreprise']),
+            new TwigFunction('getSearchQuery', [$this, 'getSearchQuery']),
         ];
     }
 
-
-    public function ownerPrestation(Prestation $prestation): string
+    public function getSearchQuery($name)
     {
-        if ($prestation->getCandidateProfile() instanceof CandidateProfile) {
-            return $this->generatePseudo($prestation->getCandidateProfile());
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request) {
+            return $request->query->get($name);
         }
-        if ($prestation->getEntrepriseProfile() instanceof EntrepriseProfile) {
-            return $this->generateReference($prestation->getEntrepriseProfile());
-        }
-        return "";
+        return null;
     }
 
     public function getStatuses(string $status = NULL): string

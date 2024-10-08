@@ -33,6 +33,7 @@ class PrestationExtension extends AbstractExtension
     {
         return [
             new TwigFunction('getAuthor', [$this, 'getAuthor']),
+            new TwigFunction('getUserPrestation', [$this, 'getUserPrestation']),
             new TwigFunction('getTotalCount', [$this, 'getTotalCount']),
         ];
     }
@@ -49,6 +50,20 @@ class PrestationExtension extends AbstractExtension
         }
 
         return '';
+    }
+
+    public function getUserPrestation(Prestation $prestation): ?User
+    {
+        if($prestation->getCandidateProfile() instanceof CandidateProfile){
+            $profile = $prestation->getCandidateProfile();
+            return $profile->getCandidat();
+        }
+        if($prestation->getEntrepriseProfile() instanceof EntrepriseProfile){
+            $profile = $prestation->getEntrepriseProfile();
+            return $profile->getEntreprise();
+        }
+
+        return null;
     }
 
     public function getTotalCount(User $user): int

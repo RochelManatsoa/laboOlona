@@ -82,7 +82,7 @@ class ProfileController extends AbstractController
 
         $candidates = $qb->getQuery()->getResult();
 
-        return $this->render('v2/dashboard/recruiter/profile/_candidates_list.html.twig', [
+        return $this->render('v2/dashboard/result/parts/_part_candidates_list.html.twig', [
             'candidates' => $candidates,
             'recruiter' => $recruiter,
         ]);

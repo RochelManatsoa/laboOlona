@@ -62,13 +62,13 @@ class JobOfferController extends AbstractController
             ->setMaxResults($limit)
             ->setFirstResult(($page - 1) * $limit);
 
-        $jobOffers = $qb->getQuery()->getResult();
+        $joblistings = $qb->getQuery()->getResult();
         
         return $this->render('v2/dashboard/candidate/job_offer/index.html.twig', [
             'candidat' => $candidat,
-            'jobOffers' => $jobOffers,
+            'joblistings' => $joblistings,
             'nextPage' => $page + 1,
-            'hasMore' => count($jobOffers) == $limit
+            'hasMore' => count($joblistings) == $limit
         ]);
     }
 
@@ -91,10 +91,10 @@ class JobOfferController extends AbstractController
             ->setMaxResults($limit)
             ->setFirstResult(($page - 1) * $limit);
 
-        $jobOffers = $qb->getQuery()->getResult();
+        $joblistings = $qb->getQuery()->getResult();
 
-        return $this->render('v2/dashboard/candidate/job_offer/_job_offer_list.html.twig', [
-            'jobOffers' => $jobOffers,
+        return $this->render('v2/dashboard/result/parts/_part_joblistings_list.html.twig', [
+            'joblistings' => $joblistings,
         ]);
     }
 
@@ -237,7 +237,7 @@ class JobOfferController extends AbstractController
             }
         }
         
-        return $this->render('v2/dashboard/candidate/job_offer/view.html.twig', [
+        return $this->render('v2/dashboard/job_offer/view.html.twig', [
             'annonce' => $annonce,
             'candidat' => $candidat,
             'applied' => $applied,

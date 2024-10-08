@@ -8,17 +8,19 @@ use App\Form\PrestationType;
 use App\Service\FileUploader;
 use App\Data\V2\PrestationData;
 use App\Manager\ProfileManager;
+use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Manager\PrestationManager;
 use App\Entity\BusinessModel\Boost;
-use App\Entity\BusinessModel\Credit;
-use App\Entity\CandidateProfile;
-use App\Entity\EntrepriseProfile;
 use App\Entity\Vues\PrestationVues;
+use App\Entity\BusinessModel\Credit;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\BusinessModel\PurchasedContact;
+use App\Twig\PrestationExtension;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,6 +34,7 @@ class PrestationController extends AbstractController
         private FileUploader $fileUploader,
         private UserService $userService,
         private PrestationManager $prestationManager,
+        private PrestationExtension $prestationExtension,
         private CreditManager $creditManager,
     ){}
     
@@ -239,6 +242,8 @@ class PrestationController extends AbstractController
     #[Route('/view/{prestation}', name: 'app_v2_view_prestation')]
     public function viewPrestation(Request $request, Prestation $prestation): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
         $ipAddress = $request->getClientIp();
         $viewRepository = $this->em->getRepository(PrestationVues::class);
         $existingView = $viewRepository->findOneBy([
@@ -257,8 +262,22 @@ class PrestationController extends AbstractController
             $this->em->flush();
         }
 
+        $owner = false;
+        $creater = $this->prestationExtension->getUserPrestation($prestation);
+        if($creater == $currentUser){
+            $owner = true;
+        }
+        $contactRepository = $this->em->getRepository(PurchasedContact::class);
+        $purchasedContact = $contactRepository->findOneBy([
+            'buyer' => $currentUser,
+            'contact' => $creater,
+        ]);
+
         return $this->render('v2/dashboard/prestation/view.html.twig', [
             'prestation' => $prestation,
+            'purchasedContact' => $purchasedContact,
+            'creater' => $creater,
+            'owner' => $owner,
         ]);
     }
     

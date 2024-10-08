@@ -1,0 +1,35 @@
+{% for prestation in prestations %}
+	<div class="card my-3 small px-5 py-4">
+		<div class="row">
+            <div class="col-1 me-3">
+                <div class="rounded-circle" style="
+                    width: 45px;
+                    height: 45px;
+                    background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.jpg') }}');
+                    background-size: cover;
+                    background-position: center;
+                ">
+                </div>
+            </div>
+            <div class="col">
+                <span class="fs-6">
+                    <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">
+                        {{ prestation.titre }}
+                    </a>
+                </span><br>
+                <span class="small fw-lighter">{{ getAuthor(prestation)}}</span>
+            </div>
+		</div>
+		<div class="small">
+			{{ prestation.openai|raw }}
+		</div>
+		<div class="d-flex ms-auto small my-2 me-2">
+			<a class="btn btn-sm btn-primary rounded-pill px-3 me-2 mt-2" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
+		</div>
+		<div class="">
+            <span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
+                <i class="bi bi-tags"></i> {{ prestation.secteurs.nom}}
+            </span>
+		</div>
+	</div>
+{% endfor %}

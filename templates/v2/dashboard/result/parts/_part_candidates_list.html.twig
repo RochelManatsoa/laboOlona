@@ -25,17 +25,23 @@
 		</div>
         <div class="d-flex ms-auto small my-2 me-2">
 			<a class="btn btn-sm btn-primary rounded-pill px-3 me-2" href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}">Plus de details</a>
-            <div id="row_favorite_{{ candidate.id }}">
-                {% if isLikedByRecruiter(app.user.entrepriseProfile, candidate.id) %}
-                    <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':candidate.id}) }}"><i class="bi bi-star-fill me-2"></i>Favori</button>
-                {% else %}
-                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':candidate.id}) }}"><i class="bi bi-star me-2"></i>Ajouter</button>
-                {% endif %}
-            </div>
+            {% if recruiter is defined %}
+                <div id="row_favorite_{{ candidate.id }}">
+                    {% if isLikedByRecruiter(app.user.entrepriseProfile, candidate.id) %}
+                        <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':candidate.id}) }}"><i class="bi bi-star-fill me-2"></i>Favori</button>
+                    {% else %}
+                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':candidate.id}) }}"><i class="bi bi-star me-2"></i>Ajouter</button>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
 		<div class="">
             <span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
+                {% if recruiter is defined %}
                 <i class="bi bi-tags"></i> {{ candidate.secteurs|getFirstCommonSecteur(recruiter.secteurs)}}
+                {% else %}
+                <i class="bi bi-tags"></i> {{ candidate.secteurs|length}}
+                {% endif %}
             </span>
 		</div>
 	</div>

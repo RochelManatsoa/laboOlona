@@ -49,7 +49,7 @@ class OlonaTalentsManager
                             'secteur.nom', 
                             'langues.nom'
                         ],
-                        // 'fuzziness' => 'AUTO',
+                        'fuzziness' => 'AUTO',
                     ],
                 ],
                 'highlight' => [
@@ -87,7 +87,7 @@ class OlonaTalentsManager
                             'titre', 'description', 'lieu', 'shortDescription', 'typeContrat', 'budgetAnnonce', 
                             'competences.nom', 'secteur.nom', 'langues.nom'
                         ],
-                        // 'fuzziness' => 'AUTO',
+                        'fuzziness' => 'AUTO',
                     ],
                 ],
             ],
@@ -119,7 +119,7 @@ class OlonaTalentsManager
                             'secteurs.nom', 
                             'langages.nom'
                         ],
-                        // 'fuzziness' => 'AUTO',
+                        'fuzziness' => 'AUTO',
                     ],
                 ],
                 'highlight' => [
@@ -158,7 +158,7 @@ class OlonaTalentsManager
                             'titre', 'resume', 'localisation', 'technologies', 'tools', 'badKeywords', 'resultFree', 'metaDescription', 'traductionEn', 
                             'competences.nom', 'experiences.titre', 'experiences.description','secteurs.nom', 'langages.nom'
                         ],
-                        // 'fuzziness' => 'AUTO',
+                        'fuzziness' => 'AUTO',
                     ],
                 ],
             ],
@@ -187,7 +187,7 @@ class OlonaTalentsManager
                             'createdAt',
                             'openai',
                         ],
-                        // 'fuzziness' => 'AUTO',
+                        'fuzziness' => 'AUTO',
                     ],
                 ],
                 'highlight' => [
@@ -230,7 +230,7 @@ class OlonaTalentsManager
                             'createdAt',
                             'openai',
                         ],
-                        // 'fuzziness' => 'AUTO',
+                        'fuzziness' => 'AUTO',
                     ],
                 ],
                 'highlight' => [

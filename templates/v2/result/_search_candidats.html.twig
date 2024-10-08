@@ -1,171 +1,195 @@
-<div class="text-small my-4">
-    {{ totalCandidatesResults }} resultat(s)
-</div>
-{% for item in candidats %}
-    <div class="d-flex w-100 align-items-center justify-content-between">
-        <!-- Avatar container -->
-        <div class="rounded-circle" style="
-            width: 40px;
-            height: 40px;
-            background-image: url('{{ item['_source'].fileName ? asset('uploads/experts/' ~ item['_source'].fileName) : asset('uploads/experts/avatar-default.jpg') }}');
-            background-size: cover;
-            background-position: center;
-        ">
-        </div>
 
-        <!-- Text content -->
-        <div class="flex-grow-1 ms-3">
-			{% if app.user %}
-				<a href="{{ path('app_v2_recruiter_view_profile', {'id': item['_id']})}}">{{ generatePseudoById(item['_id']) }} </a>
-			{% else %}
-                <a href="#" data-id="{{ item['_id'] }}" class="candidate-link"><strong class="mb-1">{{ generatePseudoById(item['_id']) }} </strong></a>
-            {% endif %}
-            <div class="col-10 mb-1 fw-semibold">{{ item['_source'].titre|upper }}</div>
+<div class="row">
+	<div class="col-12 col-sm-8">
+        <div class="text-small my-4">
+            {{ totalCandidatesResults }} resultat(s)
         </div>
+        {% for item in candidats %}
+            <div class="d-flex w-100 align-items-center justify-content-between">
+                <!-- Avatar container -->
+                <div class="rounded-circle" style="
+                    width: 40px;
+                    height: 40px;
+                    background-image: url('{{ item['_source'].fileName ? asset('uploads/experts/' ~ item['_source'].fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+                    background-size: cover;
+                    background-position: center;
+                ">
+                </div>
 
-            {% if app.user.entrepriseProfile is defined and app.user.entrepriseProfile is not null %}
-            <div id="row_favorite_{{ item['_id'] }}">
-                {% if isLikedByRecruiter(app.user.entrepriseProfile, item['_id']) %}
-                    <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':item['_id']}) }}"><i class="bi bi-star-fill me-2"></i>Favori</button>
-                {% else %}
-                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}"><i class="bi bi-star me-2"></i>Ajouter</button>
-                {% endif %}
-            </div>
-            {% endif %}
-            
-        <!-- Date or any other information -->
-        <span data-candidate="{{ item['_id'] }}" style="display:none">
-        
-            <div class="mb-4 mb-2">
-                <div class="">
-                    <div class="card-img-top bg-image-candidat" style="background-image: url('{{ asset('uploads/experts/' ~ item['_source'].fileName)}}');">
-                        <div class="titre-overlay position-absolute w-100">
-                            <h6 class="card-title m-0 p-2">{{ generatePseudoById(item['_id']) }}</h6>
+                <!-- Text content -->
+                <div class="flex-grow-1 ms-3">
+                    {% if app.user %}
+                        <a href="{{ path('app_v2_recruiter_view_profile', {'id': item['_id']})}}">{{ generatePseudoById(item['_id']) }} </a>
+                    {% else %}
+                        <a href="#" data-id="{{ item['_id'] }}" class="candidate-link"><strong class="mb-1">{{ generatePseudoById(item['_id']) }} </strong></a>
+                    {% endif %}
+                    <div class="col-10 mb-1 fw-semibold">{{ item['_source'].titre|upper }}</div>
+                </div>
+
+                    {% if app.user.entrepriseProfile is defined and app.user.entrepriseProfile is not null %}
+                    <div id="row_favorite_{{ item['_id'] }}">
+                        {% if isLikedByRecruiter(app.user.entrepriseProfile, item['_id']) %}
+                            <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':item['_id']}) }}"><i class="bi bi-star-fill me-2"></i>Favori</button>
+                        {% else %}
+                            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}"><i class="bi bi-star me-2"></i>Ajouter</button>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                <!-- Date or any other information -->
+                <span data-candidate="{{ item['_id'] }}" style="display:none">
+                
+                    <div class="mb-4 mb-2">
+                        <div class="">
+                            <div class="card-img-top bg-image-candidat" style="background-image: url('{{ asset('uploads/experts/' ~ item['_source'].fileName)}}');">
+                                <div class="titre-overlay position-absolute w-100">
+                                    <h6 class="card-title m-0 p-2">{{ generatePseudoById(item['_id']) }}</h6>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <span class="mb-1 fs-4">{{ item['_source'].titre|upper }} </span>
+                                </p>
+                                <p class="card-text small">
+                                {{ item['_source'].metaDescription|raw}}
+                                </p>
+                                {% if item['_source'].competences|length > 0 %}
+                                <p class="card-text fw-bold small">
+                                    <span class="fs-5">Compétences</span><br>
+                                    {% set count = 0 %}
+                                    {% for skill in item['_source'].competences %}
+                                        {% if count < 3 %}
+                                            <span class="badge bg-info">{{ skill.nom }}</span>
+                                            {% set count = count + 1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if item['_source'].competences|length > 4 %}
+                                        <span class="badge bg-dark rounded-pill">+{{ item['_source'].competences|length - 3 }}</span>
+                                    {% endif %}
+                                </p>
+                                {% endif %}
+                                {% if item['_source'].experiences|length > 0 %}
+                                <p class="small">
+                                    <span class="fw-bold fs-5">Expériences</span><br>
+                                    <i class="mx-1 bi bi-trophy"></i> Missions réalisées: <span class="badge bg-success">5</span>
+                                </p>
+                                {% endif %}
+                                {% if item['_source'].langages|length > 0 %}
+                                <p class="small">
+                                    <span class="fw-bold fs-5">Langues</span><br>
+                                    {% for langue in item['_source'].langages %}
+                                        {{ isoToEmoji(langue.code) }}
+                                    {% endfor %}
+                                </p>
+                                {% endif %}
+                                <p class="small">
+                                    <span class="fw-bold fs-5">Disponibilité</span><br>
+                                    <i class="bi bi-clock-history"></i> {{ item['_source'].availability }}</span>
+                                </p>
+                                {% if item['_source'].tarifCandidat is not empty %}
+                                <p class="small">
+                                    <span class="fw-bold fs-5">Tarif</span><br>
+                                    <i class="bi bi-tag"></i> {{ item['_source'].tarifCandidat }}</span>
+                                </p>
+                                {% endif %}
+                                <p class="fw-bold small">
+                                    <span class="fs-5">Secteur d'activité</span><br>
+                                    {% set countSecteurs = 0 %}
+                                    {% for skill in item['_source'].secteurs %}
+                                        {% if countSecteurs < 3 %}
+                                            <span class="badge bg-warning">{{ skill.nom }}</span>
+                                            {% set countSecteurs = countSecteurs + 1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if item['_source'].secteurs|length > 4 %}
+                                        <span class="badge bg-dark rounded-pill">+{{ item['_source'].secteurs|length - 3 }}</span>
+                                    {% endif %}
+                                </p>
+                                <div class="text-center">
+                                    {% if app.user %}
+                                        <a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact (50 crédits)</a>
+                                        <a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#">Ajouter comme favoris</a>
+                                    {% else %}
+                                        <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir contact</button>
+                                        <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Ajouter comme favoris</button>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <p class="card-text">
-                            <span class="mb-1 fs-4">{{ item['_source'].titre|upper }} </span>
-                        </p>
-                        <p class="card-text small">
-                        {{ item['_source'].metaDescription|raw}}
-                        </p>
-                        {% if item['_source'].competences|length > 0 %}
-                        <p class="card-text fw-bold small">
-                            <span class="fs-5">Compétences</span><br>
-                            {% set count = 0 %}
-                            {% for skill in item['_source'].competences %}
-                                {% if count < 3 %}
-                                    <span class="badge bg-info">{{ skill.nom }}</span>
-                                    {% set count = count + 1 %}
-                                {% endif %}
-                            {% endfor %}
-                            {% if item['_source'].competences|length > 4 %}
-                                <span class="badge bg-dark rounded-pill">+{{ item['_source'].competences|length - 3 }}</span>
+
+                </span>
+            </div>
+            <div class="small fw-light">
+                {% if item.highlight %}
+                    {% set displayed = false %}
+                    {% for field, fragments in item.highlight %}
+                        {% if not displayed %}
+                            {% if fragments|length > 1 %}
+                                {{ fragments[1]|stripDivP|raw }} 
+                                {% set displayed = true %}
+                            {% elseif fragments|length > 0 %}
+                                {{ fragments[0]|stripDivP|raw }} 
+                                {% set displayed = true %}
                             {% endif %}
-                        </p>
                         {% endif %}
-                        {% if item['_source'].experiences|length > 0 %}
-                        <p class="small">
-                            <span class="fw-bold fs-5">Expériences</span><br>
-                            <i class="mx-1 bi bi-trophy"></i> Missions réalisées: <span class="badge bg-success">5</span>
-                        </p>
-                        {% endif %}
-                        {% if item['_source'].langages|length > 0 %}
-                        <p class="small">
-                            <span class="fw-bold fs-5">Langues</span><br>
-                            {% for langue in item['_source'].langages %}
-                                {{ isoToEmoji(langue.code) }}
-                            {% endfor %}
-                        </p>
-                        {% endif %}
-                        <p class="small">
-                            <span class="fw-bold fs-5">Disponibilité</span><br>
-                            <i class="bi bi-clock-history"></i> {{ item['_source'].availability }}</span>
-                        </p>
-                        {% if item['_source'].tarifCandidat is not empty %}
-                        <p class="small">
-                            <span class="fw-bold fs-5">Tarif</span><br>
-                            <i class="bi bi-tag"></i> {{ item['_source'].tarifCandidat }}</span>
-                        </p>
-                        {% endif %}
-                        <p class="fw-bold small">
-                            <span class="fs-5">Secteur d'activité</span><br>
-                            {% set countSecteurs = 0 %}
-                            {% for skill in item['_source'].secteurs %}
-                                {% if countSecteurs < 3 %}
-                                    <span class="badge bg-warning">{{ skill.nom }}</span>
-                                    {% set countSecteurs = countSecteurs + 1 %}
-                                {% endif %}
-                            {% endfor %}
-                            {% if item['_source'].secteurs|length > 4 %}
-                                <span class="badge bg-dark rounded-pill">+{{ item['_source'].secteurs|length - 3 }}</span>
+                    {% endfor %}
+                {% endif %} ...
+                {% set cleanDescription = item['_source'].metaDescription | striptags %}
+                {% set words = cleanDescription | split(' ') %}
+                {% if words|length > 12 %}
+                    {{ words|slice(0, 12)|join(' ') ~ '...' }}
+                {% else %}
+                    {{ cleanDescription }}
+                {% endif %}
+            </div>
+            <div class="small mb-3 mb-sm-4">
+                <span class="small me-3"><i class="bi bi-patch-check"></i> Certifié OLONA</span>
+                <span class="small me-3"><i class="bi bi-trophy"></i> {{ item['_source'].experiences|length }} Projets réalisés</span>
+                <span class="small me-3"><i class="bi bi-circle-fill text-success"></i> Disponibilité</span>
+                <span class="dropdown small me-3">
+                    <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                        Plus d'informations 
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-lg-end" style="cursor:pointer;">
+                        {% if app.user %}
+                            <li><a class="dropdown-item" data-id="{{ item['_id'] }}" href="{{ path('app_v2_recruiter_view_profile', {'id': item['_id']})}}">Aperçu</a></li>
+                            {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+                                <li><a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#" style="cursor:pointer;">Ajouter comme favoris</a></li>
                             {% endif %}
-                        </p>
-                        <div class="text-center">
-                            {% if app.user %}
-                                <a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact (50 crédits)</a>
-                                <a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#">Ajouter comme favoris</a>
-                            {% else %}
-                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir contact</button>
-                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Ajouter comme favoris</button>
-                            {% endif %}
-                        </div>
+                        {% else %}
+                        <li><a class="dropdown-item candidate-link" data-id="{{ item['_id'] }}" href="#">Aperçu</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#" style="cursor:pointer;">Ajouter comme favoris</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#" style="cursor:pointer;">Voir le contact</a></li>
+                        {% endif %}
+                        
+                    </ul>
+                </span>
+            </div>
+        {% endfor %}
+	</div>
+	<div class="col-12 col-sm-4">
+        <div class="d-flex flex-column flex-shrink-0 py-3 text-white position-sticky top-0">
+            <div class="card mb-3">
+                <div class="card-body small">
+                    <h3 class="card-title h5 mb-3">Statistiques</h3>
+                    <span class="fw-bolder me-2">{{ app.user.credit.total }}</span> <span class="fw-light">crédits disponibles</span><br>
+                    <span class="fw-bolder me-2">0</span> <span class="fw-light">annonces publiées</span><br>
+                    <span class="fw-bolder me-2">0</span> <span class="fw-light">favoris</span><br>
+                    <span class="fw-bolder me-2">0</span> <span class="fw-light">prestations</span><br>
+                </div>
+            </div>
+            <div class="card mb-3" id="candidate-card-container">
+                <img src="{{ asset('images/mailing/thumbnail.png')}}" class="" alt="Premium Olona Talents">
+                <div class="card-body small">
+                    <h3 class="card-title h5">Passez à la Version Premium!</h3>
+                    <p class="card-text">Profitez d'un accès illimité aux contacts candidats, de la mise en avant de vos annonces et bien plus encore.</p>
+                    <div id="checkBoost">
+                    <button class="btn btn-sm btn-danger text-uppercase fw-bold px-2" data-bs-toggle="modal" data-bs-target="#boostProfile" data-bs-whatever="@mdo"><i class="bi bi-rocket-takeoff me-2"></i> Booster l'entreprise</button>
                     </div>
                 </div>
             </div>
-
-        </span>
-    </div>
-    <div class="small fw-light">
-        {% if item.highlight %}
-            {% set displayed = false %}
-            {% for field, fragments in item.highlight %}
-                {% if not displayed %}
-                    {% if fragments|length > 1 %}
-                        {{ fragments[1]|stripDivP|raw }} 
-                        {% set displayed = true %}
-                    {% elseif fragments|length > 0 %}
-                        {{ fragments[0]|stripDivP|raw }} 
-                        {% set displayed = true %}
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        {% endif %} ...
-        {% set cleanDescription = item['_source'].metaDescription | striptags %}
-        {% set words = cleanDescription | split(' ') %}
-        {% if words|length > 12 %}
-            {{ words|slice(0, 12)|join(' ') ~ '...' }}
-        {% else %}
-            {{ cleanDescription }}
-        {% endif %}
-    </div>
-    <div class="small mb-3 mb-sm-4">
-        <span class="small me-3"><i class="bi bi-patch-check"></i> Certifié OLONA</span>
-        <span class="small me-3"><i class="bi bi-trophy"></i> {{ item['_source'].experiences|length }} Projets réalisés</span>
-        <span class="small me-3"><i class="bi bi-circle-fill text-success"></i> Disponibilité</span>
-        <span class="dropdown small me-3">
-            <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
-                Plus d'informations 
-            </a>
-            <ul class="dropdown-menu dropdown-menu-lg-end" style="cursor:pointer;">
-                {% if app.user %}
-                    <li><a class="dropdown-item" data-id="{{ item['_id'] }}" href="{{ path('app_v2_recruiter_view_profile', {'id': item['_id']})}}">Aperçu</a></li>
-                    {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
-                        <li><a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#" style="cursor:pointer;">Ajouter comme favoris</a></li>
-                    {% endif %}
-                {% else %}
-                <li><a class="dropdown-item candidate-link" data-id="{{ item['_id'] }}" href="#">Aperçu</a></li>
-                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#" style="cursor:pointer;">Ajouter comme favoris</a></li>
-                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#" style="cursor:pointer;">Voir le contact</a></li>
-                {% endif %}
-                
-            </ul>
-        </span>
-    </div>
-{% endfor %}
-
-{% if totalCandidatesResults > 0 %}
-{% include "parts/_pagination_array.html.twig" with {'total': totalCandidatesResults, 'totalPages': totalPages} %}
-{% endif %}
+        </div>
+	</div>
+</div>
 

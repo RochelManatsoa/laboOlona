@@ -13,7 +13,7 @@
       <p class="small">
       <span class="">{{ satusPrestation(prestation)|raw }}</span> | 
       <span class="">Créée le {{ prestation.createdAt|date('d/m/Y') }}</span> | 
-      <span class="">Par {{ ownerPrestation(prestation)|raw }}</span> | 
+      <span class="">Par {{ getAuthor(prestation)|raw }}</span> | 
       </p>
       <h2 class="h5">Description</h2>
       <p>{{ prestation.description|raw }}</p>
