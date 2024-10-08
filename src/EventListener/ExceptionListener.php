@@ -1,10 +1,11 @@
 <?php
 namespace App\EventListener;
 
+use Twig\Environment;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use Twig\Environment;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ExceptionListener
 {
@@ -18,6 +19,8 @@ class ExceptionListener
 
         if ($exception instanceof HttpExceptionInterface) {
             $statusCode = $exception->getStatusCode();
+        }elseif ($exception instanceof AccessDeniedException) {
+            $statusCode = Response::HTTP_FORBIDDEN; 
         }
 
         switch ($statusCode) {

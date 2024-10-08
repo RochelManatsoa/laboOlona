@@ -21,7 +21,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\BoostVisibilityManager;
+use App\Security\Voter\JobListingVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/v2/recruiter/job-listing')]
 class JobListingController extends AbstractController
@@ -133,6 +135,7 @@ class JobListingController extends AbstractController
     }
     
     #[Route('/edit/{jobListing}', name: 'app_v2_recruiter_job_listing_edit')]
+    #[IsGranted(JobListingVoter::EDIT, subject: 'jobListing')]
     public function editJobListing(Request $request, JobListing $jobListing): Response
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Accès refusé. Section réservée aux recruteurs.');
@@ -197,6 +200,7 @@ class JobListingController extends AbstractController
 
     
     #[Route('/view/{id}', name: 'app_v2_recruiter_job_listing_view')]
+    #[IsGranted(JobListingVoter::VIEW, subject: 'jobListing')]
     public function viewJobListing(Request $request, int $id): Response
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
@@ -209,6 +213,7 @@ class JobListingController extends AbstractController
     }
     
     #[Route('/delete', name: 'app_v2_recruiter_delete_job_listing', methods: ['POST'])]
+    #[IsGranted(JobListingVoter::EDIT, subject: 'jobListing')]
     public function removeJobListing(Request $request): Response
     {
         $jobListingId = $request->request->get('jobListingId');

@@ -20,10 +20,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
+use App\Security\Voter\PrestationVoter;
 use App\Twig\PrestationExtension;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/v2/dashboard/prestation')]
 class PrestationController extends AbstractController
@@ -190,6 +192,7 @@ class PrestationController extends AbstractController
     }
     
     #[Route('/edit/{prestation}', name: 'app_v2_edit_prestation')]
+    #[IsGranted(PrestationVoter::EDIT, subject: 'prestation')]
     public function editPrestation(Request $request, Prestation $prestation): Response
     {
         /** @var User $currentUser */
@@ -240,6 +243,7 @@ class PrestationController extends AbstractController
     }
     
     #[Route('/view/{prestation}', name: 'app_v2_view_prestation')]
+    #[IsGranted(PrestationVoter::VIEW, subject: 'prestation')]
     public function viewPrestation(Request $request, Prestation $prestation): Response
     {
         /** @var User $currentUser */
@@ -282,6 +286,7 @@ class PrestationController extends AbstractController
     }
     
     #[Route('/delete', name: 'app_v2_delete_prestation', methods: ['POST'])]
+    #[IsGranted(PrestationVoter::EDIT, subject: 'prestation')]
     public function removePrestation(Request $request): Response
     {
         $prestationId = $request->request->get('prestationId');
