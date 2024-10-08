@@ -4,9 +4,13 @@ namespace App\Controller\V2;
 
 use App\Entity\User;
 use App\Entity\Notification;
+use App\Form\V2\AccountType;
 use App\Form\V2\ProfileType;
+use App\Form\V2\CandidateType;
+use App\Form\V2\RecruiterType;
 use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
+use App\Entity\Vues\AnnonceVues;
 use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
 use App\Entity\ModerateurProfile;
@@ -27,9 +31,6 @@ use App\Manager\BusinessModel\CreditManager;
 use App\Entity\BusinessModel\BoostVisibility;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
-use App\Form\V2\AccountType;
-use App\Form\V2\CandidateType;
-use App\Form\V2\RecruiterType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -437,9 +438,9 @@ class DashboardController extends AbstractController
     #[Route('/job-offer/view/{id}', name: 'app_v2_job_offer_view')]
     public function viewJobOffer(Request $request, int $id): Response
     {
+        $annonce = $this->em->getRepository(JobListing::class)->find($id);
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
-        $annonce = $this->em->getRepository(JobListing::class)->find($id);
         $candidat = $this->userService->checkProfile();
         if($candidat instanceof CandidateProfile){
             return $this->redirectToRoute('app_v2_candidate_view_job_offer', ['id' => $id]);
@@ -455,7 +456,26 @@ class DashboardController extends AbstractController
             'contact' => $annonce->getEntreprise()->getEntreprise(),
         ]);
 
-        return $this->render('v2/dashboard/job_offer/details.html.twig', [
+        if ($annonce) {
+            $ipAddress = $request->getClientIp();
+            $viewRepository = $this->em->getRepository(AnnonceVues::class);
+            $existingView = $viewRepository->findOneBy([
+                'annonce' => $annonce,
+                'idAdress' => $ipAddress,
+            ]);
+    
+            if (!$existingView) {
+                $view = new AnnonceVues();
+                $view->setAnnonce($annonce);
+                $view->setIdAdress($ipAddress);
+    
+                $this->em->persist($view);
+                $annonce->addAnnonceVue($view);
+                $this->em->flush();
+            }
+        }
+
+        return $this->render('v2/dashboard/job_offer/view.html.twig', [
             'annonce' => $annonce,
             'purchasedContact' => $purchasedContact,
         ]);

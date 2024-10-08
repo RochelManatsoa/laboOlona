@@ -11,6 +11,7 @@ use App\Form\RegistrationFormType;
 use App\Security\AppAuthenticator;
 use Symfony\Component\Mime\Address;
 use App\Manager\OlonaTalentsManager;
+use App\Entity\Entreprise\JobListing;
 use App\Service\ElasticsearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -21,9 +22,9 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
@@ -67,13 +68,12 @@ class OlonaTalentsController extends AbstractController
 
     #[Route('/v2/olona-register', name: 'app_olona_talents_register')]
     public function register(
-        Request $request, 
-        UserPasswordHasherInterface $userPasswordHasher, 
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
         EmailVerifier $emailVerifier,
-        UserAuthenticatorInterface $userAuthenticator, 
+        UserAuthenticatorInterface $userAuthenticator,
         AppAuthenticator $authenticator,
-    ): Response
-    {
+    ): Response {
         $typology = $request->query->get('typology', null);
         $this->requestStack->getSession()->set('typology', $typology);
         $user = new User();
@@ -92,7 +92,9 @@ class OlonaTalentsController extends AbstractController
             $this->em->flush();
             $this->creditManager->ajouterCreditsBienvenue($user, 200);
 
-            $emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('support@olona-talents.com', 'Olona Talents'))
                     ->to($user->getEmail())
@@ -106,7 +108,6 @@ class OlonaTalentsController extends AbstractController
                 $authenticator,
                 $request
             );
-
         }
 
         return $this->render('v2/olona_register.html.twig', [
@@ -123,7 +124,7 @@ class OlonaTalentsController extends AbstractController
         $from = ($page - 1) * $size;
         $params = [];
         $currentUser = $this->security->getUser();
-        if($currentUser instanceof User){
+        if ($currentUser instanceof User) {
             $params['type'] = $currentUser->getType();
         }
         $params['currentPage'] = $page;
@@ -145,11 +146,11 @@ class OlonaTalentsController extends AbstractController
         $params['totalPages'] = $totalPages;
         $params['candidats'] = $candidates['hits']['hits'];
         $params['totalCandidatesResults'] = $totalCandidatesResults;
-        
+
         $premiums = $this->elasticsearch->search($paramsCandidatePremium);
         $params['top_candidats'] = $this->paginatorInterface->paginate(
-            $premiums['hits']['hits'], 
-            $page, 
+            $premiums['hits']['hits'],
+            $page,
             8
         );
 
@@ -159,33 +160,105 @@ class OlonaTalentsController extends AbstractController
         $params['totalAnnoncesPages'] = $totalAnnoncesPages;
         $params['annonces'] = $joblistings['hits']['hits'];
         $params['totalJobListingsResults'] = $totalJobListingsResults;
-        
+
         $premiumJoblistings = $this->elasticsearch->search($paramsJoblistingPremium);
         $params['top_annonces'] = $this->paginatorInterface->paginate(
-            $premiumJoblistings['hits']['hits'], 
-            $page, 
+            $premiumJoblistings['hits']['hits'],
+            $page,
             8
         );
-        
+
         $prestations = $this->elasticsearch->search($paramsPrestation);
         $params['prestations'] = $prestations['hits']['hits'];
         $totalPrestationsResults = $prestations['hits']['total']['value'];
         $totalPrestationsPages = ceil($totalPrestationsResults / $size);
         $params['totalPrestationsPages'] = $totalPrestationsPages;
         $params['totalPrestationsResults'] = $totalPrestationsResults;
-        
+
         $premiumPrestations = $this->elasticsearch->search($paramsPrestationPremium);
         $params['top_prestations'] = $this->paginatorInterface->paginate(
-            $premiumPrestations['hits']['hits'], 
-            $page, 
+            $premiumPrestations['hits']['hits'],
+            $page,
             8
         );
 
-        if($currentUser){
+        if ($currentUser) {
             return $this->render('v2/dashboard/result.html.twig', $params);
         }
 
         return $this->render('v2/result.html.twig', $params);
+    }
+
+    #[Route('/result/candidates', name: 'app_olona_talents_candidates')]
+    public function candidates(Request $request): Response
+    {
+        return $this->fetchAndRender($request, 'candidates');
+    }
+
+    #[Route('/result/joblistings', name: 'app_olona_talents_joblistings')]
+    public function joblistings(Request $request): Response
+    {
+        return $this->fetchAndRender($request, 'joblistings');
+    }
+
+    #[Route('/result/prestations', name: 'app_olona_talents_prestations')]
+    public function prestations(Request $request): Response
+    {
+        return $this->fetchAndRender($request, 'prestations');
+    }
+
+    private function fetchAndRender(Request $request, string $type): Response
+    {
+        $query = $request->query->get('q');
+        $size = $request->query->getInt('size', 10);
+        $from = $request->query->getInt('from', 0);
+        $params = [];
+
+        if ($type === 'candidates') {
+            $paramsSearch = $this->olonaTalentsManager->getParamsCandidates($from, $size, $query);
+        } elseif ($type === 'joblistings') {
+            $paramsSearch = $this->olonaTalentsManager->getParamsJoblisting($from, $size, $query);
+        } else {
+            $paramsSearch = $this->olonaTalentsManager->getParamsPrestations($from, $size, $query);
+        }
+
+        $searchResults = $this->elasticsearch->search($paramsSearch);
+
+        // Extraire les identifiants des résultats
+        $ids = array_map(fn($hit) => $hit['_id'], $searchResults['hits']['hits']);
+
+        // Charger les entités correspondantes à partir de Doctrine
+        $repository = $this->getRepositoryForType($type);
+        $entities = $repository->findBy(['id' => $ids]);
+
+        // Assurez-vous que les entités sont triées comme dans les résultats de recherche Elasticsearch si nécessaire
+        usort($entities, function ($a, $b) use ($ids) {
+            return array_search($a->getId(), $ids) <=> array_search($b->getId(), $ids);
+        });
+
+        // Affecter les entités aux paramètres
+        $params[$type] = $entities;
+        $params['totalResults'] = $searchResults['hits']['total']['value'];
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render("v2/dashboard/result/parts/_part_{$type}_list.html.twig", $params);
+        }
+
+        return $this->render("v2/dashboard/result/{$type}_result.html.twig", $params);
+    }
+
+    private function getRepositoryForType(string $type)
+    {
+        switch ($type) {
+            case 'candidates':
+                return $this->em->getRepository(CandidateProfile::class);
+            case 'joblistings':
+                return $this->em->getRepository(JobListing::class);
+            case 'prestations':
+                return $this->em->getRepository(Prestation::class);
+            default:
+                throw new \InvalidArgumentException("Invalid type: $type");
+        }
     }
 
     #[Route('/view/prestation/{id}', name: 'app_olona_talents_view_prestation')]
@@ -193,16 +266,16 @@ class OlonaTalentsController extends AbstractController
     {
         $currentUser = $this->security->getUser();
         $prestation = $this->em->getRepository(Prestation::class)->find($id);
-        if($currentUser instanceof User){
-            if($currentUser->getType() === User::ACCOUNT_CANDIDAT){
+        if ($currentUser instanceof User) {
+            if ($currentUser->getType() === User::ACCOUNT_CANDIDAT) {
                 return $this->redirectToRoute('app_v2_candidate_view_prestation', ['prestation' => $prestation->getId()]);
             }
-            if($currentUser->getType() === User::ACCOUNT_ENTREPRISE){
+            if ($currentUser->getType() === User::ACCOUNT_ENTREPRISE) {
                 return $this->redirectToRoute('app_v2_recruiter_view_prestation', ['prestation' => $prestation->getId()]);
             }
             return $this->redirectToRoute('app_connect', []);
         }
-        
+
         return $this->redirectToRoute('app_connect', []);
     }
 

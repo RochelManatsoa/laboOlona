@@ -29,7 +29,7 @@
               {% for item in prestations %}
               <tr>
                   <td class="">{{ item.titre }}</td>
-                  <td class="text-center fs-6 fw-light">{{ ownerPrestation(item)|raw }}</td>
+                  <td class="text-center fs-6 fw-light">{{ getAuthor(item)|raw }}</td>
                   <td class="">{{ satusPrestation(item)|raw }}</td>
                   <td class="">
                     <a href="{{ path('app_v2_staff_edit_prestation', { 'prestation': item.id })}}" class="btn btn-sm btn-primary rounded-pill"><i class="bi bi-pencil-square"></i></a>

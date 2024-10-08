@@ -30,6 +30,68 @@ $(function() {
         setupImageUpload(); 
         setupAvailabilityDropdown();  
         handleLoading();
+        initiateLoadMore();
+    }
+
+    function initiateLoadMore() {
+        const query = $('#hidden-query').val();
+
+        if ($('#candidates-list').length) {
+            loadMore('/result/candidates', '#candidates-list', query);
+        }
+        
+        if ($('#joblistings-list').length) {
+            loadMore('/result/joblistings', '#joblistings-list', query);
+        }
+        
+        if ($('#prestations-list').length) {
+            loadMore('/result/prestations', '#prestations-list', query);
+        }
+    }
+
+    function loadMore(url, containerSelector, query) {
+        let from = 10;
+        let loading = false;
+        const container = $(containerSelector);
+
+        $(window).on('scroll', function() {
+            if (!loading && ($(window).scrollTop() + $(window).height() >= $(document).height() - 100)) { // le seuil -100 pour déclencher juste avant le pied de page
+                loading = true;
+                const loader = $('<div class="text-center my-3" id="loader-spinner">' +
+                    '<div class="spinner-border text-primary" role="status">' +
+                    '<span class="visually-hidden">Loading...</span>' +
+                    '</div>' +
+                    '</div>');
+                container.append(loader);
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        from: from,
+                        q: query
+                    },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(data) {
+                        if (data.trim().length === 0) { 
+                            $(window).off('scroll');
+                            loader.remove();
+                        } else {
+                            container.append(data);
+                            from += 10;
+                        }
+                        loading = false;
+                        loader.remove();
+                    },
+                    error: function() {
+                        loading = false;
+                        loader.remove();
+                    }
+                });
+            }
+        });
     }
 
     function setupCKEditors() {
