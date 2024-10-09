@@ -92,7 +92,7 @@
 
         async createOrder() {
             try {
-                const response = await fetch("http://localhost:8888/api/orders", {
+                const response = await fetch("https://node.olona-talents.com/api/orders", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -132,7 +132,7 @@
         async onApprove(data, actions) {
             try {
                 const response = await fetch(
-                    `http://localhost:8888/api/orders/${data.orderID}/capture`,
+                    `https://node.olona-talents.com/api/orders/${data.orderID}/capture`,
                     {
                         method: "POST",
                         headers: {
