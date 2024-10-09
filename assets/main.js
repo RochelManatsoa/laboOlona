@@ -668,19 +668,9 @@ $(function() {
                       
         });
 
-        // $('input[name="transaction[typeTransaction]"]').on('change', function() {
-        //     var value = parseInt($(this).val(), 10);
-        //     if (value <= 3) {
-        //         console.log($('#pointMarchand'))
-        //         $('#pointMarchand').show();
-        //         $('#bankCard').hide();
-        //         $('#bankApi').hide();
-        //     } else {
-        //         $('#bankApi').show();
-        //         $('#mobileMoney').hide();
-        //         $('#pointMarchand').hide();
-        //     }
-        // })  
+        $('input[name="order[paymentMethod]"]').on('change', function() {
+            $('#mobileMoneySubmit').prop('disabled', false);
+        })  
 
         $('#package').on('hide.bs.modal', function (event) {
             setTimeout(function() {

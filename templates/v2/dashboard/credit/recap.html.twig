@@ -40,54 +40,192 @@
         <span class="fw-bold fs-5">{{ pack.credit }}</span><br>
       </div>
     </div>
-    <h3 class="mb-4 fw-bold">Mode de paiement :</h3>
+    <div class="col-6 mx-auto mt-3">
+      <div id="paypal-button-container"></div>
+      <div id="message-container" style="display:none;" class="text-center border rounded p-3"></div>
+    </div>
 
     {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
-
     
-          <div class="row mt-4" id="mobileMoney">
-            <div class="col-12">
-              <h3 class="fs-5 fw-bolder">Mobile Money</h3>
-            </div>
+          <div class="row justify-content-center text-center mx-auto" id="mobileMoney">
             {% for type in form.paymentMethod %}
-                {% if loop.index <= 3 %}
-                    <div class="col-md-3">
-                        <div class="custom-control custom-radio image-checkbox photo-gris">
-                            {{ form_widget(type, {'attr': {'class': 'custom-control-input'}}) }}
-                              <h3 class="fs-6">{{type.vars.label|upper}}</h3>
-                            <label class="custom-control-label" for="{{ type.vars.id }}">
-                                <img src="{{ asset('/images/' ~ type.vars.id ~ '.png') }}" class="img-fluid border" alt="{{ type.vars.label }}">
-                            </label>
-                        </div>
-                    </div>
-                {% else %}
-                    {% if loop.index == 4 %}
-                        </div> 
-                        <div class="row mt-4" id="bankCard">
-                          <div class="col-12">
-                            <h3 class="fs-5 fw-bolder">Carte Bancaire</h3>
-                          </div> 
-                    {% endif %}
-                    <div class="col-md-3">
-                        <div class="custom-control custom-radio image-checkbox photo-gris">
-                            {{ form_widget(type, {'attr': {'class': 'custom-control-input'}}) }}
-                            <h3 class="fs-6">{{type.vars.label|upper}}</h3>
-                            <label class="custom-control-label" for="{{ type.vars.id }}">
-                                <img src="{{ asset('/images/' ~ type.vars.id ~ '.png') }}" class="img-fluid border" alt="{{ type.vars.label }}">
-                            </label>
-                        </div>
-                    </div>
-                {% endif %}
+              <div class="col-md-3">
+                  <div class="custom-control custom-radio image-checkbox photo-gris">
+                      {{ form_widget(type, {'attr': {'class': 'custom-control-input'}}) }}
+                      <label class="custom-control-label" for="{{ type.vars.id }}">
+                          <img src="{{ asset('/images/' ~ type.vars.id ~ '.png') }}" class="img-fluid border" alt="{{ type.vars.label }}">
+                      </label>
+                  </div>
+              </div>
             {% endfor %}
           </div> 
     <div style="display:none;">
     {{ form_widget(form)}}
     </div>
       <div class=" text-center mx-auto">
-        <button type="submit" class="btn btn-lg btn-primary fw-semibold text-uppercase px-5 my-5">Valider ma commande</button>
+        <button type="submit" id="mobileMoneySubmit" disabled class="btn btn-lg btn-primary fw-semibold text-uppercase px-5 my-5">Valider ma commande</button>
       </div>
     {{ form_end(form) }}
   </div>
 
+<script src="https://www.paypal.com/sdk/js?client-id=ASu3tyl5NCMVfnQ9_wcXD3bv-Pn7nIOhXwkrjisQorZEIdQzr3Z4FOMq3AlmeKiBJcedrMuJPpdTKFAK&components=buttons&enable-funding=venmo,paylater&currency=EUR"></script>
+
+<script>
+    function resultMessage(message) {
+        console.log(message);
+        const messageContainer = document.getElementById('message-container');
+        if (messageContainer) {
+            messageContainer.innerHTML = message;
+            messageContainer.style.display = 'block';
+        }
+    }
+    window.paypal
+    .Buttons({
+        style: {
+            layout: "vertical",
+            color: "gold",
+            label: "paypal",
+        },
+        message: {
+            amount: {{ price }},
+        } ,
+
+        async createOrder() {
+            try {
+                const response = await fetch("http://localhost:8888/api/orders", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    // use the "body" param to optionally pass additional order information
+                    // like product ids and quantities
+                    body: JSON.stringify({
+                        cart: [
+                            {
+                                id: "{{pack.slug}}", 
+                                name: "{{pack.name}}",
+                                quantity: 1,          
+                                price: {{ price }},   
+                                currency: "EUR",      
+                            },
+                        ],
+                    }),
+                });
+
+                const orderData = await response.json();
+
+                if (orderData.id) {
+                    return orderData.id;
+                }
+                const errorDetail = orderData?.details?.[0];
+                const errorMessage = errorDetail
+                    ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
+                    : JSON.stringify(orderData);
+
+                throw new Error(errorMessage);
+            } catch (error) {
+                console.error(error);
+                resultMessage(`Impossible d'initier le paiement PayPal...<br>${error}`);
+            }
+        } ,
+
+        async onApprove(data, actions) {
+            try {
+                const response = await fetch(
+                    `http://localhost:8888/api/orders/${data.orderID}/capture`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+
+                const orderData = await response.json();
+                const errorDetail = orderData?.details?.[0];
+
+                if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
+                    return actions.restart();
+                } else if (errorDetail) {
+                    throw new Error(
+                        `${errorDetail.description} (${orderData.debug_id})`
+                    );
+                } else if (!orderData.purchase_units) {
+                    throw new Error(JSON.stringify(orderData));
+                } else {
+                    const transaction =
+                        orderData?.purchase_units?.[0]?.payments
+                            ?.captures?.[0] ||
+                        orderData?.purchase_units?.[0]?.payments
+                            ?.authorizations?.[0];
+                    resultMessage(
+                        `Transaction ${transaction.status}: ${transaction.id}`
+                    );
+                    console.log(
+                        "Capture result",
+                        orderData,
+                        JSON.stringify(orderData, null, 2)
+                    );
+                    await saveTransaction(orderData);
+                }
+            } catch (error) {
+                console.error(error);
+                resultMessage(
+                    `Désolé, votre transaction n'a pas pu être traitée...<br>${error}`
+                );
+            }
+        } ,
+    })
+    .render("#paypal-button-container"); 
+
+    async function saveTransaction(orderData) {
+        try {
+            const token = await getAuthToken();
+
+            const response = await fetch('{{ path('app_v2_user_order_save', {'pack': pack.slug, 'id': app.user.id })}}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
+                body: JSON.stringify(orderData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save transaction');
+            }
+
+            const data = await response.json();
+            console.log('Transaction saved:', data);
+        } catch (error) {
+            console.error('Error saving transaction:', error);
+        }
+    }
+
+    async function getAuthToken() {
+        try {
+            const response = await fetch('{{ path('api_login_check')}}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: 'miandrisoa.olona@gmail.com',
+                    password: 'HY9Hk86c',
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch token');
+            }
+
+            const data = await response.json();
+            return data.token; 
+        } catch (error) {
+            console.error('Error obtaining token:', error);
+            throw error;
+        }
+    }
+</script>
 </section>
 {% endblock %}
