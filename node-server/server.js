@@ -5,14 +5,16 @@ import path from "path";
 import cors from "cors";
 
 const corsOptions = {
-    origin: "https://127.0.0.1:8000", // Remplacez par l'origine de votre application frontale
-    optionsSuccessStatus: 200 // Pour les navigateurs legacy supportant uniquement le statut 204
+    origin: "https://develop.olona-talents.com", 
+    optionsSuccessStatus: 200,
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PORT = 8888 } = process.env;
 const base = "https://api-m.sandbox.paypal.com";
 const app = express();
-app.use(cors(corsOptions));
+app.use(cors());
 
 // host static files
 app.use(express.static("client"));
@@ -157,6 +159,6 @@ app.get("/", (req, res) => {
     res.sendFile(path.resolve("./checkout.html"));
 });
 
-app.listen(PORT, () => {
-    console.log(`Node server listening at http://localhost:${PORT}/`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Node server listening at http://194.164.166.41:${PORT}/`);
 }); 
