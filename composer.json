@@ -15,6 +15,7 @@
         "fakerphp/faker": "^1.23",
         "google/apiclient": "^2.15.0",
         "knplabs/knp-paginator-bundle": "^6.2",
+        "knplabs/knp-snappy-bundle": "^1.10",
         "knpuniversity/oauth2-client-bundle": "^2.16",
         "league/oauth2-google": "^4.0",
         "lexik/jwt-authentication-bundle": "^2.20",

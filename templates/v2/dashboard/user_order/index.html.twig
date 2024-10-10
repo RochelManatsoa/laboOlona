@@ -75,7 +75,10 @@
 									{{ item.createdAt|date('à h:i') }}
 								</td>
 								<td class="col-1 text-center">
-                                    {{ statusOrder(item)|raw }}
+                                    {{ statusOrder(item)|raw }}<br>
+									{% if item.status is same as(constant('App\\Entity\\BusinessModel\\Order::STATUS_COMPLETED'))%}
+									<a target=_blank href="{{ path('payment_facture', {'order': item.id})}}" class="small"><i class="bi bi-receipt"></i> Facture</a>
+									{% endif %}
                                 </td>
 								<td class="col-1 text-center">
 									<a href="{{ path('app_v2_user_order_show', {'orderNumber': item.orderNumber })}}" class="btn btn-sm btn-secondary rounded-pill">
