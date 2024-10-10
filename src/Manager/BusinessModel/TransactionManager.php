@@ -6,6 +6,8 @@ use App\Entity\User;
 use Twig\Environment as Twig;
 use Symfony\Component\Form\Form;
 use App\Entity\BusinessModel\Credit;
+use App\Entity\BusinessModel\Invoice;
+use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\Package;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
@@ -76,5 +78,33 @@ class TransactionManager
         $this->em->flush();
 
         return true;
+    }
+
+    public function findTransactionSuccessByCommand(Order $order): ?Transaction
+    {
+        $transaction = $order->getTransaction();
+        if(($transaction->getStatus() === Transaction::STATUS_AUTHORIZED)){
+            return $transaction;
+        }
+
+        return null;
+    }
+
+    public function createInvoice(Transaction $transaction) :void
+    {
+        $order = $transaction->getCommand();
+        $invoice = $order->getInvoice();
+        if(!$invoice instanceof Invoice){
+            $invoice = new Invoice();
+        }
+        $invoice->setAdress($order->getCustomer()->getAdress());
+        $invoice->setPostalCode($order->getCustomer()->getPostalCode());
+        $invoice->setCity($order->getCustomer()->getCity());
+        $invoice->setName($order->getCustomer()->getNom());
+        $invoice->setFirstName($order->getCustomer()->getPrenom());
+        $invoice->setCommande($order);
+
+        $this->em->persist($invoice);
+        $this->em->flush();
     }
 }

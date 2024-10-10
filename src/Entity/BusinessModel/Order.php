@@ -26,6 +26,7 @@ class Order
     const STATUS_AUTHORIZED = 'AUTHORIZED';
     const STATUS_REFUNDED = 'REFUNDED';
     const STATUS_DISPUTED = 'DISPUTED';
+    const DOC_DOWNLOAD = 'documents/';
 
     public static function getStatuses() {
         return [
@@ -100,6 +101,9 @@ class Order
 
     #[ORM\OneToOne(inversedBy: 'command', cascade: ['persist', 'remove'])]
     private ?Transaction $transaction = null;
+
+    #[ORM\OneToOne(mappedBy: 'commande', cascade: ['persist', 'remove'])]
+    private ?Invoice $invoice = null;
 
     public function __construct()
     {
@@ -289,6 +293,42 @@ class Order
     public function setTransaction(?Transaction $transaction): static
     {
         $this->transaction = $transaction;
+
+        return $this;
+    }
+
+    public function getGeneratedFacturePathFile(): ?string
+    {
+
+        return $this->getGeneratedFacturePath().'/facture.pdf';
+    }
+
+    public function getGeneratedFacturePath(): ?string
+    {
+        $path = $this::DOC_DOWNLOAD . $this->id ."/".
+            $this->orderNumber;
+
+        return $path;
+    }
+
+    public function getInvoice(): ?Invoice
+    {
+        return $this->invoice;
+    }
+
+    public function setInvoice(?Invoice $invoice): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($invoice === null && $this->invoice !== null) {
+            $this->invoice->setCommande(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($invoice !== null && $invoice->getCommande() !== $this) {
+            $invoice->setCommande($this);
+        }
+
+        $this->invoice = $invoice;
 
         return $this;
     }

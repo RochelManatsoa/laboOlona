@@ -2,16 +2,19 @@
 
 namespace App\Manager\BusinessModel;
 
+use Knp\Snappy\Pdf;
 use App\Entity\User;
 use Twig\Environment as Twig;
 use Symfony\Component\Form\Form;
-use App\Entity\BusinessModel\Credit;
 use App\Entity\BusinessModel\Order;
+use App\Entity\BusinessModel\Credit;
+use App\Entity\BusinessModel\Invoice;
 use App\Entity\BusinessModel\Package;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class OrderManager
 {
@@ -19,7 +22,9 @@ class OrderManager
         private EntityManagerInterface $em,
         private Twig $twig,
         private RequestStack $requestStack,
-        private Security $security
+        private Security $security,
+        private UrlGeneratorInterface $urlGeneratorInterface,
+        private TransactionManager $transactionManager
     ){}
 
     public function init(): Order
@@ -43,5 +48,42 @@ class OrderManager
         $this->save($order);
 
         return $order;
+    }
+    
+    public function generateFacture(Order $order)
+    {
+		$this->checkIfTransactionSuccess($order);
+		$folder = $order->getGeneratedFacturePath();
+        $file = $order->getGeneratedFacturePathFile();
+        // create directory
+        if (!is_dir($folder)) mkdir($folder, 0777, true);
+		$scanFolder = scandir($folder);
+        if (!in_array("facture.pdf", $scanFolder)) { 
+            $snappy = new Pdf('/usr/bin/wkhtmltopdf');
+            $filename = "Facture";
+            $html = $this->twig->render("v2/dashboard/payment/facture.pdf.twig", ['commande' => $order, 'pathToWeb' => $this->urlGeneratorInterface->generate('app_home', [], UrlGeneratorInterface::ABSOLUTE_URL)]);
+            // $html = '<html><body><h1>Test</h1></body></html>';
+            $output = $snappy->getOutputFromHtml($html);
+            
+            $filefinal = file_put_contents($file, $output);
+        }
+        
+        return $file;
+	}
+
+    public function checkIfTransactionSuccess(Order $order): bool
+    {
+        $transaction = $this->transactionManager->findTransactionSuccessByCommand($order);
+        if (!$transaction instanceof Transaction) {
+			return false;
+		}
+        $invoice = $order->getInvoice();
+        if(!$invoice instanceof Invoice){
+            $this->transactionManager->createInvoice($transaction);
+        }
+		$order->setTransaction($transaction);
+		$this->save($order);
+
+		return true;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller\V2;
 
+use App\Entity\User;
 use App\Data\QuerySearchData;
 use App\Entity\Finance\Devise;
 use App\Entity\BusinessModel\Order;
@@ -9,14 +10,15 @@ use App\Entity\BusinessModel\Package;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
 use App\Manager\BusinessModel\OrderManager;
-use App\Entity\BusinessModel\TypeTransaction;
-use App\Entity\User;
 use App\Manager\BusinessModel\CreditManager;
-use App\Manager\BusinessModel\TransactionManager;
+use App\Entity\BusinessModel\TypeTransaction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Manager\BusinessModel\TransactionManager;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[Route('/v2/dashboard/user/order')]
 class UserOrderController extends AbstractController
@@ -26,6 +28,7 @@ class UserOrderController extends AbstractController
         private OrderManager $orderManager,
         private TransactionManager $transactionManager,
         private CreditManager $creditManager,
+        private UrlGeneratorInterface $urlGeneratorInterface,
     ){}
 
     #[Route('/', name: 'app_v2_user_order')]
@@ -81,6 +84,7 @@ class UserOrderController extends AbstractController
             $transaction->setAmount($package->getPrice());
             $transaction->setCreditsAdded($package->getCredit());
             $this->transactionManager->save($transaction);
+            $this->transactionManager->createInvoice($transaction);
             $this->creditManager->notifyTransaction($transaction);
             $this->creditManager->validateTransaction($transaction);
             $order->setStatus(Order::STATUS_COMPLETED);
@@ -89,5 +93,22 @@ class UserOrderController extends AbstractController
         $entityManager->flush();
 
         return $this->json(['status' => 'Transaction recorded'], 200);
+    }
+
+    #[Route('/payment/{order}/facture', name: 'payment_facture')]
+    public function facture(Order $order, OrderManager $orderManager)
+    {
+        $file = $orderManager->generateFacture($order);
+
+        return new BinaryFileResponse($file);
+    }
+
+    #[Route('/view/{order}/facture', name: 'payment_facture_view')]
+    public function view(Order $order, OrderManager $orderManager)
+    {
+        return $this->render("v2/dashboard/payment/facture.pdf.twig", [
+            'commande' => $order,
+            'pathToWeb' => $this->urlGeneratorInterface->generate('app_home', [], UrlGeneratorInterface::ABSOLUTE_URL)
+        ]);
     }
 }
