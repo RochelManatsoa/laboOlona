@@ -316,4 +316,14 @@ class JobListingRepository extends ServiceEntityRepository
             20
         );
     }
+
+    public function findExpiredPremium()
+    {
+        return $this->createQueryBuilder('j')
+            ->innerJoin('j.boostVisibility', 'b') 
+            ->andWhere('b.endDate < :now')        
+            ->setParameter('now', new \DateTime())
+            ->getQuery()                          
+            ->getResult(); 
+    }
 }
