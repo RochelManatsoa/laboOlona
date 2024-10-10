@@ -79,78 +79,78 @@ document.addEventListener('turbo:load', function () {
     }).catch(error => {
         console.error("Erreur lors du chargement du SDK PayPal:", error);
     });
-
-    function resultMessage(message) {
-        console.log(message);
-        const messageContainer = document.getElementById('message-container');
-        if (messageContainer) {
-            messageContainer.innerHTML = message;
-            messageContainer.style.display = 'block';
-        } else {
-            console.error('Message container not found', message);
-            // Vous pouvez également envisager d'ajouter une alternative de fallback ici
-            // Par exemple, créer dynamiquement l'élément s'il n'existe pas
-            createMessageContainer(message);
-        }
-    }
-
-    function createMessageContainer(message) {
-        const container = document.createElement('div');
-        container.id = 'message-container';
-        container.style.display = 'block';
-        container.innerHTML = message;
-        document.body.appendChild(container);  // Changez cela en fonction de l'endroit où vous voulez l'ajouter
-    }
-
-    async function saveTransaction(orderData) {
-        try {
-            const token = await getAuthToken();
-
-            const response = await fetch('{{ path('app_v2_user_order_save', {'pack': pack.slug, 'id': app.user.id })}}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` 
-                },
-                body: JSON.stringify(orderData),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to save transaction');
-            }
-
-            const data = await response.json();
-            console.log('Transaction saved:', data);
-        } catch (error) {
-            console.error('Error saving transaction:', error);
-        }
-    }
-
-    async function getAuthToken() {
-        try {
-            const response = await fetch('{{ path('api_login_check')}}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: 'miandrisoa.olona@gmail.com',
-                    password: 'HY9Hk86c',
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch token');
-            }
-
-            const data = await response.json();
-            return data.token; 
-        } catch (error) {
-            console.error('Error obtaining token:', error);
-            throw error;
-        }
-    }
 });
+
+function resultMessage(message) {
+    console.log(message);
+    const messageContainer = document.getElementById('message-container');
+    if (messageContainer) {
+        messageContainer.innerHTML = message;
+        messageContainer.style.display = 'block';
+    } else {
+        console.error('Message container not found', message);
+        // Vous pouvez également envisager d'ajouter une alternative de fallback ici
+        // Par exemple, créer dynamiquement l'élément s'il n'existe pas
+        createMessageContainer(message);
+    }
+}
+
+function createMessageContainer(message) {
+    const container = document.createElement('div');
+    container.id = 'message-container';
+    container.style.display = 'block';
+    container.innerHTML = message;
+    document.body.appendChild(container);  // Changez cela en fonction de l'endroit où vous voulez l'ajouter
+}
+
+async function saveTransaction(orderData) {
+    try {
+        const token = await getAuthToken();
+
+        const response = await fetch('{{ path('app_v2_user_order_save', {'pack': pack.slug, 'id': app.user.id })}}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            },
+            body: JSON.stringify(orderData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save transaction');
+        }
+
+        const data = await response.json();
+        console.log('Transaction saved:', data);
+    } catch (error) {
+        console.error('Error saving transaction:', error);
+    }
+}
+
+async function getAuthToken() {
+    try {
+        const response = await fetch('{{ path('api_login_check')}}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: 'miandrisoa.olona@gmail.com',
+                password: 'HY9Hk86c',
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch token');
+        }
+
+        const data = await response.json();
+        return data.token; 
+    } catch (error) {
+        console.error('Error obtaining token:', error);
+        throw error;
+    }
+}
 
 function loadPaypalSdk() {
     return new Promise((resolve, reject) => {
@@ -186,8 +186,6 @@ function initializePaypalButtons() {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    // use the "body" param to optionally pass additional order information
-                    // like product ids and quantities
                     body: JSON.stringify({
                         cart: [
                             {

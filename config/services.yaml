@@ -74,3 +74,7 @@ services:
             $clientId: '%env(PAYPAL_CLIENT_ID)%'
             $clientSecret: '%env(PAYPAL_CLIENT_SECRET)%'
             $mode: '%env(PAYPAL_MODE)%'
+            
+    App\Service\PdfService:
+        arguments:
+            $wkhtmltopdfPath: '%env(WKHTMLTOPDF_PATH)%'
