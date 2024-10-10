@@ -64,10 +64,11 @@
 									</td>
 									<td class="col-2">
 										{{ isJobOfferBoosted(item)|raw }}
+										<i class="bi bi-eye"></i> <span class="small">{{ component('count_joblisting_views_component', {'jobListing': item })}} vues </span>
 									</td>
 									<td class="col-1">{{ satusJobListing(item)|raw }}</td>
 									<td class="col-2">
-										<a href="{{ path('app_v2_recruiter_job_listing_view', { 'id': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
+										<a href="{{ path('app_v2_recruiter_job_listing_view', { 'jobListing': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
 											<i class="bi bi-eye"></i>
 										</a>
 										<form method="POST" action="{{ path('app_v2_recruiter_delete_job_listing')}}">

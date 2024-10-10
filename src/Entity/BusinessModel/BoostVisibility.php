@@ -32,7 +32,7 @@ class BoostVisibility
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $type = null;
 
-    #[ORM\OneToMany(mappedBy: 'boostVisibility', targetEntity: Prestation::class)]
+    #[ORM\OneToMany(mappedBy: 'boostVisibility', targetEntity: Prestation::class, cascade: ['remove', 'persist'])]
     private Collection $prestation;
 
     #[ORM\OneToMany(mappedBy: 'boostVisibility', targetEntity: CandidateProfile::class)]

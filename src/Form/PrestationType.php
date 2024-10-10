@@ -4,8 +4,6 @@ namespace App\Form;
 
 use App\Entity\Secteur;
 use App\Entity\Prestation;
-use App\Entity\CandidateProfile;
-use App\Entity\EntrepriseProfile;
 use App\Entity\BusinessModel\Boost;
 use App\Entity\Candidate\Competences;
 use Symfony\Component\Form\FormEvent;
@@ -80,9 +78,13 @@ class PrestationType extends AbstractType
             ])
             ->add('boost', EntityType::class, [
                 'class' => Boost::class,
+                'attr' => ['class' => 'boost-select', 'data-html' => true],
                 'choices' => $this->entityManager->getRepository(Boost::class)->findBy(['type' => $options['boostType']]),
                 'choice_label' => function ($boost) {
                     return $boost->getName().' ('.$boost->getCredit().' crédits)'; 
+                },
+                'choice_attr' => function($boost) {
+                    return ['data-content' => $boost->getDescription()];
                 },
                 'expanded' => true,  
                 'required' => false, 

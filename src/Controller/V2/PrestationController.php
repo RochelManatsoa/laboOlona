@@ -11,21 +11,23 @@ use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
+use App\Twig\PrestationExtension;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Manager\PrestationManager;
 use App\Entity\BusinessModel\Boost;
 use App\Entity\Vues\PrestationVues;
 use App\Entity\BusinessModel\Credit;
+use App\Security\Voter\PrestationVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Manager\BusinessModel\CreditManager;
+use App\Entity\BusinessModel\BoostVisibility;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
-use App\Security\Voter\PrestationVoter;
-use App\Twig\PrestationExtension;
+use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/v2/dashboard/prestation')]
 class PrestationController extends AbstractController
@@ -38,6 +40,7 @@ class PrestationController extends AbstractController
         private PrestationManager $prestationManager,
         private PrestationExtension $prestationExtension,
         private CreditManager $creditManager,
+        private BoostVisibilityManager $boostVisibilityManager,
     ){}
     
     #[Route('/', name: 'app_v2_prestation')]
@@ -144,7 +147,20 @@ class PrestationController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $response = $this->handlePrestationSubmission($form->getData(), $currentUser);
             if ($response['success']) {
-                $prestation = $this->prestationManager->saveForm($form);
+                $boostOption = $form->get('boost')->getData();
+                $prestation = $form->getData();
+                $visibilityBoost = $prestation->getBoostVisibility();
+                if($boostOption instanceof Boost){
+                    if(!$visibilityBoost instanceof BoostVisibility){
+                        $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
+                    }
+                    $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
+                    $visibilityBoost->addPrestation($prestation);
+                    $prestation->setStatus(Prestation::STATUS_FEATURED);
+                    $this->em->persist($visibilityBoost);
+                    $this->em->flush();
+                }
+                $this->prestationManager->saveForm($form);
                 return $this->redirectToRoute('app_v2_view_prestation', ['prestation' => $prestation->getId()]);
             } else {
                 if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
