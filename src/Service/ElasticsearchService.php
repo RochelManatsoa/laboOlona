@@ -43,4 +43,9 @@ class ElasticsearchService
     {
         return $this->client->indices()->delete(['index' => $indexName]);
     }
+    
+    public function delete(array $params)
+    {
+        return $this->client->delete($params);
+    }
 }

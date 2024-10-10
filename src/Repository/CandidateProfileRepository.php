@@ -511,4 +511,14 @@ class CandidateProfileRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findExpiredPremium()
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.boostVisibility', 'b') 
+            ->andWhere('b.endDate < :now')        
+            ->setParameter('now', new \DateTime())
+            ->getQuery()                          
+            ->getResult(); 
+    }
 }

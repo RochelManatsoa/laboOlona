@@ -145,4 +145,14 @@ class PrestationRepository extends ServiceEntityRepository
             10
         );
     }
+
+    public function findExpiredPremium()
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.boostVisibility', 'b') 
+            ->andWhere('b.endDate < :now')        
+            ->setParameter('now', new \DateTime())
+            ->getQuery()                          
+            ->getResult(); 
+    }
 }
