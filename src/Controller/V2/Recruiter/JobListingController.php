@@ -199,13 +199,12 @@ class JobListingController extends AbstractController
     }
 
     
-    #[Route('/view/{id}', name: 'app_v2_recruiter_job_listing_view')]
+    #[Route('/view/{jobListing}', name: 'app_v2_recruiter_job_listing_view')]
     #[IsGranted(JobListingVoter::VIEW, subject: 'jobListing')]
-    public function viewJobListing(Request $request, int $id): Response
+    public function viewJobListing(Request $request, JobListing $jobListing): Response
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $recruiter = $this->userService->checkProfile();
-        $jobListing = $this->em->getRepository(JobListing::class)->find($id);
 
         return $this->render('v2/dashboard/recruiter/job_listing/view.html.twig', [
             'annonce' => $jobListing,

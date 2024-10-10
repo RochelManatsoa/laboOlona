@@ -8,14 +8,10 @@ use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\Transaction;
 use App\Entity\Candidate\TarifCandidat;
 use App\Entity\CandidateProfile;
-use App\Entity\User;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use App\Entity\ReferrerProfile;
-use App\Entity\Referrer\Referral;
 use App\Entity\Entreprise\JobListing;
 use Twig\Extension\AbstractExtension;
-use App\Entity\Moderateur\Assignation;
 use App\Entity\Entreprise\BudgetAnnonce;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Finance\Contrat;
@@ -391,22 +387,28 @@ class StatusExtension extends AbstractExtension
         $url = $this->urlGenerator->generate('app_v2_edit_prestation', ['prestation' => $prestation->getId()]);
         $info = '<a href="'.$url.'" class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster</a>';
         if($boost instanceof Boost){
-            switch ($boost->getSlug()) {
-                case 'boost-recruiter-prestation-7' :
-                    $info = '<span class="fw-semibold small">Boost 7 jour</span>';
-                    break;
-    
-                case 'boost-recruiter-prestation-15' :
-                    $info = '<span class="fw-semibold small">Boost 15 jour</span>';
-                    break;
-    
-                case 'boost-recruiter-prestation-30' :
-                    $info = '<span class="fw-semibold small">Boost 30 jour</span>';
-                    break;
-                
-                default:
-                    $status = '<span class="fw-semibold small">Boost 1 jour</span>';
-                    break;
+            $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findLatestBoostVisibilityByBoost($boost);
+            if($boostVisibility instanceof BoostVisibility && !$boostVisibility->isExpired() ){
+                switch ($boost->getSlug()) {
+                    case 'boost-prestation-recruiter-7' :
+                    case 'boost-prestation-candidate-7' :
+                        $info = '<span class="fw-semibold small">Boost 7 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        break;
+        
+                    case 'boost-prestation-recruiter-15' :
+                    case 'boost-prestation-candidate-15' :
+                        $info = '<span class="fw-semibold small">Boost 15 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        break;
+        
+                    case 'boost-prestation-recruiter-15' :
+                    case 'boost-prestation-candidate-30' :
+                        $info = '<span class="fw-semibold small">Boost 30 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        break;
+                    
+                    default:
+                        $status = '<span class="fw-semibold small">Boost 1 jour</span>';
+                        break;
+                }
             }
         }
         
