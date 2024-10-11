@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class OlonaTalentsController extends AbstractController
@@ -38,6 +39,7 @@ class OlonaTalentsController extends AbstractController
         private OlonaTalentsManager $olonaTalentsManager,
         private CreditManager $creditManager,
         private PaginatorInterface $paginatorInterface,
+        private UrlGeneratorInterface $urlGeneratorInterface,
         private Security $security,
         private RequestStack $requestStack,
     ) {}
@@ -224,20 +226,17 @@ class OlonaTalentsController extends AbstractController
 
         $searchResults = $this->elasticsearch->search($paramsSearch);
 
-        // Extraire les identifiants des résultats
         $ids = array_map(fn($hit) => $hit['_id'], $searchResults['hits']['hits']);
 
-        // Charger les entités correspondantes à partir de Doctrine
         $repository = $this->getRepositoryForType($type);
         $entities = $repository->findBy(['id' => $ids]);
 
-        // Assurez-vous que les entités sont triées comme dans les résultats de recherche Elasticsearch si nécessaire
         usort($entities, function ($a, $b) use ($ids) {
             return array_search($a->getId(), $ids) <=> array_search($b->getId(), $ids);
         });
 
-        // Affecter les entités aux paramètres
         $params[$type] = $entities;
+        $params['action'] = $this->urlGeneratorInterface->generate('app_olona_talents_'. $type);
         $params['totalResults'] = $searchResults['hits']['total']['value'];
 
         if ($request->isXmlHttpRequest()) {

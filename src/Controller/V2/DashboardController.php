@@ -3,23 +3,19 @@
 namespace App\Controller\V2;
 
 use App\Entity\User;
-use App\Entity\Notification;
 use App\Form\V2\AccountType;
 use App\Form\V2\ProfileType;
 use App\Form\V2\CandidateType;
 use App\Form\V2\RecruiterType;
 use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
-use App\Entity\Vues\AnnonceVues;
 use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
 use App\Entity\ModerateurProfile;
 use App\Entity\Vues\CandidatVues;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
-use App\Entity\BusinessModel\Credit;
 use App\Manager\NotificationManager;
-use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Moderateur\ContactFormType;
@@ -125,7 +121,7 @@ class DashboardController extends AbstractController
             if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
                 $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
 
-                return $this->render('v2/dashboard/profile/update.html.twig', [
+                return $this->render('v2/dashboard/provider/update.html.twig', [
                     'formProfileUser' => $formProfileUser->createView(),
                     'success' => $success,
                 ]);
@@ -149,14 +145,14 @@ class DashboardController extends AbstractController
             if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
                 $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
 
-                return $this->render('v2/dashboard/profile/update.html.twig', [
+                return $this->render('v2/dashboard/provider/update.html.twig', [
                     'formProfileUser' => $formProfileUser->createView(),
                     'success' => false,
                 ]);
             }
         }
 
-        return $this->render('v2/dashboard/profile/create.html.twig', [
+        return $this->render('v2/dashboard/provider/create.html.twig', [
             'form' => $form->createView(),
             'formProfileUser' => $formProfileUser->createView(),
         ]);
@@ -185,7 +181,7 @@ class DashboardController extends AbstractController
             return $this->redirectToRoute('app_v2_dashboard_boost_profile', ['id' => $user->getId()]);
         }
         
-        return $this->render('v2/dashboard/profile/contact.html.twig', [
+        return $this->render('v2/dashboard/provider/contact.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -238,9 +234,8 @@ class DashboardController extends AbstractController
 
             if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
                 $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-                // dd($message, $status, $success);
     
-                return $this->render('v2/dashboard/profile/update.html.twig', [
+                return $this->render('v2/dashboard/provider/update.html.twig', [
                     'message' => $message,
                     'success' => $success,
                     'status' => $status,
@@ -257,136 +252,9 @@ class DashboardController extends AbstractController
             ], 200);
         }
         
-        return $this->render('v2/dashboard/profile/boost.html.twig', [
+        return $this->render('v2/dashboard/provider/boost.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
-    
-    #[Route('/contacts', name: 'app_v2_contacts')]
-    public function contact(Request $request): Response
-    {
-        /** @var User $currentUser */
-        $currentUser = $this->userService->getCurrentUser();
-        $purchasedContacts = $this->em->getRepository(PurchasedContact::class)->findContactsByBuyerAndStatus($currentUser, true);
-        $pendingContacts = $this->em->getRepository(PurchasedContact::class)->findContactsByBuyerAndStatus($currentUser, false);
-        $allContacts = $this->em->getRepository(PurchasedContact::class)->findBy([
-            'buyer' => $currentUser,
-        ], ['id' => 'DESC']);
-        
-        return $this->render('v2/dashboard/contacts/index.html.twig', [
-            'allContacts' => $this->paginator->paginate(
-                $allContacts,
-                $request->query->getInt('page', 1),
-                10
-            ),
-            'contacts' => $this->paginator->paginate(
-                $purchasedContacts,
-                $request->query->getInt('page', 1),
-                10
-            ),
-            'pendingContacts' => $this->paginator->paginate(
-                $pendingContacts,
-                $request->query->getInt('page', 1),
-                10
-            ),
-        ]);
-    }
-
-    #[Route('/contact/view/{purchasedContact}', name: 'app_v2_contact_view')]
-    public function view(Request $request, PurchasedContact $purchasedContact): Response
-    {
-        return $this->render('v2/dashboard/contacts/view.html.twig', [
-            'contact' => $purchasedContact->getContact(),
-        ]);
-    }
-
-    #[Route('/contact/delete/{contact}', name: 'app_v2_contact_delete', methods: ['POST', 'GET'])]
-    public function delete(Request $request, PurchasedContact $contact): Response
-    {
-        $contactId = $contact->getId();
-        $message = "La contact a bien été supprimée";
-        $this->em->remove($contact);
-        $this->em->flush();
-        if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
-            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-            return $this->render('v2/dashboard/contacts/delete.html.twig', [
-                'contactId' => $contactId,
-                'message' => $message,
-            ]);
-        }
-
-        $referer = $request->headers->get('referer');
-        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_v2_dashboard');
-    }
-
-    #[Route('/show-contact', name: 'app_v2_contact_show', methods: ['POST', 'GET'])]
-    public function showContact(Request $request): Response
-    {
-        /** @var User $currentUser */
-        $currentUser = $this->userService->getCurrentUser();
-        $contactId = $request->request->get('contactId');
-        $contact = $this->em->getRepository(User::class)->find($contactId);
-        $message = 'Demande d\'ajout dans votre réseau professionnel envoyée';
-        $success = true;
-        $status = 'Succès';
-    
-        $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
-        $response = $this->creditManager->adjustCredits($currentUser, $creditAmount);
-    
-        $recruiter = $this->em->getRepository(EntrepriseProfile::class)->findOneBy(['entreprise' => $contactId]);
-        $candidat = $this->em->getRepository(CandidateProfile::class)->findOneBy(['candidat' => $contactId]);
-        
-        if (isset($response['error'])) {
-            $message = $response['error'];
-            $success = false;
-            $status = 'Echec';
-        }else{
-            $purchasedContact = new PurchasedContact();
-            $purchasedContact->setBuyer($currentUser);
-            $purchasedContact->setPurchaseDate(new \DateTime());
-            $purchasedContact->setContact($contact);
-            $purchasedContact->setPrice($creditAmount);
-            $purchasedContact->setIsAccepted(false);
-            $this->em->persist($purchasedContact);
-            $this->em->flush();
-            $urlAccepted = $this->urlGenerator->generate(
-                'app_v2_dashboard_notification_accept',
-                ['id' => $purchasedContact->getId()], 
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $urlRefused = $this->urlGenerator->generate(
-                'app_v2_dashboard_notification_refuse',
-                ['id' => $purchasedContact->getId()], 
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $this->notificationManager->createNotification(
-                $currentUser, 
-                $contact, 
-                Notification::TYPE_CONTACT,
-                'Nouvelle demande de contact',
-                ucfirst(substr($currentUser->getNom(), 0, 1)).'. '.$currentUser->getPrenom(). ' souhaite vous contacter pour une opportunité de collaboration. Acceptez-vous de partager vos coordonnées ? <br>
-                <a class="btn btn-primary rounded-pill my-3 px-4" href="'.$urlAccepted.'">Accepter</a>  <a class="btn btn-danger rounded-pill my-3 px-3" href="'.$urlRefused.'">Refuser</a>
-                '
-            );
-        }
-
-        
-        if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
-            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-
-            return $this->render('v2/turbo/live.html.twig', [
-                'message' => $message,
-                'success' => $success,
-                'status' => $status,
-                'recruiter' => $recruiter,
-                'candidat' => $candidat,
-                'user' => $contact,
-                'credit' => $currentUser->getCredit()->getTotal(),
-            ]);
-        }
-
-        $referer = $request->headers->get('referer');
-        return $referer ? $this->redirect($referer) : $this->redirectToRoute('app_v2_dashboard');
     }
 
     #[Route('/profile/view/{id}', name: 'app_v2_profile_view')]
@@ -432,52 +300,6 @@ class DashboardController extends AbstractController
             'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
             'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
             'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
-        ]);
-    }
-
-    #[Route('/job-offer/view/{id}', name: 'app_v2_job_offer_view')]
-    public function viewJobOffer(Request $request, int $id): Response
-    {
-        $annonce = $this->em->getRepository(JobListing::class)->find($id);
-        /** @var User $currentUser */
-        $currentUser = $this->userService->getCurrentUser();
-        $candidat = $this->userService->checkProfile();
-        if($candidat instanceof CandidateProfile){
-            return $this->redirectToRoute('app_v2_candidate_view_job_offer', ['id' => $id]);
-        }
-        if(!$annonce instanceof JobListing){
-            $this->addFlash('error', 'Annonce introuvable.');
-            return $this->redirectToRoute('app_v2_candidate_job_offer');
-        }
-
-        $contactRepository = $this->em->getRepository(PurchasedContact::class);
-        $purchasedContact = $contactRepository->findOneBy([
-            'buyer' => $currentUser,
-            'contact' => $annonce->getEntreprise()->getEntreprise(),
-        ]);
-
-        if ($annonce) {
-            $ipAddress = $request->getClientIp();
-            $viewRepository = $this->em->getRepository(AnnonceVues::class);
-            $existingView = $viewRepository->findOneBy([
-                'annonce' => $annonce,
-                'idAdress' => $ipAddress,
-            ]);
-    
-            if (!$existingView) {
-                $view = new AnnonceVues();
-                $view->setAnnonce($annonce);
-                $view->setIdAdress($ipAddress);
-    
-                $this->em->persist($view);
-                $annonce->addAnnonceVue($view);
-                $this->em->flush();
-            }
-        }
-
-        return $this->render('v2/dashboard/job_offer/view.html.twig', [
-            'annonce' => $annonce,
-            'purchasedContact' => $purchasedContact,
         ]);
     }
 

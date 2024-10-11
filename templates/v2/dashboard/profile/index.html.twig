@@ -1,0 +1,99 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Candidats | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endif %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+    <section class="">
+      <div class="shadow p-2 p-sm-4">
+          <h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+            <i class="bi bi-search text-warning me-2"></i>
+            Trouvez le profil idéal, parcourez par mot-clé, titre ou compétences.
+          </h2>
+          <div class="row">
+            <div class="col-12 col-sm-8" id="candidates-container">
+            {% include "v2/dashboard/result/parts/_part_candidates_list.html.twig" %}
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="d-flex flex-column flex-shrink-0 py-3 text-white position-sticky top-0">
+                    <div class="card mb-3">
+                      <div class="card-body small">
+
+                        {% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+                            {% include "v2/dashboard/sidebar_candidat.html.twig" %}
+                        {% endif %}
+
+                        {% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+                            {% include "v2/dashboard/sidebar_entreprise.html.twig" %}
+                        {% endif %}
+
+                      </div>
+                    </div>
+                    <div class="card mb-3" id="candidate-card-container">
+                        <img src="{{ asset('images/mailing/thumbnail.png')}}" class="" alt="Premium Olona Talents">
+                        <div class="card-body small">
+                            <h3 class="card-title h5">Passez à la Version Premium!</h3>
+                            <p class="card-text">Profitez d'un accès illimité aux contacts candidats, de la mise en avant de vos annonces et bien plus encore.</p>
+                            <div id="checkBoost">
+                            <button class="btn btn-sm btn-danger text-uppercase fw-bold px-2" data-bs-toggle="modal" data-bs-target="#boostProfile" data-bs-whatever="@mdo"><i class="bi bi-rocket-takeoff me-2"></i> Booster l'entreprise</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+      </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script> 
+    
+    var currentPage = 1;
+    var allDataLoaded = false;
+
+    $(window).scroll(function() {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !allDataLoaded) {
+            loadMoreJobs();
+        }
+    });
+
+    function loadMoreJobs() {
+        currentPage++;
+        var url = `{{ path('api_candidate_secteurs') }}?page=${currentPage}`;
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(html) {
+                if (html.trim() === "") {
+                    allDataLoaded = true;
+                } else {
+                    $('#candidates-container').append(html);
+                }
+            }
+        });
+    }
+    </script>
+{% endblock %}

@@ -48,4 +48,14 @@ class ElasticsearchService
     {
         return $this->client->delete($params);
     }
+
+    public function exists(array $params)
+    {
+        try {
+            return $this->client->exists($params);
+        } catch (\Exception $e) {
+            // vous pourriez également vouloir logger l'exception ici
+            return false;
+        }
+    }
 }

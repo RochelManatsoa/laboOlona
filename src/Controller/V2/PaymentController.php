@@ -8,7 +8,6 @@ use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\Transaction;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\BusinessModel\TransactionType;
-use App\Entity\BusinessModel\TypeTransaction;
 use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

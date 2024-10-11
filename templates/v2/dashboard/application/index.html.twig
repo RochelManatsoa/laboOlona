@@ -1,0 +1,33 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Mes candidatures | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% else %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+    <section class="">
+      {% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+        {% include "v2/dashboard/application/_candidate.html.twig" %}
+      {% else %}
+        {% include "v2/dashboard/application/_recruiter.html.twig" %}
+      {% endif %}
+    </section>
+{% endblock %}
