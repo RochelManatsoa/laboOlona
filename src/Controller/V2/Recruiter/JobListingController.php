@@ -23,9 +23,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\BoostVisibilityManager;
 use App\Security\Voter\JobListingVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/v2/recruiter/job-listing')]
+#[Route('/v2/dashboard')]
 class JobListingController extends AbstractController
 {
     public function __construct(
@@ -37,9 +38,10 @@ class JobListingController extends AbstractController
         private BoostVisibilityManager $boostVisibilityManager,
         private CreditManager $creditManager,
         private ProfileManager $profileManager,
+        private UrlGeneratorInterface $urlGeneratorInterface,
     ){}
 
-    #[Route('/', name: 'app_v2_recruiter_job_listing')]
+    #[Route('/job-listings', name: 'app_v2_recruiter_job_listing')]
     public function index(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
@@ -51,11 +53,12 @@ class JobListingController extends AbstractController
                 $jobListings,
                 $request->query->getInt('page', 1),
                 20
-            )
+            ),
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_joblistings'),
         ]);
     }
     
-    #[Route('/create', name: 'app_v2_recruiter_create_job_listing')]
+    #[Route('/job-listing/create', name: 'app_v2_recruiter_create_job_listing')]
     public function create(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Accès refusé. Cette section est réservée aux recruteurs.');
@@ -111,6 +114,7 @@ class JobListingController extends AbstractController
     
         return $this->render('v2/dashboard/recruiter/job_listing/create.html.twig', [
             'form' => $form->createView(),
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_joblistings'),
         ]);
     }
     
@@ -134,7 +138,7 @@ class JobListingController extends AbstractController
         return ['success' => true];
     }
     
-    #[Route('/edit/{jobListing}', name: 'app_v2_recruiter_job_listing_edit')]
+    #[Route('/job-listing/edit/{jobListing}', name: 'app_v2_recruiter_job_listing_edit')]
     #[IsGranted(JobListingVoter::EDIT, subject: 'jobListing')]
     public function editJobListing(Request $request, JobListing $jobListing): Response
     {
@@ -182,6 +186,7 @@ class JobListingController extends AbstractController
         return $this->render('v2/dashboard/recruiter/job_listing/edit.html.twig', [
             'jobListing' => $jobListing,
             'form' => $form->createView(),
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_joblistings'),
         ]);
     }
 
@@ -199,7 +204,7 @@ class JobListingController extends AbstractController
     }
 
     
-    #[Route('/view/{jobListing}', name: 'app_v2_recruiter_job_listing_view')]
+    #[Route('/job-listing/view/{jobListing}', name: 'app_v2_recruiter_job_listing_view')]
     #[IsGranted(JobListingVoter::VIEW, subject: 'jobListing')]
     public function viewJobListing(Request $request, JobListing $jobListing): Response
     {
@@ -208,10 +213,11 @@ class JobListingController extends AbstractController
 
         return $this->render('v2/dashboard/recruiter/job_listing/view.html.twig', [
             'annonce' => $jobListing,
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_joblistings'),
         ]);
     }
     
-    #[Route('/delete', name: 'app_v2_recruiter_delete_job_listing', methods: ['POST'])]
+    #[Route('/job-listing/delete', name: 'app_v2_recruiter_delete_job_listing', methods: ['POST'])]
     #[IsGranted(JobListingVoter::EDIT, subject: 'jobListing')]
     public function removeJobListing(Request $request): Response
     {

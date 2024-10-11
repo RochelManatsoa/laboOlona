@@ -16,8 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Entreprise\FavorisRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-#[Route('/v2/recruiter/favorite')]
+#[Route('/v2/dashboard')]
 class FavoriteController extends AbstractController
 {
     public function __construct(
@@ -28,9 +29,10 @@ class FavoriteController extends AbstractController
         private CandidatManager $candidatManager,
         private ProfileManager $profileManager,
         private CreditManager $creditManager,
+        private UrlGeneratorInterface $urlGeneratorInterface,
     ){}
     
-    #[Route('/', name: 'app_v2_recruiter_favorite')]
+    #[Route('/favorites', name: 'app_v2_recruiter_favorite')]
     public function index(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
@@ -44,11 +46,12 @@ class FavoriteController extends AbstractController
                 $favorites,
                 $request->query->getInt('page', 1),
                 20
-            )
+            ),
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_candidates'),
         ]);
     }
     
-    #[Route('/view/{uid}', name: 'app_v2_recruiter_favorite_view')]
+    #[Route('/favorite/view/{uid}', name: 'app_v2_recruiter_favorite_view')]
     public function view(Request $request, CandidateProfile $candidat): Response
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
@@ -57,13 +60,14 @@ class FavoriteController extends AbstractController
         return $this->render('v2/dashboard/recruiter/favorite/view.html.twig', [
             'candidat' => $candidat,
             'recruiter' => $recruiter,
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_candidates'),
             'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
             'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
             'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
         ]);
     }
     
-    #[Route('/add/candidate/{id}', name: 'app_v2_recruiter_favorite_add_candidate')]
+    #[Route('/favorite/add/candidate/{id}', name: 'app_v2_recruiter_favorite_add_candidate')]
     public function add(Request $request, int $id)
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
@@ -108,7 +112,7 @@ class FavoriteController extends AbstractController
         ], Response::HTTP_OK);
     }
     
-    #[Route('/delete/candidate/{id}', name: 'app_v2_recruiter_favorite_delete_candidate')]
+    #[Route('/favorite/delete/candidate/{id}', name: 'app_v2_recruiter_favorite_delete_candidate')]
     public function remove(Request $request, int $id)
     {
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');

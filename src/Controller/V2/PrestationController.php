@@ -28,8 +28,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-#[Route('/v2/dashboard/prestation')]
+#[Route('/v2/dashboard')]
 class PrestationController extends AbstractController
 {
     public function __construct(
@@ -39,11 +40,12 @@ class PrestationController extends AbstractController
         private UserService $userService,
         private PrestationManager $prestationManager,
         private PrestationExtension $prestationExtension,
+        private UrlGeneratorInterface $urlGeneratorInterface,
         private CreditManager $creditManager,
         private BoostVisibilityManager $boostVisibilityManager,
     ){}
     
-    #[Route('/', name: 'app_v2_prestation')]
+    #[Route('/prestations', name: 'app_v2_prestation')]
     public function index(Request $request): Response
     {
         $data = new PrestationData();
@@ -62,10 +64,11 @@ class PrestationController extends AbstractController
         $qb = $this->em->getRepository(Prestation::class)->createQueryBuilder('p');
 
         $qb->join('p.secteurs', 's') 
-        ->where('p.status = :status')
-        ->setParameter('status', Prestation::STATUS_VALID)
-        ->andWhere('s IN (:secteurs)') 
-        ->setParameter('secteurs', $secteurs)
+        ->where('p.status = :valid OR p.status = :featured') 
+        ->setParameter('valid', Prestation::STATUS_VALID)
+        ->setParameter('featured', Prestation::STATUS_FEATURED)
+        // ->andWhere('s IN (:secteurs)') 
+        // ->setParameter('secteurs', $secteurs)
         ->orderBy('p.id', 'DESC')
         ->setMaxResults($limit)
         ->setFirstResult(($page - 1) * $limit);
@@ -73,6 +76,7 @@ class PrestationController extends AbstractController
         $prestations = $qb->getQuery()->getResult();
 
         return $this->render('v2/dashboard/prestation/index.html.twig', [
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_prestations'),
             'prestations' => $prestations,
             'profile' => $profile
         ]);
@@ -90,10 +94,11 @@ class PrestationController extends AbstractController
         $qb = $this->em->getRepository(Prestation::class)->createQueryBuilder('p');
 
         $qb->join('p.secteurs', 's') 
-        ->where('p.status = :status')
-        ->setParameter('status', Prestation::STATUS_VALID)
-        ->andWhere('s IN (:secteurs)') 
-        ->setParameter('secteurs', $secteurs)
+        ->where('p.status = :valid OR p.status = :featured') 
+        ->setParameter('valid', Prestation::STATUS_VALID)
+        ->setParameter('featured', Prestation::STATUS_FEATURED)
+        // ->andWhere('s IN (:secteurs)') 
+        // ->setParameter('secteurs', $secteurs)
         ->orderBy('p.id', 'DESC')
         ->setMaxResults($limit)
         ->setFirstResult(($page - 1) * $limit);
@@ -106,7 +111,7 @@ class PrestationController extends AbstractController
         ]);
     }
     
-    #[Route('/my-created', name: 'app_v2_prestation_my_created')]
+    #[Route('/prestation/my-created', name: 'app_v2_prestation_my_created')]
     public function myCreated(Request $request): Response
     {
         $data = new PrestationData();
@@ -124,7 +129,7 @@ class PrestationController extends AbstractController
         ]);
     }
     
-    #[Route('/create', name: 'app_v2_create_prestation')]
+    #[Route('/prestation/create', name: 'app_v2_create_prestation')]
     public function createPrestation(Request $request): Response
     {
         /** @var User $currentUser */
@@ -207,7 +212,7 @@ class PrestationController extends AbstractController
         return ['success' => true];
     }
     
-    #[Route('/edit/{prestation}', name: 'app_v2_edit_prestation')]
+    #[Route('/prestation/edit/{prestation}', name: 'app_v2_edit_prestation')]
     #[IsGranted(PrestationVoter::EDIT, subject: 'prestation')]
     public function editPrestation(Request $request, Prestation $prestation): Response
     {
@@ -258,7 +263,7 @@ class PrestationController extends AbstractController
         return ['success' => true, 'message' => 'Modification sauvegardée avec succès', 'status' => '<i class="bi bi-check-lg me-2"></i> Succès'];
     }
     
-    #[Route('/view/{prestation}', name: 'app_v2_view_prestation')]
+    #[Route('/prestation/view/{prestation}', name: 'app_v2_view_prestation')]
     #[IsGranted(PrestationVoter::VIEW, subject: 'prestation')]
     public function viewPrestation(Request $request, Prestation $prestation): Response
     {
@@ -301,7 +306,7 @@ class PrestationController extends AbstractController
         ]);
     }
     
-    #[Route('/delete', name: 'app_v2_delete_prestation', methods: ['POST'])]
+    #[Route('/prestation/delete', name: 'app_v2_delete_prestation', methods: ['POST'])]
     #[IsGranted(PrestationVoter::EDIT, subject: 'prestation')]
     public function removePrestation(Request $request): Response
     {

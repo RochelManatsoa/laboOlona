@@ -2,7 +2,6 @@
 
 namespace App\Controller\V2;
 
-use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\Package;
 use App\Entity\Finance\Devise;
 use App\Form\BusinessModel\OrderType;

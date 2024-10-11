@@ -9,13 +9,18 @@
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <a href="{{ path('app_v2_candidate_job_offer')}}" class="nav-link {{ current_route == 'app_v2_candidate_job_offer' ? 'underline' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_job_offer')}}" class="nav-link {{ current_route == 'app_v2_job_offer' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-search me-2"></i></span> Trouver une mission
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_prestation')}}" class="nav-link {{ current_route == 'app_v2_prestation' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-journals me-2"></i> Annuaire de services
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_profiles')}}" class="nav-link {{ current_route == 'app_v2_profiles' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-person-raised-hand me-2"></i> Trouver un collaborateur
           </a>
         </li>
         {% if app.user.candidateProfile is defined and app.user.candidateProfile.prestations|length > 0 %}
@@ -26,8 +31,13 @@
         </li>
         {% endif %}
         <li class="nav-item">
-          <a href="{{ path('app_v2_candidate_application')}}" class="nav-link {{ current_route == 'app_v2_candidate_application' ? 'underline' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_applications')}}" class="nav-link {{ current_route == 'app_v2_applications' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-card-checklist me-2"></i></span> Mes candidatures
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_contacts')}}" class="nav-link {{ current_route == 'app_v2_contacts' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-journal-check me-2"></i></i></span> Mon réseau professionnel
           </a>
         </li>
         <li class="nav-item">
@@ -38,11 +48,6 @@
         <li class="nav-item">
           <a href="{{ path('app_v2_candidate_simulator')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-aspect-ratio me-2"></i></span> Mes simulations
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ path('app_v2_contacts')}}" class="nav-link {{ current_route == 'app_v2_contacts' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-journal-check me-2"></i></i></span> Mon réseau professionnel
           </a>
         </li>
         <li class="nav-item">

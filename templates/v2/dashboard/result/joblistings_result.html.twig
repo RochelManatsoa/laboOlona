@@ -28,17 +28,7 @@
 <input type="hidden" id="hidden-query" value="{{ getSearchQuery('q') }}">
 	<div class="container">
 		<div class="row mt-3 mt-sm-5">
-			<ul class="nav nav-underline">
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path('app_olona_talents_candidates', {'q': getSearchQuery('q')})}}">Candidats</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" href="{{ path('app_olona_talents_joblistings', {'q': getSearchQuery('q')})}}">Offre d'emploi</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path('app_olona_talents_prestations', {'q': getSearchQuery('q')})}}">Services</a>
-				</li>
-			</ul>
+			<h1 class="h4">Resultats pour "{{ getSearchQuery('q')}}"</h1>
 			{# {% include "v2/result/premium_candidats.html.twig" with {'top_candidats': top_candidats} %} #}
 			<div class="row">
 				<div class="col-12 col-sm-8" id="joblistings-list">

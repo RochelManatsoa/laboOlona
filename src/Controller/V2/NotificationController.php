@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/v2/dashboard/notification')]
+#[Route('/v2/dashboard')]
 class NotificationController extends AbstractController
 {
     public function __construct(
@@ -37,7 +37,7 @@ class NotificationController extends AbstractController
     ) {
     }
     
-    #[Route('/', name: 'app_v2_dashboard_notification')]
+    #[Route('/notifications', name: 'app_v2_dashboard_notification')]
     public function index(Request $request): Response
     {
         $isRead = $request->query->get('isRead');
@@ -56,7 +56,7 @@ class NotificationController extends AbstractController
         ]);
     }
     
-    #[Route('/view/{id}', name: 'app_v2_dashboard_notification_view')]
+    #[Route('/notification/view/{id}', name: 'app_v2_dashboard_notification_view')]
     public function view(int $id): Response
     {
         /** @var User $user */
@@ -76,7 +76,7 @@ class NotificationController extends AbstractController
         ], Response::HTTP_OK);
     }
     
-    #[Route('/delete/{id}', name: 'app_v2_dashboard_notification_delete')]
+    #[Route('/notification/delete/{id}', name: 'app_v2_dashboard_notification_delete')]
     public function delete(Notification $notification): Response
     {
         /** @var User $user */
@@ -87,7 +87,7 @@ class NotificationController extends AbstractController
         return $this->redirectToRoute('app_v2_dashboard_notification', []);
     }
     
-    #[Route('/see/all', name: 'app_v2_dashboard_notification_see_all')]
+    #[Route('/notification/see/all', name: 'app_v2_dashboard_notification_see_all')]
     public function seeAll(): Response
     {
         /** @var User $user */
@@ -107,7 +107,7 @@ class NotificationController extends AbstractController
         return $this->redirectToRoute('app_v2_dashboard_notification', []);
     }
     
-    #[Route('/accept/{id}', name: 'app_v2_dashboard_notification_accept')]
+    #[Route('/notification/accept/{id}', name: 'app_v2_dashboard_notification_accept')]
     public function accept(int $id): Response
     {
         /** @var User $user */
@@ -136,7 +136,7 @@ class NotificationController extends AbstractController
         return $this->redirectToRoute('app_v2_dashboard_notification', []);
     }
     
-    #[Route('/refuse/{id}', name: 'app_v2_dashboard_notification_refuse')]
+    #[Route('/notification/refuse/{id}', name: 'app_v2_dashboard_notification_refuse')]
     public function refuse(int $id): Response
     {
         /** @var User $user */

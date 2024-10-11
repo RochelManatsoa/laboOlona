@@ -47,40 +47,82 @@ class RemoveExpiredBoostCommand extends Command
         $expiredCandidateProfile = $this->entityManager->getRepository(CandidateProfile::class)->findExpiredPremium();
         $expiredRecruiterProfile = $this->entityManager->getRepository(EntrepriseProfile::class)->findExpiredPremium();
         
-        foreach ($expiredJobListings as $jobListing) {
-            $this->elasticsearchService->delete([
+        
+        foreach ($expiredJobListings as $listing) {
+            $params = [
                 'index' => 'joblisting_premium_index',
-                'id'    => $jobListing->getId(),
-            ]);
-            
-            $io->note(sprintf('Deleted expired Premium Joblisting ID: %s', $jobListing->getId()));
+                'id'    => $listing->getId(),
+            ];
+
+            if ($this->elasticsearchService->exists($params)) {
+
+                if ($this->elasticsearchService->exists($params)) {
+                    try {
+                        $this->elasticsearchService->delete($params);
+                        $io->note(sprintf('Deleted expired Premium Prestation ID: %s', $listing->getId()));
+                    } catch (\Exception $e) {
+                        $output->writeln('Failed to delete Joblisting ID: ' . $listing->getId() . ' with error: ' . $e->getMessage());
+                    }
+                } else {
+                    $io->note(sprintf('No document found to delete for ID: %s', $listing->getId()));
+                }
+            } else {
+                $io->note(sprintf('No document found to delete for ID: %s', $listing->getId()));
+            }
         }
 
-        foreach ($expiredPrestations as $prestation) {
-            $this->elasticsearchService->delete([
+        foreach ($expiredPrestations as $listing) {
+            $params = [
                 'index' => 'prestation_premium_index',
-                'id'    => $prestation->getId(),
-            ]);
-            
-            $io->note(sprintf('Deleted expired Premium prestation ID: %s', $prestation->getId()));
+                'id'    => $listing->getId(),
+            ];
+
+            if ($this->elasticsearchService->exists($params)) {
+                try {
+                    $this->elasticsearchService->delete($params);
+                    $io->note(sprintf('Deleted expired Premium Prestation ID: %s', $listing->getId()));
+                } catch (\Exception $e) {
+                    $output->writeln('Failed to delete Joblisting ID: ' . $listing->getId() . ' with error: ' . $e->getMessage());
+                }
+            } else {
+                $io->note(sprintf('No document found to delete for ID: %s', $listing->getId()));
+            }
         }
 
-        foreach ($expiredCandidateProfile as $candidate) {
-            $this->elasticsearchService->delete([
+        foreach ($expiredCandidateProfile as $listing) {
+            $params = [
                 'index' => 'candidate_premium_index',
-                'id'    => $candidate->getId(),
-            ]);
-            
-            $io->note(sprintf('Deleted expired Premium candidate ID: %s', $candidate->getId()));
+                'id'    => $listing->getId(),
+            ];
+
+            if ($this->elasticsearchService->exists($params)) {
+                try {
+                    $this->elasticsearchService->delete($params);
+                    $io->note(sprintf('Deleted expired Premium Prestation ID: %s', $listing->getId()));
+                } catch (\Exception $e) {
+                    $output->writeln('Failed to delete Joblisting ID: ' . $listing->getId() . ' with error: ' . $e->getMessage());
+                }
+            } else {
+                $io->note(sprintf('No document found to delete for ID: %s', $listing->getId()));
+            }
         }
 
-        // foreach ($expiredRecruiterProfile as $recruiter) {
-        //     $this->elasticsearchService->delete([
-        //         'index' => 'joblisting_premium_index',
-        //         'id'    => $recruiter->getId(),
-        //     ]);
-            
-        //     $io->note(sprintf('Deleted expired Premium recruiter ID: %s', $recruiter->getId()));
+        // foreach ($expiredRecruiterProfile as $listing) {
+        //     $params = [
+        //         'index' => 'candidate_premium_index',
+        //         'id'    => $listing->getId(),
+        //     ];
+
+        //     if ($this->elasticsearchService->exists($params)) {
+        //         try {
+        //             $this->elasticsearchService->delete($params);
+        //             $io->note(sprintf('Deleted expired Premium Prestation ID: %s', $listing->getId()));
+        //         } catch (\Exception $e) {
+        //             $output->writeln('Failed to delete Joblisting ID: ' . $listing->getId() . ' with error: ' . $e->getMessage());
+        //         }
+        //     } else {
+        //         $io->note(sprintf('No document found to delete for ID: %s', $listing->getId()));
+        //     }
         // }
 
         $io->success('All expired boost removed from elasticsearch');

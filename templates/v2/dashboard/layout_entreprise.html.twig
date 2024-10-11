@@ -9,13 +9,18 @@
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <a href="{{ path('app_v2_recruiter_profile')}}" class="nav-link {{ current_route == 'app_v2_recruiter_profile' ? 'underline' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_profiles')}}" class="nav-link {{ current_route == 'app_v2_profiles' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-search me-2"></i> Trouver un profil
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_prestation')}}" class="nav-link {{ current_route == 'app_v2_prestation' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-journals me-2"></i> Annuaire de services
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_job_offer')}}" class="nav-link {{ current_route == 'app_v2_job_offer' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-hand-index-thumb me-2"></i> Trouver une offre d'emploi
           </a>
         </li>
         {% if app.user.entrepriseProfile is defined and app.user.entrepriseProfile.prestations|length > 0 %}
@@ -41,6 +46,16 @@
           </a>
         </li>
         <li class="nav-item">
+          <a href="{{ path('app_v2_applications')}}" class="nav-link {{ current_route == 'app_v2_applications' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-folder2-open me-2"></i></span> Candidatures reçues
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_contacts')}}" class="nav-link {{ current_route == 'app_v2_contacts' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-journal-check me-2"></i></i> Mon réseau professionnel
+          </a>
+        </li>
+        <li class="nav-item">
           <a href="{{ path('app_v2_recruiter_simulator_create')}}" class="nav-link {{ current_route == 'app_v2_recruiter_simulator_create' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-printer me-2"></i> Simulateur de budget
           </a>
@@ -48,11 +63,6 @@
         <li class="nav-item">
           <a href="{{ path('app_v2_recruiter_simulator')}}" class="nav-link {{ current_route == 'app_v2_recruiter_simulator' ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-aspect-ratio me-2"></i> Mes simulations
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ path('app_v2_contacts')}}" class="nav-link {{ current_route == 'app_v2_contacts' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-journal-check me-2"></i></i> Mon réseau professionnel
           </a>
         </li>
         <li class="nav-item">

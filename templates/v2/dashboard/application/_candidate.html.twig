@@ -1,0 +1,66 @@
+<div class="shadow p-2 p-sm-4">
+	<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+		<i class="bi bi-card-checklist text-warning me-2"></i>
+		Retrouvez à tout moment vos candidatures
+	</h2>
+	<p class="text-center">
+		Le suivi de leur statut, ainsi que l’historique des offres auxquelles vous avez postulé. Les candidatures archivées regroupent vos candidatures sur des offres expirées.
+	</p>
+
+	<div class="mt-4">
+		<ul class="nav nav-underline justify-content-center">
+			<li class="nav-item">
+				<a class="nav-link px-3 active" id="pending-tab" data-bs-toggle="tab" href="#pending">En attente</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link px-3" id="accepted-tab" data-bs-toggle="tab" href="#accepted">Acceptées</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link px-3" id="archived-tab" data-bs-toggle="tab" href="#archived">Archivées</a>
+			</li>
+		</ul>
+
+		<!-- Contenu des onglets -->
+		<div class="tab-content mt-3">
+			<div class="tab-pane fade show active" id="pending">
+				{% if pendings|length > 0 %}
+
+					{% include 'dashboard/candidat/candidature/_pending.html.twig' %}
+
+				{% else %}
+					<div class="text-center col-6 mx-auto">
+						<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+						<p class="my-5">Vous n'avez aucune candidature en cours.</p>
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="tab-pane fade" id="accepted">
+				{% if accepteds|length > 0 %}
+
+					{% include 'dashboard/candidat/candidature/_accepted.html.twig' %}
+
+				{% else %}
+					<div class="text-center col-6 mx-auto">
+						<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+						<p class="my-5">Vous n’avez aucune candidature acceptées.</p>
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="tab-pane fade" id="archived">
+				{% if archiveds|length > 0 %}
+
+					{% include 'dashboard/candidat/candidature/_archived.html.twig' %}
+
+				{% else %}
+					<div class="text-center col-6 mx-auto">
+						<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+						<p class="my-5">Vous n’avez aucune candidature archivées.</p>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+</div>
