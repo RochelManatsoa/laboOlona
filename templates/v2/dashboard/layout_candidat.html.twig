@@ -1,10 +1,84 @@
 
 {% set current_route = app.request.attributes.get('_route') %}
-<div class="row">
-  <div class="col-12 col-sm-3">
+<div class="modal fade" id="boostProfile" tabindex="-1" aria-labelledby="boostProfileLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form action="{{ path('app_v2_candidate_boost_profile') }}" name="candidate_boost"method="post" id="boostProfileForm">
+      <div class="modal-header">
+        <h3 class="modal-title fs-5 text-uppercase fw-bold" id="boostProfileLabel"><i class="bi bi-rocket-takeoff me-2"></i> Boostez votre Visibilité !</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      Attirez l'attention des recruteurs en boostant votre profil et gagnez en visibilité. Soyez en haut des résultats de recherche ! 
+          <div class="my-3">
+            <div id="candidate_boost">
+            <fieldset class="mb-3">
+              <div id="candidate_boost_boost">
+                <div class="form-check">
+                  <input type="radio" id="candidate_boost_boost_placeholder" name="candidate_boost[boost]" class="form-check-input" value="" checked="checked">
+                  <label class="form-check-label" for="candidate_boost_boost_placeholder">Pas de boost</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" id="candidate_boost_boost_1" name="candidate_boost[boost]" class="form-check-input" value="1" data-value="30 crédits">
+                  <label class="form-check-label" for="candidate_boost_boost_1">Boost 7 jours (30 crédits)</label>
+                </div>
+                <div class="form-check"><input type="radio" id="candidate_boost_boost_2" name="candidate_boost[boost]" class="form-check-input" value="2" data-value="50 crédits">
+                  <label class="form-check-label" for="candidate_boost_boost_2">Boost 15 jours (50 crédits)</label>
+                  </div>
+                <div class="form-check">
+                  <input type="radio" id="candidate_boost_boost_3" name="candidate_boost[boost]" class="form-check-input" value="3" data-value="80 crédits">
+                  <label class="form-check-label" for="candidate_boost_boost_3">Boost 30 jours (80 crédits)</label>
+                </div>
+              </div>        
+            </fieldset>
+            </div>
+          </div>
+        Multipliez vos opportunités et démarquez-vous dès maintenant !
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary text-uppercase fw-bold" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" data-bs-toggle="modal" data-bs-type="boost-profile" data-bs-target="#confirmationModal" data-bs-price="50 crédits" class="btn btn-primary text-uppercase fw-bold">Prendre un boost</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header">
+    <div class="container">
+      <a class="navbar-brand" href="{{ path('app_home') }}">
+        <img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="100px" class="" alt="Logo">
+      </a>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
     <div class="d-flex flex-column flex-shrink-0 p-3 " style="width: 280px;">
-      <div id="checkBoost">
-			{{ checkBoost(app.user)|raw }}
+
+      <div class="d-flex justify-content-center my-2">
+          <div class="rounded-circle" style="
+              width: 85px;
+              height: 85px;
+              background-image: url('{{ app.user.candidateProfile.fileName ? asset('uploads/experts/' ~ app.user.candidateProfile.fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+              background-size: cover;
+              background-position: center;
+          ">
+          </div>
+      </div>
+      <div class="d-flex justify-content-center">
+          <div class="text-center fw-bold">
+          {{ app.user.nom }} {{ app.user.prenom }}
+          </div>
+      </div>
+      <div class="d-flex justify-content-center">
+          <div class="text-center fw-lighter">
+          {{ app.user.candidateProfile.titre }}
+          </div>
+      </div>
+      <div class="d-flex justify-content-center">
+        <div id="checkBoost">
+        {{ checkBoost(app.user)|raw }}
+        </div>
       </div>
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
@@ -90,49 +164,121 @@
       </a>
     </div>
   </div>
-  <div class="col-12 col-sm-9">
+</div>
+<div class="row">
+  <div class="col-lg-3 d-none d-lg-block">
+    <div class="d-flex flex-column flex-shrink-0 p-3 " style="width: 280px;">
 
-<div class="modal fade" id="boostProfile" tabindex="-1" aria-labelledby="boostProfileLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <form action="{{ path('app_v2_candidate_boost_profile') }}" name="candidate_boost"method="post" id="boostProfileForm">
-      <div class="modal-header">
-        <h3 class="modal-title fs-5 text-uppercase fw-bold" id="boostProfileLabel"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon profil</h3>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      Augmentez vos chances d'être vu et choisi par les recruteurs ! En boostant votre profil, vous vous assurez une visibilité accrue et une position de premier plan dans les résultats de recherche. 
-          <div class="my-3">
-            <div id="candidate_boost">
-            <fieldset class="mb-3">
-              <div id="candidate_boost_boost">
-                <div class="form-check">
-                  <input type="radio" id="candidate_boost_boost_placeholder" name="candidate_boost[boost]" class="form-check-input" value="" checked="checked">
-                  <label class="form-check-label" for="candidate_boost_boost_placeholder">Pas de boost</label>
-                </div>
-                <div class="form-check">
-                  <input type="radio" id="candidate_boost_boost_1" name="candidate_boost[boost]" class="form-check-input" value="1" data-value="30 crédits">
-                  <label class="form-check-label" for="candidate_boost_boost_1">Boost 7 jours (30 crédits)</label>
-                </div>
-                <div class="form-check"><input type="radio" id="candidate_boost_boost_2" name="candidate_boost[boost]" class="form-check-input" value="2" data-value="50 crédits">
-                  <label class="form-check-label" for="candidate_boost_boost_2">Boost 15 jours (50 crédits)</label>
-                  </div>
-                <div class="form-check">
-                  <input type="radio" id="candidate_boost_boost_3" name="candidate_boost[boost]" class="form-check-input" value="3" data-value="80 crédits">
-                  <label class="form-check-label" for="candidate_boost_boost_3">Boost 30 jours (80 crédits)</label>
-                </div>
-              </div>        
-            </fieldset>
-            </div>
+      <div class="d-flex justify-content-center my-2">
+          <div class="rounded-circle" style="
+              width: 85px;
+              height: 85px;
+              background-image: url('{{ app.user.candidateProfile.fileName ? asset('uploads/experts/' ~ app.user.candidateProfile.fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+              background-size: cover;
+              background-position: center;
+          ">
           </div>
-      En choisissant l'un de ces boosts, vous multipliez vos opportunités de contact et renforcez votre présence auprès des principales entreprises de votre secteur. Ne laissez pas passer votre chance de vous démarquer !
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary text-uppercase fw-bold" data-bs-dismiss="modal">Annuler</button>
-        <button type="button" data-bs-toggle="modal" data-bs-type="boost-profile" data-bs-target="#confirmationModal" data-bs-price="50 crédits" class="btn btn-primary text-uppercase fw-bold">Prendre un boost</button>
+      <div class="d-flex justify-content-center">
+          <div class="text-center fw-bold">
+          {{ app.user.nom }} {{ app.user.prenom }}
+          </div>
       </div>
-      </form>
+      <div class="d-flex justify-content-center">
+          <div class="text-center fw-lighter">
+          {{ app.user.candidateProfile.titre }}
+          </div>
+      </div>
+      <div class="d-flex justify-content-center">
+        <div id="checkBoost">
+        {{ checkBoost(app.user)|raw }}
+        </div>
+      </div>
+      <hr>
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="{{ path('app_v2_job_offer')}}" class="nav-link {{ current_route == 'app_v2_job_offer' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-search me-2"></i></span> Trouver une mission
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_prestation')}}" class="nav-link {{ current_route == 'app_v2_prestation' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-journals me-2"></i> Annuaire de services
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_profiles')}}" class="nav-link {{ current_route == 'app_v2_profiles' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-person-raised-hand me-2"></i> Trouver un collaborateur
+          </a>
+        </li>
+        {% if app.user.candidateProfile is defined and app.user.candidateProfile.prestations|length > 0 %}
+        <li class="nav-item">
+          <a href="{{ path('app_v2_prestation_my_created')}}" class="nav-link {{ current_route == 'app_v2_prestation_my_created' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-person-workspace me-2"></i></span> Mes prestations
+          </a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a href="{{ path('app_v2_applications')}}" class="nav-link {{ current_route == 'app_v2_applications' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-card-checklist me-2"></i></span> Mes candidatures
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_contacts')}}" class="nav-link {{ current_route == 'app_v2_contacts' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-journal-check me-2"></i></i></span> Mon réseau professionnel
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_candidate_simulator_create')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator_create' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-printer me-2"></i></span> Simulateur de salaire
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_candidate_simulator')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-aspect-ratio me-2"></i></span> Mes simulations
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_dashboard_notification')}}" class="nav-link {{ current_route == 'app_v2_dashboard_notification' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-bell me-2"></i></i></span> Mes notifications
+            {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_user_order')}}" class="nav-link {{ current_route == 'app_v2_user_order' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-bookmark-star me-2"></i></span> Mes commandes
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_candidate_dashboard_ai_tools')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard_ai_tools' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-magic me-2"></i></span> Ai Tools
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_candidate_dashboard_formation')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard_formation' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-layers me-2"></i></span> Centre de formations
+          </a>
+        </li>
+        <hr>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_candidate_dashboard')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-person-badge me-2"></i></span> Mes informations
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('app_v2_contact')}}" class="nav-link {{ current_route == 'app_v2_contact' ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-envelope-at me-2"></i></span> Contacter le support
+          </a>
+        </li>
+      </ul>
+      <hr>
+      <a href="{{ path('app_v2_credit')}}" class="btn-primary btn px-2 text-uppercase fw-semibold">
+        <i class="bi bi-bookmark-star fw-bold"></i>
+        Recharger mes crédits
+      </a>
     </div>
   </div>
-</div>
+  <div class="col-12 col-lg-9 col-md-12">
+
+
 

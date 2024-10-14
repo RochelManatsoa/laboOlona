@@ -5,15 +5,17 @@ namespace App\Entity;
 use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Finance\Devise;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Entreprise\Favoris;
 use App\Entity\Moderateur\Metting;
 use App\Entity\Entreprise\JobListing;
-use Doctrine\Common\Collections\Collection;
 use App\Repository\EntrepriseProfileRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: EntrepriseProfileRepository::class)]
 class EntrepriseProfile
@@ -90,6 +92,12 @@ class EntrepriseProfile
 
     #[ORM\ManyToOne(inversedBy: 'entrepriseProfiles', cascade: ['persist', 'remove'])]
     private ?Boost $boost = null;
+
+    #[Vich\UploadableField(mapping: 'logo_company', fileNameProperty: 'fileName')]
+    private ?File $file = null;
+    
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $fileName = null;
 
     public function __construct()
     {
@@ -394,6 +402,18 @@ class EntrepriseProfile
     public function setBoost(?Boost $boost): static
     {
         $this->boost = $boost;
+
+        return $this;
+    }
+
+    public function getFileName(): ?string
+    {
+        return $this->fileName;
+    }
+
+    public function setFileName(?string $fileName): static
+    {
+        $this->fileName = $fileName;
 
         return $this;
     }

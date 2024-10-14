@@ -10,9 +10,10 @@ body.bootstrap-dark {
         color: #ffffff !important;
     }
 
-    .card {
+    .card, .offcanvas {
         background-color: $dark-bg;
         color: $dark-text;
+        border-color: $link-light;
     }
 
     .btn-secondary, .dropdown-menu {
