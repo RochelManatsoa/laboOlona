@@ -302,6 +302,7 @@ class PrestationController extends AbstractController
             'prestation' => $prestation,
             'purchasedContact' => $purchasedContact,
             'creater' => $creater,
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_prestations'),
             'owner' => $owner,
         ]);
     }

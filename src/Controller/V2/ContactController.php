@@ -3,7 +3,9 @@
 namespace App\Controller\V2;
 
 use App\Entity\User;
+use App\Entity\Notification;
 use App\Manager\ProfileManager;
+use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
@@ -14,10 +16,11 @@ use App\Manager\BusinessModel\CreditManager;
 use App\Repository\Finance\ContratRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
+use App\Manager\NotificationManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/v2/dashboard')]
 class ContactController extends AbstractController
@@ -29,6 +32,7 @@ class ContactController extends AbstractController
         private PaginatorInterface $paginator,
         private ProfileManager $profileManager,
         private CreditManager $creditManager,
+        private NotificationManager $notificationManager,
         private UrlGeneratorInterface $urlGeneratorInterface,
     ){}
     
@@ -121,12 +125,12 @@ class ContactController extends AbstractController
             $purchasedContact->setIsAccepted(false);
             $this->em->persist($purchasedContact);
             $this->em->flush();
-            $urlAccepted = $this->urlGenerator->generate(
+            $urlAccepted = $this->urlGeneratorInterface->generate(
                 'app_v2_dashboard_notification_accept',
                 ['id' => $purchasedContact->getId()], 
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $urlRefused = $this->urlGenerator->generate(
+            $urlRefused = $this->urlGeneratorInterface->generate(
                 'app_v2_dashboard_notification_refuse',
                 ['id' => $purchasedContact->getId()], 
                 UrlGeneratorInterface::ABSOLUTE_URL

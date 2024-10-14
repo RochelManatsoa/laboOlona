@@ -47,6 +47,9 @@ class OlonaTalentsController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
+        if($this->security->getUser()){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         return $this->render('v2/home.html.twig', [
             'candidats' => $this->candidatRepository->findBy(
                 ['status' => CandidateProfile::STATUS_VALID],
@@ -183,6 +186,7 @@ class OlonaTalentsController extends AbstractController
             $page,
             8
         );
+        $params['action'] = $this->urlGeneratorInterface->generate('app_olona_talents_result');
 
         if ($currentUser) {
             return $this->render('v2/dashboard/result.html.twig', $params);

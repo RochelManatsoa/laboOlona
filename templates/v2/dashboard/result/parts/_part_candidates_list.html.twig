@@ -23,6 +23,21 @@
 		<div class="small">
 			{{ candidate.metaDescription|raw }}
 		</div>
+        <p class="small fw-light">
+            <span class="badge bg-info rounded-pill px-2">Certifié</span>
+            <span class="small text-center mx-2">|</span>
+            <i class="bi bi-hourglass-split"></i>
+            Connecté
+            {{ candidate.candidat.lastLogin|time_ago }}
+            <span class="small text-center mx-2">|</span>
+            <i class="bi bi-eye"></i>
+            {{ candidate.vues|length }}
+            vues
+            <span class="small text-center mx-2">|</span>
+            <i class="bi bi-bookmark-check"></i>
+            {{ candidate.competences|length }}
+            competences
+        </p>
         <div class="d-flex ms-auto small my-2 me-2">
 			<a class="btn btn-sm btn-primary rounded-pill px-3 me-2" href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}">Plus de details</a>
             {% if recruiter is defined %}
