@@ -302,31 +302,31 @@ class StatusExtension extends AbstractExtension
         $type = $prestation->getStatus() ?? '';
         switch ($type) {
             case Prestation::STATUS_VALID :
-                $status = '<span class="badge text-bg-danger">Validée</span>';
+                $status = '<span class="badge rounded-pill px-2 text-bg-danger">Validée</span>';
                 break;
 
             case Prestation::STATUS_COMPLETED :
-                $status = '<span class="badge text-bg-info">Terminé</span>';
+                $status = '<span class="badge rounded-pill px-2 text-bg-info">Terminé</span>';
                 break;
 
             case Prestation::STATUS_FEATURED :
-                $status = '<span class="badge text-bg-success">Boostée</span>';
+                $status = '<span class="badge rounded-pill px-2 text-bg-success">Boostée</span>';
                 break;
 
             case Prestation::STATUS_DELETED :
-                $status = '<span class="badge text-bg-dark">Effacée</span>';
+                $status = '<span class="badge rounded-pill px-2 text-bg-dark">Effacée</span>';
                 break;
 
             case Prestation::STATUS_PENDING :
-                $status = '<span class="badge text-bg-primary">En attente</span>';
+                $status = '<span class="badge rounded-pill px-2 text-bg-primary">En attente</span>';
                 break;
 
             case Prestation::STATUS_SUSPENDED :
-                $status = '<span class="badge text-bg-primary">Suspendue</span>';
+                $status = '<span class="badge rounded-pill px-2 text-bg-primary">Suspendue</span>';
                 break;
             
             default:
-                $status = '<span class="badge text-bg-primary">En attente</span>';
+                $status = '<span class="badge rounded-pill px-2 text-bg-primary">En attente</span>';
                 break;
         }
         

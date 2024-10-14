@@ -23,8 +23,18 @@
 		<div class="small">
 			{{ prestation.openai|raw }}
 		</div>
-		<div class="d-flex ms-auto small my-2 me-2">
-			<a class="btn btn-sm btn-primary rounded-pill px-3 me-2 mt-2" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
+        <span class="small fw-light">
+            {{ satusPrestation(prestation)|raw }}
+            <span class="small text-center mx-2">|</span>
+            <span class="">Publié
+                {{ prestation.createdAt|time_ago }}</span>
+            <span class="small text-center mx-2">|</span>
+            <i class="bi bi-eye"></i> {{ prestation.prestationVues|length}} vues
+            <span class="small text-center mx-2">|</span>
+            <i class="mx-2 bi bi-person-workspace"></i> {{ prestation.modalitesPrestation }}
+        </span>
+		<div class="d-flex ms-auto small mt-2">
+			<a class="btn btn-sm btn-primary rounded-pill px-3" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
 		</div>
 		<div class="">
             <span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
