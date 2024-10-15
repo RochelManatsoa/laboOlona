@@ -256,6 +256,7 @@ $(function() {
     function updateLogo() {
         const currentTheme = $('body').hasClass('bootstrap-dark') ? 'dark' : 'light';
         const logoSrc = currentTheme === 'dark' ? '/images/logo-olona-talents-white600x200.png' : '/images/logo-olona-talents-black600x200.png';
+        $('#logoOffCanvas').attr('src', logoSrc);
         $('#logo').attr('src', logoSrc);
 
         const themeIcon = currentTheme === 'dark' ? 'bi-brightness-high' : 'bi-moon-stars-fill';
@@ -264,12 +265,31 @@ $(function() {
     }
 
     function setupImageUpload() {
+        const logoInput = document.getElementById('edit_entreprise_file'); 
         const imageInput = document.getElementById('prestation_file'); 
         const profileImgDiv = document.querySelector('.profile-img');
+        const companyImgDiv = document.querySelector('.company-img');
+
+        if(logoInput && companyImgDiv){
+            logoInput.addEventListener('change', function(event) {
+                if (event.target.files && event.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        companyImgDiv.style.backgroundImage = 'url(' + e.target.result + ')';
+                    };
+                    reader.readAsDataURL(event.target.files[0]);
+                }
+            });
+    
+            companyImgDiv.addEventListener('click', function() {
+                logoInput.click();
+            });
+        }
     
         if (imageInput && profileImgDiv) {
             imageInput.addEventListener('change', function(event) {
                 if (event.target.files && event.target.files[0]) {
+                    console.log('change')
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         profileImgDiv.style.backgroundImage = 'url(' + e.target.result + ')';
@@ -282,6 +302,7 @@ $(function() {
                 imageInput.click();
             });
         }
+
         
         const ids = ['#applyJob', '#createJob', '#createPrestation']; 
         ids.forEach(function(id) {
@@ -364,12 +385,16 @@ $(function() {
 
         $('input[name="candidate_boost[boost]"]').on('change', function() {
             selectedValue = $(this).data('value');
+            $('.form-check').removeClass('selected');
+            $(this).closest('.form-check').addClass('selected');
             console.log(selectedValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
         });
 
         $('input[name="recruiter_boost[boost]"]').on('change', function() {
             selectedValue = $(this).data('value');
+            $('.form-check').removeClass('selected');
+            $(this).closest('.form-check').addClass('selected');
             console.log(selectedValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
         });

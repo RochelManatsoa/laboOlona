@@ -57,12 +57,17 @@
 											{% if app.user.gravatar is not null %}
 												{% if (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) and app.user.candidateProfile is defined and app.user.candidateProfile.fileName is not empty) %}
 													<img src="{{ asset('uploads/experts/' ~ app.user.candidateProfile.fileName) }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+												{% elseif (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) and app.user.entrepriseProfile is defined and app.user.entrepriseProfile.fileName is not empty)  %}
+													<img src="{{ asset('uploads/compagnies/' ~ app.user.entrepriseProfile.fileName) }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
 												{% else %}
 													<img src="{{ app.user.gravatar }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
 												{% endif %}
-
+											{% elseif (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) and app.user.candidateProfile is defined and app.user.candidateProfile.fileName is not empty) %}
+												<img src="{{ asset('uploads/experts/' ~ app.user.candidateProfile.fileName) }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+											{% elseif (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) and app.user.entrepriseProfile is defined and app.user.entrepriseProfile.fileName is not empty) %}
+												<img src="{{ asset('uploads/compagnies/' ~ app.user.entrepriseProfile.fileName) }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
 											{% else %}
-											<img src="{{ asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+												<img src="{{ asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
 											{% endif %}
 										</button>
 										<ul class="dropdown-menu text-small shadow">

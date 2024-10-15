@@ -233,21 +233,16 @@ class CandidateProfile
     
     public function __serialize(): array
     {
-        // Retournez ici les propriétés à sérialiser
         return [
             'id' => $this->id,
             'createdAt' => $this->createdAt,
-            // Ajoutez d'autres propriétés si nécessaire
-            // Notez que certaines propriétés, comme les objets et les collections d'entités, ne doivent pas être sérialisées
         ];
     }
 
     public function __unserialize(array $data): void
     {
-        // Restaurez l'état de l'objet à partir des données sérialisées
         $this->id = $data['id'] ?? null;
         $this->createdAt = $data['createdAt'] ?? null;
-        // Restaurez d'autres propriétés si elles étaient sérialisées
     }
 
     public function getId(): ?int
@@ -474,17 +469,6 @@ class CandidateProfile
         $this->fileName = $fileName;
 
         return $this;
-    }
-    
-    public function serialize()
-    {
-        $this->fileName = base64_encode($this->fileName);
-    }
-
-    public function unserialize($serialized)
-    {
-        $this->fileName = base64_decode($this->fileName);
-
     }
 
     public function getLocalisation(): ?string

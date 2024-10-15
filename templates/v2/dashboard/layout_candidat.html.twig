@@ -1,39 +1,120 @@
 
 {% set current_route = app.request.attributes.get('_route') %}
+
 <div class="modal fade" id="boostProfile" tabindex="-1" aria-labelledby="boostProfileLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ path('app_v2_candidate_boost_profile') }}" name="candidate_boost"method="post" id="boostProfileForm">
+      <form action="{{ path('app_v2_candidate_boost_profile') }}" name="candidate_boost" method="post" id="boostProfileForm">
       <div class="modal-header">
-        <h3 class="modal-title fs-5 text-uppercase fw-bold" id="boostProfileLabel"><i class="bi bi-rocket-takeoff me-2"></i> Boostez votre Visibilité !</h3>
+        <h3>Boostez votre Visibilité !</h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      Attirez l'attention des recruteurs en boostant votre profil et gagnez en visibilité. Soyez en haut des résultats de recherche ! 
-          <div class="my-3">
-            <div id="candidate_boost">
-            <fieldset class="mb-3">
-              <div id="candidate_boost_boost">
-                <div class="form-check">
-                  <input type="radio" id="candidate_boost_boost_placeholder" name="candidate_boost[boost]" class="form-check-input" value="" checked="checked">
-                  <label class="form-check-label" for="candidate_boost_boost_placeholder">Pas de boost</label>
-                </div>
-                <div class="form-check">
-                  <input type="radio" id="candidate_boost_boost_1" name="candidate_boost[boost]" class="form-check-input" value="1" data-value="30 crédits">
-                  <label class="form-check-label" for="candidate_boost_boost_1">Boost 7 jours (30 crédits)</label>
-                </div>
-                <div class="form-check"><input type="radio" id="candidate_boost_boost_2" name="candidate_boost[boost]" class="form-check-input" value="2" data-value="50 crédits">
-                  <label class="form-check-label" for="candidate_boost_boost_2">Boost 15 jours (50 crédits)</label>
-                  </div>
-                <div class="form-check">
-                  <input type="radio" id="candidate_boost_boost_3" name="candidate_boost[boost]" class="form-check-input" value="3" data-value="80 crédits">
-                  <label class="form-check-label" for="candidate_boost_boost_3">Boost 30 jours (80 crédits)</label>
-                </div>
-              </div>        
-            </fieldset>
+        <p class="text-center">Augmentez vos chances d'être vu par les recruteurs en boostant votre profil ! Cela vous garantit une meilleure visibilité et une place prioritaire dans les résultats de recherche.</p>
+        <div class="border p-3 mb-4 small">
+          <div class="col-6 mx-auto my-3">
+            <div class="input-group rounded-pill my-3">
+              <input class="form-control" type="search" name="q" value="votre mot clé" placeholder="Rechercher" disabled>
+              <button class="btn btn-outline-success" type="button"><i class="bi bi-stars"></i></button>
             </div>
           </div>
-        Multipliez vos opportunités et démarquez-vous dès maintenant !
+          <ul class="nav nav-underline mb-4">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Candidats</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" aria-disabled="true">Offre d'emploi</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" aria-disabled="true">Services</a>
+            </li>
+          </ul>
+          <div class="profile-cards row">
+            <div class="col">
+                <div class="card shadow">
+                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
+                  <div class="card-img-top bg-image-candidat" style="background-image: url('{{ app.user.candidateProfile.fileName ? asset('uploads/experts/' ~ app.user.candidateProfile.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="{{ app.user.prenom }}"></div>
+                  <p class="card-title h6 bg-dark text-white text-center py-2">{{ generatePseudo(app.user.candidateProfile) }}</p>
+                  <div class="card-body-candidat">
+                      <small class="mt-auto">
+                          <small class="card-text text-uppercase">{{ app.user.candidateProfile.titre }}</small><br>
+                          <small class="card-text"><i class="mx-1 bi bi-trophy"></i> {{ app.user.candidateProfile.experiences|length }} {{ 'app_catalog_expert.realised'|trans }}</small><br>
+                          <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                      </small>
+                  </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow card position-relative text-center">
+                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
+                  <div class="card-img-top bg-image-candidat" style="background-image: url('/uploads/experts/avatar-default.jpg');" alt="{{ app.user.prenom }}"></div>
+                  <p class="card-title h6 bg-dark text-white text-center py-2">OT0013</p>
+                  <div class="card-body-candidat">
+                      <small class="mt-auto">
+                          <small class="card-text text-uppercase">Développeuse web</small><br>
+                          <small class="card-text"><i class="mx-1 bi bi-trophy"></i> 3 projets réalisés</small><br>
+                          <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                      </small>
+                  </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow">
+                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
+                  <div class="card-img-top bg-image-candidat" style="background-image: url('/uploads/experts/avatar-default.jpg');" alt="Avatar"></div>
+                  <p class="card-title h6 bg-dark text-white text-center py-2">OT00740</p>
+                  <div class="card-body-candidat">
+                      <small class="mt-auto">
+                          <small class="card-text text-uppercase">Superviseur Senior</small><br>
+                          <small class="card-text"><i class="mx-1 bi bi-trophy"></i> 7 {{ 'app_catalog_expert.realised'|trans }}</small><br>
+                          <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                      </small>
+                  </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow">
+                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
+                  <div class="card-img-top bg-image-candidat" style="background-image: url('/uploads/experts/avatar-default.jpg');" alt="{{ app.user.prenom }}"></div>
+                  <p class="card-title h6 bg-dark text-white text-center py-2">OT0652</p>
+                  <div class="card-body-candidat">
+                      <small class="mt-auto">
+                          <small class="card-text text-uppercase">Analyste vidéo</small><br>
+                          <small class="card-text"><i class="mx-1 bi bi-trophy"></i> 10 {{ 'app_catalog_expert.realised'|trans }}</small><br>
+                          <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                      </small>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="my-3">
+          <div id="candidate_boost">
+            <fieldset class="mb-3">
+              <div id="candidate_boost_boost" class="radio-grid">
+                <div class="form-check selected">
+                  <input type="radio" id="candidate_boost_boost_placeholder" name="candidate_boost[boost]" value="" >
+                  <label for="candidate_boost_boost_placeholder">Pas de boost</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" id="candidate_boost_boost_1" name="candidate_boost[boost]" value="1" data-value="30 crédits">
+                  <label for="candidate_boost_boost_1">Boost 7 jours (30 crédits)</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" id="candidate_boost_boost_2" name="candidate_boost[boost]" value="2" data-value="50 crédits">
+                  <label for="candidate_boost_boost_2">Boost 15 jours (50 crédits)</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" id="candidate_boost_boost_3" name="candidate_boost[boost]" value="3" data-value="80 crédits">
+                  <label for="candidate_boost_boost_3">Boost 30 jours (80 crédits)</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <p class="text-center">
+        En choisissant l'un de ces boosts, vous multipliez vos opportunités de contact et renforcez votre présence auprès des principales entreprises de votre secteur.<br><span class="fw-bold">Ne laissez pas passer votre chance de vous démarquer !</span>
+        </p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary text-uppercase fw-bold" data-bs-dismiss="modal">Annuler</button>
@@ -43,14 +124,15 @@
     </div>
   </div>
 </div>
+
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
   <div class="offcanvas-header">
     <div class="container">
       <a class="navbar-brand" href="{{ path('app_home') }}">
-        <img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="100px" class="" alt="Logo">
+        <img id="logoOffCanvas" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="100px" class="" alt="Logo">
       </a>
     </div>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="offcanvas" aria-label="Close"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="offcanvas-body">
     <div class="d-flex flex-column flex-shrink-0 p-3 " style="width: 280px;">
@@ -165,6 +247,7 @@
     </div>
   </div>
 </div>
+
 <div class="row">
   <div class="col-lg-3 d-none d-lg-block">
     <div class="d-flex flex-column flex-shrink-0 p-3 " style="width: 280px;">
@@ -197,77 +280,77 @@
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <a href="{{ path('app_v2_job_offer')}}" class="nav-link {{ current_route == 'app_v2_job_offer' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-search me-2"></i></span> Trouver une mission
+          <a href="{{ path('app_v2_job_offer')}}" class="nav-link {{ (current_route == 'app_v2_job_offer' or current_route == 'app_v2_candidate_view_job_offer' or current_route == 'app_olona_talents_joblistings') ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-search me-2"></i><span class="link-text">Trouver une mission</span> 
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_prestation')}}" class="nav-link {{ current_route == 'app_v2_prestation' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-journals me-2"></i> Annuaire de services
+          <a href="{{ path('app_v2_prestation')}}" class="nav-link {{ (current_route == 'app_v2_prestation' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-journals me-2"></i><span class="link-text"> Annuaire de services</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_profiles')}}" class="nav-link {{ current_route == 'app_v2_profiles' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-person-raised-hand me-2"></i> Trouver un collaborateur
+          <a href="{{ path('app_v2_profiles')}}" class="nav-link {{ (current_route == 'app_v2_profiles' or current_route == 'app_v2_recruiter_view_profile' or current_route == 'app_olona_talents_candidates') ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-person-raised-hand me-2"></i><span class="link-text"> Trouver un collaborateur</span>
           </a>
         </li>
         {% if app.user.candidateProfile is defined and app.user.candidateProfile.prestations|length > 0 %}
         <li class="nav-item">
-          <a href="{{ path('app_v2_prestation_my_created')}}" class="nav-link {{ current_route == 'app_v2_prestation_my_created' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-person-workspace me-2"></i></span> Mes prestations
+          <a href="{{ path('app_v2_prestation_my_created')}}" class="nav-link {{ (current_route == 'app_v2_prestation_my_created' or current_route == 'app_v2_create_prestation' or current_route == 'app_v2_edit_prestation') ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-person-workspace me-2"></i><span class="link-text"> Mes prestations</span>
           </a>
         </li>
         {% endif %}
         <li class="nav-item">
           <a href="{{ path('app_v2_applications')}}" class="nav-link {{ current_route == 'app_v2_applications' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-card-checklist me-2"></i></span> Mes candidatures
+            <i class="bi bi-card-checklist me-2"></i><span class="link-text"> Mes candidatures</span> 
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_contacts')}}" class="nav-link {{ current_route == 'app_v2_contacts' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-journal-check me-2"></i></i></span> Mon réseau professionnel
+            <i class="bi bi-journal-check me-2"></i></i><span class="link-text"> Mon réseau professionnel</span> 
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_candidate_simulator_create')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator_create' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-printer me-2"></i></span> Simulateur de salaire
+            <i class="bi bi-printer me-2"></i><span class="link-text"> Simulateur de salaire</span> 
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_candidate_simulator')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-aspect-ratio me-2"></i></span> Mes simulations
+          <a href="{{ path('app_v2_candidate_simulator')}}" class="nav-link {{ (current_route == 'app_v2_candidate_simulator' or current_route == 'app_v2_candidate_simulator_view') ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-aspect-ratio me-2"></i><span class="link-text"> Mes simulations</span> 
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_dashboard_notification')}}" class="nav-link {{ current_route == 'app_v2_dashboard_notification' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-bell me-2"></i></i></span> Mes notifications
+            <i class="bi bi-bell me-2"></i></i><span class="link-text"> Mes notifications</span> 
             {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_user_order')}}" class="nav-link {{ current_route == 'app_v2_user_order' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-bookmark-star me-2"></i></span> Mes commandes
+          <a href="{{ path('app_v2_user_order')}}" class="nav-link {{ (current_route == 'app_v2_user_order' or current_route == 'app_v2_user_order_show') ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-bookmark-star me-2"></i><span class="link-text"> Mes commandes</span> 
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_candidate_dashboard_ai_tools')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard_ai_tools' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-magic me-2"></i></span> Ai Tools
+          <a href="{{ path('app_v2_candidate_dashboard_ai_tools')}}" class="nav-link {{ (current_route == 'app_v2_candidate_dashboard_ai_tools' or current_route == 'app_dashboard_moderateur_view_affiliate_tool') ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-magic me-2"></i><span class="link-text"> Ai Tools</span> 
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_candidate_dashboard_formation')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard_formation' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-layers me-2"></i></span> Centre de formations
+          <a href="{{ path('app_v2_candidate_dashboard_formation')}}" class="nav-link {{ (current_route == 'app_v2_candidate_dashboard_formation' or current_route == 'app_v2_candidate_dashboard_formation_playlist_view') ? 'underline' : '' }}" aria-current="page">
+            <i class="bi bi-layers me-2"></i><span class="link-text"> Centre de formations</span> 
           </a>
         </li>
         <hr>
         <li class="nav-item">
           <a href="{{ path('app_v2_candidate_dashboard')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-person-badge me-2"></i></span> Mes informations
+            <i class="bi bi-person-badge me-2"></i><span class="link-text"> Mes informations</span> 
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_contact')}}" class="nav-link {{ current_route == 'app_v2_contact' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-envelope-at me-2"></i></span> Contacter le support
+            <i class="bi bi-envelope-at me-2"></i><span class="link-text"> Contacter le support</span> 
           </a>
         </li>
       </ul>

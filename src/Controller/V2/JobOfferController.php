@@ -284,6 +284,7 @@ class JobOfferController extends AbstractController
             'annonce' => $annonce,
             'candidat' => $candidat,
             'applied' => $applied,
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_joblistings'),
             'purchasedContact' => $purchasedContact,
             'form' => $form,
         ]);
