@@ -10,7 +10,20 @@ body.bootstrap-light {
         color: #ffffff !important;
     }
 
-    .card {
+    .nav-link .link-text {
+        transition: border-bottom 0.3s ease-in-out; 
+        border-bottom: 2px solid transparent; 
+    }
+    
+    .nav-link:hover .link-text {
+        border-bottom: 3px solid $link-light; 
+    }
+    
+    .underline .link-text {
+        border-bottom: 3px solid $link-light; 
+    }
+
+    .card, .offcanvas {
         background-color: #ffffff;
         color: $link-light;
     }

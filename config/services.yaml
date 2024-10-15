@@ -6,6 +6,7 @@
 parameters:
     cv_expert: /uploads/experts
     medias_prestation: /uploads/prestations
+    logo_company: /uploads/compagnies
     app.locales: [en, fr]
     cv_directory: '%kernel.project_dir%/public/uploads/cv'
     csv_directory: '%kernel.project_dir%/public/uploads/csv'

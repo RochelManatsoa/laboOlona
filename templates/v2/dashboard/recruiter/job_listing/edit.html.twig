@@ -18,7 +18,7 @@
 
 {% block body %}
 <section class="">
-	<div class="shadow p-2 p-sm-4">
+	<div class="shadow-custom p-2 p-sm-4">
 		<div class="col-12 col-sm-10 mx-auto p-2 p-sm-4">
 			<turbo-frame id="job_listing_{{ jobListing.id}}">
 				{{ form_start(form, { action : path('app_v2_recruiter_job_listing_edit', { jobListing : jobListing.id }), 'attr':{'id': 'createJob'}})}}

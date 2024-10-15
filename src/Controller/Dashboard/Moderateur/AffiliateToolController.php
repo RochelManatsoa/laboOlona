@@ -164,8 +164,11 @@ class AffiliateToolController extends AbstractController
     public function viewTool(Request $request, AffiliateTool $tool): Response
     {
         $tools = $tool->getRelatedIds();
-        foreach ($tools as $key => $value) {
-            $relateds[] = $this->affiliateToolRepository->findOneBy(['customId' => $value]); 
+        $relateds = [];
+        if(!empty($tools)){
+            foreach ($tools as $key => $value) {
+                $relateds[] = $this->affiliateToolRepository->findOneBy(['customId' => $value]); 
+            }
         }
         return $this->render('dashboard/moderateur/affiliate_tool/view.html.twig', [
             'aiTool' => $tool,

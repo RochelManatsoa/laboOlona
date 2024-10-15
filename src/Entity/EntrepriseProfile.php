@@ -5,17 +5,20 @@ namespace App\Entity;
 use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Finance\Devise;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Entreprise\Favoris;
 use App\Entity\Moderateur\Metting;
 use App\Entity\Entreprise\JobListing;
-use Doctrine\Common\Collections\Collection;
 use App\Repository\EntrepriseProfileRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: EntrepriseProfileRepository::class)]
+#[Vich\Uploadable]
 class EntrepriseProfile
 {
     const SIZE_SMALL = 'SM';
@@ -91,6 +94,18 @@ class EntrepriseProfile
     #[ORM\ManyToOne(inversedBy: 'entrepriseProfiles', cascade: ['persist', 'remove'])]
     private ?Boost $boost = null;
 
+    #[Vich\UploadableField(mapping: 'logo_company', fileNameProperty: 'fileName')]
+    private ?File $file = null;
+    
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $fileName = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
     public function __construct()
     {
         $this->jobListings = new ArrayCollection();
@@ -98,11 +113,26 @@ class EntrepriseProfile
         $this->secteurs = new ArrayCollection();
         $this->favoris = new ArrayCollection();
         $this->prestations = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function __toString()
     {
         return $this->getNom();
+    }
+    
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'createdAt' => $this->createdAt,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->id = $data['id'] ?? null;
+        $this->createdAt = $data['createdAt'] ?? null;
     }
 
     public function getId(): ?int
@@ -394,6 +424,59 @@ class EntrepriseProfile
     public function setBoost(?Boost $boost): static
     {
         $this->boost = $boost;
+
+        return $this;
+    }
+
+    public function setFile(?File $file = null): void
+    {
+        $this->file = $file;
+
+        if (null !== $file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTime();
+        }
+
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function getFileName(): ?string
+    {
+        return $this->fileName;
+    }
+
+    public function setFileName(?string $fileName): static
+    {
+        $this->fileName = $fileName;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

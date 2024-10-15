@@ -158,7 +158,7 @@ class OlonaTalentsExtension extends AbstractExtension
         $secteurs1 = $secteurs1 instanceof Collection ? $secteurs1->toArray() : $secteurs1;
         $secteurs2 = $secteurs2 instanceof Collection ? $secteurs2->toArray() : $secteurs2;
         $common = array_intersect($secteurs1, $secteurs2);
-        return !empty($common) ? reset($common) : 'Aucun secteur commun';
+        return !empty($common) ? reset($common) : (empty($secteurs1) ? "Aucun secteur" : $secteurs1[0]);
     }
 
 }

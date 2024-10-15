@@ -143,3 +143,48 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease; 
     box-shadow: 0 0 15px rgba(0,0,0,0.6); 
 }
+#recruiter_boost, #candidate_boost {
+  .radio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .form-check {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+
+    input[type="radio"] {
+      margin-right: 18px;
+      display: none; 
+    }
+
+    label {
+      width: 100%;
+      cursor: pointer;
+    }
+
+    &:hover {
+      color: #fff;
+      background-color: #007bff;
+    }
+
+    &.selected {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+
+      &::before {
+        content: '✔  ';
+        color: white;
+        margin-right: 10px; 
+      }
+    }
+  }
+}

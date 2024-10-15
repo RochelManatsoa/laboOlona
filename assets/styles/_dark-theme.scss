@@ -10,9 +10,23 @@ body.bootstrap-dark {
         color: #ffffff !important;
     }
 
-    .card {
+    .nav-link .link-text {
+        transition: border-bottom 0.3s ease-in-out; 
+        border-bottom: 2px solid transparent; 
+    }
+    
+    .nav-link:hover .link-text {
+        border-bottom: 3px solid $link-dark; 
+    }
+    
+    .underline .link-text {
+        border-bottom: 3px solid $link-dark; 
+    }
+
+    .card, .offcanvas {
         background-color: $dark-bg;
         color: $dark-text;
+        border-color: $link-light;
     }
 
     .btn-secondary, .dropdown-menu {
