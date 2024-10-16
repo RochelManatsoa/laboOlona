@@ -125,7 +125,8 @@ class PrestationController extends AbstractController
         }
 
         return $this->render('v2/dashboard/prestation/my_created.html.twig', [
-            'prestations' => $this->em->getRepository(Prestation::class)->findSearch($data)
+            'prestations' => $this->em->getRepository(Prestation::class)->findSearch($data),
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_prestations'),
         ]);
     }
     
@@ -185,6 +186,7 @@ class PrestationController extends AbstractController
 
         return $this->render('v2/dashboard/prestation/create.html.twig', [
             'form' => $form->createView(),
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_prestations'),
         ]);
     }
     

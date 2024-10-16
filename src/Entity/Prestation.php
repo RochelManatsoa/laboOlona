@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Prestation\TypePrestation;
 use App\Entity\Vues\PrestationVues;
@@ -175,6 +176,9 @@ class Prestation
 
     #[ORM\OneToMany(mappedBy: 'prestation', targetEntity: PrestationVues::class)]
     private Collection $prestationVues;
+
+    #[ORM\ManyToOne(inversedBy: 'prestations')]
+    private ?BoostFacebook $boostFacebook = null;
 
     public function __construct()
     {
@@ -684,6 +688,18 @@ class Prestation
                 $prestationVue->setPrestation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBoostFacebook(): ?BoostFacebook
+    {
+        return $this->boostFacebook;
+    }
+
+    public function setBoostFacebook(?BoostFacebook $boostFacebook): static
+    {
+        $this->boostFacebook = $boostFacebook;
 
         return $this;
     }

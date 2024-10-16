@@ -2,11 +2,13 @@
 
 namespace App\Controller\V2\Recruiter;
 
+use App\Entity\User;
 use App\Manager\ProfileManager;
 use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Formation\Playlist;
+use App\Entity\BusinessModel\Boost;
 use App\Manager\AffiliateToolManager;
 use App\Form\Boost\RecruiterBoostType;
 use App\Form\Profile\EditEntrepriseType;
@@ -122,56 +124,105 @@ class DashboardController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $boostOption = $form->get('boost')->getData(); 
+            $boostOptionFacebook = $form->get('boostFacebook')->getData(); 
             $recruiter = $form->getData();
-            $message = 'Erreur sur le formulaire';
-            $success = false;
-            $status = 'Echec';
-            $visibilityBoost = $recruiter->getBoostVisibility();
+            // dd($recruiter);
 
-            if ($this->profileManager->canApplyBoost($recruiter->getEntreprise(), $boostOption)) {
-                if(!$visibilityBoost instanceof BoostVisibility){
-                    $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
-                }
-                $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
-                $response = $this->creditManager->adjustCredits($recruiter->getEntreprise(), $boostOption->getCredit());
-
-                if(isset($response['success'])){
-                    $recruiter->setBoostVisibility($visibilityBoost);
-                    $recruiter->setStatus(EntrepriseProfile::STATUS_PREMIUM);
-                    $this->em->persist($recruiter);
-                    $this->em->flush();
-                    $message = 'Votre entreprise est maintenant boosté';
-                    $success = true;
-                    $status = 'Succès';
-                }else{
-                    $message = 'Une erreur s\'est produite.';
-                    $success = false;
-                    $status = 'Echec';
-                }
+            if ($this->profileManager->canApplyBoost($currentUser, $boostOption) && $this->profileManager->canApplyBoostFacebook($currentUser, $boostOptionFacebook)) {
+                $result = $this->handleBoostProfile($boostOption, $recruiter, $currentUser);
+                $result = $this->handleBoostFacebook($boostOptionFacebook, $recruiter, $currentUser);
+            }elseif ($this->profileManager->canApplyBoost($currentUser, $boostOption)) {
+                $result = $this->handleBoostProfile($boostOption, $recruiter, $currentUser);
             } else {
-                $message = 'Crédits insuffisants pour ce boost.';
-                $success = false;
-                $status = 'Echec';
+                $result = [
+                    'message' => 'Crédits insuffisants pour ce boost.',
+                    'success' => false,
+                    'status' => 'Echec',
+                ];
             }
-        }
 
-        if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
-            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+    
+                return $this->render('v2/dashboard/candidate/update.html.twig', array_merge($result, [
+                    'credit' => $currentUser->getCredit()->getTotal(),
+                ]));
+            }
 
-            return $this->render('v2/dashboard/candidate/update.html.twig', [
-                'message' => $message,
-                'success' => $success,
-                'status' => $status,
-                'visibilityBoost' => $visibilityBoost,
+            return $this->json(array_merge($result, [
                 'credit' => $currentUser->getCredit()->getTotal(),
-            ]);
+            ]), 200);
         }
 
         return $this->json([
-            'message' => $message,
-            'success' => $success,
-            'status' => $status,
-            'credit' => $currentUser->getCredit()->getTotal(),
-        ], 200);        
+            'status' => 'error', 
+            'message' => 'Erreur de formulaire.'
+        ], 400);    
+    }
+
+    private function handleBoostProfile($boostOption, $recruiter, User $currentUser): array
+    {
+        $visibilityBoost = $this->em->getRepository(BoostVisibility::class)
+        ->findBoostVisibilityByBoostAndUser($boostOption, $currentUser);
+        if (!$visibilityBoost instanceof BoostVisibility) {
+            $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
+        }
+        $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
+        $response = $this->creditManager->adjustCredits($currentUser, $boostOption->getCredit());
+        
+        if (isset($response['success'])) {
+            $recruiter->setStatus(EntrepriseProfile::STATUS_PREMIUM);
+            $recruiter->setBoost($boostOption);
+            $currentUser->addBoostVisibility($visibilityBoost);
+            $this->em->persist($currentUser);
+            $this->em->persist($recruiter);
+            $this->em->flush();
+            return [
+                'message' => 'Votre profil est maintenant boosté',
+                'success' => true,
+                'status' => 'Succès',
+                'visibilityBoost' => $visibilityBoost
+            ];
+        } else {
+            return [
+                'message' => 'Une erreur s\'est produite.',
+                'success' => false,
+                'status' => 'Echec'
+            ];
+        }
+    }
+
+    private function handleBoostFacebook($boostOptionFacebook, $recruiter, User $currentUser): array
+    {
+        $visibilityBoost = $this->em->getRepository(BoostVisibility::class)
+            ->findBoostVisibilityByBoostFacebookAndCandidate($boostOptionFacebook, $currentUser);
+
+        if (!$visibilityBoost instanceof BoostVisibility) {
+            $visibilityBoost = $this->boostVisibilityManager->initBoostvisibilityFacebook($boostOptionFacebook);
+        }
+        $visibilityBoost = $this->boostVisibilityManager->updateFacebook($visibilityBoost, $boostOptionFacebook);
+        $response = $this->creditManager->adjustCredits($currentUser, $boostOptionFacebook->getCredit());
+
+        if (isset($response['success'])) {
+            $recruiter->setStatus(EntrepriseProfile::STATUS_PREMIUM);
+            $recruiter->setBoostFacebook($boostOptionFacebook);
+            $currentUser->addBoostVisibility($visibilityBoost);
+            $this->em->persist($currentUser);
+            $this->em->persist($recruiter);
+            $this->em->flush();
+
+            return [
+                'message' => 'Votre profil est maintenant boosté sur facebook',
+                'success' => true,
+                'status' => 'Succès',
+                'visibilityBoost' => $visibilityBoost
+            ];
+        } else {
+            return [
+                'message' => 'Une erreur s\'est produite.',
+                'success' => false,
+                'status' => 'Echec'
+            ];
+        }
     }
 }

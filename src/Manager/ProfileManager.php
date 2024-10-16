@@ -13,6 +13,7 @@ use Symfony\Component\Form\Form;
 use App\Entity\EntrepriseProfile;
 use App\Entity\ModerateurProfile;
 use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\Moderateur\EditedCv;
 use App\Entity\BusinessModel\Credit;
 use Doctrine\ORM\EntityManagerInterface;
@@ -155,6 +156,19 @@ class ProfileManager
     }
 
     public function canApplyBoost(User $user, Boost $boost): bool
+    {
+        $credit = $user->getCredit();
+        $amount = $boost->getCredit();
+        if ($credit instanceof Credit) {
+            if($credit->getTotal() > $amount){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function canApplyBoostFacebook(User $user, BoostFacebook $boost): bool
     {
         $credit = $user->getCredit();
         $amount = $boost->getCredit();

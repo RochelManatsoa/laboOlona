@@ -6,6 +6,7 @@ use App\Entity\CandidateProfile;
 use App\Entity\Entreprise\JobListing;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Prestation;
+use App\Entity\User;
 use App\Repository\BusinessModel\BoostVisibilityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -46,6 +47,12 @@ class BoostVisibility
 
     #[ORM\ManyToOne(inversedBy: 'boostVisibilities')]
     private ?Boost $boost = null;
+
+    #[ORM\ManyToOne(inversedBy: 'boostVisibilities')]
+    private ?BoostFacebook $boostFacebook = null;
+
+    #[ORM\ManyToOne(inversedBy: 'boostVisibilities')]
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -242,6 +249,30 @@ class BoostVisibility
     public function setBoost(?Boost $boost): static
     {
         $this->boost = $boost;
+
+        return $this;
+    }
+
+    public function getBoostFacebook(): ?BoostFacebook
+    {
+        return $this->boostFacebook;
+    }
+
+    public function setBoostFacebook(?BoostFacebook $boostFacebook): static
+    {
+        $this->boostFacebook = $boostFacebook;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

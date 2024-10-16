@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\BusinessModel\Credit;
 use App\Entity\BusinessModel\History;
 use App\Entity\BusinessModel\Order;
@@ -170,6 +171,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class)]
     private Collection $orders;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: BoostVisibility::class)]
+    private Collection $boostVisibilities;
+
     public function __construct()
     {
         $this->envois = new ArrayCollection();
@@ -180,6 +184,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->transactions = new ArrayCollection();
         $this->purchasedContacts = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->boostVisibilities = new ArrayCollection();
     }
 
     public function __toString()
@@ -789,6 +794,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($order->getCustomer() === $this) {
                 $order->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BoostVisibility>
+     */
+    public function getBoostVisibilities(): Collection
+    {
+        return $this->boostVisibilities;
+    }
+
+    public function addBoostVisibility(BoostVisibility $boostVisibility): static
+    {
+        if (!$this->boostVisibilities->contains($boostVisibility)) {
+            $this->boostVisibilities->add($boostVisibility);
+            $boostVisibility->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBoostVisibility(BoostVisibility $boostVisibility): static
+    {
+        if ($this->boostVisibilities->removeElement($boostVisibility)) {
+            // set the owning side to null (unless already changed)
+            if ($boostVisibility->getUser() === $this) {
+                $boostVisibility->setUser(null);
             }
         }
 
