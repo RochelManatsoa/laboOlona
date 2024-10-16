@@ -3,6 +3,7 @@
 namespace App\Entity\Entreprise;
 
 use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Candidate\Applications;
 use App\Entity\Candidate\Competences;
@@ -167,6 +168,9 @@ class JobListing
 
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
     private ?Boost $boost = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jobListings')]
+    private ?BoostFacebook $boostFacebook = null;
 
     public function __toString()
     {
@@ -670,6 +674,18 @@ class JobListing
     public function setBoost(?Boost $boost): static
     {
         $this->boost = $boost;
+
+        return $this;
+    }
+
+    public function getBoostFacebook(): ?BoostFacebook
+    {
+        return $this->boostFacebook;
+    }
+
+    public function setBoostFacebook(?BoostFacebook $boostFacebook): static
+    {
+        $this->boostFacebook = $boostFacebook;
 
         return $this;
     }

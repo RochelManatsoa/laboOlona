@@ -186,5 +186,18 @@
         margin-right: 10px; 
       }
     }
+
+    &.selected-facebook {
+      background-color: #082441;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+
+      &::before {
+        content: '✔  ';
+        color: white;
+        margin-right: 10px; 
+      }
+    }
   }
 }

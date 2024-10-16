@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Finance\Devise;
 use App\Entity\Entreprise\Favoris;
@@ -105,6 +106,9 @@ class EntrepriseProfile
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'entrepriseProfiles')]
+    private ?BoostFacebook $boostFacebook = null;
 
     public function __construct()
     {
@@ -477,6 +481,18 @@ class EntrepriseProfile
     public function setCreatedAt(?\DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getBoostFacebook(): ?BoostFacebook
+    {
+        return $this->boostFacebook;
+    }
+
+    public function setBoostFacebook(?BoostFacebook $boostFacebook): static
+    {
+        $this->boostFacebook = $boostFacebook;
 
         return $this;
     }

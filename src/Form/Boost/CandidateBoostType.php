@@ -4,6 +4,7 @@ namespace App\Form\Boost;
 
 use App\Entity\CandidateProfile;
 use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostFacebook;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,6 +25,17 @@ class CandidateBoostType extends AbstractType
                 'choices' => $this->entityManager->getRepository(Boost::class)->findBy(['type' => 'PROFILE_CANDIDATE']),
                 'choice_label' => function ($boost) {
                     return $boost->getName().' ('.$boost->getCredit().' crédits)'; 
+                },
+                'expanded' => true,  
+                'required' => false, 
+                'placeholder' => 'Pas de boost',
+                'label' => false
+            ])
+            ->add('boostFacebook', EntityType::class, [
+                'class' => BoostFacebook::class,
+                'choices' => $this->entityManager->getRepository(BoostFacebook::class)->findBy(['type' => 'OT_PLUS_FB']),
+                'choice_label' => function ($boostFB) {
+                    return $boostFB->getName().' ('.$boostFB->getCredit().' crédits)'; 
                 },
                 'expanded' => true,  
                 'required' => false, 

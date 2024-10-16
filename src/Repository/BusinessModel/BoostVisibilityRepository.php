@@ -4,7 +4,9 @@ namespace App\Repository\BusinessModel;
 
 use App\Entity\BusinessModel\Boost;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
@@ -29,6 +31,34 @@ class BoostVisibilityRepository extends ServiceEntityRepository
             ->setParameter('boost', $boost)
             ->orderBy('bv.startDate', 'DESC')
             ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    
+    public function findBoostVisibilityByBoostFacebookAndCandidate(BoostFacebook $boostFacebook, User $user): ?BoostVisibility
+    {
+        return $this->createQueryBuilder('bv')
+            ->addSelect('bf', 'u') 
+            ->innerJoin('bv.boostFacebook', 'bf')
+            ->innerJoin('bv.user', 'u')
+            ->where('bf = :boostFacebook')
+            ->andWhere('u = :user')
+            ->setParameter('boostFacebook', $boostFacebook)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    
+    public function findBoostVisibilityByBoostAndUser(Boost $boost, User $user): ?BoostVisibility
+    {
+        return $this->createQueryBuilder('bv')
+            ->addSelect('bf', 'u') 
+            ->innerJoin('bv.boost', 'bf')
+            ->innerJoin('bv.user', 'u')
+            ->where('bf = :boost')
+            ->andWhere('u = :user')
+            ->setParameter('boost', $boost)
+            ->setParameter('user', $user)
             ->getQuery()
             ->getOneOrNullResult();
     }

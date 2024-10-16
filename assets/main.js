@@ -382,21 +382,52 @@ $(function() {
     function handleLoading() {
 
         var selectedValue = '';
+        var val = 0;
+        var selectedFBValue = '';
+        var valFB = 0;
 
         $('input[name="candidate_boost[boost]"]').on('change', function() {
             selectedValue = $(this).data('value');
+            val = $(this).val();
             $('.form-check').removeClass('selected');
             $(this).closest('.form-check').addClass('selected');
+            if(val > 0){
+                $('#candidate_boost_boost_boost_facebook').show()
+            }else{
+                $('#candidate_boost_boost_boost_facebook').hide()
+            }
             console.log(selectedValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
         });
 
+        $('input[name="candidate_boost[boostFacebook]"]').on('change', function() {
+            selectedFBValue = $(this).data('value');
+            valFB = $(this).val();
+            $('.form-check').removeClass('selected-facebook');
+            $(this).closest('.form-check').addClass('selected-facebook');
+            $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedFBValue + selectedValue);
+        });
+
         $('input[name="recruiter_boost[boost]"]').on('change', function() {
             selectedValue = $(this).data('value');
+            val = $(this).val();
             $('.form-check').removeClass('selected');
             $(this).closest('.form-check').addClass('selected');
+            if(val > 0){
+                $('#recruiter_boost_boost_boost_facebook').show()
+            }else{
+                $('#recruiter_boost_boost_boost_facebook').hide()
+            }
             console.log(selectedValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
+        });
+
+        $('input[name="recruiter_boost[boostFacebook]"]').on('change', function() {
+            selectedFBValue = $(this).data('value');
+            valFB = $(this).val();
+            $('.form-check').removeClass('selected-facebook');
+            $(this).closest('.form-check').addClass('selected-facebook');
+            $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedFBValue + selectedValue);
         });
         
         var boosts = [

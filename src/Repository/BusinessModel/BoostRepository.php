@@ -2,9 +2,10 @@
 
 namespace App\Repository\BusinessModel;
 
+use App\Entity\CandidateProfile;
 use App\Entity\BusinessModel\Boost;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Boost>
@@ -19,6 +20,16 @@ class BoostRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Boost::class);
+    }
+
+    public function findBoostByCandidate(CandidateProfile $candidateProfile): ?Boost
+    {
+        return $this->createQueryBuilder('b')
+            ->innerJoin('b.candidateProfiles', 'cp')
+            ->where('cp = :candidateProfile')
+            ->setParameter('candidateProfile', $candidateProfile)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**

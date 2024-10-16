@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Candidate\CV;
 use App\Entity\Candidate\Langages;
@@ -205,6 +206,9 @@ class CandidateProfile
     #[Groups(['boost'])]
     #[ORM\ManyToOne(inversedBy: 'candidateProfiles', cascade: ['persist', 'remove'])]
     private ?Boost $boost = null;
+
+    #[ORM\ManyToOne(inversedBy: 'candidateProfiles')]
+    private ?BoostFacebook $boostFacebook = null;
 
     public function __construct()
     {
@@ -1044,6 +1048,18 @@ class CandidateProfile
     public function setBoost(?Boost $boost): static
     {
         $this->boost = $boost;
+
+        return $this;
+    }
+
+    public function getBoostFacebook(): ?BoostFacebook
+    {
+        return $this->boostFacebook;
+    }
+
+    public function setBoostFacebook(?BoostFacebook $boostFacebook): static
+    {
+        $this->boostFacebook = $boostFacebook;
 
         return $this;
     }
