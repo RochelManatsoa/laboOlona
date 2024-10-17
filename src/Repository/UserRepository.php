@@ -104,4 +104,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function findExpiredBoostVisibilitiesByType(string $type): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->innerJoin('u.boostVisibilities', 'bv')
+            ->where('bv.type = :type')
+            ->andWhere('bv.endDate < :now')
+            ->setParameter('type', $type)
+            ->setParameter('now', new \DateTime())
+            ->getQuery();
+
+        return $qb->getResult();
+    }
+
+    public function findExpiredBoostVisibilities(): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->innerJoin('u.boostVisibilities', 'bv')
+            ->where('bv.endDate < :now')
+            ->setParameter('now', new \DateTime())
+            ->getQuery();
+
+        return $qb->getResult();
+    }
 }
