@@ -42,7 +42,6 @@ class BoostExtension extends AbstractExtension
     {
         $userBoost = '';
         if($user->getCandidateProfile() instanceof CandidateProfile){
-            $userBoost = '<button class="btn btn-sm btn-danger text-uppercase fw-bold px-4" data-bs-toggle="modal" data-bs-target="#boostProfile" data-bs-whatever="@mdo"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon profil</button>';
             $candidat = $user->getCandidateProfile();
             if($candidat->getBoostFacebook() instanceof BoostFacebook){
                 $boostFacebook = $candidat->getBoostFacebook();
@@ -58,9 +57,11 @@ class BoostExtension extends AbstractExtension
                     $userBoost .= '<div class="text-center"><span class="fs-6 fw-bold text-uppercase"><i class="bi bi-rocket me-2"></i> Profil boosté</span><br><span class="small fw-light"> Jusqu\'au '.$boostVisibility->getEndDate()->format('d-m-Y \à H:i').' </span></div>';
                 }
             }
+            if($userBoost === ''){
+                $userBoost = '<button class="btn btn-sm btn-danger text-uppercase fw-bold px-4" data-bs-toggle="modal" data-bs-target="#boostProfile" data-bs-whatever="@mdo"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon profil</button>';
+            }
         }
         if($user->getEntrepriseProfile() instanceof EntrepriseProfile){
-            $userBoost = '<button class="btn btn-sm btn-danger text-uppercase fw-bold" data-bs-toggle="modal" data-bs-target="#boostProfile" data-bs-whatever="@mdo"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon entreprise</button>';
             $recruiter = $user->getEntrepriseProfile();
             if($recruiter->getBoostFacebook() instanceof BoostFacebook){
                 $boostFacebook = $recruiter->getBoostFacebook();
@@ -75,6 +76,9 @@ class BoostExtension extends AbstractExtension
                 if($boost instanceof Boost && !$this->boostVisibilityManager->isExpired($boostVisibility)){
                     $userBoost .= '<div class="text-center"><span class="fs-6 fw-bold text-uppercase"><i class="bi bi-rocket me-2"></i> Entreprise boosté</span><br><span class="small fw-light"> Jusqu\'au '.$boostVisibility->getEndDate()->format('d-m-Y \à H:i').' </span></div>';
                 }
+            }
+            if($userBoost === ''){
+                $userBoost = '<button class="btn btn-sm btn-danger text-uppercase fw-bold" data-bs-toggle="modal" data-bs-target="#boostProfile" data-bs-whatever="@mdo"><i class="bi bi-rocket-takeoff me-2"></i> Booster mon entreprise</button>';
             }
         }
 

@@ -168,8 +168,11 @@ class ProfileManager
         return false;
     }
 
-    public function canApplyBoostFacebook(User $user, BoostFacebook $boost): bool
+    public function canApplyBoostFacebook(User $user, ?BoostFacebook $boost): bool
     {
+        if($boost === null){
+            return false;
+        }
         $credit = $user->getCredit();
         $amount = $boost->getCredit();
         if ($credit instanceof Credit) {
