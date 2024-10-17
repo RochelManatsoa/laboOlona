@@ -402,10 +402,19 @@ $(function() {
 
         $('input[name="candidate_boost[boostFacebook]"]').on('change', function() {
             selectedFBValue = $(this).data('value');
+            if (!selectedFBValue) {
+                selectedFBValue = 0; 
+            }
             valFB = $(this).val();
             $('.form-check').removeClass('selected-facebook');
             $(this).closest('.form-check').addClass('selected-facebook');
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedFBValue + selectedValue);
+        });
+
+        $('button[data-bs-target="#confirmationModal"]').on('click', function() {
+            var packagePrice = $(this).attr('data-bs-price');
+            var modalBody = $('#confirmationModal').find('.modal-body');
+            modalBody.text(`Voulez-vous vraiment dépenser ${packagePrice} ?`);
         });
 
         $('input[name="recruiter_boost[boost]"]').on('change', function() {
@@ -424,10 +433,25 @@ $(function() {
 
         $('input[name="recruiter_boost[boostFacebook]"]').on('change', function() {
             selectedFBValue = $(this).data('value');
-            valFB = $(this).val();
+            if (!selectedFBValue) {
+                selectedFBValue = 0; 
+            }
             $('.form-check').removeClass('selected-facebook');
             $(this).closest('.form-check').addClass('selected-facebook');
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedFBValue + selectedValue);
+        });
+        
+        var boostProfiles = [
+            { name: 'candidate_boost[boost]', type: 'boost-profile' },
+            { name: 'recruiter_boost[boost]', type: 'boost-profile' }
+        ];
+
+        boostProfiles.forEach(function(boost) {
+            $('input[type="radio"][name="' + boost.name + '"]').on('change', function() {
+                var dataLabel = $(this).data('value');
+                console.log(dataLabel);
+                $('#confirmationModal .modal-body').text("Voulez-vous vraiment dépenser " + dataLabel + " crédits");
+            });
         });
         
         var boosts = [
@@ -495,6 +519,7 @@ $(function() {
             modalBody.text(`Voulez-vous vraiment dépenser ${packagePrice} ?`);
             submitButton.attr('data-id', packageType);
         });
+
         $('#notification').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var modal = $(this);
@@ -530,7 +555,7 @@ $(function() {
                 }
             });
         });
-
+        
         $('#boostProfileForm').on('submit', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
@@ -540,27 +565,29 @@ $(function() {
                 data: formData,
                 contentType: false,
                 processData: false,
-                headers: {
-                    'Accept': 'text/vnd.turbo-stream.html'
-                },
+                // headers: {
+                //     'Accept': 'text/vnd.turbo-stream.html'
+                // },
                 success: function(data) {
-                    Turbo.renderStreamMessage(data);
-                    console.log(data.succes)
+                    // Turbo.renderStreamMessage(data);
+                    console.log(data); // Assurez-vous que c'est `success` et non `succes`
                     if (data.success) {
-                        $('#successToast').find('.toast-body').text(data.message);
+                        $('#successToast .toast-body').text(data.message);
+                        console.log($('#newCheckBoost').length); 
+                        $('#newCheckBoost').html(data.detail);
                         var successToast = new Toast($('#successToast')[0]);
                         successToast.show();
                         var boostProfileModal = Modal.getInstance($('#boostProfile')[0]) || new Modal($('#boostProfile')[0]);
                         boostProfileModal.hide();
                     } else {
-                        $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
-                        var errorToast = new Toast($('#errorToast')[0]);
+                        $('#errorToast .toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Modal($('#lowCreditModal')[0]);
                         errorToast.show();
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.error('Erreur:', textStatus, errorThrown);
-                    $('#errorToast').find('.toast-body').text('Une erreur s\'est produite.');
+                    $('#errorToast .toast-body').text('Une erreur s\'est produite.');
                     var errorToast = new Toast($('#errorToast')[0]);
                     errorToast.show();
                 }
