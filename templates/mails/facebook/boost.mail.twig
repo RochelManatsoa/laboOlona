@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail de notification</title>
+</head>
+<body style="font-family: 'Open Sans', Arial, sans-serif; margin: 0; padding: 20px; background-color: #EDEDED;">
+    <div style="max-width: 550px; margin: 0 auto; background-color: #FFFFFF; padding: 25px; border-radius: 10px; box-shadow: 0 6px 10px rgba(0,0,0,0.05);">
+        <div style="text-align: center;">
+            <img src="https://app.olona-talents.com/images/logo-light150x150.png" alt="Logo Olona-talents" style="width: 250px;">
+        </div>
+        <div>
+            <p>Hello Joel,</p>
+            <p>Un utilisateur vient de prendre un boost Facebook</p>
+            <div>
+                Voici les détails : 
+                <div>
+                <p><strong>Nom de l'utilisateur</strong> : {{ user.nom }} {{ user.prenom }}</p>
+                <p><strong>Date de début</strong> {{ boost.startDate|date('d/m/Y à H:i') }} </p>
+                <p><strong>Date de fin</strong> {{boost.endDate|date('d/m/Y à H:i')}}</p>
+                <p><strong>Durée :</strong> {{ boost.boostFacebook.durationDays }} jours</p>
+                <p><strong>Budget :</strong> {{ boost.boostFacebook.credit }} crédits</p>
+                </div>
+            </div>
+            <p>   
+                Voici le lien pour acceder au profil
+            </p>
+            <p style="text-align: center;">    
+            <a href="{{ url|raw }}" style="display: inline-block; padding: 12px 24px; background-color: #0D6EFD; color: #FFFFFF; border-radius: 5px; text-decoration: none; font-weight: 500; margin-bottom: 20px;">Détails profil</a>
+            </p>
+            
+            <p>Bonne chance dans vos recherches et n'hésitez pas à <span style="font-weight: 700;">nous contacter</span> si vous avez des questions ou besoin d'aide.</p>
+            <p style="font-size: 12px; color: #777;">Écrivez-nous à <a href="mailto:contact@olona-talents.com" style="text-decoration: none; color: #0D6EFD;">contact@olona-talents.com</a> ou appelez-nous au <a href="tel:+261320373420" style="text-decoration: none; color: #0D6EFD;">+261320373420</a>.</p>
+        </div>
+        <div style="font-family: 'Poppins', Arial, sans-serif; background-color: #F2F2F2; padding: 15px 0; font-size: 12px; color: #666; margin-top: 25px;">
+            <a href="https://olona-talents.com/privacy-policy" style="text-decoration: none; color: #0D6EFD;">Politique de confidentialité</a> | 
+            <a href="https://olona-talents.com/terms-of-service" style="text-decoration: none; color: #0D6EFD;">Conditions d'utilisation</a> | 
+            <a href="https://olona-talents.com/cookie-policy" style="text-decoration: none; color: #0D6EFD;">Politique de cookies</a> | 
+            <a href="https://olona-talents.com/data-request" style="text-decoration: none; color: #0D6EFD;">Demande de données</a>
+        </div>
+    </div>
+</body>
+</html>
