@@ -210,31 +210,55 @@ class DashboardController extends AbstractController
             $boostOption = $form->get('boost')->getData(); 
             $boostOptionFacebook = $form->get('boostFacebook')->getData(); 
             $candidat = $form->getData();
-
-            if ($this->profileManager->canApplyBoost($currentUser, $boostOption) && $this->profileManager->canApplyBoostFacebook($currentUser, $boostOptionFacebook)) {
-                $result = $this->handleBoostProfile($boostOption, $candidat, $currentUser);
-                $result = $this->handleBoostFacebook($boostOptionFacebook, $candidat, $currentUser);
-            }elseif ($this->profileManager->canApplyBoost($currentUser, $boostOption)) {
-                $result = $this->handleBoostProfile($boostOption, $candidat, $currentUser);
-            } else {
-                $result = [
-                    'message' => 'Crédits insuffisants pour ce boost.',
-                    'success' => false,
-                    'status' => 'Echec',
-                ];
+            if ($boostOptionFacebook === 0) {
+                $boostOptionFacebook = null; // Rendre null si la valeur est 0
             }
 
-            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
-                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-    
-                return $this->render('v2/dashboard/candidate/update.html.twig', array_merge($result, [
-                    'credit' => $currentUser->getCredit()->getTotal(),
-                ]));
-            }
-
-            return $this->json(array_merge($result, [
+            // Vérifier si les deux boosts peuvent être appliqués
+            $canApplyBoost = $this->profileManager->canApplyBoost($currentUser, $boostOption);
+            $canApplyBoostFacebook = $this->profileManager->canApplyBoostFacebook($currentUser, $boostOptionFacebook);
+            
+            // Initialiser un tableau pour le résultat
+            $result = [
+                'success' => false,
+                'status' => 'Echec',
+                'detail' => '',
                 'credit' => $currentUser->getCredit()->getTotal(),
-            ]), 200);
+            ];
+
+            // Vérifier si les boosts peuvent être appliqués
+            $canApplyBoost = $this->profileManager->canApplyBoost($currentUser, $boostOption);
+            $canApplyBoostFacebook = $this->profileManager->canApplyBoostFacebook($currentUser, $boostOptionFacebook);
+
+            // Vérification des crédits
+            if ($boostOptionFacebook && !($canApplyBoost && $canApplyBoostFacebook)) {
+                // Si le boost Facebook est demandé mais crédits insuffisants pour les deux
+                $result['message'] = 'Crédits insuffisants pour appliquer les deux boosts.';
+            } elseif ($canApplyBoost) {
+                if ($boostOptionFacebook && $canApplyBoostFacebook) {
+                    $resultProfile = $this->handleBoostProfile($boostOption, $candidat, $currentUser);
+                    $resultFacebook = $this->handleBoostFacebook($boostOptionFacebook, $candidat, $currentUser);
+
+                    $result['message'] = $resultProfile['message'] . ' ' . $resultFacebook['message'];
+                    $result['success'] = $resultProfile['success'] && $resultFacebook['success'];
+                    $result['detail'] = '
+                        <div class="text-center"><span class="fs-6 fw-bold text-uppercase"><i class="bi bi-facebook me-2"></i> Boost facebook</span><br><span class="small fw-light"> Jusqu\'au '.$resultFacebook['visibilityBoost']->getEndDate()->format('d-m-Y \à H:i').' </span></div>
+                        <div class="text-center"><span class="fs-6 fw-bold text-uppercase"><i class="bi bi-rocket me-2"></i> Profil boosté</span><br><span class="small fw-light"> Jusqu\'au '.$resultProfile['visibilityBoost']->getEndDate()->format('d-m-Y \à H:i').' </span></div>
+                    ';
+                } else {
+                    $resultProfile = $this->handleBoostProfile($boostOption, $candidat, $currentUser);
+                    $result['message'] = $resultProfile['message'];
+                    $result['success'] = $resultProfile['success'];
+                    $result['detail'] = '
+                        <div class="text-center"><span class="fs-6 fw-bold text-uppercase"><i class="bi bi-rocket me-2"></i> Profil boosté</span><br><span class="small fw-light"> Jusqu\'au '.$resultProfile['visibilityBoost']->getEndDate()->format('d-m-Y \à H:i').' </span></div>
+                    ';
+                }
+                $result['status'] = $result['success'] ? 'Succès' : 'Echec';
+            } else {
+                $result['message'] = 'Crédits insuffisants pour le boost de profil.';
+            }
+
+            return $this->json($result, 200);
         }
 
         return $this->json([
@@ -260,7 +284,7 @@ class DashboardController extends AbstractController
             $this->em->persist($currentUser);
             $this->em->flush();
             return [
-                'message' => 'Votre profil est maintenant boosté',
+                'message' => 'Votre profil est maintenant boosté.',
                 'success' => true,
                 'status' => 'Succès',
                 'visibilityBoost' => $visibilityBoost
