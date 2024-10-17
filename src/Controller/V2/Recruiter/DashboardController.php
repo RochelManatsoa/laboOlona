@@ -23,6 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Formation\PlaylistRepository;
 use App\Form\Search\AffiliateTool\ToolSearchType;
 use App\Manager\BusinessModel\BoostVisibilityManager;
+use App\Manager\MailManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/v2/recruiter/dashboard')]
@@ -30,6 +31,7 @@ class DashboardController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $em,
+        private MailManager $mailManager,
         private ProfileManager $profileManager,
         private UserService $userService,
         private AffiliateToolManager $affiliateToolManager,
@@ -232,6 +234,7 @@ class DashboardController extends AbstractController
             $this->em->persist($currentUser);
             $this->em->persist($recruiter);
             $this->em->flush();
+            $this->mailManager->facebookBoost($recruiter->getEntreprise(), $visibilityBoost);
 
             return [
                 'message' => 'Votre profil est maintenant boosté sur facebook',

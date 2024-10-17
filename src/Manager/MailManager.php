@@ -2,8 +2,10 @@
 
 namespace App\Manager;
 
+use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
 use App\Entity\Finance\Contrat;
-use App\Entity\Finance\Simulateur;
 use App\Entity\Referrer\Referral;
 use App\Entity\User;
 use App\Manager\Finance\EmployeManager;
@@ -74,6 +76,31 @@ class MailManager
                 'simulateur' => $contrat->getSimulateur(),
                 'details' => $this->employeManager->simulate($contrat->getSimulateur()),
                 'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_view_portage', ['id' => $contrat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]
+        );
+    }
+
+    public function facebookBoost(User $user, BoostVisibility $boost)
+    {
+        $url = '';
+        if($user->getCandidateProfile() instanceof CandidateProfile){
+            $url = $this->urlGenerator->generate('app_dashboard_moderateur_profile_candidat_view', [
+                'id' => $user->getCandidateProfile()->getId()
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+        if($user->getEntrepriseProfile() instanceof EntrepriseProfile){
+            $url = $this->urlGenerator->generate('app_dashboard_moderateur_profile_entreprise_view', [
+                'id' => $user->getEntrepriseProfile()->getId()
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+        return $this->mailerService->send(
+            'jrandriamalala.olona@gmail.com',
+            'Notification de Boost Facebook '.$user->getNom().' '.$user->getPrenom(),
+            'facebook/boost.mail.twig',
+            [
+                'user' => $user,
+                'boost' => $boost,
+                'url' => $url,
             ]
         );
     }

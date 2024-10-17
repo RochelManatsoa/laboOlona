@@ -30,6 +30,7 @@ use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\CandidateProfile;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile as EditStepOneType;
+use App\Manager\MailManager;
 
 #[Route('/v2/candidate/dashboard')]
 class DashboardController extends AbstractController
@@ -38,6 +39,7 @@ class DashboardController extends AbstractController
         private EntityManagerInterface $em,
         private ProfileManager $profileManager,
         private CreditManager $creditManager,
+        private MailManager $mailManager,
         private BoostVisibilityManager $boostVisibilityManager,
         private FileUploader $fileUploader,
         private UserService $userService,
@@ -316,6 +318,7 @@ class DashboardController extends AbstractController
             $this->em->persist($candidat);
             $this->em->persist($currentUser);
             $this->em->flush();
+            $this->mailManager->facebookBoost($candidat->getCandidat(), $visibilityBoost);
 
             return [
                 'message' => 'Votre profil est maintenant boosté sur facebook',
