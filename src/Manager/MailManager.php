@@ -2,15 +2,17 @@
 
 namespace App\Manager;
 
-use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\User;
+use App\Entity\Prestation;
+use Twig\Environment as Twig;
+use App\Entity\Finance\Contrat;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
-use App\Entity\Finance\Contrat;
 use App\Entity\Referrer\Referral;
-use App\Entity\User;
-use App\Manager\Finance\EmployeManager;
-use Twig\Environment as Twig;
+use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
+use App\Manager\Finance\EmployeManager;
+use App\Entity\BusinessModel\BoostVisibility;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -80,7 +82,7 @@ class MailManager
         );
     }
 
-    public function facebookBoost(User $user, BoostVisibility $boost)
+    public function facebookBoostProfile(User $user, BoostVisibility $boost)
     {
         $url = '';
         if($user->getCandidateProfile() instanceof CandidateProfile){
@@ -95,10 +97,50 @@ class MailManager
         }
         return $this->mailerService->send(
             'jrandriamalala.olona@gmail.com',
-            'Notification de Boost Facebook '.$user->getNom().' '.$user->getPrenom(),
-            'facebook/boost.mail.twig',
+            'Notification de Boost Facebook Profil '.$user->getNom().' '.$user->getPrenom(),
+            'facebook/boost_profile.mail.twig',
             [
                 'user' => $user,
+                'boost' => $boost,
+                'url' => $url,
+            ]
+        );
+    }
+
+    public function facebookBoostPrestation(User $user, Prestation $prestation, BoostVisibility $boost)
+    {
+        $url = '';
+        $url = $this->urlGenerator->generate('app_v2_staff_view_prestation', [
+            'prestation' => $prestation->getId()
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        
+        return $this->mailerService->send(
+            'jrandriamalala.olona@gmail.com',
+            'Notification de Boost Facebook Prestation '.$user->getNom().' '.$user->getPrenom(),
+            'facebook/boost_prestation.mail.twig',
+            [
+                'user' => $user,
+                'prestation' => $prestation,
+                'boost' => $boost,
+                'url' => $url,
+            ]
+        );
+    }
+
+    public function facebookBoostJobListing(User $user, JobListing $jobListing, BoostVisibility $boost)
+    {
+        $url = '';
+        $url = $this->urlGenerator->generate('app_dashboard_moderateur_annonce_view', [
+            'id' => $jobListing->getId()
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        
+        return $this->mailerService->send(
+            'jrandriamalala.olona@gmail.com',
+            'Notification de Boost Facebook Annonce '.$user->getNom().' '.$user->getPrenom(),
+            'facebook/boost_job_listing.mail.twig',
+            [
+                'user' => $user,
+                'jobListing' => $jobListing,
                 'boost' => $boost,
                 'url' => $url,
             ]

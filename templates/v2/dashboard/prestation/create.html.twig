@@ -1,7 +1,7 @@
 {% extends 'base_v21.html.twig' %}
 
 {% block title %}
-  Créer une prestation | Olona Talents
+	Créer une prestation | Olona Talents
 {% endblock %}
 
 {% block meta %}
@@ -14,13 +14,13 @@
 
 {% block sidebar %}
 
-{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
-	{% include "v2/dashboard/layout_candidat.html.twig" %}
-{% endif %}
+	{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+		{% include "v2/dashboard/layout_candidat.html.twig" %}
+	{% endif %}
 
-{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
-	{% include "v2/dashboard/layout_entreprise.html.twig" %}
-{% endif %}
+	{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+		{% include "v2/dashboard/layout_entreprise.html.twig" %}
+	{% endif %}
 
 {% endblock %}
 
@@ -36,7 +36,7 @@
 				Créez et publiez votre prestation en quelques étapes simples. Remplissez les informations demandées ci-dessous pour décrire votre service de manière claire et précise. Une fois la prestation complétée, vous pourrez choisir d'améliorer sa visibilité grâce à l'option de boost disponible. N'oubliez pas que la publication d'une prestation coûte 10 crédits et qu'un boost peut vous aider à atteindre plus de clients potentiels. Assurez-vous que toutes les informations sont exactes avant de soumettre.
 			</p>
 			<div class="col-12 col-sm-10 mx-auto p-2 p-sm-4">
-				{{ form_start(form, {'attr': {'id': 'createPrestation'}}) }}
+				{{ form_start(form, {'attr': {'id': 'createPrestation', 'action': path('app_v2_create_prestation')}}) }}
 				{{ form_errors(form)}}
 				<div class="row">
 					<div id="prestation_titre_row" class="">
@@ -46,12 +46,12 @@
 				<div class="row">
 					<div id="prestation_secteurs_row" class="">
 						{{ form_row(form.secteurs) }}
-					</div>	
+					</div>
 				</div>
 				<div class="row">
 					<div id="prestation_description_row" class="">
 						{{ form_row(form.description) }}
-					</div>	
+					</div>
 				</div>
 				<div id="prestation_tarifPrestation_row" class="">
 
@@ -85,15 +85,15 @@
 					<div class="col">
 						<div class="mb-3">
 							<div class="disponibilite-form">
-						
+
 								<div class="radio-options">
 									{{ form_row(form.availability.nom) }}
 								</div>
-							
+
 								<div class="date-picker-container mt-2">
 									{{ form_row(form.availability.dateFin) }}
 								</div>
-					
+
 							</div>
 						</div>
 					</div>
@@ -164,44 +164,50 @@
 						{{ form_row(form.contactReseauxSociaux) }}
 					</div>
 				</div>
-
 				<div class="row">
-					<div class="mb-3 experience-form">
-						<fieldset>
-							<div class="px-5 ">
-								<span class="fw-bolder text-uppercase fs-5 mb-3"> <i class="bi bi-rocket-takeoff me-2"></i> Booster</span>
+					<div id="prestation_boost">
+						<fieldset class="mb-3">
+							<div id="prestation_boost" class="radio-grid" data-html="data-html" aria-describedby="prestation_boost_help">
+								<div class="form-check selected">
+									<input type="radio" id="prestation_boost_placeholder" name="prestation[boost]" class="form-check-input" value="" checked="checked">
+									<label class="form-check-label" for="prestation_boost_placeholder">Pas de boost</label>
+								</div>
+								<div class="form-check">
+									<input type="radio" id="prestation_boost_7" name="prestation[boost]" data-content="Ce boost offre une visibilité accrue de votre prestation pendant une semaine. Il est idéal pour des missions urgentes nécessitant une attention rapide. Votre prestation sera mise en avant dans les résultats de recherche, augmentant ainsi vos chances de recevoir des propositions." class="form-check-input" value="7">
+									<label class="form-check-label" for="prestation_boost_7">Boost 7 jours (1000 crédits)</label>
+								</div>
+								<div class="form-check">
+									<input type="radio" id="prestation_boost_boost_8" name="prestation[boost]" data-content="Doublez la durée de visibilité avec notre Boost Avancé. Conçu pour les prestations nécessitant plus de temps pour attirer le bon client, cette option vous assure une place de choix dans les recherches pendant deux semaines." class="form-check-input" value="8">
+									<label class="form-check-label" for="prestation_boost_boost_8">Boost 15 jours (2000 crédits)</label>
+								</div>
+								<div class="form-check">
+									<input type="radio" id="prestation_boost_boost_9" name="prestation[boost]" data-content="Maximisez votre présence sur la plateforme avec le Boost Premium. Offrant un mois de visibilité étendue, cette option est parfaite pour les prestataires cherchant à établir une présence solide et continuelle. Profitez également d'un placement préférentiel dans les recommandations envoyées aux clients." class="form-check-input" value="9">
+									<label class="form-check-label" for="prestation_boost_boost_9">Boost 30 jours (4000 crédits)</label>
+								</div>
 							</div>
-							<div class="p-3">
-							{% for boost in form.boost %}
-								{% if loop.index == 1 %}
-									<div class="form-check">
-										<div class="row">
-											<div class="col-1">
-												{{ form_widget(boost, {'label': false}) }}
-											</div>
-											<div class="col-11">
-												<label class="form-check-label" for="{{ boost.vars.id }}">
-													{{ boost.vars.label | raw }}
-												</label>
-											</div>
-										</div>
+							<small class="fw-lighter">Choisissez un boost pour augmenter la visibilité de votre prestation (optionnel).</small>
+						</fieldset>
+						<fieldset class="mb-3">
+							<div id="prestation_boostFacebook" style="display:none;">
+                				<h4 class="text-center fw-bolder h5 mb-2">Augmentez votre influence sur Facebook</h4>
+								<div class="radio-grid">
+									<div class="form-check selected-facebook">
+										<input type="radio" id="prestation_boostFacebook_placeholder" name="prestation[boostFacebook]" class="form-check-input" value="" checked="checked">
+										<label class="form-check-label" for="prestation_boostFacebook_placeholder">Pas de boost <i class="bi bi-facebook mx-2 h5"></i></label>
 									</div>
-								{% else %}
 									<div class="form-check">
-										<div class="row">
-											<div class="col-1">
-												{{ form_widget(boost, {'label': false}) }}
-											</div>
-											<div class="col-11">
-												<label class="form-check-label" for="{{ boost.vars.id }}">
-													{{ boost.vars.label | raw }}
-													<i class="bi bi-info-circle mx-2"  data-bs-toggle="tooltip" data-bs-html="true" title="{{ boost.vars.attr['data-content'] | raw }}"></i>
-												</label>
-											</div>
-										</div>
+										<input type="radio" id="prestation_boostFacebook_1" name="prestation[boostFacebook]" class="form-check-input" value="1">
+										<label class="form-check-label" for="prestation_boostFacebook_1">Boost <i class="bi bi-facebook mx-2 h5"></i> 7 jours (2100 crédits)</label>
 									</div>
-								{% endif %}
-							{% endfor %}
+									<div class="form-check">
+										<input type="radio" id="prestation_boostFacebook_2" name="prestation[boostFacebook]" class="form-check-input" value="2">
+										<label class="form-check-label" for="prestation_boostFacebook_2">Boost <i class="bi bi-facebook mx-2 h5"></i> 15 jours (4500 crédits)</label>
+									</div>
+									<div class="form-check">
+										<input type="radio" id="prestation_boostFacebook_3" name="prestation[boostFacebook]" class="form-check-input" value="3">
+										<label class="form-check-label" for="prestation_boostFacebook_3">Boost <i class="bi bi-facebook mx-2 h5"></i> 30 jours (9000 crédits)</label>
+									</div>
+								</div>
 							</div>
 						</fieldset>
 					</div>
@@ -212,7 +218,7 @@
 						<div class="mb-3">
 							{{ form_widget(form.agreeTerms, {
 								'label': 'J\'accepte les Termes et Conditions',
-           						'label_attr': {'class': 'fw-bold small'},
+           						'label_attr': {'class': 'fw-bold'},
 							})}}
 						</div>
 					</div>
@@ -232,41 +238,41 @@
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
 		var imageInput = document.getElementById('{{ form.file.vars.id }}');
-		var profileImgDiv = document.querySelector('.profile-img');
-
-		imageInput.addEventListener('change', function(event) {
-			if (event.target.files && event.target.files[0]) {
-				var reader = new FileReader();
-				reader.onload = function(e) {
-					profileImgDiv.style.backgroundImage = 'url(' + e.target.result + ')';
-				};
-				reader.readAsDataURL(event.target.files[0]);
-			}
-		});
-
-		profileImgDiv.addEventListener('click', function() {
-			imageInput.click();
-		});
-	});
-
-	document.addEventListener("DOMContentLoaded", function() {
-		var availabilityDropdown = document.getElementById('prestation_availability_nom');
-		var dateField = document.getElementById('prestation_availability_dateFin');
-
-		if (availabilityDropdown && dateField) { // Vérifie si les éléments existent
-
-			function toggleDateInput() {
-				if (availabilityDropdown.value === 'from-date') {
-					dateField.style.display = 'block';  // Show the date field
-				} else {
-					dateField.style.display = 'none';  // Hide the date field
-				}
-			}
-
-			availabilityDropdown.addEventListener('change', toggleDateInput);
-
-			toggleDateInput();
-		}
-	});
-</script>
-{% endblock %}
+																var profileImgDiv = document.querySelector('.profile-img');
+														
+																imageInput.addEventListener('change', function(event) {
+																	if (event.target.files && event.target.files[0]) {
+																		var reader = new FileReader();
+																		reader.onload = function(e) {
+																			profileImgDiv.style.backgroundImage = 'url(' + e.target.result + ')';
+																		};
+																		reader.readAsDataURL(event.target.files[0]);
+																	}
+																});
+														
+																profileImgDiv.addEventListener('click', function() {
+																	imageInput.click();
+																});
+															});
+														
+															document.addEventListener("DOMContentLoaded", function() {
+																var availabilityDropdown = document.getElementById('prestation_availability_nom');
+																var dateField = document.getElementById('prestation_availability_dateFin');
+														
+																if (availabilityDropdown && dateField) { // Vérifie si les éléments existent
+														
+																	function toggleDateInput() {
+																		if (availabilityDropdown.value === 'from-date') {
+																			dateField.style.display = 'block';  // Show the date field
+																		} else {
+																			dateField.style.display = 'none';  // Hide the date field
+																		}
+																	}
+														
+																	availabilityDropdown.addEventListener('change', toggleDateInput);
+														
+																	toggleDateInput();
+																}
+															});
+						</script>
+					{% endblock %}

@@ -1,0 +1,151 @@
+<div class="modal fade" id="boostPrestation{{ prestation.id }}" tabindex="-1" aria-labelledby="boostPrestation{{ prestation.id }}Label" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form action="{{ path('app_v2_boost_prestation') }}" name="prestation_boost" method="post" id="boostPrestationForm">
+      <div class="modal-header">
+        <h3>Boostez votre Prestation !</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <input type="hidden" name="id" value="3" id="prestation-edit-id">
+      <div class="modal-body">
+        <p class="text-center">Augmentez vos chances d'être vu par les recruteurs en boostant votre profil ! Cela vous garantit une meilleure visibilité et une place prioritaire dans les résultats de recherche.</p>
+        <div class="border p-3 mb-4 small">
+          <div class="col-6 mx-auto my-3">
+            <div class="input-group rounded-pill my-3">
+              <input class="form-control" type="search" name="q" value="votre mot clé" placeholder="Rechercher" disabled>
+              <button class="btn btn-outline-success" type="button"><i class="bi bi-stars"></i></button>
+            </div>
+          </div>
+          <ul class="nav nav-underline mb-4">
+            <li class="nav-item">
+              <a class="nav-link disabled" aria-current="page" href="#">Candidats</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" aria-disabled="true">Offre d'emploi</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-disabled="true">Services</a>
+            </li>
+          </ul>
+          <div class="profile-cards row">
+            <div class="col">
+                <div class="card position-relative text-center mt-2">
+                    <!-- Badge -->
+                    <span class="badge bg-danger rounded-pill position-absolute top-0 start-50 translate-middle">Réf:{{ generateprestationReference(prestation.id) }}</span>
+                    <p class="card-title h6 bg-dark text-white text-center py-2" style="height:120px; display: flex; align-items: center; justify-content: center;">{{ prestation.titre|upper }} </p>
+                    <div class="card-body-candidat">
+                        <small class="mt-auto">
+                            <small class="card-text"></small><br>
+                            <small class="card-text"><i class="mx-1 bi bi-tags"></i>{{ prestation.competencesRequises|length}} specialités</small><br>
+                            <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                        </small>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" desabled>Contacter</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card position-relative text-center mt-2">
+                    <!-- Badge -->
+                    <span class="badge bg-danger rounded-pill position-absolute top-0 start-50 translate-middle">Réf: OT-0027</span>
+                    <p class="card-title h6 bg-dark text-white text-center py-2 text-uppercase" style="height:120px; display: flex; align-items: center; justify-content: center;">Plomberie sur Tana </p>
+                    <div class="card-body-candidat">
+                        <small class="mt-auto">
+                            <small class="card-text"></small><br>
+                            <small class="card-text"><i class="mx-1 bi bi-tags"></i>2 specialités</small><br>
+                            <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                        </small>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" desabled>Contacter</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card position-relative text-center mt-2">
+                    <!-- Badge -->
+                    <span class="badge bg-danger rounded-pill position-absolute top-0 start-50 translate-middle">Réf: OT-0021</span>
+                    <p class="card-title h6 bg-dark text-white text-center py-2 text-uppercase" style="height:120px; display: flex; align-items: center; justify-content: center;">Création site clé en main </p>
+                    <div class="card-body-candidat">
+                        <small class="mt-auto">
+                            <small class="card-text"></small><br>
+                            <small class="card-text"><i class="mx-1 bi bi-tags"></i>8 specialités</small><br>
+                            <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                        </small>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" desabled>Contacter</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card position-relative text-center mt-2">
+                    <!-- Badge -->
+                    <span class="badge bg-danger rounded-pill position-absolute top-0 start-50 translate-middle">Réf: OT-0042</span>
+                    <p class="card-title h6 bg-dark text-white text-center py-2 text-uppercase" style="height:120px; display: flex; align-items: center; justify-content: center;">assistant airbnb </p>
+                    <div class="card-body-candidat">
+                        <small class="mt-auto">
+                            <small class="card-text"></small><br>
+                            <small class="card-text"><i class="mx-1 bi bi-tags"></i>5 specialités</small><br>
+                            <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                        </small>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" desabled>Contacter</button>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="my-3">
+          <div id="prestation_boost">
+            <fieldset class="mb-3">
+              <div id="prestation_boost_boost" class="radio-grid">
+                <div class="form-check selected">
+                  <input type="radio" id="prestation_boost_boost_placeholder" name="prestation_boost[boost]" value="" >
+                  <label for="prestation_boost_boost_placeholder">Pas de boost</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" id="prestation_boost_boost_7" name="prestation_boost[boost]" value="7" data-value="1000">
+                  <label for="prestation_boost_boost_7">Boost 7 jours (1000 crédits)</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" id="prestation_boost_boost_8" name="prestation_boost[boost]" value="8" data-value="2000">
+                  <label for="prestation_boost_boost_8">Boost 15 jours (2000 crédits)</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" id="prestation_boost_boost_9" name="prestation_boost[boost]" value="9" data-value="4000">
+                  <label for="prestation_boost_boost_9">Boost 30 jours (4000 crédits)</label>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset class="mb-3">
+              <div id="prestation_boost_boostFacebook" style="display:none;">
+                <h4 class="text-center fw-bolder h5 mb-2">Augmentez votre influence sur Facebook</h4>
+                <div class="radio-grid">
+                  <div class="form-check selected-facebook">
+                    <input type="radio" id="prestation_boost_boostFacebook_placeholder" name="prestation_boost[boostFacebook]" value="" >
+                    <label for="prestation_boost_boostFacebook_placeholder">Pas de boost <i class="bi bi-facebook mx-2 h5"></i></label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" id="prestation_boost_boostFacebook_1" name="prestation_boost[boostFacebook]" value="1" data-value="2100">
+                    <label for="prestation_boost_boostFacebook_1">Boost <i class="bi bi-facebook mx-2 h5"></i> 7 jours (2100 crédits)</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" id="prestation_boost_boostFacebook_2" name="prestation_boost[boostFacebook]" value="2" data-value="4500">
+                    <label for="prestation_boost_boostFacebook_2">Boost <i class="bi bi-facebook mx-2 h5"></i> 15 jours (4500 crédits)</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" id="prestation_boost_boostFacebook_3" name="prestation_boost[boostFacebook]" value="3" data-value="9000">
+                    <label for="prestation_boost_boostFacebook_3">Boost <i class="bi bi-facebook mx-2 h5"></i> 30 jours (9000 crédits)</label>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <p class="text-center">
+        En choisissant l'un de ces boosts, vous multipliez vos opportunités de contact et renforcez votre présence auprès des principales entreprises de votre secteur.<br><span class="fw-bold">Ne laissez pas passer votre chance de vous démarquer !</span>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary text-uppercase fw-bold" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" data-bs-toggle="modal" data-bs-type="boost-prestation" data-bs-target="#confirmationModal" data-bs-price="50 crédits" class="btn btn-primary text-uppercase fw-bold">Prendre un boost</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>

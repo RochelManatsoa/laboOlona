@@ -14,24 +14,23 @@
                                 {% for j in 0..3 %}
                                     {% set index = i * 4 + j %}
                                     {% if index < top_prestations.items|length %}
-                                        {% set candidat = top_prestations.items[index] %}
+                                        {% set prestation = top_prestations.items[index] %}
                                             <div class="col">
-                                                <div class="card position-relative text-center">
+                                                <div class="card position-relative text-center mt-2">
                                                     <!-- Badge -->
-                                                    <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3">PRO</span>
-                                                    <div class="" style="height:120px; background-image: url('{{ candidat['_source'].fileName ? asset('uploads/experts/' ~ candidat['_source'].fileName) : asset('uploads/experts/avatar-default.jpg') }}'); background-position: center; background-size: cover; background-repeat: no-repeat;" alt="{{ generatePseudoById(candidat['_id']) }}"></div>
-                                                    <p class="card-title h6 bg-dark text-white text-center py-2">{{ generatePseudoById(candidat['_id']) }}</p>
+                                                    <span class="badge bg-danger rounded-pill position-absolute top-0 start-50 translate-middle">Réf:{{ generateprestationReference(prestation['_id']) }}</span>
+                                                    <p class="card-title h6 bg-dark text-white text-center py-2" style="height:120px; display: flex; align-items: center; justify-content: center;">{{ prestation['_source'].titre|upper }} </p>
                                                     <div class="card-body-candidat">
                                                         <small class="mt-auto">
                                                             <small class="card-text"></small><br>
-                                                            <small class="card-text"><i class="mx-1 bi bi-trophy"></i>{{ candidat['_source'].competencesRequises|length}} {{ 'app_catalog_expert.realised'|trans }}</small><br>
+                                                            <small class="card-text"><i class="mx-1 bi bi-tags"></i>{{ prestation['_source'].competencesRequises|length}} specialités</small><br>
                                                             <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
                                                         </small>
                                                     </div>
                                                     {% if app.user %}
-                                                        <a href="{{ path('app_olona_talents_view_prestation', {'id': candidat['_id']})}}" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto">Contacter</a>
+                                                        <a href="{{ path('app_olona_talents_view_prestation', {'id': prestation['_id']})}}" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto">Contacter</a>
                                                     {% else %}
-                                                        <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':candidat['_id']}) }}">Contacter</button>
+                                                        <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':prestation['_id']}) }}">Contacter</button>
                                                     {% endif %}
                                                 </div>
                                             </div>

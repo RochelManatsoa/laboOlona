@@ -131,9 +131,6 @@ class DashboardController extends AbstractController
             if ($boostOptionFacebook === 0) {
                 $boostOptionFacebook = null; // Rendre null si la valeur est 0
             }
-            // Vérifier si les deux boosts peuvent être appliqués
-            $canApplyBoost = $this->profileManager->canApplyBoost($currentUser, $boostOption);
-            $canApplyBoostFacebook = $this->profileManager->canApplyBoostFacebook($currentUser, $boostOptionFacebook);
             
             // Initialiser un tableau pour le résultat
             $result = [
@@ -187,7 +184,7 @@ class DashboardController extends AbstractController
     private function handleBoostProfile($boostOption, $recruiter, User $currentUser): array
     {
         $visibilityBoost = $this->em->getRepository(BoostVisibility::class)
-        ->findBoostVisibilityByBoostAndUser($boostOption, $currentUser);
+            ->findBoostVisibilityByBoostAndUser($boostOption, $currentUser, 'PROFILE_RECRUITER');
         if (!$visibilityBoost instanceof BoostVisibility) {
             $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
         }
@@ -219,7 +216,7 @@ class DashboardController extends AbstractController
     private function handleBoostFacebook($boostOptionFacebook, $recruiter, User $currentUser): array
     {
         $visibilityBoost = $this->em->getRepository(BoostVisibility::class)
-            ->findBoostVisibilityByBoostFacebookAndCandidate($boostOptionFacebook, $currentUser);
+            ->findBoostVisibilityByBoostFacebookAndUser($boostOptionFacebook, $currentUser, 'PROFILE_RECRUITER');
 
         if (!$visibilityBoost instanceof BoostVisibility) {
             $visibilityBoost = $this->boostVisibilityManager->initBoostvisibilityFacebook($boostOptionFacebook);
@@ -234,7 +231,7 @@ class DashboardController extends AbstractController
             $this->em->persist($currentUser);
             $this->em->persist($recruiter);
             $this->em->flush();
-            $this->mailManager->facebookBoost($recruiter->getEntreprise(), $visibilityBoost);
+            $this->mailManager->facebookBoostProfile($recruiter->getEntreprise(), $visibilityBoost);
 
             return [
                 'message' => 'Votre profil est maintenant boosté sur facebook',

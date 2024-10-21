@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use App\Entity\Prestation\TypePrestation;
 use App\Form\Prestation\AvailabilityType;
+use App\Entity\BusinessModel\BoostFacebook;
 use App\Form\Prestation\TarifPrestationType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -44,13 +45,14 @@ class PrestationType extends AbstractType
         $builder
             ->add('titre', TextType::class, [
                 'required' => false,
+                'label' => 'Titre (*)',
                 'constraints' => new Sequentially([
                     new NotBlank(message:'Le titre est obligatoire.'),
                     new Length(
                         min: 2,
-                        max: 50,
+                        max: 100,
                         minMessage: 'Le titre est trop court',
-                        maxMessage: 'Le titre ne doit pas depasser 50 characters',
+                        maxMessage: 'Le titre ne doit pas depasser 100 characters',
                     ),
                 ]),
                 'label_attr' => [
@@ -60,6 +62,7 @@ class PrestationType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
+                'label' => 'Description (*)',
                 'constraints' => new Sequentially([
                     new NotBlank(message:'La description est obligatoire.'),
                     new Length(
@@ -78,7 +81,7 @@ class PrestationType extends AbstractType
             ])
             ->add('boost', EntityType::class, [
                 'class' => Boost::class,
-                'attr' => ['class' => 'boost-select', 'data-html' => true],
+                'attr' => ['class' => 'boost-select radio-grid', 'data-html' => true],
                 'choices' => $this->entityManager->getRepository(Boost::class)->findBy(['type' => $options['boostType']]),
                 'choice_label' => function ($boost) {
                     return $boost->getName().' ('.$boost->getCredit().' crédits)'; 
@@ -91,6 +94,18 @@ class PrestationType extends AbstractType
                 'placeholder' => 'Pas de boost',
                 'label' => false,
                 'help' => 'Choisissez un boost pour augmenter la visibilité de votre prestation (optionnel).',
+            ])
+            ->add('boostFacebook', EntityType::class, [
+                'class' => BoostFacebook::class,
+                'attr' => ['class' => 'boost-select radio-grid', 'data-html' => true],
+                'choices' => $this->entityManager->getRepository(BoostFacebook::class)->findBy(['type' => 'OT_PLUS_FB']),
+                'choice_label' => function ($boostFB) {
+                    return $boostFB->getName().' ('.$boostFB->getCredit().' crédits)'; 
+                },
+                'expanded' => true,  
+                'required' => false, 
+                'placeholder' => 'Pas de boost',
+                'label' => false
             ])
             ->add('tarifPrestation', TarifPrestationType::class, [
                 'required' => false,
@@ -233,7 +248,7 @@ class PrestationType extends AbstractType
                 ],
             ])
             ->add('competences', TextType::class, [
-                'label' => 'Spécialisations',
+                'label' => 'Spécialisations (*)',
                 'autocomplete' => true,
                 'attr' => [
                     'data-controller' => 'technical-add-autocomplete',
@@ -260,6 +275,7 @@ class PrestationType extends AbstractType
             ])
             ->add('secteurs', EntityType::class, [
                 'class' => Secteur::class,
+                'label' => 'Secteur d\'activité (*)',
                 'choice_label' => function(?Secteur $secteur) {
                     return $secteur ? $secteur->getNom() : '';
                 },

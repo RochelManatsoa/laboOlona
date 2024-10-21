@@ -12,19 +12,23 @@
         </div>
         <div>
             <p>Hello Joel,</p>
-            <p>Un utilisateur vient de prendre un boost Facebook</p>
+            <p>Un utilisateur vient de prendre un <strong>Boost Prestation Facebook</strong></p>
             <div>
                 Voici les détails : 
                 <div>
                 <p><strong>Nom de l'utilisateur</strong> : {{ user.nom }} {{ user.prenom }}</p>
+                <p><strong>Téléphone</strong> : {{ user.telephone }}</p>
+                <p><strong>Email</strong> : {{ user.email }}</p>
                 <p><strong>Date de début</strong> {{ boost.startDate|date('d/m/Y à H:i') }} </p>
                 <p><strong>Date de fin</strong> {{boost.endDate|date('d/m/Y à H:i')}}</p>
                 <p><strong>Durée :</strong> {{ boost.boostFacebook.durationDays }} jours</p>
                 <p><strong>Budget :</strong> {{ boost.boostFacebook.credit }} crédits</p>
+                <p><strong>Titre de la prestation :</strong> {{ prestation.titre|raw }}</p>
+                <p><strong>Publiée le :</strong> {{ prestation.createdAt|date('d-M-Y') }}</p>
                 </div>
             </div>
             <p>   
-                Voici le lien pour acceder au profil
+                Voici le lien pour acceder à la prestation
             </p>
             <p style="text-align: center;">    
             <a href="{{ url|raw }}" style="display: inline-block; padding: 12px 24px; background-color: #0D6EFD; color: #FFFFFF; border-radius: 5px; text-decoration: none; font-weight: 500; margin-bottom: 20px;">Détails profil</a>
