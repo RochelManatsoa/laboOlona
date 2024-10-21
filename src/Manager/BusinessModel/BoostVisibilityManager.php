@@ -36,6 +36,7 @@ class BoostVisibilityManager
         $visibilityBoost->setType($boost->getType());
         $visibilityBoost->setBoost($boost);
         $visibilityBoost->setDurationDays($boost->getDurationDays());
+        $this->save($visibilityBoost);
 
         return $visibilityBoost;
     }

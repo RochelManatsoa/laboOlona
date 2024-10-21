@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\BoostFacebook;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\Prestation;
 use App\Manager\BusinessModel\BoostVisibilityManager;
 
 class BoostExtension extends AbstractExtension
@@ -35,6 +36,8 @@ class BoostExtension extends AbstractExtension
         return [
             new TwigFunction('checkBoost', [$this, 'checkBoost']),
             new TwigFunction('getBoostInfo', [$this, 'getBoostInfo']),
+            new TwigFunction('getPrestationBoostVisibilityOT', [$this, 'getPrestationBoostVisibilityOT']),
+            new TwigFunction('getPrestationBoostVisibilityFB', [$this, 'getPrestationBoostVisibilityFB']),
         ];
     }
 
@@ -45,14 +48,14 @@ class BoostExtension extends AbstractExtension
             $candidat = $user->getCandidateProfile();
             if($candidat->getBoostFacebook() instanceof BoostFacebook){
                 $boostFacebook = $candidat->getBoostFacebook();
-                $boostFacebookVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByBoostFacebookAndCandidate($boostFacebook, $user);
+                $boostFacebookVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByBoostFacebookAndUser($boostFacebook, $user, 'PROFILE_CANDIDAT');
                 if($boostFacebookVisibility instanceof BoostVisibility && !$this->boostVisibilityManager->isExpired($boostFacebookVisibility)){
                     $userBoost = '<div class="text-center"><span class="fs-6 fw-bold text-uppercase"><i class="bi bi-facebook me-2"></i> Boost facebook</span><br><span class="small fw-light"> Jusqu\'au '.$boostFacebookVisibility->getEndDate()->format('d-m-Y \à H:i').' </span></div>';
                 }
             }
             if($candidat->getBoost() instanceof Boost){
                 $boost = $candidat->getBoost();
-                $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByBoostAndUser($boost, $user);
+                $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByBoostAndUser($boost, $user, 'PROFILE_CANDIDATE');
                 if($boost instanceof Boost && !$this->boostVisibilityManager->isExpired($boostVisibility)){
                     $userBoost .= '<div class="text-center"><span class="fs-6 fw-bold text-uppercase"><i class="bi bi-rocket me-2"></i> Profil boosté</span><br><span class="small fw-light"> Jusqu\'au '.$boostVisibility->getEndDate()->format('d-m-Y \à H:i').' </span></div>';
                 }
@@ -65,14 +68,14 @@ class BoostExtension extends AbstractExtension
             $recruiter = $user->getEntrepriseProfile();
             if($recruiter->getBoostFacebook() instanceof BoostFacebook){
                 $boostFacebook = $recruiter->getBoostFacebook();
-                $boostFacebookVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByBoostFacebookAndCandidate($boostFacebook, $user);
+                $boostFacebookVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByBoostFacebookAndUser($boostFacebook, $user, 'PROFILE_RECRUITER');
                 if($boostFacebookVisibility instanceof BoostVisibility && !$this->boostVisibilityManager->isExpired($boostFacebookVisibility)){
                     $userBoost = '<div class="text-center"><span class="fs-6 fw-bold text-uppercase"><i class="bi bi-facebook me-2"></i> Boost facebook</span><br><span class="small fw-light"> Jusqu\'au '.$boostFacebookVisibility->getEndDate()->format('d-m-Y \à H:i').' </span></div>';
                 }
             }
             if($recruiter->getBoost() instanceof Boost){
                 $boost = $recruiter->getBoost();
-                $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByBoostAndUser($boost, $user);
+                $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByBoostAndUser($boost, $user, 'PROFILE_RECRUITER');
                 if($boost instanceof Boost && !$this->boostVisibilityManager->isExpired($boostVisibility)){
                     $userBoost .= '<div class="text-center"><span class="fs-6 fw-bold text-uppercase"><i class="bi bi-rocket me-2"></i> Entreprise boosté</span><br><span class="small fw-light"> Jusqu\'au '.$boostVisibility->getEndDate()->format('d-m-Y \à H:i').' </span></div>';
                 }
@@ -92,6 +95,34 @@ class BoostExtension extends AbstractExtension
         }
 
         return $this->em->getRepository(Boost::class)->find($boostId);
+    }
+
+    public function getPrestationBoostVisibilityOT(Prestation $prestation, User $user): ?string
+    {
+        $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByPrestationAndUser($prestation, $user, $prestation->getBoost());
+        if (!$boostVisibility) {
+            return null;
+        }
+        return '<div class="">
+        <h3 class="h6">Boost Olona Talents <i class="bi bi-rocket me-2"></i></h3>
+        <p class="fw-light small">
+        Jusqu\'au '.$boostVisibility->getEndDate()->format('d-m-Y \à H:i').'
+        </p>
+        </div>';
+    }
+
+    public function getPrestationBoostVisibilityFB(Prestation $prestation, User $user): ?string
+    {
+        $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityFBByPrestationAndUser($prestation, $user, $prestation->getBoostFacebook());
+        if (!$boostVisibility) {
+            return null;
+        }
+        return '<div class="">
+        <h3 class="h6">Boost <i class="bi bi-facebook me-2"></i></h3>
+        <p class="fw-light small">
+        Jusqu\'au '.$boostVisibility->getEndDate()->format('d-m-Y \à H:i').'
+        </p>
+        </div>';
     }
 
 }

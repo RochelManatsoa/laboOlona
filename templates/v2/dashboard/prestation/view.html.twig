@@ -141,11 +141,33 @@
 					<a href="{{path('app_v2_edit_prestation', {'prestation': prestation.id})}}" class="btn btn-outline-warning  texte-uppercase  my-3 px-5">
 						<i class="mx-2 bi bi-pencil"></i>Editer
 					</a>
-					<a href="{{path('app_v2_edit_prestation', {'prestation': prestation.id})}}#prestation_boost" class="btn btn-dark  texte-uppercase  my-3 px-5">
-						<i class="mx-2 bi bi-rocket-takeoff"></i>Booster
-					</a>
+					{% if prestation.boost is not empty or prestation.boostFacebook is not empty %}
+						{% if prestation.boost is not null %}
+							{{ getPrestationBoostVisibilityOT(prestation, app.user)|raw }}
+						{% endif %}
+						{% if prestation.boostFacebook is not null %}
+					 		{{ getPrestationBoostVisibilityFB(prestation, app.user)|raw }}
+						{% endif %}
+					{% else %}
+						<button type="button" data-bs-toggle="modal" data-bs-target="#boostPrestation{{ prestation.id }}" data-bs-type="boost-prestation" data-bs-prestation="{{ prestation.id }}" class="btn btn-dark  texte-uppercase  my-3 px-5">
+							<i class="mx-2 bi bi-rocket-takeoff"></i>Booster
+						</button>
+					{% endif %}
 				{% endif %}
 			</div>
 		</div>
 	</section>
+{% if owner and prestation.boost is null %}
+	{% include "/v2/modal/_boost_prestation.html.twig" with {'prestation': prestation } %}
+    <script>
+        document.addEventListener('turbo:load', function () {
+            var button = document.querySelector('[data-bs-target="#boostPrestation"]');
+            if (button) {
+                setTimeout(function() {
+                    button.click();
+                }, 5000);  // 5000 millisecondes correspondent à 5 secondes
+            }
+        });
+    </script>
+{% endif %}
 {% endblock %}

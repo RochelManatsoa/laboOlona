@@ -304,7 +304,7 @@ $(function() {
         }
 
         
-        const ids = ['#applyJob', '#createJob', '#createPrestation']; 
+        const ids = ['#applyJob', '#createJob']; 
         ids.forEach(function(id) {
             $(id).on('submit', function(e) {
 
@@ -382,9 +382,55 @@ $(function() {
     function handleLoading() {
 
         var selectedValue = '';
-        var val = 0;
         var selectedFBValue = '';
-        var valFB = 0;
+        var prestationValue = '';
+        var prestationFBValue = '';
+        var val = 0;
+
+        $('input[name="prestation[boost]"]').on('change', function() {
+            prestationValue = $(this).data('value');
+            val = $(this).val();
+            $('.form-check').removeClass('selected');
+            $(this).closest('.form-check').addClass('selected');
+            if(val > 0){
+                $('#prestation_boostFacebook').show()
+            }else{
+                $('#prestation_boostFacebook').hide()
+            }
+        });
+
+        $('input[name="prestation[boostFacebook]"]').on('change', function() {
+            prestationFBValue = $(this).data('value');
+            if (!prestationFBValue) {
+                prestationFBValue = 0; 
+            }
+            $('.form-check').removeClass('selected-facebook');
+            $(this).closest('.form-check').addClass('selected-facebook');
+        });
+
+        $('input[name="prestation_boost[boost]"]').on('change', function() {
+            prestationValue = $(this).data('value');
+            val = $(this).val();
+            $('.form-check').removeClass('selected');
+            $(this).closest('.form-check').addClass('selected');
+            if(val > 0){
+                $('#prestation_boost_boostFacebook').show()
+            }else{
+                $('#prestation_boost_boostFacebook').hide()
+            }
+            console.log(prestationValue);
+            $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', prestationValue);
+        });
+
+        $('input[name="prestation_boost[boostFacebook]"]').on('change', function() {
+            prestationFBValue = $(this).data('value');
+            if (!prestationFBValue) {
+                prestationFBValue = 0; 
+            }
+            $('.form-check').removeClass('selected-facebook');
+            $(this).closest('.form-check').addClass('selected-facebook');
+            $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', prestationFBValue + prestationValue);
+        });
 
         $('input[name="candidate_boost[boost]"]').on('change', function() {
             selectedValue = $(this).data('value');
@@ -506,6 +552,9 @@ $(function() {
             } else if (buttonType === "apply-job") {
                 var form = $('button[data-bs-type="apply-job"]').closest('form');
                 form.trigger("submit");
+            } else if (buttonType === "boost-prestation") {
+                var form = $('button[data-bs-type="boost-prestation"]').closest('form');
+                form.trigger("submit");
             }
             $('#confirmationModal').modal('hide');
         });
@@ -517,6 +566,16 @@ $(function() {
             var modalBody = $(this).find('.modal-body');
             var submitButton = $(this).find('#confirmButton');
             modalBody.text(`Voulez-vous vraiment dépenser ${packagePrice} ?`);
+            submitButton.attr('data-id', packageType);
+        });
+
+        $('#boostPrestation').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var prestationId = button.data('bs-prestation');
+            var packageType = button.data('bs-type');
+            var hiddenField = $(this).find('#prestation-edit-id');
+            hiddenField.val(prestationId);
+            var submitButton = $(this).find('#confirmButton');
             submitButton.attr('data-id', packageType);
         });
 
@@ -555,6 +614,40 @@ $(function() {
                 }
             });
         });
+
+        $('#createPrestation').on('submit', function(e){
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: this.action,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'Accept': 'text/vnd.turbo-stream.html'
+                },
+                success: function(data) {
+                    console.log(data); 
+                    if (data.success) {
+                        // Redirection vers l'URL spécifiée dans data.redirect
+                        if (data.redirect) {
+                            window.location.href = data.redirect; 
+                        }
+                    }else if(data.success === false){
+                        $('#errorToast .toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Modal($('#lowCreditModal')[0]);
+                        errorToast.show();
+                    } else {
+                        Turbo.renderStreamMessage(data);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    Turbo.renderStreamMessage(data);
+                }
+            });
+        })
         
         $('#boostProfileForm').on('submit', function(e) {
             e.preventDefault();
@@ -565,16 +658,46 @@ $(function() {
                 data: formData,
                 contentType: false,
                 processData: false,
-                // headers: {
-                //     'Accept': 'text/vnd.turbo-stream.html'
-                // },
                 success: function(data) {
-                    // Turbo.renderStreamMessage(data);
                     console.log(data); // Assurez-vous que c'est `success` et non `succes`
                     if (data.success) {
                         $('#successToast .toast-body').text(data.message);
                         console.log($('#newCheckBoost').length); 
                         $('#newCheckBoost').html(data.detail);
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
+                        var boostProfileModal = Modal.getInstance($('#boostProfile')[0]) || new Modal($('#boostProfile')[0]);
+                        boostProfileModal.hide();
+                    } else {
+                        $('#errorToast .toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Modal($('#lowCreditModal')[0]);
+                        errorToast.show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast .toast-body').text('Une erreur s\'est produite.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
+        
+        $('#boostPrestationForm').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: this.action,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    console.log(data); 
+                    if (data.success) {
+                        $('#successToast .toast-body').text(data.message);
+                        var part = $('#col_prestation_recruiter_' + data.id)
+                        part.html(data.detail);
                         var successToast = new Toast($('#successToast')[0]);
                         successToast.show();
                         var boostProfileModal = Modal.getInstance($('#boostProfile')[0]) || new Modal($('#boostProfile')[0]);

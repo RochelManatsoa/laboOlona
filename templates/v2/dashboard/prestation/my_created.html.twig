@@ -53,7 +53,7 @@
 						<thead>
 							<tr>
 								<td scope="col" class="h5">{{ knp_pagination_sortable(prestations, 'Titre', 'p.titre') }}</td>
-								<td scope="col-2" class="h5">Boost</td>
+								<td scope="col-2" class="h5 text-center">Boost</td>
 								<td scope="col-1" class="h5">{{ knp_pagination_sortable(prestations, 'Statut', 'p.status') }}</td>
 								<td scope="col-2" class=""></td>
 							</tr>
@@ -72,7 +72,7 @@
 										<span class="fw-lighter small">Créé le
 											{{ item.createdAt|date('d/m/Y') }}</span>
 									</td>
-									<td class="col-2">
+									<td class="col-2 text-center" id="col_prestation_recruiter_{{item.id}}">
 										{{ isPrestationBoosted(item)|raw }}
 									</td>
 									<td class="col-2">{{ satusPrestation(item)|raw }}</td>
@@ -111,4 +111,9 @@
 				</p>
 			{% endif %}
 		</section>
+		{% for prestation in prestations %}
+
+			{% include "/v2/modal/_boost_prestation.html.twig" with {'prestation': prestation } %}
+			
+		{% endfor %}
 	{% endblock %}

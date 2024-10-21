@@ -270,13 +270,7 @@ class OlonaTalentsController extends AbstractController
         $currentUser = $this->security->getUser();
         $prestation = $this->em->getRepository(Prestation::class)->find($id);
         if ($currentUser instanceof User) {
-            if ($currentUser->getType() === User::ACCOUNT_CANDIDAT) {
-                return $this->redirectToRoute('app_v2_candidate_view_prestation', ['prestation' => $prestation->getId()]);
-            }
-            if ($currentUser->getType() === User::ACCOUNT_ENTREPRISE) {
-                return $this->redirectToRoute('app_v2_recruiter_view_prestation', ['prestation' => $prestation->getId()]);
-            }
-            return $this->redirectToRoute('app_connect', []);
+            return $this->redirectToRoute('app_v2_view_prestation', ['prestation' => $prestation->getId()]);
         }
 
         return $this->redirectToRoute('app_connect', []);

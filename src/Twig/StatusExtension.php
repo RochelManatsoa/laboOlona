@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\Transaction;
@@ -384,34 +385,36 @@ class StatusExtension extends AbstractExtension
     public function isPrestationBoosted(Prestation $prestation): string
     {
         $boost = $prestation->getBoost();
-        $url = $this->urlGenerator->generate('app_v2_edit_prestation', ['prestation' => $prestation->getId()]);
-        $info = '<a href="'.$url.'" class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster</a>';
+        $boostFacebook = $prestation->getBoostFacebook();
+        $info = '<button class="btn btn-sm btn-danger text-uppercase fw-bold" data-bs-toggle="modal" data-bs-target="#boostPrestation'.$prestation->getId().'" data-bs-type="boost-prestation" data-bs-prestation="'.$prestation->getId().'"><i class="bi bi-rocket-takeoff me-2"></i> Booster</button>';
         if($boost instanceof Boost){
-            $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findLatestBoostVisibilityByBoost($boost);
+            $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByBoostAndPrestation($boost, $prestation);
             if($boostVisibility instanceof BoostVisibility && !$boostVisibility->isExpired() ){
                 switch ($boost->getSlug()) {
                     case 'boost-prestation-recruiter-7' :
                     case 'boost-prestation-candidate-7' :
-                        $info = '<span class="fw-semibold small">Boost 7 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        $info = '<div class="text-center"><span class="fw-semibold small">Boost 7 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span></div>';
                         break;
         
                     case 'boost-prestation-recruiter-15' :
                     case 'boost-prestation-candidate-15' :
-                        $info = '<span class="fw-semibold small">Boost 15 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
+                        $info = '<div class="text-center"><span class="fw-semibold small">Boost 15 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span></div>';
                         break;
         
                     case 'boost-prestation-recruiter-15' :
                     case 'boost-prestation-candidate-30' :
-                        $info = '<span class="fw-semibold small">Boost 30 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
-                        break;
-                    
-                    default:
-                        $status = '<span class="fw-semibold small">Boost 1 jour</span>';
+                        $info = '<div class="text-center"><span class="fw-semibold small">Boost 30 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span></div>';
                         break;
                 }
             }
         }
-        
+        if($boostFacebook instanceof BoostFacebook){
+            $boostVisibilityFacebook = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByBoostFacebookAndPrestation($boostFacebook, $prestation);
+            if($boostVisibilityFacebook instanceof BoostVisibility && !$boostVisibilityFacebook->isExpired()){
+                $info .= '<div class="text-center"><span class="small fw-semibold"><i class="bi bi-facebook me-2"></i> Boost</span><br><span class="small fw-light"> Jusqu\'au '.$boostVisibilityFacebook->getEndDate()->format('d-m-Y \à H:i').' </span></div>';
+            }
+        }
+
         return $info;
     }
 
