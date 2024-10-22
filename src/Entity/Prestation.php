@@ -186,6 +186,20 @@ class Prestation
         $this->prestationVues = new ArrayCollection();
         $this->boostVisibilities = new ArrayCollection();
     }
+    
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'createdAt' => $this->createdAt,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->id = $data['id'] ?? null;
+        $this->createdAt = $data['createdAt'] ?? null;
+    }
 
     public function getId(): ?int
     {

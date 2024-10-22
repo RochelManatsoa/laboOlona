@@ -110,9 +110,9 @@
 				</div>
 				<div class="row my-4 text-center">
 					<div class="col mx-auto">
-						<label class="fw-bold fs-6 form-label" for="prestation_file">Ajouter votre logo ici</label>
+						<label class="fw-bold fs-6 form-label" for="prestation_file">Ajouter votre affiche ici</label>
 						<div class="rounded-circle profile-img bg-image-candidat-account mx-auto" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/prestations/' ~ form.vars.data.fileName) : asset('images/prestation.jpg') }}');cursor:pointer;" alt="Avatar">
-							<div class="overlay-text">Changer le logo</div>
+							<div class="overlay-text">Changer l'affiche</div>
 						</div>
 						{{ form_widget(form.file) }}
 						{{ form_help(form.file) }}

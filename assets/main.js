@@ -410,13 +410,14 @@ $(function() {
 
         $('input[name="prestation_boost[boost]"]').on('change', function() {
             prestationValue = $(this).data('value');
+            var elementId = $(this).data('prestation');
             val = $(this).val();
             $('.form-check').removeClass('selected');
             $(this).closest('.form-check').addClass('selected');
             if(val > 0){
-                $('#prestation_boost_boostFacebook').show()
+                $('#prestation_boost_boostFacebook_'+ elementId +'').show()
             }else{
-                $('#prestation_boost_boostFacebook').hide()
+                $('#prestation_boost_boostFacebook_'+ elementId +'').hide()
             }
             console.log(prestationValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', prestationValue);
@@ -537,6 +538,7 @@ $(function() {
         
         $('#confirmButton').off('click').on('click', function() {
             var buttonType = $(this).attr('data-id');
+            var prestationId = $(this).attr('data-prestation-id');
             if (buttonType === "show-candidate-contact") {
                 var form = $('button[data-bs-type="show-candidate-contact"]').closest('form');
                 form.trigger("submit");
@@ -553,7 +555,7 @@ $(function() {
                 var form = $('button[data-bs-type="apply-job"]').closest('form');
                 form.trigger("submit");
             } else if (buttonType === "boost-prestation") {
-                var form = $('button[data-bs-type="boost-prestation"]').closest('form');
+                var form = $('button[data-prestation-id="'+ prestationId +'"]').closest('form');
                 form.trigger("submit");
             }
             $('#confirmationModal').modal('hide');
@@ -563,10 +565,23 @@ $(function() {
             var button = $(event.relatedTarget);
             var packagePrice = button.data('bs-price');
             var packageType = button.data('bs-type');
+            var prestationId = button.data('prestation-id');
             var modalBody = $(this).find('.modal-body');
             var submitButton = $(this).find('#confirmButton');
             modalBody.text(`Voulez-vous vraiment dépenser ${packagePrice} ?`);
             submitButton.attr('data-id', packageType);
+            submitButton.attr('data-prestation-id', prestationId);
+        });
+
+        $('[id^=boostPrestation]').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var prestationId = button.data('bs-prestation');
+            var packageType = button.data('bs-type');
+            var hiddenField = $(this).find('.prestation-edit-id');
+            hiddenField.val(prestationId);
+            var submitButton = $(this).find('#confirmButton');
+            submitButton.attr('data-id', packageType);
+            submitButton.attr('data-prestation-id', hiddenField);
         });
 
         $('#boostPrestation').on('show.bs.modal', function (event) {
@@ -683,11 +698,12 @@ $(function() {
             });
         });
         
-        $('#boostPrestationForm').on('submit', function(e) {
+        $('.boost-prestation-form').on('submit', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
+            var form = $(this);
             $.ajax({
-                url: this.action,
+                url: form.attr('action'),
                 type: 'POST',
                 data: formData,
                 contentType: false,
