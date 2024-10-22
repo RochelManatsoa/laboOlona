@@ -186,6 +186,7 @@ class PrestationController extends AbstractController
                     $this->em->flush();
                     $this->mailManager->facebookBoostPrestation($currentUser, $prestation, $visibilityBoostFacebook);
                 }
+                
                 $this->prestationManager->saveForm($form);
                 $response['redirect'] = $this->urlGeneratorInterface->generate('app_v2_view_prestation', ['prestation' => $prestation->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
                 return $this->json($response, 200);
@@ -471,6 +472,7 @@ class PrestationController extends AbstractController
 
         return $this->json([
             'status' => 'error', 
+            'success' => false, 
             'message' => 'Erreur de formulaire PrestationBoostType.'
         ], 400);
     }
