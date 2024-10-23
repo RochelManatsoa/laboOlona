@@ -235,18 +235,6 @@ class PrestationType extends AbstractType
                 ],
                 'help' => 'Décrivez vos engagements qualité pour cette prestation.',
             ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'label' => false,
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Vous devriez accepter nos conditions.',
-                    ]),
-                ],
-                'attr' => [
-                    'label' => 'J\'accepte les termes et conditions.',
-                ],
-            ])
             ->add('competences', TextType::class, [
                 'label' => 'Spécialisations (*)',
                 'autocomplete' => true,

@@ -105,6 +105,46 @@
 						</button>
 					{% endif %}
 			</div>
+			<div class="row p-5">
+				<div class="col-8">
+					<h2 class="fs-5">Aperçu</h2>
+					<div class="card my-3 small px-5 py-4">
+						<h3 class="fs-6">
+						<a href="{{ path('app_v2_candidate_view_job_offer', {'id': annonce.id })}}">
+							{{ annonce.titre }}
+						</a>
+						</h3>
+						<div class="small">
+							{{ annonce.shortDescription }}
+						</div>
+						<div class="small">
+							<p class="small fw-light">
+								<span class="badge bg-info rounded-pill px-2">{{ annonce.typeContrat }}</span>
+								<span class="small text-center mx-2">|</span>
+								<i class="bi bi-hourglass-split"></i>
+								Publiée le
+								{{ annonce.dateCreation|date('d/m/Y') }}
+								<span class="small text-center mx-2">|</span>
+								<i class="bi bi-eye"></i>
+								{{ annonce.annonceVues|length }}
+								vues
+								<span class="small text-center mx-2">|</span>
+								<i class="bi bi-bookmark-check"></i>
+								{{ annonce.applications|length }}
+								offres
+							</p>
+						</div>
+						<div class="d-flex ms-auto small">
+							<a class="btn btn-sm btn-primary rounded-pill px-3 me-2" href="{{ path('app_v2_candidate_view_job_offer', {'id': annonce.id })}}" desabled>Plus de details</a>
+						</div>
+						<div class="">
+							<span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill"><i class="bi bi-tags"></i> {{ annonce.secteur.nom}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-4">
+				</div>
+			</div>
 		</div>
 
     </section>
