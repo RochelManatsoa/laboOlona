@@ -139,21 +139,6 @@ class AnnonceType extends AbstractType
                 ]),
                 'help' => 'Définissez le budget alloué pour cette annonce ou mission.'
             ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'label' => false,
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Vous devriez accepter nos conditions.',
-                    ]),
-                ],
-                'attr' => [
-                    'label' => 'J\'accepte les termes et conditions.',
-                ],
-                'label_attr' => [
-                    'class' => 'fw-bold fs-6' 
-                ],
-            ])
             ->add('lieu', TextType::class, [
                 'required' => false,
                 'label' => 'Lieu',
