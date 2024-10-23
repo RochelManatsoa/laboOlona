@@ -421,8 +421,9 @@ class StatusExtension extends AbstractExtension
     public function isJobOfferBoosted(JobListing $jobListing)
     {
         $boost = $jobListing->getBoost();
+        $boostFacebook = $jobListing->getBoostFacebook();
         $url = $this->urlGenerator->generate('app_v2_recruiter_job_listing_edit', ['jobListing' => $jobListing->getId()]);
-        $info = '<a href="'.$url.'" class="btn btn-sm btn-danger text-uppercase fw-bold"><i class="bi bi-rocket-takeoff me-2"></i> Booster</a>';
+        $info = '<button class="btn btn-sm btn-danger text-uppercase fw-bold" data-bs-toggle="modal" data-bs-target="#boostJobListing'.$jobListing->getId().'" data-bs-type="boost-annonce" data-bs-annonce="'.$jobListing->getId().'"><i class="bi bi-rocket-takeoff me-2"></i> Booster</button>';
         if($boost instanceof Boost){
             $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findLatestBoostVisibilityByBoost($boost);
             if($boostVisibility instanceof BoostVisibility && !$boostVisibility->isExpired() ){
@@ -443,6 +444,12 @@ class StatusExtension extends AbstractExtension
                         $status = '<span class="fw-bold">Boost 1 jour</span><br><span class="fw-lighter small"> Expire '.$this->appExtension->timeUntil($boostVisibility->getEndDate()).'</span>';
                         break;
                 }
+            }
+        }
+        if($boostFacebook instanceof BoostFacebook){
+            $boostVisibilityFacebook = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByBoostFacebookAndJobListing($boostFacebook, $jobListing);
+            if($boostVisibilityFacebook instanceof BoostVisibility && !$boostVisibilityFacebook->isExpired()){
+                $info .= '<div class="text-center"><span class="small fw-semibold"><i class="bi bi-facebook me-2"></i> Boost</span><br><span class="small fw-light"> Jusqu\'au '.$boostVisibilityFacebook->getEndDate()->format('d-m-Y \à H:i').' </span></div>';
             }
         }
         

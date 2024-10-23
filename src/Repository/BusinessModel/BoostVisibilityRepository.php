@@ -6,6 +6,7 @@ use App\Entity\BusinessModel\Boost;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\Entreprise\JobListing;
 use App\Entity\Prestation;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -96,6 +97,34 @@ class BoostVisibilityRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
     
+    public function findBoostVisibilityByBoostAndJobLisiting(Boost $boost, JobListing $jobListing): ?BoostVisibility
+    {
+        return $this->createQueryBuilder('bv')
+            ->addSelect('bf', 'j') 
+            ->innerJoin('bv.boost', 'bf')
+            ->innerJoin('bv.jobListing', 'j')
+            ->where('bf = :boost')
+            ->andWhere('j = :jobListing')
+            ->setParameter('boost', $boost)
+            ->setParameter('jobListing', $jobListing)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    
+    public function findBoostVisibilityByBoostFacebookAndJobListing(BoostFacebook $boost, JobListing $jobListing): ?BoostVisibility
+    {
+        return $this->createQueryBuilder('bv')
+            ->addSelect('bf', 'j') 
+            ->innerJoin('bv.boostFacebook', 'bf')
+            ->innerJoin('bv.jobListing', 'j')
+            ->where('bf = :boost')
+            ->andWhere('j = :jobListing')
+            ->setParameter('boost', $boost)
+            ->setParameter('jobListing', $jobListing)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    
     public function findBoostVisibilityByPrestationAndUser(Prestation $prestation, User $user, Boost $boost): ?BoostVisibility
     {
         return $this->createQueryBuilder('bv')
@@ -125,6 +154,40 @@ class BoostVisibilityRepository extends ServiceEntityRepository
             ->andWhere('bf = :boostFacebook')
             ->setParameter('user', $user)
             ->setParameter('prestation', $prestation)
+            ->setParameter('boostFacebook', $boostFacebook)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    
+    public function findBoostVisibilityByJobListingAndUser(JobListing $jobListing, User $user, Boost $boost): ?BoostVisibility
+    {
+        return $this->createQueryBuilder('bv')
+            ->addSelect('b', 'j') 
+            ->innerJoin('bv.jobListing', 'j')
+            ->innerJoin('bv.user', 'u')
+            ->innerJoin('bv.boost', 'b')
+            ->where('u = :user')
+            ->andWhere('j = :jobListing')
+            ->andWhere('b = :boost')
+            ->setParameter('user', $user)
+            ->setParameter('jobListing', $jobListing)
+            ->setParameter('boost', $boost)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    
+    public function findBoostVisibilityFBByJobListingAndUser(JobListing $jobListing, User $user, BoostFacebook $boostFacebook): ?BoostVisibility
+    {
+        return $this->createQueryBuilder('bv')
+            ->addSelect('bf', 'j') 
+            ->innerJoin('bv.jobListing', 'j')
+            ->innerJoin('bv.user', 'u')
+            ->innerJoin('bv.boostFacebook', 'bf')
+            ->where('u = :user')
+            ->andWhere('j = :jobListing')
+            ->andWhere('bf = :boostFacebook')
+            ->setParameter('user', $user)
+            ->setParameter('jobListing', $jobListing)
             ->setParameter('boostFacebook', $boostFacebook)
             ->getQuery()
             ->getOneOrNullResult();

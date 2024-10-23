@@ -371,7 +371,6 @@ class PrestationController extends AbstractController
     }
     
     #[Route('/prestation/delete', name: 'app_v2_delete_prestation', methods: ['POST'])]
-    #[IsGranted(PrestationVoter::EDIT, subject: 'prestation')]
     public function removePrestation(Request $request): Response
     {
         $prestationId = $request->request->get('prestationId');

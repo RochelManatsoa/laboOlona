@@ -5,6 +5,7 @@ namespace App\Form\Entreprise;
 use App\Entity\Secteur;
 use App\Entity\EntrepriseProfile;
 use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\Candidate\Competences;
 use App\Entity\Entreprise\JobListing;
 use Symfony\Component\Form\FormEvent;
@@ -22,7 +23,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Sequentially;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
@@ -114,6 +114,18 @@ class AnnonceType extends AbstractType
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
+                'label' => false
+            ])
+            ->add('boostFacebook', EntityType::class, [
+                'class' => BoostFacebook::class,
+                'attr' => ['class' => 'boost-select radio-grid', 'data-html' => true],
+                'choices' => $this->entityManager->getRepository(BoostFacebook::class)->findBy(['type' => 'OT_PLUS_FB']),
+                'choice_label' => function ($boostFB) {
+                    return $boostFB->getName().' ('.$boostFB->getCredit().' crédits)'; 
+                },
+                'expanded' => true,  
+                'required' => false, 
+                'placeholder' => 'Pas de boost',
                 'label' => false
             ])
             ->add('budgetAnnonce', BudgetAnnonceType::class, [

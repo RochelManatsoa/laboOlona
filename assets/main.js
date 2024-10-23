@@ -385,7 +385,57 @@ $(function() {
         var selectedFBValue = '';
         var prestationValue = '';
         var prestationFBValue = '';
+        var annonceValue = '';
+        var annonceFBValue = '';
+        var annonceBoostValue = '';
+        var annonceBoostFBValue = '';
         var val = 0;
+
+        $('input[name="annonce[boost]"]').on('change', function() {
+            annonceValue = $(this).data('value');
+            val = $(this).val();
+            $('.form-check').removeClass('selected');
+            $(this).closest('.form-check').addClass('selected');
+            if(val > 0){
+                $('#annonce_boostFacebook').show()
+            }else{
+                $('#annonce_boostFacebook').hide()
+            }
+        });
+
+        $('input[name="annonce[boostFacebook]"]').on('change', function() {
+            annonceFBValue = $(this).data('value');
+            if (!annonceFBValue) {
+                annonceFBValue = 0; 
+            }
+            $('.form-check').removeClass('selected-facebook');
+            $(this).closest('.form-check').addClass('selected-facebook');
+        });
+
+        $('input[name="annonce_boost[boost]"]').on('change', function() {
+            annonceBoostValue = $(this).data('value');
+            var elementId = $(this).data('annonce');
+            val = $(this).val();
+            $('.form-check').removeClass('selected');
+            $(this).closest('.form-check').addClass('selected');
+            if(val > 0){
+                $('#annonce_boost_boostFacebook_'+ elementId +'').show()
+            }else{
+                $('#annonce_boost_boostFacebook_'+ elementId +'').hide()
+            }
+            console.log(annonceBoostValue);
+            $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', annonceBoostValue);
+        });
+
+        $('input[name="annonce_boost[boostFacebook]"]').on('change', function() {
+            annonceBoostFBValue = $(this).data('value');
+            if (!annonceBoostFBValue) {
+                annonceBoostFBValue = 0; 
+            }
+            $('.form-check').removeClass('selected-facebook');
+            $(this).closest('.form-check').addClass('selected-facebook');
+            $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', annonceBoostFBValue + annonceBoostValue);
+        });
 
         $('input[name="prestation[boost]"]').on('change', function() {
             prestationValue = $(this).data('value');
@@ -539,6 +589,7 @@ $(function() {
         $('#confirmButton').off('click').on('click', function() {
             var buttonType = $(this).attr('data-id');
             var prestationId = $(this).attr('data-prestation-id');
+            var annonceId = $(this).attr('data-annonce-id');
             if (buttonType === "show-candidate-contact") {
                 var form = $('button[data-bs-type="show-candidate-contact"]').closest('form');
                 form.trigger("submit");
@@ -557,6 +608,9 @@ $(function() {
             } else if (buttonType === "boost-prestation") {
                 var form = $('button[data-prestation-id="'+ prestationId +'"]').closest('form');
                 form.trigger("submit");
+            } else if (buttonType === "boost-annonce") {
+                var form = $('button[data-annonce-id="'+ annonceId +'"]').closest('form');
+                form.trigger("submit");
             }
             $('#confirmationModal').modal('hide');
         });
@@ -566,11 +620,13 @@ $(function() {
             var packagePrice = button.data('bs-price');
             var packageType = button.data('bs-type');
             var prestationId = button.data('prestation-id');
+            var annonceId = button.data('annonce-id');
             var modalBody = $(this).find('.modal-body');
             var submitButton = $(this).find('#confirmButton');
             modalBody.text(`Voulez-vous vraiment dépenser ${packagePrice} ?`);
             submitButton.attr('data-id', packageType);
             submitButton.attr('data-prestation-id', prestationId);
+            submitButton.attr('data-annonce-id', annonceId);
         });
 
         $('[id^=boostPrestation]').on('show.bs.modal', function (event) {
@@ -582,6 +638,18 @@ $(function() {
             var submitButton = $(this).find('#confirmButton');
             submitButton.attr('data-id', packageType);
             submitButton.attr('data-prestation-id', hiddenField);
+        });
+
+        $('[id^=boostAnnonceForm_]').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var annonceId = button.data('bs-annonce');
+            var packageType = button.data('bs-type');
+            var hiddenField = $(this).find('.annonce-edit-id');
+            hiddenField.val(annonceId);
+            console.log(hiddenField)
+            var submitButton = $(this).find('#confirmButton');
+            submitButton.attr('data-id', packageType);
+            submitButton.attr('data-annonce-id', hiddenField);
         });
 
         $('#boostPrestation').on('show.bs.modal', function (event) {
@@ -713,6 +781,41 @@ $(function() {
                     if (data.success) {
                         $('#successToast .toast-body').text(data.message);
                         var part = $('#col_prestation_recruiter_' + data.id)
+                        part.html(data.detail);
+                        var successToast = new Toast($('#successToast')[0]);
+                        successToast.show();
+                        var boostProfileModal = Modal.getInstance($('#boostProfile')[0]) || new Modal($('#boostProfile')[0]);
+                        boostProfileModal.hide();
+                    } else {
+                        $('#errorToast .toast-body').text('Erreur: ' + data.message);
+                        var errorToast = new Modal($('#lowCreditModal')[0]);
+                        errorToast.show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Erreur:', textStatus, errorThrown);
+                    $('#errorToast .toast-body').text('Une erreur s\'est produite.');
+                    var errorToast = new Toast($('#errorToast')[0]);
+                    errorToast.show();
+                }
+            });
+        });
+        
+        $('.boost-annonce-form').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    console.log(data); 
+                    if (data.success) {
+                        $('#successToast .toast-body').text(data.message);
+                        var part = $('#col_annonce_recruiter_' + data.id)
                         part.html(data.detail);
                         var successToast = new Toast($('#successToast')[0]);
                         successToast.show();
