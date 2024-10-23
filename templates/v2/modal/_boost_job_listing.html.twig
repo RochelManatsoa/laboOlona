@@ -1,0 +1,151 @@
+<div class="modal fade" id="boostJobListing{{ jobListing.id }}" tabindex="-1" aria-labelledby="boostJobLisiting{{ jobListing.id }}Label" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form action="{{ path('app_v2_boost_job_offer') }}" name="annonce_boost" method="post" class="boost-annonce-form" id="boostAnnonceForm_{{ jobListing.id }}">
+        <div class="modal-header">
+          <h3>Boostez votre Annonce !</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <input type="hidden" name="id" value="{{ jobListing.id }}" class="annonce-edit-id">
+        <div class="modal-body">
+          <p class="text-center">Augmentez vos chances d'être vu par les recruteurs en boostant votre profil ! Cela vous garantit une meilleure visibilité et une place prioritaire dans les résultats de recherche.</p>
+          <div class="border p-3 mb-4 small">
+            <div class="col-6 mx-auto my-3">
+              <div class="input-group rounded-pill my-3">
+                <input class="form-control" type="search" name="q" value="votre mot clé" placeholder="Rechercher" disabled>
+                <button class="btn btn-outline-success" type="button"><i class="bi bi-stars"></i></button>
+              </div>
+            </div>
+            <ul class="nav nav-underline mb-4">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page">Offre d'emploi</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" aria-disabled="true" href="#">Candidats</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" aria-disabled="true">Services</a>
+              </li>
+            </ul>
+            <div class="profile-cards row">
+              <div class="col">
+                  <div class="card position-relative text-center mt-2">
+                      <!-- Badge -->
+                      <span class="badge bg-danger rounded-pill position-absolute top-0 start-25 translate-middle">URGENT</span>
+                      <p class="card-title h6 bg-dark text-white text-center py-2" style="height:120px; display: flex; align-items: center; justify-content: center;">{{ jobListing.titre|upper }} | Réf:{{ generateJobReference(jobListing.id) }}</p>
+                      <div class="card-body-candidat">
+                          <small class="mt-auto">
+                              <small class="card-text"></small><br>
+                              <small class="card-text"><i class="mx-1 bi bi-tags"></i>{{ jobListing.competences|length}} compétences</small><br>
+                              <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                          </small>
+                      </div>
+                      <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" desabled>Contacter</button>
+                  </div>
+              </div>
+              <div class="col">
+                  <div class="card position-relative text-center mt-2">
+                      <!-- Badge -->
+                      <span class="badge bg-danger rounded-pill position-absolute top-0 start-25 translate-middle">URGENT</span>
+                      <p class="card-title h6 bg-dark text-white text-center py-2" style="height:120px; display: flex; align-items: center; justify-content: center;">DEVELOPPEUR ANGULAR | Réf:OE-0055</p>
+                      <div class="card-body-candidat">
+                          <small class="mt-auto">
+                              <small class="card-text"></small><br>
+                              <small class="card-text"><i class="mx-1 bi bi-tags"></i>4 compétences</small><br>
+                              <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                          </small>
+                      </div>
+                      <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" desabled>Contacter</button>
+                  </div>
+              </div>
+              <div class="col">
+                  <div class="card position-relative text-center mt-2">
+                      <!-- Badge -->
+                      <span class="badge bg-danger rounded-pill position-absolute top-0 start-25 translate-middle">URGENT</span>
+                      <p class="card-title h6 bg-dark text-white text-center py-2" style="height:120px; display: flex; align-items: center; justify-content: center;">LEAD DEVELOPER | Réf:OE-0091</p>
+                      <div class="card-body-candidat">
+                          <small class="mt-auto">
+                              <small class="card-text"></small><br>
+                              <small class="card-text"><i class="mx-1 bi bi-tags"></i>5 compétences</small><br>
+                              <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                          </small>
+                      </div>
+                      <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" desabled>Contacter</button>
+                  </div>
+              </div>
+              <div class="col">
+                  <div class="card position-relative text-center mt-2">
+                      <!-- Badge -->
+                      <span class="badge bg-danger rounded-pill position-absolute top-0 start-25 translate-middle">URGENT</span>
+                      <p class="card-title h6 bg-dark text-white text-center py-2" style="height:120px; display: flex; align-items: center; justify-content: center;">DES TÉLÉVENDEURS POUR DE LA MUTUELLE SANTÉ | Réf:OE-0076</p>
+                      <div class="card-body-candidat">
+                          <small class="mt-auto">
+                              <small class="card-text"></small><br>
+                              <small class="card-text"><i class="mx-1 bi bi-tags"></i>3 compétences</small><br>
+                              <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                          </small>
+                      </div>
+                      <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" desabled>Contacter</button>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="my-3">
+            <div id="annonce_boost">
+              <fieldset class="mb-3">
+                <div id="annonce_boost_boost_{{ jobListing.id }}" class="radio-grid">
+                  <div class="form-check selected">
+                    <input type="radio" data-annonce="{{ jobListing.id }}" id="annonce_boost_boost_placeholder_{{ jobListing.id }}" name="annonce_boost[boost]" value="" >
+                    <label for="annonce_boost_boost_placeholder_{{ jobListing.id }}">Pas de boost</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" data-annonce="{{ jobListing.id }}" id="annonce_boost_boost_7_{{ jobListing.id }}" name="annonce_boost[boost]" value="4" data-value="100">
+                    <label for="annonce_boost_boost_7_{{ jobListing.id }}">Boost 1 jour (100 crédits)</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" data-annonce="{{ jobListing.id }}" id="annonce_boost_boost_8_{{ jobListing.id }}" name="annonce_boost[boost]" value="5" data-value="600">
+                    <label for="annonce_boost_boost_8_{{ jobListing.id }}">Boost 7 jours (600 crédits)</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" data-annonce="{{ jobListing.id }}" id="annonce_boost_boost_9_{{ jobListing.id }}" name="annonce_boost[boost]" value="6" data-value="1000">
+                    <label for="annonce_boost_boost_9_{{ jobListing.id }}">Boost 15 jours (1000 crédits)</label>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset class="mb-3">
+                <div id="annonce_boost_boostFacebook_{{ jobListing.id }}" style="display:none;">
+                  <h4 class="text-center fw-bolder h5 mb-2">Augmentez votre influence sur Facebook</h4>
+                  <div class="radio-grid">
+                    <div class="form-check selected-facebook">
+                      <input type="radio" id="annonce_boost_boostFacebook_placeholder_{{ jobListing.id }}" name="annonce_boost[boostFacebook]" value="" >
+                      <label for="annonce_boost_boostFacebook_placeholder_{{ jobListing.id }}">Pas de boost <i class="bi bi-facebook mx-2 h5"></i></label>
+                    </div>
+                    <div class="form-check">
+                      <input type="radio" id="annonce_boost_boostFacebook_1_{{ jobListing.id }}" name="annonce_boost[boostFacebook]" value="1" data-value="2100">
+                      <label for="annonce_boost_boostFacebook_1_{{ jobListing.id }}">Boost <i class="bi bi-facebook mx-2 h5"></i> 7 jours (2100 crédits)</label>
+                    </div>
+                    <div class="form-check">
+                      <input type="radio" id="annonce_boost_boostFacebook_2_{{ jobListing.id }}" name="annonce_boost[boostFacebook]" value="2" data-value="4500">
+                      <label for="annonce_boost_boostFacebook_2_{{ jobListing.id }}">Boost <i class="bi bi-facebook mx-2 h5"></i> 15 jours (4500 crédits)</label>
+                    </div>
+                    <div class="form-check">
+                      <input type="radio" id="annonce_boost_boostFacebook_3_{{ jobListing.id }}" name="annonce_boost[boostFacebook]" value="3" data-value="9000">
+                      <label for="annonce_boost_boostFacebook_3_{{ jobListing.id }}">Boost <i class="bi bi-facebook mx-2 h5"></i> 30 jours (9000 crédits)</label>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <p class="text-center">
+          En choisissant l'un de ces boosts, vous multipliez vos opportunités de contact et renforcez votre présence auprès des principales entreprises de votre secteur.<br><span class="fw-bold">Ne laissez pas passer votre chance de vous démarquer !</span>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary text-uppercase fw-bold" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" data-annonce-id="{{ jobListing.id }}" data-bs-toggle="modal" data-bs-type="boost-annonce" data-bs-target="#confirmationModal" data-bs-price="50 crédits" class="btn btn-primary text-uppercase fw-bold">Prendre un boost</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\BoostFacebook;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\Entreprise\JobListing;
 use App\Entity\Prestation;
 use App\Manager\BusinessModel\BoostVisibilityManager;
 
@@ -38,6 +39,8 @@ class BoostExtension extends AbstractExtension
             new TwigFunction('getBoostInfo', [$this, 'getBoostInfo']),
             new TwigFunction('getPrestationBoostVisibilityOT', [$this, 'getPrestationBoostVisibilityOT']),
             new TwigFunction('getPrestationBoostVisibilityFB', [$this, 'getPrestationBoostVisibilityFB']),
+            new TwigFunction('getJobListingBoostVisibilityOT', [$this, 'getJobListingBoostVisibilityOT']),
+            new TwigFunction('getJobListingBoostVisibilityFB', [$this, 'getJobListingBoostVisibilityFB']),
         ];
     }
 
@@ -114,6 +117,34 @@ class BoostExtension extends AbstractExtension
     public function getPrestationBoostVisibilityFB(Prestation $prestation, User $user): ?string
     {
         $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityFBByPrestationAndUser($prestation, $user, $prestation->getBoostFacebook());
+        if (!$boostVisibility) {
+            return null;
+        }
+        return '<div class="">
+        <h3 class="h6">Boost <i class="bi bi-facebook me-2"></i></h3>
+        <p class="fw-light small">
+        Jusqu\'au '.$boostVisibility->getEndDate()->format('d-m-Y \à H:i').'
+        </p>
+        </div>';
+    }
+
+    public function getJobListingBoostVisibilityOT(JobListing $jobListing, User $user): ?string
+    {
+        $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityByJobListingAndUser($jobListing, $user, $jobListing->getBoost());
+        if (!$boostVisibility) {
+            return null;
+        }
+        return '<div class="">
+        <h3 class="h6">Boost Olona Talents <i class="bi bi-rocket me-2"></i></h3>
+        <p class="fw-light small">
+        Jusqu\'au '.$boostVisibility->getEndDate()->format('d-m-Y \à H:i').'
+        </p>
+        </div>';
+    }
+
+    public function getJobListingBoostVisibilityFB(JobListing $jobListing, User $user): ?string
+    {
+        $boostVisibility = $this->em->getRepository(BoostVisibility::class)->findBoostVisibilityFBByJobListingAndUser($jobListing, $user, $jobListing->getBoostFacebook());
         if (!$boostVisibility) {
             return null;
         }

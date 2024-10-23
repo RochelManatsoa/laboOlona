@@ -60,11 +60,11 @@
 										</turbo-frame>
 										<br>
 										<span class="fw-lighter small">Créé le
-											{{ item.dateCreation|date('d/m/Y') }}</span>
-									</td>
-									<td class="col-3 text-center">
-										{{ isJobOfferBoosted(item)|raw }}<br>
+											{{ item.dateCreation|date('d/m/Y') }}</span><br>
 										<i class="bi bi-eye"></i> <span class="small">{{ component('count_joblisting_views_component', {'jobListing': item })}} vues </span>
+									</td>
+									<td class="col-3 text-center" id="col_annonce_recruiter_{{item.id}}">
+										{{ isJobOfferBoosted(item)|raw }}
 									</td>
 									<td class="col-1 text-center">{{ satusJobListing(item)|raw }}</td>
 									<td class="col-1">
@@ -102,4 +102,9 @@
 
 		</div>
     </section>
+		{% for jobListing in joblistings %}
+
+			{% include "/v2/modal/_boost_job_listing.html.twig" with {'jobListing': jobListing } %}
+			
+		{% endfor %}
 {% endblock %}
