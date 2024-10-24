@@ -197,7 +197,7 @@
         </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_job_offer')}}" class="nav-link {{ current_route == 'app_v2_job_offer' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-hand-index-thumb me-2"></i> Trouver une offre d'emploi
+            <i class="bi bi-hand-index-thumb me-2"></i> Trouver des opportunités
           </a>
         </li>
         {% if app.user.entrepriseProfile is defined and app.user.entrepriseProfile.prestations|length > 0 %}
@@ -214,7 +214,7 @@
         </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="nav-link {{ current_route == 'app_v2_recruiter_create_job_listing' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-megaphone me-2"></i> Publier une offre
+            <i class="bi bi-megaphone me-2"></i> Publier une annonce
           </a>
         </li>
         <li class="nav-item">
@@ -327,7 +327,7 @@
         </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_job_offer')}}" class="nav-link {{ (current_route == 'app_v2_job_offer_view' or current_route == 'app_v2_job_offer' or current_route == 'app_olona_talents_joblistings') ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-hand-index-thumb me-2"></i><span class="link-text"> Trouver une offre d'emploi</span>
+            <i class="bi bi-hand-index-thumb me-2"></i><span class="link-text"> Trouver des opportunités</span>
           </a>
         </li>
         {% if app.user.entrepriseProfile is defined and app.user.entrepriseProfile.prestations|length > 0 %}
@@ -344,12 +344,12 @@
         </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="nav-link {{ current_route == 'app_v2_recruiter_create_job_listing' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-megaphone me-2"></i><span class="link-text"> Publier une offre</span>
+            <i class="bi bi-megaphone me-2"></i><span class="link-text"> Publier des offres</span>
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ path('app_v2_recruiter_job_listing')}}" class="nav-link {{ (current_route == 'app_v2_recruiter_job_listing' or current_route == 'app_v2_recruiter_job_listing_edit') ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-card-checklist me-2"></i><span class="link-text"> Gérer mes annonces</span>
+            <i class="bi bi-card-checklist me-2"></i><span class="link-text"> Gérer mes offres</span>
           </a>
         </li>
         <li class="nav-item">

@@ -86,7 +86,7 @@ class SimulatorController extends AbstractController
                 $this->em->persist($employe);
                 $this->em->persist($simulateur);
                 $this->em->flush();
-                $this->creditManager->adjustCredits($user, 10);
+                $this->creditManager->adjustCredits($user, 10, "Simulation de buget");
             }else{
                 $message = "Crédits insuffisant. Veuillez recharger votre compte.";
                 $success = false;

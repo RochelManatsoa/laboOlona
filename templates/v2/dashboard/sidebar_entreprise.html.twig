@@ -1,8 +1,56 @@
-
 <h3 class="card-title h5 mb-3">Statistiques</h3>
-<span class="fw-bolder me-2">{{ app.user.credit.total }}</span> <span class="fw-light">crédits disponibles</span><br>
-<span class="fw-bolder me-2">{{ profile.jobListings|length}}</span> <span class="fw-light">annonces publiées</span><br>
-<span class="fw-bolder me-2">{{ profile.favoris|length}}</span> <span class="fw-light">favoris</span><br>
-<span class="fw-bolder me-2">{{ profile.prestations|length}}</span> <span class="fw-light">prestations</span><br>
-<a href="{{ path('app_v2_recruiter_create_job_listing')}}" class="px-3 btn btn-sm mt-2 rounded-pill btn-primary"><i class="bi bi-megaphone me-2"></i> Créer une annonce</a><br>
-<a href="{{ path('app_v2_create_prestation')}}" class="px-3 btn btn-sm mt-2 rounded-pill btn-secondary"><i class="bi bi-person-workspace me-2"></i> Créer une prestation</a><br>
+
+<!-- Crédits disponibles -->
+<span class="fw-bolder me-2">{{ app.user.credit.total }}</span>
+<span class="fw-light">
+    {% if app.user.credit.total == 0 %}
+       aucun crédit disponible
+    {% elseif app.user.credit.total == 1 %}
+       crédit disponible
+    {% else %}
+       crédits disponibles
+    {% endif %}
+</span><br>
+
+<!-- Annonces publiées -->
+<span class="fw-bolder me-2">{{ profile.jobListings|length }}</span>
+<span class="fw-light">
+    {% if profile.jobListings|length == 0 %}
+        aucune annonce publiée
+    {% elseif profile.jobListings|length == 1 %}
+        annonce publiée
+    {% else %}
+        annonces publiées
+    {% endif %}
+</span><br>
+
+<!-- Favoris -->
+<span class="fw-bolder me-2">{{ profile.favoris|length }}</span>
+<span class="fw-light">
+    {% if profile.favoris|length == 0 %}
+        aucun favori
+    {% elseif profile.favoris|length == 1 %}
+        favori
+    {% else %}
+        favoris
+    {% endif %}
+</span><br>
+
+<!-- Prestations -->
+<span class="fw-bolder me-2">{{ profile.prestations|length }}</span>
+<span class="fw-light">
+    {% if profile.prestations|length == 0 %}
+        aucun service publié
+    {% elseif profile.prestations|length == 1 %}
+        service publiés
+    {% else %}
+        services publiés
+    {% endif %}
+</span><br>
+
+<a href="{{ path('app_v2_recruiter_create_job_listing') }}" class="px-3 btn btn-sm mt-2 rounded-pill btn-primary">
+    <i class="bi bi-megaphone me-2"></i> Créer une annonce
+</a><br>
+<a href="{{ path('app_v2_create_prestation') }}" class="px-3 btn btn-sm mt-2 rounded-pill btn-primary">
+    <i class="bi bi-person-workspace me-2"></i> Créer une prestation
+</a><br>

@@ -32,8 +32,8 @@
 				</span>
 			</h2>
 
-			<p class="fw-light">
-				Afin de maximiser vos chances de trouver l'emploi de vos rêves, veuillez remplir ce formulaire avec soin. Notre IA spécialisée dans le recrutement analysera et optimisera votre profil en fonction des informations fournies.
+			<p class="text-center">
+				Multiplier vos opportunités de décrocher l'emploi de vos rêves en remplissant soigneusement ce formulaire. Notre IA de recrutement analysera et optimisera votre profil pour vous proposer les meilleures opportunités.
 			</p>
 			{% for message in app.flashes('success') %}
 				<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -448,6 +448,7 @@
 					</div>
 
 					<div class="tab-pane fade" id="history">
+					{% include "v2/dashboard/activity_log/_list_activities.html.twig" with {activities: activities} %}
 					</div>
 				</div>
 

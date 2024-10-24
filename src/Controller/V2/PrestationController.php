@@ -4,35 +4,36 @@ namespace App\Controller\V2;
 
 use App\Entity\User;
 use App\Entity\Prestation;
+use App\Twig\AppExtension;
 use App\Form\PrestationType;
+use App\Manager\MailManager;
 use App\Service\FileUploader;
 use App\Data\V2\PrestationData;
 use App\Manager\ProfileManager;
+use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
+use App\Form\PrestationBoostType;
 use App\Service\User\UserService;
 use App\Twig\PrestationExtension;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Manager\PrestationManager;
 use App\Entity\BusinessModel\Boost;
-use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\Vues\PrestationVues;
 use App\Entity\BusinessModel\Credit;
 use App\Security\Voter\PrestationVoter;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\BusinessModel\BoostFacebook;
 use App\Manager\BusinessModel\CreditManager;
 use App\Entity\BusinessModel\BoostVisibility;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
-use App\Form\PrestationBoostType;
-use App\Manager\BusinessModel\BoostVisibilityManager;
-use App\Manager\MailManager;
-use App\Twig\AppExtension;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/v2/dashboard')]
 class PrestationController extends AbstractController
@@ -42,6 +43,7 @@ class PrestationController extends AbstractController
         private ProfileManager $profileManager,
         private FileUploader $fileUploader,
         private AppExtension $appExtension,
+        private ActivityLogger $activityLogger,
         private UserService $userService,
         private PrestationManager $prestationManager,
         private PrestationExtension $prestationExtension,
@@ -223,7 +225,7 @@ class PrestationController extends AbstractController
         // Vérification et ajustement des crédits pour la prestation standard
         $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_APPLY_PRESTATION_RECRUITER);
         if ($this->profileManager->canBuy($currentUser, $creditAmount)) {
-            $responseDefault = $this->creditManager->adjustCredits($currentUser, $creditAmount);
+            $responseDefault = $this->creditManager->adjustCredits($currentUser, $creditAmount, "Création de prestation");
         } else {
             return [
                 'success' => false, 
@@ -235,7 +237,7 @@ class PrestationController extends AbstractController
         // Vérification et ajustement des crédits pour le Boost standard
         if ($hasBoost) {
             if ($this->profileManager->canBuy($currentUser, $boost->getCredit())) {
-                $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit());
+                $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit(), "Boost prestation");
             } else {
                 return [
                     'success' => false, 
@@ -248,7 +250,7 @@ class PrestationController extends AbstractController
         // Vérification et ajustement des crédits pour le Boost Facebook
         if ($hasBoostFacebook) {
             if ($this->profileManager->canBuy($currentUser, $boostFacebook->getCredit())) {
-                $responseBoostFacebook = $this->creditManager->adjustCredits($currentUser, $boostFacebook->getCredit());
+                $responseBoostFacebook = $this->creditManager->adjustCredits($currentUser, $boostFacebook->getCredit(), "Boost facebook prestation");
             } else {
                 return [
                     'success' => false, 
@@ -314,7 +316,7 @@ class PrestationController extends AbstractController
         $boost = $prestation->getBoost();
         if ($boost instanceof Boost) {
             if($this->profileManager->canBuy($currentUser, $boost->getCredit())){
-                $response = $this->creditManager->adjustCredits($currentUser, $boost->getCredit());
+                $response = $this->creditManager->adjustCredits($currentUser, $boost->getCredit(), "Boost prestation sur Olona Talents");
             }else{
                 return ['success' => false, 'message' => 'Crédits insuffisants. Veuillez charger votre compte', 'status' => '<i class="bi bi-exclamation-octagon me-2"></i> Echec'];
             }
@@ -360,6 +362,7 @@ class PrestationController extends AbstractController
             'buyer' => $currentUser,
             'contact' => $creater,
         ]);
+        $this->activityLogger->logPrestationViewActivity($currentUser, $this->appExtension->generateprestationReference($prestation->getId()));
 
         return $this->render('v2/dashboard/prestation/view.html.twig', [
             'prestation' => $prestation,
@@ -483,7 +486,7 @@ class PrestationController extends AbstractController
             $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
         }
         $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
-        $response = $this->creditManager->adjustCredits($currentUser, $boostOption->getCredit());
+        $response = $this->creditManager->adjustCredits($currentUser, $boostOption->getCredit(), "Boost prestation sur Olona Talents");
         
         if (isset($response['success'])) {
             $prestation->setStatus(Prestation::STATUS_FEATURED);
@@ -517,65 +520,7 @@ class PrestationController extends AbstractController
             $visibilityBoost = $this->boostVisibilityManager->initBoostvisibilityFacebook($boostOptionFacebook);
         }
         $visibilityBoost = $this->boostVisibilityManager->updateFacebook($visibilityBoost, $boostOptionFacebook);
-        $response = $this->creditManager->adjustCredits($currentUser, $boostOptionFacebook->getCredit());
-
-        if (isset($response['success'])) {
-            $prestation->setStatus(CandidateProfile::STATUS_FEATURED);
-            $prestation->setBoostFacebook($boostOptionFacebook);
-            $visibilityBoost->setPrestation($prestation);
-            $currentUser->addBoostVisibility($visibilityBoost);
-            $this->em->persist($prestation);
-            $this->em->persist($currentUser);
-            $this->em->flush();
-            $this->mailManager->facebookBoostPrestation($currentUser, $prestation, $visibilityBoost);
-
-            return [
-                'message' => 'Votre prestation est maintenant boosté sur facebook',
-                'success' => true,
-                'status' => 'Succès',
-                'visibilityBoost' => $visibilityBoost
-            ];
-        } else {
-            return [
-                'message' => 'Une erreur s\'est produite.',
-                'success' => false,
-                'status' => 'Echec'
-            ];
-        }
-    }
-
-    private function handleNewBoostPrestation($boostOption, $prestation, User $currentUser): array
-    {
-        $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
-        $response = $this->creditManager->adjustCredits($currentUser, $boostOption->getCredit());
-        
-        if (isset($response['success'])) {
-            $prestation->setStatus(Prestation::STATUS_FEATURED);
-            $prestation->setBoost($boostOption);
-            $visibilityBoost->setPrestation($prestation);
-            $currentUser->addBoostVisibility($visibilityBoost);
-            $this->em->persist($prestation);
-            $this->em->persist($currentUser);
-            $this->em->flush();
-            return [
-                'message' => 'Votre prestation est maintenant boostée.',
-                'success' => true,
-                'status' => 'Succès',
-                'visibilityBoost' => $visibilityBoost
-            ];
-        } else {
-            return [
-                'message' => 'Une erreur s\'est produite.',
-                'success' => false,
-                'status' => 'Echec'
-            ];
-        }
-    }
-
-    private function handleNewBoostFacebook($boostOptionFacebook, $prestation, User $currentUser): array
-    {
-        $visibilityBoost = $this->boostVisibilityManager->initBoostvisibilityFacebook($boostOptionFacebook);
-        $response = $this->creditManager->adjustCredits($currentUser, $boostOptionFacebook->getCredit());
+        $response = $this->creditManager->adjustCredits($currentUser, $boostOptionFacebook->getCredit(), "Boost prestation sur facebook");
 
         if (isset($response['success'])) {
             $prestation->setStatus(CandidateProfile::STATUS_FEATURED);

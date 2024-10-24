@@ -1,6 +1,53 @@
-
 <h3 class="card-title h5 mb-3">Statistiques</h3>
-<span class="fw-bolder me-2">{{ app.user.credit.total }}</span> <span class="fw-light">crédits disponibles</span><br>
-<span class="fw-bolder me-2">{{ profile.vues|length}}</span> <span class="fw-light">vues de votre profil</span><br>
-<span class="fw-bolder me-2">{{ profile.applications|length}}</span> <span class="fw-light">candidatures</span><br>
-<span class="fw-bolder me-2">{{ profile.prestations|length}}</span> <span class="fw-light">prestations</span><br>
+
+<!-- Crédits disponibles -->
+<span class="fw-bolder me-2">{{ app.user.credit.total }}</span>
+<span class="fw-light">
+    {% if app.user.credit.total == 0 %}
+        crédits disponibles
+    {% elseif app.user.credit.total == 1 %}
+        crédit disponible
+    {% else %}
+        crédits disponibles
+    {% endif %}
+</span><br>
+
+<!-- Vues de votre profil -->
+<span class="fw-bolder me-2">{{ profile.vues|length }}</span>
+<span class="fw-light">
+    {% if profile.vues|length == 0 %}
+        vue de votre profil
+    {% elseif profile.vues|length == 1 %}
+        vue de votre profil
+    {% else %}
+        vues de votre profil
+    {% endif %}
+</span><br>
+
+<!-- Candidatures -->
+<span class="fw-bolder me-2">{{ profile.applications|length }}</span>
+<span class="fw-light">
+    {% if profile.applications|length == 0 %}
+        aucune candidature
+    {% elseif profile.applications|length == 1 %}
+        candidature
+    {% else %}
+        candidatures
+    {% endif %}
+</span><br>
+
+<!-- Prestations -->
+<span class="fw-bolder me-2">{{ profile.prestations|length }}</span>
+<span class="fw-light">
+    {% if profile.prestations|length == 0 %}
+        aucun service
+    {% elseif profile.prestations|length == 1 %}
+        service publié
+    {% else %}
+        services publiés
+    {% endif %}
+</span><br>
+
+<a href="{{ path('app_v2_create_prestation') }}" class="px-3 btn btn-sm mt-2 rounded-pill btn-primary">
+    <i class="bi bi-person-workspace me-2"></i> Créer une prestation
+</a><br>

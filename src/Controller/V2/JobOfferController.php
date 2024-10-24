@@ -2,7 +2,10 @@
 
 namespace App\Controller\V2;
 
+use App\Entity\User;
+use App\Twig\AppExtension;
 use App\Manager\ProfileManager;
+use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
 use App\Entity\Vues\AnnonceVues;
 use App\Entity\Referrer\Referral;
@@ -40,6 +43,8 @@ class JobOfferController extends AbstractController
         private ProfileManager $profileManager,
         private ApplicationsRepository $applicationsRepository,
         private ModerateurManager $moderateurManager,
+        private AppExtension $appExtension,
+        private ActivityLogger $activityLogger,
         private UrlGeneratorInterface $urlGeneratorInterface,
         private MailerService $mailerService,
     ){}
@@ -136,6 +141,7 @@ class JobOfferController extends AbstractController
                 $this->em->flush();
             }
         }
+        $this->activityLogger->logJobLisitinViewActivity($currentUser, $this->appExtension->generateJobReference($annonce->getId()));
 
         return $this->render('v2/dashboard/job_offer/view.html.twig', [
             'annonce' => $annonce,
@@ -192,7 +198,7 @@ class JobOfferController extends AbstractController
             $status = 'Succès';
         
             $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_APPLY_JOB);
-            $response = $this->creditManager->adjustCredits($this->userService->getCurrentUser(), $creditAmount);
+            $response = $this->creditManager->adjustCredits($this->userService->getCurrentUser(), $creditAmount, "Candidature annonce");
             
             if (isset($response['error'])) {
                 $message = $response['error'];

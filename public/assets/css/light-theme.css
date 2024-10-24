@@ -33,3 +33,7 @@
     border-color: transparent;
     box-shadow: none; /* Removes any focus glow or border changes */
 }
+
+.fw-light {
+    text-align: center !important;
+}

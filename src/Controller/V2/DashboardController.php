@@ -207,7 +207,7 @@ class DashboardController extends AbstractController
                     $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
                 }
                 $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
-                $response = $this->creditManager->adjustCredits($user, $boostOption->getCredit());
+                $response = $this->creditManager->adjustCredits($user, $boostOption->getCredit(), "Boost Profil Olona Talents");
                 
                 $message = 'Crédits insuffisants pour ce boost.';
                 $success = true;

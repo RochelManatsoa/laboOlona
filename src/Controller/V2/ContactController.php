@@ -107,7 +107,7 @@ class ContactController extends AbstractController
         $status = 'Succès';
     
         $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
-        $response = $this->creditManager->adjustCredits($currentUser, $creditAmount);
+        $response = $this->creditManager->adjustCredits($currentUser, $creditAmount, "Contact Candidat");
     
         $recruiter = $this->em->getRepository(EntrepriseProfile::class)->findOneBy(['entreprise' => $contactId]);
         $candidat = $this->em->getRepository(CandidateProfile::class)->findOneBy(['candidat' => $contactId]);

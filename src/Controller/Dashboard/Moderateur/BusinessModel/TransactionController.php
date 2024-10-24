@@ -82,7 +82,7 @@ class TransactionController extends AbstractController
             $this->orderManager->save($order);
             $this->creditManager->notifyTransaction($transaction);
             if($transaction->getStatus() === Transaction::STATUS_AUTHORIZED){
-                $this->creditManager->validateTransaction($transaction);
+                $this->creditManager->validateTransaction($transaction, $transaction->getTypeTransaction()->getName());
             }
             $this->addFlash('success', 'Transaction mis à jour');
 

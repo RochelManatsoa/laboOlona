@@ -3,16 +3,21 @@
 namespace App\Controller\V2\Candidate;
 
 use App\Entity\User;
+use App\Manager\MailManager;
 use App\Service\FileUploader;
 use App\Manager\ProfileManager;
+use App\Entity\CandidateProfile;
+use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Formation\Playlist;
+use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\Credit;
 use App\Manager\AffiliateToolManager;
 use App\Form\Boost\CandidateBoostType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\BusinessModel\BoostFacebook;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Manager\BusinessModel\CreditManager;
 use App\Entity\BusinessModel\BoostVisibility;
@@ -26,11 +31,7 @@ use App\Form\Profile\Candidat\CandidateUploadType;
 use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Controller\Dashboard\Moderateur\OpenAi\CandidatController;
-use App\Entity\BusinessModel\Boost;
-use App\Entity\BusinessModel\BoostFacebook;
-use App\Entity\CandidateProfile;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile as EditStepOneType;
-use App\Manager\MailManager;
 
 #[Route('/v2/candidate/dashboard')]
 class DashboardController extends AbstractController
@@ -90,7 +91,7 @@ class DashboardController extends AbstractController
                     $status = 'Echec';
                     $upload = false;
                 }else{
-                    $response = $this->creditManager->adjustCredits($this->userService->getCurrentUser(), $creditAmount);
+                    $response = $this->creditManager->adjustCredits($this->userService->getCurrentUser(), $creditAmount, "Generation de résumé CV");
                     if (isset($response['error'])) {
                         $message = $response['error'];
                         $success = false;
@@ -145,6 +146,7 @@ class DashboardController extends AbstractController
             'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
             'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
             'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
+            'activities' => $this->em->getRepository(ActivityLog::class)->findUserLogs($this->userService->getCurrentUser()),
         ]);
     }
 
@@ -273,7 +275,7 @@ class DashboardController extends AbstractController
             $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
         }
         $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
-        $response = $this->creditManager->adjustCredits($candidat->getCandidat(), $boostOption->getCredit());
+        $response = $this->creditManager->adjustCredits($candidat->getCandidat(), $boostOption->getCredit(), "Boost profil sur Olona Talents");
         
         if (isset($response['success'])) {
             $candidat->setStatus(CandidateProfile::STATUS_FEATURED);
@@ -306,7 +308,7 @@ class DashboardController extends AbstractController
             $visibilityBoost = $this->boostVisibilityManager->initBoostvisibilityFacebook($boostOptionFacebook);
         }
         $visibilityBoost = $this->boostVisibilityManager->updateFacebook($visibilityBoost, $boostOptionFacebook);
-        $response = $this->creditManager->adjustCredits($currentUser, $boostOptionFacebook->getCredit());
+        $response = $this->creditManager->adjustCredits($currentUser, $boostOptionFacebook->getCredit(), "Boost profil sur facebook");
 
         if (isset($response['success'])) {
             $candidat->setStatus(CandidateProfile::STATUS_FEATURED);

@@ -9,6 +9,7 @@ use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\PurchasedContact;
 use App\Entity\BusinessModel\Transaction;
 use App\Entity\Finance\Employe;
+use App\Entity\Logs\ActivityLog;
 use App\Entity\Vues\VideoVues;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -174,6 +175,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: BoostVisibility::class)]
     private Collection $boostVisibilities;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ActivityLog::class)]
+    private Collection $activityLogs;
+
     public function __construct()
     {
         $this->envois = new ArrayCollection();
@@ -185,6 +189,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->purchasedContacts = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->boostVisibilities = new ArrayCollection();
+        $this->activityLogs = new ArrayCollection();
     }
 
     public function __toString()
@@ -824,6 +829,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($boostVisibility->getUser() === $this) {
                 $boostVisibility->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ActivityLog>
+     */
+    public function getActivityLogs(): Collection
+    {
+        return $this->activityLogs;
+    }
+
+    public function addActivityLog(ActivityLog $activityLog): static
+    {
+        if (!$this->activityLogs->contains($activityLog)) {
+            $this->activityLogs->add($activityLog);
+            $activityLog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActivityLog(ActivityLog $activityLog): static
+    {
+        if ($this->activityLogs->removeElement($activityLog)) {
+            // set the owning side to null (unless already changed)
+            if ($activityLog->getUser() === $this) {
+                $activityLog->setUser(null);
             }
         }
 

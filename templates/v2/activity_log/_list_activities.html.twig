@@ -1,0 +1,29 @@
+{% if activities|length > 0 %}
+<ul class="list-group col-10 mx-auto small">
+    {% set icon = '<i class="bi bi-info-circle text-info h4 me-2"></i>' %}
+
+	{% set themeClass = 'list-group-item-light' %}
+	{% if app.request.cookies.get('theme') == 'bootstrap-dark' %}
+		{% set themeClass = 'list-group-item-dark' %}
+	{% endif %}
+    {% for activity in activities %}
+        {% if activity.level == 2 %}
+            {% set icon = '<i class="bi bi-exclamation-circle text-danger h4 me-2"></i>' %}
+        {% endif %}
+        <li class="list-group-item d-flex justify-content-between align-items-start {{ themeClass }}">
+            {{ icon|raw }}
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">{{ activity.activityType }}</div>
+                {{ activity.details }}
+            </div>
+            <span class="fw-lighter small">{{ activity.timestamp|time_ago }}</span>
+        </li>
+    {% endfor %}
+</ul>
+
+{% else %}
+    <div class="text-center col-lg-6 col-sm-12 mx-auto">
+        <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+        <p class="text-center">Aucune historique à afficher.</p>
+    </div>
+{% endif %}

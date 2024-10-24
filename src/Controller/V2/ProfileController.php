@@ -2,21 +2,24 @@
 
 namespace App\Controller\V2;
 
-use App\Entity\BusinessModel\PurchasedContact;
+use App\Entity\User;
+use App\Twig\AppExtension;
+use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
+use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Vues\CandidatVues;
-use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use App\Manager\OlonaTalentsManager;
 use App\Service\ElasticsearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/v2/dashboard')]
 class ProfileController extends AbstractController
@@ -28,6 +31,8 @@ class ProfileController extends AbstractController
         private OlonaTalentsManager $olonaTalentsManager,
         private CandidatManager $candidatManager,
         private UrlGeneratorInterface $urlGeneratorInterface,
+        private ActivityLogger $activityLogger,
+        private AppExtension $appExtension,
         private ElasticsearchService $elasticsearch,
     ){}
     
@@ -122,6 +127,7 @@ class ProfileController extends AbstractController
             $candidat->addVue($view);
             $this->em->flush();
         }
+        $this->activityLogger->logProfileViewActivity($currentUser, $this->appExtension->generatePseudo($candidat));
         
         return $this->render('v2/dashboard/profile/view.html.twig', [
             'candidat' => $candidat,
