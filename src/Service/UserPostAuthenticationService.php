@@ -8,18 +8,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserPostAuthenticationService
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
-    }
+    public function __construct(
+        private EntityManagerInterface $em,
+    ){}
 
-    public function updateLastLoginDate(UserInterface $user)
+    public function updateLastLoginDate(UserInterface $user):void
     {
         if (!$user instanceof User) {
             return;
         }
 
         $user->setLastLogin(new \DateTime());
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $this->em->persist($user);
+        $this->em->flush();
     }
 }

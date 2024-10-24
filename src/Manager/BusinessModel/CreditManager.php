@@ -11,6 +11,7 @@ use App\Manager\NotificationManager;
 use App\Entity\BusinessModel\Package;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
+use App\Service\ActivityLogger;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -21,6 +22,7 @@ class CreditManager
         private Twig $twig,
         private NotificationManager $notificationManager,
         private RequestStack $requestStack,
+        private ActivityLogger $activityLogger,
         private Security $security
     ){}
 
@@ -46,7 +48,7 @@ class CreditManager
         return $credit;
     }
 
-    public function adjustCredits(User $user, int $creditsToDeduct): array
+    public function adjustCredits(User $user, int $creditsToDeduct, string $context = ""): array
     {
         $credit = $user->getCredit();
 
@@ -63,6 +65,7 @@ class CreditManager
         $credit->setTotal($newCredits);
         $this->em->persist($credit);
         $this->em->flush();
+        $this->activityLogger->logCreditSpending($user, $creditsToDeduct, $context);
 
         return ['success' => $newCredits];
     }
@@ -146,7 +149,7 @@ class CreditManager
         return $this->handleCreditPackagePurchase($user, $packageId, $userType === 'recruiter');
     }
 
-    public function validateTransaction(Transaction $transaction): bool
+    public function validateTransaction(Transaction $transaction, string $context): bool
     {
         if (!$transaction) {
             return false;
@@ -163,6 +166,7 @@ class CreditManager
         }
 
         $credit->setTotal($credit->getTotal() + $creditsToAdd);
+        $this->activityLogger->logCreditPurchased($user, $creditsToAdd, $context);
         
         $this->em->persist($credit);
         $this->em->persist($transaction);

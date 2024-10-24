@@ -1,9 +1,9 @@
 <?php
 namespace App\Security;
 
-use DateTime;
-use DateInterval;
 use App\Entity\User; 
+use App\Service\ActivityLogger;
+use App\Entity\Logs\ActivityLog;
 use App\Manager\IdentityManager;
 use App\Entity\Referrer\Referral;
 use App\Service\User\MailerService;
@@ -16,6 +16,7 @@ use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Service\Mailer\MailerService as MailerMailerService;
+use App\Service\User\UserService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -36,11 +37,10 @@ class GoogleAuthenticator extends OAuth2Authenticator
         private TokenGeneratorInterface $tokenGeneratorInterface,
         private UrlGeneratorInterface $urlGenerator, 
         private UserPostAuthenticationService $userPostAuthenticationService,
+        private ActivityLogger $activityLogger,
+        private UserService $userService,
         private RequestStack $requestStack,
-    )
-    {
-        
-    }
+    ){}
 
     public function authenticate(Request $request): Passport
     {
@@ -67,7 +67,7 @@ class GoogleAuthenticator extends OAuth2Authenticator
                     $new = true;
                     $existingUser = new User();
                     $existingUser->setEmail($email);
-                    $existingUser->setDateInscription(new DateTime());
+                    $existingUser->setDateInscription(new \DateTime());
                     // $existingUser->setTokenRegistration($tokenRegistration);
                     /** Check if from referrer */
                     $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $existingUser->getEmail()]);
@@ -118,6 +118,7 @@ class GoogleAuthenticator extends OAuth2Authenticator
         $providerKey) : Response
     {
         $this->userPostAuthenticationService->updateLastLoginDate($token->getUser());
+        $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_LOGIN, 'Connexion à Olona Talents via gmail', ActivityLog::LEVEL_INFO);
         if ($targetPath = $this->requestStack->getSession()->get('_security.'.$providerKey.'.target_path')) {
             return new RedirectResponse($targetPath);
         }

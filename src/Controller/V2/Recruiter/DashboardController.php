@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Manager\BusinessModel\CreditManager;
 use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\Logs\ActivityLog;
 use App\Repository\Formation\VideoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,7 @@ use App\Repository\Formation\PlaylistRepository;
 use App\Form\Search\AffiliateTool\ToolSearchType;
 use App\Manager\BusinessModel\BoostVisibilityManager;
 use App\Manager\MailManager;
+use App\Service\ActivityLogger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/v2/recruiter/dashboard')]
@@ -36,6 +38,7 @@ class DashboardController extends AbstractController
         private UserService $userService,
         private AffiliateToolManager $affiliateToolManager,
         private CreditManager $creditManager,
+        private ActivityLogger $activityLogger,
         private BoostVisibilityManager $boostVisibilityManager,
     ){}
 
@@ -59,6 +62,7 @@ class DashboardController extends AbstractController
         return $this->render('v2/dashboard/recruiter/index.html.twig', [
             'form' => $form->createView(),
             'recruiter' => $recruiter,
+            'activities' => $this->em->getRepository(ActivityLog::class)->findUserLogs($this->userService->getCurrentUser()),
         ]);
     }
 
@@ -189,7 +193,7 @@ class DashboardController extends AbstractController
             $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
         }
         $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
-        $response = $this->creditManager->adjustCredits($currentUser, $boostOption->getCredit());
+        $response = $this->creditManager->adjustCredits($currentUser, $boostOption->getCredit(), "Boost profil sur Olona Talents");
         
         if (isset($response['success'])) {
             $recruiter->setStatus(EntrepriseProfile::STATUS_PREMIUM);
@@ -222,7 +226,7 @@ class DashboardController extends AbstractController
             $visibilityBoost = $this->boostVisibilityManager->initBoostvisibilityFacebook($boostOptionFacebook);
         }
         $visibilityBoost = $this->boostVisibilityManager->updateFacebook($visibilityBoost, $boostOptionFacebook);
-        $response = $this->creditManager->adjustCredits($currentUser, $boostOptionFacebook->getCredit());
+        $response = $this->creditManager->adjustCredits($currentUser, $boostOptionFacebook->getCredit(), "Boost profil sur facebook");
 
         if (isset($response['success'])) {
             $recruiter->setStatus(EntrepriseProfile::STATUS_PREMIUM);

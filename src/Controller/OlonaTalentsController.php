@@ -24,6 +24,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
+use App\Service\ActivityLogger;
+use App\Service\User\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -41,6 +43,8 @@ class OlonaTalentsController extends AbstractController
         private PaginatorInterface $paginatorInterface,
         private UrlGeneratorInterface $urlGeneratorInterface,
         private Security $security,
+        private UserService $userService,
+        private ActivityLogger $activityLogger,
         private RequestStack $requestStack,
     ) {}
 
@@ -219,6 +223,10 @@ class OlonaTalentsController extends AbstractController
         $size = $request->query->getInt('size', 10);
         $from = $request->query->getInt('from', 0);
         $params = [];
+        
+        if($this->userService->getCurrentUser()){
+            $this->activityLogger->logSearchActivity($this->userService->getCurrentUser(), $query, $type);
+        }
 
         if ($type === 'candidates') {
             $paramsSearch = $this->olonaTalentsManager->getParamsCandidates($from, $size, $query);

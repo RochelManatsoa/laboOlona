@@ -152,7 +152,7 @@ class JobListingController extends AbstractController
         // Vérification et ajustement des crédits pour l'annonce standard
         $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_APPLY_OFFER);
         if ($this->profileManager->canBuy($currentUser, $creditAmount)) {
-            $responseDefault = $this->creditManager->adjustCredits($currentUser, $creditAmount);
+            $responseDefault = $this->creditManager->adjustCredits($currentUser, $creditAmount, "Publication annonce");
         } else {
             return [
                 'success' => false, 
@@ -164,7 +164,7 @@ class JobListingController extends AbstractController
         // Vérification et ajustement des crédits pour le Boost standard
         if ($hasBoost) {
             if ($this->profileManager->canBuy($currentUser, $boost->getCredit())) {
-                $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit());
+                $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit(), "Boost annonce sur Olona Talents");
             } else {
                 return [
                     'success' => false, 
@@ -177,7 +177,7 @@ class JobListingController extends AbstractController
         // Vérification et ajustement des crédits pour le Boost Facebook
         if ($hasBoostFacebook) {
             if ($this->profileManager->canBuy($currentUser, $boostFacebook->getCredit())) {
-                $responseBoostFacebook = $this->creditManager->adjustCredits($currentUser, $boostFacebook->getCredit());
+                $responseBoostFacebook = $this->creditManager->adjustCredits($currentUser, $boostFacebook->getCredit(), "Boost annonce sur facebook");
             } else {
                 return [
                     'success' => false, 
@@ -258,7 +258,7 @@ class JobListingController extends AbstractController
     {
         $boost = $jobListing->getBoost();
         if ($boost instanceof Boost) {
-            $response = $this->creditManager->adjustCredits($currentUser, $boost->getCredit());
+            $response = $this->creditManager->adjustCredits($currentUser, $boost->getCredit(), "Boost annonce sur Olona Talents");
             if (!empty($response['error'])) {
                 return ['success' => false, 'message' => $response['error'], 'status' => 'Echec'];
             }
@@ -387,7 +387,7 @@ class JobListingController extends AbstractController
             $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
         }
         $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
-        $response = $this->creditManager->adjustCredits($currentUser, $boostOption->getCredit());
+        $response = $this->creditManager->adjustCredits($currentUser, $boostOption->getCredit(), "Boost annonce sur Olona Talents");
         
         if (isset($response['success'])) {
             $jobListing->setStatus(JobListing::STATUS_FEATURED);
@@ -421,7 +421,7 @@ class JobListingController extends AbstractController
             $visibilityBoost = $this->boostVisibilityManager->initBoostvisibilityFacebook($boostOptionFacebook);
         }
         $visibilityBoost = $this->boostVisibilityManager->updateFacebook($visibilityBoost, $boostOptionFacebook);
-        $response = $this->creditManager->adjustCredits($currentUser, $boostOptionFacebook->getCredit());
+        $response = $this->creditManager->adjustCredits($currentUser, $boostOptionFacebook->getCredit(), "Boost annonce sur facebook");
 
         if (isset($response['success'])) {
             $jobListing->setStatus(JobListing::STATUS_FEATURED);

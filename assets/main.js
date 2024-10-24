@@ -13,6 +13,19 @@ $(function() {
     document.addEventListener('turbo:load', handlePageLoad); // Attacher sur turbo:load pour le chargement initial
     document.addEventListener('turbo:frame-load', handleFrameLoad); // Attacher sur turbo:frame-load pour les chargements dans les frames
 
+    $(document).on('click', 'a', function(event) {
+        var url = $(this).attr('href');
+        if (url) {
+            $.ajax({
+                url: '/v2/activity/log/click',  
+                method: 'POST',
+                data: {
+                    page: url,
+                }
+            });
+        }
+    });
+
     function handleFrameLoad(event) {
         const context = event ? event.target : document;
         setupImageUpload(); 
@@ -209,6 +222,13 @@ $(function() {
                             ]
                         }
                     })
+                    // .then(editor => {
+                    //     const isDarkTheme = $('html').attr('data-bs-theme') === 'dark';
+                    //     if (isDarkTheme) {
+                    //         editor.ui.view.editable.element.classList.add('dark-theme');
+                    //         editor.config.set('contentsCss', '/assets/css/ckeditor-dark-theme.css');
+                    //     } 
+                    // })
                     .catch(error => {
                         console.error(error);
                     });
@@ -234,6 +254,7 @@ $(function() {
     function handleThemeChange() {
         $('#switch-theme').off('click').on('click', function() {
             const newTheme = $('body').hasClass('bootstrap-light') ? 'bootstrap-dark' : 'bootstrap-light';
+            // const newTheme = $('html').attr('data-bs-theme') === 'dark' ? 'light' : 'dark';
             updateThemePreference(newTheme);
             updateLogo();
         });
@@ -242,27 +263,31 @@ $(function() {
     function updateThemePreference(theme) {
         document.cookie = `theme=${theme}; path=/; max-age=31536000`;
         $('body').removeClass('bootstrap-dark bootstrap-light').addClass(theme);
+        // $('html').attr('data-bs-theme', theme);
     }
-
+    
     function handleThemeInitialization() {
         const currentTheme = document.cookie.split('; ').find(row => row.startsWith('theme='));
         if (currentTheme) {
             const themeName = currentTheme.split('=')[1];
             $('body').removeClass('bootstrap-dark bootstrap-light').addClass(themeName);
+            // $('html').attr('data-bs-theme', themeName);
             updateLogo();
         }
     }
-
+    
     function updateLogo() {
         const currentTheme = $('body').hasClass('bootstrap-dark') ? 'dark' : 'light';
+        // const currentTheme = $('html').attr('data-bs-theme') === 'dark' ? 'dark' : 'light';
         const logoSrc = currentTheme === 'dark' ? '/images/logo-olona-talents-white600x200.png' : '/images/logo-olona-talents-black600x200.png';
         $('#logoOffCanvas').attr('src', logoSrc);
         $('#logo').attr('src', logoSrc);
-
+    
         const themeIcon = currentTheme === 'dark' ? 'bi-brightness-high' : 'bi-moon-stars-fill';
         $('#switch-theme i').removeClass();
         $('#switch-theme i').addClass(`bi ${themeIcon}`);
     }
+    
 
     function setupImageUpload() {
         const logoInput = document.getElementById('edit_entreprise_file'); 

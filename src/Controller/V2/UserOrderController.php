@@ -86,7 +86,7 @@ class UserOrderController extends AbstractController
             $this->transactionManager->save($transaction);
             $this->transactionManager->createInvoice($transaction);
             $this->creditManager->notifyTransaction($transaction);
-            $this->creditManager->validateTransaction($transaction);
+            $this->creditManager->validateTransaction($transaction, $transaction->getTypeTransaction()->getName());
             $order->setStatus(Order::STATUS_COMPLETED);
         }
         $entityManager->persist($order);

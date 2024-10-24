@@ -79,7 +79,7 @@ class PaymentController extends AbstractController
                     $transaction->setCreditsAdded($order->getPackage()->getCredit());
                     $this->transactionManager->save($transaction);
                     $this->creditManager->notifyTransaction($transaction);
-                    $this->creditManager->validateTransaction($transaction);
+                    $this->creditManager->validateTransaction($transaction, $transaction->getTypeTransaction()->getName());
                     $order->setStatus(Order::STATUS_COMPLETED);
                     $order->setToken($token); 
                     $order->setPaymentId($capture->id); 
