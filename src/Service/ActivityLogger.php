@@ -87,7 +87,7 @@ class ActivityLogger
      */
     public function logCreditSpending(User $user, float $amount, string $context): void
     {
-        $details = sprintf('Crédit dépensé: % dans le contexte de "%s"', $amount, $context);
+        $details = sprintf('%f crédit dépensé dans le contexte de "%s"', $amount, $context);
         $this->logActivity($user, ActivityLog::ACTIVITY_CREDIT_SPENDING, $details, ActivityLog::LEVEL_INFO);
     }
     
@@ -96,7 +96,7 @@ class ActivityLogger
      */
     public function logCreditPurchased(User $user, float $amount, string $context): void
     {
-        $details = sprintf('Achant crédit: %.2f via %s', $amount, $context);
+        $details = sprintf('Achant crédit: %f via %s', $amount, $context);
         $this->logActivity($user, ActivityLog::ACTIVITY_CREDIT_SPENDING, $details, ActivityLog::LEVEL_INFO);
     }
     /**

@@ -217,18 +217,11 @@ $(function() {
                                 'heading', '|',
                                 'bold', 'italic', 'link', '|',
                                 'bulletedList', 'numberedList', '|',
-                                'blockQuote', 'insertTable', '|',
+                                'blockQuote', '|',
                                 'undo', 'redo'
                             ]
                         }
                     })
-                    // .then(editor => {
-                    //     const isDarkTheme = $('html').attr('data-bs-theme') === 'dark';
-                    //     if (isDarkTheme) {
-                    //         editor.ui.view.editable.element.classList.add('dark-theme');
-                    //         editor.config.set('contentsCss', '/assets/css/ckeditor-dark-theme.css');
-                    //     } 
-                    // })
                     .catch(error => {
                         console.error(error);
                     });
@@ -254,7 +247,6 @@ $(function() {
     function handleThemeChange() {
         $('#switch-theme').off('click').on('click', function() {
             const newTheme = $('body').hasClass('bootstrap-light') ? 'bootstrap-dark' : 'bootstrap-light';
-            // const newTheme = $('html').attr('data-bs-theme') === 'dark' ? 'light' : 'dark';
             updateThemePreference(newTheme);
             updateLogo();
         });
@@ -263,7 +255,8 @@ $(function() {
     function updateThemePreference(theme) {
         document.cookie = `theme=${theme}; path=/; max-age=31536000`;
         $('body').removeClass('bootstrap-dark bootstrap-light').addClass(theme);
-        // $('html').attr('data-bs-theme', theme);
+        const mode = theme.replace('bootstrap-', '');
+        $('html').attr('data-bs-theme', mode);
     }
     
     function handleThemeInitialization() {
@@ -271,7 +264,8 @@ $(function() {
         if (currentTheme) {
             const themeName = currentTheme.split('=')[1];
             $('body').removeClass('bootstrap-dark bootstrap-light').addClass(themeName);
-            // $('html').attr('data-bs-theme', themeName);
+            const mode = themeName.replace('bootstrap-', '');
+            $('html').attr('data-bs-theme', mode);
             updateLogo();
         }
     }
