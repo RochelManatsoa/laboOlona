@@ -150,11 +150,9 @@ class PrestationController extends AbstractController
         $profile = $this->userService->checkProfile();
         if($profile instanceof CandidateProfile){
             $prestation->setCandidateProfile($profile);
-            $boostType = 'PRESTATION_CANDIDATE';
         }
         if($profile instanceof EntrepriseProfile){
             $prestation->setEntrepriseProfile($profile);
-            $boostType = 'PRESTATION_RECRUITER';
         }
         $boostType = 'PRESTATION_CANDIDATE';
         $form = $this->createForm(PrestationType::class, $prestation, ['boostType' => $boostType]);
@@ -209,74 +207,6 @@ class PrestationController extends AbstractController
         ]);
     }
     
-    private function handlePrestationSubmission(Prestation $prestation, User $currentUser): array
-    {
-        $boost = $prestation->getBoost();
-        $boostFacebook = $prestation->getBoostFacebook();
-        
-        // Initialisation par défaut pour éviter les "undefined keys"
-        $responseBoost = ['success' => true];
-        $responseBoostFacebook = ['success' => true];
-        $responseDefault = ['success' => true];
-        
-        $hasBoost = $boost instanceof Boost;
-        $hasBoostFacebook = $boostFacebook instanceof BoostFacebook;
-
-        // Vérification et ajustement des crédits pour la prestation standard
-        $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_APPLY_PRESTATION_RECRUITER);
-        if ($this->profileManager->canBuy($currentUser, $creditAmount)) {
-            $responseDefault = $this->creditManager->adjustCredits($currentUser, $creditAmount, "Création de prestation");
-        } else {
-            return [
-                'success' => false, 
-                'status' => 'Echec',
-                'message' => "Crédits insuffisants pour publier une prestation"
-            ];
-        }
-
-        // Vérification et ajustement des crédits pour le Boost standard
-        if ($hasBoost) {
-            if ($this->profileManager->canBuy($currentUser, $boost->getCredit())) {
-                $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit(), "Boost prestation");
-            } else {
-                return [
-                    'success' => false, 
-                    'status' => 'Echec',
-                    'message' => "Crédits insuffisants pour ce boost"
-                ];
-            }
-        }
-
-        // Vérification et ajustement des crédits pour le Boost Facebook
-        if ($hasBoostFacebook) {
-            if ($this->profileManager->canBuy($currentUser, $boostFacebook->getCredit())) {
-                $responseBoostFacebook = $this->creditManager->adjustCredits($currentUser, $boostFacebook->getCredit(), "Boost facebook prestation");
-            } else {
-                return [
-                    'success' => false, 
-                    'status' => 'Echec',
-                    'message' => "Crédits insuffisants pour le boost Facebook"
-                ];
-            }
-        }
-
-        // Si tous les ajustements de crédits ont réussi, ou si aucun boost n'a été pris, on valide l'opération
-        if ($responseBoost['success'] && $responseBoostFacebook['success'] && $responseDefault['success']) {
-            return [
-                'success' => true, 
-                'status' => 'Succès',
-                'message' => "Boost effectué"
-            ];
-        }
-
-        // Cas de crédits insuffisants non gérés spécifiquement
-        return [
-            'success' => false,
-            'status' => 'Echec',
-            'message' => "Crédits insuffisants pour les opérations demandées"
-        ];
-    }
-    
     #[Route('/prestation/edit/{prestation}', name: 'app_v2_edit_prestation')]
     #[IsGranted(PrestationVoter::EDIT, subject: 'prestation')]
     public function editPrestation(Request $request, Prestation $prestation): Response
@@ -287,45 +217,25 @@ class PrestationController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $response = $this->handlePrestationEdit($form->getData(), $currentUser);
-            
             if ($response['success']) {
                 $this->prestationManager->saveForm($form);
+                $response['redirect'] = $this->urlGeneratorInterface->generate('app_v2_view_prestation', ['prestation' => $prestation->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+                return $this->json($response, 200);
             }
-            
-            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+            return $this->json($response, 200);
+        }else {
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
                 $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-                return $this->render('v2/dashboard/recruiter/live.html.twig', $response);
+                return $this->render('v2/dashboard/prestation/form_errors.html.twig', [
+                    'form' => $form->createView(),
+                ]);
             }
-            
-            return $this->render('v2/dashboard/prestation/edit.html.twig', [
-                'prestation' => $prestation,
-                'form' => $form->createView(),
-                'message' => $response['message'],
-                'status' => $response['status'],
-            ]);
         }
 
         return $this->render('v2/dashboard/prestation/edit.html.twig', [
             'prestation' => $prestation,
             'form' => $form->createView(),
         ]);
-    }
-
-    private function handlePrestationEdit(Prestation $prestation, User $currentUser): array
-    {
-        $boost = $prestation->getBoost();
-        if ($boost instanceof Boost) {
-            if($this->profileManager->canBuy($currentUser, $boost->getCredit())){
-                $response = $this->creditManager->adjustCredits($currentUser, $boost->getCredit(), "Boost prestation sur Olona Talents");
-            }else{
-                return ['success' => false, 'message' => 'Crédits insuffisants. Veuillez charger votre compte', 'status' => '<i class="bi bi-exclamation-octagon me-2"></i> Echec'];
-            }
-            if (!empty($response['error'])) {
-                return ['success' => false, 'message' => $response['error'], 'status' => '<i class="bi bi-exclamation-octagon me-2"></i> Echec'];
-            }
-        }
-
-        return ['success' => true, 'message' => 'Modification sauvegardée avec succès', 'status' => '<i class="bi bi-check-lg me-2"></i> Succès'];
     }
     
     #[Route('/prestation/view/{prestation}', name: 'app_v2_view_prestation')]
@@ -477,6 +387,91 @@ class PrestationController extends AbstractController
             'success' => false, 
             'message' => 'Erreur de formulaire PrestationBoostType.'
         ], 400);
+    }
+    
+    private function handlePrestationSubmission(Prestation $prestation, User $currentUser): array
+    {
+        $boost = $prestation->getBoost();
+        $boostFacebook = $prestation->getBoostFacebook();
+        
+        // Initialisation par défaut pour éviter les "undefined keys"
+        $responseBoost = ['success' => true];
+        $responseBoostFacebook = ['success' => true];
+        $responseDefault = ['success' => true];
+        
+        $hasBoost = $boost instanceof Boost;
+        $hasBoostFacebook = $boostFacebook instanceof BoostFacebook;
+
+        // Vérification et ajustement des crédits pour la prestation standard
+        $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_APPLY_PRESTATION_RECRUITER);
+        if ($this->profileManager->canBuy($currentUser, $creditAmount)) {
+            $responseDefault = $this->creditManager->adjustCredits($currentUser, $creditAmount, "Création de prestation");
+        } else {
+            return [
+                'success' => false, 
+                'status' => 'Echec',
+                'message' => "Crédits insuffisants pour publier une prestation"
+            ];
+        }
+
+        // Vérification et ajustement des crédits pour le Boost standard
+        if ($hasBoost) {
+            if ($this->profileManager->canBuy($currentUser, $boost->getCredit())) {
+                $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit(), "Boost prestation");
+            } else {
+                return [
+                    'success' => false, 
+                    'status' => 'Echec',
+                    'message' => "Crédits insuffisants pour ce boost"
+                ];
+            }
+        }
+
+        // Vérification et ajustement des crédits pour le Boost Facebook
+        if ($hasBoostFacebook) {
+            if ($this->profileManager->canBuy($currentUser, $boostFacebook->getCredit())) {
+                $responseBoostFacebook = $this->creditManager->adjustCredits($currentUser, $boostFacebook->getCredit(), "Boost facebook prestation");
+            } else {
+                return [
+                    'success' => false, 
+                    'status' => 'Echec',
+                    'message' => "Crédits insuffisants pour le boost Facebook"
+                ];
+            }
+        }
+
+        // Si tous les ajustements de crédits ont réussi, ou si aucun boost n'a été pris, on valide l'opération
+        if ($responseBoost['success'] && $responseBoostFacebook['success'] && $responseDefault['success']) {
+            return [
+                'success' => true, 
+                'status' => 'Succès',
+                'message' => "Boost effectué"
+            ];
+        }
+
+        // Cas de crédits insuffisants non gérés spécifiquement
+        return [
+            'success' => false,
+            'status' => 'Echec',
+            'message' => "Crédits insuffisants pour les opérations demandées"
+        ];
+    }
+
+    private function handlePrestationEdit(Prestation $prestation, User $currentUser): array
+    {
+        $boost = $prestation->getBoost();
+        if ($boost instanceof Boost) {
+            if($this->profileManager->canBuy($currentUser, $boost->getCredit())){
+                $response = $this->creditManager->adjustCredits($currentUser, $boost->getCredit(), "Boost prestation sur Olona Talents");
+            }else{
+                return ['success' => false, 'message' => 'Crédits insuffisants. Veuillez charger votre compte', 'status' => '<i class="bi bi-exclamation-octagon me-2"></i> Echec'];
+            }
+            if (!empty($response['error'])) {
+                return ['success' => false, 'message' => $response['error'], 'status' => '<i class="bi bi-exclamation-octagon me-2"></i> Echec'];
+            }
+        }
+
+        return ['success' => true, 'message' => 'Modification sauvegardée avec succès', 'status' => '<i class="bi bi-check-lg me-2"></i> Succès'];
     }
 
     private function handleBoostPrestation($boostOption, $prestation, User $currentUser): array

@@ -223,45 +223,4 @@
 			</div>
 		</div>
 	</section>
-
-<script>
-	document.addEventListener("DOMContentLoaded", function() {
-		var imageInput = document.getElementById('{{ form.file.vars.id }}');
-																var profileImgDiv = document.querySelector('.profile-img');
-														
-																imageInput.addEventListener('change', function(event) {
-																	if (event.target.files && event.target.files[0]) {
-																		var reader = new FileReader();
-																		reader.onload = function(e) {
-																			profileImgDiv.style.backgroundImage = 'url(' + e.target.result + ')';
-																		};
-																		reader.readAsDataURL(event.target.files[0]);
-																	}
-																});
-														
-																profileImgDiv.addEventListener('click', function() {
-																	imageInput.click();
-																});
-															});
-														
-															document.addEventListener("DOMContentLoaded", function() {
-																var availabilityDropdown = document.getElementById('prestation_availability_nom');
-																var dateField = document.getElementById('prestation_availability_dateFin');
-														
-																if (availabilityDropdown && dateField) { // Vérifie si les éléments existent
-														
-																	function toggleDateInput() {
-																		if (availabilityDropdown.value === 'from-date') {
-																			dateField.style.display = 'block';  // Show the date field
-																		} else {
-																			dateField.style.display = 'none';  // Hide the date field
-																		}
-																	}
-														
-																	availabilityDropdown.addEventListener('change', toggleDateInput);
-														
-																	toggleDateInput();
-																}
-															});
-						</script>
-					{% endblock %}
+{% endblock %}
