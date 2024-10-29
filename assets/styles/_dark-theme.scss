@@ -69,6 +69,9 @@ body.bootstrap-dark {
         background-color: #444c57 !important;
         color: #f8f9fa !important;
     }
+    #paypal-button-container, .paypal-button-container{
+        background: none!important;
+    }
 
     .pagination {
         .page-link {

@@ -21,7 +21,11 @@
             </div>
 		</div>
 		<div class="small">
+            {% if prestation.openai is not null %}
 			{{ prestation.openai|raw }}
+            {% else %}
+			{{ prestation.description|raw }}
+            {% endif %}
 		</div>
         <span class="small fw-light">
             {{ satusPrestation(prestation)|raw }}

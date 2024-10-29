@@ -1,6 +1,6 @@
 <div class="container-fluid mt-5">
     {% if top_candidats.items|length > 0 %}
-        {% set numSlides = top_candidats.items|length // 4 %}
+        {% set numSlides = top_candidats.items|length // 5 %}
         {% if top_candidats.items|length % 4 > 0 %}
             {% set numSlides = numSlides + 1 %}
         {% endif %}
@@ -10,9 +10,9 @@
                 {% for i in 0..numSlides - 1 %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <div class="container-fluid">
-                            <div class="row row-cols-1 row-cols-md-4 g-2">
-                                {% for j in 0..3 %}
-                                    {% set index = i * 4 + j %}
+                            <div class="row row-cols-1 row-cols-md-5 g-2">
+                                {% for j in 0..4 %}
+                                    {% set index = i * 5 + j %}
                                     {% if index < top_candidats.items|length %}
                                         {% set candidat = top_candidats.items[index] %}
                                             <div class="col">

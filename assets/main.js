@@ -7,7 +7,7 @@
 
 import $ from 'jquery';
 import 'bootstrap';
-import { Tooltip, Toast, Popover, Modal } from 'bootstrap';
+import { Tooltip, Toast, Carousel, Modal } from 'bootstrap';
 
 $(function() {
     document.addEventListener('turbo:load', handlePageLoad); // Attacher sur turbo:load pour le chargement initial

@@ -1,7 +1,7 @@
 <div class="container-fluid mt-5">
     {% if top_annonces.items is not empty %}
-        {% set numSlides = top_annonces.items|length // 4 %}
-        {% if top_annonces.items|length % 4 > 0 %}
+        {% set numSlides = top_annonces.items|length // 5 %}
+        {% if top_annonces.items|length % 5 > 0 %}
             {% set numSlides = numSlides + 1 %}
         {% endif %}
         <div id="carousel_posting_component" class="carousel slide mb-5" data-bs-ride="carousel">
@@ -10,9 +10,9 @@
                 {% for i in 0..numSlides - 1 %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <div class="container-fluid">
-                            <div class="row row-cols-1 row-cols-md-4 g-2"> <!-- Changement ici pour 4 colonnes -->
-                                {% for j in 0..3 %} <!-- Itérer sur 6 top_annonces.items par slide -->
-                                    {% set index = i * 4 + j %} <!-- Calcul de l'index basé sur 6 top_annonces.items par slide -->
+                            <div class="row row-cols-1 row-cols-md-5 g-2"> <!-- Changement ici pour 4 colonnes -->
+                                {% for j in 0..4 %} <!-- Itérer sur 6 top_annonces.items par slide -->
+                                    {% set index = i * 5 + j %} <!-- Calcul de l'index basé sur 6 top_annonces.items par slide -->
                                     {% if index < top_annonces.items|length %}
                                         {% set posting = top_annonces.items[index] %}
 

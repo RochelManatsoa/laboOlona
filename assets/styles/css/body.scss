@@ -209,3 +209,53 @@ a[target="_blank"] .bi {
     margin-left: -2px; /* Ajoute un peu d'espace entre le texte et l'icône */
     color: #007bff; /* Couleur de l'icône, vous pouvez l'ajuster selon vos besoins */
 }
+.custom-carousel {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.carousel-viewport {
+    width: 100%;
+    overflow: hidden;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease;
+    margin: 0;
+    padding: 0;
+}
+
+.carousel-item {
+    flex: 0 0 20%; /* Means each item takes 20% of the space */
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+@media (max-width: 768px) {
+    .carousel-item {
+        flex: 0 0 100%; /* Single card for mobile */
+    }
+}

@@ -37,3 +37,7 @@
 .fw-light {
     text-align: center !important;
 }
+
+.custom-placeholder::placeholder {
+    font-size: 0.9em; /* Vous pouvez ajuster la valeur selon vos besoins */
+}

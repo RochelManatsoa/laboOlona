@@ -1,7 +1,4 @@
-<div class="text-small my-4">
-    {{ totalCandidatesResults }} resultat(s)
-</div>
-{% for item in candidats %}
+ {% for item in candidats %}
     <div class="d-flex w-100 align-items-center justify-content-between">
         <!-- Avatar container -->
         <div class="rounded-circle" style="
@@ -165,6 +162,3 @@
     </div>
 {% endfor %}
 
-{% if totalPages > 0 %}
-{% include "parts/_pagination_array.html.twig" with {'total': totalCandidatesResults, 'totalPages': totalPages} %}
-{% endif %}
