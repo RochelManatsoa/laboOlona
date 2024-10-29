@@ -149,8 +149,17 @@ class OlonaTalentsExtension extends AbstractExtension
 
     public function stripDivP(string $content): string
     {
-        // Enlever les balises <div> et <p>
-        return preg_replace('#<(div|p)[^>]*>(.*?)</\1>|<div[^>]*>|</div>|<p[^>]*>|</p>#si', '$2', $content);
+        // Étape 1: Fermez correctement les balises <strong> ouvertes sans correspondance
+        // Rechercher les balises <strong> sans balise fermante correspondante dans l'ordre et les supprimer
+        while (preg_match('#<strong\b[^>]*>(?![^<]*</strong>)#i', $content)) {
+            $content = preg_replace('#<strong\b[^>]*>(?![^<]*</strong>)#i', '', $content);
+        }
+
+        // Étape 2: Supprime toutes les balises sauf <strong> correctement fermées
+        // Remplace toutes les balises autres que <strong> et </strong>
+        $content = preg_replace('#<(?!\/?strong\b)[^>]*>#i', '', $content);
+
+        return $content;
     }
 
     public function getFirstCommonSecteur($secteurs1, $secteurs2)

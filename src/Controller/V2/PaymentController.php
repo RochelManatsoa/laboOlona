@@ -140,7 +140,10 @@ class PaymentController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $transactionManager->saveForm($form);
+            $transaction = $form->getData();
+            $command = $form->getData()->getCommand();
+            $transaction->setPackage($command->getPackage());
+            $transactionManager->save($transaction);
             
             return $this->redirectToRoute('app_v2_user_order');
         }else {

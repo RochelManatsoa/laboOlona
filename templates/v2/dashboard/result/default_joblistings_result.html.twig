@@ -1,0 +1,62 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Résultat de recherche | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+<input type="hidden" id="hidden-query" value="{{ getSearchQuery('q') }}">
+	<div class="container">
+		<div class="row mt-3 mt-sm-5">
+			<ul class="nav nav-underline">
+				<li class="nav-item">
+					<a class="nav-link" aria-current="page" id="candidats-tab" href="{{ path('app_olona_talents_candidates', {'q': getSearchQuery('q')})}}">Candidats</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" id="annonces-tab" href="{{ path('app_olona_talents_joblistings', {'q': getSearchQuery('q')})}}">Offre d'emploi</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="services-tab" href="{{ path('app_olona_talents_prestations', {'q': getSearchQuery('q')})}}">Services</a>
+				</li>
+			</ul>
+			{% include "v2/result/boost_annonces.html.twig" with {'top_annonces': joblistings_boost} %}
+			<div class="row">
+				<div class="col-12 col-sm-8" id="joblistings-list">
+                    {% include "v2/dashboard/result/parts/_part_joblistings_list.html.twig" %}
+                </div>
+				<div class="col-12 col-sm-4">
+					<div class="d-flex flex-column flex-shrink-0 py-3 text-white position-sticky top-0">
+						<div class="card mb-3">
+							<img src="{{ asset('images/mailing/espace-pub.webp')}}" class="" alt="Premium Olona Talents">
+						</div>
+						<div class="card mb-3" id="candidate-card-container">
+							<img src="{{ asset('images/mailing/thumbnail.png')}}" class="" alt="Premium Olona Talents">
+							<div class="card-body small">
+								<h3 class="card-title h5">Passez à la Version Premium!</h3>
+								<p class="card-text">Profitez d'un accès illimité aux contacts candidats, de la mise en avant de vos annonces et bien plus encore.</p>
+								<div id="checkBoost">
+									<button class="btn btn-sm btn-danger text-uppercase fw-bold px-2" data-bs-toggle="modal" data-bs-target="#boostProfile" data-bs-whatever="@mdo">
+										<i class="bi bi-rocket-takeoff me-2"></i>
+										Booster l'entreprise</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block preview %}
+{% endblock %}

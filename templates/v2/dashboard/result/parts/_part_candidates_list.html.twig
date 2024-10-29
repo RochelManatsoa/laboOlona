@@ -57,11 +57,14 @@
             {% endif %}
         </div>
 		<div class="">
+            {% if app.user %}
+                
+            {% endif %}
             <span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
-                {% if app.user.entrepriseProfile is defined and app.user.entrepriseProfile is not null %}
+                {% if app.user and app.user.entrepriseProfile is defined and app.user.entrepriseProfile is not null %}
                 <i class="bi bi-tags"></i> {{ candidate.secteurs|getFirstCommonSecteur(app.user.entrepriseProfile.secteurs)}}
                 {% else %}
-                <i class="bi bi-tags"></i> {{ candidate.secteurs|getFirstCommonSecteur(app.user.candidateProfile.secteurs)}}
+                <i class="bi bi-tags"></i> {{ candidate.secteurs[0]}}
                 {% endif %}
             </span>
 		</div>

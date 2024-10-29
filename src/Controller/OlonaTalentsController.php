@@ -191,7 +191,7 @@ class OlonaTalentsController extends AbstractController
             8
         );
         $params['action'] = $this->urlGeneratorInterface->generate('app_olona_talents_result');
-
+        // dd($params);
         if ($currentUser) {
             return $this->render('v2/dashboard/result.html.twig', $params);
         }
@@ -223,6 +223,7 @@ class OlonaTalentsController extends AbstractController
         $size = $request->query->getInt('size', 10);
         $from = $request->query->getInt('from', 0);
         $params = [];
+        $currentUser = $this->userService->getCurrentUser();
         
         if($this->userService->getCurrentUser()){
             $this->activityLogger->logSearchActivity($this->userService->getCurrentUser(), $query, $type);
@@ -230,13 +231,17 @@ class OlonaTalentsController extends AbstractController
 
         if ($type === 'candidates') {
             $paramsSearch = $this->olonaTalentsManager->getParamsCandidates($from, $size, $query);
+            $paramsBoost = $this->olonaTalentsManager->getParamsPremiumCandidates($from, $size, $query);
         } elseif ($type === 'joblistings') {
             $paramsSearch = $this->olonaTalentsManager->getParamsJoblisting($from, $size, $query);
+            $paramsBoost = $this->olonaTalentsManager->getParamsPremiumJoblisting($from, $size, $query);
         } else {
             $paramsSearch = $this->olonaTalentsManager->getParamsPrestations($from, $size, $query);
+            $paramsBoost = $this->olonaTalentsManager->getParamsPremiumPrestations($from, $size, $query);
         }
 
         $searchResults = $this->elasticsearch->search($paramsSearch);
+        $boostResults = $this->elasticsearch->search($paramsBoost);
 
         $ids = array_map(fn($hit) => $hit['_id'], $searchResults['hits']['hits']);
 
@@ -251,11 +256,24 @@ class OlonaTalentsController extends AbstractController
         $params['action'] = $this->urlGeneratorInterface->generate('app_olona_talents_'. $type);
         $params['totalResults'] = $searchResults['hits']['total']['value'];
 
+        // Fetch the boost results
+        $boostIds = array_map(fn($hit) => $hit['_id'], $boostResults['hits']['hits']);
+        $boostEntities = $repository->findBy(['id' => $boostIds]);
+
+        usort($boostEntities, function ($a, $b) use ($boostIds) {
+            return array_search($a->getId(), $boostIds) <=> array_search($b->getId(), $boostIds);
+        });
+
+        $params[$type . '_boost'] = $boostEntities;
+
         if ($request->isXmlHttpRequest()) {
             return $this->render("v2/dashboard/result/parts/_part_{$type}_list.html.twig", $params);
         }
-
-        return $this->render("v2/dashboard/result/{$type}_result.html.twig", $params);
+        if ($currentUser) {
+            return $this->render("v2/dashboard/result/{$type}_result.html.twig", $params);
+        }
+        
+        return $this->render("v2/dashboard/result/default_{$type}_result.html.twig", $params);
     }
 
     private function getRepositoryForType(string $type)
