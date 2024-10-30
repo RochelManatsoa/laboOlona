@@ -1,14 +1,14 @@
-{% for prestation in prestations %}
-	<div class="card my-3 small px-5 py-4">
-		<div class="row">
+    {% for prestation in prestations %}
+    <div class="card my-3 small px-5 py-4">
+        <div class="row">
             <div class="col-1 me-3">
                 <div class="rounded-circle" style="
-                    width: 45px;
-                    height: 45px;
-                    background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.jpg') }}');
-                    background-size: cover;
-                    background-position: center;
-                ">
+                        width: 45px;
+                        height: 45px;
+                        background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}');
+                        background-size: cover;
+                        background-position: center;
+                    ">
                 </div>
             </div>
             <div class="col">
@@ -19,14 +19,14 @@
                 </span><br>
                 <span class="small fw-lighter">{{ getAuthor(prestation)}}</span>
             </div>
-		</div>
-		<div class="small">
+        </div>
+        <div class="small">
             {% if prestation.openai is not null %}
-			{{ prestation.openai|raw }}
+            {{ prestation.openai|raw }}
             {% else %}
-			{{ prestation.description|raw }}
+            {{ prestation.description|raw }}
             {% endif %}
-		</div>
+        </div>
         <span class="small fw-light">
             {{ satusPrestation(prestation)|raw }}
             <span class="small text-center mx-2">|</span>
@@ -37,13 +37,15 @@
             <span class="small text-center mx-2">|</span>
             <i class="mx-2 bi bi-person-workspace"></i> {{ prestation.modalitesPrestation }}
         </span>
-		<div class="d-flex ms-auto small mt-2">
-			<a class="btn btn-sm btn-primary rounded-pill px-3" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
-		</div>
-		<div class="">
-            <span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
+        <div class="d-flex ms-auto small mt-2">
+            <a class="btn btn-sm btn-primary rounded-pill px-3"
+                href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
+        </div>
+        <div class="">
+            <span
+                class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
                 <i class="bi bi-tags"></i> {{ prestation.secteurs.nom}}
             </span>
-		</div>
-	</div>
-{% endfor %}
+        </div>
+    </div>
+    {% endfor %}
