@@ -27,10 +27,13 @@
 					<a class="nav-link" id="services-tab" href="{{ path('app_olona_talents_prestations', {'q': getSearchQuery('q')})}}">Services</a>
 				</li>
 			</ul>
-			{% include "v2/result/boost_candidats.html.twig" with {'top_candidats': candidates_boost} %}
 			<div class="row">
 				<div class="col-12 col-sm-8" id="candidates-list">
-                    {% include "v2/dashboard/result/parts/_part_candidates_list.html.twig" %}
+					{% if candidates|length > 0 %}
+						{% include "v2/dashboard/result/parts/_part_candidates_list.html.twig" %}
+					{% else %}
+                    	{% include "v2/dashboard/result/none/_none_candidates.html.twig" %}
+					{% endif %}
                 </div>
 				<div class="col-12 col-sm-4">
 					<div class="d-flex flex-column flex-shrink-0 py-3 text-white position-sticky top-0">
@@ -58,5 +61,4 @@
 
 {% endblock %}
 
-{% block preview %}
-{% endblock %}
+{% block preview %}{% endblock %}

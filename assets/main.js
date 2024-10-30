@@ -63,7 +63,7 @@ $(function() {
     }
 
     function loadMore(url, containerSelector, query) {
-        let from = 10;
+        let from = 6;
         let loading = false;
         const container = $(containerSelector);
 
@@ -93,7 +93,7 @@ $(function() {
                             loader.remove();
                         } else {
                             container.append(data);
-                            from += 10;
+                            from += 6;
                         }
                         loading = false;
                         loader.remove();

@@ -220,7 +220,7 @@ class OlonaTalentsController extends AbstractController
     private function fetchAndRender(Request $request, string $type): Response
     {
         $query = $request->query->get('q');
-        $size = $request->query->getInt('size', 10);
+        $size = $request->query->getInt('size', 6);
         $from = $request->query->getInt('from', 0);
         $params = [];
         $currentUser = $this->userService->getCurrentUser();
@@ -265,7 +265,7 @@ class OlonaTalentsController extends AbstractController
         });
 
         $params[$type . '_boost'] = $boostEntities;
-
+        $params['from'] = $from;
         if ($request->isXmlHttpRequest()) {
             return $this->render("v2/dashboard/result/parts/_part_{$type}_list.html.twig", $params);
         }

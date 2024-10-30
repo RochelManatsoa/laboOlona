@@ -1,6 +1,6 @@
 <div class="container-fluid mt-5 d-block d-md-none">
     {% if top_candidats|length > 0 %}
-        <div id="carousel_expert_component" class="carousel slide mb-5" data-bs-interval="false">
+        <div id="carousel_expert_component_mobile_{{ from }}" class="carousel slide mb-5" data-bs-interval="5000" data-bs-ride="carousel">
             <div class="carousel-inner" role="listbox">
                 {% for candidat in top_candidats %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
@@ -32,35 +32,31 @@
                     </div>
                 {% endfor %}
             </div>
-            <!-- Controls -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#carousel_expert_component" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carousel_expert_component" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
         </div>
     {% endif %}
 </div>
 
 <div class="container-fluid mt-5 d-none d-md-block">
     {% if top_candidats|length > 0 %}
-        <div id="carousel_expert_component" class="carousel slide mb-5" data-bs-interval="false">
+        <div id="carousel_expert_component_{{ from }}" class="carousel slide mb-5" data-bs-interval="5000" data-bs-ride="carousel">
             <div class="carousel-inner" role="listbox">
-                {% for i in 0..((top_candidats|length - 1) / 5) %}
+                {% set totalCandidats = top_candidats|length %}
+                {% set fillCount = totalCandidats % 3 == 0 ? 0 : 3 - (totalCandidats % 3) %}
+                {% set totalItems = totalCandidats + fillCount %}
+                {% set pageCount = (totalItems + 2) // 3 %}
+
+                {% for i in 0..(pageCount - 1) %}
                     <div class="carousel-item {% if i == 0 %}active{% endif %}">
                         <div class="container-fluid">
-                            <div class="row row-cols-1 row-cols-md-5 g-2">
-                                {% for j in 0..4 %}
-                                    {% set index = i * 5 + j %}
-                                    {% if index < top_candidats|length %}
+                            <div class="row row-cols-1 row-cols-md-3 g-2">
+                                {% for j in 0..2 %}
+                                    {% set index = i * 3 + j %}
+                                    {% if index < totalCandidats %}
                                         {% set candidat = top_candidats[index] %}
-                                        <div class="col">
+                                        <div class="col"> 
                                             <div class="card position-relative text-center">
                                                 <!-- Badge -->
-                                                <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3">PRO</span>
+                                                <span class="badge bg-danger rounded-pill position-absolute top-0 start-25 translate-middle mt-2 ms-3">PRO</span>
                                                 <div class="" style="height:200px; background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}'); background-position: center; background-size: cover; background-repeat: no-repeat;" alt="{{ generatePseudoById(candidat.id) }}"></div>
                                                 <p class="card-title h6 bg-dark text-white text-center py-2">{{ generatePseudoById(candidat.id) }}</p>
                                                 <div class="card-body-candidat">
@@ -78,6 +74,21 @@
                                                 {% endif %}
                                             </div>
                                         </div>
+                                    {% else %}
+                                        <div class="col">
+                                            <div class="card position-relative text-center">
+                                                <!-- Badge -->
+                                                <span class="badge bg-danger rounded-pill position-absolute top-0 start-25 translate-middle mt-2 ms-3">PRO</span>
+                                                <div class="" style="height:200px; background-image: url('{{asset('uploads/experts/avatar-default.jpg') }}'); background-position: center; background-size: cover; background-repeat: no-repeat;" alt="{{ generatePseudoById(candidat.id) }}"></div>
+                                                <p class="card-title h6 bg-dark text-white text-center py-2">Disponible</p>
+                                                <div class="card-body-candidat">
+                                                    <small class="mx-auto mt-3 small">
+                                                        <span class="small">Mettez en avant votre profil pour atteindre plus de clients potentiels.</span> 
+                                                    </small>
+                                                </div>
+                                                <a href="{{ path('app_v2_contact') }}" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto">Contacter</a>
+                                            </div>
+                                        </div>
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -85,15 +96,16 @@
                     </div>
                 {% endfor %}
             </div>
-            <!-- Controls -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#carousel_expert_component" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel_expert_component_{{ from }}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="false"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carousel_expert_component" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel_expert_component_{{ from }}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="false"></span>
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
     {% endif %}
 </div>
+
+
