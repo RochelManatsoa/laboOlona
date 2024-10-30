@@ -27,7 +27,6 @@
 					<a class="nav-link active" id="services-tab" href="{{ path('app_olona_talents_prestations', {'q': getSearchQuery('q')})}}">Services</a>
 				</li>
 			</ul>
-			{% include "v2/result/boost_prestations.html.twig" with {'top_prestations': prestations_boost} %}
 			<div class="row">
 				<div class="col-12 col-sm-8" id="prestations-list">
 					{% if prestations|length > 0 %}
