@@ -66,9 +66,9 @@ $(function() {
         let from = 6;
         let loading = false;
         const container = $(containerSelector);
-
+    
         $(window).on('scroll', function() {
-            if (!loading && ($(window).scrollTop() + $(window).height() >= $(document).height() - 100)) { // le seuil -100 pour déclencher juste avant le pied de page
+            if (!loading && ($(window).scrollTop() + $(window).height() >= $(document).height() - 100)) {
                 loading = true;
                 const loader = $('<div class="text-center my-3" id="loader-spinner">' +
                     '<div class="spinner-border text-primary" role="status">' +
@@ -76,7 +76,7 @@ $(function() {
                     '</div>' +
                     '</div>');
                 container.append(loader);
-
+    
                 $.ajax({
                     url: url,
                     type: 'GET',
@@ -88,11 +88,12 @@ $(function() {
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(data) {
-                        if (data.trim().length === 0) { 
+                        if (!data.hasMore) { 
                             $(window).off('scroll');
+                            loading = false;
                             loader.remove();
                         } else {
-                            container.append(data);
+                            container.append(data.content); // Assuming `data.content` contains the HTML to append
                             from += 6;
                         }
                         loading = false;

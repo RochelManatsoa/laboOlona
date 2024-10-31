@@ -229,7 +229,6 @@ class OlonaTalentsController extends AbstractController
             $this->activityLogger->logSearchActivity($currentUser, $query, $type);
         }
 
-        // Changement pour une limite raisonnable
         $maxResults = 10000;  // Une limite raisonnable pour ElasticSearch
         if ($type === 'candidates') {
             $paramsSearch = $this->olonaTalentsManager->getParamsCandidates($from, $size, $query);
@@ -245,7 +244,6 @@ class OlonaTalentsController extends AbstractController
         $searchResults = $this->elasticsearch->search($paramsSearch);
         $boostResults = $this->elasticsearch->search($paramsBoost);
 
-        // Suite de votre logique inchangée pour traiter ces résultats
         $ids = array_map(fn($hit) => $hit['_id'], $searchResults['hits']['hits']);
         $repository = $this->getRepositoryForType($type);
         $entities = $repository->findBy(['id' => $ids]);
@@ -254,23 +252,32 @@ class OlonaTalentsController extends AbstractController
         });
 
         $params[$type] = $entities;
-        $params['action'] = $this->urlGeneratorInterface->generate('app_olona_talents_' . $type);
         $params['totalResults'] = $searchResults['hits']['total']['value'];
+        $params['action'] = $this->urlGeneratorInterface->generate('app_olona_talents_' . $type);
+        
+        // Indicate if there are more results
+        $params['hasMore'] = count($searchResults['hits']['hits']) === $size;
 
         $boostIds = array_map(fn($hit) => $hit['_id'], $boostResults['hits']['hits']);
         $boostEntities = $repository->findBy(['id' => $boostIds]);
         usort($boostEntities, function ($a, $b) use ($boostIds) {
             return array_search($a->getId(), $boostIds) <=> array_search($b->getId(), $boostIds);
         });
-
-        // Gérer `from` pour booster les entités cycliques
+        
         $boostFrom = $from % count($boostEntities);
-
+        
         $params[$type . '_boost'] = array_slice($boostEntities, $boostFrom, $size);
+        $params['totalBoostResults'] = $boostResults['hits']['total']['value'];
         $params['from'] = $from;
 
+        // dd($params);
+
         if ($request->isXmlHttpRequest()) {
-            return $this->render("v2/dashboard/result/parts/_part_{$type}_list.html.twig", $params);
+            $htmlContent = $this->renderView("v2/dashboard/result/parts/_part_{$type}_list.html.twig", $params);
+            return $this->json([
+                'content' => $htmlContent,
+                'hasMore' => $params['hasMore'],
+            ]);
         }
         if ($currentUser) {
             return $this->render("v2/dashboard/result/{$type}_result.html.twig", $params);
