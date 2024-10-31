@@ -1,5 +1,7 @@
+{% if prestations_boost is defined %}
 {% include "v2/result/boost_prestations.html.twig" %}
-{# 
+{% endif %}
+
 <div class="card position-relative text-center d-none d-md-block">
     <a href="{{ path('app_v2_contact') }}">
         <img class="img-fluid" src="{{ asset('images/espace-pub-horizontal.webp')}}">
@@ -10,7 +12,7 @@
     <a href="{{ path('app_v2_contact') }}">
         <img class="img-fluid" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
     </a>
-</div> #}
+</div>
 
 {% for prestation in prestations %}
 <div class="card my-3 small px-5 py-4">

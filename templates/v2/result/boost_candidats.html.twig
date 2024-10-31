@@ -1,8 +1,8 @@
 <div class="container-fluid mt-5 d-block d-md-none">
-    {% if boost_candidates|length > 0 %}
+    {% if candidates_boost|length > 0 %}
         <div id="carousel_expert_component_mobile_{{ from }}" class="carousel slide mb-5" data-bs-interval="5000" data-bs-ride="carousel">
             <div class="carousel-inner" role="listbox">
-                {% for candidat in boost_candidates %}
+                {% for candidat in candidates_boost %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <div class="container-fluid">
                             <div class="row justify-content-center g-2">
@@ -37,10 +37,10 @@
 </div>
 
 <div class="container-fluid mt-5 d-none d-md-block">
-    {% if boost_candidates|length > 0 %}
+    {% if candidates_boost|length > 0 %}
         <div id="carousel_expert_component_{{ from }}" class="carousel slide mb-5" data-bs-interval="5000" data-bs-ride="carousel">
             <div class="carousel-inner" role="listbox">
-                {% set totalCandidats = boost_candidates|length %}
+                {% set totalCandidats = candidates_boost|length %}
                 {% set fillCount = totalCandidats % 3 == 0 ? 0 : 3 - (totalCandidats % 3) %}
                 {% set totalItems = totalCandidats + fillCount %}
                 {% set pageCount = (totalItems + 2) // 3 %}
@@ -53,7 +53,7 @@
                                 {% for j in 0..itemsPerSlide - 1 %}
                                     {% set index = i * itemsPerSlide + j %}
                                     {% if index < totalCandidats %}
-                                        {% set candidat = boost_candidates[index] %}
+                                        {% set candidat = candidates_boost[index] %}
                                         <div class="col"> 
                                             <div class="card position-relative text-center">
                                                 <!-- Badge -->
