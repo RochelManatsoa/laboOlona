@@ -1,4 +1,16 @@
-{% include "v2/result/boost_annonces.html.twig" with {'top_annonces': joblistings_boost} %}
+{% include "v2/result/boost_annonces.html.twig" %}
+
+<div class="card position-relative text-center d-none d-md-block">
+    <a href="{{ path('app_v2_contact') }}">
+        <img class="img-fluid" src="{{ asset('images/espace-pub-horizontal.webp')}}">
+    </a>
+</div>
+
+<div class="m-4 card position-relative text-center d-block d-md-none">
+	<a href="{{ path('app_v2_contact') }}">
+		<img class="img-fluid" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
+	</a>
+</div>
 
 {% for job in joblistings %}
 	<div class="card my-3 small px-5 py-4">

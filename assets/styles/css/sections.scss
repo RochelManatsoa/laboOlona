@@ -188,13 +188,33 @@
     background-position: center;
     width: 250px;
     height: 250px;
-    border-radius: 50%; /* Pour rendre l'élément circulaire */
+    border-radius: 50%; 
 }
 .my-custom-btn {
-    background-color: rgba(255, 255, 255, 0.5); /* Changer 0.5 à la valeur de transparence que vous souhaitez, entre 0 (complètement transparent) et 1 (complètement opaque) */
+    background-color: rgba(255, 255, 255, 0.5); 
+}
+.card-image-wrapper {
+    width: 100%; 
+    aspect-ratio: 9 / 16; 
+    overflow: hidden; 
 }
 .card-body-candidat{
     height: 110px!important;
     text-align: center;
     justify-content: center;
+}
+.job-image {
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+.job-title {
+    position: absolute; 
+    width: 100%; 
+    background-color: rgba(0, 0, 0, 0.6); 
+    color: white; 
+    padding: 5px 0;
+    text-align: center;
 }

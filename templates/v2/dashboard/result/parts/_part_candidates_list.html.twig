@@ -1,5 +1,17 @@
 
-{% include "v2/result/boost_candidats.html.twig" with {'top_candidats': candidates_boost} %}
+{% include "v2/result/boost_candidats.html.twig" %}
+
+<div class="card position-relative text-center d-none d-md-block">
+    <a href="{{ path('app_v2_contact') }}">
+        <img class="img-fluid" src="{{ asset('images/espace-pub-horizontal.webp')}}">
+    </a>
+</div>
+
+<div class="m-4 card position-relative text-center d-block d-md-none">
+    <a href="{{ path('app_v2_contact') }}">
+        <img class="img-fluid" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
+    </a>
+</div>
 
 {% for candidate in candidates %}
 	<div class="card my-3 small px-5 py-4">

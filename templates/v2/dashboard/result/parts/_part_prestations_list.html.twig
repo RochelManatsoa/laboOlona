@@ -1,4 +1,17 @@
-{% include "v2/result/boost_prestations.html.twig" with {'top_prestations': prestations_boost} %}
+{% include "v2/result/boost_prestations.html.twig" %}
+{# 
+<div class="card position-relative text-center d-none d-md-block">
+    <a href="{{ path('app_v2_contact') }}">
+        <img class="img-fluid" src="{{ asset('images/espace-pub-horizontal.webp')}}">
+    </a>
+</div>
+
+<div class="m-4 card position-relative text-center d-block d-md-none">
+    <a href="{{ path('app_v2_contact') }}">
+        <img class="img-fluid" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
+    </a>
+</div> #}
+
 {% for prestation in prestations %}
 <div class="card my-3 small px-5 py-4">
     <div class="row">
