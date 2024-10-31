@@ -1,4 +1,6 @@
+{% if prestations_boost is defined %}
 {% include "v2/result/boost_prestations.html.twig" %}
+{% endif %}
 
 <div class="card position-relative text-center d-none d-md-block">
     <a href="{{ path('app_v2_contact') }}">
