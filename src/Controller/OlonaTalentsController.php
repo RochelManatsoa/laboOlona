@@ -124,81 +124,6 @@ class OlonaTalentsController extends AbstractController
         ]);
     }
 
-    #[Route('/result', name: 'app_olona_talents_result')]
-    public function result(Request $request): Response
-    {
-        $query = $request->query->get('q');
-        $page = $request->query->getInt('page', 1);
-        $size = $request->query->getInt('size', 10);
-        $from = ($page - 1) * $size;
-        $params = [];
-        $currentUser = $this->security->getUser();
-        if ($currentUser instanceof User) {
-            $params['type'] = $currentUser->getType();
-        }
-        $params['currentPage'] = $page;
-        $params['size'] = $size;
-        $params['searchQuery'] = $query;
-
-        $paramsCandidate = $this->olonaTalentsManager->getParamsCandidates($from, $size, $query);
-        $paramsCandidatePremium = $this->olonaTalentsManager->getParamsPremiumCandidates($from, $size, $query);
-
-        $paramsJoblisting = $this->olonaTalentsManager->getParamsJoblisting($from, $size, $query);
-        $paramsJoblistingPremium = $this->olonaTalentsManager->getParamsPremiumJoblisting($from, $size, $query);
-
-        $paramsPrestation = $this->olonaTalentsManager->getParamsPrestations($from, $size, $query);
-        $paramsPrestationPremium = $this->olonaTalentsManager->getParamsPremiumPrestations($from, $size, $query);
-
-        $candidates = $this->elasticsearch->search($paramsCandidate);
-        $totalCandidatesResults = $candidates['hits']['total']['value'];
-        $totalPages = ceil($totalCandidatesResults / $size);
-        $params['totalPages'] = $totalPages;
-        $params['candidats'] = $candidates['hits']['hits'];
-        $params['totalCandidatesResults'] = $totalCandidatesResults;
-
-        $premiums = $this->elasticsearch->search($paramsCandidatePremium);
-        $params['top_candidats'] = $this->paginatorInterface->paginate(
-            $premiums['hits']['hits'],
-            $page,
-            8
-        );
-
-        $joblistings = $this->elasticsearch->search($paramsJoblisting);
-        $totalJobListingsResults = $joblistings['hits']['total']['value'];
-        $totalAnnoncesPages = ceil($totalJobListingsResults / $size);
-        $params['totalAnnoncesPages'] = $totalAnnoncesPages;
-        $params['annonces'] = $joblistings['hits']['hits'];
-        $params['totalJobListingsResults'] = $totalJobListingsResults;
-
-        $premiumJoblistings = $this->elasticsearch->search($paramsJoblistingPremium);
-        $params['top_annonces'] = $this->paginatorInterface->paginate(
-            $premiumJoblistings['hits']['hits'],
-            $page,
-            8
-        );
-
-        $prestations = $this->elasticsearch->search($paramsPrestation);
-        $params['prestations'] = $prestations['hits']['hits'];
-        $totalPrestationsResults = $prestations['hits']['total']['value'];
-        $totalPrestationsPages = ceil($totalPrestationsResults / $size);
-        $params['totalPrestationsPages'] = $totalPrestationsPages;
-        $params['totalPrestationsResults'] = $totalPrestationsResults;
-
-        $premiumPrestations = $this->elasticsearch->search($paramsPrestationPremium);
-        $params['top_prestations'] = $this->paginatorInterface->paginate(
-            $premiumPrestations['hits']['hits'],
-            $page,
-            8
-        );
-        $params['action'] = $this->urlGeneratorInterface->generate('app_olona_talents_result');
-        // dd($params);
-        if ($currentUser) {
-            return $this->render('v2/dashboard/result.html.twig', $params);
-        }
-
-        return $this->render('v2/result.html.twig', $params);
-    }
-
     #[Route('/result/candidates', name: 'app_olona_talents_candidates')]
     public function candidates(Request $request): Response
     {
@@ -229,48 +154,15 @@ class OlonaTalentsController extends AbstractController
             $this->activityLogger->logSearchActivity($currentUser, $query, $type);
         }
 
-        $maxResults = 10000;  // Une limite raisonnable pour ElasticSearch
-        if ($type === 'candidates') {
-            $paramsSearch = $this->olonaTalentsManager->getParamsCandidates($from, $size, $query);
-            $paramsBoost = $this->olonaTalentsManager->getParamsPremiumCandidates(0, $maxResults, $query);
-        } elseif ($type === 'joblistings') {
-            $paramsSearch = $this->olonaTalentsManager->getParamsJoblisting($from, $size, $query);
-            $paramsBoost = $this->olonaTalentsManager->getParamsPremiumJoblisting(0, $maxResults, $query);
-        } else {
-            $paramsSearch = $this->olonaTalentsManager->getParamsPrestations($from, $size, $query);
-            $paramsBoost = $this->olonaTalentsManager->getParamsPremiumPrestations(0, $maxResults, $query);
-        }
-
-        $searchResults = $this->elasticsearch->search($paramsSearch);
-        $boostResults = $this->elasticsearch->search($paramsBoost);
-
-        $ids = array_map(fn($hit) => $hit['_id'], $searchResults['hits']['hits']);
-        $repository = $this->getRepositoryForType($type);
-        $entities = $repository->findBy(['id' => $ids]);
-        usort($entities, function ($a, $b) use ($ids) {
-            return array_search($a->getId(), $ids) <=> array_search($b->getId(), $ids);
-        });
-
-        $params[$type] = $entities;
-        $params['totalResults'] = $searchResults['hits']['total']['value'];
+        $searchResults = $this->olonaTalentsManager->searchEntities($type, $from, $size, $query);
+        $params[$type] = $searchResults['entities'];
+        $params['totalResults'] = $searchResults['totalResults'];
         $params['action'] = $this->urlGeneratorInterface->generate('app_olona_talents_' . $type);
-        
-        // Indicate if there are more results
-        $params['hasMore'] = count($searchResults['hits']['hits']) === $size;
-
-        $boostIds = array_map(fn($hit) => $hit['_id'], $boostResults['hits']['hits']);
-        $boostEntities = $repository->findBy(['id' => $boostIds]);
-        usort($boostEntities, function ($a, $b) use ($boostIds) {
-            return array_search($a->getId(), $boostIds) <=> array_search($b->getId(), $boostIds);
-        });
-        
-        $boostFrom = $from % count($boostEntities);
-        
-        $params[$type . '_boost'] = array_slice($boostEntities, $boostFrom, $size);
-        $params['totalBoostResults'] = $boostResults['hits']['total']['value'];
+        $params['hasMore'] = $searchResults['hasMore'];
         $params['from'] = $from;
 
-        // dd($params);
+        $boostEntities = $this->olonaTalentsManager->getBoostedEntities($type, $from, $size, $query);
+        $params[$type . '_boost'] = $boostEntities;
 
         if ($request->isXmlHttpRequest()) {
             $htmlContent = $this->renderView("v2/dashboard/result/parts/_part_{$type}_list.html.twig", $params);

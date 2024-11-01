@@ -44,6 +44,14 @@ $(function() {
         setupAvailabilityDropdown();  
         handleLoading();
         initiateLoadMore();
+        initializeCarousels(); // Initialize carousels on page load
+    }
+
+    function initializeCarousels() {
+        const carousels = document.querySelectorAll('.carousel');
+        carousels.forEach(carousel => {
+            new Carousel(carousel);
+        });
     }
 
     function initiateLoadMore() {
@@ -61,20 +69,39 @@ $(function() {
             loadMore('/result/prestations', '#prestations-list', query);
         }
     }
-
+    
     function loadMore(url, containerSelector, query) {
         let from = 6;
         let loading = false;
+        let hasMore = true;
         const container = $(containerSelector);
     
         $(window).on('scroll', function() {
-            if (!loading && ($(window).scrollTop() + $(window).height() >= $(document).height() - 100)) {
+            if (!loading && hasMore && ($(window).scrollTop() + $(window).height() >= $(document).height() - 100)) {
                 loading = true;
-                const loader = $('<div class="text-center my-3" id="loader-spinner">' +
-                    '<div class="spinner-border text-primary" role="status">' +
-                    '<span class="visually-hidden">Loading...</span>' +
-                    '</div>' +
-                    '</div>');
+                const loader = $('<div class="text-center">'+
+                '<div class="spinner-grow spinner-grow-sm mx-2 text-primary" role="status">' +
+                '<span class="visually-hidden">Loading...</span>'+
+                '</div>' +
+                '<div class="spinner-grow spinner-grow-sm mx-2 text-secondary" role="status">' +
+                '<span class="visually-hidden">Loading...</span>'+
+                '</div>'+
+                '<div class="spinner-grow spinner-grow-sm mx-2 text-success" role="status">' +
+                '<span class="visually-hidden">Loading...</span>'+
+                '</div>'+
+                '<div class="spinner-grow spinner-grow-sm mx-2 text-danger" role="status">' +
+                '<span class="visually-hidden">Loading...</span>'+
+                '</div>'+
+                '<div class="spinner-grow spinner-grow-sm mx-2 text-warning" role="status">' +
+                '<span class="visually-hidden">Loading...</span>'+
+                '</div>'+
+                '<div class="spinner-grow spinner-grow-sm mx-2 text-info" role="status">' +
+                '<span class="visually-hidden">Loading...</span>'+
+                '</div>'+
+                '<div class="spinner-grow spinner-grow-sm mx-2 text-dark" role="status">' +
+                '<span class="visually-hidden">Loading...</span>'+
+                '</div></div>');
+
                 container.append(loader);
     
                 $.ajax({
@@ -82,25 +109,26 @@ $(function() {
                     type: 'GET',
                     data: {
                         from: from,
+                        size: 6,
                         q: query
                     },
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(data) {
-                        if (!data.hasMore) { 
-                            $(window).off('scroll');
-                            loading = false;
-                            loader.remove();
-                        } else {
-                            container.append(data.content); // Assuming `data.content` contains the HTML to append
+                        if (data.content && data.content.trim()) {
+                            container.append(data.content);
                             from += 6;
+                            hasMore = data.hasMore;
+                        } else {
+                            hasMore = false;
                         }
                         loading = false;
                         loader.remove();
                     },
                     error: function() {
                         loading = false;
+                        hasMore = false;
                         loader.remove();
                     }
                 });
