@@ -21,7 +21,7 @@
         </a>
 		</h2>
 		<div class="small">
-			{{ job.shortDescription }}
+			{{ job.shortDescription|raw }}
 		</div>
 		<div class="small">
 			<p class="small fw-light">
@@ -41,10 +41,17 @@
 			</p>
 		</div>
 		<div class="d-flex ms-auto small">
-			<a class="btn btn-sm btn-primary rounded-pill px-3 me-2" href="{{ path('app_v2_candidate_view_job_offer', {'id': job.id })}}">Plus de details</a>
+			{% if app.user %}
+				<a class="btn btn-sm btn-primary rounded-pill px-3 me-2" href="{{ path('app_v2_candidate_view_job_offer', {'id': job.id })}}">Plus de details</a>
+			{% else %}
+				<button class="btn btn-sm btn-primary rounded-pill px-3 me-2 annonce-link" type="button" data-id="{{ job.id }}">Plus de details</button>
+			{% endif %}
 		</div>
 		<div class="">
         	<span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill"><i class="bi bi-tags"></i> {{ job.secteur.nom}}</span>
 		</div>
 	</div>
+	<span data-annonce="{{ job.id }}" style="display:none">
+		{% include "v2/preview/_prev_joblistings.html.twig" %}
+	</span>
 {% endfor %}

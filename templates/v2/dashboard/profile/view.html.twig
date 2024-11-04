@@ -95,14 +95,12 @@
         </div>
         {% endif %}    
         <div class="text-center my-3">
-          {% if recruiter is defined and recruiter is not null %}
-            {% if candidat.editedCvs|length > 0 and (recruiter.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_VALID')) or recruiter.status is same as(constant('App\\Entity\\EntrepriseProfile::STATUS_PREMIUM') )) %}
+            {% if candidat.editedCvs|length > 0 %}
               <h4 class="fs-5 text-uppercase">CV</h4>
               <button type="button" class="btn btn-outline-primary text-upercase fw-semibold" data-bs-toggle="modal" data-bs-target="#exampleModal">
                   <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
               </button>
             {% endif %}
-          {% endif %}
         </div>   
 
       </div>

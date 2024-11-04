@@ -246,7 +246,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_candidate_dashboard_formation')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard_formation' ? 'underline' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_dashboard_formation')}}" class="nav-link {{ (current_route == 'app_v2_dashboard_formation' or current_route == 'app_v2_dashboard_formation_playlist_view') ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-layers me-2"></i></span> Centre de formations
           </a>
         </li>
@@ -362,7 +362,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_candidate_dashboard_formation')}}" class="nav-link {{ (current_route == 'app_v2_candidate_dashboard_formation' or current_route == 'app_v2_candidate_dashboard_formation_playlist_view') ? 'underline' : '' }}" aria-current="page">
+          <a href="{{ path('app_v2_dashboard_formation')}}" class="nav-link {{ (current_route == 'app_v2_dashboard_formation' or current_route == 'app_v2_dashboard_formation_playlist_view') ? 'underline' : '' }}" aria-current="page">
             <i class="bi bi-layers me-2"></i><span class="link-text"> Centre de formations</span> 
           </a>
         </li>

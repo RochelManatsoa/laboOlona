@@ -15,6 +15,7 @@ use App\Entity\ModerateurProfile;
 use App\Entity\Vues\CandidatVues;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
+use App\Entity\Formation\Playlist;
 use App\Manager\NotificationManager;
 use App\Service\Mailer\MailerService;
 use App\Entity\Moderateur\ContactForm;
@@ -25,10 +26,12 @@ use App\Form\Boost\CreateCandidateBoostType;
 use App\Form\Boost\CreateRecruiterBoostType;
 use App\Manager\BusinessModel\CreditManager;
 use App\Entity\BusinessModel\BoostVisibility;
+use App\Repository\Formation\VideoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Formation\PlaylistRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -327,6 +330,23 @@ class DashboardController extends AbstractController
 
         return $this->render('v2/dashboard/support.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/centre-de-formation', name: 'app_v2_dashboard_formation')]
+    public function formation(PlaylistRepository $playlistRepository, VideoRepository $videoRepository): Response
+    {
+        return $this->render('v2/dashboard/formation.html.twig', [
+            'playlists' => $playlistRepository->findAll(),
+            'videos' => $videoRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/centre-de-formation/playlist/{id}', name: 'app_v2_dashboard_formation_playlist_view')]
+    public function viewPlaylist(Playlist $playlist): Response
+    {
+        return $this->render('v2/dashboard/_playlist.html.twig', [
+            'playlist' => $playlist,
         ]);
     }
 }

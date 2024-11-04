@@ -58,7 +58,11 @@
             competences
         </p>
         <div class="d-flex ms-auto my-2 me-2">
-			<a class="btn btn-sm btn-primary rounded-pill px-3 me-2" href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}">Plus de details</a>
+			{% if app.user %}
+                <a class="btn btn-sm btn-primary rounded-pill px-3 me-2" href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}">Plus de details</a>
+			{% else %}
+				<button class="btn btn-sm btn-primary rounded-pill px-3 me-2 candidate-link" type="button" data-id="{{ candidate.id }}">Plus de details</button>
+			{% endif %}
             {% if app.user.entrepriseProfile is defined and app.user.entrepriseProfile is not null %}
                 <div id="row_favorite_{{ candidate.id }}">
                 {% if app.user.entrepriseProfile is defined %}
@@ -89,4 +93,7 @@
             </span>
 		</div>
 	</div>
+	<span data-candidate="{{ candidate.id }}" style="display:none">
+		{% include "v2/preview/_prev_candidates.html.twig" %}
+	</span>
 {% endfor %}

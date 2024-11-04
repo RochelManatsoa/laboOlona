@@ -6,9 +6,6 @@ use App\Entity\User;
 use App\Manager\ProfileManager;
 use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
-use Symfony\UX\Turbo\TurboBundle;
-use App\Entity\Formation\Playlist;
-use App\Entity\BusinessModel\Boost;
 use App\Manager\AffiliateToolManager;
 use App\Form\Boost\RecruiterBoostType;
 use App\Form\Profile\EditEntrepriseType;
@@ -17,11 +14,9 @@ use Knp\Component\Pager\PaginatorInterface;
 use App\Manager\BusinessModel\CreditManager;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Logs\ActivityLog;
-use App\Repository\Formation\VideoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\Formation\PlaylistRepository;
 use App\Form\Search\AffiliateTool\ToolSearchType;
 use App\Manager\BusinessModel\BoostVisibilityManager;
 use App\Manager\MailManager;
@@ -63,23 +58,6 @@ class DashboardController extends AbstractController
             'form' => $form->createView(),
             'recruiter' => $recruiter,
             'activities' => $this->em->getRepository(ActivityLog::class)->findUserLogs($this->userService->getCurrentUser()),
-        ]);
-    }
-
-    #[Route('/centre-de-formation', name: 'app_v2_recruiter_dashboard_formation')]
-    public function formation(PlaylistRepository $playlistRepository, VideoRepository $videoRepository): Response
-    {
-        return $this->render('v2/dashboard/recruiter/formation.html.twig', [
-            'playlists' => $playlistRepository->findAll(),
-            'videos' => $videoRepository->findAll(),
-        ]);
-    }
-
-    #[Route('/centre-de-formation/playlist/{id}', name: 'app_v2_recruiter_dashboard_formation_playlist_view')]
-    public function viewPlaylist(Playlist $playlist): Response
-    {
-        return $this->render('v2/dashboard/recruiter/_playlist.html.twig', [
-            'playlist' => $playlist,
         ]);
     }
 
