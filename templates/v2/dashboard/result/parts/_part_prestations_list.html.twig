@@ -54,8 +54,11 @@
         <i class="mx-2 bi bi-person-workspace"></i> {{ prestation.modalitesPrestation }}
     </span>
     <div class="d-flex ms-auto small mt-2">
-        <a class="btn btn-sm btn-primary rounded-pill px-3"
-            href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
+        {% if app.user %}
+            <a class="btn btn-sm btn-primary rounded-pill px-3" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
+        {% else %}
+            <button class="btn btn-sm btn-primary rounded-pill px-3 me-2 prestation-link" type="button" data-id="{{ prestation.id }}">Plus de details</button>
+        {% endif %}
     </div>
     <div class="">
         <span
@@ -64,4 +67,7 @@
         </span>
     </div>
 </div>
+<span data-prestation="{{ prestation.id }}" style="display:none">
+    {% include "v2/preview/_prev_prestations.html.twig" %}
+</span>
 {% endfor %}

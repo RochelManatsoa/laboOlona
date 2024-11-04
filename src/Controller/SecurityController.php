@@ -47,9 +47,7 @@ class SecurityController extends AbstractController
     public function logout(): void
     {
         $this->youTubeService->logout();
-        if($this->userService->getCurrentUser()){
-            $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_LOGIN, 'Deconnexion', ActivityLog::LEVEL_INFO);
-        }
+        
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
@@ -72,22 +70,22 @@ class SecurityController extends AbstractController
             }elseif ($user->getEntrepriseProfile()->getStatus() === EntrepriseProfile::STATUS_BANNED) {
                 return $this->redirectToRoute('app_logout');
             }
-            return $this->redirectToRoute('app_dashboard_entreprise');
+            return $this->redirectToRoute('app_v2_recruiter_dashboard');
         }
     
         if ($user->getType() === User::ACCOUNT_CANDIDAT) {
             if ($user->getCandidateProfile() instanceof CandidateProfile && $user->getCandidateProfile()->getStatus() === CandidateProfile::STATUS_BANNISHED) {
                 return $this->redirectToRoute('app_logout');
             }
-            return $this->redirectToRoute('app_dashboard_candidat');
+            return $this->redirectToRoute('app_v2_candidate_dashboard');
         }
 
         if ($user->getType() === User::ACCOUNT_REFERRER) {
-            return $this->redirectToRoute('app_dashboard_referrer');
+            return $this->redirectToRoute('app_v2_dashboard');
         }
 
         if ($user->getType() === User::ACCOUNT_EMPLOYE) {
-            return $this->redirectToRoute('app_dashboard_employes_simulations');
+            return $this->redirectToRoute('app_v2_dashboard');
         }
     
         return $this->redirectToRoute('app_profile');

@@ -100,6 +100,9 @@ class ProfileController extends AbstractController
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $recruiter = $this->userService->checkProfile();
+        if($recruiter == $candidat){
+            return $this->redirectToRoute('app_v2_candidate_dashboard');
+        }
         if(!$recruiter instanceof EntrepriseProfile){
             $recruiter = null;
         }

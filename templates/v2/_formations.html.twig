@@ -6,7 +6,7 @@
             <!-- Colonne Titre -->
             <div class="col-lg-4 col-sm-12">
                 <div class="d-flex flex-column">
-                    <a href="{{ path('app_v2_candidate_dashboard_formation_playlist_view', {'id': playlist.id}) }}" class="mb-2">{{ playlist.titre }}</a>
+                    <a href="{{ path('app_v2_dashboard_formation_playlist_view', {'id': playlist.id}) }}" class="mb-2">{{ playlist.titre }}</a>
                     {% set videosVisionnees = playlist.getNombreVideosVisionnees(app.user) %}
                     <span class="badge bg-info mb-2">
                         {{ videosVisionnees.visionnees }} / {{ videosVisionnees.total }} vidéos visionnées

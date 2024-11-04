@@ -6,31 +6,41 @@
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <div class="container-fluid">
                             <div class="row justify-content-center g-2">
-                                <div class="col-12 col-md-3"> <!-- Width adjusted for better desktop view -->
-                                    
-                                    <div class="card position-relative text-center">
-                                        <!-- Badge -->
-                                        <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3">URGENT</span>
+                                <div class="col-12 col-md-3"> 
+                                    <div class="card mt-3 text-center">
+                                        <div class="">
+                                            <span class="position-absolute top-0 start-0 ms-5 px-3 translate-middle badge bg-danger rounded-pill" style="z-index:999">URGENT</span>
+                                        </div>
                                         <div class="card-image-wrapper">
-                                            <div class="job-image" style="height:180px; background-image: url('{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/annonce.png') }}'); background-position: center; background-size: cover; background-repeat: no-repeat;" alt="{{ generatePseudoById(joblisting.id) }}">
-                                                <span class="job-title fw-bold text-uppercase fs-7 small">{{ joblisting.titre }}</span>
-                                            </div>
-                                            <p class="card-title h6 bg-dark text-white text-center py-2">{{ generateJobReference(joblisting.id) }}</p>
+                                            <div class="job-image card-img-top" style="background-image: url('{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/annonce.png') }}');" alt="{{ generatePseudoById(joblisting.id) }}"></div>
                                             <div class="card-body-candidat">
-                                                <small class="mt-auto">
-                                                    <small class="card-text"><i class="bi bi-eye"></i> {{ joblisting.annonceVues|length }} vues</small> |
-                                                    <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ joblisting.applications|length }} offres</small>
-                                                </small><br>
-                                                <small class="">
-                                                    <span class="badge bg-info">{{ joblisting.typeContrat }}</span><br>
-                                                    Date limite : <br>{{ joblisting.dateExpiration|date('d/m/Y') }}<br>
-                                                </small>
+                                                <p class="job-title">Ref: {{ generateJobReference(joblisting.id) }}</p>
+                                                <div style="min-height:50px;display: flex; align-items: center; justify-content: center;">
+                                                    <h2 class="fw-bold text-uppercase fs-6">
+                                                        {% set title_words = joblisting.titre|striptags|split(' ') %}
+                                                        {% if title_words|length > 5 %}
+                                                            {{ title_words|slice(0, 5)|join(' ') }}...
+                                                        {% else %}
+                                                            {{ title_words|join(' ') }}
+                                                        {% endif %}
+                                                    </h2>
+                                                </div>
+                                                <div class="">
+                                                    <span class="">
+                                                        <small><i class="bi bi-eye"></i> {{ joblisting.annonceVues|length }} vues</small> |
+                                                        <small><i class="mx-1 bi bi-patch-check"></i> {{ joblisting.applications|length }} offres</small>
+                                                    </span><br>
+                                                    <span class="">
+                                                        <small class="badge bg-info rounded-pill">{{ joblisting.typeContrat }}</small><br>
+                                                        <span class="fw-lighter small">Date limite :</span> {{ joblisting.dateExpiration|date('d/m/Y') }}
+                                                    </span>
+                                                </div>
+                                                {% if app.user %}
+                                                    <a href="{{ path('app_v2_job_offer_view', {'id': joblisting.id})}}" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mt-3 mx-auto">Contacter</a>
+                                                {% else %}
+                                                    <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mt-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':joblisting.id}) }}">Contacter</button>
+                                                {% endif %}
                                             </div>
-                                            {% if app.user %}
-                                                <a href="{{ path('app_v2_recruiter_view_profile', {'id': joblisting.id})}}" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto">Contacter</a>
-                                            {% else %}
-                                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':joblisting.id}) }}">Contacter</button>
-                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
@@ -62,35 +72,46 @@
                                     {% if index < totalAnnonces %}
                                         {% set joblisting = joblistings_boost[index] %}
                                         <div class="col">
-                                            <div class="card position-relative text-center">
-                                                <!-- Badge -->
-                                                <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3">URGENT</span>
+                                            <div class="card mt-3 text-center">
+                                                <div class="">
+                                                    <span class="position-absolute top-0 start-0 ms-5 px-3 translate-middle badge bg-danger rounded-pill" style="z-index:999">URGENT</span>
+                                                </div>
                                                 <div class="card-image-wrapper">
-                                                    <div class="job-image" style="height:180px; background-image: url('{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/annonce.png') }}'); background-position: center; background-size: cover; background-repeat: no-repeat;" alt="{{ generatePseudoById(joblisting.id) }}">
-                                                        <span class="job-title fw-bold text-uppercase fs-7 small">{{ joblisting.titre }}</span>
-                                                    </div>
-                                                    <p class="card-title h6 bg-dark text-white text-center py-2">{{ generateJobReference(joblisting.id) }}</p>
+                                                    <div class="job-image card-img-top" style="background-image: url('{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/annonce.png') }}');" alt="{{ generatePseudoById(joblisting.id) }}"></div>
                                                     <div class="card-body-candidat">
-                                                        <small class="mt-auto">
-                                                            <small class="card-text"><i class="bi bi-eye"></i> {{ joblisting.annonceVues|length }} vues</small> |
-                                                            <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ joblisting.applications|length }} offres</small>
-                                                        </small><br>
-                                                        <small class="">
-                                                            <span class="badge bg-info">{{ joblisting.typeContrat }}</span><br>
-                                                            Date limite : <br>{{ joblisting.dateExpiration|date('d/m/Y') }}<br>
-                                                        </small>
+                                                        <p class="job-title">Ref: {{ generateJobReference(joblisting.id) }}</p>
+                                                        <div style="min-height:50px;display: flex; align-items: center; justify-content: center;">
+                                                            <h2 class="fw-bold text-uppercase fs-6">
+                                                                {% set title_words = joblisting.titre|striptags|split(' ') %}
+                                                                {% if title_words|length > 5 %}
+                                                                    {{ title_words|slice(0, 5)|join(' ') }}...
+                                                                {% else %}
+                                                                    {{ title_words|join(' ') }}
+                                                                {% endif %}
+                                                            </h2>
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="">
+                                                                <small><i class="bi bi-eye"></i> {{ joblisting.annonceVues|length }} vues</small> |
+                                                                <small><i class="mx-1 bi bi-patch-check"></i> {{ joblisting.applications|length }} offres</small>
+                                                            </span><br>
+                                                            <span class="">
+                                                                <small class="badge bg-info rounded-pill">{{ joblisting.typeContrat }}</small><br>
+                                                                <span class="fw-lighter small">Date limite :</span> {{ joblisting.dateExpiration|date('d/m/Y') }}
+                                                            </span>
+                                                        </div>
+                                                        {% if app.user %}
+                                                            <a href="{{ path('app_v2_job_offer_view', {'id': joblisting.id})}}" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mt-3 mx-auto">Contacter</a>
+                                                        {% else %}
+                                                            <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mt-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':joblisting.id}) }}">Contacter</button>
+                                                        {% endif %}
                                                     </div>
-                                                    {% if app.user %}
-                                                        <a href="{{ path('app_v2_recruiter_view_profile', {'id': joblisting.id})}}" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto">Contacter</a>
-                                                    {% else %}
-                                                        <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':joblisting.id}) }}">Contacter</button>
-                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
                                     {% else %}
                                         <div class="col">
-                                            <div class="card position-relative text-center">
+                                            <div class="card mt-3 text-center">
                                                 <a href="{{ path('app_v2_contact') }}">
                                                     <img class="img-fluid" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
                                                 </a>
