@@ -57,20 +57,11 @@
                                 </div>
                             </div>
 
-                            <div class="form-check form-check-inline">
-                                <div class="row">
-                                    <div class="col-1 m-0 p-0">
-                                        <div class="form-check form-check-inline">
-                                          <input type="checkbox" class="form-check-input" id="terms">
-                                        </div>
-                                    </div>
-                                    <div class="col-11 m-0 pl-0">
-                                        <label class="form-check-label fs-6" for="terms">
-                                          <small class="ml-3 pt-sans">En vous connectant sur Olona Talents, vous acceptez nos <a class="fw-bolder" href="/terms-and-conditions">Conditions Générales d'Utilisation</a>. </small>
-                                        </label>
-                                    </div>
-                                </div>
-
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="_remember_me" id="remember_me">
+                                <label class="form-check-label" for="remember_me">
+                                    Se souvenir de moi
+                                </label>
                             </div>
 
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">

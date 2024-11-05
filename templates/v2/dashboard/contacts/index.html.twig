@@ -106,15 +106,9 @@
 												<span class="small fw-lighter">{{ item.purchaseDate|date('à h:i')}}</span>
 											</td>
 											<td class="text-center">
-												{% if not item.isAccepted %}
-													<span class="btn btn-sm btn-secondary rounded-pill disabled" aria-disabled="true">
-														<i class="bi bi-eye"></i>
-													</span>
-												{% else %}
 													<a href="{{ path('app_v2_contact_view', {'purchasedContact': item.id }) }}" class="btn btn-sm btn-secondary rounded-pill">
 														<i class="bi bi-eye"></i>
 													</a>
-												{% endif %}
 												<form action="{{ path('app_v2_contact_delete', {'contact': item.id})}}" method="post" id="delete-contact">
 													<button type="submit" class="btn btn-sm btn-danger rounded-pill">
 														<i class="bi bi-trash"></i>

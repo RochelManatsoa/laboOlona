@@ -6,20 +6,22 @@
 {% if candidat is defined and candidat is not null %}
     <turbo-stream action="update" target="contactDetails">
         <template>
-            <div class="experience-form">
-                <fieldset>
-                    <strong>Email:</strong> {{ purchasedContact.contact.email }}<br>
-                    <strong>Téléphone:</strong> {{ purchasedContact.contact.telephone }}<br>
-                    <strong>Nom complet:</strong> {{ purchasedContact.contact.nom }} {{ purchasedContact.contact.prenom }}
-                </fieldset>
-            </div>
+            <fieldset>
+                <strong>Email:</strong> {{ purchasedContact.contact.email }}<br>
+                <strong>Téléphone:</strong> {{ purchasedContact.contact.telephone }}<br>
+                <strong>Nom complet:</strong> {{ purchasedContact.contact.nom }} {{ purchasedContact.contact.prenom }}
+            </fieldset>
         </template>
     </turbo-stream>
 {% endif %}
 {% if recruiter is defined and recruiter is not null %}
     <turbo-stream action="update" target="contactDetails">
         <template>
-            Votre demande de contact a été envoyée au client et est en attente de son approbation. Vos crédits ne seront débités qu'une fois la demande approuvée.
+            <fieldset>
+                <strong>Email:</strong> {{ purchasedContact.contact.email }}<br>
+                <strong>Téléphone:</strong> {{ purchasedContact.contact.telephone }}<br>
+                <strong>Nom complet:</strong> {{ purchasedContact.contact.nom }} {{ purchasedContact.contact.prenom }}
+            </fieldset>
         </template>
     </turbo-stream>
 {% endif %}

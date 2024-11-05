@@ -58,7 +58,9 @@
 							{% endif %}
 							<tr id="row_prestation_recruiter_{{item.id}}">
 								<td class="">
-									{{ item.package.name }}
+									{{ item.package.name }} | 
+									<span class="fw-bolder">{{ item.package.credit }}</span>
+									<span class="fw-light">crédits</span>
 									<br>
 									<span class="fw-lighter small">
 									    {{ item.orderNumber }}

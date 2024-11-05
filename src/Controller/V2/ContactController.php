@@ -102,7 +102,7 @@ class ContactController extends AbstractController
         $currentUser = $this->userService->getCurrentUser();
         $contactId = $request->request->get('contactId');
         $contact = $this->em->getRepository(User::class)->find($contactId);
-        $message = 'Demande d\'ajout dans votre réseau professionnel envoyée';
+        $message = 'Contact ajouté dans votre réseau professionnel';
         $success = true;
         $status = 'Succès';
     
@@ -122,28 +122,28 @@ class ContactController extends AbstractController
             $purchasedContact->setPurchaseDate(new \DateTime());
             $purchasedContact->setContact($contact);
             $purchasedContact->setPrice($creditAmount);
-            $purchasedContact->setIsAccepted(false);
+            $purchasedContact->setIsAccepted(true);
             $this->em->persist($purchasedContact);
             $this->em->flush();
-            $urlAccepted = $this->urlGeneratorInterface->generate(
-                'app_v2_dashboard_notification_accept',
-                ['id' => $purchasedContact->getId()], 
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $urlRefused = $this->urlGeneratorInterface->generate(
-                'app_v2_dashboard_notification_refuse',
-                ['id' => $purchasedContact->getId()], 
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $this->notificationManager->createNotification(
-                $currentUser, 
-                $contact, 
-                Notification::TYPE_CONTACT,
-                'Nouvelle demande de contact',
-                ucfirst(substr($currentUser->getNom(), 0, 1)).'. '.$currentUser->getPrenom(). ' souhaite vous contacter pour une opportunité de collaboration. Acceptez-vous de partager vos coordonnées ? <br>
-                <a class="btn btn-primary rounded-pill my-3 px-4" href="'.$urlAccepted.'">Accepter</a>  <a class="btn btn-danger rounded-pill my-3 px-3" href="'.$urlRefused.'">Refuser</a>
-                '
-            );
+            // $urlAccepted = $this->urlGeneratorInterface->generate(
+            //     'app_v2_dashboard_notification_accept',
+            //     ['id' => $purchasedContact->getId()], 
+            //     UrlGeneratorInterface::ABSOLUTE_URL
+            // );
+            // $urlRefused = $this->urlGeneratorInterface->generate(
+            //     'app_v2_dashboard_notification_refuse',
+            //     ['id' => $purchasedContact->getId()], 
+            //     UrlGeneratorInterface::ABSOLUTE_URL
+            // );
+            // $this->notificationManager->createNotification(
+            //     $currentUser, 
+            //     $contact, 
+            //     Notification::TYPE_CONTACT,
+            //     'Nouvelle demande de contact',
+            //     ucfirst(substr($currentUser->getNom(), 0, 1)).'. '.$currentUser->getPrenom(). ' souhaite vous contacter pour une opportunité de collaboration. Acceptez-vous de partager vos coordonnées ? <br>
+            //     <a class="btn btn-primary rounded-pill my-3 px-4" href="'.$urlAccepted.'">Accepter</a>  <a class="btn btn-danger rounded-pill my-3 px-3" href="'.$urlRefused.'">Refuser</a>
+            //     '
+            // );
         }
 
         

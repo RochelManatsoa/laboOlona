@@ -50,14 +50,17 @@ security:
             logout:
                 path: app_logout
                 # where to redirect after logout
-                # target: app_any_route
-                invalidate_session: true # Ceci va effacer la session
+                target: app_login
+                invalidate_session: true
+                clear_site_data:
+                    - cookies
+                    - storage
 
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
-                always_remember_me: true
+                always_remember_me: false
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
