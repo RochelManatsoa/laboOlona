@@ -155,6 +155,7 @@ class ContactController extends AbstractController
                 'success' => $success,
                 'status' => $status,
                 'recruiter' => $recruiter,
+                'purchasedContact' => $purchasedContact,
                 'candidat' => $candidat,
                 'user' => $contact,
                 'credit' => $currentUser->getCredit()->getTotal(),

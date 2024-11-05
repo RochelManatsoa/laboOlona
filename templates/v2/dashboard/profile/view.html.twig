@@ -72,12 +72,10 @@
         {% if purchasedContact is defined and purchasedContact is not null %}
             <div class="experience-form">
                 <fieldset>
-                {% if purchasedContact.isAccepted %}
+                {% if purchasedContact %}
                   <strong>Email:</strong> {{ purchasedContact.contact.email }}<br>
                   <strong>Téléphone:</strong> {{ purchasedContact.contact.telephone }}<br>
                   <strong>Nom complet:</strong> {{ purchasedContact.contact.nom }} {{ purchasedContact.contact.prenom }}
-                {% else %}
-                    Votre demande de contact a été envoyée au candidat et est en attente de son approbation. Vos crédits ne seront débités qu'une fois la demande approuvée.
                 {% endif %}
                 </fieldset>
             </div>
