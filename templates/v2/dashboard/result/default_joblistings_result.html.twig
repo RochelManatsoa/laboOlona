@@ -30,6 +30,13 @@
 			<div class="row">
 				<div class="col-12 col-sm-8" id="joblistings-list">
 					{% if joblistings|length > 0 %}
+					<p class="small fw-light mt-3">
+						{% if totalResults > 2 %}
+						{{ totalResults }} resultats trouvés
+						{% else %}
+						{{ totalResults }} resultat trouvé
+						{% endif %}
+					</p>
 						{% include "v2/dashboard/result/parts/_part_joblistings_list.html.twig" %}
 					{% else %}
                     	{% include "v2/dashboard/result/none/_none_joblistings.html.twig" %}

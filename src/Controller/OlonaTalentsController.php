@@ -178,20 +178,6 @@ class OlonaTalentsController extends AbstractController
         return $this->render("v2/dashboard/result/default_{$type}_result.html.twig", $params);
     }
 
-    private function getRepositoryForType(string $type)
-    {
-        switch ($type) {
-            case 'candidates':
-                return $this->em->getRepository(CandidateProfile::class);
-            case 'joblistings':
-                return $this->em->getRepository(JobListing::class);
-            case 'prestations':
-                return $this->em->getRepository(Prestation::class);
-            default:
-                throw new \InvalidArgumentException("Invalid type: $type");
-        }
-    }
-
     #[Route('/view/prestation/{id}', name: 'app_olona_talents_view_prestation')]
     public function viewprestation(int $id): Response
     {

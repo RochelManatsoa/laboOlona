@@ -1,1 +1,16 @@
 
+
+<div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="{{ asset('images/prestation.png')}}" alt="" width="172" height="172">
+    <h1 class="display-5 fw-bold text-body-emphasis">Soyez le premier</h1>
+    <div class="col-lg-10 mx-auto">
+        <p class="lead mb-4">Ne trouvez pas ce que vous cherchez ? Soyez le premier à offrir vos services de "{{ getSearchQuery('q') }}" sur Olona Talents et atteignez des clients à la recherche de votre expertise.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            {% if app.user %}
+            <a href="{{ path('app_v2_create_prestation')}}" class="btn btn-primary btn-lg px-4 gap-3">Créer une prestation</a>
+            {% else %}
+            <a href="{{ path('app_olona_talents_register', {'typology':'ENTREPRISE'})}}" class="btn btn-primary btn-lg px-4 gap-3">Créer votre profil</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
