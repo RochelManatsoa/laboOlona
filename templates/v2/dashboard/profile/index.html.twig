@@ -27,13 +27,23 @@
 {% block body %}
     <section class="">
       <div class="shadow-custom p-2 p-sm-4">
-          <h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+        {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE'))  %}
+        <h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
             <i class="bi bi-search text-warning me-2"></i>
             Simplifiez votre recrutement avec les talents qu'il vous faut
-          </h2>
-          <p class="text-center">
-				Recherchez les profils idéaux par mots-clés, titres de postes ou compétences spécifiques. Notre plateforme facilite votre processus de recrutement en vous connectant rapidement aux candidats qui propulseront votre équipe vers le succès.
-                </p>
+        </h1>
+        <p class="text-center">
+            Recherchez les profils idéaux par mots-clés, titres de postes ou compétences spécifiques. Notre plateforme facilite votre processus de recrutement en vous connectant rapidement aux candidats qui propulseront votre équipe vers le succès.
+        </p>
+        {% else %}
+        <h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+            <i class="bi bi-search text-warning me-2"></i>
+            Simplifiez votre recrutement avec les talents qu'il vous faut
+        </h1>
+        <p class="text-center"> 
+            Explorez les projets et les équipes qui recherchent des compétences et des talents comme les vôtres. Notre plateforme facilite votre démarche de collaboration en vous connectant rapidement avec des partenaires potentiels. Trouvez les initiatives idéales où vous pouvez apporter votre expertise et contribuer au succès d'équipes ambitieuses.
+        </p>
+        {% endif %}
           <div class="row">
             <div class="col-12 col-sm-8" id="candidates-container">
             {% include "v2/dashboard/result/parts/_part_candidates_list.html.twig" %}

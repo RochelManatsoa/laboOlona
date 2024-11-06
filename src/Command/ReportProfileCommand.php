@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Twig\AppExtension;
 use App\Entity\Cron\CronLog;
+use App\Entity\Errors\ErrorLog;
 use App\Service\Mailer\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CandidateProfileRepository;
@@ -13,6 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Controller\Dashboard\Moderateur\OpenAi\CandidatController;
 use App\Entity\{CandidateProfile, EntrepriseProfile, ModerateurProfile, ReferrerProfile};
+use App\Service\ErrorLogger;
 
 #[AsCommand(
     name: 'app:generate-report',
@@ -27,6 +29,7 @@ class ReportProfileCommand extends Command
         private MailerService $mailerService,
         private EntityManagerInterface $em,
         private AppExtension $appExtension,
+        private ErrorLogger $errorLogger,
         private CandidatController $candidatController
     ){
         parent::__construct();
@@ -50,11 +53,28 @@ class ReportProfileCommand extends Command
             if ($profile->getCv() != null) {
                 try {
                     // Appeler directement la méthode du contrôleur
-                    $response = $this->candidatController->resume(new \Symfony\Component\HttpFoundation\Request(), $profile);
+                    $response = $this->candidatController->analyse(new \Symfony\Component\HttpFoundation\Request(), $profile);
                     $data = json_decode($response->getContent(), true);
 
                     if ($data['status'] === 'error') {
                         $output->writeln(' - Report failed for '.$this->appExtension->generatePseudo($profile).' ' . $data['error']);
+                        
+                        $errorLog = new ErrorLog();
+                        $url = '/api/openai/generate/'.$profile->getId();
+                        $longueurMax = 255; 
+                        $messageTronque = mb_substr($data['error'], 0, $longueurMax);
+                        $errorLog->setMessage($messageTronque)
+                            ->setType('openai') 
+                            ->setUrl($url) 
+                            ->setFileName('/var/www/olonaTalents/laboOlona/src/Controller/Dashboard/Moderateur/OpenAi/CandidateController') 
+                            ->setLineNumber(96) 
+                            ->setErrorObject($data['error'])
+                            ->setErrorMessage($data['error'])
+                            ->setUserAgent('openai') 
+                            ->setUserId(null) 
+                            ->setCreatedAt(new \DateTime()); 
+
+                        $this->errorLogger->logError($errorLog);
                     }
                     $output->writeln(' - Report saved for '.$this->appExtension->generatePseudo($profile));
                     $emailsSent ++;

@@ -223,4 +223,38 @@
 .card-body-candidat {
     height: 60%; 
     width: 100%;
+    .desktop-margin{
+        margin: 1rem!important;
+    }
+    .job-h2{
+        min-height:3rem!important;
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+    }
+    h2 {
+        font-size: 1rem!important; 
+    }
+}
+
+.desktop .carousel-item .card-body-candidat{
+    font-size: 12px!important;
+    a{
+        font-size: 12px!important;
+    }
+    .badge{
+        font-size: 12px!important;
+    }
+    .job-h2{
+        min-height:1.75rem!important;
+    }
+    .desktop-none{
+        display:none!important;
+    }
+    .desktop-margin{
+        margin: 0.7rem!important;
+    }
+    h2 {
+        font-size: 0.65rem!important; 
+    }
 }
