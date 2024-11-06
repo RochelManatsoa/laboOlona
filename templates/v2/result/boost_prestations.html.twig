@@ -1,4 +1,4 @@
-<div class="container-fluid mt-5 d-block d-md-none">
+<div class="container-fluid d-block d-md-none">
     {% if prestations_boost|length > 0 %}
         <div id="carousel_expert_component_mobile_{{ from }}" class="carousel slide mb-5" data-bs-interval="5000" data-bs-ride="carousel">
             <div class="carousel-inner" role="listbox">
@@ -50,7 +50,7 @@
     {% endif %}
 </div>
 
-<div class="container-fluid mt-5 d-none d-md-block">
+<div class="container-fluid d-none d-md-block">
     {% if prestations_boost|length > 0 %}
         <div id="carousel_expert_component_{{ from }}" class="carousel slide mb-5" data-bs-interval="5000" data-bs-ride="carousel">
             <div class="carousel-inner" role="listbox">
@@ -77,11 +77,17 @@
                                                     <div class="job-image card-img-top" style="background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}');" alt="prestation_{{ prestation.id }}"></div>
                                                     <div class="card-body-candidat">
                                                         <p class="job-title">Réf: {{ generateprestationReference(prestation.id) }}</p>
-                                                        <div style="min-height:50px;display: flex; align-items: center; justify-content: center;">
-                                                            <h2 class="fw-bold text-uppercase fs-6">{{ prestation.titre }}</h2>
+                                                        <div class="job-h2">
+                                                            <h2 class="fw-bold text-uppercase">
+                                                                {% set title_words = prestation.titre|striptags|split(' ') %}
+                                                                {% if title_words|length > 6 %}
+                                                                    {{ title_words|slice(0, 6)|join(' ') }}...
+                                                                {% else %}
+                                                                    {{ title_words|join(' ') }}
+                                                                {% endif %}</h2>
                                                         </div>
                                                         <div class="card-text small">
-                                                            <span class="card-text small">
+                                                            <div class="card-text small desktop-margin">
                                                                 {% if prestation.openai is not null %}
                                                                 {% set description_words = prestation.openai|striptags|split(' ') %}
                                                                 {% else %}
@@ -92,7 +98,7 @@
                                                                 {% else %}
                                                                     {{ description_words|join(' ') }}
                                                                 {% endif %}
-                                                            </span>
+                                                            </div>
                                                         </div>
                                                         {% if app.user %}
                                                             <a href="{{ path('app_v2_recruiter_view_profile', {'id': prestation.id}) }}" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto">Contacter</a>

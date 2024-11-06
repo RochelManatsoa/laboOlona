@@ -1,4 +1,4 @@
-<div class="container-fluid mt-5 d-block d-md-none">
+<div class="container-fluid d-block d-md-none">
     {% if joblistings_boost|length > 0 %}
         <div id="carousel_expert_component_mobile_{{ from }}" class="carousel slide mb-5" data-bs-interval="5000" data-bs-ride="carousel">
             <div class="carousel-inner" role="listbox">
@@ -53,7 +53,7 @@
     {% endif %}
 </div>
 
-<div class="container-fluid mt-5 d-none d-md-block">
+<div class="container-fluid d-none d-md-block">
     {% if joblistings_boost|length > 0 %}
         <div id="carousel_expert_component_{{from}}" class="carousel slide mb-5" data-bs-interval="5000" data-bs-ride="carousel">
             <div class="carousel-inner" role="listbox">
@@ -80,11 +80,11 @@
                                                     <div class="job-image card-img-top" style="background-image: url('{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/annonce.png') }}');" alt="{{ generatePseudoById(joblisting.id) }}"></div>
                                                     <div class="card-body-candidat">
                                                         <p class="job-title">Ref: {{ generateJobReference(joblisting.id) }}</p>
-                                                        <div style="min-height:50px;display: flex; align-items: center; justify-content: center;">
-                                                            <h2 class="fw-bold text-uppercase fs-6">
+                                                        <div class="job-h2">
+                                                            <h2 class="fw-bold text-uppercase">
                                                                 {% set title_words = joblisting.titre|striptags|split(' ') %}
-                                                                {% if title_words|length > 5 %}
-                                                                    {{ title_words|slice(0, 5)|join(' ') }}...
+                                                                {% if title_words|length > 6 %}
+                                                                    {{ title_words|slice(0, 6)|join(' ') }}...
                                                                 {% else %}
                                                                     {{ title_words|join(' ') }}
                                                                 {% endif %}
