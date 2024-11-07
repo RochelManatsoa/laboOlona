@@ -92,6 +92,7 @@
 						<tr>
 							<th>N° de facture</th>
 							<th class="text-center">Date</th>
+							<th class="text-center">Paiement</th>
 							<th class="text-center">Ref client</th>
 						</tr>
 					</thead>
@@ -99,6 +100,7 @@
 						<tr>
 							<td>{{commande.invoice.getNumeroFactureValue }}</td>
 							<td class="text-center">{{commande.transaction.transactionDate | date('d/m/Y')}}</td>
+							<td class="text-center">{{currentTransaction.typeTransaction.name}}</td>
 							<td class="text-center">{{commande.payerId}}</td>
 						</tr>
 					</tbody>
@@ -117,21 +119,30 @@
 					<tbody>
 						<tr>
 							<td>
-								<strong>Pack Olona Talents
-								</strong>
-								<br>{{commande.package.name}}
+								<strong>Pack Olona Talents</strong>
+								<br>{{commande.package.name}}  <strong>|</strong> {{commande.package.credit}} crédits
 							</td>
 							<td class="text-center">
-								<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }}
-									€</strong>
+								{% if currentTransaction.typeTransaction.slug == 'paypal' %}
+								<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }} €</strong>
+								{% else %}
+								<strong>{{(commande.totalAmount) }} Ar</strong>
+								{% endif %}
 							</td>
 							<td class="text-center">0%</td>
 							<td class="text-center">
+								{% if currentTransaction.typeTransaction.slug == 'paypal' %}
 								<strong>0,00 €</strong>
+								{% else %}
+								<strong>0 Ar</strong>
+								{% endif %}
 							</td>
 							<td class="text-center">
-								<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }}
-									€</strong>
+								{% if currentTransaction.typeTransaction.slug == 'paypal' %}
+								<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }} €</strong>
+								{% else %}
+								<strong>{{(commande.totalAmount) }} Ar</strong>
+								{% endif %}
 							</td>
 						</tr>
 						<tr></tr>
@@ -152,8 +163,11 @@
 									</strong>
 								</td>
 								<td class="text-right">
-									<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }}
-										€</strong>
+									{% if currentTransaction.typeTransaction.slug == 'paypal' %}
+									<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }} €</strong>
+									{% else %}
+									<strong>{{(commande.totalAmount) }} Ar</strong>
+									{% endif %}
 								</td>
 							</tr>
 							<tr>
@@ -169,7 +183,11 @@
 									<strong>TVA 0% :</strong>
 								</td>
 								<td class="text-right bg">
-									<strong>0.00 €</strong>
+									{% if currentTransaction.typeTransaction.slug == 'paypal' %}
+									<strong>0,00 €</strong>
+									{% else %}
+									<strong>0 Ar</strong>
+									{% endif %}
 								</td>
 							</tr>
 							<tr class="table-active">
@@ -177,8 +195,11 @@
 									<strong>Total TTC :</strong>
 								</td>
 								<td class="text-right">
-									<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }}
-										€</strong>
+									{% if currentTransaction.typeTransaction.slug == 'paypal' %}
+									<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }} €</strong>
+									{% else %}
+									<strong>{{(commande.totalAmount) }} Ar</strong>
+									{% endif %}
 								</td>
 							</tr>
 						</table>
