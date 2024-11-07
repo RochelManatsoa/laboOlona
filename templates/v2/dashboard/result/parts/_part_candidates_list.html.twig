@@ -14,9 +14,9 @@
 </div>
 
 {% for candidate in candidates %}
-	<div class="card my-3 small px-5 py-4">
-		<div class="row">
-            <div class="col-1 me-3">
+	<div class="card my-3 small px-3 px-sm-5 py-4">
+        <div class="d-flex align-items-center">
+            <div class="me-3">
                 <div class="rounded-circle" style="
                     width: 45px;
                     height: 45px;
@@ -26,16 +26,16 @@
                 ">
                 </div>
             </div>
-            <div class="col">
+            <div class="flex-grow-1">
                 <span class="fs-6">
                     <a href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}">
                         {{ candidate.titre }}
                     </a>
                 </span><br>
-                <span class="small fw-lighter">{{ generatePseudo(candidate)}}</span>
+                <span class="small fw-lighter">{{ generatePseudo(candidate) }}</span>
             </div>
-		</div>
-		<div class="">
+        </div>
+		<div class="mt-3">
 			{{ candidate.metaDescription|raw }}
 		</div>
         <p class="small fw-light">
@@ -76,9 +76,6 @@
             {% endif %}
         </div>
 		<div class="">
-            {% if app.user %}
-                
-            {% endif %}
             <span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
                 {% if app.user and app.user.entrepriseProfile is defined and app.user.entrepriseProfile is not null %}
                 <i class="bi bi-tags"></i> {{ candidate.secteurs|getFirstCommonSecteur(app.user.entrepriseProfile.secteurs)}}
