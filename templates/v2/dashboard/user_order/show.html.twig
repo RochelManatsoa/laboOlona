@@ -53,7 +53,7 @@
                                 <h2 class="mb-0">Achat</h2>
                             </div>
                             <div class="card-body">
-                                <p><strong>Nom :</strong> {{ order.package.name}}</p>
+                                <p><strong>Nom :</strong> {{ order.package.name}} | <strong>{{ order.package.credit }} crédits</strong></p>
                                 <!-- Si applicable, ajoutez des taxes ou frais d'expédition -->
                                 <p><strong>Prix :</strong> {{ amount }}</p>
                                 <p><strong>Mode de paiement :</strong> <span class="fw-bold">{{ order.paymentMethod.name }}</span></p>
