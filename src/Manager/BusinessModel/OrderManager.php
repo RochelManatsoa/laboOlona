@@ -5,7 +5,6 @@ namespace App\Manager\BusinessModel;
 use Twig\Environment as Twig;
 use Symfony\Component\Form\Form;
 use App\Entity\BusinessModel\Order;
-use App\Entity\BusinessModel\Invoice;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
 use App\Service\PdfService;
@@ -50,7 +49,6 @@ class OrderManager
     
     public function generateFacture(Order $order)
     {
-		$this->checkIfTransactionSuccess($order);
 		$folder = $order->getGeneratedFacturePath();
         $file = $order->getGeneratedFacturePathFile();
         // create directory
@@ -77,10 +75,6 @@ class OrderManager
         if (!$transaction instanceof Transaction) {
 			return false;
 		}
-        $invoice = $order->getInvoice();
-        if(!$invoice instanceof Invoice){
-            $this->transactionManager->createInvoice($transaction);
-        }
 		$order->setTransaction($transaction);
 		$this->save($order);
 

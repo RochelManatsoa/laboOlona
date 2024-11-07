@@ -98,6 +98,9 @@ class UserOrderController extends AbstractController
     #[Route('/payment/{order}/facture', name: 'payment_facture')]
     public function facture(Order $order, OrderManager $orderManager)
     {
+        if (!$orderManager->checkIfTransactionSuccess($order)) {
+            return $this->redirectToRoute('app_v2_user_order');
+        }
         $file = $orderManager->generateFacture($order);
 
         return new BinaryFileResponse($file);
