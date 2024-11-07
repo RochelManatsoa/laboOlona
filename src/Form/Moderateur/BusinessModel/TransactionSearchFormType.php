@@ -19,7 +19,7 @@ class TransactionSearchFormType extends AbstractType
                 'label' => false,
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Référence'
+                    'placeholder' => 'N° commande'
                 ]
             ])
             ->add('status', ChoiceType::class, [

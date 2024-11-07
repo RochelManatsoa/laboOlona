@@ -35,6 +35,7 @@ class TransactionRepository extends ServiceEntityRepository
             ->leftJoin('t.typeTransaction', 'type')
             ->leftJoin('t.package', 'p')
             ->leftJoin('t.user', 'u')
+            ->leftJoin('t.command', 'o')
             ->orderBy('t.id', 'DESC')
         ;
 
@@ -46,7 +47,7 @@ class TransactionRepository extends ServiceEntityRepository
 
         if (!empty($searchData->reference)) {
             $qb = $qb
-                ->andWhere('t.reference = :reference')
+                ->andWhere('o.orderNumber = :reference')
                 ->setParameter('reference', "{$searchData->reference}");
         }
        

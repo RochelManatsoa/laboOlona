@@ -40,7 +40,7 @@
 
 
     {{ form_start(form)}}
-    <div class="input-group">
+    <div class="input-group mb-3">
         <div class="form-floating">
             {{ form_widget(form.amount, {'attr': {'class': 'form-control', 'readonly':'true'}}) }}
             {{ form_label(form.amount)}}
@@ -84,7 +84,9 @@
         </div>
     </div>
         {{ form_row(form.details, {'attr': {'class': 'form-control'}}) }}
-        <button class="btn btn-dark px-5" type="submit"><i class="mx-2 h5 bi bi-save"></i> Mettre à jour</button>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-dark px-5 rounded-pill" type="submit"><i class="mx-2 h5 bi bi-save"></i> Mettre à jour</button>
+        </div>
     {{ form_end(form)}}
 
     <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">

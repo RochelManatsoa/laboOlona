@@ -83,7 +83,11 @@ class TransactionManager
     public function findTransactionSuccessByCommand(Order $order): ?Transaction
     {
         $transaction = $order->getTransaction();
-        if(($transaction->getStatus() === Transaction::STATUS_AUTHORIZED)){
+        if($transaction->getStatus() === Transaction::STATUS_AUTHORIZED || $transaction->getStatus() === Transaction::STATUS_COMPLETED){
+            $invoice = $order->getInvoice();
+            if(!$invoice instanceof Invoice){
+                $this->createInvoice($transaction);
+            }
             return $transaction;
         }
 
