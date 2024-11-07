@@ -15,9 +15,9 @@
 </div>
 
 {% for prestation in prestations %}
-<div class="card my-3 small px-5 py-4">
-    <div class="row">
-        <div class="col-1 me-3">
+<div class="card my-3 small px-3 px-sm-5 py-4">
+    <div class="d-flex align-items-center">
+        <div class="me-3">
             <div class="rounded-circle" style="
                         width: 45px;
                         height: 45px;
@@ -27,7 +27,7 @@
                     ">
             </div>
         </div>
-        <div class="col">
+        <div class="flex-grow-1">
             <span class="fs-6">
                 <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">
                     {{ prestation.titre }}

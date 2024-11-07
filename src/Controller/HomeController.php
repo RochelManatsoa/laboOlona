@@ -198,6 +198,7 @@ class HomeController extends AbstractController
     #[Route('/contact', name: 'app_home_contact')]
     public function contact(Request $request): Response
     {
+        
         $contactForm = new ContactForm;
         $contactForm->setCreatedAt(new DateTime());
         $form = $this->createForm(ContactFormType::class, $contactForm);
@@ -225,33 +226,25 @@ class HomeController extends AbstractController
     #[Route('/service', name: 'app_home_service')]
     public function service(): Response
     {
-        return $this->render('home/service.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
+        return $this->render('home/service.html.twig', []);
     }
 
     #[Route('/legal-mentions', name: 'app_home_legal')]
     public function legal(): Response
     {
-        return $this->render('home/legal.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
+        return $this->render('home/legal.html.twig', []);
     }
 
     #[Route('/privacy-policy', name: 'app_home_privacy')]
     public function privacy(): Response
     {
-        return $this->render('home/privacy.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
+        return $this->render('home/privacy.html.twig', []);
     }
 
     #[Route('/terms-and-conditions', name: 'app_home_terms')]
     public function terms(): Response
     {
-        return $this->render('home/terms.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
+        return $this->render('home/terms.html.twig', []);
     }
 
     #[Route('/formulaire', name: 'app_home_form', methods: ['POST'])]

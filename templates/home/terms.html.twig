@@ -1,26 +1,33 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Conditions Générales d'Utilisations{% endblock %}
+
+{% block meta %}
+    {{ parent() }}
+{% endblock %}
+
 {% block body %}
-<section id="terms" class="my-5" style="background-color: black;">
+<section id="terms" class="my-5">
     <div class="container my-5 d-flex flex-column justify-content-center">
         <div class="row my-4">
             <div class="col d-flex flex-column justify-content-center">
-                <h1 class="text-white text-center display-2">{{ 'app_home.terms.h1'|trans }}</h1>
+                <h1 class="text-center display-4 mb-4">{{ 'app_home.terms.h1'|trans }}</h1>
                 <div class="">
-                    <p class="text-white fs-6">{{ 'app_home.terms.section1.p'|trans |raw }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.terms.section1.p1'|trans |raw }}</p>
+                    <p class="fs-6">{{ 'app_home.terms.section1.p'|trans |raw }}</p>
+                    <p class="fs-6">{{ 'app_home.terms.section1.p1'|trans |raw }}</p>
                 </div>
 
-                <h2 class="text-white display-6 my-3">{{ 'app_home.terms.section2.h2'|trans | raw }}</h2>
+                <h2 class="display-6 my-3">{{ 'app_home.terms.section2.h2'|trans | raw }}</h2>
                 <div class="">
-                    <h3 class="text-white display-7 my-3">{{ 'app_home.terms.section2.h3'|trans | raw }}</h3>
-                    <p class="text-white fs-6">{{ 'app_home.terms.section2.p'|trans({
+                    <h3 class="display-7 my-3">{{ 'app_home.terms.section2.h3'|trans | raw }}</h3>
+                    <p class="fs-6">{{ 'app_home.terms.section2.p'|trans({
                         '%home_url%': path('app_home'),
                     })|raw }}</p>
-                    <h3 class="text-white display-7 my-3">{{ 'app_home.terms.section3.h3'|trans | raw }}</h3>
-                    <p class="text-white fs-6">{{ 'app_home.terms.section3.p'|trans({
+                    <h3 class="display-7 my-3">{{ 'app_home.terms.section3.h3'|trans | raw }}</h3>
+                    <p class="fs-6">{{ 'app_home.terms.section3.p'|trans({
                         '%home_url%': path('app_home'),
                     })|raw }}</p>
-                    <ul class="text-white fs-6">
+                    <ul class="fs-6">
                         <li>
                             {{ 'app_home.terms.section3.li0'|trans({
                                 '%home_url%': path('app_home'),
@@ -69,25 +76,25 @@
                     </ul>
                 </div>
 
-                <h2 class="text-white display-6 my-3">{{ 'app_home.privacy.section5.h2'|trans }}</h2>
+                <h2 class="display-6 my-3">{{ 'app_home.privacy.section5.h2'|trans }}</h2>
                 <div class="">
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section5.p'|trans }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section5.p1'|trans({
+                    <p class="fs-6">{{ 'app_home.privacy.section5.p'|trans }}</p>
+                    <p class="fs-6">{{ 'app_home.privacy.section5.p1'|trans({
                         '%home_url%': path('app_home'),
                     })|raw }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section5.p3'|trans }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section5.p4'|trans({
+                    <p class="fs-6">{{ 'app_home.privacy.section5.p3'|trans }}</p>
+                    <p class="fs-6">{{ 'app_home.privacy.section5.p4'|trans({
                         '%home_url%': path('app_home'),
                     })|raw }}</p>
                 </div>
 
-                <h2 class="text-white display-6 my-3">{{ 'app_home.privacy.section6.h2'|trans }}</h2>
+                <h2 class="display-6 my-3">{{ 'app_home.privacy.section6.h2'|trans }}</h2>
                 <div class="">
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section6.p'|trans }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section6.p1'|trans({
+                    <p class="fs-6">{{ 'app_home.privacy.section6.p'|trans }}</p>
+                    <p class="fs-6">{{ 'app_home.privacy.section6.p1'|trans({
                         '%home_url%': path('app_home'),
                     })|raw }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section6.p2'|trans }}</p>
+                    <p class="fs-6">{{ 'app_home.privacy.section6.p2'|trans }}</p>
                 </div>
             </div>
         </div>
@@ -95,3 +102,4 @@
 </section>
 
 {% endblock %}
+{% block preview %}{% endblock %}
