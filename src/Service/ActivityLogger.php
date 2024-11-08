@@ -74,6 +74,15 @@ class ActivityLogger
     }
 
     /**
+     * Log a ai tools view activity
+     */
+    public function logAiToolsViewActivity(User $user, string $reference): void
+    {
+        $details = sprintf('Vue outils IA %s', $reference);
+        $this->logActivity($user, ActivityLog::ACTIVITY_PAGE_VIEW, $details, ActivityLog::LEVEL_INFO);
+    }
+
+    /**
      * Log a page view activity
      */
     public function logPageViewActivity(User $user, string $pageUrl): void

@@ -1,0 +1,90 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+{{tag.nomFr ?? tag.nom}} | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endif %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+	<section class="">
+		<div class="shadow-custom p-2 p-sm-4">
+			<h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-magic text-warning me-2"></i></span> 
+				Ai Tools
+			</h1>
+			<h2 class="fs-5 text-center">Etiquettes : {{tag.nomFr ?? tag.nom}}</h2> 
+			<p class="my-4 text-center">{{ tag.description|raw }}</p>
+			<div id="outils-ia-tag-list">
+				{% if aiTools|length > 0 %}
+				{% include 'v2/dashboard/ai_tools/_part_ai_tools_list.html.twig' %}
+				{% else %}
+				<div class="text-center col-lg-6 col-sm-12 mx-auto">
+					<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+					<p class="text-center">Aucun outils enregistrés pour ce tag.</p>
+				</div>
+				{% endif %}
+			</div>
+
+		<div class="">
+			<h3 class="fs-5 fw-bolder mt-3 mt-sm-5 text-center">
+				<span class="u-file-icon u-icon">
+					<img src="{{ asset('v2/images/3221746.png')}}" alt="icone" style="width:32px;">
+				</span>
+				Pourquoi utiliser nos outils IA ?
+			</h3>
+			<ul class="col-12 col-sm-8 mx-auto">
+				<li class="list-group-item mx-2">
+					<div class="row mb-3">
+						<div class="col-1">
+							<i class="bi bi-check h5 text-danger"></i>
+						</div>
+						<div class="col-11">
+							<span class="fw-bold">Diversité des Ressources :</span> Accédez à une variété d'outils allant des modèles pré-entraînés à des frameworks sophistiqués pour le développement d'IA.
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item mx-2">
+					<div class="row mb-3">
+						<div class="col-1">
+							<i class="bi bi-check h5 text-danger"></i>
+						</div>
+						<div class="col-11">
+							<span class="fw-bold">Apprentissage Continu :</span> Perfectionnez vos compétences en IA avec les dernières technologies et méthodologies.
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item mx-2">
+					<div class="row mb-3">
+						<div class="col-1">
+							<i class="bi bi-check h5 text-danger"></i>
+						</div>
+						<div class="col-11">
+							<span class="fw-bold">Opportunités de Réseau : </span>Connectez avec d'autres professionnels utilisant ces outils pour élargir votre réseau et partager des connaissances.
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+		</div>
+	</section>
+{% endblock %}
