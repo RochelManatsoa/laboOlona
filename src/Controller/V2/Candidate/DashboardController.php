@@ -15,13 +15,11 @@ use App\Entity\BusinessModel\Credit;
 use App\Manager\AffiliateToolManager;
 use App\Form\Boost\CandidateBoostType;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use App\Manager\BusinessModel\CreditManager;
 use App\Entity\BusinessModel\BoostVisibility;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Search\AffiliateTool\ToolSearchType;
 use App\Form\Profile\Candidat\CandidateUploadType;
 use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -142,39 +140,6 @@ class DashboardController extends AbstractController
             'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
             'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
             'activities' => $this->em->getRepository(ActivityLog::class)->findUserLogs($this->userService->getCurrentUser()),
-        ]);
-    }
-
-    #[Route('/outils-ai', name: 'app_v2_candidate_dashboard_ai_tools')]
-    public function aiTools(Request $request, PaginatorInterface $paginatorInterface): Response
-    {
-        $form = $this->createForm(ToolSearchType::class);
-        $form->handleRequest($request);
-        $data = $this->affiliateToolManager->findAllAITools();
-        if ($form->isSubmitted() && $form->isValid()) {
-            $nom = $form->get('nom')->getData();
-            $data = $this->affiliateToolManager->findSearchTools($nom);
-            if ($request->isXmlHttpRequest()) {
-                return $this->json([
-                    'content' => $this->renderView('dashboard/moderateur/affiliate_tool/_aitools.html.twig', [
-                        'aiTools' => $paginatorInterface->paginate(
-                            $data,
-                            $request->query->getInt('page', 1),
-                            10
-                        ),
-                        'result' => $data
-                    ])
-                ], 200);
-            }
-        }
-        return $this->render('v2/dashboard/candidate/ai_tools.html.twig', [
-            'aiTools' => $paginatorInterface->paginate(
-                $data,
-                $request->query->getInt('page', 1),
-                10
-            ),
-            'result' => $data,
-            'form' => $form->createView(),
         ]);
     }
 

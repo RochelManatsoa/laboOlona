@@ -5,6 +5,9 @@ namespace App\Controller\V2;
 use App\Entity\User;
 use App\Form\V2\AccountType;
 use App\Form\V2\ProfileType;
+use App\Entity\AffiliateTool;
+use App\Entity\AffiliateTool\Category;
+use App\Entity\AffiliateTool\Tag;
 use App\Form\V2\CandidateType;
 use App\Form\V2\RecruiterType;
 use App\Manager\ProfileManager;
@@ -17,10 +20,12 @@ use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Formation\Playlist;
 use App\Manager\NotificationManager;
+use App\Manager\AffiliateToolManager;
 use App\Service\Mailer\MailerService;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\AffiliateToolRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\Boost\CreateCandidateBoostType;
 use App\Form\Boost\CreateRecruiterBoostType;
@@ -32,8 +37,10 @@ use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Formation\PlaylistRepository;
+use App\Form\Search\AffiliateTool\ToolSearchType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Manager\BusinessModel\BoostVisibilityManager;
+use App\Service\ActivityLogger;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -51,6 +58,8 @@ class DashboardController extends AbstractController
         private MailerService $mailerService,
         private UrlGeneratorInterface $urlGenerator,
         private RequestStack $requestStack,
+        private AffiliateToolManager $affiliateToolManager,
+        private ActivityLogger $activityLogger,
         private BoostVisibilityManager $boostVisibilityManager,
     ){}
 
@@ -347,6 +356,84 @@ class DashboardController extends AbstractController
     {
         return $this->render('v2/dashboard/_playlist.html.twig', [
             'playlist' => $playlist,
+        ]);
+    }
+
+    #[Route('/outils-ai', name: 'app_v2_dashboard_ai_tools')]
+    public function aiToolsIndex(Request $request): Response
+    {
+        $query = $request->query->get('q');
+        $size = $request->query->getInt('size', 9);
+        $from = $request->query->getInt('from', 0);
+        $form = $this->createForm(ToolSearchType::class);
+        $form->handleRequest($request);
+        $params = [];
+        $data = $this->affiliateToolManager->getAllAITools($from, $size, $query);
+        $params['aiTools'] = $data;
+        $params['from'] = $from;
+        $params['form'] = $form->createView();
+        $params['hasMore'] = count($data) === $size;
+        if ($form->isSubmitted() && $form->isValid()) {
+            $nom = $form->get('nom')->getData();
+            $data = $this->affiliateToolManager->findSearchTools($nom);
+            $params['aiTools'] = $data;
+            if ($request->isXmlHttpRequest()) {
+                $htmlContent = $this->renderView("v2/dashboard/ai_tools/_part_ai_tools_list.html.twig", $params);
+                return $this->json([
+                    'content' => $htmlContent,
+                    'hasMore' => $params['hasMore'],
+                ]);
+            }
+        }
+        
+        if ($request->isXmlHttpRequest()) {
+            $htmlContent = $this->renderView("v2/dashboard/ai_tools/_part_ai_tools_list.html.twig", $params);
+            return $this->json([
+                'content' => $htmlContent,
+                'hasMore' => $params['hasMore'],
+            ]);
+        }
+
+        return $this->render('v2/dashboard/ai_tools/index.html.twig', $params);
+    }
+
+    #[Route('/outils-ai/{slug}', name: 'app_v2_dashboard_ai_tool_view')]
+    public function aiTool(AffiliateTool $tool, AffiliateToolRepository $affiliateToolRepository): Response
+    {
+        $tools = $tool->getRelatedIds();
+        $relateds = [];
+        if(!empty($tools)){
+            foreach ($tools as $key => $value) {
+                $relateds[] = $affiliateToolRepository->findOneBy(['customId' => $value]); 
+            }
+        }
+
+        $currentUser = $this->userService->getCurrentUser();
+        if ($currentUser) {
+            $this->activityLogger->logAiToolsViewActivity($currentUser, $tool->getNom());
+        }
+
+        return $this->render('v2/dashboard/ai_tools/view.html.twig', [
+            'aiTool' => $tool,
+            'relateds' => $relateds,
+        ]);
+    }
+
+    #[Route('/outils-ai/categorie/{slug}', name: 'app_v2_dashboard_ai_tool_category')]
+    public function aiToolCategory(Category $category): Response
+    {        
+        return $this->render('v2/dashboard/ai_tools/category.html.twig', [
+            'category' => $category,
+            'aiTools' => $this->em->getRepository(AffiliateTool::class)->getAffiliateToolsByCategory($category),
+        ]);
+    }
+
+    #[Route('/outils-ai/tag/{slug}', name: 'app_v2_dashboard_ai_tool_tag')]
+    public function aiToolTag(Tag $tag): Response
+    {        
+        return $this->render('v2/dashboard/ai_tools/tag.html.twig', [
+            'tag' => $tag,
+            'aiTools' => $this->em->getRepository(AffiliateTool::class)->getAffiliateToolsByTag($tag),
         ]);
     }
 }

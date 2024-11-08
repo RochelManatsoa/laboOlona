@@ -31,11 +31,9 @@ $(function() {
         setupImageUpload(); 
         setupAvailabilityDropdown(); 
         setupCKEditors();
-        // adjustFontSize(context);
     }
 
     function handlePageLoad() {
-        // adjustFontSize(document);
         handleThemeChange();
         handleThemeInitialization();
         setupCKEditors();
@@ -47,15 +45,6 @@ $(function() {
         handleLoading();
         initiateLoadMore();
         initializeCarousels(); // Initialize carousels on page load
-    }
-
-    function adjustFontSize(context) {
-        $(context).find('.card-image-wrapper').each(function() {
-            var cardWidth = $(this).width();
-            var fontSize = cardWidth * 0.05; // Adaptez ce pourcentage à vos besoins
-            $(this).css('font-size', fontSize + 'px');
-            $(this).find('h2').css('font-size', fontSize + 'px'); // Ajustement spécifique pour h2 si nécessaire
-        });
     }
 
     function initializeCarousels() {
@@ -78,6 +67,10 @@ $(function() {
         
         if ($('#prestations-list').length) {
             loadMore('/result/prestations', '#prestations-list', query);
+        }
+
+        if ($('#outils-ia-list').length ) {
+            loadMore('/v2/dashboard/outils-ai', '#outils-ia-list', query)
         }
     }
     

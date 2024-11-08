@@ -13,28 +13,41 @@
 {% endblock %}
 
 {% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
 	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endif %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
 {% endblock %}
 
 {% block body %}
 	<section class="">
 		<div class="shadow-custom p-2 p-sm-4">
-			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+			<h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
 				<i class="bi bi-magic text-warning me-2"></i></span> 
 				Ai Tools
-			</h2>
+			</h1>
 			<p class="text-center">
-				Dans un monde où la technologie évolue à une vitesse fulgurante, il est crucial de rester à jour, surtout dans le domaine de l'intelligence artificielle. Olona-Talents.com vous donne accès à une vaste bibliothèque d'outils d'IA, vous permettant de rester en tête dans votre domaine professionnel.
+				{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+					Dans un monde où la technologie évolue à une vitesse fulgurante, il est crucial de rester à jour, surtout dans le domaine de l'intelligence artificielle. Olona-Talents.com vous donne accès à une vaste bibliothèque d'outils d'IA, vous permettant de rester en tête dans votre domaine professionnel.
+				{% else %}
+					Pour rester compétitif dans le recrutement moderne, s'équiper des bons outils est indispensable. Chez Olona-Talents.com, nous proposons une bibliothèque complète d'outils d'IA conçus pour optimiser vos processus de recrutement et d'engagement des talents.
+				{% endif %}
 			</p>
 
-				{{ form_start(form, {'attr': {'class': 'form-group mb-2 col-6', 'id':'moderateur-aitools-search-form'}}) }}
-				<div class="input-group">
-					{{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+				<form name="tool_search" method="get" class="form-group my-3 my-sm-4 col-lg-6 col-12 mx-auto" id="moderateur-aitools-search-form">
+					<div class="input-group">
+						<input type="text" id="tool_search_nom" name="tool_search[nom]" placeholder="Entrez votre recherche..." class="form-control form-control">
+					</div>
+				</form>
+				<div id="outils-ia-list">
+					{% include 'v2/dashboard/ai_tools/_part_ai_tools_list.html.twig' %}
 				</div>
-				{{ form_end(form) }}
-				<div id="aitools-container">
-					{% include 'dashboard/moderateur/affiliate_tool/_aitools.html.twig' %}
-				</div>
+
 			<div class="">
 				<h3 class="fs-5 fw-bolder mt-3 mt-sm-5 text-center">
 					<span class="u-file-icon u-icon">
@@ -85,16 +98,18 @@ $(document).ready(function() {
         var formData = $('#moderateur-aitools-search-form').serialize();
 
         $.ajax({
-            url: '{{ path('app_dashboard_moderateur_affiliate_tool') }}',
+            url: '{{ path('app_v2_dashboard_ai_tools') }}',
             type: 'GET',
             data: formData,
             success: function(data) {
-                $('#aitools-container').html(data.content);
+                $('#outils-ia-list').html(data.content);
             }
         });
     }
-    $('#moderateur-aitools-search-form input, #moderateur-aitools-search-form select').on('keyup change', function() {
-        searchAnnonces();
+    $('#moderateur-aitools-search-form input').on('keyup change', function() {
+		if($('#moderateur-aitools-search-form input').val !== ''){
+			searchAnnonces();
+		}
     });
 });
 </script>

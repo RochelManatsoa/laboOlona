@@ -241,8 +241,8 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_candidate_dashboard_ai_tools')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard_ai_tools' ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-magic me-2"></i></span> Ai Tools
+          <a href="{{ path('app_v2_dashboard_ai_tools') }}" class="nav-link {{ current_route in ['app_v2_dashboard_ai_tools', 'app_v2_dashboard_ai_tool_view', 'app_v2_dashboard_ai_tool_category', 'app_v2_dashboard_ai_tool_tag'] ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-magic me-2"></i> Ai Tools
           </a>
         </li>
         <li class="nav-item">
@@ -357,8 +357,8 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ path('app_v2_candidate_dashboard_ai_tools')}}" class="nav-link {{ (current_route == 'app_v2_candidate_dashboard_ai_tools' or current_route == 'app_dashboard_moderateur_view_affiliate_tool') ? 'underline' : '' }}" aria-current="page">
-            <i class="bi bi-magic me-2"></i><span class="link-text"> Ai Tools</span> 
+          <a href="{{ path('app_v2_dashboard_ai_tools') }}" class="nav-link {{ current_route in ['app_v2_dashboard_ai_tools', 'app_v2_dashboard_ai_tool_view', 'app_v2_dashboard_ai_tool_category', 'app_v2_dashboard_ai_tool_tag'] ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-magic me-2"></i> Ai Tools
           </a>
         </li>
         <li class="nav-item">
