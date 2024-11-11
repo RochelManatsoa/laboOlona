@@ -29,9 +29,13 @@
         </div>
         <div class="flex-grow-1">
             <span class="fs-6">
-                <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">
-                    {{ prestation.titre }}
-                </a>
+                {% if app.user %}
+                    <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">
+                        {{ prestation.titre }}
+                    </a>
+                {% else %}
+                    <span style="cursor:pointer;" class="prestation-link" data-id="{{ prestation.id }}">{{ prestation.titre }}</span>
+                {% endif %}
             </span><br>
             <span class="small fw-lighter">{{ getAuthor(prestation)}}</span>
         </div>
