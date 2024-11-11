@@ -28,9 +28,13 @@
             </div>
             <div class="flex-grow-1">
                 <span class="fs-6">
-                    <a href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}">
-                        {{ candidate.titre }}
-                    </a>
+                    {% if app.user %}
+                        <a href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}">
+                            {{ candidate.titre }}
+                        </a>
+                    {% else %}
+                        <span style="cursor:pointer;" class="candidate-link" data-id="{{ candidate.id }}">{{ candidate.titre }}</span>
+                    {% endif %}
                 </span><br>
                 <span class="small fw-lighter">{{ generatePseudo(candidate) }}</span>
             </div>

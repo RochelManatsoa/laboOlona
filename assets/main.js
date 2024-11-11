@@ -10,6 +10,7 @@ import 'bootstrap';
 import { Tooltip, Toast, Carousel, Modal } from 'bootstrap';
 
 $(function() {
+    setupDynamicLinks();
     document.addEventListener('turbo:load', handlePageLoad); // Attacher sur turbo:load pour le chargement initial
     document.addEventListener('turbo:frame-load', handleFrameLoad); // Attacher sur turbo:frame-load pour les chargements dans les frames
 
@@ -37,7 +38,6 @@ $(function() {
         handleThemeChange();
         handleThemeInitialization();
         setupCKEditors();
-        setupDynamicLinks();
         updateLogo();
         setupDeletionConfirmation();
         setupImageUpload(); 
@@ -51,6 +51,23 @@ $(function() {
         const carousels = document.querySelectorAll('.carousel');
         carousels.forEach(carousel => {
             new Carousel(carousel);
+        });
+
+        $('button[data-bs-target="#connectingModal"]').on('click', function() {
+            var href = $(this).data('bs-href'); 
+    
+            $.ajax({
+                url: '/store/target/path', 
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ href: href }),
+                success: function(response) {
+                    console.log('Success:', response.message);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', xhr.responseText);
+                }
+            });
         });
     }
 
@@ -403,32 +420,26 @@ $(function() {
     }
 
     function setupDynamicLinks() {
-        if ($('.candidate-link').length) {
-            $('.candidate-link').on('click', function(event) {
-                event.preventDefault();
-                var candidateId = $(this).data('id');
-                var candidateContent = $('span[data-candidate="' + candidateId + '"]').html();
-                $('#candidate-card-container').html(candidateContent);
-            });
-        }
-    
-        if ($('.annonce-link').length) {
-            $('.annonce-link').on('click', function(event) {
-                event.preventDefault();
-                var annonceId = $(this).data('id');
-                var annonceContent = $('span[data-annonce="' + annonceId + '"]').html();
-                $('#candidate-card-container').html(annonceContent);
-            });
-        }
-    
-        if ($('.prestation-link').length) {
-            $('.prestation-link').on('click', function(event) {
-                event.preventDefault();
-                var prestationId = $(this).data('id');
-                var prestationContent = $('span[data-prestation="' + prestationId + '"]').html();
-                $('#candidate-card-container').html(prestationContent);
-            });
-        }
+        $('#candidates-list').on('click', '.candidate-link', function(event) {
+            event.preventDefault();
+            var candidateId = $(this).data('id');
+            var candidateContent = $('span[data-candidate="' + candidateId + '"]').html();
+            $('#candidate-card-container').html(candidateContent);
+        });
+
+        $('#joblistings-list').on('click', '.annonce-link', function(event) {
+            event.preventDefault();
+            var annonceId = $(this).data('id');
+            var annonceContent = $('span[data-annonce="' + annonceId + '"]').html();
+            $('#candidate-card-container').html(annonceContent);
+        });
+
+        $('#prestations-list').on('click', '.prestation-link', function(event) {
+            event.preventDefault();
+            var prestationId = $(this).data('id');
+            var prestationContent = $('span[data-prestation="' + prestationId + '"]').html();
+            $('#candidate-card-container').html(prestationContent);
+        });
     }
 
     function handleLoading() {

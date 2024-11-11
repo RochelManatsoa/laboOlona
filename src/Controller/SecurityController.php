@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Service\YouTubeService;
 use App\Entity\CandidateProfile;
-use App\Entity\Logs\ActivityLog;
 use App\Entity\EntrepriseProfile;
 use App\Service\ActivityLogger;
 use App\Service\User\UserService;
@@ -13,8 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -23,6 +22,7 @@ class SecurityController extends AbstractController
         private YouTubeService $youTubeService,
         private ActivityLogger $activityLogger,
         private UserService $userService,
+        private RequestStack $requestStack,
     ){}
 
     #[Route(path: '/login', name: 'app_login')]
@@ -103,12 +103,28 @@ class SecurityController extends AbstractController
     public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
     {
         if(!$this->getUser()){
-            return new JsonResponse([
+            return $this->json([
                 'status' => false,
                 'message' => "User not found"
-            ]);
+            ], Response::HTTP_FORBIDDEN);
         }else{
             return $this->redirectToRoute('app_connect');
         }
+    }
+
+    #[Route(path: '/store/target/path', name: 'store_target_path')]
+    public function storeTargetPath(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        $href = $data['href'] ?? null;
+    
+        if ($href) {
+            $session = $this->requestStack->getSession();
+            $providerKey = 'main'; 
+            $session->set('_security.'.$providerKey.'.target_path', $href);
+            return $this->json(['status' => 'success', 'message' => 'Href stored in session'], Response::HTTP_ACCEPTED);
+        }
+    
+        return $this->json(['status' => 'error', 'message' => 'No href provided'], Response::HTTP_BAD_REQUEST);
     }
 }
