@@ -17,7 +17,7 @@
             <div style="background-color: #FFF3E0; padding: 15px; margin: 20px 0; border-radius: 5px; font-weight: 500;">
             
                 <p><span style="font-weight: 700;">Titre :</span> {{ user.titre }}</p>
-                <p><span style="font-weight: 700;">Message :</span> {{ user.message }}</p>
+                <p><span style="font-weight: 700;">Message :</span> {{ user.message|raw }}</p>
                 <p><span style="font-weight: 700;">Email :</span> {{ user.email }}</p>
             </div>
             <p>Bonne chance dans vos recherches et n'hésitez pas à <span style="font-weight: 700;">nous contacter</span> si vous avez des questions ou besoin d'aide.</p>

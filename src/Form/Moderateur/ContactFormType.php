@@ -7,9 +7,12 @@ use App\Entity\Moderateur\ContactForm;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Validator\Constraints\Sequentially;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
@@ -31,7 +34,15 @@ class ContactFormType extends AbstractType
                 ]
             ])
             ->add('message', TextareaType::class, [
+                'required' => false,
                 'label' => 'app_home.contact.message',
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Le message est obligatoire.'),
+                    new Length(
+                        min: 3,
+                        minMessage: 'Le message est trop court',
+                    ),
+                ]),
                 'attr' => [
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'

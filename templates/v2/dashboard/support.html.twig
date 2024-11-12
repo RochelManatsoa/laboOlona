@@ -39,11 +39,12 @@
 
                 <div class="col-lg-10 col-md-10 col-sm-12 mx-auto">
                     {% for message in app.flashes('success') %}
-                        <div class="alert alert-primary">
+                        <div class="alert alert-primary alert-dismissible fade show small" role="alert">
                             {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     {% endfor %}
-                    {{ form_start(form) }}
+                    {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
 
 
                     <div class="row">

@@ -153,13 +153,13 @@
 
   </div>
 </section>
-{% if candidat.editedCvs|length > 0 and candidat.editedCvs[0] is defined and candidat.editedCvs[0] is not null %}
+{% if candidat.editedCvs|length > 0 and candidat.editedCvs[candidat.editedCvs|length -1] is defined and candidat.editedCvs[candidat.editedCvs|length -1] is not null %}
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
-        <iframe class="embed-responsive-item w-100" style="height: 600px;" src="{{ asset('uploads/cv/olona/' ~ candidat.editedCvs[0].cvLink) }}" allowfullscreen></iframe>
+        <iframe class="embed-responsive-item w-100" style="height: 600px;" src="{{ asset('uploads/cv/olona/' ~ candidat.editedCvs[candidat.editedCvs|length -1].cvLink) }}" allowfullscreen></iframe>
       </div>
     </div>
   </div>
