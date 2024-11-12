@@ -496,7 +496,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
             ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
             ->setParameter('statusFeatured', CandidateProfile::STATUS_FEATURED)
             ->setParameter('isGenerated', false)
-            ->setMaxResults(5)
+            ->setMaxResults(6)
             ->orderBy('c.id', 'DESC')
             ->getQuery();
             
@@ -520,5 +520,14 @@ class CandidateProfileRepository extends ServiceEntityRepository
             ->setParameter('now', new \DateTime())
             ->getQuery()                          
             ->getResult(); 
+    }
+
+    public function findValidProfiles()
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.status = :statusValid')
+            ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
+            ->getQuery()
+            ->getResult();
     }
 }

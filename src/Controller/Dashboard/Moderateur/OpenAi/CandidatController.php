@@ -111,8 +111,16 @@ class CandidatController extends AbstractController
             $resumeCandidat = $this->arrayToStringResume($json);
             $tools = $this->arrayToString($json['tools']);
             $technologies = $this->arrayToString($json['technologies']);
-            $keywords = isset($json['keywords']) ? isset($json['keywords']) : null;
+            $keywords = isset($json['keywords']) ? $json['keywords'] : null;
             $experiences = $json['experiences'];
+
+            if (empty($metaDescription) || empty($text)) {
+                return $this->json([
+                    'status' => 'error',
+                    'message' => 'Infos manquants ou invalides.',
+                    'error' => 'Infos manquants ou invalides pour le candidat ' . $candidat->getId()
+                ], 500);
+            }
 
             // Effacer les expériences actuelles si elles existent
             if (count($json['experiences']) > 0) {

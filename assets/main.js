@@ -32,10 +32,12 @@ $(function() {
         setupImageUpload(); 
         setupAvailabilityDropdown(); 
         setupCKEditors();
+        setupDynamicLinks();
     }
 
     function handlePageLoad() {
         handleThemeChange();
+        setupDynamicLinks();
         handleThemeInitialization();
         setupCKEditors();
         updateLogo();
@@ -51,23 +53,6 @@ $(function() {
         const carousels = document.querySelectorAll('.carousel');
         carousels.forEach(carousel => {
             new Carousel(carousel);
-        });
-
-        $('button[data-bs-target="#connectingModal"]').on('click', function() {
-            var href = $(this).data('bs-href'); 
-    
-            $.ajax({
-                url: '/store/target/path', 
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ href: href }),
-                success: function(response) {
-                    console.log('Success:', response.message);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', xhr.responseText);
-                }
-            });
         });
     }
 
@@ -439,6 +424,23 @@ $(function() {
             var prestationId = $(this).data('id');
             var prestationContent = $('span[data-prestation="' + prestationId + '"]').html();
             $('#candidate-card-container').html(prestationContent);
+        });
+
+        $('button[data-bs-target="#connectingModal"]').on('click', function() {
+            var href = $(this).data('bs-href'); 
+    
+            $.ajax({
+                url: '/store/target/path', 
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ href: href }),
+                success: function(response) {
+                    console.log('Success:', response.message);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', xhr.responseText);
+                }
+            });
         });
     }
 

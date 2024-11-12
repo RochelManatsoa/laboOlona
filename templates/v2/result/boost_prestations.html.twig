@@ -33,9 +33,9 @@
                                                     </span>
                                                 </div>
                                                 {% if app.user %}
-                                                    <a href="{{ path('app_v2_view_prestation', {'id': prestation.id}) }}" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto">Contacter</a>
+                                                    <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id}) }}" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto">Contacter</a>
                                                 {% else %}
-                                                    <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_view_prestation', {'id': prestation.id}) }}">Contacter</button>
+                                                    <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_view_prestation', {'prestation': prestation.id}) }}">Contacter</button>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -101,9 +101,9 @@
                                                             </div>
                                                         </div>
                                                         {% if app.user %}
-                                                            <a href="{{ path('app_v2_view_prestation', {'id': prestation.id}) }}" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto">Contacter</a>
+                                                            <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id}) }}" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto">Contacter</a>
                                                         {% else %}
-                                                            <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_view_prestation', {'id': prestation.id}) }}">Contacter</button>
+                                                            <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_view_prestation', {'prestation': prestation.id}) }}">Contacter</button>
                                                         {% endif %}
                                                     </div>
                                                 </div>

@@ -3,9 +3,15 @@ dotenv.config();
 const fs = require('fs');
 const OpenAI = require('openai');
 const pdf = require('pdf-parse');
+const https = require('https');
+const axios = require('axios');
 
 const apiKey = process.env.OPENAI_API_KEY || process.argv[3];
-const jsonlPath = 'output.jsonl';
+const candidatId = process.argv[4];
+
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false
+});
 
 const openai = new OpenAI({
   apiKey
@@ -13,6 +19,19 @@ const openai = new OpenAI({
 
 const pdfPath = '/var/www/olonaTalents/laboOlona/public/uploads/cv/' + process.argv[2];
 const assistantId = 'asst_FVlPdIFoQh6UzFp5qjee1brC'; 
+
+const fetchPdfText = async (candidatId) => {
+  try {
+    const response = await axios.get(`https://develop.olona-talents.com/api/ocr/${candidatId}`, {
+      httpsAgent: httpsAgent
+    });
+    const pdfText = response.data.text;
+    return pdfText;
+  } catch (error) {
+    console.error('Erreur lors de la récupération et de la lecture du PDF:', error);
+    return null;
+  }
+};
 
 // Fonction pour vérifier le statut du run
 const checkRunStatus = async (threadId, runId) => {
@@ -32,6 +51,10 @@ const main = async () => {
     const thread = await openai.beta.threads.create();
     const threadId = thread.id;
     // console.log('Thread created with ID:', threadId);
+    const pdfText = await fetchPdfText(candidatId);
+    if (!pdfText) {
+      throw new Error('Erreur lors de la récupération du texte PDF');
+    }
 
     // Ajoute un message pour demander l'analyse du CV
     await openai.beta.threads.messages.create(threadId, {
@@ -52,6 +75,11 @@ const main = async () => {
         file_id: fileResponse.id,
         tools: [{ type: "file_search" }]
       }]
+    });
+
+    await openai.beta.threads.messages.create(threadId, {
+      role: 'user',
+      content: 'If the document did not yield any direct searchable results. Here is the resume content extracted as text: ' + pdfText,
     });
 
     // Crée et exécute un run
