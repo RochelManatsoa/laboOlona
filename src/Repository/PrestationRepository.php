@@ -155,4 +155,13 @@ class PrestationRepository extends ServiceEntityRepository
             ->getQuery()                          
             ->getResult(); 
     }
+
+    public function findValidPrestations()
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.status = :statusValid')
+            ->setParameter('statusValid', Prestation::STATUS_VALID)
+            ->getQuery()
+            ->getResult();
+    }
 }

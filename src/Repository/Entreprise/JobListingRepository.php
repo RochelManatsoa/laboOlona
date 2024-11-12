@@ -326,4 +326,13 @@ class JobListingRepository extends ServiceEntityRepository
             ->getQuery()                          
             ->getResult(); 
     }
+
+    public function findValidJobListings()
+    {
+        return $this->createQueryBuilder('j')
+            ->andWhere('j.status = :statusValid')
+            ->setParameter('statusValid', JobListing::STATUS_PUBLISHED)
+            ->getQuery()
+            ->getResult();
+    }
 }

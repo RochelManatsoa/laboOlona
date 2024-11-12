@@ -144,20 +144,22 @@
       </ul>
     {% endif %}
 
-    <div class="p-5 border rounded"> 
-    <h2 class="fs-5 text-uppercase">Résumé Olona Talents</h2>
-    {{ candidat.resultFree|raw}}
-    </div>
+    {% if candidat.resultFree is not null %}
+      <div class="p-sm-5 p-3 border rounded"> 
+        <h2 class="fs-5 text-uppercase">Résumé Olona Talents</h2>
+        {{ candidat.resultFree|raw}}
+      </div>
+    {% endif %}
 
   </div>
 </section>
-{% if candidat.editedCvs|length > 0 and candidat.cvs[0].edited is defined and candidat.cvs[0].edited is not null %}
+{% if candidat.editedCvs|length > 0 and candidat.editedCvs[0] is defined and candidat.editedCvs[0] is not null %}
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
-        <iframe class="embed-responsive-item w-100" style="height: 600px;" src="{{ asset('uploads/cv/olona/' ~ candidat.cvs[0].edited.cvLink) }}" allowfullscreen></iframe>
+        <iframe class="embed-responsive-item w-100" style="height: 600px;" src="{{ asset('uploads/cv/olona/' ~ candidat.editedCvs[0].cvLink) }}" allowfullscreen></iframe>
       </div>
     </div>
   </div>
