@@ -20,6 +20,11 @@ class ActivityLog
     const ACTIVITY_PAGE_VIEW = 'Page Vue';
     const ACTIVITY_PURCHASE = 'Achat';
     const ACTIVITY_CREDIT_SPENDING = 'Crédit';
+    const ACTIVITY_ERROR = 'Erreur';
+    const ACTIVITY_REGISTER = 'Inscription';
+    const ACTIVITY_UPDATE = 'Mise à jour';
+    const ACTIVITY_DELETE = 'Suppression';
+    const ACTIVITY_CREATE = 'Création';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
