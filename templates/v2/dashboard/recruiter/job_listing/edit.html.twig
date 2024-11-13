@@ -21,7 +21,19 @@
 	<div class="shadow-custom p-2 p-sm-4">
 		<div class="col-12 col-sm-10 mx-auto p-2 p-sm-4">
 			<turbo-frame id="job_listing_{{ jobListing.id}}">
-				{{ form_start(form, { action : path('app_v2_recruiter_job_listing_edit', { jobListing : jobListing.id }), 'attr':{'id': 'createJob'}})}}
+				{% for message in app.flashes('success') %}
+					<div class="alert alert-success alert-dismissible fade show" role="alert">
+						{{ message }}
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				{% endfor %}
+				{% for message in app.flashes('danger') %}
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						{{ message }}
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				{% endfor %}
+				{{ form_start(form, { action : path('app_v2_recruiter_job_listing_edit', { jobListing : jobListing.id }), 'attr':{'data-turbo': 'false'}})}}
 
 
 				<div class="row">
