@@ -235,6 +235,7 @@ class JobListingController extends AbstractController
                     $this->em->flush();
                 }
                 $this->jobListingManager->saveForm($form);
+                $this->addFlash('success', 'Offre d\'emploi modifiée avec succès');
                 $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_UPDATE, 'Mise à jour Offre d\'emploi "'. $jobListing->getTitre().'"', ActivityLog::LEVEL_NOTICE);
             }
             
