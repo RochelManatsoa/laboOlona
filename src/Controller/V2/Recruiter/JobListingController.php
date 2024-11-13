@@ -3,7 +3,10 @@
 namespace App\Controller\V2\Recruiter;
 
 use App\Entity\User;
+use App\Twig\AppExtension;
+use App\Manager\MailManager;
 use App\Manager\ProfileManager;
+use App\Entity\Logs\ActivityLog;
 use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
@@ -24,8 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\BoostVisibilityManager;
-use App\Manager\MailManager;
-use App\Twig\AppExtension;
+use App\Service\ActivityLogger;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,6 +46,7 @@ class JobListingController extends AbstractController
         private ProfileManager $profileManager,
         private MailManager $mailManager,
         private AppExtension $appExtension,
+        private ActivityLogger $activityLogger,
         private UrlGeneratorInterface $urlGeneratorInterface,
     ){}
 
@@ -98,6 +101,7 @@ class JobListingController extends AbstractController
                     $currentUser->addBoostVisibility($visibilityBoost);
                     $this->em->persist($visibilityBoost);
                     $this->em->flush();
+                    $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_CREATE, 'Boost Offre d\'emploi sur Olona Talents', ActivityLog::LEVEL_INFO);
                 }
                 if($boostFacebookOption instanceof BoostFacebook){
                     $visibilityBoostFacebook = $this->boostVisibilityManager->initBoostvisibilityFacebook($boostFacebookOption);
@@ -110,8 +114,10 @@ class JobListingController extends AbstractController
                     $this->em->persist($visibilityBoostFacebook);
                     $this->em->flush();
                     $this->mailManager->facebookBoostJobListing($currentUser, $jobListing, $visibilityBoostFacebook);
+                    $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_CREATE, 'Boost Offre d\'emploi sur Olona Talents', ActivityLog::LEVEL_INFO);
                 }
                 $this->jobListingManager->saveForm($form);
+                $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_CREATE, 'Creation Offre d\'emploi "'. $jobListing->getTitre().'"', ActivityLog::LEVEL_INFO);
                 return $this->redirectToRoute('app_v2_recruiter_job_listing_view', ['jobListing' => $jobListing->getId()]);
             } else {
                 if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
@@ -164,7 +170,7 @@ class JobListingController extends AbstractController
         // Vérification et ajustement des crédits pour le Boost standard
         if ($hasBoost) {
             if ($this->profileManager->canBuy($currentUser, $boost->getCredit())) {
-                $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit(), "Boost annonce sur Olona Talents");
+                $responseBoost = $this->creditManager->adjustCredits($currentUser, $boost->getCredit(), "Boost Offre d\'emploi sur Olona Talents");
             } else {
                 return [
                     'success' => false, 
@@ -177,7 +183,7 @@ class JobListingController extends AbstractController
         // Vérification et ajustement des crédits pour le Boost Facebook
         if ($hasBoostFacebook) {
             if ($this->profileManager->canBuy($currentUser, $boostFacebook->getCredit())) {
-                $responseBoostFacebook = $this->creditManager->adjustCredits($currentUser, $boostFacebook->getCredit(), "Boost annonce sur facebook");
+                $responseBoostFacebook = $this->creditManager->adjustCredits($currentUser, $boostFacebook->getCredit(), "Boost Offre d\'emploi sur facebook");
             } else {
                 return [
                     'success' => false, 
@@ -221,17 +227,15 @@ class JobListingController extends AbstractController
             if ($response['success']) {
                 $boostOption = $form->get('boost')->getData(); 
                 $jobListing = $form->getData();
-                $visibilityBoost = $jobListing->getBoostVisibility();
                 if($boostOption instanceof Boost){
-                    if(!$visibilityBoost instanceof BoostVisibility){
-                        $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
-                    }
+                    $visibilityBoost = $this->boostVisibilityManager->init($boostOption);
                     $visibilityBoost = $this->boostVisibilityManager->update($visibilityBoost, $boostOption);
                     $jobListing->setStatus(JobListing::STATUS_FEATURED);
                     $this->em->persist($visibilityBoost);
                     $this->em->flush();
                 }
                 $this->jobListingManager->saveForm($form);
+                $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_UPDATE, 'Mise à jour Offre d\'emploi "'. $jobListing->getTitre().'"', ActivityLog::LEVEL_NOTICE);
             }
             
             if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
@@ -290,6 +294,8 @@ class JobListingController extends AbstractController
         $jobListing->setStatus(JobListing::STATUS_DELETED);
         $this->em->persist($jobListing);
         $this->em->flush();
+        $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_DELETE, 'Suppression Offre d\'emploi "'. $jobListing->getTitre().'"', ActivityLog::LEVEL_NOTICE);
+
         
         if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);

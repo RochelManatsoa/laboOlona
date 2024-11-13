@@ -46,7 +46,8 @@ class ActivityLogRepository extends ServiceEntityRepository
         return $this->paginator->paginate(
             $this->createQueryBuilder('a')
                 ->andWhere('a.user = :user')
-                ->setParameter('user', $user),
+                ->setParameter('user', $user)
+                ->orderBy('a.timestamp', 'DESC'),
             $page,
             20,
             [

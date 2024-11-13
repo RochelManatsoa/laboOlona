@@ -12,6 +12,7 @@ use App\Data\V2\PrestationData;
 use App\Manager\ProfileManager;
 use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
+use App\Entity\Logs\ActivityLog;
 use App\Entity\EntrepriseProfile;
 use App\Form\PrestationBoostType;
 use App\Service\User\UserService;
@@ -173,6 +174,7 @@ class PrestationController extends AbstractController
                     $this->em->persist($currentUser);
                     $this->em->persist($visibilityBoost);
                     $this->em->flush();
+                    $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_CREATE, 'Boost Prestation sur Olona Talents', ActivityLog::LEVEL_INFO);
                 }
                 if($boostFacebookOption instanceof BoostFacebook){
                     $visibilityBoostFacebook = $this->boostVisibilityManager->initBoostvisibilityFacebook($boostFacebookOption);
@@ -184,10 +186,12 @@ class PrestationController extends AbstractController
                     $this->em->persist($currentUser);
                     $this->em->persist($visibilityBoostFacebook);
                     $this->em->flush();
+                    $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_CREATE, 'Boost Prestation sur facebook', ActivityLog::LEVEL_INFO);
                     $this->mailManager->facebookBoostPrestation($currentUser, $prestation, $visibilityBoostFacebook);
                 }
                 
                 $this->prestationManager->saveForm($form);
+                $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_CREATE, 'Creation Prestation "'. $prestation->getTitre().'"', ActivityLog::LEVEL_INFO);
                 $response['redirect'] = $this->urlGeneratorInterface->generate('app_v2_view_prestation', ['prestation' => $prestation->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
                 return $this->json($response, 200);
             } 
@@ -219,6 +223,7 @@ class PrestationController extends AbstractController
             $response = $this->handlePrestationEdit($form->getData(), $currentUser);
             if ($response['success']) {
                 $this->prestationManager->saveForm($form);
+                $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_UPDATE, 'Mise à jour Prestation "'. $prestation->getTitre().'"', ActivityLog::LEVEL_NOTICE);
                 $response['redirect'] = $this->urlGeneratorInterface->generate('app_v2_view_prestation', ['prestation' => $prestation->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
                 return $this->json($response, 200);
             }
@@ -292,6 +297,7 @@ class PrestationController extends AbstractController
         $prestation->setStatus(Prestation::STATUS_DELETED);
         $this->em->persist($prestation);
         $this->em->flush();
+        $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_DELETE, 'Suppression Prestation "'. $prestation->getTitre().'"', ActivityLog::LEVEL_NOTICE);
 
         if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
