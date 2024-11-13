@@ -1,0 +1,38 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+	<div class="container mt-5">
+        <h1 class="h4 mb-3">Historique des actions de {{ user.nom }} {{ user.prenom }}</h1>
+        {% if user_logs|length > 0 %}
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">{{ knp_pagination_sortable(user_logs, 'Date', 'a.timestamp') }}</th>
+                <th scope="col">{{ knp_pagination_sortable(user_logs, 'Type', 'a.activityType') }}</th>
+                <th scope="col">{{ knp_pagination_sortable(user_logs, 'Niveau', 'a.level') }}</th>
+                <th scope="col">Détails</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for log in user_logs %}
+                <tr>
+                  <td>{{ log.timestamp|date('d/m/Y H:i:s') }}</th>
+                  <td>{{ log.activityType }}</td>
+                  <td>{{ log.level }}</td>
+                  <td>{{ log.details }}</td>
+                </tr>                    
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="navigation">
+            {{ knp_pagination_render(user_logs, 'parts/_pagination.html.twig') }}
+        </div>
+
+        {% else %}
+            <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                <p class="text-center">Aucune historique à afficher.</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
