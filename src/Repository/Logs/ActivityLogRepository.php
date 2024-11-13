@@ -3,8 +3,11 @@
 namespace App\Repository\Logs;
 
 use App\Entity\Logs\ActivityLog;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<ActivityLog>
@@ -16,7 +19,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ActivityLogRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, ActivityLog::class);
     }
@@ -37,14 +40,19 @@ class ActivityLogRepository extends ServiceEntityRepository
             ->getResult();
         ;
    }
-
-//    public function findOneBySomeField($value): ?ActivityLog
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+   
+   public function paginateActivities(int $page, User $user): PaginationInterface
+   {
+        return $this->paginator->paginate(
+            $this->createQueryBuilder('a')
+                ->andWhere('a.user = :user')
+                ->setParameter('user', $user),
+            $page,
+            20,
+            [
+                'distinct' => true,
+                'shortFieldAllowList' => ['a.activityType', 'a.timestamp', 'a.level'],
+            ]
+        );
+   }
 }
