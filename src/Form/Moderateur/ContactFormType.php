@@ -29,6 +29,9 @@ class ContactFormType extends AbstractType
         $builder
             ->add('titre', TextType::class, [
                 'label' => 'app_home.contact.title',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'attr' => [
                     'placeholder' => 'app_home.contact.placeholder.title'
                 ]
@@ -36,6 +39,9 @@ class ContactFormType extends AbstractType
             ->add('message', TextareaType::class, [
                 'required' => false,
                 'label' => 'app_home.contact.message',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'constraints' => new Sequentially([
                     new NotBlank(message:'Le message est obligatoire.'),
                     new Length(
@@ -50,6 +56,9 @@ class ContactFormType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'label' => 'app_home.contact.email',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'attr' => [
                     'placeholder' => 'app_home.contact.placeholder.email',
                     'value' => $this->userService->getCurrentUser() ? $this->userService->getCurrentUser()->getEmail() : "",
@@ -57,6 +66,9 @@ class ContactFormType extends AbstractType
             ])
             ->add('numero', TextType::class, [
                 'label' => 'app_home.contact.number',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'app_home.contact.placeholder.number'
