@@ -5,7 +5,7 @@ import path from "path";
 import cors from "cors";
 
 const corsOptions = {
-    origin: "https://develop.olona-talents.com", 
+    origin: "https://olona-talents.com", 
     optionsSuccessStatus: 200,
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
