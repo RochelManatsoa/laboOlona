@@ -147,10 +147,6 @@ class InvitationController extends AbstractController
             );
         }
 
-
-        //     return $this->redirectToRoute('app_connect');
-        // }
-
         return $this->render('invitation/cooptation.html.twig', [
             'annonce' => $annonce,
             'form' => $form->createView(),
