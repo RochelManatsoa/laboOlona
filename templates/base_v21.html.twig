@@ -116,10 +116,18 @@
 			{% block sidebar %}{% endblock %}
 			{% block body %}{% endblock %}
 			{% block preview %}
-        	<a href="javascript:history.back()" class="btn btn-info fw-semibold text-uppercase px-4 my-5 me-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+        	<a href="javascript:history.back()" class="d-none d-sm-block d-md-none btn btn-info fw-semibold text-uppercase px-4 my-5 me-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 			{% endblock %}
 			</div>
 		</div>
+		<footer class="py-3 my-4">
+			<ul class="nav justify-content-center border-bottom pb-3 mb-3">
+			  <li class="nav-item"><a href="{{ path('app_home_legal')}}" class="nav-link px-2 text-body-secondary">Mentions Légales</a></li>
+			  <li class="nav-item"><a href="{{ path('app_home_privacy')}}" class="nav-link px-2 text-body-secondary">Politique de Confidentialité</a></li>
+			  <li class="nav-item"><a href="{{ path('app_home_terms')}}" class="nav-link px-2 text-body-secondary">Conditions d'Utilisation</a></li>
+			</ul>
+			<p class="text-center text-body-secondary">© 2024 Olona Talents, Tout droit reservé</p>
+		</footer>
 		<script>
 
 			function loadCKEditor() {
