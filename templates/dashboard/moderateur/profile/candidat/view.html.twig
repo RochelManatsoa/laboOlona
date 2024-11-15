@@ -11,7 +11,7 @@
                     </h2>
                 </div>
                 <div class="col-md-4">
-                <span class="small"><i class="bi bi-clock-history"></i> <a href="{{ path('app_v2_staff_history', {'user': candidat.candidat.id })}}" target="_blank">Historique de {{ candidat.candidat.prenom }}</a></span><br>
+                <span class="small"><i class="bi bi-clock-history"></i> <a href="{{ path('app_v2_staff_history_user', {'user': candidat.candidat.id })}}" target="_blank">Historique de {{ candidat.candidat.prenom }}</a></span><br>
 				<form method="post" action="{{ path('change_status_candidat', {'uid': candidat.uid}) }}" class="d-flex justify-content-end">
 					<select name="status" class="form-select form-select-lg bg-dark text-white" onchange="confirmChange(this)">
 						<option value="PENDING" {{ candidat.status == 'PENDING' ? 'selected' : '' }}>En attente</option>

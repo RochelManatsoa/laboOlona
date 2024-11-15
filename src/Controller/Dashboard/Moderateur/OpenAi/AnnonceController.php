@@ -40,7 +40,6 @@ class AnnonceController extends AbstractController
         $this->em->getConnection()->close();
         try {
             /** Generate OpenAI resume */
-            // $parsePdf = $this->pdfProcessor->processPdf($candidat);
             $openai = $this->openAITranslator->metaDescription($annonce);
             [$short, $clean] = $this->openaiManager->extractCleanAndShortText($openai);
             // dd($metaDescription, $resumeCandidat, $tools, $technologies, $text, $json);

@@ -2,30 +2,46 @@
 
 {% block body %}
 	<div class="container mt-5">
-        <h1 class="h4 mb-3">Historique des actions de {{ user.nom }} {{ user.prenom }}</h1>
-        {% if user_logs|length > 0 %}
+        <h1 class="h4 mb-3">Utilisateurs connéctés à Olona Talents</h1>
+        {{ form_start(form) }}
+        <div class="m-4">
+          <div class="input-group">
+              {{ form_widget(form.days, {'attr': {'class': 'form-control'}}) }}
+              {{ form_widget(form.startDate, {'attr': {'class': 'form-control'}}) }}
+              {{ form_widget(form.endDate, {'attr': {'class': 'form-control'}}) }}
+              {{ form_widget(form.submit, {'attr': {'class': 'btn btn-dark px-5'}}) }}
+          </div>
+        </div>
+        {{ form_end(form) }}
+        {% if users|length > 0 %}
         <table class="table table-hover">
             <thead>
               <tr>
-                <th scope="col">{{ knp_pagination_sortable(user_logs, 'Date', 'a.timestamp') }}</th>
-                <th scope="col">{{ knp_pagination_sortable(user_logs, 'Type', 'a.activityType') }}</th>
-                <th scope="col">{{ knp_pagination_sortable(user_logs, 'Niveau', 'a.level') }}</th>
-                <th scope="col">Détails</th>
+                <th scope="col">{{ knp_pagination_sortable(users, 'Nom et prénoms', 'u.nom') }}</th>
+                <th scope="col">{{ knp_pagination_sortable(users, 'Compte', 'u.type') }}</th>
+                <th scope="col">{{ knp_pagination_sortable(users, 'Date', 'u.lastLogin') }}</th>
+                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
-                {% for log in user_logs %}
+                {% for user in users %}
                 <tr>
-                  <td>{{ log.timestamp|date('d/m/Y H:i:s') }}</th>
-                  <td>{{ log.activityType }}</td>
-                  <td>{{ log.level }}</td>
-                  <td>{{ log.details }}</td>
+                  <td>
+                    {{ user.nom }} {{ user.prenom }} <br>
+                    <span class="small fw-lighter">{{ user.email }}</span>
+                  </td>
+                  <td>{{ user.type }}</td>
+                  <td>
+                    {{ user.lastLogin|date('d/m/Y') }}<br>
+                    <span class="small fw-lighter">{{ user.lastLogin|date('H:i:s') }}</span>
+                  </td>
+                  <td><a target="_blank" href="{{ path('app_v2_staff_history_user', {'user': user.id })}}" class="btn-primary btn btn-sm rounded-pill px-3">Voir</a></td>
                 </tr>                    
                 {% endfor %}
             </tbody>
         </table>
         <div class="navigation">
-            {{ knp_pagination_render(user_logs, 'parts/_pagination.html.twig') }}
+            {{ knp_pagination_render(users, 'parts/_pagination.html.twig') }}
         </div>
 
         {% else %}

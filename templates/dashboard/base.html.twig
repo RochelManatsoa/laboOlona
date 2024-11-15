@@ -20,10 +20,10 @@
     </head>
     <body>
         {% block header %} {% include "parts/_navbar-none.html.twig" with { 'title': dashboard_title()} %} {% endblock %}
-        <div class="bg-dark text-white">
+        <div class="text-white">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 bg-dark">
                         {% block sidebar %}
                             {% if app.user.type == 'MODERATEUR' %}
                             {% include "dashboard/_sidebar_moderateur.html.twig" %} 
@@ -34,7 +34,7 @@
                             {% endif %}
                         {% endblock %}
                     </div>
-                    <div class="col-lg-9 p-1">
+                    <div class="col-lg-9">
                         <div class="div-plein-ecran bg-light text-dark p-3">
                             {% for message in app.flashes('success') %}
                                 <div class="alert alert-success">
@@ -42,13 +42,16 @@
                                 </div>
                             {% endfor %}
                             {% block body %}{% endblock %}
+                            <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
+                                <i class="mx-2 bi bi-arrow-left"></i>Retour
+                            </a>
                             {% block inner_footer %}{% endblock %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        {% block footer %} {% include "parts/_footer.html.twig" %} {% endblock %}
+        {% block footer %}  {% endblock %}
         {% block modal %}
         {% if app.user.type == 'CANDIDAT' %}
             {{ render(controller('App\\Controller\\Dashboard\\CandidatController::availabilityFormView')) }}

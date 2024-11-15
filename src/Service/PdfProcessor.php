@@ -39,6 +39,7 @@ class PdfProcessor
                 'Content-Type' => 'multipart/form-data; boundary='.$boundary,
             ],
             'body' => $body,
+            'timeout' => 60,
         ]);
 
         // Récupérer le contenu de la réponse

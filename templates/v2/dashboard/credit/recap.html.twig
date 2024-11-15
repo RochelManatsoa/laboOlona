@@ -158,7 +158,7 @@ function loadPaypalSdk() {
             resolve();
         } else {
             const script = document.createElement('script');
-            script.src = "https://www.paypal.com/sdk/js?client-id=ASu3tyl5NCMVfnQ9_wcXD3bv-Pn7nIOhXwkrjisQorZEIdQzr3Z4FOMq3AlmeKiBJcedrMuJPpdTKFAK&components=buttons&enable-funding=venmo,paylater&currency=EUR";
+            script.src = "https://www.paypal.com/sdk/js?client-id=AT3VNDtp1XLa-i5RiH6-64z02R0d2HawjrGs26oXddGZGnqJzxShg_Jwv3jJeyyCaE5gW-zrCZlZMG9J&components=buttons&enable-funding=venmo,paylater&currency=EUR";
             script.onload = () => resolve();
             script.onerror = () => reject(new Error('Échec du chargement du SDK PayPal'));
             document.head.appendChild(script);

@@ -2,12 +2,16 @@
 
 namespace App\Repository;
 
+use DateTime;
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Data\UserData;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -21,7 +25,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, User::class);
     }
@@ -127,5 +131,76 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery();
 
         return $qb->getResult();
+    }
+
+    public function paginateUsers(UserData $data): PaginationInterface
+    {
+        if ($data->getDays() !== 1) {
+            return $this->gatUsersLogedInSince($data->getDays(), $data->getPage());
+        }
+        if ($data->getStartDate() === null && $data->getEndDate() === null) {
+            return $this->gatUsersLogedInToday($data->getPage());
+        }
+
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.lastLogin >= :startDate')
+            ->andWhere('u.lastLogin <= :endDate')
+            ->setParameter('startDate', $data->getStartDate())
+            ->setParameter('endDate', $data->getEndDate())
+            ->orderBy('u.lastLogin', 'DESC')
+            ->getQuery();
+
+        return $this->paginator->paginate(
+            $qb,
+            $data->getPage(),
+            20,
+            [
+                'distinct' => true,
+                'shortFieldAllowList' => ['u.id', 'u.type', 'u.dateInscription', 'u.lastLogin'],
+            ]
+        );
+    }
+
+    public function gatUsersLogedInToday(int $page = 1): PaginationInterface
+    {
+        // Définir la date de début à aujourd'hui à 00h00
+        $startOfDay = new \DateTime('today');
+        
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.lastLogin >= :startOfDay')
+            ->setParameter('startOfDay', $startOfDay)
+            ->orderBy('u.lastLogin', 'DESC');
+
+        return $this->paginator->paginate(
+            $qb,
+            $page,
+            20,
+            [
+                'distinct' => true,
+                'shortFieldAllowList' => ['u.id', 'u.type', 'u.dateInscription', 'u.lastLogin'],
+            ]
+        );
+    }
+
+    public function gatUsersLogedInSince(int $days, int $page = 1): PaginationInterface
+    {
+        // Calculer la date correspondant au nombre de jours passés
+        $dateSince = (new \DateTime())->modify("-$days days");
+
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.lastLogin >= :dateSince')
+            ->setParameter('dateSince', $dateSince)
+            ->orderBy('u.lastLogin', 'DESC');
+
+
+        return $this->paginator->paginate(
+            $qb,
+            $page,
+            20,
+            [
+                'distinct' => true,
+                'shortFieldAllowList' => ['u.id', 'u.type', 'u.dateInscription', 'u.lastLogin'],
+            ]
+        );
     }
 }

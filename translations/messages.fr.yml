@@ -1190,6 +1190,10 @@ app_v2_staff_view_prestation :
     dashboard_title : Prestation de service
 
 app_v2_staff_history : 
+    title : Utilisateurs connectés
+    dashboard_title : Utilisateurs connectés 
+
+app_v2_staff_history_user:
     title : Historique d'activité
     dashboard_title : Historique d'activité 
     
