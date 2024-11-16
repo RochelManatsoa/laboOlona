@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\TransactionManager;
+use App\Service\User\UserService;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -29,11 +30,18 @@ class UserOrderController extends AbstractController
         private TransactionManager $transactionManager,
         private CreditManager $creditManager,
         private UrlGeneratorInterface $urlGeneratorInterface,
+        private UserService $userService
     ){}
 
     #[Route('/', name: 'app_v2_user_order')]
     public function index(): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         return $this->render('v2/dashboard/user_order/index.html.twig', [
             'orders' => $this->em->getRepository(Order::class)->filterByUser(new QuerySearchData)
         ]);
@@ -42,6 +50,12 @@ class UserOrderController extends AbstractController
     #[Route('/show/{orderNumber}', name: 'app_v2_user_order_show')]
     public function show(Order $order): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         return $this->render('v2/dashboard/user_order/show.html.twig', [
             'order' => $order
         ]);
@@ -98,20 +112,17 @@ class UserOrderController extends AbstractController
     #[Route('/payment/{order}/facture', name: 'payment_facture')]
     public function facture(Order $order, OrderManager $orderManager)
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         if (!$orderManager->checkIfTransactionSuccess($order)) {
             return $this->redirectToRoute('app_v2_user_order');
         }
         $file = $orderManager->generateFacture($order);
 
         return new BinaryFileResponse($file);
-    }
-
-    #[Route('/view/{order}/facture', name: 'payment_facture_view')]
-    public function view(Order $order, OrderManager $orderManager)
-    {
-        return $this->render("v2/dashboard/payment/facture.pdf.twig", [
-            'commande' => $order,
-            'pathToWeb' => $this->urlGeneratorInterface->generate('app_home', [], UrlGeneratorInterface::ABSOLUTE_URL)
-        ]);
     }
 }

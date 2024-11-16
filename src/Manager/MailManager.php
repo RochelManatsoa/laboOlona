@@ -13,6 +13,7 @@ use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Manager\Finance\EmployeManager;
 use App\Entity\BusinessModel\BoostVisibility;
+use Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -143,6 +144,25 @@ class MailManager
                 'jobListing' => $jobListing,
                 'boost' => $boost,
                 'url' => $url,
+            ]
+        );
+    }
+
+    public function errorAlertUser(User $user, string $url, Exception $exception)
+    {        
+        $dashboardUrl = $this->urlGenerator->generate('app_v2_staff_history_user', [
+            'user' => $user->getId()
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $this->mailerService->send(
+            'nirinarocheldev@gmail.com',
+            'Erreur experience utilisateur : '.$user->getNom().' '.$user->getPrenom(),
+            'error/user_log.mail.twig',
+            [
+                'user' => $user,
+                'exception' => $exception,
+                'url' => $url,
+                'dashboard_url' => $dashboardUrl,
             ]
         );
     }

@@ -25,10 +25,14 @@ class ContractController extends AbstractController
     
     #[Route('/contracts', name: 'app_v2_contracts')]
     public function index(Request $request): Response
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $contracts = $this->em->getRepository(Contrat::class)->findContractsByUser($user);
+    {        
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
+        $contracts = $this->em->getRepository(Contrat::class)->findContractsByUser($currentUser);
         
         return $this->render('v2/dashboard/contract/index.html.twig', [
             'contracts' => $this->paginator->paginate(

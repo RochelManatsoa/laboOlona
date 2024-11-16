@@ -2,16 +2,17 @@
 
 namespace App\Controller\V2;
 
+use App\Entity\User;
 use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/v2/dashboard')]
 class ApplicationController extends AbstractController
@@ -27,6 +28,12 @@ class ApplicationController extends AbstractController
     #[Route('/applications', name: 'app_v2_applications')]
     public function index(Request $request): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $profile = $this->userService->checkProfile();
         $params = [
             'action' => $this->urlGeneratorInterface->generate('app_olona_talents_candidates'),
