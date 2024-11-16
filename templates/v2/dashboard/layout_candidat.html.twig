@@ -35,7 +35,7 @@
                   <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
                   <div class="card-img-top bg-image-candidat" style="background-image: url('{{ app.user.candidateProfile.fileName ? asset('uploads/experts/' ~ app.user.candidateProfile.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="{{ app.user.prenom }}"></div>
                   <p class="card-title h6 bg-dark text-white text-center py-2">{{ generatePseudo(app.user.candidateProfile) }}</p>
-                  <div class="card-body-candidat">
+                  <div class="card-body-candidat text-center mb-3">
                       <small class="mt-auto">
                           <small class="card-text text-uppercase">{{ app.user.candidateProfile.titre }}</small><br>
                           <small class="card-text"><i class="mx-1 bi bi-trophy"></i> {{ app.user.candidateProfile.experiences|length }} {{ 'app_catalog_expert.realised'|trans }}</small><br>
@@ -49,7 +49,7 @@
                   <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
                   <div class="card-img-top bg-image-candidat" style="background-image: url('/uploads/experts/avatar-default.jpg');" alt="{{ app.user.prenom }}"></div>
                   <p class="card-title h6 bg-dark text-white text-center py-2">OT0013</p>
-                  <div class="card-body-candidat">
+                  <div class="card-body-candidat text-center mb-3">
                       <small class="mt-auto">
                           <small class="card-text text-uppercase">Développeuse web</small><br>
                           <small class="card-text"><i class="mx-1 bi bi-trophy"></i> 3 projets réalisés</small><br>
@@ -63,7 +63,7 @@
                   <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
                   <div class="card-img-top bg-image-candidat" style="background-image: url('/uploads/experts/avatar-default.jpg');" alt="Avatar"></div>
                   <p class="card-title h6 bg-dark text-white text-center py-2">OT00740</p>
-                  <div class="card-body-candidat">
+                  <div class="card-body-candidat text-center mb-3">
                       <small class="mt-auto">
                           <small class="card-text text-uppercase">Superviseur Senior</small><br>
                           <small class="card-text"><i class="mx-1 bi bi-trophy"></i> 7 {{ 'app_catalog_expert.realised'|trans }}</small><br>
@@ -77,7 +77,7 @@
                   <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
                   <div class="card-img-top bg-image-candidat" style="background-image: url('/uploads/experts/avatar-default.jpg');" alt="{{ app.user.prenom }}"></div>
                   <p class="card-title h6 bg-dark text-white text-center py-2">OT0652</p>
-                  <div class="card-body-candidat">
+                  <div class="card-body-candidat text-center mb-3">
                       <small class="mt-auto">
                           <small class="card-text text-uppercase">Analyste vidéo</small><br>
                           <small class="card-text"><i class="mx-1 bi bi-trophy"></i> 10 {{ 'app_catalog_expert.realised'|trans }}</small><br>

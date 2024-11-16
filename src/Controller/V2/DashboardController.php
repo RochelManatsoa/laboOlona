@@ -104,7 +104,7 @@ class DashboardController extends AbstractController
             $formProfileUser = $this->createForm(CandidateType::class, $candidat); 
         }
 
-        $form = $this->createForm(AccountType::class, $user, ['typology' => $typology]);
+        $form = $this->createForm(AccountType::class, $user, ['typology' => ucfirst($typology)]);
         $form->handleRequest($request);
         $formProfileUser->handleRequest($request);
 
