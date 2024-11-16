@@ -149,6 +149,7 @@ class OlonaTalentsController extends AbstractController
         $from = $request->query->getInt('from', 0);
         $params = [];
         $currentUser = $this->userService->getCurrentUser();
+        $profile = $this->userService->checkUserProfile($currentUser);
 
         if ($currentUser) {
             $this->activityLogger->logSearchActivity($currentUser, $query, $type);
@@ -171,7 +172,7 @@ class OlonaTalentsController extends AbstractController
                 'hasMore' => $params['hasMore'],
             ]);
         }
-        if ($currentUser) {
+        if ($currentUser && $profile) {
             return $this->render("v2/dashboard/result/{$type}_result.html.twig", $params);
         }
 

@@ -57,6 +57,12 @@ class PrestationController extends AbstractController
     #[Route('/prestations', name: 'app_v2_prestation')]
     public function index(Request $request): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $data = new PrestationData();
         $data->page = $request->get('page', 1);
         $profile = $this->userService->checkProfile();
@@ -67,7 +73,6 @@ class PrestationController extends AbstractController
             $data->entreprise = $profile;
         }
 
-        $secteurs = $profile->getSecteurs();
         $page = $request->query->get('page', 1);
         $limit = 10;
         $qb = $this->em->getRepository(Prestation::class)->createQueryBuilder('p');
@@ -123,6 +128,12 @@ class PrestationController extends AbstractController
     #[Route('/prestation/my-created', name: 'app_v2_prestation_my_created')]
     public function myCreated(Request $request): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $data = new PrestationData();
         $data->page = $request->get('page', 1);
         $profile = $this->userService->checkProfile();
@@ -144,6 +155,10 @@ class PrestationController extends AbstractController
     {
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         /** @var Prestation $prestation */
         $prestation = $this->prestationManager->init();
         $prestation->setContactEmail($currentUser->getEmail());
@@ -249,6 +264,10 @@ class PrestationController extends AbstractController
     {
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $ipAddress = $request->getClientIp();
         $viewRepository = $this->em->getRepository(PrestationVues::class);
         $existingView = $viewRepository->findOneBy([
