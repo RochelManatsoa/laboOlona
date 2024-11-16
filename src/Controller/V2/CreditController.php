@@ -2,11 +2,12 @@
 
 namespace App\Controller\V2;
 
-use App\Entity\BusinessModel\Package;
+use App\Entity\User;
 use App\Entity\Finance\Devise;
-use App\Form\BusinessModel\OrderType;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
+use App\Entity\BusinessModel\Package;
+use App\Form\BusinessModel\OrderType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\BusinessModel\TransactionType;
 use App\Manager\BusinessModel\OrderManager;
@@ -31,6 +32,12 @@ class CreditController extends AbstractController
     #[Route('/', name: 'app_v2_credit')]
     public function index(Request $request): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $transaction = $this->transactionManager->init();
@@ -68,6 +75,12 @@ class CreditController extends AbstractController
     #[Route('/{slug}', name: 'app_v2_credit_view')]
     public function pack(Request $request, Package $package): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         /** @var Devise $currency */
         $currency = $this->em->getRepository(Devise::class)->findOneBy([
             'slug' => 'euro'

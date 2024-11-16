@@ -149,7 +149,9 @@ class OlonaTalentsController extends AbstractController
         $from = $request->query->getInt('from', 0);
         $params = [];
         $currentUser = $this->userService->getCurrentUser();
-        $profile = $this->userService->checkUserProfile($currentUser);
+        if($currentUser){
+            $profile = $this->userService->checkUserProfile($currentUser);
+        }
 
         if ($currentUser) {
             $this->activityLogger->logSearchActivity($currentUser, $query, $type);
