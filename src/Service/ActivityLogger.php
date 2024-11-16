@@ -1,6 +1,7 @@
 <?php
 namespace App\Service;
 
+use App\Entity\BusinessModel\Credit;
 use App\Entity\User;
 use App\Entity\Logs\ActivityLog;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,13 +25,22 @@ class ActivityLogger
      */
     public function logActivity(User $user, string $activityType, ?string $details = null, int $level = ActivityLog::LEVEL_INFO): void
     {
+        $credit = $user->getCredit();
+        if(!$credit instanceof Credit){
+            $credit = new Credit();
+            $credit->setTotal(200);
+            $credit->setExpireAt((new \DateTime())->modify('+60 days'));
+            $this->entityManager->persist($credit);
+            $this->entityManager->persist($user);
+            $user->setCredit($credit);
+        }
         $log = new ActivityLog();
         $log->setUser($user);
         $log->setActivityType($activityType);
         $log->setTimestamp(new \DateTime());
         $log->setDetails($details);
         $log->setLevel($level);
-        $log->setUserCredit($user->getCredit()->getTotal());
+        $log->setUserCredit($credit->getTotal());
         $log->setIpAddress($this->getIpAddress());
         $log->setUserAgent($this->getUserAgent());
         $this->entityManager->persist($log);
