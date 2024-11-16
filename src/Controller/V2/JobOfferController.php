@@ -52,6 +52,12 @@ class JobOfferController extends AbstractController
     #[Route('/job-offers', name: 'app_v2_job_offer')]
     public function index(Request $request): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $profile = $this->userService->checkProfile();
         $secteurs = $profile->getSecteurs();
         $page = $request->query->get('page', 1);
@@ -108,6 +114,10 @@ class JobOfferController extends AbstractController
         $annonce = $this->em->getRepository(JobListing::class)->find($id);
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $candidat = $this->userService->checkProfile();
         if($candidat instanceof CandidateProfile){
             return $this->redirectToRoute('app_v2_candidate_view_job_offer', ['id' => $id]);
@@ -152,14 +162,18 @@ class JobOfferController extends AbstractController
     #[Route('/job-offer/candidate/view/{id}', name: 'app_v2_candidate_view_job_offer')]
     public function candidateViewJobOffer(Request $request, int $id): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $annonce = $this->em->getRepository(JobListing::class)->find($id);
         $candidat = $this->userService->checkProfile();
         if(!$candidat instanceof CandidateProfile){
             return $this->redirectToRoute('app_v2_job_offer_view', ['id' => $id]);
         }
         $recruiter = $annonce->getEntreprise();
-        /** @var User $currentUser */
-        $currentUser = $this->userService->getCurrentUser();
         if(!$annonce instanceof JobListing){
             $this->addFlash('error', 'Annonce introuvable.');
             return $this->redirectToRoute('app_v2_job_offer');

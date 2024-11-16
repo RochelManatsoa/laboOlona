@@ -39,6 +39,12 @@ class ProfileController extends AbstractController
     #[Route('/profiles', name: 'app_v2_profiles')]
     public function index(Request $request): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $profile = $this->userService->checkProfile();
         $secteurs = $profile->getSecteurs();
         $page = $request->query->get('page', 1);
@@ -99,6 +105,10 @@ class ProfileController extends AbstractController
         $candidat = $this->em->getRepository(CandidateProfile::class)->find($id);
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $recruiter = $this->userService->checkProfile();
         if($recruiter == $candidat){
             return $this->redirectToRoute('app_v2_candidate_dashboard');

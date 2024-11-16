@@ -40,6 +40,12 @@ class NotificationController extends AbstractController
     #[Route('/notifications', name: 'app_v2_dashboard_notification')]
     public function index(Request $request): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $isRead = $request->query->get('isRead');
         $page = $request->query->get('page', 1);
         /** @var User $user */
@@ -59,8 +65,12 @@ class NotificationController extends AbstractController
     #[Route('/notification/view/{id}', name: 'app_v2_dashboard_notification_view')]
     public function view(int $id): Response
     {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $notification = $this->em->getRepository(Notification::class)->find($id);
         if(!$notification instanceof Notification){
             return $this->json([
@@ -79,8 +89,12 @@ class NotificationController extends AbstractController
     #[Route('/notification/delete/{id}', name: 'app_v2_dashboard_notification_delete')]
     public function delete(Notification $notification): Response
     {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $notification->setStatus(Notification::STATUS_DELETED);
         $this->notificationManager->save($notification);
 
@@ -90,10 +104,14 @@ class NotificationController extends AbstractController
     #[Route('/notification/see/all', name: 'app_v2_dashboard_notification_see_all')]
     public function seeAll(): Response
     {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $notifications = $this->notificationRepository->findByDestinataireAndStatusNot(
-            $user, 
+            $currentUser, 
             ['id' => 'DESC'], 
             Notification::STATUS_DELETED,
             0

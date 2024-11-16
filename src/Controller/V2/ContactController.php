@@ -41,6 +41,10 @@ class ContactController extends AbstractController
     {
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $purchasedContacts = $this->em->getRepository(PurchasedContact::class)->findContactsByBuyerAndStatus($currentUser, true);
         $pendingContacts = $this->em->getRepository(PurchasedContact::class)->findContactsByBuyerAndStatus($currentUser, false);
         $allContacts = $this->em->getRepository(PurchasedContact::class)->findBy([
@@ -100,6 +104,10 @@ class ContactController extends AbstractController
     {
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $contactId = $request->request->get('contactId');
         $contact = $this->em->getRepository(User::class)->find($contactId);
         $message = 'Contact ajouté dans votre réseau professionnel';
