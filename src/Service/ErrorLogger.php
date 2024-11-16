@@ -44,13 +44,14 @@ class ErrorLogger
         $errorLog = new ErrorLog();
         $longueurMax = 255; // ou toute autre limite appropriée pour votre colonne
         $messageTronque = mb_substr($exception->getMessage(), 0, $longueurMax);
+        $urlTronque = mb_substr($exception->getMessage(), 0, $longueurMax);
         if($user){
             $userId = $user->getId();
             $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_ERROR, $exception->getMessage(), ActivityLog::LEVEL_CRITICAL);
         }
         $errorLog->setMessage($messageTronque)
             ->setType('php') 
-            ->setUrl($url) 
+            ->setUrl($urlTronque) 
             ->setFileName($exception->getFile()) 
             ->setLineNumber($exception->getLine()) 
             ->setErrorObject($exception->getTraceAsString())

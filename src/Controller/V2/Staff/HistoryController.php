@@ -27,7 +27,7 @@ class HistoryController extends AbstractController
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $data = new UserData($request->query->get('startDate'), $request->query->get('endDate'), $request->query->getInt('page', 1), $request->query->getInt('days', 1));
         
-        /** Formulaire de recherche entreprise */
+        /** Formulaire de recherche */
         $form = $this->createForm(UserDataType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

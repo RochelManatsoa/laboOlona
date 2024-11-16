@@ -76,9 +76,9 @@
 									<div class="dropdown me-3">
 										<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
 											{% if app.user.gravatar is not null %}
-												{% if (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) and app.user.candidateProfile is defined and app.user.candidateProfile.fileName is not empty) %}
+												{% if (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) and app.user.candidateProfile is not null and app.user.candidateProfile.fileName is not empty) %}
 													<img src="{{ asset('uploads/experts/' ~ app.user.candidateProfile.fileName) }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
-												{% elseif (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) and app.user.entrepriseProfile is defined and app.user.entrepriseProfile.fileName is not empty)  %}
+												{% elseif (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) and app.user.entrepriseProfile is not null and app.user.entrepriseProfile.fileName is not empty)  %}
 													<img src="{{ asset('uploads/compagnies/' ~ app.user.entrepriseProfile.fileName) }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
 												{% else %}
 													<img src="{{ app.user.gravatar }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
