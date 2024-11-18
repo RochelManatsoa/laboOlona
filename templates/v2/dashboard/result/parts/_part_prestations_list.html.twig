@@ -61,7 +61,13 @@
         {% if app.user %}
             <a class="btn btn-sm btn-primary rounded-pill px-3" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
         {% else %}
-            <button class="btn btn-sm btn-primary rounded-pill px-3 me-2 prestation-link" type="button" data-id="{{ prestation.id }}">Plus de details</button>
+            <div class="d-none d-md-block">
+                <button class="btn btn-sm btn-primary rounded-pill px-3 me-2 prestation-link" type="button" data-id="{{ prestation.id }}">Plus de details</button>
+            </div>
+            
+            <div class="d-block d-md-none">
+                <button type="button" class="btn btn-outline-primary btn-sm rounded fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_view_prestation', {'prestation':prestation.id}) }}">Plus de détails</button>
+            </div>
         {% endif %}
     </div>
     <div class="">

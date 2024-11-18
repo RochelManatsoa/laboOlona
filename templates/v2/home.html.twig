@@ -1,12 +1,13 @@
 {% extends 'base_v21.html.twig' %}
 
-{% block title %}Olona Talents
-{% endblock %}
+{% block title %}Olona Talents{% endblock %}
 
 {% block meta %}
-	{{ parent() }}
+<meta name="description" content="Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement">
+<meta property="og:title" content="Olona Talents">
+<meta property="og:description" content="Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent.">
 {% endblock %}
-
 
 {% block header %}
 	{% set last_query = app.request.query.get('q', '') %}
