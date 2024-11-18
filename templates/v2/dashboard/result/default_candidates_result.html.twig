@@ -42,10 +42,14 @@
                     	{% include "v2/dashboard/result/none/_none_candidates.html.twig" %}
 					{% endif %}
                 </div>
-				<div class="col-12 col-sm-4">
+				<div class="col-12 col-sm-4 d-none d-md-block">
 					<div class="d-flex flex-column flex-shrink-0 py-3 position-sticky top-0">
 						<div class="card mb-3" id="candidate-card-container">
-							<img src="{{ asset('images/mailing/espace-pub.webp')}}" class="" alt="Premium Olona Talents">
+							<div class="m-4 position-relative text-center">
+								<a href="{{ path('app_v2_contact') }}">
+									<img class="img-fluid" src="{{ asset('images/pubs/espace-pub-carre-regard-beauty.webp')}}">
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>
