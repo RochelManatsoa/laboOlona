@@ -31,9 +31,12 @@ class RegistrationController extends AbstractController
         private EntityManagerInterface $em,
     ) {}
 
-    #[Route('/register', name: 'app_register')]
+    #[Route('/v2/olona-register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
+
+        return $this->redirectToRoute('app_olona_talents_register');
+
         $user = new User();
         $user->setDateInscription(new DateTime());
         $form = $this->createForm(RegistrationFormType::class, $user);

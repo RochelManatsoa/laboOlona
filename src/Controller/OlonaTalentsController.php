@@ -75,7 +75,7 @@ class OlonaTalentsController extends AbstractController
         return $this->render('v2/premium.html.twig', []);
     }
 
-    #[Route('/v2/olona-register', name: 'app_olona_talents_register')]
+    #[Route('/register', name: 'app_olona_talents_register')]
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,

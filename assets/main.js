@@ -149,7 +149,6 @@ $(function() {
     
         $('#myFormT').on('submit', function(e) {
             e.preventDefault();
-            console.log('submit')
             var url = $(this).data('action');
             var formData = new FormData(this);
             $.ajax({
@@ -164,7 +163,6 @@ $(function() {
                 },
                 success: function(data) {
                     Turbo.renderStreamMessage(data);
-                    console.log('success')
                     // Vérifiez si la réponse contient le target 'errorToast'
                     if (data.includes('target="errorToast"')) {
                         var errorToast = new Toast($('#errorToast')[0]);
@@ -309,8 +307,10 @@ $(function() {
         const currentTheme = $('body').hasClass('bootstrap-dark') ? 'dark' : 'light';
         // const currentTheme = $('html').attr('data-bs-theme') === 'dark' ? 'dark' : 'light';
         const logoSrc = currentTheme === 'dark' ? '/images/logo-olona-talents-white600x200.png' : '/images/logo-olona-talents-black600x200.png';
+        const loginImage = currentTheme === 'dark' ? 'images/login-dark.webp' : 'images/login-light.webp';
         $('#logoOffCanvas').attr('src', logoSrc);
         $('#logo').attr('src', logoSrc);
+        $('#login-image').attr('src', loginImage);
     
         const themeIcon = currentTheme === 'dark' ? 'bi-brightness-high' : 'bi-moon-stars-fill';
         $('#switch-theme i').removeClass();
@@ -343,7 +343,6 @@ $(function() {
         if (imageInput && profileImgDiv) {
             imageInput.addEventListener('change', function(event) {
                 if (event.target.files && event.target.files[0]) {
-                    console.log('change')
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         profileImgDiv.style.backgroundImage = 'url(' + e.target.result + ')';
@@ -378,7 +377,6 @@ $(function() {
         });        
 
         $('a[role="menuitem"][href="#finish"]').on('click', function(){
-            console.log('click')
             var successToast = new Toast($('#errorToast')[0]);
             setTimeout(function() {
                 successToast.show(); 
@@ -434,7 +432,7 @@ $(function() {
                 contentType: 'application/json',
                 data: JSON.stringify({ href: href }),
                 success: function(response) {
-                    console.log('Success:', response.message);
+                    console.log(response.message);
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', xhr.responseText);
@@ -487,7 +485,6 @@ $(function() {
             }else{
                 $('#annonce_boost_boostFacebook_'+ elementId +'').hide()
             }
-            console.log(annonceBoostValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', annonceBoostValue);
         });
 
@@ -533,7 +530,6 @@ $(function() {
             }else{
                 $('#prestation_boost_boostFacebook_'+ elementId +'').hide()
             }
-            console.log(prestationValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', prestationValue);
         });
 
@@ -557,7 +553,6 @@ $(function() {
             }else{
                 $('#candidate_boost_boost_boost_facebook').hide()
             }
-            console.log(selectedValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
         });
 
@@ -588,7 +583,6 @@ $(function() {
             }else{
                 $('#recruiter_boost_boost_boost_facebook').hide()
             }
-            console.log(selectedValue);
             $('button[data-bs-target="#confirmationModal"]').attr('data-bs-price', selectedValue);
         });
 
@@ -610,7 +604,6 @@ $(function() {
         boostProfiles.forEach(function(boost) {
             $('input[type="radio"][name="' + boost.name + '"]').on('change', function() {
                 var dataLabel = $(this).data('value');
-                console.log(dataLabel);
                 $('#confirmationModal .modal-body').text("Voulez-vous vraiment dépenser " + dataLabel + " crédits");
             });
         });
@@ -628,7 +621,6 @@ $(function() {
                     cardElement.addClass('card-selected');
                 }
                 var dataLabel = $(this).closest('.col').find('h2').data('label');
-                console.log(dataLabel);
 
                 var nextButton = $('#boostProfileButton'); 
                 nextButton.attr('data-bs-toggle', 'modal');
@@ -710,7 +702,6 @@ $(function() {
             var packageType = button.data('bs-type');
             var hiddenField = $(this).find('.annonce-edit-id');
             hiddenField.val(annonceId);
-            console.log(hiddenField)
             var submitButton = $(this).find('#confirmButton');
             submitButton.attr('data-id', packageType);
             submitButton.attr('data-annonce-id', hiddenField);
@@ -744,7 +735,6 @@ $(function() {
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    console.log(data)
                     if (data.success) {
                         var trow = $('#row_notification_' + data.id )
                         var status = trow.find('.status');
@@ -775,7 +765,6 @@ $(function() {
                     'Accept': 'text/vnd.turbo-stream.html'
                 },
                 success: function(data) {
-                    console.log(data); 
                     if (data.success) {
                         // Redirection vers l'URL spécifiée dans data.redirect
                         if (data.redirect) {
@@ -806,10 +795,8 @@ $(function() {
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    console.log(data); // Assurez-vous que c'est `success` et non `succes`
                     if (data.success) {
                         $('#successToast .toast-body').text(data.message);
-                        console.log($('#newCheckBoost').length); 
                         $('#newCheckBoost').html(data.detail);
                         var successToast = new Toast($('#successToast')[0]);
                         successToast.show();
@@ -841,7 +828,6 @@ $(function() {
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    console.log(data); 
                     if (data.success) {
                         $('#successToast .toast-body').text(data.message);
                         var part = $('#col_prestation_recruiter_' + data.id)
@@ -876,7 +862,6 @@ $(function() {
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    console.log(data); 
                     if (data.success) {
                         $('#successToast .toast-body').text(data.message);
                         var part = $('#col_annonce_recruiter_' + data.id)
@@ -914,7 +899,6 @@ $(function() {
                 },
                 success: function(data) {
                     Turbo.renderStreamMessage(data);
-                    console.log(data)
                     if (data.success) {
                         $('#successToast').find('.toast-body').text(data.message);
                         var successToast = new Toast($('#successToast')[0]);
@@ -950,7 +934,6 @@ $(function() {
                 },
                 success: function(data) {
                     Turbo.renderStreamMessage(data);
-                    console.log(data)
                     if (data.success) {
                         $('#successToast').find('.toast-body').text(data.message);
                         var successToast = new Toast($('#successToast')[0]);
@@ -984,7 +967,6 @@ $(function() {
                 },
                 success: function(data) {
                     Turbo.renderStreamMessage(data);
-                    console.log(data)
                     if (data.success) {
                         $('#successToast').find('.toast-body').text(data.message);
                         var successToast = new Toast($('#successToast')[0]);
@@ -1018,7 +1000,6 @@ $(function() {
                 },
                 success: function(data) {
                     Turbo.renderStreamMessage(data);
-                    console.log(data)
                     if (data.success) {
                         $('#successToast').find('.toast-body').text(data.message);
                         var successToast = new Toast($('#successToast')[0]);
@@ -1096,7 +1077,6 @@ $(function() {
                     'Accept': 'text/vnd.turbo-stream.html'
                 },
                 success: function(data) {
-                    console.log('Response processed by Turbo:', data);
                     Turbo.renderStreamMessage(data);
         
                     // Vérifiez si la réponse contient le target 'errorToast'

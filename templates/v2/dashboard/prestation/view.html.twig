@@ -136,6 +136,17 @@
 								</form>
 							</div>
 						{% endif %}
+						<div class="my-4 card position-relative text-center d-none d-md-block">
+							<a href="{{ path('app_v2_contact') }}">
+								<img class="img-fluid" src="{{ asset('images/pubs/espace-pub-horizontal-regard-beauty-_1_.webp')}}">
+							</a>
+						</div>
+						
+						<div class="m-4 card position-relative text-center d-block d-md-none">
+							<a href="{{ path('app_v2_contact') }}">
+								<img class="img-fluid" src="{{ asset('images/pubs/espace-pub-carre-regard-beauty.webp')}}">
+							</a>
+						</div>
 					</div>
 				{% else %}
 					<a href="{{path('app_v2_edit_prestation', {'prestation': prestation.id})}}" class="btn btn-outline-warning  texte-uppercase  my-3 px-5">
