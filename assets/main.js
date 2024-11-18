@@ -426,9 +426,8 @@ $(function() {
             $('#candidate-card-container').html(prestationContent);
         });
 
-        $('button[data-bs-target="#connectingModal"]').on('click', function() {
+        $(document).on('click', 'button[data-bs-target="#connectingModal"]', function() {
             var href = $(this).data('bs-href'); 
-    
             $.ajax({
                 url: '/store/target/path', 
                 type: 'POST',

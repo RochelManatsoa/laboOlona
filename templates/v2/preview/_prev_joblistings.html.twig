@@ -1,21 +1,56 @@
-<div class="mb-4 mb-2">
+<div class="mb-2">
     <div class="">
-        <div class="card-img-top bg-image-candidat" style="background-image: url('{{ asset('images/annonce.jpg')}}');">
-            <div class="titre-overlay position-absolute w-100">
-                <h6 class="card-title m-0 p-2">{{ job.titre|upper }}</h6>
-            </div>
-        </div>
         <div class="card-body">
+            <div class="d-flex p-2 align-items-center">
+                <div class="me-3">
+                    <div class="rounded-circle" style="
+                        width: 65px;
+                        height: 65px;
+                        background-image: url('{{ job.entreprise.fileName ? asset('uploads/compagnies/' ~ job.entreprise.fileName) : asset('images/annonce.jpg') }}');
+                        background-size: cover;
+                        background-position: center;
+                    ">
+                    </div>
+                </div>
+                <div class="flex-grow-1">
+                    <span class="fs-6">
+                        {% if app.user %}
+                            <a href="{{ path('app_v2_job_offer_view', {'id': job.id })}}">
+                                {{ job.titre }}
+                            </a>
+                        {% else %}
+                            <span style="cursor:pointer;" class="annonce-link" data-id="{{ job.id }}">{{ job.titre }}</span>
+                        {% endif %}
+                    </span><br>
+                    <span class="small fw-lighter">{{ generateJobReference(job.id) }}</span>
+                </div>
+            </div>
+            <hr>
             <p class="card-text small">
                 {{ job.shortDescription|raw }}
             </p>
+            <p class="small ">
+                <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-currency-exchange"></i></span>
+                <span class="">Budget indicatif : </span>
+                {{ job.budgetAnnonce }}
+            </p>
+            <p class="small ">
+                <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-bookmark-check"></i></span>
+                <span class="">Contrat : </span>
+                {{ job.typeContrat }}
+            </p>
+            <p class="small ">
+                <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-hourglass-top"></i></span>
+                <span class="">Expire le </span>
+                {{ job.dateExpiration|date("d/m/Y") }}
+            </p>
             {% if job.competences|length > 0 %}
-                <p class="card-text fw-bold small">
-                    <span class="fs-5">Compétences requises</span><br>
+                <p class="small">
+                    <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-inboxes-fill"></i></span>  Compétences requises : 
                     {% set count = 0 %}
                     {% for skill in job.competences %}
                         {% if count < 3 %}
-                            <span class="badge bg-info">{{ skill.nom }}</span>
+                            <span class="badge bg-info rounded-pill px-2 lh-1">{{ skill.nom }}</span>
                             {% set count = count + 1 %}
                         {% endif %}
                     {% endfor %}
@@ -24,26 +59,9 @@
                     {% endif %}
                 </p>
             {% endif %}
-            <p class="small">
-                <span class="fw-bold fs-5">Type contrat</span><br>
-                <i class="bi bi-bookmark-check"></i>
-                {{ job.typeContrat }}
-            </p>
-            {% if job.budgetAnnonce is not empty %}
-                <p class="small">
-                    <span class="fw-bold fs-5">Budget indicatif</span><br>
-                    <i class="bi bi-currency-exchange"></i>
-                    {{ job.budgetAnnonce }}
-                </p>
-            {% endif %}
-            <p class="small">
-                <span class="fw-bold fs-5">Date expiration</span><br>
-                <i class="bi bi-hourglass-top"></i>
-                {{ job.dateExpiration|date("d/m/Y") }}
-            </p>
             <div class="text-center">
-                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_job_offer_view', {'id':job.id}) }}">Voir contact</button>
-                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_job_offer_view', {'id':job.id}) }}">Postuler</button>
+                <button type="button" class="btn btn-outline-primary btn-sm rounded fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_job_offer_view', {'id':job.id}) }}">Voir contact</button>
+                <button type="button" class="btn btn-outline-primary btn-sm rounded fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_job_offer_view', {'id':job.id}) }}">Postuler</button>
             </div>
         </div>
     </div>
