@@ -88,19 +88,24 @@
     });
 
     function loadMoreJobs() {
-        currentPage++;
-        var url = `{{ path('api_job_offers') }}?page=${currentPage}`;
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function(html) {
-                if (html.trim() === "") {
-                    allDataLoaded = true;
-                } else {
-                    $('#jobs-container').append(html);
+        if (!allDataLoaded) {
+            currentPage++;
+            var url = `{{ path('api_job_offers') }}?page=${currentPage}`;
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json', 
+                success: function(data) {
+                    $('#jobs-container').append(data.html);
+                    if (!data.hasMore) {
+                        allDataLoaded = true;
+                    }
+                },
+                error: function() {
+                    allDataLoaded = true; 
                 }
-            }
-        });
+            });
+        }
     }
     </script>
 {% endblock %}
