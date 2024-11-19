@@ -92,10 +92,18 @@ class ProfileController extends AbstractController
         ->setFirstResult(($page - 1) * $limit);
 
         $candidates = $qb->getQuery()->getResult();
-
-        return $this->render('v2/dashboard/result/parts/_part_candidates_list.html.twig', [
-            'candidates' => $candidates,
-            'recruiter' => $recruiter,
+        $html = "";
+        if(count($candidates) > 0){
+            $html = $this->renderView('v2/dashboard/result/parts/_part_candidates_list.html.twig', [
+                'candidates' => $candidates,
+                'recruiter' => $recruiter
+            ]);
+        }
+    
+        return $this->json([
+            'html' => $html,
+            'hasMore' => count($candidates) == $limit,
+            'count' => count($candidates) ,
         ]);
     }
     

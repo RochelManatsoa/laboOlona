@@ -118,10 +118,18 @@ class PrestationController extends AbstractController
         ->setFirstResult(($page - 1) * $limit);
 
         $prestations = $qb->getQuery()->getResult();
-
-        return $this->render('v2/dashboard/prestation/_prestations_list.html.twig', [
-            'prestations' => $prestations,
-            'profile' => $profile,
+        $html = "";
+        if(count($prestations) > 0){
+            $html = $this->renderView('v2/dashboard/result/parts/_part_prestations_list.html.twig', [
+                'prestations' => $prestations,
+                'profile' => $profile
+            ]);
+        }
+    
+        return $this->json([
+            'html' => $html,
+            'hasMore' => count($prestations) == $limit,
+            'count' => count($prestations) ,
         ]);
     }
     

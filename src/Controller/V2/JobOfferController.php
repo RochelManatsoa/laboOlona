@@ -102,9 +102,17 @@ class JobOfferController extends AbstractController
             ->setFirstResult(($page - 1) * $limit);
 
         $joblistings = $qb->getQuery()->getResult();
-
-        return $this->render('v2/dashboard/result/parts/_part_joblistings_list.html.twig', [
-            'joblistings' => $joblistings,
+        $html = "";
+        if(count($joblistings) > 0){
+            $html = $this->renderView('v2/dashboard/result/parts/_part_joblistings_list.html.twig', [
+                'joblistings' => $joblistings,
+            ]);
+        }
+    
+        return $this->json([
+            'html' => $html,
+            'hasMore' => count($joblistings) == $limit,
+            'count' => count($joblistings) ,
         ]);
     }
 
