@@ -10,12 +10,14 @@ use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Vues\CandidatVues;
 use App\Service\User\UserService;
+use App\Entity\BusinessModel\Credit;
 use App\Manager\OlonaTalentsManager;
 use App\Service\ElasticsearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
+use App\Manager\ProfileManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -34,6 +36,7 @@ class ProfileController extends AbstractController
         private ActivityLogger $activityLogger,
         private AppExtension $appExtension,
         private ElasticsearchService $elasticsearch,
+        private ProfileManager $profileManager,
     ){}
     
     #[Route('/profiles', name: 'app_v2_profiles')]
@@ -156,6 +159,7 @@ class ProfileController extends AbstractController
             'recruiter' => $recruiter,
             'action' => $this->urlGeneratorInterface->generate('app_olona_talents_candidates'),
             'purchasedContact' => $purchasedContact,
+            'show_candidate_price' => $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE),
             'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
             'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
             'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),

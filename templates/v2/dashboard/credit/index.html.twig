@@ -36,9 +36,9 @@
     <div class="container">
       <div class="row text-center">
           {% for package in packages %}
-              {% set col_size = 'col-4' %}
+              {% set col_size = 'col-12 col-sm-4' %}
               {% if loop.index <= 2 %}
-                  {% set col_size = 'col-6' %}
+                  {% set col_size = 'col-12 col-sm-6' %}
               {% endif %}
               
               <div class="{{ col_size }} mx-auto">
@@ -47,7 +47,8 @@
                           <div class="card-body text-center">
                               <i class="bi bi-rocket fs-1 text-warning"></i><br>
                               <span class="card-title h5 mt-5">{{ package.name }} <br><span class="fw-bolder fs-2"> {{ package.credit }} </span>crédits</span>
-                              <p class="card-text py-3">{{ package.price|number_format(0, ',', '.') }} Ariary</p>
+                              <p class="card-text fw-light pt-3">{{ convertToEuro(package.price, currency)}} €</p>
+                              <p class="card-text fw-bolder pb-3">{{ package.price|number_format(0, ',', '.') }} Ariary</p>
                           </div>
                       </a>
                   </div>

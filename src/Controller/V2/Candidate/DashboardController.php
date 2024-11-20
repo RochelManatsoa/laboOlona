@@ -47,6 +47,10 @@ class DashboardController extends AbstractController
     {
         $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $candidat = $this->userService->checkProfile();
+        $creditAmount = 0;
+        if($candidat->isIsGeneretated()){
+            $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_UPLOAD_CV);
+        }
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $formOne = $this->createForm(EditStepOneType::class, $candidat);
@@ -69,10 +73,6 @@ class DashboardController extends AbstractController
             $success = true;
             $status = 'Succès';
             $upload = false;
-            $creditAmount = 0;
-            if($candidat->isIsGeneretated()){
-                $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_UPLOAD_CV);
-            }
 
             if($this->profileManager->canApplyAction($currentUser, Credit::ACTION_UPLOAD_CV)){
                 $responseOpenai = $this->candidatController->analyse(new \Symfony\Component\HttpFoundation\Request(), $candidat);
@@ -136,6 +136,7 @@ class DashboardController extends AbstractController
             'form' => $form->createView(),
             'form_one' => $formOne->createView(),
             'candidat' => $candidat,
+            'creditAmount' => $creditAmount,
             'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
             'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
             'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),

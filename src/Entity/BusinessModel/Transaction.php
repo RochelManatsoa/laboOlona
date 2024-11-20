@@ -71,7 +71,7 @@ class Transaction
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Sequentially([
-        new Assert\Length(min:10, minMessage:'La référence est trop courte.'),
+        new Assert\Length(min:8, minMessage:'La référence est trop courte.'),
         new Assert\Regex(pattern: '/^[a-zA-Z0-9]*$/', message: 'La référence ne doit contenir que des chiffres et des lettres.'),
     ])]
     private ?string $reference = null;

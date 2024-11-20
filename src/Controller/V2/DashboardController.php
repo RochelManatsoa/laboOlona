@@ -90,7 +90,7 @@ class DashboardController extends AbstractController
         $typology = ucfirst($typology); 
         $user->setType(strtoupper($typology));
         $this->userService->save($user); 
-        if($user->getType() === User::ACCOUNT_ENTREPRISE || $typology === 'Entreprise'){
+        if($user->getType() === User::ACCOUNT_ENTREPRISE || ucfirst($typology) === 'Entreprise'){
             $recruiter = $user->getEntrepriseProfile();
             if(!$recruiter instanceof EntrepriseProfile){
                 $recruiter = $this->profileManager->createCompany($user); 

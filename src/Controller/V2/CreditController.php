@@ -40,6 +40,10 @@ class CreditController extends AbstractController
         }
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
+        /** @var Devise $currency */
+        $currency = $this->em->getRepository(Devise::class)->findOneBy([
+            'slug' => 'euro'
+        ]);
         $transaction = $this->transactionManager->init();
         $form = $this->createForm(TransactionType::class, $transaction);
         $form->handleRequest($request);
@@ -68,7 +72,8 @@ class CreditController extends AbstractController
 
         return $this->render('v2/dashboard/credit/index.html.twig', [
             'packages' => $this->packageRepository->findBy([], ['id' => 'DESC']),
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'currency' => $currency,
         ]);
     }
     

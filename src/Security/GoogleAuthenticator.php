@@ -140,7 +140,7 @@ class GoogleAuthenticator extends OAuth2Authenticator
     public function start(Request $request, AuthenticationException $authException = null)
     {
         return new RedirectResponse(
-            '/connect/', // might be the site, where users choose their oauth provider
+            '/connect/', 
             Response::HTTP_TEMPORARY_REDIRECT
         );
     }
