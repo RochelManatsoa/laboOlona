@@ -173,6 +173,7 @@ class JobOfferController extends AbstractController
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);
+        $showRecruiterPrice = $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER);
         if($hasProfile === null){
             return $this->redirectToRoute('app_v2_dashboard');
         }
@@ -312,7 +313,7 @@ class JobOfferController extends AbstractController
             'annonce' => $annonce,
             'candidat' => $candidat,
             'applied' => $applied,
-            'show_recruiter_price' => $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER),
+            'show_recruiter_price' => $showRecruiterPrice,
             'apply_job_price' => $this->profileManager->getCreditAmount(Credit::ACTION_APPLY_JOB),
             'action' => $this->urlGeneratorInterface->generate('app_olona_talents_joblistings'),
             'purchasedContact' => $purchasedContact,

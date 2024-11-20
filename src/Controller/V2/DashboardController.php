@@ -318,6 +318,12 @@ class DashboardController extends AbstractController
     #[Route('/contact', name: 'app_v2_contact')]
     public function support(Request $request): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $contactForm = new ContactForm;
         $contactForm->setCreatedAt(new \DateTime());
         $form = $this->createForm(ContactFormType::class, $contactForm);
