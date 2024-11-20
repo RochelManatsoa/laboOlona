@@ -171,6 +171,7 @@ class PrestationController extends AbstractController
         $prestation = $this->prestationManager->init();
         $prestation->setContactEmail($currentUser->getEmail());
         $prestation->setContactTelephone($currentUser->getTelephone());
+        $creditAmount = $this->profileManager->getCreditAmount(Credit::ACTION_APPLY_PRESTATION_RECRUITER);
         $profile = $this->userService->checkProfile();
         if($profile instanceof CandidateProfile){
             $prestation->setCandidateProfile($profile);
@@ -230,6 +231,7 @@ class PrestationController extends AbstractController
 
         return $this->render('v2/dashboard/prestation/create.html.twig', [
             'form' => $form->createView(),
+            'creditAmount' => $creditAmount,
             'action' => $this->urlGeneratorInterface->generate('app_olona_talents_prestations'),
         ]);
     }

@@ -210,10 +210,17 @@
 				<div style="display:none;">
 					{{ form_widget(form) }}
 				</div>
+				{% if app.user.credit.total < creditAmount %}
+				<button type="button" data-bs-toggle="modal" data-bs-target="#lowCreditModal" data-bs-price="{{ creditAmount }} crédits" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+					<i class="bi bi-save"></i>
+					Publier ( {{ creditAmount }} crédits )
+				</button>
+				{% else %}
 				<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
 					<i class="bi bi-save"></i>
-					Publier ( 10 crédits)
+					Publier ( {{ creditAmount }} crédits )
 				</button>
+				{% endif %}
 				{{ form_end(form) }}
 			</div>
 		</div>

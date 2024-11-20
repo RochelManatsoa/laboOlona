@@ -86,7 +86,7 @@ class DashboardController extends AbstractController
     public function profileInfo(Request $request, User $user): Response
     {             
         $session = $this->requestStack->getSession();        
-        $typology = $session->has('typology') && $session->get('typology') !== null ? $session->get('typology') : 'Candidat';
+        $typology = $session->has('typology') && $session->get('typology') !== "" ? $session->get('typology') : 'Candidat';
         $typology = ucfirst($typology); 
         $user->setType(strtoupper($typology));
         $this->userService->save($user); 
