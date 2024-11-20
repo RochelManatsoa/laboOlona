@@ -49,6 +49,7 @@ class AppExtension extends AbstractExtension
             new TwigFilter('candidature_status_Label', [$this, 'candidatureStatusLabel']),
             new TwigFilter('timeUntil', [$this, 'timeUntil']),
             new TwigFilter('time_ago', [$this, 'timeAgo']),
+            new TwigFilter('ucfirst', [$this, 'ucfirstFilter']),
         ];
     }
 
@@ -95,6 +96,10 @@ class AppExtension extends AbstractExtension
             new TwigFunction('tailleEntreprise', [$this, 'tailleEntreprise']),
             new TwigFunction('getSearchQuery', [$this, 'getSearchQuery']),
         ];
+    }
+    public function ucfirstFilter($value)
+    {
+        return ucfirst($value);
     }
 
     public function getSearchQuery($name)

@@ -84,7 +84,7 @@ class OlonaTalentsController extends AbstractController
         AppAuthenticator $authenticator,
     ): Response {
         $typology = $request->query->get('typology', null);
-        $this->requestStack->getSession()->set('typology', $typology);
+        $this->requestStack->getSession()->set('typology', ucfirst($typology));
         $user = new User();
         $user->setDateInscription(new DateTime());
         $form = $this->createForm(RegistrationFormType::class, $user);

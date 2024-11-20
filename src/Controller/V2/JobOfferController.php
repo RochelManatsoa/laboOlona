@@ -312,6 +312,8 @@ class JobOfferController extends AbstractController
             'annonce' => $annonce,
             'candidat' => $candidat,
             'applied' => $applied,
+            'show_recruiter_price' => $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER),
+            'apply_job_price' => $this->profileManager->getCreditAmount(Credit::ACTION_APPLY_JOB),
             'action' => $this->urlGeneratorInterface->generate('app_olona_talents_joblistings'),
             'purchasedContact' => $purchasedContact,
             'form' => $form,

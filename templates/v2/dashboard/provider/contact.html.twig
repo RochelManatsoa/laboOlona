@@ -51,7 +51,7 @@
 							<button type="submit" class="btn btn-primary my-3 my-sm-5 px-4 float-end fw-bold">
 								Suivant	<i class="bi bi-arrow-right ms-2"></i>
 							</button>
-							<a href="{{ path('app_v2_dashboard_create_profile', {'id':app.user.id, 'typology':app.user.type|capitalize})}}" class="btn btn-outline-primary my-3 my-sm-5 px-4 float-end fw-bold me-2">
+							<a href="{{ path('app_v2_dashboard_create_profile', {'id':app.user.id, 'typology':app.user.type|ucfirst})}}" class="btn btn-outline-primary my-3 my-sm-5 px-4 float-end fw-bold me-2">
 								<i class="bi bi-arrow-left me-2"></i> Précedent
 							</a>
 					</div>

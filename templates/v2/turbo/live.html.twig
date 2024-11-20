@@ -3,7 +3,7 @@
     {{ credit }}
   </template>
 </turbo-stream>
-{% if candidat is defined and candidat is not null %}
+{% if (candidat is defined and candidat is not null) and (purchasedContact is defined and purchasedContact is not null)%}
     <turbo-stream action="update" target="contactDetails">
         <template>
             <fieldset>
@@ -14,7 +14,7 @@
         </template>
     </turbo-stream>
 {% endif %}
-{% if recruiter is defined and recruiter is not null %}
+{% if (recruiter is defined and recruiter is not null) and (purchasedContact is defined and purchasedContact is not null) %}
     <turbo-stream action="update" target="contactDetails">
         <template>
             <fieldset>

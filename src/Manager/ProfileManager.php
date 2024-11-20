@@ -215,31 +215,31 @@ class ProfileManager
     {
         switch ($action) {
             case Credit::ACTION_VIEW_CANDIDATE :
-                $amount = 50;
+                $amount = 75;
                 break;
 
             case Credit::ACTION_VIEW_RECRUITER :
-                $amount = 50;
+                $amount = 150;
                 break;
                 
             case Credit::ACTION_UPLOAD_CV :
-                $amount = 15;
+                $amount = 120;
                 break;
                 
             case Credit::ACTION_APPLY_OFFER :
-                $amount = 15;
+                $amount = 20;
                 break;
                 
             case Credit::ACTION_APPLY_JOB :
-                $amount = 10;
+                $amount = 20;
                 break;
                 
             case Credit::ACTION_APPLY_PRESTATION_CANDIDATE :
-                $amount = 10;
+                $amount = 20;
                 break;
                 
             case Credit::ACTION_APPLY_PRESTATION_RECRUITER :
-                $amount = 10;
+                $amount = 20;
                 break;
             
             default:
