@@ -48,18 +48,22 @@
                         <div class="form-floating mb-3">
                             {{ form_widget(registrationForm.nom) }}
                             {{ form_label(registrationForm.nom) }}
+                            {{ form_errors(registrationForm.nom) }}
                         </div>
                         <div class="form-floating mb-3">
                             {{ form_widget(registrationForm.prenom) }}
                             {{ form_label(registrationForm.prenom) }}
+                            {{ form_errors(registrationForm.prenom) }}
                         </div>
                         <div class="form-floating mb-3">
                             {{ form_widget(registrationForm.email) }}
                             {{ form_label(registrationForm.email) }}
+                            {{ form_errors(registrationForm.email) }}
                         </div>
                         <div class="form-floating mb-3">
                             {{ form_widget(registrationForm.plainPassword.first) }}
                             {{ form_label(registrationForm.plainPassword.first) }}
+                            {{ form_errors(registrationForm.plainPassword.first) }}
                         </div>
                         <div class="form-floating mb-3">
                             {{ form_widget(registrationForm.plainPassword.second) }}
