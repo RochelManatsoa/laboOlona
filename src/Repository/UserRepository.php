@@ -133,26 +133,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $qb->getResult();
     }
 
-    public function paginateUsers(UserData $data): PaginationInterface
+    public function paginateUsers(array $data): PaginationInterface
     {
-        if ($data->getDays() !== 1) {
-            return $this->gatUsersLogedInSince($data->getDays(), $data->getPage());
+        if ($data['days'] > 1) {
+            return $this->gatUsersLogedInSince($data['days'], $data['page']);
         }
-        if ($data->getStartDate() === null && $data->getEndDate() === null) {
-            return $this->gatUsersLogedInToday($data->getPage());
+        if ($data['startDate'] === "" && $data['endDate'] === "") {
+            return $this->gatUsersLogedInToday($data['page']);
         }
+        $startDate = new \DateTime($data['startDate']);
+        $endDate = new \DateTime($data['endDate']);
 
         $qb = $this->createQueryBuilder('u')
             ->where('u.lastLogin >= :startDate')
             ->andWhere('u.lastLogin <= :endDate')
-            ->setParameter('startDate', $data->getStartDate())
-            ->setParameter('endDate', $data->getEndDate())
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
             ->orderBy('u.lastLogin', 'DESC')
             ->getQuery();
 
         return $this->paginator->paginate(
             $qb,
-            $data->getPage(),
+            $data['page'],
             20,
             [
                 'distinct' => true,
