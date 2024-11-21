@@ -3,16 +3,37 @@
 {% block body %}
 	<div class="container mt-5">
         <h1 class="h4 mb-3">Utilisateurs connéctés à Olona Talents</h1>
-        {{ form_start(form) }}
-        <div class="m-4">
-          <div class="input-group">
-              {{ form_widget(form.days, {'attr': {'class': 'form-control'}}) }}
-              {{ form_widget(form.startDate, {'attr': {'class': 'form-control'}}) }}
-              {{ form_widget(form.endDate, {'attr': {'class': 'form-control'}}) }}
-              {{ form_widget(form.submit, {'attr': {'class': 'btn btn-dark px-5'}}) }}
+        <form action="{{ path('app_v2_staff_history')}}" method="get" class="p-4">
+          <div class="row g-2 align-items-end">
+            <div class="col-auto">
+              <label for="user_data_days" class="col-form-label fw-lighter small">Période</label>
+              <select id="user_data_days" name="days" class="form-select" aria-label="Période">
+                <option value="0" {% if query.days == 0 %}selected{% endif %}>Choisir période</option>
+                <option value="1" {% if query.days == 1 %}selected{% endif %}>Aujourd'hui</option>
+                <option value="2" {% if query.days == 2 %}selected{% endif %}>Hier</option>
+                <option value="7" {% if query.days == 7 %}selected{% endif %}>7 derniers jours</option>
+                <option value="14" {% if query.days == 14 %}selected{% endif %}>14 derniers jours</option>
+                <option value="30" {% if query.days == 30 %}selected{% endif %}>30 derniers jours</option>
+                <option value="60" {% if query.days == 60 %}selected{% endif %}>60 derniers jours</option>
+                <option value="90" {% if query.days == 90 %}selected{% endif %}>90 derniers jours</option>
+              </select>
+            </div>
+            <div class="col-auto">
+              <label for="user_data_startDate" class="col-form-label fw-lighter small">Date de début</label>
+              <input type="date" id="user_data_startDate" name="startDate" class="form-control" value="{{ query.startDate }}">
+            </div>
+            <div class="col-auto">
+              <label for="user_data_endDate" class="col-form-label fw-lighter small">Date de fin</label>
+              <input type="date" id="user_data_endDate" name="endDate" class="form-control" value="{{ query.endDate }}">
+            </div>
+            <div class="col-auto">
+              <label for="user_data_submit" class="col-form-label">  </label>
+              <button type="submit" id="user_data_submit" class="btn btn-dark">Filtrer</button>
+            </div>
           </div>
-        </div>
-        {{ form_end(form) }}
+          <input type="hidden" id="user_data_page" name="page" value="{{ query.page }}">
+        </form>
+        
         {% if users|length > 0 %}
         <table class="table table-hover">
             <thead>

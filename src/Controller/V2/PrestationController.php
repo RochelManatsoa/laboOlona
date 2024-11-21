@@ -274,6 +274,7 @@ class PrestationController extends AbstractController
     {
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
+        $showContactPrice = $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
         $hasProfile = $this->userService->checkUserProfile($currentUser);
         if($hasProfile === null){
             return $this->redirectToRoute('app_v2_dashboard');
@@ -312,6 +313,7 @@ class PrestationController extends AbstractController
             'prestation' => $prestation,
             'purchasedContact' => $purchasedContact,
             'creater' => $creater,
+            'showContactPrice' => $showContactPrice,
             'action' => $this->urlGeneratorInterface->generate('app_olona_talents_prestations'),
             'owner' => $owner,
         ]);

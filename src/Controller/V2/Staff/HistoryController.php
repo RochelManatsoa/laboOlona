@@ -25,24 +25,17 @@ class HistoryController extends AbstractController
     public function index(Request $request): Response
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
-        $data = new UserData($request->query->get('startDate'), $request->query->get('endDate'), $request->query->getInt('page', 1), $request->query->getInt('days', 1));
-        
-        /** Formulaire de recherche */
-        $form = $this->createForm(UserDataType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $startDate = $form->get('startDate')->getData();
-            $endDate = $form->get('endDate')->getData();
-            $page = $form->get('page')->getData() ?? 1;
-            $days = $form->get('days')->getData() ?? 1;
-            
-            $data = new UserData($startDate, $endDate, $page, $days);
-        }
-        // dd($data);
+        $page = $request->query->get('page', 1);
+        $array = [
+            'startDate' => $request->query->get('startDate', ""),
+            'endDate' => $request->query->get('endDate', ""),
+            'page' => is_numeric($page) && (int)$page > 0 ? (int)$page : 1,
+            'days' => $request->query->getInt('days', 1),
+        ];
 
         return $this->render('v2/staff/history/index.html.twig', [
-            'users' => $this->em->getRepository(User::class)->paginateUsers($data),
-            'form' => $form->createView(),
+            'users' => $this->em->getRepository(User::class)->paginateUsers($array),
+            'query' => $array,
         ]);
     }
 
@@ -57,34 +50,5 @@ class HistoryController extends AbstractController
             'profile' => $this->userService->checkUserProfile($user),
             'user' => $user,
         ]);
-    }
-}
-
-class HistoryData
-{
-    private int $startDate;
-    private int $endDate;
-    private int $page;
-
-    public function __construct(int $startDate, int $endDate, int $page)
-    {
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
-        $this->page = $page;
-    }
-
-    public function getStartDate(): int
-    {
-        return $this->startDate;
-    }
-
-    public function getEndDate(): int
-    {
-        return $this->endDate;
-    }
-
-    public function getPage(): int
-    {
-        return $this->page;
     }
 }

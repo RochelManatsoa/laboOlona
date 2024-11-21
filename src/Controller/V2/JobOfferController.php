@@ -123,6 +123,7 @@ class JobOfferController extends AbstractController
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);
+        $showRecruiterPrice = $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER);
         if($hasProfile === null){
             return $this->redirectToRoute('app_v2_dashboard');
         }
@@ -163,6 +164,7 @@ class JobOfferController extends AbstractController
 
         return $this->render('v2/dashboard/job_offer/view.html.twig', [
             'annonce' => $annonce,
+            'show_recruiter_price' => $showRecruiterPrice,
             'purchasedContact' => $purchasedContact,
         ]);
     }
