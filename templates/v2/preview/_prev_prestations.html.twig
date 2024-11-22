@@ -33,7 +33,7 @@
                 </div>
                 <hr>
                 <p class="card-text small">
-                {{ prestation.openai}}
+                {{ prestation.openai|raw}}
                 </p>
                 {% if prestation.tarifPrestation is defined and prestation.tarifPrestation is not null %}
                 <p class="small ">
