@@ -3,7 +3,14 @@
 {% block title %}Connexion | Olona Talents{% endblock %}
 
 {% block meta %}
-    {{ parent() }}
+<meta name="description" content="Connectez-vous à votre compte sur https://olona-talents.com/ pour accéder à vos services personnalisés, gérer vos annonces, consulter vos candidatures et profiter d'une expérience utilisateur optimale.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement, travail, emploi, talents, candidat, recruteur, offres, agence, olona, olona talents, olona talents agence, talents agence, agence talents, candidature, candidature agence, candidature olona, candidature olona talents">
+<meta property="og:title" content="Connexion | Olona Talents">
+<meta property="og:description" content="Connectez-vous à votre compte sur https://olona-talents.com/ pour accéder à vos services personnalisés, gérer vos annonces, consulter vos candidatures et profiter d'une expérience utilisateur optimale.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
 {% endblock %}
 
 {% block body %}

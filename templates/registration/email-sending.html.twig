@@ -1,20 +1,27 @@
-{% extends "base.html.twig" %}
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Veuillez consulter votre boîte de réception{% endblock %}
+
 {% block body %}
-<section id="email-sending" class="" style="background-color: black;">
-    <div class="text-center">
-        <h1 class="fs-2 mb-3 font-weight-normal">
-            {{ meta_title() }}
+
+<section>
+    <div class="shadow-custom col-12 col-sm-10 col-md-8 col-lg-8 p-2 p-sm-4 mx-auto">
+        <h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+            <i class="bi bi-envelope-at text-warning me-2"></i>
+            Vérifiez votre mail
         </h1>
-        <div class="col-6 offset-3">
-            <p class="my-4 text-white">
-            Nous avons envoyé un email de confirmation à l'adresse que vous avez fournie lors de l'inscription. Veuillez consulter votre boîte de réception et suivre les instructions pour activer votre compte.
+
+        <div class="col-md-10 mx-auto text-center mb-5">
+            <p>
+                Nous avons envoyé un email de confirmation à l'adresse que vous avez fournie lors de l'inscription. Veuillez consulter votre boîte de réception et suivre les instructions pour activer votre compte.
             </p>
-            <p class="my-4 text-white">
+            <p>
                 {{ 'app_email_sending.not_received'|trans({
                     '%resend_confirmation%': path('app_forgot_password_request'),
                 })|raw }}
             </p>
         </div>
+
     </div>
 </section>
 {% endblock %}
