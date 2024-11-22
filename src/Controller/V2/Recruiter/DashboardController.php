@@ -38,6 +38,12 @@ class DashboardController extends AbstractController
     #[Route('/', name: 'app_v2_recruiter_dashboard')]
     public function index(Request $request): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $recruiter = $this->userService->checkProfile();
 

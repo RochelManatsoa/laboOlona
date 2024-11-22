@@ -32,16 +32,9 @@ class ActivityLogController extends AbstractController
     {
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
-        
-        if (!$currentUser) {
-            return $this->json([
-                'message' => 'User not authenticated',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
         $pageUrl = $request->request->get('page', '');
-
-        if ($pageUrl !== '' && $pageUrl[0] !== '#') {
+        
+        if ($currentUser) {
             $this->activityLogger->logPageViewActivity($currentUser, $pageUrl);
             
             return $this->json([
@@ -50,7 +43,7 @@ class ActivityLogController extends AbstractController
         }
     
         return $this->json([
-            'message' => 'Invalid URL or not logged',
-        ], Response::HTTP_BAD_REQUEST);
+            'message' => 'Not logged',
+        ], Response::HTTP_ACCEPTED);
     }
 }
