@@ -6,13 +6,17 @@ use DateTime;
 use App\Entity\User;
 use App\Entity\Prestation;
 use App\Security\EmailVerifier;
+use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
+use App\Service\User\UserService;
 use App\Form\RegistrationFormType;
 use App\Security\AppAuthenticator;
 use Symfony\Component\Mime\Address;
 use App\Manager\OlonaTalentsManager;
 use App\Entity\Entreprise\JobListing;
 use App\Service\ElasticsearchService;
+use App\Entity\Moderateur\ContactForm;
+use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -24,11 +28,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
-use App\Service\ActivityLogger;
-use App\Service\User\UserService;
+use App\Service\Mailer\MailerService;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class OlonaTalentsController extends AbstractController
@@ -46,6 +49,7 @@ class OlonaTalentsController extends AbstractController
         private UserService $userService,
         private ActivityLogger $activityLogger,
         private RequestStack $requestStack,
+        private MailerService $mailerService,
     ) {}
 
     #[Route('/', name: 'app_home')]
@@ -80,8 +84,6 @@ class OlonaTalentsController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         EmailVerifier $emailVerifier,
-        UserAuthenticatorInterface $userAuthenticator,
-        AppAuthenticator $authenticator,
     ): Response {
         $typology = $request->query->get('typology', null);
         $this->requestStack->getSession()->set('typology', ucfirst($typology));
@@ -112,11 +114,8 @@ class OlonaTalentsController extends AbstractController
                     ->context(['user' => $user])
             );
 
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
-            );
+            return $this->redirectToRoute('app_email_sending');
+
         }
 
         return $this->render('v2/olona_register.html.twig', [
@@ -197,5 +196,32 @@ class OlonaTalentsController extends AbstractController
     public function viewRecruiter(int $id): Response
     {
         return $this->render('v2/upgrade.html.twig', []);
+    }
+
+    #[Route('/v2/contact', name: 'app_contact')]
+    public function support(Request $request): Response
+    {
+        $contactForm = new ContactForm;
+        $contactForm->setCreatedAt(new \DateTime());
+        $form = $this->createForm(ContactFormType::class, $contactForm);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contactForm = $form->getData();
+            $this->em->persist($contactForm);
+            $this->em->flush();
+            $this->mailerService->sendMultiple(
+                ["contact@olona-talents.com", "nirinarocheldev@gmail.com", "techniques@olona-talents.com"],
+                "Nouvelle entrée sur le formulaire de contact",
+                "contact.html.twig",
+                [
+                    'user' => $contactForm,
+                ]
+            );
+            $this->addFlash('success', 'Votre message a été bien envoyé. Nous vous repondrons dans le plus bref delais');
+        }
+
+        return $this->render('v2/contact.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }

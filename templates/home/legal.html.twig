@@ -3,7 +3,14 @@
 {% block title %}Mentions légales{% endblock %}
 
 {% block meta %}
-    {{ parent() }}
+<meta name="description" content="Découvrez les mentions légales du site https://olona-talents.com/. Retrouvez les informations sur la propriété intellectuelle, les données personnelles, les conditions d’utilisation et les responsabilités légales liées à l’utilisation de nos services.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement">
+<meta property="og:title" content="Mentions légales">
+<meta property="og:description" content="Découvrez les mentions légales du site https://olona-talents.com/. Retrouvez les informations sur la propriété intellectuelle, les données personnelles, les conditions d’utilisation et les responsabilités légales liées à l’utilisation de nos services.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
 {% endblock %}
 
 {% block body %}

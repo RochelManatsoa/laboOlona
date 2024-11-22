@@ -65,10 +65,11 @@ class SecurityController extends AbstractController
         }
     
         if ($user->getType() === User::ACCOUNT_ENTREPRISE) {
-            if(!$user->getEntrepriseProfile() instanceof EntrepriseProfile){
-                return $this->redirectToRoute('app_profile_entreprise');
-            }elseif ($user->getEntrepriseProfile()->getStatus() === EntrepriseProfile::STATUS_BANNED) {
+            if ($user->getEntrepriseProfile() instanceof EntrepriseProfile && $user->getEntrepriseProfile()->getStatus() === EntrepriseProfile::STATUS_BANNED) {
                 return $this->redirectToRoute('app_logout');
+            }
+            if ($user->getEntrepriseProfile() instanceof EntrepriseProfile && $user->getEntrepriseProfile()->getStatus() === EntrepriseProfile::STATUS_VALID) {
+                return $this->redirectToRoute('app_v2_profiles');
             }
             return $this->redirectToRoute('app_v2_recruiter_dashboard');
         }
@@ -76,6 +77,9 @@ class SecurityController extends AbstractController
         if ($user->getType() === User::ACCOUNT_CANDIDAT) {
             if ($user->getCandidateProfile() instanceof CandidateProfile && $user->getCandidateProfile()->getStatus() === CandidateProfile::STATUS_BANNISHED) {
                 return $this->redirectToRoute('app_logout');
+            }
+            if ($user->getCandidateProfile() instanceof CandidateProfile && $user->getCandidateProfile()->getStatus() === CandidateProfile::STATUS_VALID ) {
+                return $this->redirectToRoute('app_v2_job_offer');
             }
             return $this->redirectToRoute('app_v2_candidate_dashboard');
         }
@@ -108,6 +112,7 @@ class SecurityController extends AbstractController
                 'message' => "User not found"
             ], Response::HTTP_FORBIDDEN);
         }else{
+            dd("etoile");
             return $this->redirectToRoute('app_connect');
         }
     }

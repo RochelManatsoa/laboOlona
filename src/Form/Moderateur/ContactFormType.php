@@ -5,6 +5,7 @@ namespace App\Form\Moderateur;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\ContactForm;
 use Symfony\Component\Form\AbstractType;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
@@ -15,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Validator\Constraints\Sequentially;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 
 class ContactFormType extends AbstractType
 {
@@ -85,6 +87,11 @@ class ContactFormType extends AbstractType
                 'attr' => [
                     'label' => 'J\'accepte les termes et conditions.',
                 ],
+            ])
+            ->add('captcha', Recaptcha3Type::class, [
+                'constraints' => new Recaptcha3(),
+                'action_name' => 'contact',
+                'locale' => 'fr',
             ])
         ;
     }

@@ -4,7 +4,6 @@ namespace App\Controller\Dashboard\Referrer;
 
 use App\Service\User\UserService;
 use App\Entity\Entreprise\JobListing;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,10 +16,12 @@ class AnnonceController extends AbstractController
     ) {}
     
     #[Route('/{jobId}', name: 'app_dashboard_referrer_annonce_view')]
-    public function view(Request $request, JobListing $annonce): Response
+    public function view(JobListing $annonce): Response
     {
-        return $this->render('dashboard/referrer/annonce/view.html.twig', [
-            'annonce' => $annonce,
-        ]);
+        if($annonce->getStatus() === JobListing::STATUS_PUBLISHED){
+            return $this->redirectToRoute('app_v2_job_offer_view', ['id' => $annonce->getId()]);
+        }
+
+        return $this->redirectToRoute('app_v2_job_offer');
     }
 }

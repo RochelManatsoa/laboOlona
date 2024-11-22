@@ -2,31 +2,37 @@
 
 {% block title %}Réinitialiser votre mot de passe{% endblock %}
 
+{% block meta %}
+<meta name="description" content="Réinitialisez votre mot de passe sur https://olona-talents.com/ en toute sécurité. Suivez les étapes pour récupérer l'accès à votre compte rapidement et facilement.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement, travail, emploi, talents, candidat, recruteur, offres, agence, olona, olona talents, olona talents agence, talents agence, agence talents, candidature, candidature agence, candidature olona, candidature olona talents">
+<meta property="og:title" content="Réinitialiser mot de passe | Olona Talents">
+<meta property="og:description" content="Réinitialisez votre mot de passe sur https://olona-talents.com/ en toute sécurité. Suivez les étapes pour récupérer l'accès à votre compte rapidement et facilement.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+
 {% block body %}
-<section id="contact" class="my-5">
-    <div class="container my-5 d-flex flex-column justify-content-center">
-        <div class="row my-4">
-            <div class="col d-flex flex-column justify-content-center">
-                {% for flash_error in app.flashes('reset_password_error') %}
-                    <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-                {% endfor %}
-                <h1 class="text-center display-6 my-4">Réinitialisation de votre mot de passe</h1>
-
-                {{ form_start(requestForm, {'attr': {'class': 'col-md-6 mx-auto'}}) }}
-                        <div class="form-floating mb-3">
-                            {{ form_widget(requestForm.email, {'attr': {'placeholder': 'email@olona-talents.com'}}) }}
-                            {{ form_label(requestForm.email) }}
-                        </div>
-                    <div>
-                        <small>
-                            Saisissez votre adresse e-mail, et nous vous enverrons un lien pour réinitialiser votre mot de passe.
-                        </small>
-                    </div>
-
-                    <button class="btn btn-primary my-2">Générer un mot de passe</button>
-                {{ form_end(requestForm) }}
+<section id="contact">
+    <div class="shadow-custom col-12 col-sm-10 col-md-8 col-lg-8 p-2 p-sm-4 mx-auto">
+        <h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+            <i class="bi bi-envelope-at text-warning me-2"></i>
+            Réinitialisation de votre mot de passe
+        </h1>
+        {{ form_start(requestForm, {'attr': {'class': 'col-md-8 mx-auto'}}) }}
+                <div class="form-floating mb-3">
+                    {{ form_widget(requestForm.email, {'attr': {'placeholder': 'email@olona-talents.com'}}) }}
+                    {{ form_label(requestForm.email) }}
+                </div>
+            <div>
+                <small>
+                    Saisissez votre adresse e-mail, et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                </small>
             </div>
-        </div>
+
+            <button class="btn btn-primary mb-5 mt-3">Générer un mot de passe</button>
+        {{ form_end(requestForm) }}
     </div>
 </section>
 {% endblock %}
