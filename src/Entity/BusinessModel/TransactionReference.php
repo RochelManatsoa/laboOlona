@@ -36,6 +36,21 @@ class TransactionReference
     ])]
     private ?float $montant = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Sequentially([
+        new Assert\Length(
+            min: 10,
+            max: 13,
+            minMessage: 'Le numéro est trop court.',
+            maxMessage: 'Le numéro est trop long.'
+        ),
+        new Assert\Regex(
+            pattern: '/^\+?\d{10,13}$/',
+            message: 'Mauvais format de numéro.'
+        ),
+    ])]
+    private ?string $telephone = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -85,6 +100,18 @@ class TransactionReference
     public function setMontant(?float $montant): static
     {
         $this->montant = $montant;
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?string $telephone): static
+    {
+        $this->telephone = $telephone;
 
         return $this;
     }

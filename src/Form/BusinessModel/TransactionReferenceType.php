@@ -38,6 +38,9 @@ class TransactionReferenceType extends AbstractType
             ->add('montant', NumberType::class, [
                 'label' => 'Montant de la transaction (*)',
             ])
+            ->add('telephone', TextType::class, [
+                'label' => 'Numéro du compte (*)',
+            ])
             ->add('reference', TextType::class, [
                 'label' => 'Référence de la transaction (*)',
             ]);

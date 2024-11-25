@@ -2,6 +2,8 @@
 
 namespace App\Manager;
 
+use Exception;
+use Throwable;
 use App\Entity\User;
 use App\Entity\Prestation;
 use Twig\Environment as Twig;
@@ -13,7 +15,6 @@ use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Manager\Finance\EmployeManager;
 use App\Entity\BusinessModel\BoostVisibility;
-use Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -148,7 +149,7 @@ class MailManager
         );
     }
 
-    public function errorAlertUser(User $user, string $url, Exception $exception)
+    public function errorAlertUser(User $user, string $url, Throwable $exception)
     {        
         $dashboardUrl = $this->urlGenerator->generate('app_v2_staff_history_user', [
             'user' => $user->getId()

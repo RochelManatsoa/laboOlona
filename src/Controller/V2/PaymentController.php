@@ -2,11 +2,14 @@
 
 namespace App\Controller\V2;
 
+use App\Entity\User;
 use App\Service\PaymentService;
+use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\BusinessModel\Order;
-use App\Entity\BusinessModel\Transaction;
+use App\Service\Mailer\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\BusinessModel\Transaction;
 use App\Form\BusinessModel\TransactionType;
 use App\Manager\BusinessModel\CreditManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +26,8 @@ class PaymentController extends AbstractController
         private PaymentService $paymentService,
         private TransactionManager $transactionManager,
         private CreditManager $creditManager,
+        private MailerService $mailerService,
+        private UserService $userService,
     ){}
 
     #[Route('/paypal/checkout/{orderNumber}', name: 'app_v2_paypal_checkout')]
@@ -128,6 +133,8 @@ class PaymentController extends AbstractController
     #[Route('/mobile-money/{orderNumber}', name: 'app_v2_mobile_money_checkout')]
     public function mobileMoney(Order $order, Request $request, TransactionManager $transactionManager): Response
     {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
         $mobileMoney = $order->getPaymentMethod();
         $transaction = $order->getTransaction();
         if(!$transaction instanceof Transaction){
@@ -142,8 +149,26 @@ class PaymentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $transaction = $form->getData();
             $command = $form->getData()->getCommand();
+            $command->setStatus(Order::STATUS_PROCESSING);
             $transaction->setPackage($command->getPackage());
+            $transaction->setUpdatedAt(new \DateTime());
+            $transaction->setStatus(Transaction::STATUS_PROCESSING);
             $transactionManager->save($transaction);
+
+            /** On envoi un mail */
+            $this->mailerService->send(
+                "aolonaprodadmi@gmail.com",
+                "Paiement sur Olona Talents",
+                "notification_paiement.html.twig",
+                [
+                    'user' => $currentUser,
+                    'transaction' => $transaction,
+                    'order' => $order,
+                    'dashboard_url' => $this->generateUrl('app_dashboard_moderateur_business_model_transaction_view', [
+                        'transaction' => $transaction->getId(),
+                    ], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
             
             return $this->redirectToRoute('app_v2_user_order');
         }else {
