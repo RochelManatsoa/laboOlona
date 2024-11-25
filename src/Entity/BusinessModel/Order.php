@@ -108,7 +108,7 @@ class Order
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->status = self::STATUS_PENDING;
+        $this->status = self::STATUS_ON_HOLD;
     }
 
     #[ORM\PrePersist]

@@ -125,7 +125,11 @@
 			  <li class="nav-item"><a href="{{ path('app_home_legal')}}" class="nav-link px-2 text-body-secondary">Mentions Légales</a></li>
 			  <li class="nav-item"><a href="{{ path('app_home_privacy')}}" class="nav-link px-2 text-body-secondary">Politique de Confidentialité</a></li>
 			  <li class="nav-item"><a href="{{ path('app_home_terms')}}" class="nav-link px-2 text-body-secondary">Conditions d'Utilisation</a></li>
+			  {% if app.user %}
+			  <li class="nav-item"><a href="{{ path('app_v2_contact')}}" class="nav-link px-2 text-body-secondary">Nous contacter</a></li>
+			  {% else %}
 			  <li class="nav-item"><a href="{{ path('app_contact')}}" class="nav-link px-2 text-body-secondary">Nous contacter</a></li>
+			  {% endif %}
 			</ul>
 			<p class="text-center text-body-secondary">© 2024 Olona Talents, Tout droit reservé</p>
 		</footer>

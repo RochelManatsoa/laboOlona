@@ -30,7 +30,12 @@
     {% set amount = order.package.price ~ ' Ar' %}
 {% endif %}
 	<section class="">
-		<div class="shadow-custom p-2 p-sm-4">
+		<div class="shadow-custom p-2 p-sm-5">
+			<h1 class="fs-4 fw-bolder text-center my-3 my-sm-4">
+				<i class="bi bi-bookmark-star text-warning me-2"></i>
+				Détails de votre commande
+			</h1>
+			<p class="text-center mb-4">Merci d'avoir passé commande sur notre plateforme ! Retrouvez ci-dessous toutes les informations relatives à votre achat.</p>
 
             <div class="container">
                 <div class="row justify-content-center">
@@ -38,7 +43,7 @@
                         <!-- Entête de la commande -->
                         <div class="card mb-4 shadow">
                             <div class="card-header bg-primary text-white">
-                                <h2 class="mb-0">Détails de la commande</h2>
+                                <h2 class="mb-0 text-center">Résumé de votre commande</h2>
                             </div>
                             <div class="card-body">
                                 <p><strong>Numéro de commande :</strong> {{ order.orderNumber }}</p>
@@ -50,7 +55,7 @@
                         <!-- Articles de la commande -->
                         <div class="card mb-4 shadow">
                             <div class="card-header bg-primary text-white">
-                                <h2 class="mb-0">Achat</h2>
+                                <h2 class="mb-0 text-center">Achat</h2>
                             </div>
                             <div class="card-body">
                                 <p><strong>Nom :</strong> {{ order.package.name}} | <strong>{{ order.package.credit }} crédits</strong></p>
@@ -63,7 +68,7 @@
                         <!-- Total de la commande -->
                         <div class="card mb-4 shadow">
                             <div class="card-header bg-primary text-white">
-                                <h2 class="mb-0">Total</h2>
+                                <h2 class="mb-0 text-center">Total</h2>
                             </div>
                             <div class="card-body">
                                 <p><strong>Total des articles :</strong> {{ amount }}</p>
@@ -75,7 +80,11 @@
 
                         <!-- Boutons d'action -->
                         <div class="d-flex justify-content-center">
-                            <a href="{{ path('app_v2_credit') }}" class="btn btn-primary me-2">Continuer les achats</a>
+                            {% if order.status is same as(constant('App\\Entity\\BusinessModel\\Order::STATUS_ON_HOLD')) %}
+                                <a href="{{ path('app_v2_mobile_money_checkout', {'orderNumber': order.orderNumber}) }}" class="btn btn-primary me-2">Terminer l'achat</a>
+                            {% else %}
+                                <a href="{{ path('app_v2_credit') }}" class="btn btn-primary me-2">Continuer les achats</a>
+                            {% endif %}
                             <a href="{{ path('app_v2_contact') }}" class="btn btn-secondary">Contactez le support</a>
                         </div>
                     </div>

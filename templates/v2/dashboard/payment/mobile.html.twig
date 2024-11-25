@@ -44,9 +44,10 @@
         </div>
         <div class="col">
           {{ form_row(form.amount, {'attr': {'value': order.package.price}})}}   
+          {{ form_row(form.telephone)}}   
           {{ form_row(form.reference)}}   
           <hr>
-          {{ form_row(form.transactionReferences)}}   
+          {# {{ form_row(form.transactionReferences)}}    #}
           <div style="display:none">   
           {{ form_widget(form)}}      
           </div>

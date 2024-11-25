@@ -50,6 +50,14 @@ class TransactionType extends AbstractType
                 ],
                 'help' => 'Référence reçue par SMS après votre paiement Mobile Money.',
             ])
+            ->add('telephone', TextType::class, [
+                'required' => false,
+                'label' => 'Numéro de téléphone (*)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Numéro de téléphone du compte Mobile Money.',
+            ])
             ->add('transactionReferences', CollectionType::class, [
                 'entry_type' => TransactionReferenceType::class,
                 'allow_add' => true,

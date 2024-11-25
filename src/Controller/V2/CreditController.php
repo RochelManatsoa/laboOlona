@@ -99,11 +99,7 @@ class CreditController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             $order = $this->orderManager->saveForm($form);
-            if($order->getPaymentMethod()->getSlug() === 'paypal'){
-                return $this->redirectToRoute('app_v2_paypal_checkout', [
-                    'orderNumber' => $order->getOrderNumber()
-                ]);
-            }
+            
             return $this->redirectToRoute('app_v2_mobile_money_checkout', [
                 'orderNumber' => $order->getOrderNumber()
             ]);
