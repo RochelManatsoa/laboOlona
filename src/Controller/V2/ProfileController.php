@@ -18,6 +18,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
 use App\Manager\ProfileManager;
+use Google\Service\CivicInfo\Candidate;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -114,6 +115,9 @@ class ProfileController extends AbstractController
     public function viewProfile(Request $request, int $id): Response
     {
         $candidat = $this->em->getRepository(CandidateProfile::class)->find($id);
+        if ($candidat === null || $candidat->getStatus() === CandidateProfile::STATUS_BANNISHED || $candidat->getStatus() === CandidateProfile::STATUS_PENDING) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais le candidat demandé n\'existe pas.');
+        }
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);
@@ -153,7 +157,7 @@ class ProfileController extends AbstractController
         }
         $this->activityLogger->logProfileViewActivity($currentUser, $this->appExtension->generatePseudo($candidat));
         
-        return $this->render('v2/dashboard/profile/view.html.twig', [
+        return $this->render('v2/dashboard/profile/view_candidate.html.twig', [
             'candidat' => $candidat,
             'type' => $currentUser->getType(),
             'recruiter' => $recruiter,
@@ -163,6 +167,45 @@ class ProfileController extends AbstractController
             'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
             'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
             'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
+        ]);
+    }
+    
+    #[Route('/recruiter/view/{id}', name: 'app_v2_view_recruiter_profile')]
+    public function viewRecruiterProfile(int $id): Response
+    {
+        $recruiter = $this->em->getRepository(EntrepriseProfile::class)->find($id);
+        if ($recruiter === null || $recruiter->getStatus() === EntrepriseProfile::STATUS_BANNED || $recruiter->getStatus() === EntrepriseProfile::STATUS_PENDING) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais l\'entreprise demandée n\'existe pas.');
+        }
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
+        $candidat = $this->userService->checkProfile();
+        if($recruiter == $candidat){
+            return $this->redirectToRoute('app_v2_recruiter_dashboard');
+        }
+        if(!$candidat instanceof CandidateProfile){
+            $candidat = null;
+        }
+
+        $contactRepository = $this->em->getRepository(PurchasedContact::class);
+        $purchasedContact = $contactRepository->findOneBy([
+            'buyer' => $currentUser,
+            'contact' => $recruiter->getEntreprise(),
+        ]);
+
+        $this->activityLogger->logProfileViewActivity($currentUser, $this->appExtension->generateReference($recruiter));
+        
+        return $this->render('v2/dashboard/profile/view_recruiter.html.twig', [
+            'candidat' => $candidat,
+            'type' => $currentUser->getType(),
+            'recruiter' => $recruiter,
+            'action' => $this->urlGeneratorInterface->generate('app_olona_talents_candidates'),
+            'purchasedContact' => $purchasedContact,
+            'show_recruiter_price' => $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER),
         ]);
     }
 }

@@ -3,10 +3,6 @@
 namespace App\Command;
 
 use App\Entity\Cron\CronLog;
-use App\Entity\Notification;
-use App\Entity\Finance\Employe;
-use App\Repository\UserRepository;
-use App\Manager\NotificationManager;
 use App\Service\Mailer\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CandidateProfileRepository;
@@ -14,7 +10,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use App\Entity\{CandidateProfile, EntrepriseProfile, ModerateurProfile, ReferrerProfile};
 
 #[AsCommand(
     name: 'app:send-relance',
@@ -52,7 +47,6 @@ class RelanceProfileCommand extends Command
 
         foreach ($relanceIntervals as $relanceNumber => $interval) {
             $profiles = $this->candidateProfileRepository->findProfilesToRelance($interval['daysSinceCreation'], $interval['daysSinceLastRelance'], $relanceNumber);
-            dump(count($profiles));
             foreach ($profiles as $profile) {
                 if ($profile->getRelanceCount() === $relanceNumber - 1) {
                     $categorie = 'relance_' . $relanceNumber;
@@ -79,16 +73,8 @@ class RelanceProfileCommand extends Command
 
         $this->em->persist($cronLog);
         $this->em->flush();
-
-        $output->writeln('Languages and sectors initialized');
-
-
-        // outputs a message followed by a "\n"
-        $output->writeln('Whoa!');
-
-        // outputs a message without adding a "\n" at the end of the line
         $output->write('You are about to ');
-        $output->writeln('attribute roles Olona Talents.');
+        $output->writeln('sending relance emails Olona Talents.');
 
         return Command::SUCCESS;
     }

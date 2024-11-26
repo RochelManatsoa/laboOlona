@@ -41,6 +41,9 @@ class PrestationStaffType extends AbstractType
         $builder
             ->add('titre', TextType::class, [
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'constraints' => new Sequentially([
                     new NotBlank(message:'Le titre est obligatoire.'),
                     new Length(
@@ -53,6 +56,9 @@ class PrestationStaffType extends AbstractType
             ])
             ->add('secteurs', EntityType::class, [
                 'class' => Secteur::class,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'choice_label' => function(?Secteur $secteur) {
                     return $secteur ? $secteur->getNom() : '';
                 },
@@ -60,10 +66,16 @@ class PrestationStaffType extends AbstractType
                 'required' => false,
             ])
             ->add('status', ChoiceType::class, [
-                'choices' => Prestation::CHOICE_STATUS
+                'choices' => Prestation::CHOICE_STATUS,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'constraints' => new Sequentially([
                     new NotBlank(message:'La description est obligatoire.'),
                     new Length(
@@ -79,21 +91,39 @@ class PrestationStaffType extends AbstractType
             ->add('tarifPrestation', TarifPrestationType::class, [
                 'required' => false,
                 'label' => 'Tarif proposé',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
             ])
             ->add('modalitesPrestation', ChoiceType::class, [
-                'choices' => Prestation::CHOICE_MODALITE
+                'choices' => Prestation::CHOICE_MODALITE,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
             ])
             ->add('availability', AvailabilityType::class, [
                 'required' => false,
                 'label' => false,
             ])
-            ->add('cleanDescription', TextareaType::class, [
-                'required' => false,
-            ])
             ->add('openai', TextareaType::class, [
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ],
             ])
-            ->add('motsCles')
+            ->add('motsCles', TextareaType::class, [
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ]
+            ])
             ->add('typePrestation', EntityType::class, [
                 'class' => TypePrestation::class,
                 'choice_label' => 'name',
@@ -101,31 +131,78 @@ class PrestationStaffType extends AbstractType
                 'autocomplete' => true,
                 'expanded' => false,
                 'multiple' => false,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
             ])
-            ->add('portfolioLinks')
+            ->add('portfolioLinks', TextareaType::class, [
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ],
+            ])
             ->add('contactTelephone', TextType::class, [
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'constraints' => new Sequentially([
                     new NotBlank(message:'Le contact est obligatoire.'),
                 ]),
             ])
             ->add('contactEmail', EmailType::class, [
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'constraints' => new Sequentially([
                     new NotBlank(message:'Le mail est obligatoire.'),
                 ]),
             ])
-            ->add('contactReseauxSociaux')
+            ->add('contactReseauxSociaux', TextareaType::class, [
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ],
+            ])
             ->add('preferencesCommunication', TextType::class, [
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'constraints' => new Sequentially([
                     new NotBlank(message:'Champ obligatoire.'),
                 ]),
             ])
-            ->add('conditionsParticulieres')
-            ->add('engagementQualite')
+            ->add('conditionsParticulieres', TextareaType::class, [
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ],
+            ])
+            ->add('engagementQualite', TextareaType::class, [
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ],
+            ])
             ->add('candidateProfile', EntityType::class, [
                 'class' => CandidateProfile::class,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'choice_label' => function(?CandidateProfile $candidateProfile) {
                     return $candidateProfile ? $candidateProfile->getMatricule() : '';
                 },
@@ -134,6 +211,9 @@ class PrestationStaffType extends AbstractType
             ])
             ->add('entrepriseProfile', EntityType::class, [
                 'class' => EntrepriseProfile::class,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'choice_label' => function(?EntrepriseProfile $entrepriseProfile) {
                     return $entrepriseProfile ? $entrepriseProfile->getNom() : '';
                 },
@@ -141,7 +221,7 @@ class PrestationStaffType extends AbstractType
                 'required' => false,
             ])
             ->add('competences', TextType::class, [
-                'label' => false,
+                'label' => "Compétences",
                 'autocomplete' => true,
                 'attr' => [
                     'data-controller' => 'technical-add-autocomplete',
@@ -161,11 +241,17 @@ class PrestationStaffType extends AbstractType
                 'autocomplete_url' => '/autocomplete/competences_autocomplete_field',
                 'no_results_found_text' => 'Aucun résultat',
                 'no_more_results_text' => 'Plus de résultats',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
             ])
             ->add('file', FileType::class, [
                 'required' => false,
-                'label' => 'app_identity_expert_step_one.avatar_desc',
-                'attr' => ['class' => 'd-none'],
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'label' => 'Ajouter un fichier',
+                'attr' => ['class' => ''],
                 'constraints' => [
                     new File([
                         'maxSize' => '2048k',
@@ -179,6 +265,9 @@ class PrestationStaffType extends AbstractType
                 ],
             ])
             ->add('isGenerated', CheckboxType::class, [
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
                 'label' => 'Contenu regénéré ?'
             ])
         ;
