@@ -13,8 +13,8 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Controller\Dashboard\Moderateur\OpenAi\CandidatController;
-use App\Entity\{CandidateProfile, EntrepriseProfile, ModerateurProfile, ReferrerProfile};
 use App\Service\ErrorLogger;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsCommand(
     name: 'app:generate-report',
@@ -30,6 +30,7 @@ class ReportProfileCommand extends Command
         private EntityManagerInterface $em,
         private AppExtension $appExtension,
         private ErrorLogger $errorLogger,
+        private UrlGeneratorInterface $urlGenerator,
         private CandidatController $candidatController
     ){
         parent::__construct();
@@ -82,9 +83,42 @@ class ReportProfileCommand extends Command
                 } catch (\Exception $e) {
                     $output->writeln('Erreur de génération du rapport par IA pour le profil ID: ' . $this->appExtension->generatePseudo($profile));
                     $output->writeln($e->getMessage());
+                    $this->mailerService->send(
+                        'miandrisoa.olona@gmail.com',
+                        "Erreur génération rapport IA pour le profil ID: " . $this->appExtension->generatePseudo($profile),
+                        'error/user_openai.mail.twig',
+                        [
+                            'message' => $e->getMessage(),
+                            'candidat' => $this->appExtension->generatePseudo($profile),
+                            'dashboard_url' => $this->urlGenerator->generate(
+                                'app_dashboard_moderateur_profile_candidat_view', 
+                                [
+                                    'id' => $profile->getId()
+                                ], 
+                                UrlGeneratorInterface::ABSOLUTE_URL
+                            ),
+                        ]
+                    );
                     return Command::FAILURE;
                 }
 
+            }else{
+                $this->mailerService->send(
+                    'miandrisoa.olona@gmail.com',
+                    "Erreur génération rapport IA pour le profil ID: " . $this->appExtension->generatePseudo($profile),
+                    'error/user_openai.mail.twig',
+                    [
+                        'message' => 'CV manquant et pourtant validé',
+                        'candidat' => $this->appExtension->generatePseudo($profile),
+                        'dashboard_url' => $this->urlGenerator->generate(
+                            'app_dashboard_moderateur_profile_candidat_view', 
+                            [
+                                'id' => $profile->getId()
+                            ], 
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        ),
+                    ]
+                );
             }
         }
 
@@ -98,14 +132,6 @@ class ReportProfileCommand extends Command
 
         $this->em->persist($cronLog);
         $this->em->flush();
-
-        $output->writeln('AI-generated report saved');
-
-
-        // outputs a message followed by a "\n"
-        $output->writeln('Whoa!');
-
-        // outputs a message without adding a "\n" at the end of the line
         $output->write('You are about to ');
         $output->writeln('generating recruitement report Olona Talents.');
 

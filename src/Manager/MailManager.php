@@ -156,7 +156,7 @@ class MailManager
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $this->mailerService->send(
-            'nirinarocheldev@gmail.com',
+            'miandrisoa.olona@gmail.com',
             'Erreur experience utilisateur : '.$user->getNom().' '.$user->getPrenom(),
             'error/user_log.mail.twig',
             [

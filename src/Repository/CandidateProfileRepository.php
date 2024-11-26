@@ -481,6 +481,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+    
     public function findProfilesForReport()
     {
         $queryBuilder = $this->createQueryBuilder('c');

@@ -42,10 +42,8 @@ class PrestationController extends AbstractController
     public function createPrestation(Request $request): Response
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
-        $candidat = $this->userService->checkProfile();
         /** @var Prestation $prestation */
         $prestation = $this->prestationManager->init();
-        $prestation->setCandidateProfile($candidat);
         $form = $this->createForm(PrestationStaffType::class, $prestation, []);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
@@ -54,9 +52,6 @@ class PrestationController extends AbstractController
         }
 
         return $this->render('v2/dashboard/staff/prestation/create.html.twig', [
-            'prestations' => $this->em->getRepository(Prestation::class)->findBy([
-                'candidateProfile' => $candidat
-            ],['id' => 'DESC']),
             'form' => $form->createView(),
             'new' => true,
         ]);
