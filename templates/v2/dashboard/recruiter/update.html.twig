@@ -3,7 +3,7 @@
 <turbo-stream action="update" target="jobListingForm">
     <template>
     
-	{{ form_start(form, {'attr': {'id': 'createJob'}}) }}
+		{{ form_start(form, {'attr': {'id': 'createJob'}}) }}
 		<div class="row">
 			<div class="col">
 				<div class="mb-3">
@@ -44,33 +44,62 @@
 		</div>
 
 		<div class="row">
-			<div class="mb-3 experience-form">
-				<fieldset>
-					<span class="fw-bolder text-uppercase fs-5 mb-3">
-						<i class="bi bi-rocket-takeoff me-2"></i>
-						Booster</span>
-					{{ form_row(form.boost)}}
+			<label class="fw-bold fs-4 form-label" for=""><i class="bi bi-rocket mx-1 h5"></i> Boost</label>
+			<div id="annonce_boost">
+				<fieldset class="mb-3">
+					<div class="radio-grid">
+						<div class="form-check selected">
+							<input type="radio" id="annonce_boost_placeholder" name="annonce[boost]" class="form-check-input" value="">
+							<label class="form-check-label fw-bold fs-6" for="annonce_boost_placeholder">Pas de boost</label>
+						</div>
+						<div class="form-check">
+							<input type="radio" id="annonce_boost_4" name="annonce[boost]" class="form-check-input" value="4" checked="checked">
+							<label class="form-check-label fw-bold fs-6" for="annonce_boost_4">Boost 1 jour (100 crédits)</label>
+						</div>
+						<div class="form-check">
+							<input type="radio" id="annonce_boost_5" name="annonce[boost]" class="form-check-input" value="5">
+							<label class="form-check-label fw-bold fs-6" for="annonce_boost_5">Boost 7 jours (600 crédits)</label>
+						</div>
+						<div class="form-check">
+							<input type="radio" id="annonce_boost_6" name="annonce[boost]" class="form-check-input" value="6">
+							<label class="form-check-label fw-bold fs-6" for="annonce_boost_6">Boost 15 jours (1000 crédits)</label>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="mb-3">
+					<div id="annonce_boostFacebook"  style="display:none;">
+                		<h4 class="text-center fw-bolder h5 my-3">Augmentez votre influence sur Facebook</h4>
+						<div class="radio-grid" data-html="data-html">
+							<div class="form-check selected-facebook">
+								<input type="radio" id="annonce_boostFacebook_placeholder" name="annonce[boostFacebook]" class="form-check-input" value="" checked="checked">
+								<label class="form-check-label" for="annonce_boostFacebook_placeholder">Pas de boost <i class="bi bi-facebook mx-2 h5"></i></label>
+							</div>
+							<div class="form-check">
+								<input type="radio" id="annonce_boostFacebook_1" name="annonce[boostFacebook]" class="form-check-input" value="1">
+								<label class="form-check-label" for="annonce_boostFacebook_1">Boost <i class="bi bi-facebook mx-2 h5"></i> 7 jours (2100 crédits)</label>
+							</div>
+							<div class="form-check">
+								<input type="radio" id="annonce_boostFacebook_2" name="annonce[boostFacebook]" class="form-check-input" value="2">
+								<label class="form-check-label" for="annonce_boostFacebook_2">Boost <i class="bi bi-facebook mx-2 h5"></i> 15 jours (4500 crédits)</label>
+							</div>
+							<div class="form-check">
+								<input type="radio" id="annonce_boostFacebook_3" name="annonce[boostFacebook]" class="form-check-input" value="3">
+								<label class="form-check-label" for="annonce_boostFacebook_3">Boost <i class="bi bi-facebook mx-2 h5"></i> 30 jours (9000 crédits)</label>
+							</div>
+						</div>
+					</div>
 				</fieldset>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col">
-				<div class="mb-3">
-					{{ form_widget(form.agreeTerms, {
-								'label': 'J\'accepte les Termes et Conditions',
-								'label_attr': {'class': 'fw-bold small'},
-							})}}
-						</div>
-					</div>
-				</div>
-
 				<div style="display:none;">
 				{{ form_widget(form) }}
 				</div>
 				<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
 					<i class="bi bi-save"></i>
-					Publier ( 10 crédits)
+					Publier ( 20 crédits)
 				</button>
 			</div>
 		

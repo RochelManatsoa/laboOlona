@@ -39,7 +39,7 @@ class MailerService
     ): void
     {
         $email = new TemplatedEmail();
-        $sender = $from === '' ? 'noreply@olona-talents.com': $from;
+        $sender = $from === '' ? 'support@olona-talents.com': $from;
         $env = 'Olona Talents';
         if ($this->env === 'prod') {
             $email->to($to);
@@ -51,6 +51,7 @@ class MailerService
         }
         $email 
             ->from(new Address($sender, $env))
+            ->replyTo('contact@olona-talents.com')
             ->subject($subject)
             ->htmlTemplate("mails/$template")
             ->context($context)
@@ -86,7 +87,8 @@ class MailerService
             $email->addTo('s.maurel@olona-outsourcing.com');
         }
         $email
-            ->from(new Address('noreply@olona-talents.com', $env))
+            ->from(new Address('support@olona-talents.com', $env))
+            ->replyTo('contact@olona-talents.com')
             ->subject($subject)
             ->htmlTemplate("mails/$template")
             ->context($context);
@@ -105,7 +107,7 @@ class MailerService
 
         if ($emailTemplate) {
             $email = new TemplatedEmail();
-            $sender = 'noreply@olona-talents.com';
+            $sender = 'support@olona-talents.com';
             $env = 'Olona Talents';
             if ($this->env === 'prod') {
                 $email->to($profile->getCandidat()->getEmail());
@@ -115,6 +117,7 @@ class MailerService
             }
             $email 
                 ->from(new Address($sender, $env))
+                ->replyTo('contact@olona-talents.com')
                 ->subject($emailTemplate->getTitre())
                 ->htmlTemplate("mails/relance/profile/candidat.html.twig")
                 ->context([
@@ -141,7 +144,7 @@ class MailerService
     public function sendMultipleRelanceEmail(CandidateProfile $profile, string $titre, string $contenu)
     {
         $email = new TemplatedEmail();
-        $sender = 'noreply@olona-talents.com';
+        $sender = 'support@olona-talents.com';
         $env = 'Olona Talents';
         if ($this->env === 'prod') {
             $email->to($profile->getCandidat()->getEmail());
@@ -151,6 +154,7 @@ class MailerService
         }
         $email 
             ->from(new Address($sender, $env))
+            ->replyTo('contact@olona-talents.com')
             ->subject($titre)
             ->htmlTemplate("mails/relance/profile/candidat.html.twig")
             ->context([

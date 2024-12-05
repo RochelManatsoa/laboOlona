@@ -13,12 +13,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Form\DataTransformer\CompetencesTransformer;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class JobListingType extends AbstractType
@@ -56,7 +57,7 @@ class JobListingType extends AbstractType
                     'rows' => 8
                 ]
             ])
-            ->add('salaire', MoneyType::class, ['label' => false])
+            // ->add('salaire', MoneyType::class, ['label' => false])
             // ->add('prime', MoneyType::class, ['label' => false])
             ->add('primeAnnonce', PrimeAnnonceType::class, [
                 'label' => false,
@@ -73,6 +74,11 @@ class JobListingType extends AbstractType
             ])
             ->add('nombrePoste', null, ['label' => false])
             ->add('competences', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Vous devriez choisir un secteur.',
+                    ]),
+                ],
                 'label' => false,
                 'autocomplete' => true,
                 'attr' => [
