@@ -42,7 +42,7 @@
     
     {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
     <div>
-        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_order_new') }}">Create new</a>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_order_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
     </div>
     {% endif %}
 

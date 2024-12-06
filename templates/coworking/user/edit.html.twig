@@ -5,10 +5,10 @@
 {% block body %}
     <h1 class="h3">Modifier un utilisateur</h1>
 
-    {{ include('coworking/user/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('coworking/user/_form.html.twig', {'button_label': 'Modifier'}) }}
     <div class="d-flex justify-content-end w-100">
         {{ include('coworking/user/_delete_form.html.twig') }}
-        <a class="btn btn-primary px-5 rounded-pill" href="{{ path('app_user_index') }}">Retour à la liste</a>
+        <a class="btn btn-primary px-5 rounded-pill" href="{{ path('app_user_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
     </div>
 
 {% endblock %}

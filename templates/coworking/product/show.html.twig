@@ -38,11 +38,11 @@
         </tbody>
     </table>
     <div class="d-flex justify-content-end w-100">
-        <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a>
+        <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_product_edit', {'id': product.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
         {{ include('coworking/product/_delete_form.html.twig') }}
     </div>
 
     <div>
-        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_product_index') }}">Retour à la liste</a>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_product_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
     </div>
 {% endblock %}

@@ -82,6 +82,7 @@ class EventType extends AbstractType
                         'expanded' => false,
                         'multiple' => false,
                         'required' => false,
+                        'autocomplete' => true,
                     ])
                     ->add('backgroundColor', ColorType::class, [
                         'label' => 'Couleur de fond',

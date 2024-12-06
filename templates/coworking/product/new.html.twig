@@ -5,9 +5,9 @@
 {% block body %}
     <h1 class="h3">Nouveau produit</h1>
 
-    {{ include('coworking/product/_form.html.twig') }}
+    {{ include('coworking/product/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
     <div>
-        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_product_index') }}">Retour à la liste</a>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_product_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
     </div>
 
 {% endblock %}
