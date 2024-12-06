@@ -1,0 +1,121 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Calendrier!{% endblock %}
+
+{% block body %}
+<div class="row mb-5">
+    <div class="col">
+        <h1 class="h3 text-end">Places disponibles</h1>
+    </div>
+    <div class="col">
+        <div>
+            <form action="{{ path('app_coworking_main') }}" method="get">
+                <select class="form-select" id="date-select" name="date" onchange="this.form.submit()">
+                    <option value="today" {{ app.request.query.get('date') == 'today' ? 'selected' : '' }}>Aujourd'hui</option>
+                    <option value="tomorrow" {{ app.request.query.get('date') == 'tomorrow' ? 'selected' : '' }}>Demain</option>
+                    <option value="dayAfterTomorrow" {{ app.request.query.get('date') == 'dayAfterTomorrow' ? 'selected' : '' }}>Après-demain</option>
+                </select>
+            </form>                      
+        </div>
+    </div>
+</div>
+
+<div id="places-list">
+    <h2 class="h4 text-center">{{ availableTodayNumber }} places restantes {{ app.request.query.get('date') == 'dayAfterTomorrow' ? 'après-demain' : app.request.query.get('date') == 'tomorrow' ? 'demain' : 'aujourd\'hui' }}</h2>
+</div>
+
+<div class="row">
+    {% set date = "today" %}
+    {% if app.request.query.get('date') %}
+        {% set date = app.request.query.get('date') %}
+    {% endif %}
+    {% for event in places %}
+        {% set unavailable = false %}
+        {% for place in availableToday %}
+            {% if place.placeId == event.id %}
+                {% set unavailable = true %}
+            {% endif %}            
+        {% endfor %}
+        {% if unavailable %}
+        <div class="col-3 g-5"><div class="card mb-3 text-center">
+            <div class="image-container position-relative">
+                <img src="{{ vich_uploader_asset(event, 'imageFile') }}" class="card-img-top blurry-image" alt="...">
+                <div class="overlay-text">Non disponible</div>
+            </div>
+        
+            <h5 class="card-header">{{ event.name }}</h5>
+        
+            <div class="card-body">
+                <p class="card-text">{{ event.description }}</p>
+            </div>
+        
+            <div class="card-footer">
+                <button type="button" class="btn btn-light  btn-sm rounded-pill px-4" disabled>Réservée</button>
+            </div>
+        </div>
+        </div>            
+        {% else %}
+        <div class="col-3 g-5">
+            <div class="card mb-3 text-center">
+                <img src="{{ vich_uploader_asset(event, 'imageFile') }}" class="card-img-top" alt="...">
+
+                <h5 class="card-header">{{ event.name }}</h5>
+
+                <div class="card-body">
+                    <p class="card-text">{{ event.description }}</p>
+                </div>
+
+                <div class="card-footer">
+                    <a href="{{ path('app_event_new', {'placeId': event.id, 'date': date}) }}" class="btn btn-primary btn-sm rounded-pill px-4">Réserver</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<h2 class="h4 text-center my-5">Places occupées {{ app.request.query.get('date') == 'dayAfterTomorrow' ? 'après-demain' : app.request.query.get('date') == 'tomorrow' ? 'demain' : 'aujourd\'hui' }}</h2>
+<div class="col-6 mx-auto">
+    <ul class="list-group">
+        {% for event in availableToday %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span><span class="fw-bold">Place {{ event.placeId }}</span>
+                réservée</span>
+                {% if event.duration == 'demi_journee' %}
+                    <span class="badge text-bg-success rounded-pill">
+                        Démi-journée
+                    {% else %}
+                    <span class="badge text-bg-primary rounded-pill">
+                        Journée
+                    {% endif %}
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+    const availablePlaces = {
+        today: {{ availableToday|json_encode|raw }},
+        tomorrow: {{ availableTomorrow|json_encode|raw }},
+        dayAfterTomorrow: {{ availableDayAfterTomorrow|json_encode|raw }},
+        number: {
+            'today': {{ availableTodayNumber }},
+            'tomorrow': {{ availableTomorrowNumber }},
+            'dayAfterTomorrow': {{ availableDayAfterTomorrowNumber }}
+        }
+    };
+
+    function showAvailablePlaces(day) {
+        console.log(day, availablePlaces.number[day]);
+        const placesList = document.getElementById('places-list');
+        const places = availablePlaces[day];
+        let html = `<h2 class="h4">${availablePlaces.number[day]} places restantes ${day === 'today' ? "aujourd'hui" : day === 'tomorrow' ? 'demain' : 'après-demain'}</h2><ul>`;
+        places.forEach(function(event) {
+            html += `<li>Place ${event.placeId} réservée ${event.duration} : ${event.title}</li>`;
+        });
+        html += '</ul>';
+        placesList.innerHTML = html;
+    }
+</script>
+
+{% endblock %}

@@ -40,6 +40,7 @@
         "@fortawesome/fontawesome-free": "^6.4.2",
         "@yaireo/tagify": "^4.27.0",
         "bootstrap-icons": "^1.11.1",
+        "fullcalendar": "^6.1.15",
         "jquery": "^3.7.1",
         "jquery-ui": "^1.14.0",
         "tooltip.js": "^1.3.3"

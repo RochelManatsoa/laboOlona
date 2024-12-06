@@ -1,0 +1,49 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Commandes</h1>
+    {% if orders|length > 0 %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{{ knp_pagination_sortable(orders, 'Créée le', 'o.orderDate') }}</th>
+                <th>{{ knp_pagination_sortable(orders, 'Utilisateur', 'o.customer') }}</th>
+                <th class="text-center">{{ knp_pagination_sortable(orders, 'Montant', 'o.totalAmount') }}</th>
+                <th class="text-center">{{ knp_pagination_sortable(orders, 'Statut', 'o.status') }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ order.customer}}</td>
+                <td class="text-center">{{ order.totalAmount }} {{ order.currency.symbole }}</td>
+                <td class="text-center">{{ statusOrder(order)|raw }}</td>
+                <td>
+                    <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_order_show', {'id': order.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_order_edit', {'id': order.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ knp_pagination_render(orders) }}
+    {% else %}
+    <div class="text-center col-lg-6 col-sm-12 mx-auto">
+        <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+        <p class="text-center">Aucune commande trouvée</p>
+    </div>
+    {% endif %}
+    
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+    <div>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_order_new') }}">Create new</a>
+    </div>
+    {% endif %}
+
+{% endblock %}

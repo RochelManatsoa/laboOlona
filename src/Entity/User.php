@@ -2,24 +2,25 @@
 
 namespace App\Entity;
 
-use App\Entity\BusinessModel\BoostVisibility;
-use App\Entity\BusinessModel\Credit;
-use App\Entity\BusinessModel\History;
-use App\Entity\BusinessModel\Order;
-use App\Entity\BusinessModel\PurchasedContact;
-use App\Entity\BusinessModel\Transaction;
+use App\Entity\Vues\VideoVues;
+use Doctrine\DBAL\Types\Types;
+use App\Entity\Coworking\Event;
 use App\Entity\Finance\Employe;
 use App\Entity\Logs\ActivityLog;
-use App\Entity\Vues\VideoVues;
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use App\Entity\BusinessModel\Order;
+use App\Entity\BusinessModel\Credit;
+use App\Entity\BusinessModel\History;
+use App\Entity\BusinessModel\Transaction;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\BusinessModel\PurchasedContact;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -178,6 +179,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ActivityLog::class)]
     private Collection $activityLogs;
 
+    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'user')]
+    private Collection $events;
+
     public function __construct()
     {
         $this->envois = new ArrayCollection();
@@ -190,6 +194,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->orders = new ArrayCollection();
         $this->boostVisibilities = new ArrayCollection();
         $this->activityLogs = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function __toString()
@@ -859,6 +864,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($activityLog->getUser() === $this) {
                 $activityLog->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+    
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): static
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): static
+    {
+        if ($this->events->removeElement($event)) {
+            // set the owning side to null (unless already changed)
+            if ($event->getUser() === $this) {
+                $event->setUser(null);
             }
         }
 

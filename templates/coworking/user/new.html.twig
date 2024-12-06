@@ -1,0 +1,14 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Nouvel utilisateur{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Nouvel utilisateur</h1>
+
+    {{ include('coworking/user/_form.html.twig') }}
+    
+    <div>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_user_index') }}">Retour à la liste</a>
+    </div>
+    
+{% endblock %}

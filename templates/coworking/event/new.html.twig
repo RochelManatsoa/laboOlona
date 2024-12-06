@@ -1,0 +1,13 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Réserver{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Réserver</h1>
+
+    {{ include('coworking/event/_form.html.twig') }}
+    <div>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_event_index') }}">Retour à la liste</a>
+    </div>
+    
+{% endblock %}

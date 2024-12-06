@@ -1,0 +1,14 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Modifier une commande{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Modifier une commande</h1>
+
+    {{ include('coworking/order/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="d-flex justify-content-end w-100">
+        <a class="btn btn-primary px-5 rounded-pill" href="{{ path('app_order_index') }}">Retour à la liste</a>
+        {{ include('coworking/order/_delete_form.html.twig') }}
+    </div>
+
+{% endblock %}

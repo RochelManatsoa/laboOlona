@@ -59,4 +59,24 @@ class OrderRepository extends ServiceEntityRepository
             10
         );
     }
+    
+    public function paginateRecipes($page, ?int $userId): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('o')->select('o');
+        $queryBuilder->addOrderBy('o.id', 'DESC');
+        if ($userId) {
+            $queryBuilder->andWhere('o.customer = :userId')
+                ->setParameter('userId', $userId);
+        };
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            20,
+            [
+                'distinct' => false,
+                'shortFieldAllowList' => ['id', 'status', 'orderDate', 'totalAmount', 'bankedAt', 'updatedAt'],
+            ]
+        );
+    }
 }

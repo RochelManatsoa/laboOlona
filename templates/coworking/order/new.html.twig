@@ -1,0 +1,13 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}New Order{% endblock %}
+
+{% block body %}
+    <h1>Create new Order</h1>
+
+    {{ include('coworking/order/_form.html.twig') }}
+
+    <div>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_order_index') }}">Retour à la liste</a>
+    </div>
+{% endblock %}
