@@ -2,9 +2,9 @@
 
 namespace App\Form\Coworking;
 
-use App\Entity\User;
 use App\Entity\Coworking\Event;
 use App\Entity\Coworking\Place;
+use App\Form\Autocomplete\UserAutocompleteField;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
@@ -45,7 +45,6 @@ class EventType extends AbstractType
                     'class' => 'fw-bold fs-5' 
                 ],
                 'help' => 'Date et heure de la réservation.',
-                // 'data' => new \DateTime('08:00'), 
             ])
             ->add('places', EntityType::class, [
                 'class' => Place::class,
@@ -75,15 +74,7 @@ class EventType extends AbstractType
             // Vérifiez si l'utilisateur est administrateur
             if ($options['is_admin']) {
                 $builder
-                    ->add('user', EntityType::class, [
-                        'label' => 'Utilisateur',
-                        'choice_label' => 'email',
-                        'class' => User::class,
-                        'expanded' => false,
-                        'multiple' => false,
-                        'required' => false,
-                        'autocomplete' => true,
-                    ])
+                    ->add('user', UserAutocompleteField::class, [])
                     ->add('backgroundColor', ColorType::class, [
                         'label' => 'Couleur de fond',
                         'label_attr' => ['class' => 'fw-bold fs-5'],

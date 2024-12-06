@@ -236,3 +236,74 @@
         font-size: 0.65rem!important; 
     }
 }
+#coworking{
+
+    .date-picker {
+        display: flex; /* Utilise flexbox pour gérer l'alignement en ligne */
+        align-items: center; /* Aligne verticalement les éléments au centre */
+    }
+
+    .date-picker input[type="date"],
+    .date-picker input[type="time"] {
+        flex: 1; /* Permet aux champs de prendre le même espace disponible */
+        margin-right: 10px; /* Ajoute un espace entre les champs */
+    }
+
+    .date-picker input[type="time"] {
+        margin-right: 0; /* Retire la marge sur le dernier élément si besoin */
+    }
+
+    .color-picker-group {
+        display: flex; /* Active Flexbox */
+        flex-wrap: wrap; /* Permet de passer à la ligne suivante si nécessaire */
+    }
+
+    .color-picker {
+        flex: 1 1 30%; /* Prend environ 30% de la largeur compte tenu des marges */
+        max-width: 30%;
+        margin-right: 1%; /* Espace entre les colonnes */
+        box-sizing: border-box; /* Inclut la bordure et le padding dans la largeur totale */
+    }
+
+    .color-picker:nth-child(3n) {
+        margin-right: 0; /* Pas de marge après la troisième colonne */
+    }
+    .card {
+        position: relative;
+
+        .image-container {
+            position: relative;
+            overflow: hidden; // Maintient l'overlay dans les limites de l'image
+
+            .blurry-image {
+                filter: blur(5px) brightness(0.7);
+                transition: filter 0.3s ease-in-out;
+            }
+            
+            .overlay-text {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 2;
+                color: white;
+                font-size: 1.5rem;
+                font-weight: bold;  // Assure que le texte est en gras
+                text-shadow: 2px 2px 4px #000;
+                pointer-events: none; // Empêche le texte d'interférer avec les interactions
+                text-align: center;   // Centre le texte si plusieurs lignes
+            }
+        }
+
+        // Optionally restore the image on hover or perform other effects
+        .blurry-image {
+            filter: blur(5px) brightness(0.5);  // Peut alléger lors du survol si souhaité
+        }
+    }
+    #event{
+        legend{
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+    }
+}

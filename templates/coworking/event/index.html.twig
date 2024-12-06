@@ -13,7 +13,7 @@
                 <th>{{ knp_pagination_sortable(events, 'Début', 'e.startEvent') }}</th>
                 <th>{{ knp_pagination_sortable(events, 'Fin', 'e.endEvent') }}</th>
                 <th>{{ knp_pagination_sortable(events, 'Place', 'e.places') }}</th>
-                <th>{{ knp_pagination_sortable(events, 'Journée', 'e.allDay') }}</th>
+                <th>{{ knp_pagination_sortable(events, 'Journée', 'e.durtion') }}</th>
                 <th>{{ knp_pagination_sortable(events, 'Réservé le', 'e.createdAt') }}</th>
                 <th>{{ knp_pagination_sortable(events, 'Mis à jour', 'e.updatedAt') }}</th>
                 <th></th>
@@ -27,7 +27,7 @@
                 <td>{{ event.startEvent ? event.startEvent|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ event.endEvent ? event.endEvent|date('Y-m-d H:i:s') : '' }}</td>
                 <td class="text-center">{{ event.places|length }}</td>
-                <td class="text-center">{{ event.allDay ? 'Oui' : 'Non' }}</td>
+                <td class="text-center">{{ event.duration == "journee" ? 'Oui' : 'Non' }}</td>
                 <td>{{ event.createdAt ? event.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td class="text-center">{{ event.updatedAt ? 'Oui' : 'Non' }}</td>
                 <td>
