@@ -5,28 +5,6 @@
     background-position: center; /* Centre l'image */
     background-repeat: no-repeat; /* Empêche la répétition de l'image */
 }
-.vich-image {
-    display: flex;
-    flex-direction: column;
-    align-items: center;  /* Pour centrer horizontalement les éléments dans le conteneur */
-}
-/* L'image doit apparaître en premier */
-.vich-image a {
-    order: 1;
-}
-
-/* L'input doit apparaître après l'image */
-.vich-image input {
-    order: 2;
-    display: none;
-}
-.vich-image img{
-    border-radius: 50%;        /* Rend l'image complètement arrondie */
-    border: 6px solid $indigo;    /* Ajoute une bordure solide de 3 pixels avec la couleur #333 (gris foncé) */
-    object-fit: cover;        /* Garde les proportions de l'image */
-    width: 200px;              /* Exemple de largeur, ajustez selon vos besoins */
-    height: 200px; 
-}
 .flex-centre{
     display: flex;
     align-items: center;  /* Centre verticalement */

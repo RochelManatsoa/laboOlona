@@ -46,7 +46,7 @@ document.addEventListener('turbo:load', function() {
     })
     calendar.on('eventChange', function(e) {
       console.log('eventChange', e);
-      let url = '/api/event/' + e.event.id + '/edit';
+      let url = '/coworking/api/event/' + e.event.id + '/edit';
       let donnees = {
         "title": e.event.title,
         "description": e.event.extendedProps.description,
