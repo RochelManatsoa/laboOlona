@@ -36,7 +36,7 @@ class OrderVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::EDIT:
-                return $subject->getUser()->getId() === $user->getId();
+                return $subject->getCustomer()->getId() === $user->getId();
                 break;
                 
             case self::LIST:

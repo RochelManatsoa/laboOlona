@@ -22,11 +22,10 @@
                 <td>{{ order.id }}</td>
                 <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ order.customer}}</td>
-                <td class="text-center">{{ order.totalAmount }} {{ order.currency.symbole }}</td>
+                <td class="text-center">{{ order.totalAmount }} {{ order.currency == null ? 'Ar' : ' ' ~ order.currency.symbole }}</td>
                 <td class="text-center">{{ statusOrder(order)|raw }}</td>
                 <td>
                     <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_order_show', {'id': order.id}) }}"><i class="bi bi-eye"></i></a>
-                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_order_edit', {'id': order.id}) }}"><i class="bi bi-pencil"></i></a>
                 </td>
             </tr>
         {% endfor %}

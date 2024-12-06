@@ -106,7 +106,7 @@ class Order
     #[ORM\OneToOne(mappedBy: 'commande', cascade: ['persist', 'remove'])]
     private ?Invoice $invoice = null;
 
-    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'command')]
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'command', cascade: ['persist', 'remove'])]
     private Collection $orderItems;
 
     public function __construct()

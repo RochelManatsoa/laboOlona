@@ -14,10 +14,10 @@ class OrderItem
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orderItems')]
+    #[ORM\ManyToOne(inversedBy: 'orderItems', cascade: ['persist', 'remove'])]
     private ?Order $command = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orderItems')]
+    #[ORM\ManyToOne(inversedBy: 'orderItems', cascade: ['persist', 'remove'])]
     private ?Product $product = null;
 
     #[ORM\Column]
@@ -31,12 +31,6 @@ class OrderItem
         $this->product = $product;
         $this->quantity = $quantity;
         $this->price = $product->getPrice();
-
-        if ($product->getStock() < $quantity) {
-            throw new \Exception('Stock insuffisant pour ce produit');
-        }
-
-        $product->setStock($product->getStock() - $quantity);
     }
 
     public function getId(): ?int
