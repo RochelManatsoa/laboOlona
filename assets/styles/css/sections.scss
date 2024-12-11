@@ -307,3 +307,62 @@
         }
     }
 }
+.default-design {
+    background-image: url('/public/images/coworking/IMG_0686.png');
+}
+.event-design {
+    background-image: url('/public/images/coworking/IMG_0682.png');
+}
+.order-design {
+    background-image: url('/public/images/coworking/IMG_0676.png');
+}
+.product-design {
+    background-image: url('/public/images/coworking/IMG_0678.png');
+}
+.cart-design {
+    background-image: url('/public/images/coworking/IMG_0700.png');
+}
+.paralax {
+    background-size: cover;
+    background-position: bottom;
+    background-attachment: fixed;
+    color: white;
+    position: relative;
+    height: 100vh; 
+    align-items: center; 
+}
+
+.paralax::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 1;
+}
+
+.paralax > * {
+    position: relative;
+    z-index: 2;
+}
+.blurry-image {
+    filter: blur(5px) brightness(0.7);
+    transition: filter 0.3s ease-in-out;
+}
+
+.overlay-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;  // Assure que le texte est en gras
+    text-shadow: 2px 2px 4px #000;
+    pointer-events: none; // Empêche le texte d'interférer avec les interactions
+    text-align: center;   // Centre le texte si plusieurs lignes
+}
+

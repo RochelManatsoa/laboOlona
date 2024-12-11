@@ -1,0 +1,41 @@
+
+<nav class="container navbar navbar-expand-lg px-5">
+    <a class="navbar-brand" href="{{ path('app_coworking_main')}}">
+      <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" style="height: 70px;" alt="logo" class="px-0 img-fluid">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link px-3 mx-2 btn-sm" aria-current="page" href="{{ path('app_coworking_main')}}">Disponibilités</a>
+        <a class="nav-link px-3 mx-2 btn-sm" href="{{ path('app_event_index')}}">Mes réservations</a>
+        <a class="nav-link px-3 mx-2 btn-sm" href="{{ path('app_product_index')}}">Produits</a>
+        <a class="nav-link px-3 mx-2 btn-sm" href="{{ path('app_order_index')}}">Mes commandes</a>
+      </div>
+    </div>
+    {% if app.user %}
+        {% if not is_granted('ROLE_ADMIN') %}
+            <a class="me-4 position-relative" href="{{ path('app_cart_index')}}" aria-expanded="false">
+            <i class="bi bi-basket h5 text-white"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ component('cart_user_component') }}
+                <span class="visually-hidden">unread messages</span>
+            </span>
+            </a>
+        {% endif %}
+    {% else %}
+    <a href="{{ path('app_login')}}" class=""><i class="bi h4 me-5 bi-box-arrow-in-right"></i></a>
+    {% endif %}
+    <div class="dropdown-center">
+      {% if app.user %}
+        <a class="me-5 h4" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle"></i></a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="{{ path('app_cart_index')}}">Mon panier</a></li>
+          <li><a class="dropdown-item" href="{{ path('app_order_index')}}">Mes commandes</a></li>
+          <li><a class="dropdown-item" href="{{ path('app_home')}}">Olona Talents</a></li>
+          <li><a class="dropdown-item" href="{{ path('app_logout')}}">Logout <i class="bi bi-box-arrow-right"></i></a></li>
+        </ul>
+      {% endif %}
+    </div>
+  </nav>

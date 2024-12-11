@@ -1,104 +1,364 @@
 {% extends 'base_coworking.html.twig' %}
 
-{% block title %}Calendrier!{% endblock %}
+{% block title %}Réservez votre espace de coworking {% endblock %}
+
+{% block paralax %}
+  {% if not is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
 
 {% block body %}
-<div class="row mb-5">
-    <div class="col">
-        <h1 class="h3 text-end">Places disponibles</h1>
-    </div>
-    <div class="col">
-        <div>
-            <form action="{{ path('app_coworking_main') }}" method="get">
-                <select class="form-select" id="date-select" name="date" onchange="this.form.submit()">
-                    <option value="today" {{ app.request.query.get('date') == 'today' ? 'selected' : '' }}>Aujourd'hui</option>
-                    <option value="tomorrow" {{ app.request.query.get('date') == 'tomorrow' ? 'selected' : '' }}>Demain</option>
-                    <option value="dayAfterTomorrow" {{ app.request.query.get('date') == 'dayAfterTomorrow' ? 'selected' : '' }}>Après-demain</option>
-                </select>
-            </form>                      
-        </div>
-    </div>
-</div>
 
-<div id="places-list">
-    <h2 class="h4 text-center">{{ availableTodayNumber }} places restantes {{ app.request.query.get('date') == 'dayAfterTomorrow' ? 'après-demain' : app.request.query.get('date') == 'tomorrow' ? 'demain' : 'aujourd\'hui' }}</h2>
-</div>
+{% if is_granted('ROLE_ADMIN') %}
+  
+{% else %}
 
-<div class="row">
-    {% set date = "today" %}
-    {% if app.request.query.get('date') %}
-        {% set date = app.request.query.get('date') %}
-    {% endif %}
-    {% for event in places %}
-        {% set unavailable = false %}
-        {% for place in availableToday %}
-            {% if place.placeId == event.id %}
-                {% set unavailable = true %}
-            {% endif %}            
-        {% endfor %}
-        {% if unavailable %}
-        <div class="col-3 g-5">
-            <div class="card mb-3 text-center" data-bs-theme="dark">
-                <div class="image-container position-relative">
-                    <img src="{{ vich_uploader_asset(event, 'imageFile') }}" class="card-img-top blurry-image" alt="...">
-                    <div class="overlay-text">Non disponible</div>
-                </div>
-            
-                <h5 class="card-header">{{ event.name }}</h5>
-            
-                <div class="card-body">
-                    <p class="card-text">{{ event.description }}</p>
-                </div>
-            
-                <div class="card-footer">
-                    <button type="button" class="btn btn-dark  btn-sm rounded-pill px-4" disabled>Non disponible</button>
+  <section class="p-0 m-0">
+      <div class="container my-5">
+          <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+              <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+                  <h2 class="display-5 fw-bold lh-1 text-body-emphasis">Pourquoi choisir notre espace de coworking?</h2>
+                  <p class="lead">Chez Olona Talents, nous avons conçu un espace de travail dynamique et accueillant qui s'adresse aussi bien aux indépendants qu'aux équipes de petites entreprises. Situé dans un cadre inspirant, notre coworking offre cinq places cloisonnées pour ceux qui recherchent intimité et concentration, ainsi que treize espaces ouverts parfaits pour stimuler la collaboration et l'interaction.</p>
+                  <p class="lead">Vous bénéficiez d'un accès constant à des installations modernes et confortables. Notre processus de réservation est rapide et sécurisé, vous assurant une tranquillité d'esprit et une flexibilité optimale pour gérer votre emploi du temps. De plus, notre équipe de support dévouée est toujours prête à vous assister, garantissant que votre expérience de coworking soit aussi fluide et productive que possible. </p>
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+                  <button type="button" class="btn btn-primary px-5 me-md-2 fw-bold">Privatiser</button>
+                  <button type="button" class="btn btn-outline-secondary px-5">Réserver</button>
+                  </div>
+              </div>
+          <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+              <img class="rounded-lg-3" src="{{ asset('images/coworking/screen-logo.png') }}" alt="" width="720">
+          </div>
+          </div>
+      </div>
+  </section>
+
+  <section class="container-fluid py-5">
+
+      <div class="bg-dark text-secondary px-4 py-5 text-center" data-bs-theme="dark">
+          <div class="py-5">
+            <h1 class="display-5 fw-bold text-white mb-3">Réservation en ligne</h1>
+            <div class="col-lg-6 mx-auto">
+              <div class="row justify-content-lg-center">
+                  <div class="col-lg-8">
+                    <!-- Form -->
+                    <form class="fs-5 mb-4">
+                      <div class="row gx-3">
+                        <div class="col-md-6">
+                          <!-- Contact number (hidden) -->
+                          <input type="hidden" name="contact_number">
+        
+                          <!-- Full name -->
+                          <div class="mb-3">
+                            <label class="visually-hidden" for="user_name">Nom complet</label>
+                            <input class="form-control" id="user_name" name="user_name" type="text" placeholder="Nom complet" required="">
+                          </div>
+        
+                          <!-- Phone number -->
+                          <div class="mb-3">
+                            <label class="visually-hidden" for="user_phone">Téléphone</label>
+                            <input class="form-control" id="user_phone" name="user_phone" type="tel" placeholder="Téléphone" required="">
+                          </div>
+        
+                          <!-- Email address -->
+                          <div class="mb-3">
+                            <label class="visually-hidden" for="user_email">Email</label>
+                            <input class="form-control" id="user_email" name="user_email" type="email" placeholder="Email" required="">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <!-- Guests -->
+                          <div class="mb-3">
+                            <label class="visually-hidden" for="guests">Guests</label>
+                            <select class="form-select" id="guests" name="guests" required="">
+                              <option value="1">1 personne</option>
+                              <option value="2" selected="">2 personnes</option>
+                              <option value="3">3 personnes</option>
+                              <option value="4">4 personnes</option>
+                              <option value="5">5 personnes</option>
+                            </select>
+                          </div>
+        
+                          <!-- Date -->
+                          <div class="mb-3">
+                            <label class="visually-hidden" for="date">Date</label>
+                            <input class="form-control" id="date" name="date" type="date" value="2021-02-12" required="">
+                          </div>
+        
+                          <!-- Time -->
+                          <div class="mb-3">
+                            <label class="visually-hidden" for="time">Time</label>
+                            <input class="form-control" id="time" name="time" type="time" value="18:00" required="">
+                          </div>
+                        </div>
+                        <div class="col text-center">
+                          <!-- Button -->
+                          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                              <button type="submit" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Réserver maintenant</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </div>
             </div>
-        </div>            
-        {% else %}
-        <div class="col-3 g-5">
-            <div class="card mb-3 text-center">
-                <img src="{{ vich_uploader_asset(event, 'imageFile') }}" class="card-img-top" alt="...">
+          </div>
+      </div>
 
-                <h5 class="card-header">{{ event.name }}</h5>
+  </section>
 
-                <div class="card-body">
-                    <p class="card-text">{{ event.description }}</p>
+  <section class="container-fluid py-5">
+      <div class="container">
+          <div class="row">
+              <h2 class="display-5 fw-bold lh-1 text-body-emphasis text-center">Places disponibles</h2>
+              <p class="lead col-12 col-sm-8 mx-auto text-center">Découvrez l'innovation et la flexibilité au cœur de notre espace de coworking, où des postes de travail sont prêts à vous accueillir.</p>
+              <div class="row">
+                  <div class="col mb-5">
+                    <!-- Navigation -->
+                    <div class="nav justify-content-center mb-6" id="menuTabs" role="tablist">
+                      <a class="nav-link active" id="todayTab" data-bs-toggle="tab" href="#today" role="tab" aria-controls="today" aria-selected="true" tabindex="-1"> Aujourd'hui </a>
+                      <a class="nav-link" id="tomorrowTab" data-bs-toggle="tab" href="#tomorrow" role="tab" aria-controls="tomorrow" aria-selected="false" tabindex="-1"> Demain </a>
+                      <a class="nav-link" id="afterTomorrowTab" data-bs-toggle="tab" href="#afterTomorrow" role="tab" aria-controls="afterTomorrow" aria-selected="false" tabindex="-1"> Après-demain </a>
+                      <a class="nav-link" id="otherDateTab" data-bs-toggle="tab" href="#otherDate" role="tab" aria-controls="otherDate" aria-selected="false" tabindex="-1"> Autre jour </a>
+                    </div>
+                  </div>
                 </div>
-
-                <div class="card-footer">
-                    <a href="{{ path('app_event_new', {'placeId': event.id, 'date': date}) }}" class="btn btn-primary btn-sm rounded-pill px-4">Réserver</a>
+                <div class="row">
+                  <div class="col-12">
+                    <!-- Content -->
+                    <div class="tab-content" id="menuContent">
+                      <div class="tab-pane fade active show" id="today" role="tabpanel" aria-labelledby="mainsTab">
+                        <div class="row">
+                          {% for event in places %}
+                          {% set unavailable = false %}
+                          {% for place in availableToday %}
+                              {% if place.placeId == event.id %}
+                                  {% set unavailable = true %}
+                              {% endif %}            
+                          {% endfor %}
+                          {% if unavailable %}
+                          <div class="col-12 col-md-6">
+                            <div class="py-3 border-bottom">
+                              <div class="row">
+                                <div class="col-3 align-self-center">
+                                  <!-- Image -->
+                                  <div class="ratio ratio-1x1">
+                                    <img class="object-fit-cover blurry-image" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                  </div>
+                                </div>
+                                <div class="col-7">
+                                  <!-- Heading -->
+                                  <h5 class="mb-2">{{ event.name }}</h5>
+        
+                                  <!-- Text -->
+                                  <p class="mb-0">{{ event.description }}</p>
+                                  <button type="button" class="btn btn-dark btn-sm rounded-pill px-4 mt-3" disabled>Non disponible</button>
+                                </div>
+                                <div class="col-2">
+                                  <!-- Price -->
+                                  <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {% else %}
+                          <div class="col-12 col-md-6">
+                            <div class="py-3 border-bottom">
+                              <div class="row">
+                                <div class="col-3 align-self-center">
+                                  <!-- Image -->
+                                  <div class="ratio ratio-1x1">
+                                    <img class="object-fit-cover" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                  </div>
+                                </div>
+                                <div class="col-7">
+                                  <!-- Heading -->
+                                  <h5 class="mb-2">{{ event.name }}</h5>
+        
+                                  <!-- Text -->
+                                  <p class="mb-0">{{ event.description }}</p>
+                                  <a href="{{ path('app_event_new', {'placeId': event.id, 'date': 'today'}) }}" class="btn btn-primary btn-sm rounded-pill px-4 mt-3">Réserver</a>
+                                </div>
+                                <div class="col-2">
+                                  <!-- Price -->
+                                  <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        </div>
+                      </div>
+                      <div class="tab-pane fade" id="tomorrow" role="tabpanel" aria-labelledby="lunchTab">
+                          <div class="row">
+                              {% for event in places %}
+                              {% set unavailable = false %}
+                              {% for place in availableTomorrow %}
+                                  {% if place.placeId == event.id %}
+                                      {% set unavailable = true %}
+                                  {% endif %}            
+                              {% endfor %}
+                              {% if unavailable %}
+                              <div class="col-12 col-md-6">
+                                <div class="py-3 border-bottom">
+                                  <div class="row">
+                                    <div class="col-3 align-self-center">
+                                      <!-- Image -->
+                                      <div class="ratio ratio-1x1">
+                                        <img class="object-fit-cover blurry-image" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                      </div>
+                                    </div>
+                                    <div class="col-7">
+                                      <!-- Heading -->
+                                      <h5 class="mb-2">{{ event.name }}</h5>
+            
+                                      <!-- Text -->
+                                      <p class="mb-0">{{ event.description }}</p>
+                                      <button type="button" class="btn btn-dark btn-sm rounded-pill px-4 mt-3" disabled>Non disponible</button>
+                                    </div>
+                                    <div class="col-2">
+                                      <!-- Price -->
+                                      <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              {% else %}
+                              <div class="col-12 col-md-6">
+                                <div class="py-3 border-bottom">
+                                  <div class="row">
+                                    <div class="col-3 align-self-center">
+                                      <!-- Image -->
+                                      <div class="ratio ratio-1x1">
+                                        <img class="object-fit-cover" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                      </div>
+                                    </div>
+                                    <div class="col-7">
+                                      <!-- Heading -->
+                                      <h5 class="mb-2">{{ event.name }}</h5>
+            
+                                      <!-- Text -->
+                                      <p class="mb-0">{{ event.description }}</p>
+                                      <a href="{{ path('app_event_new', {'placeId': event.id, 'date':'tomorow'}) }}" class="btn btn-primary btn-sm rounded-pill px-4 mt-3">Réserver</a>
+                                    </div>
+                                    <div class="col-2">
+                                      <!-- Price -->
+                                      <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              {% endif %}
+                              {% endfor %}
+                            </div>
+                      </div>
+                      <div class="tab-pane fade" id="afterTomorrow" role="tabpanel" aria-labelledby="dinnerTab">
+                          <div class="row">
+                              {% for event in places %}
+                              <div class="col-12 col-md-6">
+                                <div class="py-3 border-bottom">
+                                  <div class="row">
+                                    <div class="col-3 align-self-center">
+                                      <!-- Image -->
+                                      <div class="ratio ratio-1x1">
+                                        <img class="object-fit-cover" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                      </div>
+                                    </div>
+                                    <div class="col-7">
+                                      <!-- Heading -->
+                                      <h5 class="mb-2">{{ event.name }}</h5>
+            
+                                      <!-- Text -->
+                                      <p class="mb-0">{{ event.description }}</p>
+                                      <a href="{{ path('app_event_new', {'placeId': event.id, 'date': 'dayAfterTomorrow'}) }}" class="btn btn-primary btn-sm rounded-pill px-4 mt-3">Réserver</a>
+                                    </div>
+                                    <div class="col-2">
+                                      <!-- Price -->
+                                      <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              {% endfor %}
+                            </div>
+                      </div>
+                      <div class="tab-pane fade" id="otherDate" role="tabpanel" aria-labelledby="drinksTab">
+                          <div class="row">
+                              {% for event in places %}
+                              <div class="col-12 col-md-6">
+                                <div class="py-3 border-bottom">
+                                  <div class="row">
+                                    <div class="col-3 align-self-center">
+                                      <!-- Image -->
+                                      <div class="ratio ratio-1x1">
+                                        <img class="object-fit-cover" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                      </div>
+                                    </div>
+                                    <div class="col-7">
+                                      <!-- Heading -->
+                                      <h5 class="mb-2">{{ event.name }}</h5>
+            
+                                      <!-- Text -->
+                                      <p class="mb-0">{{ event.description }}</p>
+                                      <a href="{{ path('app_event_new', {'placeId': event.id}) }}" class="btn btn-primary btn-sm rounded-pill px-4">Réserver</a>
+                                    </div>
+                                    <div class="col-2">
+                                      <!-- Price -->
+                                      <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              {% endfor %}
+                            </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-            </div>
+          </div>
+      </div>
+  </section>
+
+  <section class="container-fluid py-5">
+    <div class="container">
+        <div class="row">
+        <h2 class="h4 text-center my-5">Places occupées {{ app.request.query.get('date') == 'dayAfterTomorrow' ? 'après-demain' : app.request.query.get('date') == 'tomorrow' ? 'demain' : 'aujourd\'hui' }}</h2>
+        <div class="col-6 mx-auto">
+            <ul class="list-group">
+                {% for event in availableToday %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            <span class="fw-bold">Place {{ event.placeId }}</span>
+                            <span class="text-success mx-2">
+                                {{ getTypePlace(event.placeId) }}
+                            </span>
+                            - Réservée
+                        </span>
+                        {% if event.duration == 'demi_journee' %}
+                            <span class="badge bg-success rounded-pill">
+                                Demi-journée
+                            {% else %}
+                            <span class="badge bg-primary rounded-pill">
+                                Journée
+                            {% endif %}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
-        {% endif %}
-    {% endfor %}
-</div>
+      </div>
+    </div>
+  </section>
 
-<h2 class="h4 text-center my-5">Places occupées {{ app.request.query.get('date') == 'dayAfterTomorrow' ? 'après-demain' : app.request.query.get('date') == 'tomorrow' ? 'demain' : 'aujourd\'hui' }}</h2>
-<div class="col-6 mx-auto">
-    <ul class="list-group">
-        {% for event in availableToday %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="fw-bold">Place {{ event.placeId }}</span>
-                    <span class="text-success mx-2">
-                        {{ getTypePlace(event.placeId) }}
-                    </span>
-                    - Réservée
-                </span>
-                {% if event.duration == 'demi_journee' %}
-                    <span class="badge text-bg-success rounded-pill">
-                        Démi-journée
-                    {% else %}
-                    <span class="badge text-bg-primary rounded-pill">
-                        Journée
-                    {% endif %}
-                </span>
-            </li>
-        {% endfor %}
-    </ul>
-</div>
+{% endif %}
+
 <script>
     const availablePlaces = {
         today: {{ availableToday|json_encode|raw }},

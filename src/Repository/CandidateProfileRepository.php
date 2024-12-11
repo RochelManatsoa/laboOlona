@@ -516,8 +516,9 @@ class CandidateProfileRepository extends ServiceEntityRepository
     public function findExpiredPremium()
     {
         return $this->createQueryBuilder('c')
-            ->innerJoin('c.boostVisibility', 'b') 
-            ->andWhere('b.endDate < :now')        
+            ->innerJoin('c.boost', 'b') 
+            ->innerJoin('b.boostVisibilities', 'bv') 
+            ->andWhere('bv.endDate < :now')        
             ->setParameter('now', new \DateTime())
             ->getQuery()                          
             ->getResult(); 

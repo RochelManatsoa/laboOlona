@@ -2,12 +2,25 @@
 
 {% block title %}Modifier une place{% endblock %}
 
-{% block body %}
-    <h1 class="h3">Modifier une place</h1>
+{% block paralax %}{% endblock %}
 
-    {{ include('coworking/place/_form.html.twig', {'button_label': 'Modifier'}) }}
-    <div class="d-flex justify-content-end w-100">
-        <a class="btn btn-primary px-5 rounded-pill" href="{{ path('app_place_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
-        {{ include('coworking/place/_delete_form.html.twig') }}
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-5 align-items-center rounded-3 border shadow-lg">
+            <h1 class="h3">Modifier une place</h1>
+            {{ include('coworking/place/_form.html.twig', {'button_label': 'Modifier'}) }}
+            <div class="d-flex justify-content-end w-100">
+                <a class="btn btn-primary px-5 rounded-pill" href="{{ path('app_place_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+                {{ include('coworking/place/_delete_form.html.twig') }}
+            </div>
+        </div>
     </div>
+</section>
 {% endblock %}

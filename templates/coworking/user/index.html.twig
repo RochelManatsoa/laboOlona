@@ -2,41 +2,55 @@
 
 {% block title %}Tous les utilisateurs{% endblock %}
 
-{% block body %}
-    <h1 class="h3">Tous les utilisateurs</h1>
+{% block paralax %}{% endblock %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>{{ knp_pagination_sortable(users, 'Email', 'u.email') }}</th>
-                <th>{{ knp_pagination_sortable(users, 'Nom et prénom(s)', 'u.nom') }}</th>
-                <th>{{ knp_pagination_sortable(users, 'Compte', 'u.type') }}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user }}</td>
-                <td>{{ user.type ? user.type : 'Non défini' }}</td>
-                <td>
-                    <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_user_show', {'id': user.id}) }}"><i class="bi bi-eye"></i></a>
-                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_user_edit', {'id': user.id}) }}"><i class="bi bi-pencil"></i></a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="12">Aucun utilisateur trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {{ knp_pagination_render(users) }}
-    <div>
-        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_user_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-5 align-items-center rounded-3 border shadow-lg">
+            <h1 class="h3">Tous les utilisateurs</h1>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>{{ knp_pagination_sortable(users, 'Email', 'u.email') }}</th>
+                        <th>{{ knp_pagination_sortable(users, 'Nom et prénom(s)', 'u.nom') }}</th>
+                        <th>{{ knp_pagination_sortable(users, 'Compte', 'u.type') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user }}</td>
+                        <td>{{ user.type ? user.type : 'Non défini' }}</td>
+                        <td>
+                            <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_user_show', {'id': user.id}) }}"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_user_edit', {'id': user.id}) }}"><i class="bi bi-pencil"></i></a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="12">Aucun utilisateur trouvé</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {{ knp_pagination_render(users) }}
+            <div>
+                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_user_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+            </div>
+        </div>
     </div>
+</section>
 
 {% endblock %}

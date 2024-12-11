@@ -2,37 +2,50 @@
 
 {% block title %}Détail de la place{% endblock %}
 
-{% block body %}
-    <h1 class="h3">Détail de la place</h1>
+{% block paralax %}{% endblock %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ place.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ place.name }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ place.price }}</td>
-            </tr>
-            <tr>
-                <th>IsAvailable</th>
-                <td>{{ place.isAvailable ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="d-flex justify-content-end w-100">
-        <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_place_edit', {'id': place.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
-        {{ include('coworking/place/_delete_form.html.twig') }}
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block body %}    
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-5 align-items-center rounded-3 border shadow-lg">
+            <h1 class="h3">Détail de la place</h1>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ place.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ place.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Price</th>
+                        <td>{{ place.price }}</td>
+                    </tr>
+                    <tr>
+                        <th>IsAvailable</th>
+                        <td>{{ place.isAvailable ? 'Yes' : 'No' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end w-100">
+                <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_place_edit', {'id': place.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                {{ include('coworking/place/_delete_form.html.twig') }}
+            </div>
+
+            <div>
+                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_place_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+            </div>
+        </div>
     </div>
-
-    <div>
-        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_place_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
-    </div>
-
+</section>
 
 {% endblock %}

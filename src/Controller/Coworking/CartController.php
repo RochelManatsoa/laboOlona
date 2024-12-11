@@ -25,32 +25,8 @@ class CartController extends AbstractController
         ProductRepository $productRepository,
         Cart $cartService
     )
-    {
-        $order = new Order();
-        $order->setTotalAmount($cartService->getTotal());
-        $order->setCustomer($this->getUser());
-        $order->setDescription('Commande de ' . $this->getUser()->getNom().' '.$this->getUser()->getPrenom().' pour '.$cartService->getTotal().' Ar');
-        foreach ($cartService->getCart() as $item) {
-            $p = $productRepository->find($item['product']);
-            $orderItem = new OrderItem($p, $item['quantity']);
-            $order->addOrderItem($orderItem);
-        }
-        $form = $this->createForm(OrderType::class, $order);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($order);
-            $entityManager->flush();
-            foreach ($order->getOrderItems() as $orderItem) {
-                $cartService->removeProduct($orderItem->getProduct()->getId());
-            }
-            $this->addFlash('success', 'Commande créée avec succès');
-
-            return $this->redirectToRoute('app_order_index', [], Response::HTTP_SEE_OTHER);
-        }
-        
+    {                
         return $this->render('coworking/cart/index.html.twig', [
-            'form' => $form->createView(),
             'items' => $cartService->getCart(),
             'total' => $cartService->getTotal()
         ]);

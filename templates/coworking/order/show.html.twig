@@ -2,6 +2,10 @@
 
 {% block title %}Commande{% endblock %}
 
+{% block paralax %}
+{% include "coworking/order/_paralax.html.twig" %}
+{% endblock %}
+
 {% block body %}
     <h1 class="h3">Commande #{{ order.id }}</h1>
 

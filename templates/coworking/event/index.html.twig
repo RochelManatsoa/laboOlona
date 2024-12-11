@@ -2,50 +2,106 @@
 
 {% block title %}Réservations{% endblock %}
 
+{% block paralax %}
+{% if not is_granted('ROLE_ADMIN') %}
+    {% include "coworking/event/_paralax.html.twig" %}
+  {% endif %}
+{% endblock %}
+
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
 {% block body %}
-    <h1 class="h3">Réservations</h1>
-    {% if events|length > 0 %}
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>{{ knp_pagination_sortable(events, 'Titre', 'e.title') }}</th>
-                <th>{{ knp_pagination_sortable(events, 'Début', 'e.startEvent') }}</th>
-                <th>{{ knp_pagination_sortable(events, 'Fin', 'e.endEvent') }}</th>
-                <th>{{ knp_pagination_sortable(events, 'Place', 'e.places') }}</th>
-                <th>{{ knp_pagination_sortable(events, 'Journée', 'e.durtion') }}</th>
-                <th>{{ knp_pagination_sortable(events, 'Réservé le', 'e.createdAt') }}</th>
-                <th>{{ knp_pagination_sortable(events, 'Mis à jour', 'e.updatedAt') }}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for event in events %}
-            <tr>
-                <td>{{ event.id }}</td>
-                <td>{{ event.title }}<br> <span class="fw-lighter">{{ event.user ? event.user.email : 'Non défini' }}</span></td>
-                <td>{{ event.startEvent ? event.startEvent|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ event.endEvent ? event.endEvent|date('Y-m-d H:i:s') : '' }}</td>
-                <td class="text-center">{{ event.places|length }}</td>
-                <td class="text-center">{{ event.duration == "journee" ? 'Oui' : 'Non' }}</td>
-                <td>{{ event.createdAt ? event.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td class="text-center">{{ event.updatedAt ? 'Oui' : 'Non' }}</td>
-                <td>
-                    <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_event_show', {'id': event.id}) }}"><i class="bi bi-eye"></i></a>
-                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_event_edit', {'id': event.id}) }}"><i class="bi bi-pencil"></i></a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {{ knp_pagination_render(events) }}
-    {% else %}
-    <div class="text-center col-lg-6 col-sm-12 mx-auto">
-        <img src="{{ asset('images/empty.png')}}" class="img-fluid">
-        <p class="text-center">Aucune réservation trouvée</p>
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+                <h2 class="h3 text-body-emphasis">Toutes les réservations</h2>
+                {% if events|length > 0 %}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{ knp_pagination_sortable(events, 'Titre', 'e.createdAt') }}</th>
+                            <th>{{ knp_pagination_sortable(events, 'Début', 'e.startEvent') }}</th>
+                            <th>{{ knp_pagination_sortable(events, 'Place', 'e.places') }}</th>
+                            <th>{{ knp_pagination_sortable(events, 'Journée', 'e.durtion') }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for event in events %}
+                        <tr>
+                            <td>{{ event.id }}</td>
+                            <td>{{ event.title }}<br> <span class="fw-lighter">{{ event.createdAt|time_ago }}</span></td>
+                            <td>{{ event.startEvent ? event.startEvent|date('Y-m-d H:i:s') : '' }}</td>
+                            <td class="text-center">{{ event.places|length }}</td>
+                            <td class="text-center">{{ event.duration == "journee" ? 'Oui' : 'Non' }}</td>
+                            <td>
+                                <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_event_show', {'id': event.id}) }}"><i class="bi bi-eye"></i></a>
+                                <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_event_edit', {'id': event.id}) }}"><i class="bi bi-pencil"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {{ knp_pagination_render(events) }}
+                {% else %}
+                <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                    <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                    <p class="text-center">Aucune réservation trouvée</p>
+                </div>
+                {% endif %}
+                <div>
+                    <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_event_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+                </div>
+            {% else %}
+            <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+                <h2 class="display-5 fw-bold lh-1 text-body-emphasis">Mes réservations</h2>
+                {% if events|length > 0 %}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{ knp_pagination_sortable(events, 'Titre', 'e.createdAt') }}</th>
+                            <th>{{ knp_pagination_sortable(events, 'Début', 'e.startEvent') }}</th>
+                            <th>{{ knp_pagination_sortable(events, 'Place', 'e.places') }}</th>
+                            <th>{{ knp_pagination_sortable(events, 'Journée', 'e.durtion') }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for event in events %}
+                        <tr>
+                            <td>{{ event.id }}</td>
+                            <td>{{ event.title }}<br> <span class="fw-lighter">{{ event.createdAt|time_ago }}</span></td>
+                            <td>{{ event.startEvent ? event.startEvent|date('Y-m-d H:i:s') : '' }}</td>
+                            <td class="text-center">{{ event.places|length }}</td>
+                            <td class="text-center">{{ event.duration == "journee" ? 'Oui' : 'Non' }}</td>
+                            <td>
+                                <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_event_show', {'id': event.id}) }}"><i class="bi bi-eye"></i></a>
+                                <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_event_edit', {'id': event.id}) }}"><i class="bi bi-pencil"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {{ knp_pagination_render(events) }}
+                {% else %}
+                <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                    <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                    <p class="text-center">Aucune réservation trouvée</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+                <img class="rounded-lg-3" src="{{ asset('images/coworking/IMG_0678.png') }}" alt="" width="720">
+            </div>
+            {% endif %}
+        </div>
     </div>
-    {% endif %}
-    <div>
-        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_event_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
-    </div>
+</section>
 {% endblock %}

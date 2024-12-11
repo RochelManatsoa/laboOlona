@@ -2,57 +2,125 @@
 
 {% block title %}Evénement{% endblock %}
 
-{% block body %}
-    <h1 class="h3">Événement #{{ event.id }}</h1>
+{% block paralax %}
+{% if not is_granted('ROLE_ADMIN') %}
+    {% include "coworking/event/_paralax.html.twig" %}
+  {% endif %}
+{% endblock %}
 
-    <table class="table table-hover">
-        <tbody>
-            <tr>
-                <th>Utilisateur</th>
-                <td>{{ event.user ? event.user.email : 'Non défini' }}</td>
-            </tr>
-            <tr>
-                <th>Titre</th>
-                <td>{{ event.title }}</td>
-            </tr>
-            <tr>
-                <th>Début</th>
-                <td>{{ event.startEvent ? event.startEvent|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Fin</th>
-                <td>{{ event.endEvent ? event.endEvent|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Journée</th>
-                <td>{{ event.duration == "journee" ? 'Oui' : 'Non' }}</td>
-            </tr>
-            <tr>
-                <th>Place</th>
-                <td>
-                    {% for place in event.places %}
-                        <div class="badge bg-info">{{ place.name }}</div>
-                    {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ event.description }}</td>
-            </tr>
-            <tr>
-                <th>Créée le</th>
-                <td>{{ event.createdAt ? event.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Mis à jour</th>
-                <td>{{ event.updatedAt ? event.updatedAt|date('Y-m-d H:i:s') : '-' }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="d-flex justify-content-end w-100">
-        <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_event_edit', {'id': event.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
-        {{ include('coworking/event/_delete_form.html.twig') }}
-    </div>
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+                <h1 class="h3">Événement #{{ event.id }}</h1>
+                <table class="table table-hover">
+                    <tbody>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <td>{{ event.user ? event.user.email : 'Non défini' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Titre</th>
+                            <td>{{ event.title }}</td>
+                        </tr>
+                        <tr>
+                            <th>Début</th>
+                            <td>{{ event.startEvent ? event.startEvent|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fin</th>
+                            <td>{{ event.endEvent ? event.endEvent|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Journée</th>
+                            <td>{{ event.duration == "journee" ? 'Oui' : 'Non' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Place</th>
+                            <td>
+                                {% for place in event.places %}
+                                    <div class="badge bg-info">{{ place.name }}</div>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ event.description }}</td>
+                        </tr>
+                        <tr>
+                            <th>Créée le</th>
+                            <td>{{ event.createdAt ? event.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Mis à jour</th>
+                            <td>{{ event.updatedAt ? event.updatedAt|date('Y-m-d H:i:s') : '-' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-end w-100">
+                    <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_event_edit', {'id': event.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                    {{ include('coworking/event/_delete_form.html.twig') }}
+                </div>
+            {% else %}
+            <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+                <h1 class="h3">Événement #{{ event.id }}</h1>
+
+                <table class="table table-hover">
+                    <tbody>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <td>{{ event.user ? event.user.email : 'Non défini' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Titre</th>
+                            <td>{{ event.title }}</td>
+                        </tr>
+                        <tr>
+                            <th>Début</th>
+                            <td>{{ event.startEvent ? event.startEvent|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fin</th>
+                            <td>{{ event.endEvent ? event.endEvent|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Journée</th>
+                            <td>{{ event.duration == "journee" ? 'Oui' : 'Non' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Place</th>
+                            <td>
+                                {% for place in event.places %}
+                                    <div class="badge bg-info">{{ place.name }}</div>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ event.description }}</td>
+                        </tr>
+                        <tr>
+                            <th>Créée le</th>
+                            <td>{{ event.createdAt ? event.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Mis à jour</th>
+                            <td>{{ event.updatedAt ? event.updatedAt|date('Y-m-d H:i:s') : '-' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+                <img class="rounded-lg-3" src="{{ asset('images/coworking/IMG_0678.png') }}" alt="" width="720">
+            </div>
+            {% endif %}
 
     <div>
         <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_event_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>

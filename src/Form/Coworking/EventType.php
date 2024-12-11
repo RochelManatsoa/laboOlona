@@ -20,6 +20,12 @@ class EventType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        if ($options['is_admin']) {
+            $builder
+                ->add('user', UserAutocompleteField::class, [])
+            ;
+        }
+
         $builder
             ->add('duration', ChoiceType::class, [
                 'choices' => [
@@ -71,10 +77,8 @@ class EventType extends AbstractType
                 ]
             ]);
 
-            // Vérifiez si l'utilisateur est administrateur
             if ($options['is_admin']) {
                 $builder
-                    ->add('user', UserAutocompleteField::class, [])
                     ->add('backgroundColor', ColorType::class, [
                         'label' => 'Couleur de fond',
                         'label_attr' => ['class' => 'fw-bold fs-5'],

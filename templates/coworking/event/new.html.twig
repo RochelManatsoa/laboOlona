@@ -2,12 +2,29 @@
 
 {% block title %}Réserver{% endblock %}
 
-{% block body %}
-    <h1 class="h3">Réserver</h1>
+{% block paralax %}
+{% if not is_granted('ROLE_ADMIN') %}
+    {% include "coworking/event/_paralax.html.twig" %}
+  {% endif %}
+{% endblock %}
 
-    {{ include('coworking/event/_form.html.twig') }}
-    <div>
-        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_event_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+        <h1 class="h3">Réserver</h1>
+
+        {{ include('coworking/event/_form.html.twig') }}
+        <div class="my-5">
+            <a class="btn btn-primary px-5 rounded-pill" href="{{ path('app_event_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+        </div>
     </div>
+</section>
     
 {% endblock %}

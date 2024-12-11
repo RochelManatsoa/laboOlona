@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+#base-coworking{
+    a.nav-link{
+        text-transform: uppercase!important;
+        font-weight: bold!important;
+        font-family: 'Poppins';
+    }
+    a.nav-link:hover, a.nav-link:active, a.nav-link:active{
+        color:$link-warning!important;
+    }
+    a.nav-link.active{
+        border-bottom: 2px solid $link-warning!important;
+        color:$link-warning!important;
+    }
+}

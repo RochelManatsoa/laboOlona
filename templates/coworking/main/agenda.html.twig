@@ -1,28 +1,47 @@
 {% extends 'base_coworking.html.twig' %}
 
-{% block title %}Calendrier!{% endblock %}
+{% block title %}Agenda Coworking{% endblock %}
+
+{% block paralax %}
+  {% if not is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
 
 {% block body %}
-<h1 class="h3">Agenda Coworking</h1>
-<div id="calendar" data-events="{{ data|e('html_attr') }}"></div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalTitle">Title here</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <p id="modalUser">User here</p>
-            <p id="modalPlaces">Description here</p>
-            <p id="modalDescription">Description here</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+<section class="p-0 m-0">
+  <div class="container my-5">
+    <div class="row py-5 align-items-center rounded-3 border shadow-lg">
+      <h1 class="h3 mb-3">Agenda Coworking</h1>
+      <div id="calendar" data-events="{{ data|e('html_attr') }}"></div>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Title here</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <p id="modalUser">User here</p>
+                  <p id="modalPlaces">Description here</p>
+                  <p id="modalDescription">Description here</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-{% endblock %}
+  </section>
+  {% endblock %}
+
 

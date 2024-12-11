@@ -3,10 +3,13 @@
 namespace App\Controller\Coworking;
 
 use App\Entity\User;
+use App\Entity\Notification;
+use App\Entity\CandidateProfile;
 use App\Form\Coworking\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Form\Moderateur\Profile\CandidatType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,10 +68,13 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    public function show(User $user, EntityManagerInterface $entityManager): Response
     {
         return $this->render('coworking/user/show.html.twig', [
             'user' => $user,
+            'notifications' => $entityManager->getRepository(Notification::class)->findBy([
+                'destinataire' => $user
+            ], ['id' => 'DESC']),
         ]);
     }
 
