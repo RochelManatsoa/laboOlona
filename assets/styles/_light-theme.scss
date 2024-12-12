@@ -3,10 +3,10 @@
 body.bootstrap-light {
     background-color: $light-bg;
     color: $light-text;
-    a:not(.btn-primary, .nav-link) {
+    a:not(.btn-primary, .nav-link, .text-white) {
         color: $link-light !important;
     }
-    a .btn-primary, a .nav-link{
+    a .btn-primary, a .nav-link, a .text-white{
         color: #ffffff !important;
     }
 

@@ -113,7 +113,7 @@
 
   </section>
 
-  <section class="container-fluid py-5">
+  <section class="container-fluid py-5" id="available"> 
       <div class="container">
           <div class="row">
               <h2 class="display-5 fw-bold lh-1 text-body-emphasis text-center">Places disponibles</h2>
@@ -367,6 +367,17 @@
 {% endif %}
 
 <script>
+  window.onload = function() {
+    const hash = window.location.hash;
+    if (hash) {
+        const target = document.querySelector(hash);
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    }
+};
     const availablePlaces = {
         today: {{ availableToday|json_encode|raw }},
         tomorrow: {{ availableTomorrow|json_encode|raw }},
