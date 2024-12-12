@@ -8,10 +8,10 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link px-3 mx-2 btn-sm" aria-current="page" href="{{ path('app_coworking_main')}}">Disponibilités</a>
-        <a class="nav-link px-3 mx-2 btn-sm" href="{{ path('app_event_index')}}">Mes réservations</a>
-        <a class="nav-link px-3 mx-2 btn-sm" href="{{ path('app_product_index')}}">Produits</a>
-        <a class="nav-link px-3 mx-2 btn-sm" href="{{ path('app_order_index')}}">Mes commandes</a>
+        <a class="nav-link px-3 mx-2 text-white" aria-current="page" href="{{ path('app_coworking_main')}}">Disponibilités</a>
+        <a class="nav-link px-3 mx-2 text-white" href="{{ path('app_event_index')}}">Mes réservations</a>
+        <a class="nav-link px-3 mx-2 text-white" href="{{ path('app_product_index')}}">Produits</a>
+        <a class="nav-link px-3 mx-2 text-white" href="{{ path('app_order_index')}}">Mes commandes</a>
       </div>
     </div>
     {% if app.user %}
@@ -29,11 +29,11 @@
     {% endif %}
     <div class="dropdown-center">
       {% if app.user %}
-        <a class="me-5 h4" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle"></i></a>
+        <a class="me-5 h4" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle text-white"></i></a>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="{{ path('app_cart_index')}}">Mon panier</a></li>
           <li><a class="dropdown-item" href="{{ path('app_order_index')}}">Mes commandes</a></li>
-          <li><a class="dropdown-item" href="{{ path('app_home')}}">Olona Talents</a></li>
+          <li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Olona Talents</a></li>
           <li><a class="dropdown-item" href="{{ path('app_logout')}}">Logout <i class="bi bi-box-arrow-right"></i></a></li>
         </ul>
       {% endif %}

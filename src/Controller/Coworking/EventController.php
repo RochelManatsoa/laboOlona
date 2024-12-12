@@ -79,6 +79,9 @@ class EventController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $event = $form->getData();
             $event->setUser($this->getUser());
+            if($event->getDescription() == ""){
+                $event->setDescription('Réservation de '.$this->getUser());
+            }
             $entityManager->persist($event);
             $entityManager->flush();
             foreach ($event->getPlaces() as $place) {

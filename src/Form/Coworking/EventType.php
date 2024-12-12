@@ -63,22 +63,22 @@ class EventType extends AbstractType
                 'autocomplete' => true,
                 'multiple' => true,  
                 'expanded' => false 
-            ])
-            ->add('description', TextareaType::class, [
-                'required' => false,
-                'label' => 'Description',
-                'label_attr' => [
-                    'class' => 'fw-bold fs-5' 
-                ],
-                'help' => 'Notes pour la réservation. Ces notes seront visibles par les utilisateurs qui ont accès à la réservation.',
-                'attr' => [
-                    'rows' => 6,
-                    'class' => 'ckeditor-textarea'
-                ]
             ]);
 
             if ($options['is_admin']) {
                 $builder
+                    ->add('description', TextareaType::class, [
+                        'required' => false,
+                        'label' => 'Description',
+                        'label_attr' => [
+                            'class' => 'fw-bold fs-5' 
+                        ],
+                        'help' => 'Notes pour la réservation. Ces notes seront visibles par les utilisateurs qui ont accès à la réservation.',
+                        'attr' => [
+                            'rows' => 6,
+                            'class' => 'ckeditor-textarea'
+                        ]
+                    ])
                     ->add('backgroundColor', ColorType::class, [
                         'label' => 'Couleur de fond',
                         'label_attr' => ['class' => 'fw-bold fs-5'],
