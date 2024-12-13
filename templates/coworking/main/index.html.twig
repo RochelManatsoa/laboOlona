@@ -46,55 +46,40 @@
             <h1 class="display-5 fw-bold text-white mb-3">Réservation en ligne</h1>
             <div class="col-lg-6 mx-auto">
               <div class="row justify-content-lg-center">
-                  <div class="col-lg-8">
+                  <div class="col-12 col-sm-10" id="reservationForm">
                     <!-- Form -->
-                    <form class="fs-5 mb-4">
+                    {{ form_start(form) }}
                       <div class="row gx-3">
-                        <div class="col-md-6">
-                          <!-- Contact number (hidden) -->
-                          <input type="hidden" name="contact_number">
-        
+                        <div class="col-md-6">        
                           <!-- Full name -->
                           <div class="mb-3">
-                            <label class="visually-hidden" for="user_name">Nom complet</label>
-                            <input class="form-control" id="user_name" name="user_name" type="text" placeholder="Nom complet" required="">
+                            {{ form_widget(form.fullName, {'attr': {'placeholder': 'Nom complet'}}) }}
                           </div>
         
                           <!-- Phone number -->
                           <div class="mb-3">
-                            <label class="visually-hidden" for="user_phone">Téléphone</label>
-                            <input class="form-control" id="user_phone" name="user_phone" type="tel" placeholder="Téléphone" required="">
+                            {{ form_widget(form.phone, {'attr': {'placeholder': 'Téléphone'}}) }}
                           </div>
         
                           <!-- Email address -->
                           <div class="mb-3">
-                            <label class="visually-hidden" for="user_email">Email</label>
-                            <input class="form-control" id="user_email" name="user_email" type="email" placeholder="Email" required="">
+                            {{ form_widget(form.email, {'attr': {'placeholder': 'Email'}}) }}
                           </div>
                         </div>
                         <div class="col-md-6">
                           <!-- Guests -->
                           <div class="mb-3">
-                            <label class="visually-hidden" for="guests">Guests</label>
-                            <select class="form-select" id="guests" name="guests" required="">
-                              <option value="1">1 personne</option>
-                              <option value="2" selected="">2 personnes</option>
-                              <option value="3">3 personnes</option>
-                              <option value="4">4 personnes</option>
-                              <option value="5">5 personnes</option>
-                            </select>
+                            {{ form_widget(form.guest, {'attr': {'placeholder': '2 personnes'}}) }}
                           </div>
         
                           <!-- Date -->
                           <div class="mb-3">
-                            <label class="visually-hidden" for="date">Date</label>
-                            <input class="form-control" id="date" name="date" type="date" value="2021-02-12" required="">
+                            {{ form_widget(form.date.date, {'attr': {'placeholder': 'Date'}}) }}
                           </div>
         
                           <!-- Time -->
                           <div class="mb-3">
-                            <label class="visually-hidden" for="time">Time</label>
-                            <input class="form-control" id="time" name="time" type="time" value="18:00" required="">
+                            {{ form_widget(form.date.time, {'attr': {'placeholder': 'Time'}}) }}
                           </div>
                         </div>
                         <div class="col text-center">
@@ -104,7 +89,10 @@
                           </div>
                         </div>
                       </div>
-                    </form>
+                      <div style="display: none;">
+                        {{ form_widget(form) }}
+                      </div>
+                      {{ form_end(form) }}
                   </div>
                 </div>
             </div>

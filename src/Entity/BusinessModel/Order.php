@@ -42,6 +42,7 @@ class Order
             'Contestée' => self::STATUS_DISPUTED ,
         ];
     }
+    
     public static function getLabels() {
         return [
             self::STATUS_PENDING =>         'En attente' ,

@@ -1,6 +1,6 @@
 {% extends 'base_coworking.html.twig' %}
 
-{% block title %}Nouvel utilisateur{% endblock %}
+{% block title %}Nouvelle réservation{% endblock %}
 
 {% block paralax %}{% endblock %}
 
@@ -10,11 +10,12 @@
   {% endif %}
 {% endblock %}
 
+
 {% block body %}
 <section class="p-0 m-0">
     <div class="container my-5">
         <div class="row p-5 align-items-center rounded-3 border shadow-lg">
-            <h1 class="h3">Nouvel utilisateur</h1>
+            <h1 class="h3">Nouvelle réservation</h1>
 
             {{ include('coworking/user/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
             
@@ -24,5 +25,9 @@
         </div>
     </div>    
 </section>
-    
+    <h1>Create new Reservation</h1>
+
+    {{ include('coworking/reservation/_form.html.twig') }}
+
+    <a href="{{ path('app_coworking_reservation_index') }}">back to list</a>
 {% endblock %}

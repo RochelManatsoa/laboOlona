@@ -15,6 +15,7 @@ use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Manager\Finance\EmployeManager;
 use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\Coworking\Reservation;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -144,6 +145,24 @@ class MailManager
                 'user' => $user,
                 'jobListing' => $jobListing,
                 'boost' => $boost,
+                'url' => $url,
+            ]
+        );
+    }
+
+    public function reservationEnLigne(Reservation $reservation)
+    {
+        $url = '';
+        $url = $this->urlGenerator->generate('app_coworking_reservation_edit', [
+            'id' => $reservation->getId()
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        
+        return $this->mailerService->sendMultiple(
+            ['contact@olona-talents.com', 'rajaomia20@gmail.com', 'aolonaprodadmi@gmail.com', 'sm.affiliations@gmail.com'],
+            'Réservation au nom de '.$reservation->getFullName(),
+            'reservation/coworking.mail.twig',
+            [
+                'reservation' => $reservation,
                 'url' => $url,
             ]
         );
