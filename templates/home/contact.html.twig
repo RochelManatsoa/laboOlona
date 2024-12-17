@@ -30,23 +30,6 @@
                     {{ form_label(form.numero) }}
                     </div>
                     {{ form_widget(form.numero) }}
-                    <div class="form-check mt-3 form-check-inline">
-                        <div class="row">
-                            <div class="col-1 m-0 p-0">
-                                <div class="form-check form-check-inline">
-                                    {{ form_widget(form.agreeTerms) }}
-                                </div>
-                            </div>
-                            <div class="col-11 m-0 pl-0">
-                                <label class="form-check-label fs-6" for="{{ form.agreeTerms.vars.id }}">
-                                    {{ attribute(form.agreeTerms.vars.attr, 'label')|trans({
-                                        '%terms_url%': path('app_home_terms'),
-                                    })|raw }}
-                                </label>
-                            </div>
-                        </div>
-
-                    </div>
                     <div class="col-6 mx-auto">
                         <button type="submit" class="btn btn-primary w-100 my-3 ">{{ 'app_home.contact.button'|trans }}</button>
                     </div>

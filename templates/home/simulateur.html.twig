@@ -1,0 +1,136 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Réservez votre espace de coworking {% endblock %}
+
+{% block paralax %}
+{% endblock %}
+
+{% block body %}
+
+<section class="container-fluid py-5 bg-body-tertiary">
+  
+  <div class="container my-5">
+    <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+      <h2 class="display-6 fw-bold">Votre bureau, comme vous l'imaginez</h2>
+      <p class="lead">
+        Découvrez nos espaces de travail conçus pour votre confort et votre productivité. Profitez de chaises ergonomiques, d'une lumière naturelle abondante, d'une connexion Wi-Fi fibre ultra-rapide et d'une ambiance professionnelle stimulante avec coin café et espaces communs.
+      </p>
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+          <div class="card h-100 rounded-3 border shadow-sm">
+            <img src="{{ asset('images/coworking/IMG_0700.png')}}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">Postes de travail individuels.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100 rounded-3 border shadow-sm">
+            <img src="{{ asset('images/coworking/IMG_0682.png')}}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">Open space collaboratif.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100 rounded-3 border shadow-sm">
+            <img src="{{ asset('images/coworking/IMG_0707.png')}}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">Salles de réunion équipées.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+
+</section>
+
+  <section class="p-0 m-0">
+      <div class="container my-5">
+          <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+              <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+                  <h2 class="display-5 fw-bold lh-1 text-body-emphasis">Pourquoi choisir notre espace de coworking?</h2>
+                  <p class="lead">Chez Olona Talents, nous avons conçu un espace de travail dynamique et accueillant qui s'adresse aussi bien aux indépendants qu'aux équipes de petites entreprises. Situé dans un cadre inspirant, notre coworking offre cinq places cloisonnées pour ceux qui recherchent intimité et concentration, ainsi que treize espaces ouverts parfaits pour stimuler la collaboration et l'interaction.</p>
+                  <p class="lead">Vous bénéficiez d'un accès constant à des installations modernes et confortables. Notre processus de réservation est rapide et sécurisé, vous assurant une tranquillité d'esprit et une flexibilité optimale pour gérer votre emploi du temps. De plus, notre équipe de support dévouée est toujours prête à vous assister, garantissant que votre expérience de coworking soit aussi fluide et productive que possible. </p>
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+                  <button type="button" class="btn btn-primary px-5 me-md-2 fw-bold">Privatiser</button>
+                  <button type="button" class="btn btn-outline-secondary px-5">Réserver</button>
+                  </div>
+              </div>
+          <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+              <img class="rounded-lg-3" src="{{ asset('images/coworking/screen-logo.png') }}" alt="" width="720">
+          </div>
+          </div>
+          <div class="row row-cols-1 row-cols-md-4 g-4 text-center">
+            <div class="col">
+              <div class="card shadow h-100">
+                <i class="bi bi-wifi display-4 fw-bolder ms-4 mt-4"></i>
+                <div class="card-body">
+                  <h5 class="card-title">Wi-Fi ultra-rapide</h5>
+                  <p class="card-text">Connexion fibre optique sécurisée et stable.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card shadow h-100">
+                <i class="bi bi-geo-alt-fill display-4 fw-bolder ms-4 mt-4"></i>
+                <div class="card-body">
+                  <h5 class="card-title">Emplacement central</h5>
+                  <p class="card-text">Proche des transports en commun.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card shadow h-100">
+                <i class="bi bi-people-fill display-4 fw-bolder ms-4 mt-4"></i>
+                <div class="card-body">
+                  <h5 class="card-title">Ambiance collaborative</h5>
+                  <p class="card-text">Événements networking réguliers.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card shadow h-100">
+                <i class="bi bi-cup-hot-fill display-4 fw-bolder ms-4 mt-4"></i>
+                <div class="card-body">
+                  <h5 class="card-title">Services inclus</h5>
+                  <p class="card-text">Imprimante, café, coin détente.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </section>
+
+  <section class="container-fluid py-5">
+
+      <div class="bg-dark text-secondary px-4 py-5 text-center" data-bs-theme="dark">
+          <div class="py-5">
+            <h1 class="display-5 fw-bold text-white mb-3">Réservation en ligne</h1>
+            <div class="col-lg-6 mx-auto">
+              <div class="row justify-content-lg-center">
+                </div>
+            </div>
+          </div>
+      </div>
+
+  </section>
+
+  <section class="container-fluid py-5" id="available"> 
+      <div class="container">
+          <div class="row py-4 py-sm-5 px-2 px-sm-3 rounded-3 border shadow-lg">
+            
+          </div>
+      </div>
+  </section>
+
+  <section class="container-fluid py-5">
+    <div class="container">
+        <div class="row">
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

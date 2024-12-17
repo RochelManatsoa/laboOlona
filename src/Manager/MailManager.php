@@ -16,6 +16,7 @@ use App\Service\Mailer\MailerService;
 use App\Manager\Finance\EmployeManager;
 use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Coworking\Reservation;
+use App\Entity\Moderateur\ContactForm;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -164,6 +165,18 @@ class MailManager
             [
                 'reservation' => $reservation,
                 'url' => $url,
+            ]
+        );
+    }
+
+    public function contactForm(ContactForm $contactForm)
+    {        
+        return $this->mailerService->sendMultiple(
+            ["contact@olona-talents.com", "nirinarocheldev@gmail.com", "techniques@olona-talents.com"],
+            "Nouvelle entrée sur le formulaire de contact Coworking",
+            "contact.html.twig",
+            [
+                'user' => $contactForm,
             ]
         );
     }

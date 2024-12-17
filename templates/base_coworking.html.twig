@@ -20,10 +20,10 @@
               <div class="container">
                 <!-- Content Section -->
                 <div class="row">
-                  <div class="col-12 col-sm-8 mx-auto text-center">
-                    <h1 class="display-1 fw-bolder">Coworking</h1>
-                    <p class="lead my-4">Notre espace de coworking propose un environnement collaboratif idéal pour les professionnels désireux de travailler dans un cadre dynamique et inspirant.</p>
-                    <a href="{{path('app_coworking_main')}}#reservationForm" class="text-white btn btn-outline-warning px-5">Prendre une reservation</a>
+                  <div class="col-12 col-sm-10 mx-auto text-center">
+                    <h1 class="display-5 fw-bolder">Un espace de travail inspirant pour booster votre productivité</h1>
+                    <p class="lead my-4">Espaces modernes, connectés et modulables, pensés pour votre réussite.</p>
+                    <a href="{{path('app_coworking_main')}}#reservationForm" class="text-white btn btn-outline-warning px-5">Réserver votre espace dès maintenant</a>
                   </div>
                 </div>
                 <!-- Social Links and Address Section in Line -->
@@ -76,20 +76,21 @@
                 {% block body %}{% endblock %}
             </div>
         </div>
-        <img src="{{ asset('images/coworking/map_olona_talents.png')}}" alt="map" class="w-100 img-fluid">
         <footer class="py-3 my-4">
-          <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-            <li class="nav-item"><a href="{{ path('app_home_legal')}}" class="px-2 text-body-secondary">Mentions Légales</a></li>
-            <li class="nav-item"><a href="{{ path('app_home_privacy')}}" class="px-2 text-body-secondary">Politique de Confidentialité</a></li>
-            <li class="nav-item"><a href="{{ path('app_home_terms')}}" class="px-2 text-body-secondary">Conditions d'Utilisation</a></li>
-            <li class="nav-item"><a href="{{ path('app_v2_dashboard')}}" class="px-2 text-body-secondary">Olona Talents</a></li>
-            {% if app.user %}
-            <li class="nav-item"><a href="{{ path('app_v2_contact')}}" class="px-2 text-body-secondary">Nous contacter</a></li>
-            {% else %}
-            <li class="nav-item"><a href="{{ path('app_contact')}}" class="px-2 text-body-secondary">Nous contacter</a></li>
-            {% endif %}
-          </ul>
-          <p class="text-center text-body-secondary">© 2024 Olona Talents, Tout droit reservé</p>
+          <div class="container">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+              <li class="nav-item"><a href="{{ path('app_home_legal')}}" class="px-2 text-body-secondary">Mentions Légales</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_privacy')}}" class="px-2 text-body-secondary">Politique de Confidentialité</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_terms')}}" class="px-2 text-body-secondary">Conditions d'Utilisation</a></li>
+              <li class="nav-item"><a href="{{ path('app_v2_dashboard')}}" class="px-2 text-body-secondary">Olona Talents</a></li>
+              {% if app.user %}
+              <li class="nav-item"><a href="{{ path('app_v2_contact')}}" class="px-2 text-body-secondary">Nous contacter</a></li>
+              {% else %}
+              <li class="nav-item"><a href="{{ path('app_contact')}}" class="px-2 text-body-secondary">Nous contacter</a></li>
+              {% endif %}
+            </ul>
+            <p class="text-center text-body-secondary">© 2024 Olona Talents, Tout droit reservé</p>
+          </div>
         </footer>
     </body>
     {% block javascripts %}

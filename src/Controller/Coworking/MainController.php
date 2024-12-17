@@ -2,13 +2,15 @@
 
 namespace App\Controller\Coworking;
 
+use App\Manager\MailManager;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Coworking\Reservation;
+use App\Entity\Moderateur\ContactForm;
+use App\Form\Moderateur\ContactFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Coworking\ReservationFormType;
-use App\Manager\MailManager;
 use App\Repository\Coworking\EventRepository;
 use App\Repository\Coworking\PlaceRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -54,6 +56,27 @@ class MainController extends AbstractController
         $resa = new Reservation();
         $form = $this->createForm(ReservationFormType::class, $resa);
         $form->handleRequest($request);
+        
+        $contact = new ContactForm;
+        $contact->setCreatedAt(new \DateTime());
+        $contactForm = $this->createForm(ContactFormType::class, $contact);
+        $contactForm->handleRequest($request);
+        if ($contactForm->isSubmitted() && $contactForm->isValid()) {
+            $contact = $contactForm->getData();
+            $entityManager->persist($contact);
+            $entityManager->flush();
+            $mailManager->contactForm($contact);
+            $this->addFlash('success', 'Votre message a été bien envoyé. Nous vous repondrons dans le plus bref delais');
+
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('coworking/update.html.twig', ['id' => 'contactForm']);
+            }
+        
+            return $this->json([
+                'message' => 'Success',
+            ], Response::HTTP_OK);
+        }
 
         if($form->isSubmitted() && $form->isValid()){
             $resa = $form->getData();
@@ -63,7 +86,7 @@ class MainController extends AbstractController
 
             if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
                 $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-                return $this->render('coworking/update.html.twig');
+                return $this->render('coworking/update.html.twig', ['id' => 'reservationForm']);
             }
         
             return $this->json([
@@ -73,13 +96,14 @@ class MainController extends AbstractController
 
         return $this->render('coworking/main/index.html.twig', [
             'availableToday' => $availablePlaces,
-            'availableTodayNumber' => (int)(count($places) - count($numberOfAvailablePlaces)),
+            'availableTodayNumber' => (int)(count($places) - count($availablePlaces)),
             'availableTomorrow' => $eventRepository->findAvailablePlacesByDate($tomorrow),
-            'availableTomorrowNumber' => (int)(count($places) - count($numberOfAvailablePlaces)),
+            'availableTomorrowNumber' => (int)(count($places) - count($eventRepository->findAvailablePlacesByDate($tomorrow))),
             'availableDayAfterTomorrow' => $eventRepository->findAvailablePlacesByDate($dayAfterTomorrow),
-            'availableDayAfterTomorrowNumber' => (int)(count($places) - count($numberOfAvailablePlaces)),
+            'availableDayAfterTomorrowNumber' => (int)(count($places) - count($eventRepository->findAvailablePlacesByDate($dayAfterTomorrow))),
             'places' => $places,
             'form' => $form->createView(),
+            'contactForm' => $contactForm->createView(),
             'date' => (new \DateTime())->format('Y-m-d'),
         ]);
     }
@@ -114,19 +138,5 @@ class MainController extends AbstractController
         return $this->render('coworking/main/agenda.html.twig', [
             'data' => json_encode($reservations),
         ]);
-    }
-
-    #[Route('/formulaire', name: 'app_main_form', methods: ['POST'])]
-    public function form(Request $request): Response
-    {
-        $data = $request->request->all();
-        if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
-            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-            return $this->render('coworking/update.html.twig', $data);
-        }
-        
-        return $this->json([
-            'message' => 'Success',
-        ], Response::HTTP_OK);
     }
 }

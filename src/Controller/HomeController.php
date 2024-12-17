@@ -65,8 +65,8 @@ class HomeController extends AbstractController
 
     #[Route('/simulateur-portage-salarial', name: 'app_home_simulateur_portage')]
     public function simulateur(): Response 
-    {
-        return $this->redirectToRoute('app_v2_candidate_simulator');
+    {        
+        return $this->render('home/simulateur.html.twig', []);
     }
 
     #[Route('/simulateur-entreprise', name: 'app_home_simulateur_entreprise')]

@@ -38,24 +38,6 @@ class ContactFormType extends AbstractType
                     'placeholder' => 'app_home.contact.placeholder.title'
                 ]
             ])
-            ->add('message', TextareaType::class, [
-                'required' => false,
-                'label' => 'app_home.contact.message',
-                'label_attr' => [
-                    'class' => 'fw-bold fs-6' 
-                ],
-                'constraints' => new Sequentially([
-                    new NotBlank(message:'Le message est obligatoire.'),
-                    new Length(
-                        min: 3,
-                        minMessage: 'Le message est trop court',
-                    ),
-                ]),
-                'attr' => [
-                    'rows' => 6,
-                    'class' => 'ckeditor-textarea'
-                ]
-            ])
             ->add('email', EmailType::class, [
                 'label' => 'app_home.contact.email',
                 'label_attr' => [
@@ -76,17 +58,23 @@ class ContactFormType extends AbstractType
                     'placeholder' => 'app_home.contact.placeholder.number'
                 ]
             ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'label' => false,
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Vous devriez accepter nos conditions.',
-                    ]),
+            ->add('message', TextareaType::class, [
+                'required' => false,
+                'label' => 'app_home.contact.message',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
                 ],
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Le message est obligatoire.'),
+                    new Length(
+                        min: 3,
+                        minMessage: 'Le message est trop court',
+                    ),
+                ]),
                 'attr' => [
-                    'label' => 'J\'accepte les termes et conditions.',
-                ],
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ]
             ])
             ->add('captcha', Recaptcha3Type::class, [
                 'constraints' => new Recaptcha3(),
