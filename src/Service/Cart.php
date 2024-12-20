@@ -42,6 +42,21 @@ class Cart
         return $cartWithData;
     }
 
+    public function getDefaultCart(): array
+    {
+        $cart = $this->requestStack->getSession()->get('cart', []);
+        $cartWithData = [];
+
+        foreach ($cart as $id => $quantity) {
+            $cartWithData[] = [
+                'product' => $id,
+                'quantity' => $quantity
+            ];
+        }
+
+        return $cartWithData;
+    }
+
     public function getTotal(): float
     {
         $total = 0;

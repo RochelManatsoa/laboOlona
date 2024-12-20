@@ -3,8 +3,10 @@
 namespace App\Repository\Moderateur;
 
 use App\Entity\Moderateur\Invitation;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Invitation>
@@ -16,9 +18,27 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class InvitationRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, Invitation::class);
+    }
+       
+
+    public function paginateInvitation(array $data): PaginationInterface
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->orderBy('i.id', 'DESC')
+            ->getQuery();
+
+        return $this->paginator->paginate(
+            $qb,
+            $data['page'],
+            20,
+            [
+                'distinct' => true,
+                'shortFieldAllowList' => ['i.id', 'i.status', 'i.createdAt', 'i.usedAt'],
+            ]
+        );
     }
 
 //    /**

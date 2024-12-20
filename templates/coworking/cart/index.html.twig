@@ -50,9 +50,14 @@
                     </tbody>
                 </table>
                 <h3 class="h4">Total : <span class="px-5 fw-bold text-success">{{ total }} Ar</span></h3>
-                <div>
-                    <button type="submit" class="btn btn-primary my-3 px-5 rounded-pill">Valider la commande</button> 
-                </div>
+                <form action="{{ path('app_cart_checkout') }}" method="post">
+                    <input type="hidden" name="items" value="{{ jsonItems }}">
+                    <input type="hidden" name="total" value="{{ total }}">
+                    <input type="hidden" name="user" value="{{ app.user.id }}">
+                    <div>
+                        <button type="submit" class="btn btn-primary my-3 px-5 rounded-pill">Valider la commande</button> 
+                    </div>
+                </form>
             {% endif %}
         </div>
         <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">

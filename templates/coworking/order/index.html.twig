@@ -39,7 +39,8 @@
                         <tr>
                             <td>{{ order.id }}</td>
                             <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                            <td>{{ order.customer}}</td>
+                            
+                            <td>{{ order.customer}}<br><span class="fw-lighter">{{ order.customer.email }}</span></td>
                             <td class="text-center">{{ order.totalAmount }} {{ order.currency == null ? 'Ar' : ' ' ~ order.currency.symbole }}</td>
                             <td class="text-center">{{ statusOrder(order)|raw }}</td>
                             <td>

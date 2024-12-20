@@ -84,7 +84,7 @@ class MailerService
             $env = '[Preprod] Olona Talents';
             $email->to('nirinarocheldev@gmail.com'); 
             $email->addTo('jrandriamalala.olona@gmail.com');
-            $email->addTo('s.maurel@olona-outsourcing.com');
+            $email->addTo('contact@olona-talents.com');
         }
         $email
             ->from(new Address('techniques@olona-talents.com', $env))

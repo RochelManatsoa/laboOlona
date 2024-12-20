@@ -20,6 +20,9 @@
         <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
             {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
                 <h2 class="h3 text-body-emphasis">Toutes les réservations</h2>
+                <div>
+                    <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_event_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+                </div>
                 {% if events|length > 0 %}
                 <table class="table table-hover">
                     <thead>
@@ -55,9 +58,6 @@
                     <p class="text-center">Aucune réservation trouvée</p>
                 </div>
                 {% endif %}
-                <div>
-                    <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_event_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
-                </div>
             {% else %}
             <div class="col-lg-7 p-2 p-lg-4 pt-lg-3">
                 {% if events|length > 0 %}

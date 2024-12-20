@@ -1,20 +1,20 @@
 
-<nav class="container navbar navbar-expand-lg px-5">
+<nav class="container navbar navbar-expand-lg px-5 bg-dark">
     <a class="navbar-brand" href="{{ path('app_coworking_main')}}">
-      <img src="{{ asset('images/logo-olona-talents-black600x200.png') }}" style="height: 70px;" alt="logo" class="px-0 img-fluid">
+      <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" style="height: 70px;" alt="logo" class="px-0 img-fluid">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link " href="{{ path('app_main_agenda')}}"> Agenda</a>
-        <a class="nav-link px-2 mx-2 btn-sm" href="{{ path('app_event_index')}}">Réservations</a>
-        <a class="nav-link px-2 mx-2 btn-sm" href="{{ path('app_product_index')}}">Produits</a>
-        <a class="nav-link px-2 mx-2 btn-sm" href="{{ path('app_place_index')}}">Places</a>
-        <a class="nav-link px-2 mx-2 btn-sm" href="{{ path('app_user_index')}}">Utilisateurs</a>
-        <a class="nav-link px-2 mx-2 btn-sm" href="{{ path('app_order_index')}}">Commandes</a>
-        <a class="nav-link px-2 mx-2 btn-sm" href="{{ path('app_coworking_reservation_index')}}">En ligne</a>
+        <a class="nav-link" href="{{ path('app_event_index')}}">Réservations</a>
+        <a class="nav-link" href="{{ path('app_product_index')}}">Produits</a>
+        <a class="nav-link" href="{{ path('app_place_index')}}">Places</a>
+        <a class="nav-link" href="{{ path('app_user_index')}}">Utilisateurs</a>
+        <a class="nav-link" href="{{ path('app_order_index')}}">Commandes</a>
+        <a class="nav-link" href="{{ path('app_coworking_reservation_index')}}">En ligne</a>
+        <a class="nav-link" href="{{ path('app_moderateur_invitation_index')}}">Invitations</a>
       </div>
     </div>
   </nav>
