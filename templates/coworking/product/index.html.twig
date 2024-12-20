@@ -72,9 +72,7 @@
                                     <img src="{{ vich_uploader_asset(product, 'imageFile') }}" class="card-img-top" alt="...">
                                     <div class="card-body">
                                         <p class="card-text">{{ product.description }}</p>
-                                    </div>
-                
-                                    <div class="card-footer">
+                                        <p class="fw-bold h5">{{ product.price }} Ar</p>
                                         <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-primary btn-sm rounded-pill px-4">Ajouter au panier</a>
                                     </div>
                                 </div>
