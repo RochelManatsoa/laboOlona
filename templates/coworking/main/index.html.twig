@@ -214,7 +214,7 @@
                   <div class="tab-content" id="menuContent">
                     <div class="tab-pane fade active show" id="today" role="tabpanel" aria-labelledby="mainsTab">
                       <div class="row">
-                        <h3 class="display-6 fw-bold text-center mb-4">Places {{ availableTodayNumber}} restantes aujourd'hui</h3>
+                        <h3 class="display-6 fw-bold text-center mb-4">{{ availableTodayNumber}} Places restantes aujourd'hui</h3>
                         {% for event in places %}
                         {% set unavailable = false %}
                         {% for place in availableToday %}
@@ -304,7 +304,7 @@
                     </div>
                     <div class="tab-pane fade" id="tomorrow" role="tabpanel" aria-labelledby="lunchTab">
                         <div class="row">
-                          <h3 class="display-6 fw-bold text-center mb-4">Places {{availableTomorrowNumber}} restantes demain</h3>
+                          <h3 class="display-6 fw-bold text-center mb-4">{{availableTomorrowNumber}} Places restantes demain</h3>
                           {% for event in places %}
                           {% set unavailable = false %}
                           {% for place in availableTomorrow %}
@@ -394,7 +394,7 @@
                     </div>
                     <div class="tab-pane fade" id="afterTomorrow" role="tabpanel" aria-labelledby="dinnerTab">
                         <div class="row">
-                          <h3 class="display-6 fw-bold text-center mb-4">Places {{ availableDayAfterTomorrowNumber }} restantes après demain</h3>
+                          <h3 class="display-6 fw-bold text-center mb-4">{{ availableDayAfterTomorrowNumber }} Places restantes après demain</h3>
                           {% for event in places %}
                           {% set unavailable = false %}
                           {% for place in availableDayAfterTomorrow %}
@@ -508,7 +508,7 @@
           <img src="{{ asset('images/coworking/map_olona-talents_compressed.png')}}" alt="map" class="img-fluid my-3">
         </div>
         <div class="col">
-          <p class="lead"><i class="bi bi-phone"></i> +261 32 12 34 56</p>
+          <p class="lead"><i class="bi bi-phone"></i> +261 03 734 32</p>
           <p class="lead"><i class="bi bi-geo-alt"></i> Ambatonakanga, Antananarivo</p>
           <div id="contactForm">
             <h3 class="h4 mb-4 fw-bold">Contact rapide</h3>

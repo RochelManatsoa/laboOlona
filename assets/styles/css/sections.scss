@@ -331,7 +331,6 @@
     background-attachment: fixed;
     color: white;
     position: relative;
-    height: 100vh; 
     align-items: center; 
 }
 
@@ -349,6 +348,13 @@
 .paralax > * {
     position: relative;
     z-index: 2;
+}
+.main-content-min {
+    max-height: 500px; /* Hauteur minimale */
+    display: flex; 
+    flex-direction: column; /* Disposition verticale */
+    justify-content: center; /* Centrer verticalement */
+    align-items: center; /* Centrer horizontalement */
 }
 .main-content {
     height: calc(100vh - 70px); /* Ajustez cette hauteur en fonction de la hauteur de votre nav */

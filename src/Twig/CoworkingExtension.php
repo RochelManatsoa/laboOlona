@@ -44,7 +44,7 @@ class CoworkingExtension extends AbstractExtension
         if(!$place){
             return 'Inconnu';
         }
-        if($place->getType() == 'open-space'){
+        if($place->getType() == 'open_space'){
             return 'Open Space';
         }else{
             return 'Cloisonnée';

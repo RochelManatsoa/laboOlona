@@ -1,5 +1,5 @@
 
-<h3 class="display-6 fw-bold text-center mb-4">Places {{ availableOverDateNumber }} restantes le {{ date }}</h3>
+<h3 class="display-6 fw-bold text-center mb-4">{{ availableOverDateNumber }} Places restantes le {{ date }}</h3>
 {% for event in places %}
     {% set unavailable = false %}
     {% for place in availablePlaces %}
@@ -60,7 +60,7 @@
     {% endif %}
 {% endfor %}
 {% if availablePlaces|length >0 %}
-    <h2 class="h4 text-center my-5 ">Places occupées après-demain</h2>
+    <h2 class="h4 text-center my-5 ">Places occupées le {{ date }}</h2>
     <div class="col-6 mx-auto">
         <ul class="list-group">
             {% for event in availablePlaces %}
@@ -84,6 +84,4 @@
             {% endfor %}
         </ul>
     </div>
-{% else %}
-Toutes les places sont déjà occupées.
 {% endif %}

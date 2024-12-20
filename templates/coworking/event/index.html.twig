@@ -59,8 +59,7 @@
                     <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_event_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
                 </div>
             {% else %}
-            <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
-                <h2 class="display-5 fw-bold lh-1 text-body-emphasis">Mes réservations</h2>
+            <div class="col-lg-7 p-2 p-lg-4 pt-lg-3">
                 {% if events|length > 0 %}
                 <table class="table table-hover">
                     <thead>
@@ -77,13 +76,16 @@
                     {% for event in events %}
                         <tr>
                             <td>{{ event.id }}</td>
-                            <td>{{ event.title }}<br> <span class="fw-lighter">{{ event.createdAt|time_ago }}</span></td>
+                            <td><a class="text-primary" href="{{ path('app_event_show', {'id': event.id}) }}">{{ event.title }}</a><br> <span class="fw-lighter">{{ event.createdAt|time_ago }}</span></td>
                             <td>{{ event.startEvent ? event.startEvent|date('Y-m-d H:i:s') : '' }}</td>
-                            <td class="text-center">{{ event.places|length }}</td>
+                            <td class="">
+                                {% for palce in event.places %}
+                                    <span class="badge bg-success rounded-pill">{{ palce.name }}</span>
+                                {% endfor %}
+                            </td>
                             <td class="text-center">{{ event.duration == "journee" ? 'Oui' : 'Non' }}</td>
                             <td>
-                                <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_event_show', {'id': event.id}) }}"><i class="bi bi-eye"></i></a>
-                                <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_event_edit', {'id': event.id}) }}"><i class="bi bi-pencil"></i></a>
+                                <a class="btn btn-sm rounded-pill btn-info" href="{{ path('app_event_edit', {'id': event.id}) }}"><i class="bi bi-pencil"></i></a>
                             </td>
                         </tr>
                     {% endfor %}
