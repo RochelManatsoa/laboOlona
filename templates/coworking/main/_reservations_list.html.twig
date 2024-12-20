@@ -1,0 +1,89 @@
+
+<h3 class="display-6 fw-bold text-center mb-4">Places {{ availableOverDateNumber }} restantes le {{ date }}</h3>
+{% for event in places %}
+    {% set unavailable = false %}
+    {% for place in availablePlaces %}
+        {% if place.placeId == event.id %}
+            {% set unavailable = true %}
+        {% endif %}            
+    {% endfor %}
+    {% if unavailable %}
+    <div class="col-12 col-md-6">
+        <div class="py-3 border-bottom">
+        <div class="row">
+            <div class="col-3 align-self-center">
+            <!-- Image -->
+            <div class="ratio ratio-1x1">
+                <img class="object-fit-cover blurry-image" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+            </div>
+            </div>
+            <div class="col-7">
+            <!-- Heading -->
+            <h5 class="mb-2">{{ event.name }}</h5>
+
+            <!-- Text -->
+            <p class="mb-0">{{ event.description }}</p>
+            <button type="button" class="btn btn-dark btn-sm rounded-pill px-4 mt-3" disabled>Non disponible</button>
+            </div>
+            <div class="col-2">
+            <!-- Price -->
+            <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+            </div>
+        </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 col-md-6">
+        <div class="py-3 border-bottom">
+        <div class="row">
+            <div class="col-3 align-self-center">
+            <!-- Image -->
+            <div class="ratio ratio-1x1">
+                <img class="object-fit-cover" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+            </div>
+            </div>
+            <div class="col-7">
+            <!-- Heading -->
+            <h5 class="mb-2">{{ event.name }}</h5>
+
+            <!-- Text -->
+            <p class="mb-0">{{ event.description }}</p>
+            <a href="{{ path('app_event_new', {'placeId': event.id, 'date':'tomorrow'}) }}" class="btn btn-primary btn-sm rounded-pill px-4 mt-3">Réserver</a>
+            </div>
+            <div class="col-2">
+            <!-- Price -->
+            <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+            </div>
+        </div>
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}
+{% if availablePlaces|length >0 %}
+    <h2 class="h4 text-center my-5 ">Places occupées après-demain</h2>
+    <div class="col-6 mx-auto">
+        <ul class="list-group">
+            {% for event in availablePlaces %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <span class="fw-bold">Place {{ event.placeId }}</span>
+                        <span class="text-success mx-2">
+                            {{ getTypePlace(event.placeId) }}
+                        </span>
+                        - Réservée
+                    </span>
+                    {% if event.duration == 'demi_journee' %}
+                        <span class="badge bg-success rounded-pill">
+                            Demi-journée
+                        {% else %}
+                        <span class="badge bg-primary rounded-pill">
+                            Journée
+                        {% endif %}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% else %}
+Toutes les places sont déjà occupées.
+{% endif %}

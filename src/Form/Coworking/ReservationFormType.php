@@ -62,6 +62,13 @@ class ReservationFormType extends AbstractType
                 'time_widget' => 'single_text',
                 'data' => new \DateTime(),
             ])
+            ->add('private', CheckboxType::class, [
+                'mapped' => false,
+                'label' => 'Je souhaite privatiser',
+                'required' => true,
+                'row_attr' => ['class' => 'd-flex align-items-center'], // Flexbox pour aligner
+                'label_attr' => ['class' => 'ms-2 text-white'], 
+            ])
             ->add('captcha', Recaptcha3Type::class, [
                 'constraints' => new Recaptcha3(),
                 'action_name' => 'reservation',

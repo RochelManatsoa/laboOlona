@@ -108,6 +108,37 @@ class MainController extends AbstractController
         ]);
     }
 
+    #[Route('/reservations', name: 'app_reservations', methods: ['GET'])]
+    public function getReservationsByDate(
+        Request $request,
+        EventRepository $eventRepository,
+        PlaceRepository $placeRepository
+    ): Response {
+        $date = $request->query->get('date');
+        $places = $placeRepository->findAll();
+        if (!$date) {
+            return $this->json(['error' => 'Date not provided'], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $selectedDate = new \DateTime($date);
+        } catch (\Exception $e) {
+            return $this->json(['error' => 'Invalid date format'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $availablePlaces = $eventRepository->findAvailablePlacesByDate($selectedDate);
+
+        $html = $this->renderView('coworking/main/_reservations_list.html.twig', [
+            'availablePlaces' => $availablePlaces,
+            'date' => $date,
+            'places' => $places,
+            'availableOverDateNumber' => (int)(count($places) - count($availablePlaces)),
+        ]);
+
+        return $this->json(['html' => $html], Response::HTTP_OK);
+    }
+
+
     #[Route('/agenda', name: 'app_main_agenda')]
     public function agenda(EventRepository $eventRepository): Response
     {

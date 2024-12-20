@@ -4,9 +4,9 @@
 
 
 {% block paralax %}
-{% if not is_granted('ROLE_ADMIN') %}
-    {% include "coworking/product/_paralax.html.twig" %}
-  {% endif %}
+    {% if not is_granted('ROLE_ADMIN') %}
+        {% include "coworking/product/_paralax.html.twig" %}
+    {% endif %}
 {% endblock %}
 
 {% block admin %}

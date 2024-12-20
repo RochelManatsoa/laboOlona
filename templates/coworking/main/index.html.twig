@@ -15,7 +15,11 @@
 {% endblock %}
 
 {% block body %}
-
+<style>
+  #available {
+    scroll-margin-top: 100px; /* Adjust the value as needed */
+}
+</style>
 {% if is_granted('ROLE_ADMIN') %}
   
 {% else %}
@@ -121,58 +125,64 @@
 
       <div class="bg-dark text-secondary px-4 py-5 text-center" data-bs-theme="dark">
           <div class="py-5">
-            <h2 class="display-5 fw-bold text-white mb-3">Réservation en ligne</h2>
+            <h2 class="display-5 fw-bold text-white mb-3">Demander une réservation</h2>
             <div class="col-lg-6 mx-auto">
+              <p class="text-center lead mb-4 text-white">
+                Réservez votre espace de travail idéal dès maintenant en remplissant le formulaire ci-dessous. Que ce soit pour une journée ou une période plus longue, nous avons une solution adaptée à vos besoins.
+              </p>
               <div class="row justify-content-lg-center">
-                  <div class="col-12 col-sm-10" id="reservationForm">
-                    <!-- Form -->
-                    {{ form_start(form) }}
-                      <div class="row gx-3">
-                        <div class="col-md-6">        
-                          <!-- Full name -->
-                          <div class="mb-3">
-                            {{ form_widget(form.fullName, {'attr': {'placeholder': 'Nom complet'}}) }}
-                          </div>
-        
-                          <!-- Phone number -->
-                          <div class="mb-3">
-                            {{ form_widget(form.phone, {'attr': {'placeholder': 'Téléphone'}}) }}
-                          </div>
-        
-                          <!-- Email address -->
-                          <div class="mb-3">
-                            {{ form_widget(form.email, {'attr': {'placeholder': 'Email'}}) }}
-                          </div>
+                <div class="col-12 col-sm-10" id="reservationForm">
+                  <!-- Form -->
+                  {{ form_start(form) }}
+                    <div class="row gx-3">
+                      <div class="col-md-6">        
+                        <!-- Full name -->
+                        <div class="mb-3">
+                          {{ form_widget(form.fullName, {'attr': {'placeholder': 'Nom complet'}}) }}
                         </div>
-                        <div class="col-md-6">
-                          <!-- Guests -->
-                          <div class="mb-3">
-                            {{ form_widget(form.guest, {'attr': {'placeholder': '2 personnes'}}) }}
-                          </div>
-        
-                          <!-- Date -->
-                          <div class="mb-3">
-                            {{ form_widget(form.date.date, {'attr': {'placeholder': 'Date'}}) }}
-                          </div>
-        
-                          <!-- Time -->
-                          <div class="mb-3">
-                            {{ form_widget(form.date.time, {'attr': {'placeholder': 'Time'}}) }}
-                          </div>
+      
+                        <!-- Phone number -->
+                        <div class="mb-3">
+                          {{ form_widget(form.phone, {'attr': {'placeholder': 'Téléphone'}}) }}
                         </div>
-                        <div class="col text-center">
-                          <!-- Button -->
-                          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                              <button type="submit" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Réserver maintenant</button>
-                          </div>
+      
+                        <!-- Email address -->
+                        <div class="mb-3">
+                          {{ form_widget(form.email, {'attr': {'placeholder': 'Email'}}) }}
                         </div>
                       </div>
-                      <div style="display: none;">
-                        {{ form_widget(form) }}
+                      <div class="col-md-6">
+                        <!-- Guests -->
+                        <div class="mb-3">
+                          {{ form_widget(form.guest, {'attr': {'placeholder': '2 personnes'}}) }}
+                        </div>
+      
+                        <!-- Date -->
+                        <div class="mb-3">
+                          {{ form_widget(form.date.date, {'attr': {'placeholder': 'Date'}}) }}
+                        </div>
+      
+                        <!-- Time -->
+                        <div class="mb-3">
+                          {{ form_widget(form.date.time, {'attr': {'placeholder': 'Time'}}) }}
+                        </div>
                       </div>
-                      {{ form_end(form) }}
-                  </div>
+                      <div class="col mx-auto text-center">
+                        <div class="mb-3">
+                          {{ form_row(form.private) }}
+                        </div>
+                        <!-- Button -->
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                            <button type="submit" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Contactez moi</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="display: none;">
+                      {{ form_widget(form) }}
+                    </div>
+                    {{ form_end(form) }}
                 </div>
+              </div>
             </div>
           </div>
       </div>
@@ -180,10 +190,12 @@
   </section>
 
   <section class="container-fluid py-5" id="available"> 
-      <div class="container">
+      <div class="container" >
           <div class="row py-4 py-sm-5 px-2 px-sm-3 rounded-3 border shadow-lg">
               <h2 class="display-5 fw-bold lh-1 text-body-emphasis text-center">Places disponibles</h2>
               <p class="lead col-12 col-sm-8 mx-auto text-center">Découvrez l'innovation et la flexibilité au cœur de notre espace de coworking, où des postes de travail sont prêts à vous accueillir.</p>
+              
+              <div id="liveDateTime" class="display-6 text-primary text-center" data-initial-date="{{ 'now'|date('Y-m-d H:i:s') }}"></div>
               <div class="row">
                   <div class="col mb-5">
                     <!-- Navigation -->
@@ -201,7 +213,7 @@
                     <div class="tab-content" id="menuContent">
                       <div class="tab-pane fade active show" id="today" role="tabpanel" aria-labelledby="mainsTab">
                         <div class="row">
-                          <h2 class="h4 text-center">Places {{ availableTodayNumber}} restantes aujourd'hui</h2>
+                          <h3 class="display-6 fw-bold text-center mb-4">Places {{ availableTodayNumber}} restantes aujourd'hui</h3>
                           {% for event in places %}
                           {% set unavailable = false %}
                           {% for place in availableToday %}
@@ -291,7 +303,7 @@
                       </div>
                       <div class="tab-pane fade" id="tomorrow" role="tabpanel" aria-labelledby="lunchTab">
                           <div class="row">
-                            <h2 class="h4 text-center">Places {{availableTomorrowNumber}} restantes demain</h2>
+                            <h3 class="display-6 fw-bold text-center mb-4">Places {{availableTomorrowNumber}} restantes demain</h3>
                             {% for event in places %}
                             {% set unavailable = false %}
                             {% for place in availableTomorrow %}
@@ -381,7 +393,7 @@
                       </div>
                       <div class="tab-pane fade" id="afterTomorrow" role="tabpanel" aria-labelledby="dinnerTab">
                           <div class="row">
-                            <h2 class="h4 text-center">Places {{ availableDayAfterTomorrowNumber }} restantes après demain</h2>
+                            <h3 class="display-6 fw-bold text-center mb-4">Places {{ availableDayAfterTomorrowNumber }} restantes après demain</h3>
                             {% for event in places %}
                             {% set unavailable = false %}
                             {% for place in availableDayAfterTomorrow %}
@@ -472,7 +484,11 @@
                       <div class="tab-pane fade" id="otherDate" role="tabpanel" aria-labelledby="drinksTab">
                           <div class="row">
                             <div class="mb-3 col-12 col-sm-6 mx-auto">
-                              <input type="date" id="reservation_form_date_date" name="reservation_form[date][date]" placeholder="Date" class="form-control" value="2024-12-16">
+                              <h3 class="display-6 fw-bold text-center mb-4">Séléctionnez une date</h3>
+                              <input type="date" id="reservation_form_other_date" placeholder="Date" class="form-control" value="2024-12-16">
+                            </div>
+                            <div id="reservationsContainer" class="mt-4 row">
+                                <!-- Les résultats AJAX s'afficheront ici -->
                             </div>
                           </div>
                       </div>
@@ -525,41 +541,58 @@
   </section>
 
 {% endif %}
-
 <script>
-  window.onload = function() {
-    const hash = window.location.hash;
-    if (hash) {
-        const target = document.querySelector(hash);
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
-    }
-};
-    const availablePlaces = {
-        today: {{ availableToday|json_encode|raw }},
-        tomorrow: {{ availableTomorrow|json_encode|raw }},
-        dayAfterTomorrow: {{ availableDayAfterTomorrow|json_encode|raw }},
-        number: {
-            'today': {{ availableTodayNumber }},
-            'tomorrow': {{ availableTomorrowNumber }},
-            'dayAfterTomorrow': {{ availableDayAfterTomorrowNumber }}
-        }
-    };
 
-    function showAvailablePlaces(day) {
-        console.log(day, availablePlaces.number[day]);
-        const placesList = document.getElementById('places-list');
-        const places = availablePlaces[day];
-        let html = `<h2 class="h4">${availablePlaces.number[day]} places restantes ${day === 'today' ? "aujourd'hui" : day === 'tomorrow' ? 'demain' : 'après-demain'}</h2><ul>`;
-        places.forEach(function(event) {
-            html += `<li>Place ${event.placeId} réservée ${event.duration} : ${event.title}</li>`;
+  document.addEventListener('DOMContentLoaded', function () {
+    const dateInput = document.getElementById('reservation_form_other_date');
+
+    if (dateInput) {
+        dateInput.addEventListener('change', function () {
+            const selectedDate = this.value;            
+            const fetchUrl = "{{ path('app_reservations') }}?date=" + selectedDate; // URL générée dynamiquement
+
+            fetch(fetchUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest' // Indique une requête AJAX
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('reservationsContainer');
+                if (container) {
+                    container.innerHTML = data.html;
+                }
+            })
+            .catch(error => console.error('Error fetching reservations:', error));
         });
-        html += '</ul>';
-        placesList.innerHTML = html;
     }
-</script>
+});
 
+  document.addEventListener("turbo:load", function () {
+    const dateTimeElement = document.getElementById('liveDateTime');
+
+    if (dateTimeElement) {
+        const initialDate = dateTimeElement.getAttribute('data-initial-date');
+        let currentDate = new Date(initialDate);
+    
+        function updateDateTime() {
+            currentDate.setSeconds(currentDate.getSeconds() + 1);
+            const formattedDateTime = `Antananarivo, ${currentDate.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })} ${currentDate.toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            })}`;
+            dateTimeElement.textContent = formattedDateTime;
+        }
+    
+        updateDateTime(); // Initial update
+        setInterval(updateDateTime, 1000); // Update every second
+    }
+});
+
+</script>
 {% endblock %}
