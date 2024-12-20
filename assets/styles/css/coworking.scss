@@ -15,3 +15,15 @@
         color:$link-warning!important;
     }
 }
+
+.navbar-toggler {
+    border: none;
+    color: white!important;
+}
+.navbar-toggler {
+    transition: all 0.3s ease-in-out;
+}
+  
+.navbar-toggler:hover {
+    transform: scale(1.1); /* Agrandit légèrement au survol */
+}

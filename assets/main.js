@@ -247,7 +247,6 @@ $(function() {
                     ClassicEditor.create(editorElement, {
                         toolbar: {
                             items: [
-                                'heading', '|',
                                 'bold', 'italic', 'link', '|',
                                 'bulletedList', 'numberedList', '|',
                                 'blockQuote', '|',

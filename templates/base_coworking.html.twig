@@ -93,6 +93,20 @@
             <p class="text-center text-body-secondary">© 2024 Olona Talents, Tout droit reservé</p>
           </div>
         </footer>
+        <script>
+    
+          function loadCKEditor() {
+            if (typeof ClassicEditor === 'undefined') {
+              var scriptTag = document.createElement('script');
+              scriptTag.src = "{{ asset('assets/ckeditor5/ckeditor.js') }}";
+              document.body.appendChild(scriptTag);
+            }
+          }
+    
+          loadCKEditor();
+          document.addEventListener('turbo:load', loadCKEditor);
+    
+        </script>
     </body>
     {% block javascripts %}
         {{ encore_entry_script_tags('main') }}

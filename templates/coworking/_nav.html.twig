@@ -3,9 +3,6 @@
     <a class="navbar-brand" href="{{ path('app_coworking_main')}}">
       <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" style="height: 70px;" alt="logo" class="px-0 img-fluid">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-link px-3 mx-2 text-white" aria-current="page" href="{{ path('app_coworking_main')}}#available">Disponibilités</a>
@@ -25,7 +22,7 @@
             </a>
         {% endif %}
     {% else %}
-    <a href="{{ path('app_login')}}" class=""><i class="bi h4 me-5 bi-box-arrow-in-right"></i></a>
+    <a href="{{ path('app_login')}}" class=""><i class="bi h4 me-3 bi-box-arrow-in-right"></i></a>
     {% endif %}
     <div class="dropdown-center">
       {% if app.user %}
@@ -38,4 +35,7 @@
         </ul>
       {% endif %}
     </div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="bi bi-list h4"></i>
+    </button>
 </nav>

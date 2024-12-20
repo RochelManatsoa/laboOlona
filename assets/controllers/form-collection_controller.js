@@ -88,7 +88,6 @@ export default class extends Controller {
             ClassicEditor.create(textArea, {
                 toolbar: {
                     items: [
-                        'heading', '|',
                         'bold', 'italic', 'link', '|',
                         'bulletedList', 'numberedList', '|',
                         'blockQuote', '|',
