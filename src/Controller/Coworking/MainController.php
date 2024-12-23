@@ -9,6 +9,7 @@ use App\Entity\Moderateur\ContactForm;
 use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Coworking\ReservationFormType;
+use App\Repository\Coworking\CategoryRepository;
 use App\Repository\Coworking\EventRepository;
 use App\Repository\Coworking\PlaceRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,10 +20,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/coworking')]
 class MainController extends AbstractController
 {
-    #[Route('/', name: 'app_coworking_main')]
+    public function __construct(
+        private CategoryRepository $categoryRepository,
+    ){}
+
+    #[Route('/', name: 'app_coworking_main', options: ['sitemap' => true])]
     public function index(
         EventRepository $eventRepository,
         PlaceRepository $placeRepository,
+        CategoryRepository $categoryRepository,
         EntityManagerInterface $entityManager,
         MailManager $mailManager,
         Request $request
@@ -45,6 +51,11 @@ class MainController extends AbstractController
         $selectedDateTime = $dateMap[$selectedDate] ?? $today;
 
         $places = $placeRepository->findAll();
+        $categories = $categoryRepository->findAll();
+        $placesCategories = [];
+        foreach ($categories as $category) {
+            $placesCategories[$category->getSlug()] = $placeRepository->findPlacesByCategory($category);
+        }
         $availablePlaces = $eventRepository->findAvailablePlacesByDate($selectedDateTime);
         $numberOfAvailablePlaces = [];
 
@@ -105,6 +116,8 @@ class MainController extends AbstractController
             'form' => $form->createView(),
             'contactForm' => $contactForm->createView(),
             'date' => (new \DateTime())->format('Y-m-d'),
+            'placesCategories' => $placesCategories,
+            'categories' => $categories,
         ]);
     }
 
@@ -116,6 +129,11 @@ class MainController extends AbstractController
     ): Response {
         $date = $request->query->get('date');
         $places = $placeRepository->findAll();
+        $placesCategories = [];
+        $categories = $this->categoryRepository->findAll();
+        foreach ($categories as $category) {
+            $placesCategories[$category->getSlug()] = $placeRepository->findPlacesByCategory($category);
+        }
         if (!$date) {
             return $this->json(['error' => 'Date not provided'], Response::HTTP_BAD_REQUEST);
         }
@@ -132,6 +150,8 @@ class MainController extends AbstractController
             'availablePlaces' => $availablePlaces,
             'date' => $date,
             'places' => $places,
+            'categories' => $categories,
+            'placesCategories' => $placesCategories,
             'availableOverDateNumber' => (int)(count($places) - count($availablePlaces)),
         ]);
 

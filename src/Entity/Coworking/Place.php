@@ -47,6 +47,9 @@ class Place
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updateAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'places')]
+    private ?Category $category = null;
+
     public function __construct()
     {
         $this->isAvailable = false;
@@ -181,6 +184,18 @@ class Place
     public function setUpdateAt(?\DateTimeInterface $updateAt): static
     {
         $this->updateAt = $updateAt;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

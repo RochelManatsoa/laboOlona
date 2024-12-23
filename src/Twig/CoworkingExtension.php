@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Entity\Coworking\Category;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\Coworking\Place;
@@ -35,6 +36,10 @@ class CoworkingExtension extends AbstractExtension
     {
         return [
             new TwigFunction('getTypePlace', [$this, 'getTypePlace']),
+            new TwigFunction('isInArray', [$this, 'isInArray']),
+            new TwigFunction('getCategoryBySlug', [$this, 'getCategoryBySlug']),
+            new TwigFunction('getCategoryPlace', [$this, 'getCategoryPlace']),
+            new TwigFunction('countAvailableByCategory', [$this, 'countAvailableByCategory']),
         ];
     }
 
@@ -49,5 +54,43 @@ class CoworkingExtension extends AbstractExtension
         }else{
             return 'Cloisonnée';
         }
+    }
+
+    public function getCategoryPlace($id)
+    {
+        $place = $this->em->getRepository(Place::class)->find($id);
+        if($place->getCategory() instanceof Category){
+            return $place->getCategory()->getName();
+        }else{
+            return 'Non défini';
+        }
+    }
+
+    public function countAvailableByCategory(array $availableToday, Category $category)
+    {
+        $count = 0;
+        foreach ($availableToday as $event) {
+            if ($event['categoryId'] == $category->getId()) {
+                $count++;
+            }
+        }
+        
+        return $count;
+    }
+
+    public function isInArray(Place $place, array $availableToday)
+    {
+        foreach ($availableToday as $availableEvent) {
+            if ($availableEvent['placeId'] == $place->getId()) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public function getCategoryBySlug(string $slug): ?Category
+    {
+        return $this->em->getRepository(Category::class)->findOneBy(['slug' => $slug]);
     }
 }

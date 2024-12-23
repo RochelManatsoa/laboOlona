@@ -2,6 +2,7 @@
 
 namespace App\Repository\Coworking;
 
+use App\Entity\Coworking\Category;
 use App\Entity\Coworking\Place;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
@@ -38,5 +39,15 @@ class PlaceRepository extends ServiceEntityRepository
                 'shortFieldAllowList' => ['p.id', 'p.name', 'p.isAvailable', 'p.price'],
             ]
         );
+        }
+
+    public function findPlacesByCategory(Category $category): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.category = :category')
+            ->setParameter('category', $category)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

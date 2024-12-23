@@ -6,3 +6,6 @@ controllers:
     
 api_login_check:
     path: /api/login_check
+
+presta_sitemap:
+    resource: "@PrestaSitemapBundle/config/routing.yml"

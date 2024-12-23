@@ -24,7 +24,7 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/contact', name: 'app_home_contact')]
+    #[Route('/contact', name: 'app_contact')]
     public function contact(): Response
     {
         return $this->redirectToRoute('app_home');
@@ -36,19 +36,19 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/legal-mentions', name: 'app_home_legal')]
+    #[Route('/legal-mentions', name: 'app_home_legal', options: ['sitemap' => true])]
     public function legal(): Response
     {
         return $this->render('home/legal.html.twig', []);
     }
 
-    #[Route('/privacy-policy', name: 'app_home_privacy')]
+    #[Route('/privacy-policy', name: 'app_home_privacy', options: ['sitemap' => true])]
     public function privacy(): Response
     {
         return $this->render('home/privacy.html.twig', []);
     }
 
-    #[Route('/terms-and-conditions', name: 'app_home_terms')]
+    #[Route('/terms-and-conditions', name: 'app_home_terms', options: ['sitemap' => true])]
     public function terms(): Response
     {
         return $this->render('home/terms.html.twig', []);
@@ -74,7 +74,7 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('app_home_portage', []);
     }
 
-    #[Route('/portage-salarial', name: 'app_home_portage')]
+    #[Route('/portage-salarial', name: 'app_home_portage', options: ['sitemap' => true])]
     public function portage(Request $request, MailManager $mailManager, EntityManagerInterface $entityManager): Response 
     {    
         $contact = new ContactForm;

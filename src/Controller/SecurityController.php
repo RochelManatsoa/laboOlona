@@ -25,7 +25,7 @@ class SecurityController extends AbstractController
         private RequestStack $requestStack,
     ){}
 
-    #[Route(path: '/login', name: 'app_login')]
+    #[Route(path: '/login', name: 'app_login', options: ['sitemap' => true])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {

@@ -4,6 +4,7 @@ namespace App\Controller\Coworking;
 
 use App\Entity\Coworking\Place;
 use App\Form\Coworking\PlaceType;
+use App\Repository\Coworking\CategoryRepository;
 use App\Repository\Coworking\PlaceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PlaceController extends AbstractController
 {
     #[Route('/', name: 'app_place_index', methods: ['GET'])]
-    public function index(PlaceRepository $placeRepository, Request $request): Response
+    public function index(PlaceRepository $placeRepository, Request $request, CategoryRepository $categoryRepository): Response
     {
         $page = $request->query->get('page', 1);
         $array = [
@@ -29,6 +30,7 @@ class PlaceController extends AbstractController
 
         return $this->render('coworking/place/index.html.twig', [
             'places' => $placeRepository->paginatePlaces($array),
+            'categories' => $categoryRepository->findAll(),
         ]);
     }
 

@@ -50,11 +50,12 @@ class EventRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->createQueryBuilder('e')
             ->innerJoin('e.places', 'p')
+            ->innerJoin('p.category', 'c')
             ->where('e.startEvent <= :endOfDay')
             ->andWhere('e.endEvent >= :startOfDay')
             ->setParameter('startOfDay', $startOfDay)
             ->setParameter('endOfDay', $endOfDay)
-            ->select('e.id, e.title, e.duration, p.id as placeId')
+            ->select('e.id, e.title, e.duration, p.id as placeId, c.id as categoryId, c.slug as categoryName')
             ->groupBy('e.id, p.id');
 
         return $queryBuilder->getQuery()->getResult();
