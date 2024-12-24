@@ -149,6 +149,7 @@ class MainController extends AbstractController
         $html = $this->renderView('coworking/main/_reservations_list.html.twig', [
             'availablePlaces' => $availablePlaces,
             'date' => $date,
+            'dateObject' => new \DateTime($date),
             'places' => $places,
             'categories' => $categories,
             'placesCategories' => $placesCategories,

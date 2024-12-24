@@ -232,9 +232,9 @@
                               <h4 class="h3 mb-3">{{ category.name }}</h4>
                               <p class="mb-0 opacity-75">{{ category.description|raw }}</p>
                             </div>
-                            <div class="small">
+                            <div class="small text-nowrap">
                               <span class="fw-bolder text-nowrap">
-                                {{  category.places|length - countAvailableByCategory(availableToday, category) }}
+                                {{  category.places|length - countAvailableByCategory(availableTomorrow, category) }}
                               </span> 
                               disponibles sur 
                               <span class="fw-bolder text-nowrap">
@@ -355,7 +355,7 @@
                               <h4 class="h3 mb-3">{{ category.name }}</h4>
                               <p class="mb-0 opacity-75">{{ category.description|raw }}</p>
                             </div>
-                            <div class="small">
+                            <div class="small text-nowrap">
                               <span class="fw-bolder text-nowrap">
                                 {{  category.places|length - countAvailableByCategory(availableTomorrow, category) }}
                               </span> 
@@ -478,7 +478,17 @@
                               <h4 class="h3 mb-3">{{ category.name }}</h4>
                               <p class="mb-0 opacity-75">{{ category.description|raw }}</p>
                             </div>
-                            <span class="opacity-50 text-nowrap">{{  category.places|length - countAvailableByCategory(availableDayAfterTomorrow, category) }} disponibles sur {{ category.places|length }} </span>
+                            <div class="small text-nowrap">
+                              <span class="fw-bolder text-nowrap">
+                                {{  category.places|length - countAvailableByCategory(availableTomorrow, category) }}
+                              </span> 
+                              disponibles sur 
+                              <span class="fw-bolder text-nowrap">
+                                {{ category.places|length }} 
+                              </span>
+                              <br>
+                              <button class="btn btn-sm rounded-pill px-5 btn-primary mt-3">Voir</button>
+                            </div>
                           </div>
                         </a>
                       {% endfor %}
@@ -583,7 +593,7 @@
                     <div class="row">
                       <div class="mb-3 col-12 col-sm-6 mx-auto">
                         <h3 class="display-6 fw-bold text-center mb-4">Séléctionnez une date</h3>
-                        <input type="date" id="reservation_form_other_date" placeholder="Date" class="form-control" value="2024-12-16">
+                        <input type="date" id="reservation_form_other_date" placeholder="Date" class="form-control" value="{{ date }}">
                       </div>
                       <div id="reservationsContainer" class="mt-4 row">
                           <!-- Les résultats AJAX s'afficheront ici -->
