@@ -12,6 +12,32 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
+    const STATUS_RESERVED = 'RESERVED';
+    const STATUS_CONFIRMED = 'CONFIRMED';
+    const STATUS_PENDING = 'PENDING';
+    const STATUS_PAID = 'PAID';
+    const STATUS_CANCELLED = 'CANCELLED';   
+
+    public static function getStatuses() {
+        return [
+            'En attente' => self::STATUS_PENDING ,
+            'Confirmée' => self::STATUS_CONFIRMED ,
+            'Réservée' => self::STATUS_RESERVED ,
+            'Payée' => self::STATUS_PAID ,
+            'Annulée' => self::STATUS_CANCELLED ,
+        ];
+    }
+    
+    public static function getLabels() {
+        return [
+            self::STATUS_PENDING =>         'En attente' ,
+            self::STATUS_CONFIRMED =>       'Confirmée' ,
+            self::STATUS_CANCELLED =>       'Annulée' ,
+            self::STATUS_RESERVED =>        'Réservée' ,
+            self::STATUS_PAID =>            'Payée' ,
+        ];
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -56,8 +82,12 @@ class Event
     #[ORM\Column(length: 20)]
     private ?string $duration = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $status = null;
+
     public function __construct()
     {
+        $this->status = self::STATUS_PENDING;
         $this->createdAt = new \DateTime();
         $this->places = new ArrayCollection();
     }
@@ -231,6 +261,18 @@ class Event
     public function setDuration(string $duration): static
     {
         $this->duration = $duration;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

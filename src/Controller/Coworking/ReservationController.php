@@ -4,14 +4,16 @@ namespace App\Controller\Coworking;
 
 use App\Entity\Coworking\Reservation;
 use App\Form\Coworking\ReservationType;
-use App\Repository\Coworking\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Coworking\ReservationRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/coworking/reservation')]
+#[IsGranted('ROLE_ADMIN')]
 class ReservationController extends AbstractController
 {
     #[Route('/', name: 'app_coworking_reservation_index', methods: ['GET'])]

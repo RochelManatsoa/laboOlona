@@ -2,12 +2,15 @@
 
 namespace App\Form\Coworking;
 
+use Doctrine\ORM\QueryBuilder;
 use App\Entity\Coworking\Event;
 use App\Entity\Coworking\Place;
-use App\Form\Autocomplete\UserAutocompleteField;
+use App\Entity\Coworking\Product;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
+use App\Form\Autocomplete\UserAutocompleteField;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -48,7 +51,6 @@ class EventType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'help' => 'Choisissez la durée de la réservation.',
-                'data' => 'journee',
             ])
             ->add('startEvent', DateTimeType::class, [
                 'date_widget' => 'single_text',
@@ -63,6 +65,25 @@ class EventType extends AbstractType
                     'class' => 'fw-bold fs-5' 
                 ],
                 'help' => 'Date et heure de la réservation.',
+            ])
+            ->add('boissons', EntityType::class, [
+                'class' => Product::class,
+                'query_builder' => function (EntityRepository $er): QueryBuilder {
+                    return $er->createQueryBuilder('p')
+                        ->where('p.category = :category')
+                        ->setParameter('category', 'boissons');
+                },
+                'choice_label' => 'name',
+                'mapped' => false,
+                'required' => false,
+                'multiple' => true,
+                'expanded' => true,    
+                'label' => 'Boissons',
+                'help' => 'Ajouter une boisson à votre réservation.',
+                'placeholder' => 'Choisissez une boisson',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
             ]);
 
             if ($options['is_admin']) {

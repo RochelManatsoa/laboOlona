@@ -9,7 +9,18 @@
         <h4 class="h3 mb-3">{{ category.name }}</h4>
         <p class="mb-0 opacity-75">{{ category.description|raw }}</p>
       </div>
-      <span class="opacity-50 text-nowrap">{{  category.places|length - countAvailableByCategory(availablePlaces, category) }} disponibles sur {{ category.places|length }} </span>
+      <div class="small">
+        <span class="fw-bolder text-nowrap">
+          {{  category.places|length - countAvailableByCategory(availablePlaces, category) }}
+        </span> 
+        disponibles sur 
+        <span class="fw-bolder text-nowrap">
+          {{ category.places|length }} 
+        </span>
+        <br>
+        <button class="btn btn-sm rounded-pill px-5 btn-primary mt-3">Voir</button>
+      </div>
+    </div>
     </div>
   </a>
 {% endfor %}

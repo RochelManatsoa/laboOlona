@@ -13,8 +13,12 @@
 {% block body %}
 <section class="p-0 m-0">
     <div class="container my-5">
-        <div class="row p-5 align-items-center rounded-3 border shadow-lg">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
             <h1 class="h3">Tous les utilisateurs</h1>
+
+            <div>
+                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_moderateur_invitation_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+            </div>
 
             <table class="table">
                 <thead>
@@ -46,9 +50,6 @@
                 </tbody>
             </table>
             {{ knp_pagination_render(users) }}
-            <div>
-                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_user_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
-            </div>
         </div>
     </div>
 </section>

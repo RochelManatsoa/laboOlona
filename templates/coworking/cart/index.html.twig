@@ -17,14 +17,18 @@
 {% block body %}
 <section class="p-0 m-0">
     <div class="container my-5">
-        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 rounded-3 border shadow-lg">
             <div class="col-lg-7 p-2 p-lg-4 pt-lg-3">
             {% if items is empty %}
-            <div class="text-center col-lg-6 col-sm-12 mx-auto">
+            <div class="text-center col-lg-10 col-sm-12 mx-auto">
                 <p class="text-center my-5 display-6">Votre panier est vide.</p>
                 <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                <div class="my-5">
+                    <a class="btn btn-info px-5 rounded-pill" href="javascript:history.back()"><i class="bi me-2 bi-arrow-left"></i>Retour</a>
+                </div>
             </div>
             {% else %}
+                <h2 class="h4 mt-4">Détail de votre commande</h2>  
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -43,7 +47,7 @@
                                 <td class="text-center">{{ item.product.price }} Ar</td>
                                 <td class="text-center">{{ item.product.price * item.quantity }} Ar</td>
                                 <td>
-                                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_cart_remove', {'id': item.product.id}) }}"><i class="bi bi-trash"></i></a>
+                                    <a class="btn btn-sm rounded-circle btn-danger" href="{{ path('app_cart_remove', {'id': item.product.id}) }}"><i class="bi bi-trash"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}

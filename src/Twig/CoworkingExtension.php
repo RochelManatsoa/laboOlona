@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Entity\Coworking\Category;
+use App\Entity\Coworking\Event;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\Coworking\Place;
@@ -35,12 +36,39 @@ class CoworkingExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
+            new TwigFunction('getEventStatus', [$this, 'getEventStatus']),
             new TwigFunction('getTypePlace', [$this, 'getTypePlace']),
             new TwigFunction('isInArray', [$this, 'isInArray']),
             new TwigFunction('getCategoryBySlug', [$this, 'getCategoryBySlug']),
             new TwigFunction('getCategoryPlace', [$this, 'getCategoryPlace']),
             new TwigFunction('countAvailableByCategory', [$this, 'countAvailableByCategory']),
         ];
+    }
+
+    public function getEventStatus(?string $status)
+    {
+        $labels = Event::getLabels();
+        switch ($status) {
+            case Event::STATUS_RESERVED:
+                return '<span class="badge bg-secondary rounded-pill">'.$labels[Event::STATUS_RESERVED].'</span>';
+                break;
+
+            case Event::STATUS_CONFIRMED:
+                return '<span class="badge bg-success rounded-pill">'.$labels[Event::STATUS_CONFIRMED].'</span>';
+                break;
+            
+            case Event::STATUS_PAID:
+                return '<span class="badge bg-danger rounded-pill">'.$labels[Event::STATUS_PAID].'</span>';
+                break;
+
+            case Event::STATUS_CANCELLED:
+                return '<span class="badge bg-dark rounded-pill">'.$labels[Event::STATUS_CANCELLED].'</span>';
+                break;
+            
+            default:
+                return '<span class="badge bg-info rounded-pill">En attente</span>';
+                break;
+        }
     }
 
     public function getTypePlace($id)

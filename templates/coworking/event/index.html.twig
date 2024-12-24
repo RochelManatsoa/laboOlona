@@ -17,8 +17,9 @@
 {% block body %}
 <section class="p-0 m-0">
     <div class="container my-5">
-        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 rounded-3 border shadow-lg">
             {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+            <div class="col-9">
                 <h2 class="h3 text-body-emphasis">Toutes les réservations</h2>
                 <div>
                     <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_event_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
@@ -30,8 +31,8 @@
                             <th>#</th>
                             <th>{{ knp_pagination_sortable(events, 'Titre', 'e.createdAt') }}</th>
                             <th>{{ knp_pagination_sortable(events, 'Début', 'e.startEvent') }}</th>
-                            <th>{{ knp_pagination_sortable(events, 'Place', 'e.places') }}</th>
-                            <th>{{ knp_pagination_sortable(events, 'Journée', 'e.durtion') }}</th>
+                            <th class="text-center">Place(s)</th>
+                            <th class="text-center">{{ knp_pagination_sortable(events, 'Journée', 'e.duration') }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -41,7 +42,11 @@
                             <td>{{ event.id }}</td>
                             <td>{{ event.title }}<br> <span class="fw-lighter">{{ event.createdAt|time_ago }}</span></td>
                             <td>{{ event.startEvent ? event.startEvent|date('Y-m-d H:i:s') : '' }}</td>
-                            <td class="text-center">{{ event.places|length }}</td>
+                            <td class="text-center">
+                                {% for place in event.places %}
+                                    <span class="badge bg-success rounded-pill">{{ place.name }}</span>
+                                {% endfor %}
+                            </td>
                             <td class="text-center">{{ event.duration == "journee" ? 'Oui' : 'Non' }}</td>
                             <td>
                                 <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_event_show', {'id': event.id}) }}"><i class="bi bi-eye"></i></a>
@@ -58,17 +63,47 @@
                     <p class="text-center">Aucune réservation trouvée</p>
                 </div>
                 {% endif %}
+            </div>
+            <div class="col-3">
+                {% if availableToday|length >0 %}
+                <h2 class="h6 py-5">Places occupées aujourd'hui</h2>
+                <div class="small">
+                    <ul class="list-group">
+                        {% for event in availableToday %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>
+                                    <span class="fw-bold">Place {{ event.placeId }}</span>
+                                    <span class="text-success mx-2">
+                                        {{ getCategoryPlace(event.placeId) }}
+                                    </span>
+                                    - Réservée
+                                </span>
+                                {% if event.duration == 'demi_journee' %}
+                                    <span class="badge bg-success rounded-pill">
+                                        Demi-journée
+                                    {% else %}
+                                    <span class="badge bg-primary rounded-pill">
+                                        Journée
+                                    {% endif %}
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
             {% else %}
-            <div class="col-lg-7 p-2 p-lg-4 pt-lg-3">
+            <div class="col p-2 p-lg-4 pt-lg-3">
                 {% if events|length > 0 %}
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>{{ knp_pagination_sortable(events, 'Titre', 'e.createdAt') }}</th>
-                            <th>{{ knp_pagination_sortable(events, 'Début', 'e.startEvent') }}</th>
-                            <th>{{ knp_pagination_sortable(events, 'Place', 'e.places') }}</th>
-                            <th>{{ knp_pagination_sortable(events, 'Journée', 'e.durtion') }}</th>
+                            <th>{{ knp_pagination_sortable(events, 'Place', 'e.createdAt') }}</th>
+                            <th>{{ knp_pagination_sortable(events, 'Date reservée', 'e.startEvent') }}</th>
+                            <th class="text-center">{{ knp_pagination_sortable(events, 'Status', 'e.status') }}</th>
+                            <th class="text-center">{{ knp_pagination_sortable(events, 'Prix', 'e.createdAt') }}</th>
+                            <th class="text-center">{{ knp_pagination_sortable(events, 'Journée', 'e.duration') }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -76,12 +111,21 @@
                     {% for event in events %}
                         <tr>
                             <td>{{ event.id }}</td>
-                            <td><a class="text-primary" href="{{ path('app_event_show', {'id': event.id}) }}">{{ event.title }}</a><br> <span class="fw-lighter">{{ event.createdAt|time_ago }}</span></td>
-                            <td>{{ event.startEvent ? event.startEvent|date('Y-m-d H:i:s') : '' }}</td>
-                            <td class="">
-                                {% for palce in event.places %}
-                                    <span class="badge bg-success rounded-pill">{{ palce.name }}</span>
+                            <td>
+                                <a class="text-primary" href="{{ path('app_event_show', {'id': event.id}) }}">
+                                {% for place in event.places %}
+                                    <span class="badge bg-success rounded-pill">{{ place.name }}</span>
                                 {% endfor %}
+                                </a><br> 
+                                <span class="fw-lighter">{{ event.createdAt|time_ago }}</span></td>
+                            <td>{{ event.startEvent ? event.startEvent|date('Y-m-d H:i:s') : '' }}</td>
+                            <td class="text-center">{{ getEventStatus(event.status)|raw }}</td>
+                            <td class="text-center">
+                                {% set total = 0 %}
+                                {% for place in event.places %}
+                                    {% set total = total + place.price %}
+                                {% endfor %}
+                                {{ total }} Ar
                             </td>
                             <td class="text-center">{{ event.duration == "journee" ? 'Oui' : 'Non' }}</td>
                             <td>
@@ -98,9 +142,6 @@
                     <p class="text-center">Aucune réservation trouvée</p>
                 </div>
                 {% endif %}
-            </div>
-            <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
-                <img class="rounded-lg-3" src="{{ asset('images/coworking/IMG_0678.png') }}" alt="" width="720">
             </div>
             {% endif %}
         </div>

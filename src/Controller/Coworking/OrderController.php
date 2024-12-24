@@ -49,7 +49,7 @@ class OrderController extends AbstractController
             $entityManager->persist($order);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_order_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('coworking/order/new.html.twig', [

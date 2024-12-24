@@ -38,6 +38,7 @@ class EventController extends AbstractController
 
         return $this->render('coworking/event/index.html.twig', [
             'events' => $events,
+            'availableToday' => $eventRepository->findAvailablePlacesByDate(new \DateTime('today')),
         ]);
     }
 
@@ -58,7 +59,6 @@ class EventController extends AbstractController
         $user = $security->getUser();
         $place = $entityManager->getRepository(Place::class)->findOneBy(['id' => $placeId]);
         $event = new Event();
-        $event->setTitle($user->getNom() . ' ' . $user->getPrenom());
         if ($date === 'dayAfterTomorrow') {
             $event->setStartEvent((new \DateTime('tomorrow'))->modify('+1 day')->setTime(8, 0));
         }else{
@@ -71,7 +71,6 @@ class EventController extends AbstractController
         $event->setTextColor('#000000'); 
         $event->setBorderColor('#00ff00');
         $event->setAllDay(false);
-        $event->setUser($this->getUser());
         $form = $this->createForm(EventType::class, $event, [
             'is_admin' => $this->isGranted('ROLE_ADMIN'),
         ]);
@@ -79,6 +78,18 @@ class EventController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $event = $form->getData();
+            $user = $event->getUser();
+            if(!$user instanceof User){
+                /** @var User $user */
+                $user = $this->getUser();
+                $event->setUser($user);
+            }
+            if($user->getNom() != null && $user->getPrenom() != null){
+                $titre = $user->getNom() . ' ' . $user->getPrenom();
+            }else{
+                $titre = 'Coworker #'.$user->getId();
+            }
+            $event->setTitle($titre);
             if($event->getDescription() == ""){
                 $event->setDescription('Réservation de '.$this->getUser());
             }
@@ -91,9 +102,14 @@ class EventController extends AbstractController
                     $cartService->addProduct($journee->getId());
                 }
             }
+            if($form->get('boissons')->getData()){
+                foreach ($form->get('boissons')->getData() as $produit) {
+                    $cartService->addProduct($produit->getId());
+                }
+            }
             $this->addFlash('success', 'Place bien réservée');
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_cart_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('coworking/event/new.html.twig', [
@@ -115,7 +131,9 @@ class EventController extends AbstractController
     #[IsGranted('EVENT_EDIT', subject: 'event')]
     public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(EventType::class, $event);
+        $form = $this->createForm(EventType::class, $event, [
+            'is_admin' => $this->isGranted('ROLE_ADMIN'),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
