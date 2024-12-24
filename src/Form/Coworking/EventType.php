@@ -23,6 +23,18 @@ class EventType extends AbstractType
         if ($options['is_admin']) {
             $builder
                 ->add('user', UserAutocompleteField::class, [])
+                ->add('places', EntityType::class, [
+                    'class' => Place::class,
+                    'choice_label' => 'name',
+                    'label' => 'Place (*)',
+                    'label_attr' => [
+                        'class' => 'fw-bold fs-5' 
+                    ],
+                    'help' => 'Place où se déroule la réservation.',
+                    'autocomplete' => true,
+                    'multiple' => true,  
+                    'expanded' => false 
+                ])
             ;
         }
 
@@ -51,18 +63,6 @@ class EventType extends AbstractType
                     'class' => 'fw-bold fs-5' 
                 ],
                 'help' => 'Date et heure de la réservation.',
-            ])
-            ->add('places', EntityType::class, [
-                'class' => Place::class,
-                'choice_label' => 'name',
-                'label' => 'Place (*)',
-                'label_attr' => [
-                    'class' => 'fw-bold fs-5' 
-                ],
-                'help' => 'Place où se déroule la réservation.',
-                'autocomplete' => true,
-                'multiple' => true,  
-                'expanded' => false 
             ]);
 
             if ($options['is_admin']) {

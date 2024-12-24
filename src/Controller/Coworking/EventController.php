@@ -71,6 +71,7 @@ class EventController extends AbstractController
         $event->setTextColor('#000000'); 
         $event->setBorderColor('#00ff00');
         $event->setAllDay(false);
+        $event->setUser($this->getUser());
         $form = $this->createForm(EventType::class, $event, [
             'is_admin' => $this->isGranted('ROLE_ADMIN'),
         ]);
@@ -78,7 +79,6 @@ class EventController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $event = $form->getData();
-            $event->setUser($this->getUser());
             if($event->getDescription() == ""){
                 $event->setDescription('Réservation de '.$this->getUser());
             }
@@ -99,6 +99,7 @@ class EventController extends AbstractController
         return $this->render('coworking/event/new.html.twig', [
             'event' => $event,
             'form' => $form,
+            'place' => $place,
         ]);
     }
 

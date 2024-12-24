@@ -3,7 +3,9 @@
 {% block title %}Commande{% endblock %}
 
 {% block paralax %}
+{% if not is_granted('ROLE_ADMIN') %}
 {% include "coworking/order/_paralax.html.twig" %}
+{% endif %}
 {% endblock %}
 
 {% block admin %}
