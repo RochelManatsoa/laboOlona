@@ -342,12 +342,10 @@
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.7); 
-    z-index: 1;
 }
 
 .paralax > * {
     position: relative;
-    z-index: 2;
 }
 .main-content-min {
     max-height: 500px; /* Hauteur minimale */

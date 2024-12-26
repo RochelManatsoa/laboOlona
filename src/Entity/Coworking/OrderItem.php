@@ -25,13 +25,6 @@ class OrderItem
 
     #[ORM\Column]
     private ?float $price = null;
-    
-    public function __construct(Product $product, int $quantity)
-    {
-        $this->product = $product;
-        $this->quantity = $quantity;
-        $this->price = $product->getPrice();
-    }
 
     public function getId(): ?int
     {

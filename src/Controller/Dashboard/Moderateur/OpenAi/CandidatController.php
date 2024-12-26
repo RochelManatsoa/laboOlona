@@ -57,8 +57,8 @@ class CandidatController extends AbstractController
             /** Generate OpenAI resume */
             $report = $this->openAITranslator->report($candidat);
             $json = $this->openaiManager->extractJsonAndText($report);
-            $text = isset($json['frenchSummary']) ? $json['frenchSummary'] : null;
-            $traduction = isset($json['englishSummary']) ? $json['englishSummary'] : null;
+            $text = $json['frenchSummary'] ?? null;
+            $traduction = $json['englishSummary'] ?? null;
             $metaDescription = $json['professionalSummary'];
             $resumeCandidat = $this->arrayToStringResume($json);
             $fullResume = $this->arrayToString($json);
@@ -92,8 +92,16 @@ class CandidatController extends AbstractController
             // Utiliser un retour JSON pour transmettre le message de succès
             return $this->json(['status' => 'success', 'message' => 'Rapport généré par IA sauvegardé']);
         } catch (\Exception $e) {
-            // $this->em->getConnection()->rollBack();
-            return $this->json(['status' => 'error', 'message' => 'Erreur lors de la génération du rapport par IA', 'error' => $e->getMessage()], 500);
+            if ($e instanceof \Exception) {
+                $errorMessage = $e->getMessage();
+            } else {
+                $errorMessage = 'Type d\'exception inattendu';
+            }
+            return $this->json([
+                'status' => 'error', 
+                'message' => 'Erreur lors de la génération du rapport par IA', 
+                'error' => $errorMessage
+            ], 500);
         }
     }
     
@@ -105,8 +113,8 @@ class CandidatController extends AbstractController
             /** Generate OpenAI analyse */
             $report = $this->openAITranslator->report($candidat);
             $json = $this->openaiManager->extractJsonAndText($report);
-            $traduction = isset($json['englishSummary']) ? $json['englishSummary'] : null;
-            $text = isset($json['frenchSummary']) ? $json['frenchSummary'] : null;
+            $text = $json['frenchSummary'] ?? null;
+            $traduction = $json['englishSummary'] ?? null;
             $metaDescription = $json['professionalSummary'];
             $resumeCandidat = $this->arrayToStringResume($json);
             $tools = $this->arrayToString($json['tools']);
@@ -200,7 +208,16 @@ class CandidatController extends AbstractController
             return $this->json(['status' => 'success', 'message' => 'Rapport généré par IA sauvegardé']);
         } catch (\Exception $e) {
             // $this->em->getConnection()->rollBack();
-            return $this->json(['status' => 'error', 'message' => 'Erreur lors de la génération du rapport par IA', 'error' => $e->getMessage()], 500);
+            if ($e instanceof \Exception) {
+                $errorMessage = $e->getMessage();
+            } else {
+                $errorMessage = 'Type d\'exception inattendu';
+            }
+            return $this->json([
+                'status' => 'error', 
+                'message' => 'Erreur lors de la génération du rapport par IA', 
+                'error' => $errorMessage
+            ], 500);
         }
     }
 
@@ -225,29 +242,24 @@ class CandidatController extends AbstractController
         
         return $result;
     }
-
+    
     function arrayToStringResume(array $array): string
     {
-        $html = "";
-    
-        if (isset($array['strengthsAndWeaknesses'])) {
-            if (isset($array['strengthsAndWeaknesses']['strengths'])) {
-                if (is_array($array['strengthsAndWeaknesses']['strengths'])) {
-                    $html .= "<p>Points forts : <br>" . $this->arrayToString($array['strengthsAndWeaknesses']['strengths']) . "</p>";
-                }else{
-                    $html .= "<p>Points forts : <br>" . htmlspecialchars($array['strengthsAndWeaknesses']['strengths']) . "</p>";
-                }
+        $html = '';
+
+        // Vérification de l'existence de 'strengthsAndWeaknesses'
+        if (!empty($array['strengthsAndWeaknesses'])) {
+            // Gestion des 'strengths'
+            if (!empty($array['strengthsAndWeaknesses']['strengths'])) {
+                $html .= '<p>Points forts :<br>' . $this->arrayToString((array)$array['strengthsAndWeaknesses']['strengths']) . '</p>';
             }
-            
-            if (isset($array['strengthsAndWeaknesses']['weaknesses'])) {
-                if (is_array($array['strengthsAndWeaknesses']['weaknesses'])) {
-                    $html .= "<p>Points faibles : <br>" . $this->arrayToString($array['strengthsAndWeaknesses']['weaknesses']) . "</p>";
-                }else{
-                    $html .= "<p>Points faibles : <br>" . htmlspecialchars($array['strengthsAndWeaknesses']['weaknesses']) . "</p>";
-                }
+
+            // Gestion des 'weaknesses'
+            if (!empty($array['strengthsAndWeaknesses']['weaknesses'])) {
+                $html .= '<p>Points faibles :<br>' . $this->arrayToString((array)$array['strengthsAndWeaknesses']['weaknesses']) . '</p>';
             }
         }
-        
+
         return $html;
     }
 

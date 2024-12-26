@@ -28,6 +28,26 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
+    public function findOrdersFromTodayFiveAM(?string $status = null): array
+    {
+        $todayFiveAM = new \DateTime('today 5:00');
+        if ($status) {
+            $qb = $this->createQueryBuilder('o')
+                ->andWhere('o.createdAt >= :todayFiveAM')
+                ->andWhere('o.status = :status')
+                ->setParameter('todayFiveAM', $todayFiveAM)
+                ->setParameter('status', $status)
+                ->orderBy('o.createdAt', 'ASC');
+        } else {
+            $qb = $this->createQueryBuilder('o')
+                ->andWhere('o.createdAt >= :todayFiveAM')
+                ->setParameter('todayFiveAM', $todayFiveAM)
+                ->orderBy('o.createdAt', 'ASC');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function filterByUser(QuerySearchData $searchData): PaginationInterface
     {
         $qb = $this

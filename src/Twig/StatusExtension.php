@@ -222,11 +222,11 @@ class StatusExtension extends AbstractExtension
                 break;
 
             case Transaction::STATUS_PROCESSING :
-                $status = '<span class="badge text-bg-primary">'.$this->getLabels(Transaction::STATUS_PROCESSING).'</span>';
+                $status = '<span class="badge text-bg-secondary">'.$this->getLabels(Transaction::STATUS_PROCESSING).'</span>';
                 break;
 
             case Transaction::STATUS_AUTHORIZED :
-                $status = '<span class="badge text-bg-primary">'.$this->getLabels(Transaction::STATUS_AUTHORIZED).'</span>';
+                $status = '<span class="badge text-bg-warning">'.$this->getLabels(Transaction::STATUS_AUTHORIZED).'</span>';
                 break;
 
             case Transaction::STATUS_REFUNDED :

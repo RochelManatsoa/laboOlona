@@ -2,6 +2,7 @@
 
 namespace App\Controller\Ajax;
 
+use App\Entity\Coworking\Product;
 use App\Entity\Secteur;
 use App\Twig\AppExtension;
 use App\Entity\Notification;
@@ -94,6 +95,14 @@ class ModerateurController extends AbstractController
         $devise = $this->em->getRepository(Devise::class)->find((int) $id);
         
         return $this->json($devise, 200, [], ['groups' => 'devise']);
+    }   
+
+    #[Route('/ajax/product/select/{id}', name: 'ajax_select_product')]
+    public function selectProduct(int $id): Response
+    {        
+        $product = $this->em->getRepository(Product::class)->find((int) $id);
+        
+        return $this->json($product, 200, [], ['groups' => 'product']);
     }   
 
     #[Route('/ajax/edit/assignation', name: 'app_ajax_edit_assignation')]

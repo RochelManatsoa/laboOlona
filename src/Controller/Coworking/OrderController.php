@@ -3,9 +3,10 @@
 namespace App\Controller\Coworking;
 
 use App\Entity\User;
+use App\Entity\Finance\Devise;
+use App\Form\Coworking\OrderType;
 use App\Security\Voter\OrderVoter;
 use App\Entity\BusinessModel\Order;
-use App\Form\BusinessModel\OrderType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,9 +33,23 @@ class OrderController extends AbstractController
         $userId = $user->getId();
         $canListAll = $security->isGranted(OrderVoter::LIST_ALL);
         $orders = $orderRepository->paginateRecipes($page, $canListAll ? null : $userId);
+        $ordersToday = $orderRepository->findOrdersFromTodayFiveAM();
+        $ordersBankedToday = $orderRepository->findOrdersFromTodayFiveAM(Order::STATUS_COMPLETED);
+        $amount = 0;
+        $amountTotal = 0;
+        foreach ($ordersToday as $orderToday) {
+            $amountTotal += ($orderToday->getTotalAmount() * $orderToday->getCurrency()->getTaux());
+        }
+        foreach ($ordersBankedToday as $orderBankedToday) {
+            $amount += ($orderBankedToday->getTotalAmount() * $orderBankedToday->getCurrency()->getTaux());
+        }
 
         return $this->render('coworking/order/index.html.twig', [
             'orders' => $orders,
+            'ordersToday' => $ordersToday,
+            'ordersBankedToday' => $ordersBankedToday,
+            'amount' => $amount,
+            'amountTotal' => $amountTotal,
         ]);
     }
 
@@ -42,10 +57,19 @@ class OrderController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $order = new Order();
+        $devise = $entityManager->getRepository(Devise::class)->findOneBy(['slug' => 'ariary']);
+        $order->setCurrency($devise);
+        $order->setPaymentId('COWORKING');
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $orderItems = $form->get('orderItems')->getData();
+            $totalAmount = 0;
+            foreach ($orderItems as $orderItem) {
+                $totalAmount += ($orderItem->getPrice() * $orderItem->getQuantity());
+            }
+            $order->setTotalAmount($totalAmount);
             $entityManager->persist($order);
             $entityManager->flush();
 
@@ -74,6 +98,12 @@ class OrderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $orderItems = $form->get('orderItems')->getData();
+            $totalAmount = 0;
+            foreach ($orderItems as $orderItem) {
+                $totalAmount += ($orderItem->getPrice() * $orderItem->getQuantity());
+            }
+            $order->setTotalAmount($totalAmount);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_order_index', [], Response::HTTP_SEE_OTHER);

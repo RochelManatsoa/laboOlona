@@ -127,7 +127,8 @@ body.bootstrap-dark {
         border: 1px solid #dddddd!important;
         background: #ffffff!important;
         color: #333333!important;
-    }.dropdown-menu {
+    }
+    .dropdown-menu {
         background-color: #444c57; 
         border-color: #444c57; 
 
@@ -151,5 +152,17 @@ body.bootstrap-dark {
     }
     .loader-container {    
         background-color: rgba(255, 255, 255, 0.5);
+    }
+    .cookie-consent {
+        position: fixed;
+        color: #000000;
+        background-color: #f8f9fa;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000; 
+        a{
+            color: #343a40!important;
+        }
     }
 }

@@ -2,16 +2,30 @@
 
 {% block title %}New Order{% endblock %}
 
-{% block paralax %}
-{% include "coworking/order/_paralax.html.twig" %}
+{% block paralax %}{% endblock %}
+
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
 {% endblock %}
 
 {% block body %}
-    <h1>Create new Order</h1>
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+          <div class="col-9"> 
+            <h1 class="h3">Nouvelle commande</h1>
 
-    {{ include('coworking/order/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+            {{ include('coworking/order/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
 
-    <div>
-        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_order_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+            <div class=" my-5">
+                <a class="btn btn-info my-3 px-5 rounded-pill" href="{{ path('app_order_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+            </div>
+          </div>
+          <div class="col-3">
+          </div>  
+        </div>
     </div>
+</section>
 {% endblock %}

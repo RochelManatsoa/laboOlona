@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use App\Repository\Coworking\ProductRepository;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -23,12 +24,15 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['product'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['product'])]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Groups(['product'])]
     private ?float $price = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

@@ -106,4 +106,13 @@ body.bootstrap-light {
     .loader-container {    
         background-color: rgba(0, 0, 0, 0.5);
     }
+    .cookie-consent {
+        position: fixed;
+        color: #ffffff;
+        background-color: #000000;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000; /* High z-index to stay on top */
+    }
 }

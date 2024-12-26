@@ -518,7 +518,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->innerJoin('c.boost', 'b') 
             ->innerJoin('b.boostVisibilities', 'bv') 
-            ->andWhere('bv.endDate < :now')        
+            ->andWhere('bv.endDate < :now')         
             ->setParameter('now', new \DateTime())
             ->getQuery()                          
             ->getResult(); 

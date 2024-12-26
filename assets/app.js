@@ -10,6 +10,7 @@ import './bootstrap.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Calendar } from 'fullcalendar';
+import { Modal } from 'bootstrap';
 require('tom-select/dist/css/tom-select.css');
 
 

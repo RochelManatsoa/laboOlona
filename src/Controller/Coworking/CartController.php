@@ -7,6 +7,7 @@ use App\Service\Cart;
 use App\Form\Coworking\OrderType;
 use App\Entity\BusinessModel\Order;
 use App\Entity\Coworking\OrderItem;
+use App\Entity\Finance\Devise;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,8 +44,10 @@ class CartController extends AbstractController
         $user = $entityManager->getRepository(User::class)->find($userId);
         $items = json_decode($request->request->get('items'), true);
         $total = $request->request->get('total');
+        $devise = $entityManager->getRepository(Devise::class)->findBySlug('ariary');
 
         $order = new Order();
+        $order->setCurrency($devise);
         $order->setCustomer($user);
         $order->setTotalAmount($total);
         $order->setStatus(Order::STATUS_PENDING);
