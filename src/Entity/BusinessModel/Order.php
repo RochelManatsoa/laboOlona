@@ -2,15 +2,16 @@
 
 namespace App\Entity\BusinessModel;
 
-use App\Entity\Finance\Devise;
 use App\Entity\User;
-use App\Repository\BusinessModel\OrderRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Events;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
+use App\Entity\Finance\Devise;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Coworking\OrderItem;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Repository\BusinessModel\OrderRepository;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
@@ -41,6 +42,7 @@ class Order
             'Contestée' => self::STATUS_DISPUTED ,
         ];
     }
+    
     public static function getLabels() {
         return [
             self::STATUS_PENDING =>         'En attente' ,
@@ -105,10 +107,14 @@ class Order
     #[ORM\OneToOne(mappedBy: 'commande', cascade: ['persist', 'remove'])]
     private ?Invoice $invoice = null;
 
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'command', cascade: ['persist', 'remove'])]
+    private Collection $orderItems;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->status = self::STATUS_ON_HOLD;
+        $this->orderItems = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -329,6 +335,36 @@ class Order
         }
 
         $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderItem>
+     */
+    public function getOrderItems(): Collection
+    {
+        return $this->orderItems;
+    }
+
+    public function addOrderItem(OrderItem $orderItem): static
+    {
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems->add($orderItem);
+            $orderItem->setCommand($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderItem(OrderItem $orderItem): static
+    {
+        if ($this->orderItems->removeElement($orderItem)) {
+            // set the owning side to null (unless already changed)
+            if ($orderItem->getCommand() === $this) {
+                $orderItem->setCommand(null);
+            }
+        }
 
         return $this;
     }

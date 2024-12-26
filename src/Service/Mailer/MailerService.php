@@ -39,7 +39,7 @@ class MailerService
     ): void
     {
         $email = new TemplatedEmail();
-        $sender = $from === '' ? 'support@olona-talents.com': $from;
+        $sender = $from === '' ? 'techniques@olona-talents.com': $from;
         $env = 'Olona Talents';
         if ($this->env === 'prod') {
             $email->to($to);
@@ -84,10 +84,10 @@ class MailerService
             $env = '[Preprod] Olona Talents';
             $email->to('nirinarocheldev@gmail.com'); 
             $email->addTo('jrandriamalala.olona@gmail.com');
-            $email->addTo('s.maurel@olona-outsourcing.com');
+            $email->addTo('contact@olona-talents.com');
         }
         $email
-            ->from(new Address('support@olona-talents.com', $env))
+            ->from(new Address('techniques@olona-talents.com', $env))
             ->replyTo('contact@olona-talents.com')
             ->subject($subject)
             ->htmlTemplate("mails/$template")
@@ -107,7 +107,7 @@ class MailerService
 
         if ($emailTemplate) {
             $email = new TemplatedEmail();
-            $sender = 'support@olona-talents.com';
+            $sender = 'techniques@olona-talents.com';
             $env = 'Olona Talents';
             if ($this->env === 'prod') {
                 $email->to($profile->getCandidat()->getEmail());
@@ -144,7 +144,7 @@ class MailerService
     public function sendMultipleRelanceEmail(CandidateProfile $profile, string $titre, string $contenu)
     {
         $email = new TemplatedEmail();
-        $sender = 'support@olona-talents.com';
+        $sender = 'techniques@olona-talents.com';
         $env = 'Olona Talents';
         if ($this->env === 'prod') {
             $email->to($profile->getCandidat()->getEmail());

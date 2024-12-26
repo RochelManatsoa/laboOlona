@@ -73,14 +73,7 @@ class InvitationController extends AbstractController
             $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
             $this->tokenStorage->setToken($token);
 
-
-            $refered = $this->em->getRepository(Referral::class)->findOneBy(['referredEmail' => $user->getEmail()]);
-            if($refered instanceof Referral){
-                $refered->setStep(2);
-                $this->em->persist($refered);
-                $this->em->flush();
-            }
-            return $this->redirectToRoute('app_connect');
+            return $this->redirectToRoute('app_event_index');
         }
 
         return $this->render('invitation/index.html.twig', [
@@ -153,7 +146,7 @@ class InvitationController extends AbstractController
         ]);
     }
 
-    #[Route('/invitation/entreprise/test', name: 'app_invitation')]
+    #[Route('/invitation/entreprise/test', name: 'app_invitation_test')]
     public function emailTest(Request $request): Response
     {
         $this->mailerService->send(

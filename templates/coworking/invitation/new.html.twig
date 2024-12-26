@@ -1,0 +1,19 @@
+{% extends 'base_coworking.html.twig' %}
+{% block title %}Envoyer une invitation{% endblock %}
+{% block paralax %}{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-5 align-items-center rounded-3 border shadow-lg">
+            <h1 class="h3">Nouvelle invitation</h1>
+
+            {{ include('coworking/invitation/_form.html.twig') }}
+
+            <div>
+                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_moderateur_invitation_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

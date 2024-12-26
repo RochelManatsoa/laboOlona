@@ -79,8 +79,9 @@ class EntrepriseProfileRepository extends ServiceEntityRepository
     public function findExpiredPremium()
     {
         return $this->createQueryBuilder('e')
-            ->innerJoin('e.boostVisibility', 'b') 
-            ->andWhere('b.endDate < :now')        
+            ->innerJoin('e.boost', 'b') 
+            ->innerJoin('b.boostVisibilities', 'bv') 
+            ->andWhere('bv.endDate < :now')        
             ->setParameter('now', new \DateTime())
             ->getQuery()                          
             ->getResult(); 

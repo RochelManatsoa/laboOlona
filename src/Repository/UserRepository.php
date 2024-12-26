@@ -205,4 +205,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ]
         );
     }
+    
+    public function paginateRecipes($page, ?int $userId): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('u')->select('u');
+        $queryBuilder->addOrderBy('u.id', 'DESC');
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            20,
+            [
+                'distinct' => false,
+                'shortFieldAllowList' => ['id', 'email', 'type', 'nom'],
+            ]
+        );
+    }
 }

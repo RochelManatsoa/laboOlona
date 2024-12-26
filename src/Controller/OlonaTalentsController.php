@@ -52,7 +52,7 @@ class OlonaTalentsController extends AbstractController
         private MailerService $mailerService,
     ) {}
 
-    #[Route('/', name: 'app_home')]
+    #[Route('/', name: 'app_home', options: ['sitemap' => true])]
     public function index(): Response
     {
         if($this->security->getUser()){
@@ -79,7 +79,7 @@ class OlonaTalentsController extends AbstractController
         return $this->render('v2/premium.html.twig', []);
     }
 
-    #[Route('/register', name: 'app_olona_talents_register')]
+    #[Route('/register', name: 'app_olona_talents_register', options: ['sitemap' => true])]
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
@@ -198,7 +198,7 @@ class OlonaTalentsController extends AbstractController
         return $this->render('v2/upgrade.html.twig', []);
     }
 
-    #[Route('/v2/contact', name: 'app_contact')]
+    #[Route('/v2/contact', name: 'app_contact', options: ['sitemap' => true])]
     public function support(Request $request): Response
     {
         $contactForm = new ContactForm;

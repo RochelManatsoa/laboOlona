@@ -1,0 +1,708 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Réservez votre espace de coworking {% endblock %}
+
+{% block paralax %}
+  {% if not is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<style>
+  #available {
+    scroll-margin-top: 100px; /* Adjust the value as needed */
+}
+</style>
+{% if is_granted('ROLE_ADMIN') %}
+  
+{% else %}
+
+<section class="container-fluid py-5 bg-body-tertiary">
+  
+  <div class="container my-5">
+    <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+      <h2 class="display-6 fw-bold">Votre bureau, comme vous l'imaginez</h2>
+      <p class="lead">
+        Découvrez nos espaces de travail conçus pour votre confort et votre productivité. Profitez de chaises ergonomiques, d'une lumière naturelle abondante, d'une connexion Wi-Fi fibre ultra-rapide et d'une ambiance professionnelle stimulante avec coin café et espaces communs.
+      </p>
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+          <div class="card h-100 rounded-3 border shadow-sm">
+            <img src="{{ asset('images/coworking/IMG_0700.png')}}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">Postes de travail individuels.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100 rounded-3 border shadow-sm">
+            <img src="{{ asset('images/coworking/IMG_0682.png')}}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">Open space collaboratif.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100 rounded-3 border shadow-sm">
+            <img src="{{ asset('images/coworking/IMG_0707.png')}}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">Salles de réunion équipées.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+
+</section>
+
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+                <h2 class="display-5 fw-bold lh-1 text-body-emphasis">Pourquoi choisir notre espace de coworking?</h2>
+                <p class="lead">Chez Olona Talents, nous avons conçu un espace de travail dynamique et accueillant qui s'adresse aussi bien aux indépendants qu'aux équipes de petites entreprises. Situé dans un cadre inspirant, notre coworking offre cinq places cloisonnées pour ceux qui recherchent intimité et concentration, ainsi que treize espaces ouverts parfaits pour stimuler la collaboration et l'interaction.</p>
+                <p class="lead">Vous bénéficiez d'un accès constant à des installations modernes et confortables. Notre processus de réservation est rapide et sécurisé, vous assurant une tranquillité d'esprit et une flexibilité optimale pour gérer votre emploi du temps. De plus, notre équipe de support dévouée est toujours prête à vous assister, garantissant que votre expérience de coworking soit aussi fluide et productive que possible. </p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+                <a href="{{path('app_coworking_main')}}#reservationForm" class="btn btn-primary px-5 me-md-2 fw-bold">Privatiser</a>
+                <a href="{{path('app_coworking_main')}}#available" class="btn btn-outline-secondary px-5">Réserver</a>
+                </div>
+            </div>
+        <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+            <img class="rounded-lg-3" src="{{ asset('images/coworking/screen-logo.png') }}" alt="" width="720">
+        </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-4 g-4 text-center">
+          <div class="col">
+            <div class="card shadow h-100">
+              <i class="bi bi-wifi display-4 fw-bolder ms-4 mt-4 text-warning"></i>
+              <div class="card-body">
+                <h3 class="h5 fw-bold card-title">Wi-Fi ultra-rapide</h3>
+                <p class="card-text">Connexion fibre optique sécurisée et stable.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card shadow h-100">
+              <i class="bi bi-geo-alt-fill display-4 fw-bolder ms-4 mt-4 text-warning"></i>
+              <div class="card-body">
+                <h3 class="h5 fw-bold card-title">Emplacement central</h3>
+                <p class="card-text">Proche des transports en commun.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card shadow h-100">
+              <i class="bi bi-people-fill display-4 fw-bolder ms-4 mt-4 text-warning"></i>
+              <div class="card-body">
+                <h3 class="h5 fw-bold card-title">Ambiance collaborative</h3>
+                <p class="card-text">Événements networking réguliers.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card shadow h-100">
+              <i class="bi bi-cup-hot-fill display-4 fw-bolder ms-4 mt-4 text-warning"></i>
+              <div class="card-body">
+                <h3 class="h5 fw-bold card-title">Services inclus</h3>
+                <p class="card-text">Imprimante, café, coin détente.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</section>
+
+<section class="container-fluid py-5">
+
+    <div class="bg-dark text-secondary px-4 py-5 text-center" data-bs-theme="dark">
+        <div class="py-5">
+          <h2 class="display-5 fw-bold text-white mb-3">Demander une réservation</h2>
+          <div class="col-lg-6 mx-auto">
+            <p class="text-center lead mb-4 text-white">
+              Réservez votre espace de travail idéal dès maintenant en remplissant le formulaire ci-dessous. Que ce soit pour une journée ou une période plus longue, nous avons une solution adaptée à vos besoins.
+            </p>
+            <div class="row justify-content-lg-center">
+              <div class="col-12 col-sm-10" id="reservationForm">
+                <!-- Form -->
+                {{ form_start(form) }}
+                  <div class="row gx-3">
+                    <div class="col-md-6">        
+                      <!-- Full name -->
+                      <div class="mb-3">
+                        {{ form_widget(form.fullName, {'attr': {'placeholder': 'Nom complet'}}) }}
+                      </div>
+    
+                      <!-- Phone number -->
+                      <div class="mb-3">
+                        {{ form_widget(form.phone, {'attr': {'placeholder': 'Téléphone'}}) }}
+                      </div>
+    
+                      <!-- Email address -->
+                      <div class="mb-3">
+                        {{ form_widget(form.email, {'attr': {'placeholder': 'Email'}}) }}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <!-- Guests -->
+                      <div class="mb-3">
+                        {{ form_widget(form.guest, {'attr': {'placeholder': '2 personnes'}}) }}
+                      </div>
+    
+                      <!-- Date -->
+                      <div class="mb-3">
+                        {{ form_widget(form.date.date, {'attr': {'placeholder': 'Date'}}) }}
+                      </div>
+    
+                      <!-- Time -->
+                      <div class="mb-3">
+                        {{ form_widget(form.date.time, {'attr': {'placeholder': 'Time'}}) }}
+                      </div>
+                    </div>
+                    <div class="col mx-auto text-center">
+                      <div class="mb-3">
+                        {{ form_row(form.private) }}
+                      </div>
+                      <!-- Button -->
+                      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                          <button type="submit" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Contactez moi</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display: none;">
+                    {{ form_widget(form) }}
+                  </div>
+                  {{ form_end(form) }}
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="container-fluid py-5"> 
+  <div id="available"></div>
+    <div class="container" >
+        <div class="row py-4 py-sm-5 px-2 px-sm-3 rounded-3 border shadow-lg">
+            <div class="d-flex text-end">
+              <span class="fw-bold small ms-auto">
+                Réservez par téléphone au <br>
+                <i class="bi bi-phone"></i>
+                <a href="tel:+261320373432">+261 32 03 734 32</a> <br>
+                ou réservez en ligne (*)
+              </span>
+            </div>
+            <h2 class="display-5 fw-bold lh-1 text-body-emphasis text-center">Places disponibles</h2>
+            <p class="lead col-12 col-sm-8 mx-auto text-center">Découvrez l'innovation et la flexibilité au cœur de notre espace de coworking, où des postes de travail sont prêts à vous accueillir.</p>
+            
+            <div id="liveDateTime" class="display-6 text-primary text-center" data-initial-date="{{ 'now'|date('Y-m-d H:i:s') }}"></div>
+            <div class="row">
+              <div class="col mb-5">
+                <!-- Navigation -->
+                <div class="nav justify-content-center mb-6" id="menuTabs" role="tablist">
+                  <a class="nav-link active" id="todayTab" data-bs-toggle="tab" href="#today" role="tab" aria-controls="today" aria-selected="true" tabindex="-1"> Aujourd'hui </a>
+                  <a class="nav-link" id="tomorrowTab" data-bs-toggle="tab" href="#tomorrow" role="tab" aria-controls="tomorrow" aria-selected="false" tabindex="-1"> Demain </a>
+                  <a class="nav-link" id="afterTomorrowTab" data-bs-toggle="tab" href="#afterTomorrow" role="tab" aria-controls="afterTomorrow" aria-selected="false" tabindex="-1"> Après-demain </a>
+                  <a class="nav-link" id="otherDateTab" data-bs-toggle="tab" href="#otherDate" role="tab" aria-controls="otherDate" aria-selected="false" tabindex="-1"> Autre jour </a>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <!-- Content -->
+                <div class="tab-content" id="menuContent">
+                  <div class="tab-pane fade active show" id="today" role="tabpanel" aria-labelledby="mainsTab">
+                    <div class="row">
+                      <h3 class="display-6 fw-bold text-center mb-4">{{ availableTodayNumber}} Places restantes aujourd'hui</h3>
+                      <div class="list-group">
+                      {% for category in categories %}
+                        <a data-bs-toggle="modal" data-bs-target="#{{category.slug}}-today" href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                          <img src="{{ asset('images/places/' ~ category.imageName) }}" alt="twbs" width="200" class="flex-shrink-0">
+                          <div class="d-flex gap-2 w-100 justify-content-between">
+                            <div>
+                              <h4 class="h3 mb-3">{{ category.name }}</h4>
+                              <p class="mb-0 opacity-75">{{ category.description|raw }}</p>
+                            </div>
+                            <div class="small text-nowrap">
+                              <span class="fw-bolder text-nowrap">
+                                {{  category.places|length - countAvailableByCategory(availableTomorrow, category) }}
+                              </span> 
+                              disponibles sur 
+                              <span class="fw-bolder text-nowrap">
+                                {{ category.places|length }} 
+                              </span>
+                              <br>
+                              <button class="btn btn-sm rounded-pill px-5 btn-primary mt-3">Voir</button>
+                            </div>
+                          </div>
+                        </a>
+                      {% endfor %}
+                      </div>
+                      {% for item, placesCategory in placesCategories %}
+                      <div class="modal fade" id="{{item}}-today" tabindex="-1" aria-labelledby="{{item}}-todayLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title h3">{{ getCategoryBySlug(item).name }}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              {% for event in placesCategory %}
+                                {% if isInArray(event, availableToday) %}
+                                  <div class="col">
+                                    <div class="py-3 border-bottom">
+                                      <div class="row">
+                                        <div class="col-3 align-self-center">
+                                          <!-- Image -->
+                                          <div class="ratio ratio-1x1">
+                                            <img class="object-fit-cover blurry-image" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                          </div>
+                                        </div>
+                                        <div class="col-7">
+                                          <!-- Heading -->
+                                          <h5 class="mb-2">{{ event.name }}</h5>
+                
+                                          <!-- Text -->
+                                          <p class="mb-0">{{ event.description|raw }}</p>
+                                          <button type="button" class="btn btn-dark btn-sm rounded-pill px-4 mt-3" disabled>Non disponible</button>
+                                        </div>
+                                        <div class="col-2">
+                                          <!-- Price -->
+                                          <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                {% else %}
+                                <div class="col">
+                                  <div class="py-3 border-bottom">
+                                    <div class="row">
+                                      <div class="col-3 align-self-center">
+                                        <!-- Image -->
+                                        <div class="ratio ratio-1x1">
+                                          <img class="object-fit-cover" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                        </div>
+                                      </div>
+                                      <div class="col-7">
+                                        <!-- Heading -->
+                                        <h5 class="mb-2">{{ event.name }}</h5>
+              
+                                        <!-- Text -->
+                                        <p class="mb-0">{{ event.description|raw }}</p>
+                                        <a href="{{ path('app_event_new', {'placeId': event.id, 'date':'today'}) }}" class="btn btn-primary btn-sm rounded-pill px-4 mt-3">Réserver</a>
+                                      </div>
+                                      <div class="col-2">
+                                        <!-- Price -->
+                                        <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endif %}
+                              {% endfor %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                      
+                      {% if availableToday|length >0 %}
+                      <h2 class="h4 text-center my-5 ">Places occupées aujourd'hui</h2>
+                      <div class="col-6 mx-auto">
+                          <ul class="list-group">
+                              {% for event in availableToday %}
+                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                      <span>
+                                          <span class="fw-bold">Place {{ event.placeId }}</span>
+                                          <span class="text-success mx-2">
+                                              {{ getCategoryPlace(event.placeId) }}
+                                          </span>
+                                          - Réservée
+                                      </span>
+                                      {% if event.duration == 'demi_journee' %}
+                                          <span class="badge bg-success rounded-pill">
+                                              Demi-journée
+                                          {% else %}
+                                          <span class="badge bg-primary rounded-pill">
+                                              Journée
+                                          {% endif %}
+                                      </span>
+                                  </li>
+                              {% endfor %}
+                          </ul>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="tomorrow" role="tabpanel" aria-labelledby="lunchTab">
+                    <div class="row">
+                      <h3 class="display-6 fw-bold text-center mb-4">{{ availableTomorrowNumber}} Places restantes demain</h3>
+                      <div class="list-group">
+                      {% for category in categories %}
+                        <a data-bs-toggle="modal" data-bs-target="#{{category.slug}}-tomorrow" href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                          <img src="{{ asset('images/places/' ~ category.imageName) }}" alt="twbs" width="200" class="flex-shrink-0">
+                          <div class="d-flex gap-2 w-100 justify-content-between">
+                            <div>
+                              <h4 class="h3 mb-3">{{ category.name }}</h4>
+                              <p class="mb-0 opacity-75">{{ category.description|raw }}</p>
+                            </div>
+                            <div class="small text-nowrap">
+                              <span class="fw-bolder text-nowrap">
+                                {{  category.places|length - countAvailableByCategory(availableTomorrow, category) }}
+                              </span> 
+                              disponibles sur 
+                              <span class="fw-bolder text-nowrap">
+                                {{ category.places|length }} 
+                              </span>
+                              <br>
+                              <button class="btn btn-sm rounded-pill px-5 btn-primary mt-3">Voir</button>
+                            </div>
+                          </div>
+                        </a>
+                      {% endfor %}
+                      </div>
+                      {% for item, placesCategory in placesCategories %}
+                      <div class="modal fade" id="{{item}}-tomorrow" tabindex="-1" aria-labelledby="{{item}}-tomorrowLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title h3">{{ getCategoryBySlug(item).name }}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              {% for event in placesCategory %}
+                                {% if isInArray(event, availableTomorrow) %}
+                                  <div class="col">
+                                    <div class="py-3 border-bottom">
+                                      <div class="row">
+                                        <div class="col-3 align-self-center">
+                                          <!-- Image -->
+                                          <div class="ratio ratio-1x1">
+                                            <img class="object-fit-cover blurry-image" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                          </div>
+                                        </div>
+                                        <div class="col-7">
+                                          <!-- Heading -->
+                                          <h5 class="mb-2">{{ event.name }}</h5>
+                
+                                          <!-- Text -->
+                                          <p class="mb-0">{{ event.description|raw }}</p>
+                                          <button type="button" class="btn btn-dark btn-sm rounded-pill px-4 mt-3" disabled>Non disponible</button>
+                                        </div>
+                                        <div class="col-2">
+                                          <!-- Price -->
+                                          <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                {% else %}
+                                <div class="col">
+                                  <div class="py-3 border-bottom">
+                                    <div class="row">
+                                      <div class="col-3 align-self-center">
+                                        <!-- Image -->
+                                        <div class="ratio ratio-1x1">
+                                          <img class="object-fit-cover" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                        </div>
+                                      </div>
+                                      <div class="col-7">
+                                        <!-- Heading -->
+                                        <h5 class="mb-2">{{ event.name }}</h5>
+              
+                                        <!-- Text -->
+                                        <p class="mb-0">{{ event.description|raw }}</p>
+                                        <a href="{{ path('app_event_new', {'placeId': event.id, 'date':'tomorrow'}) }}" class="btn btn-primary btn-sm rounded-pill px-4 mt-3">Réserver</a>
+                                      </div>
+                                      <div class="col-2">
+                                        <!-- Price -->
+                                        <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endif %}
+                              {% endfor %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                      
+                      {% if availableTomorrow|length >0 %}
+                      <h2 class="h4 text-center my-5 ">Places occupées demain</h2>
+                      <div class="col-6 mx-auto">
+                          <ul class="list-group">
+                              {% for event in availableTomorrow %}
+                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                      <span>
+                                          <span class="fw-bold">Place {{ event.placeId }}</span>
+                                          <span class="text-success mx-2">
+                                              {{ getCategoryPlace(event.placeId) }}
+                                          </span>
+                                          - Réservée
+                                      </span>
+                                      {% if event.duration == 'demi_journee' %}
+                                          <span class="badge bg-success rounded-pill">
+                                              Demi-journée
+                                          {% else %}
+                                          <span class="badge bg-primary rounded-pill">
+                                              Journée
+                                          {% endif %}
+                                      </span>
+                                  </li>
+                              {% endfor %}
+                          </ul>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="afterTomorrow" role="tabpanel" aria-labelledby="dinnerTab">
+                    <div class="row">
+                      <h3 class="display-6 fw-bold text-center mb-4">{{ availableDayAfterTomorrowNumber }} Places restantes après demain</h3>
+                      <div class="list-group">
+                      {% for category in categories %}
+                        <a data-bs-toggle="modal" data-bs-target="#{{category.slug}}-afterTomorrow" href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                          <img src="{{ asset('images/places/' ~ category.imageName) }}" alt="twbs" width="200" class="flex-shrink-0">
+                          <div class="d-flex gap-2 w-100 justify-content-between">
+                            <div>
+                              <h4 class="h3 mb-3">{{ category.name }}</h4>
+                              <p class="mb-0 opacity-75">{{ category.description|raw }}</p>
+                            </div>
+                            <div class="small text-nowrap">
+                              <span class="fw-bolder text-nowrap">
+                                {{  category.places|length - countAvailableByCategory(availableTomorrow, category) }}
+                              </span> 
+                              disponibles sur 
+                              <span class="fw-bolder text-nowrap">
+                                {{ category.places|length }} 
+                              </span>
+                              <br>
+                              <button class="btn btn-sm rounded-pill px-5 btn-primary mt-3">Voir</button>
+                            </div>
+                          </div>
+                        </a>
+                      {% endfor %}
+                      </div>
+                      {% for item, placesCategory in placesCategories %}
+                      <div class="modal fade" id="{{item}}-afterTomorrow" tabindex="-1" aria-labelledby="{{item}}-afterTomorrowLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title h3">{{ getCategoryBySlug(item).name }}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              {% for event in placesCategory %}
+                                {% if isInArray(event, availableDayAfterTomorrow) %}
+                                  <div class="col">
+                                    <div class="py-3 border-bottom">
+                                      <div class="row">
+                                        <div class="col-3 align-self-center">
+                                          <!-- Image -->
+                                          <div class="ratio ratio-1x1">
+                                            <img class="object-fit-cover blurry-image" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                          </div>
+                                        </div>
+                                        <div class="col-7">
+                                          <!-- Heading -->
+                                          <h5 class="mb-2">{{ event.name }}</h5>
+                
+                                          <!-- Text -->
+                                          <p class="mb-0">{{ event.description|raw }}</p>
+                                          <button type="button" class="btn btn-dark btn-sm rounded-pill px-4 mt-3" disabled>Non disponible</button>
+                                        </div>
+                                        <div class="col-2">
+                                          <!-- Price -->
+                                          <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                {% else %}
+                                <div class="col">
+                                  <div class="py-3 border-bottom">
+                                    <div class="row">
+                                      <div class="col-3 align-self-center">
+                                        <!-- Image -->
+                                        <div class="ratio ratio-1x1">
+                                          <img class="object-fit-cover" src="{{ vich_uploader_asset(event, 'imageFile') }}" alt="...">
+                                        </div>
+                                      </div>
+                                      <div class="col-7">
+                                        <!-- Heading -->
+                                        <h5 class="mb-2">{{ event.name }}</h5>
+              
+                                        <!-- Text -->
+                                        <p class="mb-0">{{ event.description|raw }}</p>
+                                        <a href="{{ path('app_event_new', {'placeId': event.id, 'date':'dayAfterTomorrow'}) }}" class="btn btn-primary btn-sm rounded-pill px-4 mt-3">Réserver</a>
+                                      </div>
+                                      <div class="col-2">
+                                        <!-- Price -->
+                                        <div class="fs-4 font-serif text-center text-body-emphasis">{{ event.price }} Ar</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endif %}
+                              {% endfor %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                      
+                      {% if availableDayAfterTomorrow|length >0 %}
+                      <h2 class="h4 text-center my-5 ">Places occupées après-demain</h2>
+                      <div class="col-6 mx-auto">
+                          <ul class="list-group">
+                              {% for event in availableDayAfterTomorrow %}
+                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                      <span>
+                                          <span class="fw-bold">Place {{ event.placeId }}</span>
+                                          <span class="text-success mx-2">
+                                              {{ getCategoryPlace(event.placeId) }}
+                                          </span>
+                                          - Réservée
+                                      </span>
+                                      {% if event.duration == 'demi_journee' %}
+                                          <span class="badge bg-success rounded-pill">
+                                              Demi-journée
+                                          {% else %}
+                                          <span class="badge bg-primary rounded-pill">
+                                              Journée
+                                          {% endif %}
+                                      </span>
+                                  </li>
+                              {% endfor %}
+                          </ul>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="otherDate" role="tabpanel" aria-labelledby="drinksTab">
+                    <div class="row">
+                      <div class="mb-3 col-12 col-sm-6 mx-auto">
+                        <h3 class="display-6 fw-bold text-center mb-4">Séléctionnez une date</h3>
+                        <input type="date" id="reservation_form_other_date" placeholder="Date" class="form-control" value="{{ date }}">
+                      </div>
+                      <div id="reservationsContainer" class="mt-4 row">
+                          <!-- Les résultats AJAX s'afficheront ici -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          <span class="fw-light text-end mt-4">(*) Nous allons vous contacter pour valider votre réservation</span>
+        </div>
+    </div>
+  </section>
+
+  <section class="container-fluid py-5">
+    <div class="container">
+      <h2 class="display-6 fw-bold text-center">Visitez, testez, adoptez !</h2>
+      <div class="row align-items-center">
+        <div class="col">
+          <img src="{{ asset('images/coworking/map_olona-talents_compressed.png')}}" alt="map" class="img-fluid my-3">
+        </div>
+        <div class="col">
+          <p class="lead"><i class="bi bi-phone"></i> <a href="tel:+261320373432">+261 32 03 734 32</a></p>
+          <p class="lead"><i class="bi bi-geo-alt"></i> Ambatonakanga, Antananarivo</p>
+          <div id="contactForm">
+            <h3 class="h4 mb-4 fw-bold">Contact rapide</h3>
+            {{ form_start(contactForm)}}
+            <div class="mb-3">
+              {{ form_widget(contactForm.titre, {'attr': {'placeholder': 'Nom complet'}}) }}
+            </div>
+            <div class="mb-3">
+              {{ form_widget(contactForm.email, {'attr': {'placeholder': 'Email'}}) }}
+            </div>
+            <div class="mb-3">
+              {{ form_widget(contactForm.numero, {'attr': {'placeholder': 'Téléphone'}}) }}
+            </div>
+            <div class="mb-3">
+              {{ form_widget(contactForm.message, {'attr': {'placeholder': 'Votre message'}}) }}
+            </div>
+            <div class="col text-center">
+              <!-- Button -->
+              <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                  <button type="submit" class="btn btn-info btn-lg px-4 me-sm-3 fw-bold"><i class="bi bi-send me-2"></i> Envoyer</button>
+              </div>
+            </div>
+            <div style="display: none;">
+              {{ form_widget(contactForm) }}
+            </div>
+            {{ form_end(contactForm)}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endif %}
+<script>
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const dateInput = document.getElementById('reservation_form_other_date');
+
+    if (dateInput) {
+        dateInput.addEventListener('change', function () {
+            const selectedDate = this.value;            
+            const fetchUrl = "{{ path('app_reservations') }}?date=" + selectedDate; // URL générée dynamiquement
+
+            fetch(fetchUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest' // Indique une requête AJAX
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('reservationsContainer');
+                if (container) {
+                    container.innerHTML = data.html;
+                }
+            })
+            .catch(error => console.error('Error fetching reservations:', error));
+        });
+    }
+});
+
+  document.addEventListener("turbo:load", function () {
+    const dateTimeElement = document.getElementById('liveDateTime');
+
+    if (dateTimeElement) {
+        const initialDate = dateTimeElement.getAttribute('data-initial-date');
+        let currentDate = new Date(initialDate);
+    
+        function updateDateTime() {
+            currentDate.setSeconds(currentDate.getSeconds() + 1);
+            const formattedDateTime = `Antananarivo, ${currentDate.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })} ${currentDate.toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            })}`;
+            dateTimeElement.textContent = formattedDateTime;
+        }
+    
+        updateDateTime(); // Initial update
+        setInterval(updateDateTime, 1000); // Update every second
+    }
+});
+
+</script>
+{% endblock %}

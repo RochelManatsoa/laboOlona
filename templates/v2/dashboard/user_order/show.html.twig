@@ -24,33 +24,71 @@
 
 
 {% block body %}
-{% if order.paymentMethod.slug == 'paypal' %}
-    {% set amount = order.totalAmount ~ ' ' ~ order.currency.symbole %} 
-{% else %}
-    {% set amount = order.package.price ~ ' Ar' %}
-{% endif %}
-	<section class="">
-		<div class="shadow-custom p-2 p-sm-5">
-			<h1 class="fs-4 fw-bolder text-center my-3 my-sm-4">
-				<i class="bi bi-bookmark-star text-warning me-2"></i>
-				Détails de votre commande
-			</h1>
-			<p class="text-center mb-4">Merci d'avoir passé commande sur notre plateforme ! Retrouvez ci-dessous toutes les informations relatives à votre achat.</p>
+<section class="">
+    <div class="shadow-custom p-2 p-sm-5">
+        <h1 class="fs-4 fw-bolder text-center my-3 my-sm-4">
+            <i class="bi bi-bookmark-star text-warning me-2"></i>
+            Détails de votre commande
+        </h1>
+        <p class="text-center mb-4">Merci d'avoir passé commande sur notre plateforme ! Retrouvez ci-dessous toutes les informations relatives à votre achat.</p>
 
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-10">
-                        <!-- Entête de la commande -->
-                        <div class="card mb-4 shadow">
-                            <div class="card-header bg-primary text-white">
-                                <h2 class="mb-0 text-center">Résumé de votre commande</h2>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>Numéro de commande :</strong> {{ order.orderNumber }}</p>
-                                <p><strong>Date de commande :</strong> {{ order.createdAt|date('d/m/Y à h:m') }}</p>
-                                <p><strong>Statut :</strong> {{ statusOrder(order)|raw }}</p>
-                            </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <!-- Entête de la commande -->
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h2 class="mb-0 text-center">Résumé de votre commande</h2>
                         </div>
+                        <div class="card-body">
+                            <p><strong>Numéro de commande :</strong> {{ order.orderNumber }}</p>
+                            <p><strong>Date de commande :</strong> {{ order.createdAt|date('d/m/Y à h:m') }}</p>
+                            <p><strong>Statut :</strong> {{ statusOrder(order)|raw }}</p>
+                        </div>
+                    </div>
+                    {% if order.orderItems|length > 0 %}
+
+                    <!-- Articles de la commande -->
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h2 class="mb-0 text-center">Achat</h2>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Nom :</strong> <span class="fw-bolder text-success">Coworking</span></p>
+                            <!-- Si applicable, ajoutez des taxes ou frais d'expédition -->
+                            <p><strong>Prix :</strong> {{ order.totalAmount }} Ar</p>
+                            <p><strong>Mode de paiement :</strong> <span class="fw-bold">À la caisse</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Total de la commande -->
+                    <div class="card mb-4 shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h2 class="mb-0 text-center">Total</h2>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Total des achats :</strong> {{ order.orderItems|length }} {{ order.orderItems|length == 1 ? 'article' : 'articles' }} au total</p>
+                            <!-- Si applicable, ajoutez des taxes ou frais d'expédition -->
+                            <ul class="list-group">
+                                {% for product in order.orderItems %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>{{product.product.name}}
+                                        <span class="fw-lighter">x {{product.quantity}} </span>
+                                    </span>
+                                    <span class="badge bg-primary">{{product.product.price }} Ar</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <p class="mt-3"><strong>Montant total :</strong> <span class="fw-bolder h5 text-primary">{{ order.totalAmount }} Ar</span></p>
+                        </div>
+                    </div>
+                        
+                    {% else %}
+                        {% if order.paymentMethod.slug == 'paypal' %}
+                            {% set amount = order.totalAmount ~ ' ' ~ order.currency.symbole %} 
+                        {% else %}
+                            {% set amount = order.package.price ~ ' Ar' %}
+                        {% endif %}
 
                         <!-- Articles de la commande -->
                         <div class="card mb-4 shadow">
@@ -78,12 +116,17 @@
                             </div>
                         </div>
 
+                        {% endif %}
                         <!-- Boutons d'action -->
                         <div class="d-flex justify-content-center">
-                            {% if order.status is same as(constant('App\\Entity\\BusinessModel\\Order::STATUS_ON_HOLD')) %}
-                                <a href="{{ path('app_v2_mobile_money_checkout', {'orderNumber': order.orderNumber}) }}" class="btn btn-primary me-2">Terminer l'achat</a>
+                            {% if order.orderItems|length > 0 %}
+                                <a href="{{ path('app_coworking_main') }}" class="btn btn-primary me-2">Espace Coworking</a>                                
                             {% else %}
-                                <a href="{{ path('app_v2_credit') }}" class="btn btn-primary me-2">Continuer les achats</a>
+                                {% if order.status is same as(constant('App\\Entity\\BusinessModel\\Order::STATUS_ON_HOLD')) %}
+                                    <a href="{{ path('app_v2_mobile_money_checkout', {'orderNumber': order.orderNumber}) }}" class="btn btn-primary me-2">Terminer l'achat</a>
+                                {% else %}
+                                    <a href="{{ path('app_v2_credit') }}" class="btn btn-primary me-2">Continuer les achats</a>
+                                {% endif %}
                             {% endif %}
                             <a href="{{ path('app_v2_contact') }}" class="btn btn-secondary">Contactez le support</a>
                         </div>

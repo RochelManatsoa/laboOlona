@@ -7,6 +7,8 @@
 /public/bundles/
 /public/uploads/*
 /public/documents/*
+/public/images/products/*
+/public/images/places/*
 /public/video/*
 /public/assets/ckeditor5/
 /assets/node_app/

@@ -12,7 +12,7 @@
       </div>
       {% if app.user %}
         {% if countUnReadNotification(app.user) > 0 %}
-          <a href="{{ path('app_dashboard_notification', {'isRead':'0'}) }}" class="btn btn-dark position-relative mx-3">
+          <a href="{{ path('app_dashboard_notification', {'isRead':'0'}) }}" class="btn btn-primary position-relative mx-3">
             <i class="bi bi-bell-fill"></i>
             <span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
               {{ component('count_notification_component')}}
@@ -36,11 +36,6 @@
           </button>
 
           <ul class="dropdown-menu dropdown-menu-end">
-            {% if app.user.type == 'CANDIDAT' or is_granted('ROLE_CANDIDAT') %}
-              <li>
-                <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#candidatAvaillability">Disponibilité</button>
-              </li>
-            {% endif %}
             <li>
               {% if app.user.type == 'MODERATEUR' %}
               <a class="dropdown-item" href="{{ path('app_connect') }}">Tableau de bord
@@ -65,18 +60,23 @@
                 </a>
               </li>
             {% endif %}
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+              <li class="bg-success ">
+                <a class="dropdown-item" target="_blank" href="{{ path('app_coworking_main') }}">
+                Coworking
+                </a>
+              </li>
+              <li class="bg-danger">
+                <a class="dropdown-item" target="_blank" href="{{ path('admin') }}">
+                  Administration
+                </a>
+              </li>
+            {% endif %}
             <li>
               <a class="dropdown-item" href="{{ path('app_logout') }}">
                 {{ 'app_logout.menu'|trans }}
               </a>
             </li>
-            {% if 'ROLE_ADMIN' in app.user.roles %}
-              <li class="bg-info text-dark">
-                <a class="dropdown-item" href="{{ path('admin') }}">
-                  Administration
-                </a>
-              </li>
-            {% endif %}
           </ul>
         </div>
       {% else %}

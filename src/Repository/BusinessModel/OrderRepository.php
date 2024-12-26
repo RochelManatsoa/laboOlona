@@ -28,6 +28,26 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
+    public function findOrdersFromTodayFiveAM(?string $status = null): array
+    {
+        $todayFiveAM = new \DateTime('today 5:00');
+        if ($status) {
+            $qb = $this->createQueryBuilder('o')
+                ->andWhere('o.createdAt >= :todayFiveAM')
+                ->andWhere('o.status = :status')
+                ->setParameter('todayFiveAM', $todayFiveAM)
+                ->setParameter('status', $status)
+                ->orderBy('o.createdAt', 'ASC');
+        } else {
+            $qb = $this->createQueryBuilder('o')
+                ->andWhere('o.createdAt >= :todayFiveAM')
+                ->setParameter('todayFiveAM', $todayFiveAM)
+                ->orderBy('o.createdAt', 'ASC');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function filterByUser(QuerySearchData $searchData): PaginationInterface
     {
         $qb = $this
@@ -57,6 +77,26 @@ class OrderRepository extends ServiceEntityRepository
             $query,
             $searchData->page,
             10
+        );
+    }
+    
+    public function paginateRecipes($page, ?int $userId): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('o')->select('o');
+        $queryBuilder->addOrderBy('o.id', 'DESC');
+        if ($userId) {
+            $queryBuilder->andWhere('o.customer = :userId')
+                ->setParameter('userId', $userId);
+        };
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            20,
+            [
+                'distinct' => false,
+                'shortFieldAllowList' => ['id', 'status', 'orderDate', 'totalAmount', 'bankedAt', 'updatedAt'],
+            ]
         );
     }
 }

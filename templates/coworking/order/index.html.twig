@@ -1,0 +1,117 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+
+{% block paralax %}
+{% if not is_granted('ROLE_ADMIN') %}
+    {% include "coworking/order/_paralax.html.twig" %}
+  {% endif %}
+{% endblock %}
+
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 rounded-3 border shadow-lg">
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+
+                <div class="col-9">
+                    <h1 class="h3">Toutes les commandes</h1> 
+                    <div>
+                        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_order_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+                    </div>  
+                    {% if orders|length > 0 %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>{{ knp_pagination_sortable(orders, 'Créée le', 'o.orderDate') }}</th>
+                                <th>{{ knp_pagination_sortable(orders, 'Utilisateur', 'o.customer') }}</th>
+                                <th class="text-center">{{ knp_pagination_sortable(orders, 'Montant', 'o.totalAmount') }}</th>
+                                <th class="text-center">{{ knp_pagination_sortable(orders, 'Statut', 'o.status') }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                                
+                                <td>{{ order.customer}}<br><span class="fw-lighter">{{ order.customer.email }}</span></td>
+                                <td class="text-center">{{ order.totalAmount }} {{ order.currency == null ? 'Ar' : ' ' ~ order.currency.symbole }}</td>
+                                <td class="text-center">{{ statusOrder(order)|raw }}</td>
+                                <td>
+                                    <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_order_show', {'id': order.id}) }}"><i class="bi bi-eye"></i></a>
+                                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_order_edit', {'id': order.id}) }}"><i class="bi bi-pencil"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {{ knp_pagination_render(orders) }}
+                    {% else %}
+                    <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                        <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                        <p class="text-center">Aucune commande trouvée</p>
+                    </div>
+                    {% endif %}    
+                </div>
+                <div class="col-3">
+                    {% include "coworking/order/_side.html.twig" %}
+                </div>         
+            </div>         
+            {% else %}
+            <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+                <h1 class="h3">Commandes</h1>
+                {% if orders|length > 0 %}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{ knp_pagination_sortable(orders, 'Créée le', 'o.orderDate') }}</th>
+                            <th>{{ knp_pagination_sortable(orders, 'Utilisateur', 'o.customer') }}</th>
+                            <th class="text-center">{{ knp_pagination_sortable(orders, 'Montant', 'o.totalAmount') }}</th>
+                            <th class="text-center">{{ knp_pagination_sortable(orders, 'Statut', 'o.status') }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ order.customer}}</td>
+                            <td class="text-center">{{ order.totalAmount }} {{ order.currency == null ? 'Ar' : ' ' ~ order.currency.symbole }}</td>
+                            <td class="text-center">{{ statusOrder(order)|raw }}</td>
+                            <td>
+                                <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_order_show', {'id': order.id}) }}"><i class="bi bi-eye"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {{ knp_pagination_render(orders) }}
+                {% else %}
+                <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                    <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                    <p class="text-center">Aucune commande trouvée</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+                <img class="rounded-lg-3" src="{{ asset('images/coworking/IMG_0678.png') }}" alt="" width="720">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

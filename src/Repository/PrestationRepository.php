@@ -149,8 +149,9 @@ class PrestationRepository extends ServiceEntityRepository
     public function findExpiredPremium()
     {
         return $this->createQueryBuilder('p')
-            ->innerJoin('p.boostVisibility', 'b') 
-            ->andWhere('b.endDate < :now')        
+            ->innerJoin('p.boost', 'b') 
+            ->innerJoin('b.boostVisibilities', 'bv') 
+            ->andWhere('bv.endDate < :now')        
             ->setParameter('now', new \DateTime())
             ->getQuery()                          
             ->getResult(); 

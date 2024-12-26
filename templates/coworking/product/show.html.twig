@@ -1,0 +1,65 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Détail du produit{% endblock %}
+
+
+{% block paralax %}{% endblock %}
+
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+            <div class="p-3 p-lg-5 pt-lg-3">
+                <h1 class="h3">Détail du produit</h1>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Nom</th>
+                            <td>{{ product.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Prix</th>
+                            <td>{{ product.price }}</td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ product.description|raw }}</td>
+                        </tr>
+                        <tr>
+                            <th>Stock disponible</th>
+                            <td>{{ product.stock }}</td>
+                        </tr>
+                        <tr>
+                            <th>Mis à jour</th>
+                            <td>{{ product.updatedAt ? product.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Image</th>
+                            <td>
+                                {% if product.imageName %}
+                                    <img src="{{ asset('images/products/' ~ product.imageName) }}" alt="{{ product.name }}" class="img-thumbnail" style="width: 100px;"/>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-end w-100">
+                    <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_product_edit', {'id': product.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                    {{ include('coworking/product/_delete_form.html.twig') }}
+                </div>
+
+                <div>
+                    <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_product_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

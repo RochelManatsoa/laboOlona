@@ -2,7 +2,12 @@
 
 namespace App\Controller;
 
+use Symfony\UX\Turbo\TurboBundle;
+use App\Entity\Moderateur\ContactForm;
 use App\Service\Annonce\AnnonceService;
+use App\Form\Moderateur\ContactFormType;
+use App\Manager\MailManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +24,7 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/contact', name: 'app_home_contact')]
+    #[Route('/contact', name: 'app_contact')]
     public function contact(): Response
     {
         return $this->redirectToRoute('app_home');
@@ -31,19 +36,19 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/legal-mentions', name: 'app_home_legal')]
+    #[Route('/legal-mentions', name: 'app_home_legal', options: ['sitemap' => true])]
     public function legal(): Response
     {
         return $this->render('home/legal.html.twig', []);
     }
 
-    #[Route('/privacy-policy', name: 'app_home_privacy')]
+    #[Route('/privacy-policy', name: 'app_home_privacy', options: ['sitemap' => true])]
     public function privacy(): Response
     {
         return $this->render('home/privacy.html.twig', []);
     }
 
-    #[Route('/terms-and-conditions', name: 'app_home_terms')]
+    #[Route('/terms-and-conditions', name: 'app_home_terms', options: ['sitemap' => true])]
     public function terms(): Response
     {
         return $this->render('home/terms.html.twig', []);
@@ -65,8 +70,37 @@ class HomeController extends AbstractController
 
     #[Route('/simulateur-portage-salarial', name: 'app_home_simulateur_portage')]
     public function simulateur(): Response 
-    {
-        return $this->redirectToRoute('app_v2_candidate_simulator');
+    {        
+        return $this->redirectToRoute('app_home_portage', []);
+    }
+
+    #[Route('/portage-salarial', name: 'app_home_portage', options: ['sitemap' => true])]
+    public function portage(Request $request, MailManager $mailManager, EntityManagerInterface $entityManager): Response 
+    {    
+        $contact = new ContactForm;
+        $contact->setCreatedAt(new \DateTime());
+        $contactForm = $this->createForm(ContactFormType::class, $contact);
+        $contactForm->handleRequest($request);
+        if ($contactForm->isSubmitted() && $contactForm->isValid()) {
+            $contact = $contactForm->getData();
+            $entityManager->persist($contact);
+            $entityManager->flush();
+            $mailManager->contactForm($contact);
+            $this->addFlash('success', 'Votre message a été bien envoyé. Nous vous repondrons dans le plus bref delais');
+
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('coworking/update.html.twig', ['id' => 'contactForm']);
+            }
+        
+            return $this->json([
+                'message' => 'Success',
+            ], Response::HTTP_OK);
+        }
+            
+        return $this->render('home/simulateur.html.twig', [
+            'contactForm' => $contactForm->createView(),
+        ]);
     }
 
     #[Route('/simulateur-entreprise', name: 'app_home_simulateur_entreprise')]

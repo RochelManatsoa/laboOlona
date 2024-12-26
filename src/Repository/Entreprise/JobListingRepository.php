@@ -320,8 +320,9 @@ class JobListingRepository extends ServiceEntityRepository
     public function findExpiredPremium()
     {
         return $this->createQueryBuilder('j')
-            ->innerJoin('j.boostVisibility', 'b') 
-            ->andWhere('b.endDate < :now')        
+            ->innerJoin('j.boost', 'b') 
+            ->innerJoin('b.boostVisibilities', 'bv') 
+            ->andWhere('bv.endDate < :now')        
             ->setParameter('now', new \DateTime())
             ->getQuery()                          
             ->getResult(); 

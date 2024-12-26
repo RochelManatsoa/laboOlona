@@ -1,0 +1,73 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Commande{% endblock %}
+
+{% block paralax %}
+{% if not is_granted('ROLE_ADMIN') %}
+{% include "coworking/order/_paralax.html.twig" %}
+{% endif %}
+{% endblock %}
+
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+            <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+            <h1 class="h3">Commande #{{ order.id }}</h1>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Créée le</th>
+                        <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <td>{{ order.customer }}</td>
+                    </tr>
+                    <tr>
+                        <th>Montant</th>
+                        <td>{{ order.totalAmount }} Ar</td>
+                    </tr>
+                    <tr>
+                        <th>Statut</th>
+                        <td>
+                            {{ statusOrder(order)|raw }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Mis à jour le</th>
+                        <td>{{ order.updatedAt ? order.updatedAt|date('Y-m-d H:i:s') : '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ order.orderItems|length }} Items </th>
+                        <td>
+                            {% for item in order.orderItems %}
+                                <div class="">
+                                    <span class="fw-bold">{{ item.product.name }}</span>
+                                    <span class="mx-3 fw-lighter">({{ item.quantity }})</span>
+                                    <span class="text-muted">{{ item.product.price * item.quantity }} Ar</span>
+                                </div>                        
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+            <a class="btn btn-danger my-3 px-5 rounded-pill" href="{{ path('app_order_edit', {'id': order.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+            {% endif %}
+            <div>
+                <a class="btn btn-info my-3 px-5 rounded-pill" href="{{ path('app_order_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+            </div>
+        </div>
+        <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+            <img class="rounded-lg-3" src="{{ asset('images/coworking/IMG_0678.png') }}" alt="" width="720">
+        </div>
+
+{% endblock %}
