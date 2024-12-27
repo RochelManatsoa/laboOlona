@@ -82,7 +82,7 @@
         </div>
         <div class="row row-cols-1 row-cols-md-4 g-4 text-center">
           <div class="col">
-            <div class="card shadow h-100">
+            <div class="card shadow h-100 py-3">
               <i class="bi bi-wifi display-4 fw-bolder ms-4 mt-4 text-warning"></i>
               <div class="card-body">
                 <h3 class="h5 fw-bold card-title">Wi-Fi ultra-rapide</h3>
@@ -91,7 +91,7 @@
             </div>
           </div>
           <div class="col">
-            <div class="card shadow h-100">
+            <div class="card shadow h-100 py-3">
               <i class="bi bi-geo-alt-fill display-4 fw-bolder ms-4 mt-4 text-warning"></i>
               <div class="card-body">
                 <h3 class="h5 fw-bold card-title">Emplacement central</h3>
@@ -100,7 +100,7 @@
             </div>
           </div>
           <div class="col">
-            <div class="card shadow h-100">
+            <div class="card shadow h-100 py-3">
               <i class="bi bi-people-fill display-4 fw-bolder ms-4 mt-4 text-warning"></i>
               <div class="card-body">
                 <h3 class="h5 fw-bold card-title">Ambiance collaborative</h3>
@@ -109,7 +109,7 @@
             </div>
           </div>
           <div class="col">
-            <div class="card shadow h-100">
+            <div class="card shadow h-100 py-3">
               <i class="bi bi-cup-hot-fill display-4 fw-bolder ms-4 mt-4 text-warning"></i>
               <div class="card-body">
                 <h3 class="h5 fw-bold card-title">Services inclus</h3>
@@ -225,12 +225,12 @@
                       <h3 class="display-6 fw-bold text-center mb-4">{{ availableTodayNumber}} Places restantes aujourd'hui</h3>
                       <div class="list-group">
                       {% for category in categories %}
-                        <a data-bs-toggle="modal" data-bs-target="#{{category.slug}}-today" href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
-                          <img src="{{ asset('images/places/' ~ category.imageName) }}" alt="twbs" width="200" class="flex-shrink-0">
-                          <div class="d-flex gap-2 w-100 justify-content-between">
+                        <a data-bs-toggle="modal" data-bs-target="#{{category.slug}}-today" href="#" class="list-group-item list-group-item-action d-flex flex-column flex-md-row gap-3 py-3" aria-current="true">
+                          <img src="{{ asset('images/places/' ~ category.imageName) }}" alt="twbs" class="flex-shrink-0 img-fluid rounded col-12 col-sm-3">
+                          <div class="d-flex flex-column w-100">
                             <div>
                               <h4 class="h3 mb-3">{{ category.name }}</h4>
-                              <p class="mb-0 opacity-75">{{ category.description|raw }}</p>
+                              <p class="mb-0 opacity-75 text-truncate text-md-wrap">{{ category.description|raw }}</p>
                             </div>
                             <div class="small text-nowrap">
                               <span class="fw-bolder text-nowrap">
@@ -348,12 +348,12 @@
                       <h3 class="display-6 fw-bold text-center mb-4">{{ availableTomorrowNumber}} Places restantes demain</h3>
                       <div class="list-group">
                       {% for category in categories %}
-                        <a data-bs-toggle="modal" data-bs-target="#{{category.slug}}-tomorrow" href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
-                          <img src="{{ asset('images/places/' ~ category.imageName) }}" alt="twbs" width="200" class="flex-shrink-0">
-                          <div class="d-flex gap-2 w-100 justify-content-between">
+                        <a data-bs-toggle="modal" data-bs-target="#{{category.slug}}-tomorrow" href="#" class="list-group-item list-group-item-action d-flex flex-column flex-md-row gap-3 py-3" aria-current="true">
+                          <img src="{{ asset('images/places/' ~ category.imageName) }}" alt="twbs" width="200" class="flex-shrink-0 img-fluid rounded col-12 col-sm-3">
+                          <div class="d-flex flex-column w-100">
                             <div>
                               <h4 class="h3 mb-3">{{ category.name }}</h4>
-                              <p class="mb-0 opacity-75">{{ category.description|raw }}</p>
+                              <p class="mb-0 opacity-75 text-truncate text-md-wrap">{{ category.description|raw }}</p>
                             </div>
                             <div class="small text-nowrap">
                               <span class="fw-bolder text-nowrap">
@@ -471,12 +471,12 @@
                       <h3 class="display-6 fw-bold text-center mb-4">{{ availableDayAfterTomorrowNumber }} Places restantes après demain</h3>
                       <div class="list-group">
                       {% for category in categories %}
-                        <a data-bs-toggle="modal" data-bs-target="#{{category.slug}}-afterTomorrow" href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
-                          <img src="{{ asset('images/places/' ~ category.imageName) }}" alt="twbs" width="200" class="flex-shrink-0">
-                          <div class="d-flex gap-2 w-100 justify-content-between">
+                        <a data-bs-toggle="modal" data-bs-target="#{{category.slug}}-afterTomorrow" href="#" class="list-group-item list-group-item-action d-flex flex-column flex-md-row gap-3 py-3" aria-current="true">
+                          <img src="{{ asset('images/places/' ~ category.imageName) }}" alt="twbs" width="200" class="flex-shrink-0 img-fluid rounded col-12 col-sm-3">
+                          <div class="d-flex flex-column w-100">
                             <div>
                               <h4 class="h3 mb-3">{{ category.name }}</h4>
-                              <p class="mb-0 opacity-75">{{ category.description|raw }}</p>
+                              <p class="mb-0 opacity-75 text-truncate text-md-wrap">{{ category.description|raw }}</p>
                             </div>
                             <div class="small text-nowrap">
                               <span class="fw-bolder text-nowrap">
@@ -613,10 +613,10 @@
     <div class="container">
       <h2 class="display-6 fw-bold text-center">Visitez, testez, adoptez !</h2>
       <div class="row align-items-center">
-        <div class="col">
+        <div class="col-12 col-sm-6">
           <img src="{{ asset('images/coworking/map_olona-talents_compressed.png')}}" alt="map" class="img-fluid my-3">
         </div>
-        <div class="col">
+        <div class="col-12 col-sm-6">
           <p class="lead"><i class="bi bi-phone"></i> <a href="tel:+261320373432">+261 32 03 734 32</a></p>
           <p class="lead"><i class="bi bi-geo-alt"></i> Ambatonakanga, Antananarivo</p>
           <div id="contactForm">

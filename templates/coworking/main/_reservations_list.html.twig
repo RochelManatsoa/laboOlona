@@ -2,12 +2,12 @@
 <h3 class="display-6 fw-bold text-center mb-4">{{ availableOverDateNumber }} Places restantes le {{ dateObject|date('d/m/Y') }}</h3>
 <div class="list-group">
 {% for category in categories %}
-  <a data-bs-toggle="modal" data-bs-target="#{{category.slug}}-other-day" href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
-    <img src="{{ asset('images/places/' ~ category.imageName) }}" alt="twbs" width="200" class="flex-shrink-0">
-    <div class="d-flex gap-2 w-100 justify-content-between">
+  <a data-bs-toggle="modal" data-bs-target="#{{category.slug}}-other-day" href="#" class="list-group-item list-group-item-action d-flex flex-column flex-md-row gap-3 py-3" aria-current="true">
+    <img src="{{ asset('images/places/' ~ category.imageName) }}" alt="twbs" width="200" class="flex-shrink-0 img-fluid rounded col-12 col-sm-3">
+    <div class="d-flex flex-column w-100">
       <div>
         <h4 class="h3 mb-3">{{ category.name }}</h4>
-        <p class="mb-0 opacity-75">{{ category.description|raw }}</p>
+        <p class="mb-0 opacity-75 text-truncate text-md-wrap">{{ category.description|raw }}</p>
       </div>
       <div class="small text-nowrap">
         <span class="fw-bolder text-nowrap">
