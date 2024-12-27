@@ -63,10 +63,10 @@
                 </div>
                 {% endif %}     
             {% else %}
-                <div class="row">
+                <div class="row mb-5">
                     {% for product in products %}
                         {% if product.category == 'boissons' %}
-                        <div class="col-3 g-5">
+                        <div class="col-12 col-sm-3 g-5">
                             <div class="card mb-3 text-center">
                                 <img src="{{ vich_uploader_asset(product, 'imageFile') }}" class="card-img-top" alt="...">
                                 <div class="card-body">
