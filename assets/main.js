@@ -1130,7 +1130,7 @@ $(function() {
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.error('Erreur:', textStatus, errorThrown);
-                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de la tentative de boost de votre profil.');
+                    $('#errorToast').find('.toast-body').text('Une erreur est survenue lors de la l\'analyse. Votre CV trop lourd.');
                     var errorToast = new Toast($('#errorToast')[0]);
                     errorToast.show();
                 },

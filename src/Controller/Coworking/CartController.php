@@ -44,7 +44,7 @@ class CartController extends AbstractController
         $user = $entityManager->getRepository(User::class)->find($userId);
         $items = json_decode($request->request->get('items'), true);
         $total = $request->request->get('total');
-        $devise = $entityManager->getRepository(Devise::class)->findBySlug('ariary');
+        $devise = $entityManager->getRepository(Devise::class)->findOneBy(['slug' => 'ariary']);
 
         $order = new Order();
         $order->setCurrency($devise);
@@ -56,7 +56,9 @@ class CartController extends AbstractController
 
         foreach ($items as $item) {
             $product = $productRepository->find($item['product']);
-            $orderItem = new OrderItem($product, $item['quantity']);
+            $orderItem = new OrderItem();
+            $orderItem->setProduct($product);
+            $orderItem->setQuantity($item['quantity']);
             $orderItem->setCommand($order);
             $orderItem->setPrice($product->getPrice() * $item['quantity']);
             $entityManager->persist($orderItem);

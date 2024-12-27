@@ -7,3 +7,6 @@ Disallow: /v2/recruiter/
 Disallow: /v2/staff/
 Disallow: /finance/
 Disallow: /uploads/
+
+sitemap: https://olona-talents.fr/sitemap.xml
+sitemap: https://olona-talents.fr/sitemap.default.xml
