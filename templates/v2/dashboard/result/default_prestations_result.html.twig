@@ -28,20 +28,22 @@
 				</li>
 			</ul>
 			<div class="row">
-				<div class="col-12 col-sm-8" id="prestations-list">
-					{% if prestations|length > 0 %}
-					<p class="small fw-light mt-3">
-						{% if totalResults > 2 %}
-						{{ totalResults }} resultats trouvés
+				<div class="default-results col-12 col-sm-8">
+					<div id="prestations-list">
+						{% if prestations|length > 0 %}
+						<p class="small fw-light mt-3">
+							{% if totalResults > 2 %}
+							{{ totalResults }} resultats trouvés
+							{% else %}
+							{{ totalResults }} resultat trouvé
+							{% endif %}
+						</p>
+							{% include "v2/dashboard/result/parts/_part_prestations_list.html.twig" %}
 						{% else %}
-						{{ totalResults }} resultat trouvé
+							{% include "v2/dashboard/result/none/_none_prestations.html.twig" %}
 						{% endif %}
-					</p>
-                    	{% include "v2/dashboard/result/parts/_part_prestations_list.html.twig" %}
-					{% else %}
-                    	{% include "v2/dashboard/result/none/_none_prestations.html.twig" %}
-					{% endif %}
-                </div>
+					</div>
+				</div>
 				<div class="col-12 col-sm-4">
 					<div class="d-flex flex-column flex-shrink-0 py-3 position-sticky top-0">
 						<div class="card mb-3" id="candidate-card-container">

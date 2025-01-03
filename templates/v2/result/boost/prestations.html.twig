@@ -1,0 +1,49 @@
+<div class="boosts-container" data-slider>
+    <div class="boosts" data-slider-wrapper>
+        {% if prestations_boost|length > 0 %}
+            {% for prestation in prestations_boost %}
+                <div class="boost"> 
+                    <div class="card mt-3 text-center">
+                        <div class="">
+                            <span class="position-absolute top-0 start-0 ms-4 px-3 translate-middle badge bg-danger rounded-pill" style="z-index:999">PRO</span>
+                        </div>
+                        <div class="card-image-wrapper">
+                            <div class="job-image card-img-top" style="background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}');" alt="prestation_{{ prestation.id }}"></div>
+                            <div class="card-body-candidat">
+                                <p class="job-title">Réf: {{ generateprestationReference(prestation.id) }}</p>
+                                <div style="min-height:50px;display: flex; align-items: center; justify-content: center;">
+                                    <h2 class="fw-bold text-uppercase fs-6">{{ prestation.titre }}</h2>
+                                </div>
+                                <div class="card-text small">
+                                    <span class="card-text small">
+                                        {% if prestation.openai is not null %}
+                                        {% set description_words = prestation.openai|striptags|split(' ') %}
+                                        {% else %}
+                                        {% set description_words = prestation.description|striptags|split(' ') %}
+                                        {% endif %}
+                                        {% if description_words|length > 12 %}
+                                            {{ description_words|slice(0, 12)|join(' ') }}...
+                                        {% else %}
+                                            {{ description_words|join(' ') }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                {% if app.user %}
+                                    <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id}) }}" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto">Contacter</a>
+                                {% else %}
+                                    <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_view_prestation', {'prestation': prestation.id}) }}">Contacter</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <span class="boosts_navigation prev-boost shadow" data-slider-prev hidden>
+        <i class="bi bi-chevron-left"></i>
+    </span>
+    <span class="boosts_navigation next-boost shadow" data-slider-next>
+        <i class="bi bi-chevron-right"></i>
+    </span>
+</div>

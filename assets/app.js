@@ -114,5 +114,3 @@ document.addEventListener('turbo:load', function() {
     calendar.render()
   })
 
-
-

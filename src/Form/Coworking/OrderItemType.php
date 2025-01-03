@@ -21,6 +21,7 @@ class OrderItemType extends AbstractType
                 'class' => Product::class,
                 'choice_label' => 'name',
                 'label' => 'Article',
+                'placeholder' => 'Sélectionnez un article',
                 'attr' => [
                     'data-controller' => 'product-order',
                     'data-action' => 'change->product-order#onProductChange'
