@@ -33,7 +33,7 @@
 }
 .boosts-container {
     position: relative; 
-    margin-bottom: 1.5rem;    
+    margin-bottom: 1.5rem;  
 }
 
 .boosts_navigation {
@@ -61,8 +61,10 @@
 }
 
 @media (min-width: 768px) and (pointer: fine) {
-    .boosts {
-        overflow: hidden;
+    .user-results, .default-results{
+        .boosts {
+            overflow: hidden;
+        }
     }
 }
 

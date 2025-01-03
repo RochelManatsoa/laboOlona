@@ -1,0 +1,84 @@
+{% extends 'base_blog.html.twig' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+{% block meta %}
+<meta name="description" content="{{ post.metaDescription }}">
+<meta name="keywords" content="{{ post.metaKeywords }}">
+<meta property="og:title" content="{{ post.metaTitle }}">
+<meta property="og:description" content="{{ post.metaDescription }}">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/opengraph/coworking.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+
+{% block paralax %}
+<div class="paralax" style="background-image: url('{{ asset('images/blogs/' ~ post.imageName) }}');">
+  {% include "blog/_nav.html.twig" %}
+  <div class="main-content-min">
+    <div class="container">
+      <!-- Content Section -->
+      <div class="row my-4">
+        <div class="col-12 col-sm-8 mx-auto text-center">
+          <h1 class="display-4 fw-bolder">{{ post.title }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block body %}
+    <main id="blog-post">
+        <div class="container mt-5">
+            <div class="row g-5">
+                <div class="col-md-8">
+                <h3 class="pb-4 mb-4 fst-italic border-bottom">
+                    From the Firehose
+                </h3>
+                {{ post.content|raw }}
+                </div>
+                <div class="col-md-4">
+                <div class="position-sticky" style="top: 2rem;">
+                    <div class="p-4 mb-3 bg-body-tertiary rounded">
+                    <h4 class="fst-italic">About</h4>
+                    <p class="mb-0">Customize this section to tell your visitors a little bit about your publication, writers, content, or something else entirely. Totally up to you.</p>
+                    </div>            
+                    <div>
+                      <h4 class="fst-italic">Recent posts</h4>
+                      <ul class="list-unstyled">
+                          <li>
+                          <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+                              <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
+                              <div class="col-lg-8">
+                              <h6 class="mb-0">Example blog post title</h6>
+                              <small class="text-body-secondary">January 15, 2024</small>
+                              </div>
+                          </a>
+                          </li>
+                          <li>
+                          <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+                              <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
+                              <div class="col-lg-8">
+                              <h6 class="mb-0">This is another blog post title</h6>
+                              <small class="text-body-secondary">January 14, 2024</small>
+                              </div>
+                          </a>
+                          </li>
+                          <li>
+                          <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+                              <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
+                              <div class="col-lg-8">
+                              <h6 class="mb-0">Longer blog post title: This one has multiple lines!</h6>
+                              <small class="text-body-secondary">January 13, 2024</small>
+                              </div>
+                          </a>
+                          </li>
+                      </ul>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}

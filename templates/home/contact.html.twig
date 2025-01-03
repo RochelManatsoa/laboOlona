@@ -1,44 +1,98 @@
-{% extends 'base.html.twig' %}
-{% block body %}
-<section id="contact" class="my-5" style="background-color: black;">
-    <div class="container my-5 d-flex flex-column justify-content-center">
-        <div class="row my-4">
-            <div class="col d-flex flex-column justify-content-center">
-
-                <h1 class="text-white text-center display-4">{{ 'app_home.contact.h1'|trans }}</h1>
-
-                <div class="col-lg-6 col-md-10 col-sm-12 mx-auto">
-                {% for message in app.flashes('success') %}
-                    <div class="alert alert-primary">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                    {{ form_start(form , {'attr': {'class': 'row'}}) }}
-                    <div class="row mt-3">
-                    {{ form_label(form.titre) }}
-                    </div>
-                    {{ form_widget(form.titre) }}
-                    <div class="row mt-3">
-                    {{ form_label(form.message) }}
-                    </div>
-                    {{ form_widget(form.message) }}
-                    <div class="row mt-3">
-                    {{ form_label(form.email) }}
-                    </div>
-                    {{ form_widget(form.email) }}
-                    <div class="row mt-3">
-                    {{ form_label(form.numero) }}
-                    </div>
-                    {{ form_widget(form.numero) }}
-                    <div class="col-6 mx-auto">
-                        <button type="submit" class="btn btn-primary w-100 my-3 ">{{ 'app_home.contact.button'|trans }}</button>
-                    </div>
-                    {{ form_end(form) }}
-                </div>
-
-            </div>
+{% extends 'base_blog.html.twig' %}
+{% block title %}Nous contacter{% endblock %}
+{% block meta %}
+<meta name="description" content="Contactez-nous via le formulaire de contact de https://olona-talents.com/ pour toute question, demande d'information ou assistance. Notre équipe est à votre écoute pour vous répondre rapidement.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement">
+<meta property="og:title" content="Contacter le support | Olona Talents">
+<meta property="og:description" content="Contactez-nous via le formulaire de contact de https://olona-talents.com/ pour toute question, demande d'information ou assistance. Notre équipe est à votre écoute pour vous répondre rapidement.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/opengraph/coworking.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+{% block paralax %}
+<div class="paralax event-design">
+  {% include "blog/_nav.html.twig" %}
+  <div class="main-content-min">
+    <div class="container">
+      <!-- Content Section -->
+      <div class="row">
+        <div class="col-12 col-sm-8 mx-auto text-center">
+          <h1 class="display-4 fw-bolder my-5">Nous contacter</h1>
         </div>
+      </div>
     </div>
-</section>
+  </div>
+</div>
+{% endblock %}
+{% block body %}
 
+<div class="shadow-custom col-12 col-sm-10 col-md-8 col-lg-8 p-2 p-sm-4 mx-auto">
+    <p class="text-center">
+        Nous sommes là pour vous aider! Que vous ayez une question sur votre compte, besoin d'assistance pour une fonctionnalité de la plateforme, ou que vous souhaitiez signaler un problème, notre équipe de support est prête à vous fournir l'assistance nécessaire.
+    </p>
+    <p class="text-center">
+        Veuillez remplir le formulaire ci-dessous avec les détails de votre demande, et nous vous répondrons dans les plus brefs délais.
+    </p>
+
+        <div class="col-lg-10 col-md-10 col-sm-12 mx-auto">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-primary alert-dismissible fade show small" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+            {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+
+
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        {{ form_label(form.titre) }}
+                        {{ form_widget(form.titre)}}
+                        {{ form_errors(form.titre)}}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email)}}
+                        {{ form_errors(form.email)}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        {{ form_label(form.numero) }}
+                        {{ form_widget(form.numero)}}
+                        {{ form_errors(form.numero)}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        {{ form_label(form.message) }}
+                        {{ form_widget(form.message)}}
+                        {{ form_errors(form.message)}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 mx-auto">
+                <button type="submit" class="btn btn-primary w-100 my-3 ">{{ 'app_home.contact.button'|trans }}</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    
+    <p class="text-center my-sm-5 my-4 fw-lighter">
+        Pour les questions urgentes, vous pouvez également nous contacter par téléphone au <a href="tel:+261345052132">+261 34 50 521 32</a> ou au <a href="tel:+261320373420">+261 32 03 734 20</a>, disponible de 09h à 18h, du lundi au vendredi.
+    </p>
+</div>
 {% endblock %}

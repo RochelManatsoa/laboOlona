@@ -1,0 +1,47 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}Comment index{% endblock %}
+
+{% block body %}
+    <h1>Comment index</h1>
+    <div class="my-4">
+        <a class="btn btn-sm rounded-pill px-5 btn-primary" href="{{ path('app_blog_comment_new') }}">Create new</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Author</th>
+                <th>Content</th>
+                <th>Status</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for comment in comments %}
+            <tr>
+                <td>{{ comment.id }}</td>
+                <td>{{ comment.author }}</td>
+                <td>{{ comment.content }}</td>
+                <td>{{ comment.status }}</td>
+                <td>{{ comment.createdAt ? comment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ comment.updatedAt ? comment.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ comment.email }}</td>
+                <td>
+                    <a class="btn btn-sm rounded-circle btn-primary" href="{{ path('app_blog_comment_show', {'id': comment.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-sm rounded-circle btn-secondary" href="{{ path('app_blog_comment_edit', {'id': comment.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

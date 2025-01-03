@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Blog\Post;
 use App\Entity\Vues\VideoVues;
 use Doctrine\DBAL\Types\Types;
 use App\Entity\Coworking\Event;
@@ -182,6 +183,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'user')]
     private Collection $events;
 
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class)]
+    private Collection $posts;
+
     public function __construct()
     {
         $this->envois = new ArrayCollection();
@@ -195,6 +199,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->boostVisibilities = new ArrayCollection();
         $this->activityLogs = new ArrayCollection();
         $this->events = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function __toString()
@@ -894,6 +899,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($event->getUser() === $this) {
                 $event->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): static
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts->add($post);
+            $post->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): static
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getAuthor() === $this) {
+                $post->setAuthor(null);
             }
         }
 

@@ -9,6 +9,7 @@
 /public/documents/*
 /public/images/products/*
 /public/images/places/*
+/public/images/blogs/*
 /public/video/*
 /public/assets/ckeditor5/
 /assets/node_app/

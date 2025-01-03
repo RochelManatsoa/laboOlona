@@ -1,0 +1,17 @@
+{% extends 'base_blog.html.twig' %}
+
+{% block title %}{% endblock %}
+{% block meta %}
+<meta name="description" content="Réservez votre espace dès aujourd'hui chez Olona Talents : 18 postes de coworking disponibles, modernes et connectés. Profitez d'un cadre inspirant pour booster votre productivité et travailler en toute sérénité.">
+<meta name="keywords" content="coworking, antananarivo, madagascar, espace francophone, talents, freelance, projet, offre, portage salarial, cooptation, recrutement">
+<meta property="og:title" content="Blog | Olona Talents">
+<meta property="og:description" content="Réservez votre espace dès aujourd'hui chez Olona Talents : 18 postes de coworking disponibles, modernes et connectés. Profitez d'un cadre inspirant pour booster votre productivité et travailler en toute sérénité.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/opengraph/coworking.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+
+{% block paralax %}
+    {% include "coworking/event/_paralax.html.twig" %}
+{% endblock %}

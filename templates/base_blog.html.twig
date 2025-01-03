@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="{{ asset('images/favicon.ico') }}">
+        <title>{% block title %}Blog | Olona Talents{% endblock %}</title>
+        {% block meta %}
+          <meta name="description" content="Réservez votre espace dès aujourd'hui chez Olona Talents : 18 postes de coworking disponibles, modernes et connectés. Profitez d'un cadre inspirant pour booster votre productivité et travailler en toute sérénité.">
+          <meta name="keywords" content="coworking, antananarivo, madagascar, espace francophone, talents, freelance, projet, offre, portage salarial, cooptation, recrutement">
+          <meta property="og:title" content="Blog | Olona Talents">
+          <meta property="og:description" content="Réservez votre espace dès aujourd'hui chez Olona Talents : 18 postes de coworking disponibles, modernes et connectés. Profitez d'un cadre inspirant pour booster votre productivité et travailler en toute sérénité.">
+          <meta property="og:url" content="{{ app.request.uri }}">
+          <meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/opengraph/coworking.png') }}">
+          <meta property="og:image:width" content="1200"/>
+          <meta property="og:image:height" content="630"/>
+        {% endblock %}
+        {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-7LRZREN88L"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+        
+            // Consentement par défaut
+            gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied'
+            });
+        </script>
+        
+        <script>
+            // Afficher la bannière si aucune préférence n'est définie
+            document.addEventListener('turbo:load', function () {
+              const consent = document.cookie
+                  .split('; ')
+                  .find((row) => row.startsWith('cookieOlonaTalents='));
+                if (!consent) {
+                    document.querySelector('.cookie-consent').style.display = 'block';
+                }
+            });
+        
+            // Accepter tous les cookies
+            function acceptAllCookies() {
+                const preferences = {
+                    functionalCookies: true,
+                    analyticsCookies: true,
+                    advertisingCookies: true,
+                };
+                updateConsent(preferences);
+                document.querySelector('.cookie-consent').style.display = 'none';
+            }
+        
+            // Enregistrer les préférences sélectionnées
+            function saveCookiePreferences() {
+                const preferences = {
+                    functionalCookies: document.getElementById('functionalCookies').checked,
+                    analyticsCookies: document.getElementById('analyticsCookies').checked,
+                    advertisingCookies: document.getElementById('advertisingCookies').checked,
+                };
+                updateConsent(preferences);
+            }
+        
+            // Mettre à jour le consentement avec gtag.js et stocker les préférences
+            function updateConsent(preferences) {
+                gtag('consent', 'update', {
+                    'ad_storage': preferences.advertisingCookies ? 'granted' : 'denied',
+                    'analytics_storage': preferences.analyticsCookies ? 'granted' : 'denied',
+                    'ad_user_data': preferences.functionalCookies ? 'granted' : 'denied',
+                    'ad_personalization': preferences.advertisingCookies ? 'granted' : 'denied'
+                });
+        
+                document.cookie = `cookieOlonaTalents=${JSON.stringify(preferences)}; path=/; max-age=31536000`;
+                document.querySelector('.cookie-consent').style.display = 'none';
+            }
+        </script>
+        <style>
+            .cookie-consent {
+                position: fixed;
+                color: #ffffff;
+                background-color: #000000;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000; /* High z-index to stay on top */
+            }
+            /* Modal Styles */
+            .cookie-modal {
+              position: fixed;
+              z-index: 1000;
+              left: 0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+              overflow: auto;
+              background-color: rgba(0, 0, 0, 0.4);
+            }
+
+            .cookie-modal-content {
+              background-color: #fff;
+              margin: 10% auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 80%;
+              max-width: 500px;
+              border-radius: 8px;
+              text-align: center;
+            }
+
+            .close-modal {
+              color: #aaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+              cursor: pointer;
+            }
+
+            .close-modal:hover,
+            .close-modal:focus {
+              color: black;
+              text-decoration: none;
+              cursor: pointer;
+            }
+
+            .form-group {
+              margin-bottom: 15px;
+              text-align: left;
+            }
+
+            .modal-buttons {
+              margin-top: 20px;
+              display: flex;
+              justify-content: space-around;
+            }
+
+        </style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
+    </head>
+    <body id="base-coworking">
+        {% block paralax %}
+        <div class="paralax event-design">
+          {% include "blog/_nav.html.twig" %}
+          <div class="main-content-min">
+            <div class="container">
+              <!-- Content Section -->
+              <div class="row">
+                <div class="col-12 col-sm-8 mx-auto text-center">
+                  <h1 class="display-4 fw-bolder my-5">Blog</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endblock %}
+
+        <div class="container-fluid m-0 p-0">
+            <div class="row" id="coworking">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+        <footer class="py-3 my-4">
+          <div class="container">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+              <li class="nav-item"><a href="{{ path('app_home_legal')}}" class="px-2 text-body-secondary">Mentions Légales</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_privacy')}}" class="px-2 text-body-secondary">Politique de Confidentialité</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_terms')}}" class="px-2 text-body-secondary">Conditions d'Utilisation</a></li>
+              <li class="nav-item"><a href="{{ path('app_v2_dashboard')}}" class="px-2 text-body-secondary">Olona Talents</a></li>
+              <li class="nav-item"><a href="{{ path('app_coworking_main')}}" class="px-2 text-body-secondary">Coworking</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_simulateur_portage')}}" class="px-2 text-body-secondary">Portage salarial</a></li>
+              {% if app.user %}
+              <li class="nav-item"><a href="{{ path('app_v2_contact')}}" class="px-2 text-body-secondary">Nous contacter</a></li>
+              {% else %}
+              <li class="nav-item"><a href="{{ path('app_contact')}}" class="px-2 text-body-secondary">Nous contacter</a></li>
+              {% endif %}
+            </ul>
+            <p class="text-center text-body-secondary">© 2024 Olona Talents, Tout droit reservé</p>
+          </div>
+        </footer>
+        <!-- Cookie Consent Banner -->
+        <div class="cookie-consent" style="display:none;">
+          <div class="alert mb-0" role="alert">
+              <div class="container">
+                  <div class="row p-4 align-items-center">
+                      <div class="col-12 col-sm-8">
+                          <h3>Cookies et confidentialité</h3>
+                          <p>
+                              Nous utilisons des cookies pour optimiser votre expérience sur notre site, analyser le trafic, et personnaliser le contenu.
+                              <a href="{{ path('app_home_privacy') }}" target="_blank">En savoir plus</a>.
+                          </p>
+                      </div>
+                      <div class="col-12 col-sm-4 text-center">
+                          <button class="btn btn-primary rounded-pill px-4" onclick="acceptAllCookies()">Tout accepter</button>
+                          <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#cookieSettingsModal">Paramétrer</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+        <!-- Modal Cookie Settings -->
+        <div class="modal fade" id="cookieSettingsModal" tabindex="-1" aria-labelledby="cookieSettingsModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="cookieSettingsModalLabel">Gérer vos préférences de cookies</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <p>Sélectionnez les catégories de cookies que vous souhaitez activer :</p>
+                      <form id="cookiePreferencesForm">
+                          <div class="form-check mb-3">
+                              <input class="form-check-input" type="checkbox" id="essentialCookies" checked disabled>
+                              <label class="form-check-label" for="essentialCookies">Cookies nécessaires (toujours activés)</label>
+                          </div>
+                          <div class="form-check mb-3">
+                              <input class="form-check-input" type="checkbox" id="functionalCookies">
+                              <label class="form-check-label" for="functionalCookies">Cookies fonctionnels</label>
+                          </div>
+                          <div class="form-check mb-3">
+                              <input class="form-check-input" type="checkbox" id="analyticsCookies">
+                              <label class="form-check-label" for="analyticsCookies">Cookies analytiques</label>
+                          </div>
+                          <div class="form-check mb-3">
+                              <input class="form-check-input" type="checkbox" id="advertisingCookies">
+                              <label class="form-check-label" for="advertisingCookies">Cookies publicitaires</label>
+                          </div>
+                      </form>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                      <button type="button" class="btn btn-primary" onclick="saveCookiePreferences()" data-bs-dismiss="modal">Enregistrer</button>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+    
+        <script>
+    
+          function loadCKEditor() {
+            if (typeof ClassicEditor === 'undefined') {
+              var scriptTag = document.createElement('script');
+              scriptTag.src = "{{ asset('assets/ckeditor5/ckeditor.js') }}";
+              document.body.appendChild(scriptTag);
+            }
+          }
+    
+          loadCKEditor();
+          document.addEventListener('turbo:load', loadCKEditor);
+    
+        </script>
+    </body>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('main') }}
+    {% endblock %}
+</html>

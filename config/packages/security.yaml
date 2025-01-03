@@ -89,9 +89,11 @@ security:
         ROLE_FINANCE: [ROLE_CANDIDAT]
         ROLE_COOPTEUR: [ROLE_CANDIDAT]
         ROLE_EMPLOYE: [ROLE_CANDIDAT]
-        # Les rôles moderateur et entreprise n'ont pas de rôles enfants
         ROLE_MODERATEUR: []
-        ROLE_ENTREPRISE: []       []
+        ROLE_ENTREPRISE: [] 
+        ROLE_ADMIN_BLOG: [ROLE_USER] 
+        ROLE_COWORKING: [ROLE_USER]
+        ROLE_ADMIN: [ROLE_ADMIN_BLOG, ROLE_ENTREPRISE, ROLE_MODERATEUR, ROLE_COWORKING]
 
 when@test:
     security:
