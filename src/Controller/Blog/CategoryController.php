@@ -22,10 +22,12 @@ class CategoryController extends AbstractController
     ){}
 
     #[Route('/', name: 'app_blog_category_index', methods: ['GET'])]
-    public function index(CategoryRepository $categoryRepository): Response
+    public function index(Request $request, CategoryRepository $categoryRepository): Response
     {
+        $page = $request->query->getInt('page', 1);
+
         return $this->render('blog/category/index.html.twig', [
-            'categories' => $categoryRepository->findAll(),
+            'categories' => $categoryRepository->paginateCategories($page),
         ]);
     }
 

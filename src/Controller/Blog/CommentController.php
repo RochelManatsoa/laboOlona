@@ -17,10 +17,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CommentController extends AbstractController
 {
     #[Route('/', name: 'app_blog_comment_index', methods: ['GET'])]
-    public function index(CommentRepository $commentRepository): Response
+    public function index(Request $request, CommentRepository $commentRepository): Response
     {
+        $page = $request->query->getInt('page', 1);
         return $this->render('blog/comment/index.html.twig', [
-            'comments' => $commentRepository->findAll(),
+            'comments' => $commentRepository->paginateComments($page),
         ]);
     }
 

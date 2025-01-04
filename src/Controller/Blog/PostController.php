@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 
 #[Route('/blog/admin/post')]
 #[IsGranted('ROLE_ADMIN_BLOG')]
@@ -22,10 +23,15 @@ class PostController extends AbstractController
     ){}
     
     #[Route('/', name: 'app_blog_post_index', methods: ['GET'])]
-    public function index(PostRepository $postRepository): Response
+    public function index(
+        Request $request, 
+        PostRepository $postRepository,
+    ): Response
     {
+        $page = $request->query->getInt('page', 1);
+        
         return $this->render('blog/post/index.html.twig', [
-            'posts' => $postRepository->findAll(),
+            'posts' => $postRepository->paginatePosts($page),
         ]);
     }
 

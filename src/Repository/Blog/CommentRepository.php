@@ -2,10 +2,12 @@
 
 namespace App\Repository\Blog;
 
-use App\Entity\Blog\Comment;
 use App\Entity\Blog\Post;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Blog\Comment;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Comment>
@@ -17,7 +19,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CommentRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, Comment::class);
     }
@@ -36,6 +38,20 @@ class CommentRepository extends ServiceEntityRepository
            ->getQuery()
            ->getResult()
        ;
+   }
+
+   public function paginateComments($page): PaginationInterface
+   {
+       $queryBuilder = $this->createQueryBuilder('c')->select('c');
+       $queryBuilder
+           ->addOrderBy('c.createdAt', 'DESC');
+
+       return $this->paginator->paginate(
+           $queryBuilder,
+           $page,
+           10,
+           []
+       );
    }
 
 //    public function findOneBySomeField($value): ?Comment

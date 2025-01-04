@@ -36,6 +36,16 @@ class PostRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findPublished(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->andWhere('p.status = :status')
+            ->setParameter('status', Post::STATUS_PUBLISHED)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function paginatePosts($page, ?Category $category = null): PaginationInterface
     {
         $queryBuilder = $this->createQueryBuilder('p')->select('p');

@@ -38,7 +38,7 @@ class BlogController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_blog_view', options: ['sitemap' => true])]
+    #[Route('/{slug}', name: 'app_blog_view')]
     public function blog(Request $request, Post $post): Response
     {
         $comment = new Comment();
@@ -62,7 +62,7 @@ class BlogController extends AbstractController
         ]);
     }
 
-    #[Route('/category/{slug}', name: 'app_blog_category', options: ['sitemap' => true])]
+    #[Route('/category/{slug}', name: 'app_blog_category')]
     public function category(
         Request $request, 
         Category $category,

@@ -3,8 +3,10 @@
 namespace App\Repository\Blog;
 
 use App\Entity\Blog\Category;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Category>
@@ -16,7 +18,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CategoryRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, Category::class);
     }
@@ -28,5 +30,19 @@ class CategoryRepository extends ServiceEntityRepository
             ->orderBy('c.title', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function paginateCategories($page): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('c')->select('c');
+        $queryBuilder
+            ->addOrderBy('c.createdAt', 'DESC');
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            10,
+            []
+        );
     }
 }
