@@ -94,7 +94,7 @@
                       <ul class="list-unstyled">
                         {% for post in posts %}
                         <li>
-                          <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+                          <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="{{ path('app_blog_view', {'slug': post.slug}) }}">
 
                               <div class="col-lg-4" style="background-image: url('{{ asset('images/blogs/' ~ post.imageName) }}');
                               background-size: cover;

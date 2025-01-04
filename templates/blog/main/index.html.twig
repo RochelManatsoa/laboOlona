@@ -12,7 +12,7 @@
                     {% for category in categories %}
                     <li class="list-group-item w-100">
                         <a href="{{ path('app_blog_category', {'slug': category.slug}) }}" 
-                           class="dropdown-item d-flex justify-content-between align-items-center w-100 py-3">
+                           class="dropdown-item d-flex justify-content-between align-items-center w-100 py-3 text-white">
                             {{ category.title }}
                             <span class="badge bg-success rounded-pill">{{ category.posts|length }}</span>
                         </a>
@@ -22,16 +22,18 @@
             </div>
             </h3>
             {% for post in posts %}
-            <div class="row g-5">
-            
-                <div class="col-md-4 p-4 d-flex justify-content-end">
-                    {% if post.imageName %}
-                        <img src="{{ asset('images/blogs/' ~ post.imageName) }}" alt="{{ post.title }}" class="img-thumbnail" />
-                    {% endif %}
+            <div class="row mx-auto my-5">      
+                <div class="col-md-5 px-4 d-flex justify-content-end">
+                    <div class="border rounded shadow d-flex justify-content-end" style="background-image: url('{{ asset('images/blogs/' ~ post.imageName) }}');
+                        background-size: cover;
+                        background-position: center;
+                        width: 150px;
+                        height: 150px;
+                        float: right;
+                        ">
+                    </div>
                 </div>
-
-                <div class="col-md-8">
-                        
+                <div class="col-md-7">                        
                     <article class="blog-post">
                         <h2 class="display-6 link-body-emphasis mb-1"><a href="{{ path('app_blog_view', {'slug': post.slug})}}">{{ post.title }}</a></h2>
                         <p class="blog-post-meta">{{ post.createdAt|date('M Y')}} by <a href="#">{{ post.author }}</a></p>
@@ -41,7 +43,7 @@
                     </article>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
         <div class="row">
             <div class="col-12 col-sm-4"></div>
             <div class="col-12 col-sm-8">
