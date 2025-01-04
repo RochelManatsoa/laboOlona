@@ -12,12 +12,9 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Author</th>
-                <th>Content</th>
-                <th>Status</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>Email</th>
+                <th>Nom d'utilisateur</th>
+                <th>Statut</th>
+                <th>Créé</th>
                 <th></th>
             </tr>
         </thead>
@@ -25,12 +22,9 @@
         {% for comment in comments %}
             <tr>
                 <td>{{ comment.id }}</td>
-                <td>{{ comment.author }}</td>
-                <td>{{ comment.content }}</td>
-                <td>{{ comment.status }}</td>
-                <td>{{ comment.createdAt ? comment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ comment.updatedAt ? comment.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ comment.email }}</td>
+                <td>{{ comment.author }} <br> <span class="fw-lighter">{{ comment.email }}</span></td>
+                <td>{{ getCommentStatus(comment.status)|raw }}</td>
+                <td>{{ comment.createdAt ? comment.createdAt|time_ago : '' }}</td>
                 <td>
                     <a class="btn btn-sm rounded-circle btn-primary" href="{{ path('app_blog_comment_show', {'id': comment.id}) }}"><i class="bi bi-eye"></i></a>
                     <a class="btn btn-sm rounded-circle btn-secondary" href="{{ path('app_blog_comment_edit', {'id': comment.id}) }}"><i class="bi bi-pencil"></i></a>

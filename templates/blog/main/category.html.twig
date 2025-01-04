@@ -1,11 +1,11 @@
 {% extends 'base_blog.html.twig' %}
 
-{% block title %}{% endblock %}
+{% block title %}Catégorie {{ category.title }} | Olona Talents{% endblock %}
 {% block meta %}
-<meta name="description" content="Réservez votre espace dès aujourd'hui chez Olona Talents : 18 postes de coworking disponibles, modernes et connectés. Profitez d'un cadre inspirant pour booster votre productivité et travailler en toute sérénité.">
-<meta name="keywords" content="coworking, antananarivo, madagascar, espace francophone, talents, freelance, projet, offre, portage salarial, cooptation, recrutement">
-<meta property="og:title" content="Blog | Olona Talents">
-<meta property="og:description" content="Réservez votre espace dès aujourd'hui chez Olona Talents : 18 postes de coworking disponibles, modernes et connectés. Profitez d'un cadre inspirant pour booster votre productivité et travailler en toute sérénité.">
+<meta name="description" content="{{ category.metaDescription }}">
+<meta name="keywords" content="{{ category.metaKeywords }}">
+<meta property="og:title" content="{{ category.metaTitle }}">
+<meta property="og:description" content="{{ category.metaDescription }}">
 <meta property="og:url" content="{{ app.request.uri }}">
 <meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/opengraph/coworking.png') }}">
 <meta property="og:image:width" content="1200"/>
@@ -13,5 +13,71 @@
 {% endblock %}
 
 {% block paralax %}
-    {% include "coworking/event/_paralax.html.twig" %}
+<div class="paralax" style="background-image: url('{{ asset('images/blogs/' ~ category.imageName) }}');">
+  {% include "blog/_nav.html.twig" %}
+  <div class="main-content-min">
+    <div class="container">
+      <!-- Content Section -->
+      <div class="row">
+        <div class="col-12 col-sm-8 mx-auto text-center">
+          <h1 class="display-4 fw-bolder my-5">{{ category.title }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block body %}
+    
+<main id="blog-post">
+    <div class="container mt-5">
+        <h3 class="pb-4 mb-4 fst-italic border-bottom">
+            
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle col-12 col-sm-4 py-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ category.title }}
+            </button>
+            <ul class="dropdown-menu col-12 col-sm-4 py-3">
+                {% for category in categories %}
+                <li class="list-group-item w-100">
+                    <a href="{{ path('app_blog_category', {'slug': category.slug}) }}" 
+                       class="dropdown-item d-flex justify-content-between align-items-center w-100">
+                        {{ category.title }}
+                        <span class="badge bg-success rounded-pill">{{ category.posts|length }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        </h3>
+        {% for post in posts %}
+        <div class="row g-5">
+        
+            <div class="col-md-4 p-4 d-flex justify-content-end">
+                {% if post.imageName %}
+                    <img src="{{ asset('images/blogs/' ~ post.imageName) }}" alt="{{ post.title }}" class="img-thumbnail" />
+                {% endif %}
+            </div>
+
+            <div class="col-md-8">
+                    
+                <article class="blog-post">
+                    <h2 class="display-6 link-body-emphasis mb-1"><a href="{{ path('app_blog_view', {'slug': post.slug})}}">{{ post.title }}</a></h2>
+                    <p class="blog-post-meta">{{ post.createdAt|date('M Y')}} by <a href="#">{{ post.author }}</a></p>
+                    <div class="blog-content">
+                        {{ post.metaDescription|raw }}
+                    </div>
+                </article>
+            </div>
+        </div>
+    {% endfor %}
+        <div class="row">
+            <div class="col-12 col-sm-4"></div>
+            <div class="col-12 col-sm-8">
+                {{ knp_pagination_render(posts) }}
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}

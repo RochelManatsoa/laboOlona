@@ -2,6 +2,7 @@
 
 namespace App\Repository\Blog;
 
+use App\Entity\Blog\Category;
 use App\Entity\Blog\Post;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
@@ -23,10 +24,29 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
-    public function paginatePosts($page): PaginationInterface
+    public function lastPosts(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->andWhere('p.status = :status')
+            ->setParameter('status', Post::STATUS_PUBLISHED)
+            ->addOrderBy('p.createdAt', 'DESC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function paginatePosts($page, ?Category $category = null): PaginationInterface
     {
         $queryBuilder = $this->createQueryBuilder('p')->select('p');
-        $queryBuilder->addOrderBy('p.createdAt', 'DESC');
+        $queryBuilder
+            ->andWhere('p.status = :status')
+            ->setParameter('status', Post::STATUS_PUBLISHED)
+            ->addOrderBy('p.createdAt', 'DESC');
+            
+        if ($category) {
+            $queryBuilder->andWhere('p.category = :category')->setParameter('category', $category);
+        }
 
         return $this->paginator->paginate(
             $queryBuilder,

@@ -8,28 +8,28 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>#</th>
                 <td>{{ comment.id }}</td>
             </tr>
             <tr>
-                <th>Author</th>
+                <th>Auteur</th>
                 <td>{{ comment.author }}</td>
             </tr>
             <tr>
-                <th>Content</th>
+                <th>Contenu</th>
                 <td>{{ comment.content }}</td>
             </tr>
             <tr>
-                <th>Status</th>
-                <td>{{ comment.status }}</td>
+                <th>Statut</th>
+                <td>{{ getCommentStatus(comment.status)|raw }}</td>
             </tr>
             <tr>
-                <th>CreatedAt</th>
-                <td>{{ comment.createdAt ? comment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <th>Créé le</th>
+                <td>{{ comment.createdAt ? comment.createdAt|date('d/m/Y à H:i') : '' }}</td>
             </tr>
             <tr>
                 <th>UpdatedAt</th>
-                <td>{{ comment.updatedAt ? comment.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ comment.updatedAt ? comment.updatedAt|date('d/m/Y à H:i') : '' }}</td>
             </tr>
             <tr>
                 <th>Email</th>
@@ -37,10 +37,13 @@
             </tr>
         </tbody>
     </table>
+    <div class="d-flex justify-content-end w-100">
+        <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_blog_comment_edit', {'id': comment.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+        {{ include('blog/comment/_delete_form.html.twig') }}
+    </div>
 
-    <a href="{{ path('app_blog_comment_index') }}">back to list</a>
+    <div>
+        <a class="btn btn-info my-3 px-5 rounded-pill" href="{{ path('app_blog_comment_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+    </div>
 
-    <a href="{{ path('app_blog_comment_edit', {'id': comment.id}) }}">edit</a>
-
-    {{ include('blog/comment/_delete_form.html.twig') }}
 {% endblock %}

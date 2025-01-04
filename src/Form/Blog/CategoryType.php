@@ -4,6 +4,7 @@ namespace App\Form\Blog;
 
 use App\Entity\Blog\Category;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,6 +15,19 @@ class CategoryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        
+        if ($options['is_admin']) {
+            $builder
+                ->add('isPublished', CheckboxType::class, [
+                    'label' => 'Publiée ?',
+                    'label_attr' => [
+                        'class' => 'fw-bold fs-5' 
+                    ],
+                    'help' => 'Status de la catégorie.',
+                ])
+            ;
+        }
+
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Titre',
@@ -73,6 +87,7 @@ class CategoryType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Category::class,
+            'is_admin' => false,
         ]);
     }
 }

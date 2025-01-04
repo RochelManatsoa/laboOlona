@@ -21,33 +21,40 @@ class CommentType extends AbstractType
             ->add('author', TextType::class, [
                 'label' => 'Nom d\'utilisateur',
                 'label_attr' => [
-                    'class' => 'fw-bold fs-6' 
+                    'class' => 'fw-bold fs-7 text-uppercase' 
                 ],
             ])
             ->add('content', TextareaType::class, [
                 'required' => false,
-                'label' => 'Contenu',
+                'label' => 'Votre message',
                 'label_attr' => [
-                    'class' => 'fw-bold fs-7' 
+                    'class' => 'fw-bold fs-7 text-uppercase' 
                 ],
+                'attr' => [
+                    'rows' => 6,
+                ]
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => Comment::getStatuses(),
                 'label' => 'Status',
                 'label_attr' => [
-                    'class' => 'fw-bold fs-5' 
+                    'class' => 'fw-bold fs-7 text-uppercase' 
                 ],
                 'help' => 'Status du commentaire.',
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'label_attr' => [
-                    'class' => 'fw-bold fs-6' 
+                    'class' => 'fw-bold fs-7 text-uppercase' 
                 ],
             ])
             ->add('post', EntityType::class, [
                 'class' => Post::class,
                 'choice_label' => 'title',
+                'label' => 'Article',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-7 text-uppercase' 
+                ],
             ])
         ;
     }

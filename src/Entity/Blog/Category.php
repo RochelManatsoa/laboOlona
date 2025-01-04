@@ -53,8 +53,12 @@ class Category
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Post::class)]
     private Collection $posts;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isPublished = null;
+
     public function __construct()
     {
+        $this->isPublished = false;
         $this->createdAt = new \DateTime();
         $this->posts = new ArrayCollection();
     }
@@ -212,6 +216,18 @@ class Category
                 $post->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isIsPublished(): ?bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(?bool $isPublished): static
+    {
+        $this->isPublished = $isPublished;
 
         return $this;
     }

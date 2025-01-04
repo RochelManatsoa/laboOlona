@@ -233,17 +233,21 @@
 			{% endblock %}
 			</div>
 		</div>
-		<footer class="py-3 my-4">
-			<ul class="nav justify-content-center border-bottom pb-3 mb-3">
-			  <li class="nav-item"><a href="{{ path('app_home_legal')}}" class="nav-link px-2 text-body-secondary">Mentions Légales</a></li>
-			  <li class="nav-item"><a href="{{ path('app_home_privacy')}}" class="nav-link px-2 text-body-secondary">Politique de Confidentialité</a></li>
-			  <li class="nav-item"><a href="{{ path('app_home_terms')}}" class="nav-link px-2 text-body-secondary">Conditions d'Utilisation</a></li>
-              <li class="nav-item"><a href="{{ path('app_home_simulateur_portage')}}" class="nav-link px-2 text-body-secondary">Portage salarial</a></li>
-              <li class="nav-item"><a href="{{ path('app_coworking_main')}}" class="nav-link px-2 text-body-secondary">Coworking</a></li>
-			  <li class="nav-item"><a href="{{ path('app_contact')}}" class="nav-link px-2 text-body-secondary">Nous contacter</a></li>
-			</ul>
-			<p class="text-center text-body-secondary">© 2024 Olona Talents, Tout droit reservé</p>
-		</footer>
+        <footer class="py-3 my-4">
+          <div class="container">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+              <li class="nav-item"><a href="{{ path('app_v2_dashboard')}}" class="px-2 text-body-secondary">Olona Talents</a></li>
+              <li class="nav-item"><a href="{{ path('app_coworking_main')}}" class="px-2 text-body-secondary">Coworking</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_simulateur_portage')}}" class="px-2 text-body-secondary">Portage salarial</a></li>
+              <li class="nav-item"><a href="{{ path('app_blog_index')}}" class="px-2 text-body-secondary">Le blog</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_legal')}}" class="px-2 text-body-secondary">Mentions Légales</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_privacy')}}" class="px-2 text-body-secondary">Politique de Confidentialité</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_terms')}}" class="px-2 text-body-secondary">Conditions d'Utilisation</a></li>
+              <li class="nav-item"><a href="{{ path('app_contact_us')}}" class="px-2 text-body-secondary">Nous contacter</a></li>
+            </ul>
+            <p class="text-center text-body-secondary">© 2024 Olona Talents, Tous droits réservés.</p>
+          </div>
+        </footer>
         <!-- Cookie Consent Banner -->
         <div class="cookie-consent" style="display:none;">
           <div class="alert mb-0" role="alert">

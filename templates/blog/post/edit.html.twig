@@ -7,7 +7,10 @@
 
     {{ include('blog/post/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_blog_post_index') }}">back to list</a>
+    
+    <div class="my-5">
+    <a class="btn btn-info px-5 rounded-pill" href="javascript:history.back()"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+    </div>
 
     {{ include('blog/post/_delete_form.html.twig') }}
 {% endblock %}

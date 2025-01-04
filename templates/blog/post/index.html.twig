@@ -13,11 +13,7 @@
             <tr>
                 <th>#</th>
                 <th>Titre</th>
-                <th class="text-center">Meta Title</th>
-                <th class="text-center">Meta Desc</th>
-                <th class="text-center">Mot clés</th>
-                <th class="text-center">Créée le</th>
-                <th class="text-center">ImageName</th>
+                <th class="text-center">Image</th>
                 <th></th>
             </tr>
         </thead>
@@ -25,11 +21,12 @@
         {% for post in posts %}
             <tr>
                 <td>{{ post.id }}</td>
-                <td>{{ post.title }}</td>
-                <td class="text-center">{{ post.metaTitle ? '<i class="bi bi-check2-square text-info"></i>' : '<i class="bi bi-exclamation-circle text-danger"></i>'}}</td>
-                <td class="text-center">{{ post.metaDescription ? '<i class="bi bi-check2-square text-info"></i>' : '<i class="bi bi-exclamation-circle text-danger"></i>'}}</td>
-                <td class="text-center">{{ post.metaKeywords ? '<i class="bi bi-check2-square text-info"></i>' : '<i class="bi bi-exclamation-circle text-danger"></i>'}}</td>
-                <td class="text-center">{{ post.createdAt ? post.createdAt|date('d/m/Y H:i:s') : '' }}</td>
+                <td> 
+                    {{ post.title }} <br> 
+                    Par <span class="fw-bold">{{ post.author }}</span> <br>
+                    <span class="fw-lighter">{{ post.createdAt|time_ago }}</span> <br>
+                    <span class="badge bg-success rounded-pill">{{ post.category.title }}</span>
+                </td>
                 <td class="text-center">
                     {% if post.imageName %}
                         <img src="{{ asset('images/blogs/' ~ post.imageName) }}" alt="{{ post.title }}" class="img-thumbnail" style="width: 200px;"/>
