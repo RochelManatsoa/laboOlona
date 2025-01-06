@@ -38,12 +38,39 @@
                     </div>
                 </div>
             {% endfor %}
+
+            {% if prestations_boost|length == 1 %}
+                <div class="card mt-3 text-center">
+                    <a href="{{ path('app_contact') }}">
+                        <img class="img-fluid rounded" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
+                    </a>
+                </div>
+                {% if not app.user %}
+                    <div class="card mt-3 text-center">
+                        <a href="{{ path('app_contact') }}">
+                            <img class="img-fluid rounded" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {% if prestations_boost|length == 2 %}
+                {% if not app.user %}
+                    <div class="card mt-3 text-center">
+                        <a href="{{ path('app_contact') }}">
+                            <img class="img-fluid rounded" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
         {% endif %}
     </div>
+    {% if prestations_boost|length > 0 %}
     <span class="boosts_navigation prev-boost shadow" data-slider-prev hidden>
         <i class="bi bi-chevron-left"></i>
     </span>
     <span class="boosts_navigation next-boost shadow" data-slider-next>
         <i class="bi bi-chevron-right"></i>
     </span>
+    {% endif %}
 </div>

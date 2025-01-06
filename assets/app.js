@@ -15,6 +15,28 @@ require('tom-select/dist/css/tom-select.css');
 
 
 document.addEventListener('turbo:load', function() {
+
+  const backToTopButton = document.getElementById('backToTop');
+
+  // Écoute de l'événement de défilement
+  window.addEventListener('scroll', function() {
+      if (window.scrollY > 300) {
+          // Afficher le bouton après avoir défilé 300 px
+          backToTopButton.style.display = 'block';
+      } else {
+          // Cacher le bouton
+          backToTopButton.style.display = 'none';
+      }
+  });
+
+  // Ajouter l'événement de clic pour revenir en haut
+  backToTopButton.addEventListener('click', function() {
+      window.scrollTo({
+          top: 0,
+          behavior: 'smooth' // Défilement fluide
+      });
+  });
+  
     const calendarEl = document.getElementById('calendar')
     if (!calendarEl || calendarEl === '') {
       return; 

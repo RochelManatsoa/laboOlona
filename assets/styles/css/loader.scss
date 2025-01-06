@@ -90,3 +90,21 @@
         transform: rotate(-360deg);
     }
 }
+
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: none; /* Par défaut, caché */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+.back-to-top:hover {
+    background-color: #0056b3;
+}
