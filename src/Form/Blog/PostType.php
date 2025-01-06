@@ -36,7 +36,7 @@ class PostType extends AbstractType
                 'help' => 'Contenu de l\'article.',
                 'attr' => [
                     'rows' => 6,
-                    'class' => 'ckeditor-textarea'
+                    'class' => 'full-ckeditor-textarea'
                 ]
             ])
             ->add('metaTitle', TextType::class, [

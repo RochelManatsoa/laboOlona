@@ -14,7 +14,11 @@
     </head>
     <body id="base-coworking">
         <div class="">
-          {% include "blog/_nav_admin.html.twig" %}
+          {% block admin %}
+            <div class="">
+              {% include "blog/_nav_admin.html.twig" %}
+            </div>
+          {% endblock %}
         </div>
 
         <div class="container-fluid m-0 p-0">

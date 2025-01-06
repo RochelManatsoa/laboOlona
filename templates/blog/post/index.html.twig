@@ -1,9 +1,9 @@
 {% extends 'base_admin_blog.html.twig' %}
 
-{% block title %}Post index{% endblock %}
+{% block title %}Tous les articles{% endblock %}
 
 {% block body %}
-    <h1>Post index</h1>
+    <h1 class="h3">Tous les articles</h1>
     <div class="my-4">
         <a class="btn btn-sm rounded-pill px-5 btn-primary" href="{{ path('app_blog_post_new') }}">Create new</a>
     </div>
@@ -22,7 +22,7 @@
             <tr>
                 <td>{{ post.id }}</td>
                 <td> 
-                    {{ post.title }} <br> 
+                    {{ post.title }} {{ getPostStatus(post.status)|raw }}<br> 
                     Par <span class="fw-bold">{{ post.author }}</span> <br>
                     <span class="fw-lighter">{{ post.createdAt|time_ago }}</span> <br>
                     <span class="badge bg-success rounded-pill">{{ post.category.title }}</span>

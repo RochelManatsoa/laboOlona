@@ -15,6 +15,7 @@ use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Manager\Finance\EmployeManager;
 use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\Coworking\Contract;
 use App\Entity\Coworking\Reservation;
 use App\Entity\Moderateur\ContactForm;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -164,6 +165,24 @@ class MailManager
             'reservation/coworking.mail.twig',
             [
                 'reservation' => $reservation,
+                'url' => $url,
+            ]
+        );
+    }
+
+    public function contractVIP(Contract $contract)
+    {
+        $url = '';
+        $url = $this->urlGenerator->generate('app_coworking_contract_show', [
+            'id' => $contract->getId()
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        
+        return $this->mailerService->sendMultiple(
+            ['contact@olona-talents.com', 'rajaomia20@gmail.com', 'aolonaprodadmi@gmail.com', 'support@olona-talents.com'],
+            'Réservation au nom de '.$contract->getFirstName().' '.$contract->getLastName(),
+            'reservation/contrat_vip.mail.twig',
+            [
+                'contract' => $contract,
                 'url' => $url,
             ]
         );

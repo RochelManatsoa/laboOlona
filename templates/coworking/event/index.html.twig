@@ -65,7 +65,9 @@
                 {% endif %}
             </div>
             <div class="col-3">
+                <a class="nav-link" href="{{ path('app_coworking_reservation_index')}}">Réservation en ligne</a>
                 {% if availableToday|length >0 %}
+                <hr>
                 <h2 class="h6 py-5">Places occupées aujourd'hui</h2>
                 <div class="small">
                     <ul class="list-group">

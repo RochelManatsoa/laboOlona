@@ -1,9 +1,9 @@
 {% extends 'base_admin_blog.html.twig' %}
 
-{% block title %}Post{% endblock %}
+{% block title %}Article {{ post.id }}{% endblock %}
 
 {% block body %}
-    <h1>Post</h1>
+    <h1 class="h3">Article {{ post.id }}</h1>
 
     <table class="table">
         <tbody>

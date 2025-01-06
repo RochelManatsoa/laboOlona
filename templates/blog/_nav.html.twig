@@ -5,10 +5,11 @@
     </a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link px-3 mx-2 text-white" aria-current="page" href="{{ path('app_blog_index')}}">Le Blog</a>
-        <a class="nav-link px-3 mx-2 text-white" href="{{ path('app_coworking_main')}}">Coworking</a>
-        <a class="nav-link px-3 mx-2 text-white" href="{{ path('app_home_simulateur_portage')}}">Portage salarial</a>
-        <a class="nav-link px-3 mx-2 text-white" href="{{ path('app_contact_us')}}">Nous contacter</a>
+        <a class="nav-link px-1 mx-1 text-white" aria-current="page" href="{{ path('app_blog_index')}}">Le Blog</a>
+        <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_coworking_main')}}">Coworking</a>
+        <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_home_simulateur_portage')}}">Portage salarial</a>
+        <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_contact_us')}}">Nous contacter</a>
+        <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_home')}}">Olona Talents <i class="bi me-1 bi-box-arrow-in-right"></i></a>
       </div>
     </div>
     {% if app.user %}
@@ -22,7 +23,7 @@
             </a>
         {% endif %}
     {% else %}
-    <a href="{{ path('app_login')}}" class="text-white"><i class="bi h4 me-3 bi-box-arrow-in-right"></i></a>
+    <a href="{{ path('app_login')}}" class="text-white"><i class="bi h4 me-3 bi-person-circle text-white"></i></a>
     {% endif %}
     <div class="dropdown-center">
       {% if app.user %}

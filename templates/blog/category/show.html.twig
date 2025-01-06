@@ -1,9 +1,9 @@
 {% extends 'base_admin_blog.html.twig' %}
 
-{% block title %}Category{% endblock %}
+{% block title %}Catégorie {{ category.title }}{% endblock %}
 
 {% block body %}
-    <h1>Category</h1>
+    <h1 class="h3">Catégorie {{ category.title }}</h1>
 
     <table class="table">
         <tbody>

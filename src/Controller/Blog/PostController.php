@@ -31,7 +31,7 @@ class PostController extends AbstractController
         $page = $request->query->getInt('page', 1);
         
         return $this->render('blog/post/index.html.twig', [
-            'posts' => $postRepository->paginatePosts($page),
+            'posts' => $postRepository->paginateAllPosts($page),
         ]);
     }
 

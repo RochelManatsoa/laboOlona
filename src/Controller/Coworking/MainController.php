@@ -4,17 +4,18 @@ namespace App\Controller\Coworking;
 
 use App\Manager\MailManager;
 use Symfony\UX\Turbo\TurboBundle;
+use App\Form\Coworking\ContractType;
 use App\Entity\Coworking\Reservation;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Coworking\ReservationFormType;
-use App\Repository\Coworking\CategoryRepository;
 use App\Repository\Coworking\EventRepository;
 use App\Repository\Coworking\PlaceRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Coworking\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/coworking')]
@@ -189,6 +190,39 @@ class MainController extends AbstractController
         }
         return $this->render('coworking/main/agenda.html.twig', [
             'data' => json_encode($reservations),
+        ]);
+    }
+
+    #[Route('/contrat/membre-vip', name: 'app_main_vip_contract')]
+    public function contract(
+        Request $request, 
+        MailManager $mailManager, 
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        $form = $this->createForm(ContractType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contract = $form->getData();
+            $entityManager->persist($contract);
+            $entityManager->flush();
+            $mailManager->contractVIP($contract);
+            $this->addFlash('success', 'Votre contrat a été bien enregistré.');
+
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('coworking/update.html.twig', ['id' => 'contractForm']);
+            }
+        
+        
+            return $this->json([
+                'message' => 'Success',
+            ], Response::HTTP_OK);
+        }
+
+        return $this->render('coworking/main/membre_vip.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

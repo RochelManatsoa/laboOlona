@@ -241,7 +241,6 @@ $(function() {
             });
         });
         
-
         const editors = document.querySelectorAll('.ckeditor-textarea');
         if (editors.length > 0) {
             editors.forEach(editorElement => {
@@ -249,6 +248,28 @@ $(function() {
                     ClassicEditor.create(editorElement, {
                         toolbar: {
                             items: [
+                                'bold', 'italic', 'link', '|',
+                                'bulletedList', 'numberedList', '|',
+                                'blockQuote', '|',
+                                'undo', 'redo'
+                            ]
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+            });
+        }
+        
+        const editorsFull = document.querySelectorAll('.full-ckeditor-textarea');
+        if (editorsFull.length > 0) {
+            editorsFull.forEach(editorElement => {
+                if (editorElement) {
+                    ClassicEditor.create(editorElement, {
+                        toolbar: {
+                            items: [
+                                'heading', '|',
                                 'bold', 'italic', 'link', '|',
                                 'bulletedList', 'numberedList', '|',
                                 'blockQuote', '|',

@@ -65,4 +65,22 @@ class PostRepository extends ServiceEntityRepository
             []
         );
     }
+
+    public function paginateAllPosts($page, ?Category $category = null): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->select('p')
+            ->addOrderBy('p.createdAt', 'DESC');
+            
+        if ($category) {
+            $queryBuilder->andWhere('p.category = :category')->setParameter('category', $category);
+        }
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            10,
+            []
+        );
+    }
 }
