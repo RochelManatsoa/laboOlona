@@ -78,6 +78,9 @@ class Contract
     #[ORM\Column(length: 255)]
     private ?string $contractNumber = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $siret = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -242,6 +245,18 @@ class Contract
     public function setContractNumber(string $contractNumber): static
     {
         $this->contractNumber = $contractNumber;
+
+        return $this;
+    }
+
+    public function getSiret(): ?string
+    {
+        return $this->siret;
+    }
+
+    public function setSiret(?string $siret): static
+    {
+        $this->siret = $siret;
 
         return $this;
     }

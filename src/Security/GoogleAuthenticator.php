@@ -122,8 +122,9 @@ class GoogleAuthenticator extends OAuth2Authenticator
         if ($targetPath = $this->requestStack->getSession()->get('_security.'.$providerKey.'.target_path')) {
             return new RedirectResponse($targetPath);
         }
+        $fromPath = $request->getSession()->get('fromPath');
 
-        return new RedirectResponse($this->urlGenerator->generate('app_connect'));
+        return new RedirectResponse($this->urlGenerator->generate('app_connect', ['fromPath' => $fromPath]));
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response

@@ -34,7 +34,12 @@
             <tr>
                 <td>{{ contract.id }}</td>
                 <td>{{ contract.typePerson ? 'Oui' : 'Non' }}</td>
-                <td>{{ contract.firstName }} {{ contract.lastName }} <br> <span class="fw-lighter">{{ contract.email }}</span> <br> {{ contract.telephone }}</td>
+                <td>
+                    {% if contract.typePerson %}
+                    Société {{ contract.socialReason }} 
+                    {% else %}
+                    {{ contract.firstName }} {{ contract.lastName }}
+                    {% endif %} <br> <span class="fw-lighter">{{ contract.email }}</span> <br> {{ contract.telephone }}</td>
                 <td>{{ contract.createdAt ? contract.createdAt|date('d/m/Y H:i:s') : '' }} <br>{{ getPostStatus(contract.status)|raw }}</td>
                 <td>{{ contract.contractNumber }}</td>
                 <td>

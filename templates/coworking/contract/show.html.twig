@@ -22,10 +22,16 @@
                 <th>Société</th>
                 <td>{{ contract.typePerson ? 'Oui' : 'Non' }}</td>
             </tr>
+            {% if contract.typePerson %}
             <tr>
                 <th>Raison sociale</th>
                 <td>{{ contract.socialReason ? contract.socialReason : '-' }}</td>
             </tr>
+            <tr>
+                <th>Numéro de SIRET</th>
+                <td>{{ contract.siret ? contract.siret : '-' }}</td>
+            </tr>                
+            {% else %}
             <tr>
                 <th>Nom</th>
                 <td>{{ contract.firstName }}</td>
@@ -34,6 +40,7 @@
                 <th>Prénom</th>
                 <td>{{ contract.lastName }}</td>
             </tr>
+            {% endif %}
             <tr>
                 <th>Email</th>
                 <td>{{ contract.email }}</td>

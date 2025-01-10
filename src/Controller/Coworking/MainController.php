@@ -3,19 +3,23 @@
 namespace App\Controller\Coworking;
 
 use App\Manager\MailManager;
+use App\Entity\Finance\Devise;
 use Symfony\UX\Turbo\TurboBundle;
+use App\Entity\Coworking\Contract;
 use App\Form\Coworking\ContractType;
 use App\Entity\Coworking\Reservation;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Coworking\ReservationFormType;
+use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\Coworking\EventRepository;
 use App\Repository\Coworking\PlaceRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Coworking\CategoryRepository;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/coworking')]
@@ -23,6 +27,7 @@ class MainController extends AbstractController
 {
     public function __construct(
         private CategoryRepository $categoryRepository,
+        private RequestStack $requestStack,
     ){}
 
     #[Route('/', name: 'app_coworking_main', options: ['sitemap' => true])]
@@ -32,6 +37,7 @@ class MainController extends AbstractController
         CategoryRepository $categoryRepository,
         EntityManagerInterface $entityManager,
         MailManager $mailManager,
+        Security $security,
         Request $request
     ): Response
     {
@@ -42,6 +48,8 @@ class MainController extends AbstractController
         $today = new \DateTime('today');
         $tomorrow = new \DateTime('tomorrow');
         $dayAfterTomorrow = (new \DateTime('tomorrow'))->modify('+1 day');
+
+        $params = [];
 
         $dateMap = [
             'today' => $today,
@@ -106,7 +114,7 @@ class MainController extends AbstractController
             ], Response::HTTP_OK);
         }
 
-        return $this->render('coworking/main/index.html.twig', [
+        $params = [
             'availableToday' => $availablePlaces,
             'availableTodayNumber' => (int)(count($places) - count($availablePlaces)),
             'availableTomorrow' => $eventRepository->findAvailablePlacesByDate($tomorrow),
@@ -119,7 +127,13 @@ class MainController extends AbstractController
             'date' => (new \DateTime())->format('Y-m-d'),
             'placesCategories' => $placesCategories,
             'categories' => $categories,
-        ]);
+        ];
+
+        if($security->isGranted('ROLE_USER')){
+            return $this->render('coworking/main/user.html.twig', $params);
+        }
+
+        return $this->render('coworking/main/index.html.twig', $params);
     }
 
     #[Route('/reservations', name: 'app_reservations', methods: ['GET'])]
@@ -224,5 +238,48 @@ class MainController extends AbstractController
         return $this->render('coworking/main/membre_vip.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/membre-vip/', name: 'app_main_view_vip_contract')]
+    public function contractForm(
+        Request $request, 
+        MailManager $mailManager, 
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        /** @var Devise $currency */
+        $currency = $entityManager->getRepository(Devise::class)->findOneBy([
+            'slug' => 'euro'
+        ]);
+        $form = $this->createForm(ContractType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contract = $form->getData();
+            $entityManager->persist($contract);
+            $entityManager->flush();
+            $mailManager->contractVIP($contract);
+            $this->addFlash('success', 'Votre contrat a été bien enregistré.');
+
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('coworking/update.html.twig', ['id' => 'contractFormStep']);
+            }
+        
+        
+            return $this->json([
+                'message' => 'Success',
+            ], Response::HTTP_OK);
+        }
+
+        return $this->render('coworking/main/contract_vip.html.twig', [
+            'form' => $form->createView(),
+            'price' => $this->convertToEuro(195000, $currency),
+        ]);
+    }
+
+    private function convertToEuro(float $price, Devise $currency): float 
+    {
+        return number_format($price / $currency->getTaux(), 2, '.', '');
     }
 }

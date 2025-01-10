@@ -1,0 +1,138 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Connexion Coworking | Olona Talents{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Accédez à votre espace coworking sur https://olona-talents.com/coworking pour gérer vos réservations, consulter vos factures et profiter des services dédiés à l'espace de travail collaboratif.">
+<meta name="keywords" content="coworking, espace de travail, réservation, bureau partagé, réseau, communauté, collaboration, services, Olona Coworking, Olona Talents, Olona espaces, réservation coworkers, espace partagé">
+<meta property="og:title" content="Connexion Coworking | Olona Talents">
+<meta property="og:description" content="Accédez à votre espace coworking sur https://olona-talents.com/coworking pour gérer vos réservations, consulter vos factures et profiter des services dédiés à l'espace de travail collaboratif.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/opengraph/coworking.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+
+{% block paralax %}
+<div class="paralax default-design">
+  {% include "coworking/_nav.html.twig" %}
+  <div class="">
+    <div class="container">
+      <!-- Content Section -->
+      <div class="row">
+        <div class="col-12 col-sm-10 mx-auto">
+          <h1 class="display-4 fw-bolder mt-5 text-center">Se connecter</h1>
+              <div class="container py-5">
+                  <div class="row">
+                      <div class="col-md-6 col-12 mx-auto">
+                          <div class="card shadow-lg border-0 rounded mt-0">
+                              <div class="card-body p-4 mt-4">                                  
+                                  {% if error %}
+                                  <div class="alert alert-danger">
+                                      {{ error.messageKey|trans(error.messageData, 'security') }}
+                                  </div>
+                                  {% endif %}
+                                  
+                                  {% if app.user %}
+                                  <div class="alert alert-dark text-center">
+                                      Vous êtes connecté en tant que {{ app.user.userIdentifier }},
+                                      <a href="{{ path('app_logout') }}">Déconnexion</a>
+                                  </div>
+                                  {% endif %}
+                                  
+                                  <form method="post">
+          
+                                  <div class="form-floating mb-3">
+                                      <input type="email" class="form-control" id="email" name="email" required autofocus placeholder="Email">
+                                      <label for="email">Adresse email</label>
+                                  </div>
+                                  <div class="form-floating">
+                                      <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                                      <label for="password">Mot de passe</label>
+                                  </div>
+          
+                                      <div class="mb-4">
+                                          <div class="d-flex justify-content-end">
+                                              <a href="{{ path('app_forgot_password_request') }}" class="fw-light text-end small">Mot de passe oublié ?</a>
+                                          </div>
+                                      </div>
+          
+                                      <div class="form-check">
+                                          <input class="form-check-input" type="checkbox" name="_remember_me" id="remember_me">
+                                          <label class="form-check-label" for="remember_me">
+                                              Se souvenir de moi
+                                          </label>
+                                      </div>
+          
+                                      <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                      <div class="my-3">
+                                        <button type="submit" class="btn btn-primary px-5 mx-auto">Connexion</button>
+                                      </div>
+                                      <p class="mb-4">
+                                        <a href="{{ path('app_olona_talents_register') }}" class="small fw-lighter">Pas encore membre ?</a>
+                                      </p>
+                                  </form>
+                              </div>
+                          </div>
+                          <section class="mt-5">
+                            <h2 class="">Utiliser les réseaux sociaux</h2>
+                            <hr>
+                            <div class="d-grid gap-2">
+                              <a href="{{ path('connect_google_start') }}" class="text-white btn btn-success">
+                                <i class="bi bi-google me-3"></i>
+                                Se connecter avec Google
+                              </a>
+                            </div>
+                          </section>
+                      </div>
+                  </div>
+              </div>
+        </div>
+      </div>
+      <!-- Social Links and Address Section in Line -->
+      <div class="row">
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+          <!-- Social links -->
+          <ul class="list-inline">
+            <li class="list-inline-item">
+              <a class="text-white text-opacity-75 text-primary-hover" target="_blank" href="https://www.linkedin.com/company/emploi-madagascar/posts?lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BiwUwllhjTX2REM32%2BAYkfQ%3D%3D">
+                <i class="bi bi-linkedin"></i>
+              </a>
+            </li>
+            <li class="list-inline-item ms-3">
+              <a class="text-white text-opacity-75 text-primary-hover" target="_blank" href="https://www.facebook.com/olonatalents">
+                <i class="bi bi-facebook"></i>
+              </a>
+            </li>
+            <li class="list-inline-item ms-3">
+              <a class="text-white text-opacity-75 text-primary-hover" href="#">
+                <i class="bi bi-instagram"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <!-- Address -->
+          <p class="font-serif text-white text-opacity-75 text-md-end">
+            <i class="bi bi-geo-alt-fill"></i> Ambatonakanga, Antananarivo, Madagascar
+          <br>
+            <i class="bi bi-clock-history"></i>
+            Lundi au Vendredi de 8h à 18h
+          <br>
+            Week-end - Privatisation uniquement
+          <br>
+          <i class="bi bi-phone"></i><a href="tel:+261320373432">+261 32 03 734 32</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block admin %}{% endblock %}
+
+{% block body %}
+
+
+{% endblock %}
+

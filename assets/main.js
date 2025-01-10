@@ -33,6 +33,7 @@ $(function() {
         setupAvailabilityDropdown(); 
         setupCKEditors();
         setupDynamicLinks();
+        toggleFields();
     }
 
     function handlePageLoad() {
@@ -47,8 +48,32 @@ $(function() {
         handleLoading();
         initializeSliders();
         initiateLoadMore();
+        toggleFields();
         initializeCarousels(); // Initialize carousels on page load
     }
+
+    // Fonction pour gérer l'affichage des champs en fonction de la sélection
+    function toggleFields() {
+        var selectedValue = $('#contract_typePerson').val(); 
+
+        if (selectedValue === "0") { 
+            $('#person-type').text("Je suis un");
+            $('#contract_socialReason').closest('.mb-3').hide(); 
+            $('#contract_siret').closest('.mb-3').hide(); 
+            $('#contract_firstName').closest('.mb-3').show(); 
+            $('#contract_lastName').closest('.mb-3').show(); 
+        } else { 
+            $('#person-type').text("Je suis une");
+            $('#contract_socialReason').closest('.mb-3').show();
+            $('#contract_siret').closest('.mb-3').show(); 
+            $('#contract_firstName').closest('.mb-3').hide(); 
+            $('#contract_lastName').closest('.mb-3').hide(); 
+        }
+    }
+
+    $('#contract_typePerson').on('change', function () {
+        toggleFields();
+    });
 
     function initializeCarousels() {
         const carousels = document.querySelectorAll('.carousel');
