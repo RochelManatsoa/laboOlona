@@ -12,7 +12,56 @@
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 {% endblock %}
-
+{% block stylesheets %}
+    {{ parent() }}
+    
+<style>
+    #formStepsIndicator {
+        counter-reset: step;
+    }
+    .step-indicator {
+        position: relative;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        background-color: #f0f0f0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin: 0 15px;
+        cursor: pointer;
+    }
+    
+    .step-indicator.active {
+        background-color: #007bff;
+        color: white;
+    }
+    
+    .step-indicator::before,
+    .step-indicator::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 50px;
+        height: 2px;
+        background-color: #ddd;
+    }
+    
+    .step-indicator::before {
+        left: -50px;
+    }
+    
+    .step-indicator::after {
+        right: -50px;
+    }
+    
+    .step-indicator:first-child::before,
+    .step-indicator:last-child::after {
+        content: none;
+    }
+    </style>    
+{% endblock %}
 {% block paralax %}
 <div class="paralax product-design">
     {% include "coworking/_nav.html.twig" %}
@@ -51,7 +100,7 @@
             <br>
               Week-end - Privatisation uniquement
               <br>
-              <i class="bi bi-phone"></i><a href="tel:+261320373432">+261 32 03 734 32</a>
+              <i class="bi bi-phone"></i><a class="text-white" href="tel:+261320373432">+261 32 03 734 32</a>
             </p>
           </div>
         </div>
@@ -71,6 +120,17 @@
                     <div class="container">  
                         
                         <div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
+                            <ul class="nav nav-pills justify-content-center mb-4" id="formStepsIndicator">
+                                <li class="nav-item">
+                                    <button class="nav-link rounded-circle mx-5 active" type="button" data-step="1">1</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link rounded-circle mx-5" type="button" data-step="2" disabled>2</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link rounded-circle mx-5" type="button" data-step="3" disabled>3</button>
+                                </li>
+                            </ul>
                             <div id="contractFormStep">
                                 {{form_start(form) }}
                                 <div id="step-1" class="step">
@@ -87,12 +147,12 @@
                                             <div class="col">{{ form_row(form.siret) }}</div>
                                         </div>
                                         <div class="row">
-                                            <div class="col">{{ form_row(form.email) }}{{ form_errors(form.email) }}</div>
-                                            <div class="col">{{ form_row(form.telephone) }}{{ form_errors(form.telephone) }}</div>
+                                            <div class="col">{{ form_row(form.email) }}{{ form_errors(form.email) }}<div class="invalid-feedback"></div></div>
+                                            <div class="col">{{ form_row(form.telephone) }}{{ form_errors(form.telephone) }}<div class="invalid-feedback"></div></div>
                                         </div>
                                         <div class="row">
-                                            <div class="col">{{ form_row(form.adress) }}</div>
-                                            <div class="col">{{ form_row(form.localisation) }}</div>
+                                            <div class="col">{{ form_row(form.adress) }}<div class="invalid-feedback"></div></div>
+                                            <div class="col">{{ form_row(form.localisation) }}<div class="invalid-feedback"></div></div>
                                         </div>
                                     </div>
                                     <button type="button" class="btn btn-primary next-step">Suivant</button>
@@ -125,7 +185,6 @@
                                             <ul>
                                                 <li>Réservations illimitées et prioritaires pour l'accès aux espaces de coworking (du lundi au vendredi, de 8h à 18h).</li>
                                                 <li>Connexion haut débit via Starlink et service continu grâce aux groupes électrogènes.</li>
-                                                <li>600 crédits mensuels utilisables sur la plateforme Olona Talents.</li>
                                                 <li>Publication facultative d’un post "Coworker du jour" sur notre page Facebook.</li>
                                                 <li>Remises avantageuses : 25 % sur les autres services Olona Talents et 50 % pour les accompagnants.</li>
                                             </ul>
@@ -215,8 +274,15 @@
                                             </p>
                                             </div>
                                         </div>
-                                        <div class="mb-5">
-                                            {{ form_row(form.acceptTerms) }}
+                                        <div class="mb-5 h4 col-md-8 mx-auto">
+                                            <div class="row">
+                                                <div class="col-1 text-end">
+                                                    {{ form_row(form.acceptTerms, {'attr': {'class': 'form-check-input', 'label': 'J\'accepte les conditions d\'utilisation'}}) }}
+                                                </div>
+                                                <div class="col">
+                                                    <label class="form-check-label required" for="{{ form.acceptTerms.vars.id }}">J'accepte les conditions d'utilisation</label>
+                                                </div>
+                                            </div>
                                         </div>
 
                                     <button type="button" class="btn btn-secondary prev-step">Précédent</button>
@@ -226,15 +292,28 @@
                             
                                 <div id="step-3" class="step d-none">
                                     <h3>Étape 3 : Paiement</h3>
-                                    <div class="pt-5">
+                                    <div class="row pt-5">
+                                        <div class="col-6 mb-4">
+                                            <h2 class="h4">{{ package.name}}</h2>
+                                            <p>
+                                                {{ package.description}}
+                                            </p>
+                                            <p class="text-center my-5">
+                                               <span class="fw-bolder h1">{{ package.price}} Ar </span><br><span class="fw-light h6">[ {{ price }} € ] </span>
+                                            </p>
+                                        </div>
                                         <div class="col-6 mx-auto">
                                             <section class="mb-5">
-                                                <h6 class="">Paiement sécurisé par PayPal</h6>
+                                                <h6 class="">Payer au bureau</h6>
                                                 <hr>
                                                 <div class="d-grid gap-2">
-                                                  <div id="paypal-button-container"></div>
+                                                  <button type="submit" class="text-white btn btn-primary">
+                                                    <i class="bi bi-wallet2 me-2 h4"></i>
+                                                    Je paie en espèces
+                                                  </button>
                                                 </div>
-                                            </section><section class="mb-5">
+                                            </section>
+                                            <section class="mb-5">
                                                 <h6 class="">Paiement via mobile Money</h6>
                                                 <hr>
                                                 <div class="d-grid gap-2">
@@ -245,16 +324,12 @@
                                                 </div>
                                             </section>
                                             <section class="mb-5">
-                                                <h6 class="">Payer à la caisse</h6>
+                                                <h6 class="">Paiement sécurisé par PayPal</h6>
                                                 <hr>
                                                 <div class="d-grid gap-2">
-                                                  <button type="submit" class="text-white btn btn-primary">
-                                                    <i class="bi bi-wallet2 me-2 h4"></i>
-                                                    Je paie en espèces
-                                                  </button>
+                                                  <div id="paypal-button-container"></div>
                                                 </div>
                                             </section>
-
                                         </div>
                                     </div>
                                     <button type="button" class="btn btn-secondary prev-step">Précédent</button>
@@ -274,8 +349,7 @@
         </div>
     </div>
 </section>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><script>
     $(document).ready(function(){
         var currentStep = 1;
         var totalSteps = $('.step').length;
@@ -283,6 +357,18 @@
         function showStep(step) {
             $('.step').addClass('d-none');
             $('#step-' + step).removeClass('d-none');
+            updateStepIndicator(step);
+        }
+    
+        function updateStepIndicator(step) {
+            $('#formStepsIndicator .nav-link').each(function() {
+                var btnStep = $(this).data('step');
+                if(btnStep == step) {
+                    $(this).removeClass('disabled').addClass('active');
+                } else {
+                    $(this).removeClass('active').attr('disabled', true);
+                }
+            });
         }
     
         function validateStep(step) {
@@ -318,6 +404,8 @@
                 if (currentStep < totalSteps) {
                     currentStep++;
                     showStep(currentStep);
+                    // Enable the next step in the indicator
+                    $('#formStepsIndicator .nav-link').filter(`[data-step="${currentStep}"]`).removeAttr('disabled');
                 }
             }
         });
@@ -328,9 +416,8 @@
                 showStep(currentStep);
             }
         });
-        
     });
-</script>
+    </script>
 
 <script>
     document.addEventListener('turbo:load', function () {
@@ -370,7 +457,7 @@
         try {
             const token = await getAuthToken();
     
-            const response = await fetch('{{ path('app_v2_user_order_save', {'pack': 'contrat-vip', 'id': 1 })}}', {
+            const response = await fetch('{{ path('app_v2_user_order_save', {'pack': 'vip-coworking', 'id': 1 })}}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -452,7 +539,7 @@
                         body: JSON.stringify({
                             cart: [
                                 {
-                                    id: "contrat-vip", 
+                                    id: "vip-coworking", 
                                     name: "Contrat Membre VIP",
                                     quantity: 1,          
                                     price: {{ price }},   

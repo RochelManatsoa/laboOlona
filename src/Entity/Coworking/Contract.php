@@ -2,6 +2,8 @@
 
 namespace App\Entity\Coworking;
 
+use App\Entity\BusinessModel\Package;
+use App\Entity\User;
 use App\Repository\Coworking\ContractRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,28 +13,25 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class Contract
 {
-    const STATUS_DRAFT = 'DRAFT';
     const STATUS_PENDING = 'PENDING';
     const STATUS_VALIDATED = 'VALIDATED';
-    const STATUS_SCHEDULED = 'SCHEDULED';
+    const STATUS_NOT_PAID = 'NOT_PAID';
     const STATUS_ARCHIVED = 'ARCHIVED';   
 
     public static function getStatuses() {
         return [
-            'Brouillon' => self::STATUS_DRAFT ,
             'En attente de confirmation' => self::STATUS_PENDING ,
-            'Confirmé' => self::STATUS_VALIDATED ,
-            'Planifié' => self::STATUS_SCHEDULED ,
+            'En attente de paiement' => self::STATUS_NOT_PAID ,
+            'Validé' => self::STATUS_VALIDATED ,
             'Archivé' => self::STATUS_ARCHIVED ,
         ];
     }
     
     public static function getLabels() {
         return [
-            self::STATUS_DRAFT =>          'Brouillon' ,
             self::STATUS_PENDING =>        'En attente de confirmation' ,
+            self::STATUS_NOT_PAID =>      'En attente de paiement' ,
             self::STATUS_VALIDATED =>      'Validé' ,
-            self::STATUS_SCHEDULED =>      'Planifié' ,
             self::STATUS_ARCHIVED =>       'Archivé' ,
         ];
     }
@@ -81,10 +80,16 @@ class Contract
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $siret = null;
 
+    #[ORM\ManyToOne(inversedBy: 'contracts')]
+    private ?Package $package = null;
+
+    #[ORM\ManyToOne(inversedBy: 'contracts')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->status = self::STATUS_DRAFT;
+        $this->status = self::STATUS_PENDING;
     }
 
     #[ORM\PrePersist]
@@ -257,6 +262,30 @@ class Contract
     public function setSiret(?string $siret): static
     {
         $this->siret = $siret;
+
+        return $this;
+    }
+
+    public function getPackage(): ?Package
+    {
+        return $this->package;
+    }
+
+    public function setPackage(?Package $package): static
+    {
+        $this->package = $package;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

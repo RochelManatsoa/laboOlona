@@ -437,7 +437,7 @@
           <div class="col-md-4">
             <div class="position-sticky" style="top: 2rem;">
               <div class="p-4 mb-3 bg-body-tertiary rounded">
-                <h4 class="fst-italic">Statistiques</h4>
+                <h4 class="fw-bolder">Statistiques</h4>
                 <p class="mb-0">
 
                   <span class="fw-bolder me-2">{{ app.user.events|length }}</span>
@@ -453,13 +453,30 @@
                 </p>
                 <hr>
                 <div class="d-grid gap-2">
-                  <a href="{{ path('app_main_vip_contract') }}" class="text-white btn btn-danger fw-bolder text-uppercase h5 text-white"> 
-                    <i class="bi bi-person-bounding-box me-3 h4"></i>
-                    Devenir membre VIP
-                  </a>
+                  {% if app.user.contracts|length == 0 %}
+                    <a href="{{ path('app_main_vip_contract') }}" class="text-white btn btn-danger fw-bolder text-uppercase h5 text-white"> 
+                      <i class="bi bi-person-bounding-box me-3 h4"></i>
+                      Devenir membre VIP
+                    </a>
+                  {% else %}
+                  <h4 class="fw-bolder">Contrat en cours</h4>
+                    {% for contract in app.user.contracts %}
+                      <h5 class="lead"><i class="bi bi-star me-2"></i> {{ contract.package.name }}</h5>
+                      <p class="small">
+                        Date de signature : {{ contract.createdAt|date('d/m/Y')}}<br>
+                        Status : {{ getContractStatus(contract)|raw }} <br>
+                        Durée : 1 mois<br>
+                        Conditions Acceptées : Oui<br>
+                        Montant Total : {{ contract.package.price }} Ar<br>
+                        Mode de Paiement : À la caisse
+                      </p>
+                      <hr>
+                    {% endfor %}
+                  {% endif %}
                 </div>
               </div>
             </div>
+          </div>
         </div>
     </div>
 </section>

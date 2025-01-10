@@ -19,6 +19,16 @@
                 <td>{{ contract.id }}</td>
             </tr>
             <tr>
+                <th>Formule</th>
+                <td>
+                    {% if contract.package is not null %}
+                    {{ contract.package.name }} | <span class="fw-bold">{{ contract.package.price }} Ar</span>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <th>Société</th>
                 <td>{{ contract.typePerson ? 'Oui' : 'Non' }}</td>
             </tr>
@@ -67,7 +77,7 @@
             </tr>
             <tr>
                 <th>Statut</th>
-                <td>{{ getPostStatus(contract.status)|raw }}</td>
+                <td>{{ getContractStatus(contract)|raw }}</td>
             </tr>
             <tr>
                 <th>Numéro contract</th>

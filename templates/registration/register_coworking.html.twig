@@ -1,0 +1,137 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Inscription Coworking | Olona Talents{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Inscrivez-vous sur https://olona-talents.com/coworking pour accéder à votre espace de coworking, gérer vos réservations, consulter vos factures et profiter de nos services exclusifs dédiés au travail collaboratif.">
+<meta name="keywords" content="coworking, espace de travail, réservation, bureau partagé, réseau, communauté, collaboration, services, Olona Coworking, Olona Talents, Olona espaces, réservation coworkers, espace partagé">
+<meta property="og:title" content="Inscription Coworking | Olona Talents">
+<meta property="og:description" content="Inscrivez-vous sur https://olona-talents.com/coworking pour accéder à votre espace de coworking, gérer vos réservations, consulter vos factures et profiter de nos services exclusifs dédiés au travail collaboratif.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/opengraph/coworking.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+
+{% block paralax %}
+<div class="paralax default-design">
+  {% include "coworking/_nav.html.twig" %}
+  <div class="">
+    <div class="container">
+      <!-- Content Section -->
+      <div class="row">
+        <div class="col-12 col-sm-10 mx-auto">
+          <h1 class="display-4 fw-bolder mt-5 text-center">S'inscrire</h1>
+              <div class="container py-5">
+                  <div class="row">
+                      <div class="col-md-6 col-12 mx-auto">
+                          <div class="card shadow-lg border-0 rounded mt-0">
+                              <div class="card-body p-4 my-4">  
+                                
+                                {{ form_errors(registrationForm) }}
+
+                                {{ form_start(registrationForm, {'attr': {'data-turbo': 'false'}}) }}
+
+
+                                <div class="form-floating mb-3">
+                                  {{ form_widget(registrationForm.nom, {'attr':{'placeholder':'Nom'}}) }}
+                                  <label for="registration_form_nom">Nom</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                  {{ form_widget(registrationForm.prenom, {'attr':{'placeholder':'Prénom'}}) }}
+                                  <label for="registration_form_prenom">Prénom</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                  {{ form_widget(registrationForm.email, {'attr':{'placeholder':'Email'}}) }}
+                                  <label for="registration_form_email">Email</label>
+                                  {{ form_errors(registrationForm.email) }}
+                                </div>
+                                <div class="form-floating mb-3">
+                                  {{ form_widget(registrationForm.plainPassword.first, {'attr':{'placeholder':'Mot de passe'}}) }}
+                                  <label for="registration_form_plainPassword_first">Mot de passe</label>
+                                  {{ form_errors(registrationForm.plainPassword.first) }}
+                                </div>
+                                <div class="form-floating mb-3">
+                                  {{ form_widget(registrationForm.plainPassword.second, {'attr':{'placeholder':'Repeter le mot de passe'}}) }}
+                                  <label for="registration_form_plainPassword_second">Repeter le mot de passe</label>
+                                  {{ form_errors(registrationForm.plainPassword.second) }}
+                                </div>
+                                <div class="d-flex align-items-center">
+                                  {{ form_widget(registrationForm.agreeTerms, { 'attr': { 'class': 'me-3' } }) }}
+                                  <label class="form-check-label" for="{{ registrationForm.agreeTerms.vars.id }}">
+                                    {{ attribute(registrationForm.agreeTerms.vars.attr, 'label')|trans({
+                                        '%terms_url%': path('app_home_terms'),
+                                        '%privacy_url%': path('app_home_privacy')
+                                    })|raw }}
+                                  </label>
+                                </div>                                
+
+
+                                <button class="btn btn-primary px-5" type="submit" id="register-submit">
+                                    {{ 'app_register.menu'|trans }}                
+                                </button>
+                                {{ form_end(registrationForm) }}
+                              </div>
+                          </div>
+                          <section class="mt-5">
+                            <h2 class="">Utiliser les réseaux sociaux</h2>
+                            <hr>
+                            <div class="d-grid gap-2">
+                              <a href="{{ path('connect_google_start') }}" class="text-white btn btn-success">
+                                <i class="bi bi-google me-3"></i>
+                                Se connecter avec Google
+                              </a>
+                            </div>
+                          </section>
+                      </div>
+                  </div>
+              </div>
+        </div>
+      </div>
+      <!-- Social Links and Address Section in Line -->
+      <div class="row">
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+          <!-- Social links -->
+          <ul class="list-inline">
+            <li class="list-inline-item">
+              <a class="text-white text-opacity-75 text-primary-hover" target="_blank" href="https://www.linkedin.com/company/emploi-madagascar/posts?lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BiwUwllhjTX2REM32%2BAYkfQ%3D%3D">
+                <i class="bi bi-linkedin"></i>
+              </a>
+            </li>
+            <li class="list-inline-item ms-3">
+              <a class="text-white text-opacity-75 text-primary-hover" target="_blank" href="https://www.facebook.com/olonatalents">
+                <i class="bi bi-facebook"></i>
+              </a>
+            </li>
+            <li class="list-inline-item ms-3">
+              <a class="text-white text-opacity-75 text-primary-hover" href="#">
+                <i class="bi bi-instagram"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <!-- Address -->
+          <p class="font-serif text-white text-opacity-75 text-md-end">
+            <i class="bi bi-geo-alt-fill"></i> Ambatonakanga, Antananarivo, Madagascar
+          <br>
+            <i class="bi bi-clock-history"></i>
+            Lundi au Vendredi de 8h à 18h
+          <br>
+            Week-end - Privatisation uniquement
+          <br>
+          <i class="bi bi-phone"></i><a class="text-white" href="tel:+261320373432">+261 32 03 734 32</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block admin %}{% endblock %}
+
+{% block body %}
+
+
+{% endblock %}
+

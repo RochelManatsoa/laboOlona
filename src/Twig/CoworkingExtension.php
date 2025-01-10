@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Entity\Coworking\Category;
+use App\Entity\Coworking\Contract;
 use App\Entity\Coworking\Event;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -36,6 +37,7 @@ class CoworkingExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
+            new TwigFunction('getContractStatus', [$this, 'getContractStatus']),
             new TwigFunction('getEventStatus', [$this, 'getEventStatus']),
             new TwigFunction('getTypePlace', [$this, 'getTypePlace']),
             new TwigFunction('isInArray', [$this, 'isInArray']),
@@ -43,6 +45,32 @@ class CoworkingExtension extends AbstractExtension
             new TwigFunction('getCategoryPlace', [$this, 'getCategoryPlace']),
             new TwigFunction('countAvailableByCategory', [$this, 'countAvailableByCategory']),
         ];
+    }
+
+    public function getContractStatus(Contract $contract): string
+    {
+        $labels = Contract::getLabels();
+        switch ($contract->getStatus()) {
+            case Contract::STATUS_PENDING:
+                return '<span class="badge bg-info rounded-pill">'.$labels[Contract::STATUS_PENDING].'</span>';
+                break;
+
+            case Contract::STATUS_NOT_PAID:
+                return '<span class="badge bg-success rounded-pill">'.$labels[Contract::STATUS_NOT_PAID].'</span>';
+                break;
+            
+            case Contract::STATUS_VALIDATED:
+                return '<span class="badge bg-danger rounded-pill">'.$labels[Contract::STATUS_VALIDATED].'</span>';
+                break;
+
+            case Contract::STATUS_ARCHIVED:
+                return '<span class="badge bg-dark rounded-pill">'.$labels[Contract::STATUS_ARCHIVED].'</span>';
+                break;
+            
+            default:
+                return '<span class="badge bg-info rounded-pill">En attente de confirmation</span>';
+                break;
+        }
     }
 
     public function getEventStatus(?string $status)

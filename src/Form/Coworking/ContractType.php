@@ -4,6 +4,7 @@ namespace App\Form\Coworking;
 
 use App\Entity\Coworking\Contract;
 use Symfony\Component\Form\AbstractType;
+use App\Form\Autocomplete\UserAutocompleteField;
 use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -116,16 +117,6 @@ class ContractType extends AbstractType
                 ],
                 'help' => 'Adresse email.',
             ])
-            ->add('acceptTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Vous devez accepter nos conditions.',
-                    ]),
-                ],
-                'label' => 'J\'accepte les conditions d\'utilisation',
-                'attr' => ['data-step' => 2],
-            ]);
         ;
         
         if ($options['is_admin']) {
@@ -138,9 +129,20 @@ class ContractType extends AbstractType
                     ],
                     'help' => 'Status du contrat.',
                 ])
+                ->add('user', UserAutocompleteField::class, [])
             ;
         }else{
             $builder
+            ->add('acceptTerms', CheckboxType::class, [
+                'mapped' => false,
+                'constraints' => [
+                    new IsTrue([
+                        'message' => 'Vous devez accepter nos conditions.',
+                    ]),
+                ],
+                'label' => false,
+                'attr' => ['data-step' => 2],
+            ])
             ->add('captcha', Recaptcha3Type::class, [
                 'constraints' => new Recaptcha3(),
                 'action_name' => 'contact',

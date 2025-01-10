@@ -7,6 +7,7 @@ use App\Entity\Finance\Devise;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Coworking\Contract;
 use App\Form\Coworking\ContractType;
+use App\Entity\BusinessModel\Package;
 use App\Entity\Coworking\Reservation;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Moderateur\ContactFormType;
@@ -211,14 +212,23 @@ class MainController extends AbstractController
     public function contract(
         Request $request, 
         MailManager $mailManager, 
+        Security $security, 
         EntityManagerInterface $entityManager
     ): Response
     {
+        /** @var Package $package */
+        $package = $entityManager->getRepository(Package::class)->findOneBy([
+            'slug' => 'vip-coworking'
+        ]);
         $form = $this->createForm(ContractType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $contract = $form->getData();
+            if($security->getUser()){
+                $contract->setUser($security->getUser());
+            }
+            $contract->setPackage($package);
             $entityManager->persist($contract);
             $entityManager->flush();
             $mailManager->contractVIP($contract);
@@ -244,6 +254,7 @@ class MainController extends AbstractController
     public function contractForm(
         Request $request, 
         MailManager $mailManager, 
+        Security $security, 
         EntityManagerInterface $entityManager
     ): Response
     {
@@ -251,11 +262,19 @@ class MainController extends AbstractController
         $currency = $entityManager->getRepository(Devise::class)->findOneBy([
             'slug' => 'euro'
         ]);
+        /** @var Package $package */
+        $package = $entityManager->getRepository(Package::class)->findOneBy([
+            'slug' => 'vip-coworking'
+        ]);
         $form = $this->createForm(ContractType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $contract = $form->getData();
+            if($security->getUser()){
+                $contract->setUser($security->getUser());
+            }
+            $contract->setPackage($package);
             $entityManager->persist($contract);
             $entityManager->flush();
             $mailManager->contractVIP($contract);
@@ -274,7 +293,8 @@ class MainController extends AbstractController
 
         return $this->render('coworking/main/contract_vip.html.twig', [
             'form' => $form->createView(),
-            'price' => $this->convertToEuro(195000, $currency),
+            'package' => $package,
+            'price' => $this->convertToEuro($package->getPrice(), $currency),
         ]);
     }
 

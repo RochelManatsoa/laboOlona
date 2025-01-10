@@ -71,7 +71,7 @@ class CreditController extends AbstractController
         }
 
         return $this->render('v2/dashboard/credit/index.html.twig', [
-            'packages' => $this->packageRepository->findBy([], ['id' => 'DESC']),
+            'packages' => $this->packageRepository->findBy(['type' => 'CREDIT'], ['id' => 'DESC']),
             'form' => $form->createView(),
             'currency' => $currency,
         ]);
@@ -106,7 +106,7 @@ class CreditController extends AbstractController
         } 
 
         return $this->render('v2/dashboard/credit/recap.html.twig', [
-            'packages' => $this->packageRepository->findBy([], ['id' => 'DESC']),
+            'packages' => $this->packageRepository->findBy(['type' => 'CREDIT'], ['id' => 'DESC']),
             'form' => $form->createView(),
             'pack' => $package,
             'price' => $this->convertToEuro($package->getPrice(), $currency),

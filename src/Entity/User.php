@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Blog\Post;
+use App\Entity\Coworking\Contract;
 use App\Entity\Vues\VideoVues;
 use Doctrine\DBAL\Types\Types;
 use App\Entity\Coworking\Event;
@@ -186,6 +187,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class)]
     private Collection $posts;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Contract::class)]
+    private Collection $contracts;
+
     public function __construct()
     {
         $this->envois = new ArrayCollection();
@@ -200,6 +204,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->activityLogs = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->contracts = new ArrayCollection();
     }
 
     public function __toString()
@@ -929,6 +934,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($post->getAuthor() === $this) {
                 $post->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Contract>
+     */
+    public function getContracts(): Collection
+    {
+        return $this->contracts;
+    }
+
+    public function addContract(Contract $contract): static
+    {
+        if (!$this->contracts->contains($contract)) {
+            $this->contracts->add($contract);
+            $contract->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContract(Contract $contract): static
+    {
+        if ($this->contracts->removeElement($contract)) {
+            // set the owning side to null (unless already changed)
+            if ($contract->getUser() === $this) {
+                $contract->setUser(null);
             }
         }
 
