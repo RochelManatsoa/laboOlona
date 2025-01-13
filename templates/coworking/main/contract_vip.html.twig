@@ -114,21 +114,20 @@
 {% block body %}
 <section class="p-0 m-0">
     <div class="container my-5">
-        <div class="row px-4 pb-0 pe-lg-0 align-items-center">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
             <div class="row mb-5">
                 <section>
                     <div class="container">  
                         
-                        <div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
                             <ul class="nav nav-pills justify-content-center mb-4" id="formStepsIndicator">
                                 <li class="nav-item">
-                                    <button class="nav-link rounded-circle mx-5 active" type="button" data-step="1">1</button>
+                                    <button class="nav-link rounded-circle mx-2 mx-lg-5 active" type="button" data-step="1">1</button>
                                 </li>
                                 <li class="nav-item">
-                                    <button class="nav-link rounded-circle mx-5" type="button" data-step="2" disabled>2</button>
+                                    <button class="nav-link rounded-circle mx-2 mx-lg-5" type="button" data-step="2" disabled>2</button>
                                 </li>
                                 <li class="nav-item">
-                                    <button class="nav-link rounded-circle mx-5" type="button" data-step="3" disabled>3</button>
+                                    <button class="nav-link rounded-circle mx-2 mx-lg-5" type="button" data-step="3" disabled>3</button>
                                 </li>
                             </ul>
                             <div id="contractFormStep">
@@ -139,20 +138,20 @@
                                         {{ form_errors(form) }}
                                         {{ form_row(form.typePerson) }}
                                         <div class="row">
-                                            <div class="col">{{ form_row(form.firstName) }}</div>
-                                            <div class="col">{{ form_row(form.lastName) }}</div>
+                                            <div class="col-md-6">{{ form_row(form.firstName) }}</div>
+                                            <div class="col-md-6">{{ form_row(form.lastName) }}</div>
                                         </div>
                                         <div class="row">
-                                            <div class="col">{{ form_row(form.socialReason) }}</div>
-                                            <div class="col">{{ form_row(form.siret) }}</div>
+                                            <div class="col-md-6">{{ form_row(form.socialReason) }}</div>
+                                            <div class="col-md-6">{{ form_row(form.siret) }}</div>
                                         </div>
                                         <div class="row">
-                                            <div class="col">{{ form_row(form.email) }}{{ form_errors(form.email) }}<div class="invalid-feedback"></div></div>
-                                            <div class="col">{{ form_row(form.telephone) }}{{ form_errors(form.telephone) }}<div class="invalid-feedback"></div></div>
+                                            <div class="col-md-6">{{ form_row(form.email) }}{{ form_errors(form.email) }}<div class="invalid-feedback"></div></div>
+                                            <div class="col-md-6">{{ form_row(form.telephone) }}{{ form_errors(form.telephone) }}<div class="invalid-feedback"></div></div>
                                         </div>
                                         <div class="row">
-                                            <div class="col">{{ form_row(form.adress) }}<div class="invalid-feedback"></div></div>
-                                            <div class="col">{{ form_row(form.localisation) }}<div class="invalid-feedback"></div></div>
+                                            <div class="col-md-6">{{ form_row(form.adress) }}<div class="invalid-feedback"></div></div>
+                                            <div class="col-md-6">{{ form_row(form.localisation) }}<div class="invalid-feedback"></div></div>
                                         </div>
                                     </div>
                                     <button type="button" class="btn btn-primary next-step">Suivant</button>
@@ -293,7 +292,7 @@
                                 <div id="step-3" class="step d-none">
                                     <h3>Étape 3 : Paiement</h3>
                                     <div class="row pt-5">
-                                        <div class="col-6 mb-4">
+                                        <div class="col-md-6 mb-4">
                                             <h2 class="h4">{{ package.name}}</h2>
                                             <p>
                                                 {{ package.description}}
@@ -302,7 +301,7 @@
                                                <span class="fw-bolder h1">{{ package.price}} Ar </span><br><span class="fw-light h6">[ {{ price }} € ] </span>
                                             </p>
                                         </div>
-                                        <div class="col-6 mx-auto">
+                                        <div class="col-md-6 mx-auto">
                                             <section class="mb-5">
                                                 <h6 class="">Payer au bureau</h6>
                                                 <hr>
@@ -340,7 +339,6 @@
                                 </div>
                                 {{ form_end(form)}}
                             </div>
-                        </div>              
                         <p class="mt-5"><small>Le Contrat Membre VIP Olona Talents est régie par les lois de Madagascar. Les tarifs sont garantis pour une durée d’un an avec une possibilité de révision à partir du 1er janvier 2026. Souscrivez aujourd'hui pour accéder à un monde d'optimisation et de qualité de service.</small></p>
                     </div>
                 </section>

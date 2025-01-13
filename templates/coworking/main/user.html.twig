@@ -458,6 +458,9 @@
                       <i class="bi bi-person-bounding-box me-3 h4"></i>
                       Devenir membre VIP
                     </a>
+                    <a href="{{ path('app_main_vip_contract') }}">
+                      <img src="{{ asset('images/coworking/vip-coworking.png') }}" alt="VIP contract" class="img-fluid">
+                    </a>
                   {% else %}
                   <h4 class="fw-bolder">Contrat en cours</h4>
                     {% for contract in app.user.contracts %}

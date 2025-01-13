@@ -37,7 +37,7 @@ class HomeController extends AbstractController
             $entityManager->persist($contactForm);
             $entityManager->flush();
             $mailerService->sendMultiple(
-                ["contact@olona-talents.com", "nirinarocheldev@gmail.com", "techniques@olona-talents.com"],
+                ["contact@olona-talents.com", "support@olonatalents.com", "support@olonatalents.com"],
                 "Nouvelle entrée sur le formulaire de contact",
                 "contact.html.twig",
                 [
