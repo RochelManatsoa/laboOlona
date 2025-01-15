@@ -43,6 +43,16 @@
 						</div>
 						<div class="row mb-3">
 							<div class="col-12 col-lg-6">
+								<label class="form-label required" for="{{form.entreprise.telephone.vars.id}}">Téléphone</label>
+								{{ form_widget(form.entreprise.telephone, {'attr': {'class': 'form-control'}}) }}
+							</div>
+							<div class="col-12 col-lg-6">
+								<label class="form-label required" for="{{form.entreprise.adress.vars.id}}">Adresse</label>
+								{{ form_widget(form.entreprise.adress, {'attr': {'class': 'form-control'}}) }}
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-12 col-lg-6">
 								<label class="text-strong">
 									{{ form_label(form.localisation) }}</label>
 								{{ form_widget(form.localisation, {'attr': {'class': 'form-control'}}) }}

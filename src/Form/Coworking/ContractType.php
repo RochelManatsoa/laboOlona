@@ -82,6 +82,22 @@ class ContractType extends AbstractType
                 ],
                 'help' => 'Votre adresse.',
             ])
+            ->add('postalCode', TextType::class, [
+                'label' => 'Code postale',
+                'required' => false,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Votre code postale.',
+            ])
+            ->add('city', TextType::class, [
+                'label' => 'Ville',
+                'required' => false,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Votre ville.',
+            ])
             ->add('localisation', CountryType::class, [
                 'required' => true,
                 'label' => 'Pays',

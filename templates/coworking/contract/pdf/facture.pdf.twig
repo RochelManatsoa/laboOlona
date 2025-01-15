@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>Facture N°{{ commande.invoice.getNumeroFactureValue }}</title>
+		<title>Facture N°{{ contract.invoice.getNumeroFactureContrat }}</title>
 		<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
 		<style type="text/css">
         body {
@@ -38,7 +38,6 @@
 	</head>
 
 	<body>
-		{% set currentTransaction = commande.transaction %}
 		<br>
 		<br>
 		<br>
@@ -51,7 +50,7 @@
 					<div class="col-5">
 						<h1>FACTURE</h1>
 						<p>
-							<strong>N°{{ commande.invoice.getNumeroFactureValue }}</strong>
+							<strong>N°{{ contract.invoice.getNumeroFactureContrat }}</strong>
 						</p>
 					</div>
 				</div>
@@ -68,19 +67,19 @@
 					<div class="col-5">
 						<p>
 							<strong>
-								{% if commande.invoice.typePerson == 1 %}
+								{% if contract.invoice.typePerson == 1 %}
 									Société
-									{{commande.invoice.socialReason}}
+									{{contract.invoice.socialReason}}
 								{% else %}
-									{{commande.invoice.name}}
-									{{commande.invoice.firstName}}
+									{{contract.invoice.name}}
+									{{contract.invoice.firstName}}
 								{% endif %}
 							</strong>
 							<br>
-							{{ commande.invoice.adress }}
+							{{ contract.invoice.adress }}
 							<br>
-							{{ commande.invoice.postalCode }}
-							{{ commande.invoice.city | upper }}
+							{{ contract.invoice.postalCode }}
+							{{ contract.invoice.city | upper }}
 						</p>
 					</div>
 				</div>
@@ -92,16 +91,14 @@
 						<tr>
 							<th>N° de facture</th>
 							<th class="text-center">Date</th>
-							<th class="text-center">Paiement</th>
 							<th class="text-center">Ref client</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td>{{commande.invoice.getNumeroFactureValue }}</td>
-							<td class="text-center">{{commande.transaction.transactionDate | date('d/m/Y')}}</td>
-							<td class="text-center">{{currentTransaction.typeTransaction.name}}</td>
-							<td class="text-center">{{commande.payerId}}</td>
+							<td>{{contract.invoice.getNumeroFactureContrat }}</td>
+							<td class="text-center">{{contract.updatedAt | date('d/m/Y')}}</td>
+							<td class="text-center">{{contract.user.id}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -119,30 +116,17 @@
 					<tbody>
 						<tr>
 							<td>
-								<strong>Pack Olona Talents</strong>
-								<br>{{commande.package.name}}  <strong>|</strong> {{commande.package.credit}} crédits
+								<strong>{{contract.package.name}} </strong>
 							</td>
 							<td class="text-center">
-								{% if currentTransaction.typeTransaction.slug == 'paypal' %}
-								<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }} €</strong>
-								{% else %}
-								<strong>{{(commande.totalAmount) }} Ar</strong>
-								{% endif %}
+								<strong>{{(contract.package.price) }} Ar</strong>
 							</td>
 							<td class="text-center">0%</td>
 							<td class="text-center">
-								{% if currentTransaction.typeTransaction.slug == 'paypal' %}
-								<strong>0,00 €</strong>
-								{% else %}
 								<strong>0 Ar</strong>
-								{% endif %}
 							</td>
 							<td class="text-center">
-								{% if currentTransaction.typeTransaction.slug == 'paypal' %}
-								<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }} €</strong>
-								{% else %}
-								<strong>{{(commande.totalAmount) }} Ar</strong>
-								{% endif %}
+								<strong>{{(contract.package.price) }} Ar</strong>
 							</td>
 						</tr>
 						<tr></tr>
@@ -163,11 +147,7 @@
 									</strong>
 								</td>
 								<td class="text-right">
-									{% if currentTransaction.typeTransaction.slug == 'paypal' %}
-									<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }} €</strong>
-									{% else %}
-									<strong>{{(commande.totalAmount) }} Ar</strong>
-									{% endif %}
+									<strong>{{(contract.package.price) }} Ar</strong>
 								</td>
 							</tr>
 							<tr>
@@ -183,11 +163,7 @@
 									<strong>TVA 0% :</strong>
 								</td>
 								<td class="text-right bg">
-									{% if currentTransaction.typeTransaction.slug == 'paypal' %}
-									<strong>0,00 €</strong>
-									{% else %}
 									<strong>0 Ar</strong>
-									{% endif %}
 								</td>
 							</tr>
 							<tr class="table-active">
@@ -195,11 +171,7 @@
 									<strong>Total TTC :</strong>
 								</td>
 								<td class="text-right">
-									{% if currentTransaction.typeTransaction.slug == 'paypal' %}
-									<strong>{{(commande.totalAmount)|number_format(2, '.', ',') }} €</strong>
-									{% else %}
-									<strong>{{(commande.totalAmount) }} Ar</strong>
-									{% endif %}
+									<strong>{{(contract.package.price) }} Ar</strong>
 								</td>
 							</tr>
 						</table>

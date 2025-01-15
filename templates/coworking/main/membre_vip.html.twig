@@ -190,29 +190,42 @@
                   </div>
                   <div class="col-md-6">
                     <div class="mb-3">
+                      {{ form_widget(form.postalCode, {'attr': {'placeholder': 'Code postale'}}) }}
+                    </div>
+                  </div>
+                </div>
+                <div class="row gx-3">
+                  <div class="col-md-6">   
+                    <!-- Email address -->
+                    <div class="mb-3">
+                      {{ form_widget(form.city, {'attr': {'placeholder': 'Ville'}}) }}
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
                       {{ form_widget(form.localisation, {'attr': {'placeholder': 'Pays'}}) }}
                     </div>
                   </div>
-                  <div class="row">
+                </div>
+                <div class="row">
 
-                    <div class="mb-3 col-md-8 mx-auto">
-                      <div class="row">
-                          <div class="col-1 text-end">
-                            {{ form_widget(form.acceptTerms) }}
-                          </div>
-                          <div class="col">
-                            <label class="form-check-label required" for="contract_acceptTerms">J'accepte les <a class="text-warning fw-bolder" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: pointer;">conditions d'utilisation</a></label>
-                          </div>
-                      </div>
+                  <div class="mb-3 col-md-8 mx-auto">
+                    <div class="row">
+                        <div class="col-1 text-end">
+                          {{ form_widget(form.acceptTerms) }}
+                        </div>
+                        <div class="col">
+                          <label class="form-check-label required" for="contract_acceptTerms">J'accepte les <a class="text-warning fw-bolder" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: pointer;">conditions d'utilisation</a></label>
+                        </div>
                     </div>
                   </div>
-                  <div class="row">
+                </div>
+                <div class="row">
 
-                    <div class="col mx-auto text-center">
-                      <!-- Button -->
-                      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                          <button type="submit" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Je veux devenir membre VIP</button>
-                      </div>
+                  <div class="col mx-auto text-center">
+                    <!-- Button -->
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                        <button type="submit" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Je veux devenir membre VIP</button>
                     </div>
                   </div>
                 </div>
@@ -241,18 +254,18 @@
           <p>
               Les présentes conditions d'utilisation régissent les modalités et conditions applicables au Contrat Membre VIP Olona Talents, proposé par la société Olona Talents (ci-après dénommée "la Société"). En souscrivant à ce contrat, le client (ci-après dénommé "le Client") accepte les présentes conditions dans leur intégralité.
           </p>
-          </div>
+        </div>
 
-          <!-- Section 2: Objet du contrat -->
-          <div class="mb-4">
+        <!-- Section 2: Objet du contrat -->
+        <div class="mb-4">
           <h2 class="h4">2. Objet du contrat</h2>
           <p>
               Le Contrat Membre VIP Olona Talents offre des services exclusifs d'accès et d'utilisation des espaces de coworking, des outils numériques et des avantages personnalisés, tels que définis dans les sections suivantes.
           </p>
-          </div>
+        </div>
 
-          <!-- Section 3: Services inclus -->
-          <div class="mb-4">
+        <!-- Section 3: Services inclus -->
+        <div class="mb-4">
           <h2 class="h4">3. Services inclus</h2>
           <ul>
               <li>Réservations illimitées et prioritaires pour l'accès aux espaces de coworking (du lundi au vendredi, de 8h à 18h).</li>
@@ -260,10 +273,10 @@
               <li>Publication facultative d’un post "Coworker du jour" sur notre page Facebook.</li>
               <li>Remises avantageuses : 25 % sur les autres services Olona Talents et 50 % pour les accompagnants.</li>
           </ul>
-          </div>
+        </div>
 
-          <!-- Section 4: Modalités de réservation -->
-          <div class="mb-4">
+        <!-- Section 4: Modalités de réservation -->
+        <div class="mb-4">
           <h2 class="h4">4. Modalités de réservation</h2>
           <p>
               Les réservations doivent être effectuées à l'avance via l'un des canaux suivants :
@@ -277,10 +290,10 @@
           <p>
               En cas de privatisation ou d'indisponibilité des espaces, la Société se réserve le droit de refuser certaines réservations.
           </p>
-          </div>
+        </div>
 
-          <!-- Section 5: Engagement et renouvellement -->
-          <div class="mb-4">
+        <!-- Section 5: Engagement et renouvellement -->
+        <div class="mb-4">
           <h2 class="h4">5. Engagement et renouvellement</h2>
           <p>
               Le contrat est conclu pour une durée mensuelle, renouvelable tacitement à chaque date d’anniversaire.
@@ -288,10 +301,10 @@
           <p>
               Le Client peut résilier à tout moment, avec un préavis minimum de <strong>3 jours avant la date d'anniversaire mensuelle.</strong>
           </p>
-          </div>
+        </div>
 
-          <!-- Section 6: Conditions de paiement -->
-          <div class="mb-4">
+        <!-- Section 6: Conditions de paiement -->
+        <div class="mb-4">
           <h2 class="h4">6. Conditions de paiement</h2>
           <p>
               <strong>Premier paiement :</strong> à la signature du contrat.<br>
@@ -313,10 +326,10 @@
               <li>Facturation basée sur les journées/demi-journées consommées, avec une majoration de <strong>10 %</strong> tous les 7 jours de retard.</li>
               <li>Procédure judiciaire en cas de non-paiement au-delà de 3 relances.</li>
           </ul>
-          </div>
+        </div>
 
-          <!-- Section 7: Engagement de la Société -->
-          <div class="mb-4">
+        <!-- Section 7: Engagement de la Société -->
+        <div class="mb-4">
           <h2 class="h4">7. Engagement de la Société</h2>
           <p>
               La Société garantit les tarifs pour une période d’un an. Toute révision de l’offre ou des tarifs prendra effet à partir du <strong>1er janvier 2026</strong> et sera communiquée au Client avec un préavis de 30 jours.
@@ -336,15 +349,15 @@
           <p>
               La Société décline toute responsabilité en cas de dommages causés par une mauvaise utilisation des installations ou des services.
           </p>
-          </div>
+        </div>
 
-          <!-- Section 9: Législation applicable -->
-          <div class="mb-4">
+        <!-- Section 9: Législation applicable -->
+        <div class="mb-4">
           <h2 class="h4">9. Législation applicable</h2>
           <p>
               Le contrat est régi et interprété conformément aux lois en vigueur à Madagascar. En cas de litige, les parties s’efforceront de trouver une solution à l’amiable. À défaut, le différend sera soumis à la juridiction compétente.
           </p>
-          </div>
+        </div>
       </div>
     </div>
   </div>

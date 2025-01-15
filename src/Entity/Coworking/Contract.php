@@ -2,6 +2,7 @@
 
 namespace App\Entity\Coworking;
 
+use App\Entity\BusinessModel\Invoice;
 use App\Entity\BusinessModel\Package;
 use App\Entity\User;
 use App\Repository\Coworking\ContractRepository;
@@ -17,6 +18,7 @@ class Contract
     const STATUS_VALIDATED = 'VALIDATED';
     const STATUS_NOT_PAID = 'NOT_PAID';
     const STATUS_ARCHIVED = 'ARCHIVED';   
+    const DOC_DOWNLOAD = 'contrats/';
 
     public static function getStatuses() {
         return [
@@ -85,6 +87,15 @@ class Contract
 
     #[ORM\ManyToOne(inversedBy: 'contracts')]
     private ?User $user = null;
+
+    #[ORM\OneToOne(mappedBy: 'contract', cascade: ['persist', 'remove'])]
+    private ?Invoice $invoice = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $postalCode = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $city = null;
 
     public function __construct()
     {
@@ -286,6 +297,60 @@ class Contract
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getGeneratedContractPathFile(): ?string
+    {
+        return $this->getGeneratedDocsPath().'/contrat.pdf';
+    }
+
+    public function getGeneratedFacturePathFile(): ?string
+    {
+        return $this->getGeneratedDocsPath().'/facture.pdf';
+    }
+
+    public function getGeneratedDocsPath(): ?string
+    {
+        $path = $this::DOC_DOWNLOAD . $this->id ."/".
+            $this->contractNumber;
+
+        return $path;
+    }
+
+    public function getInvoice(): ?Invoice
+    {
+        return $this->invoice;
+    }
+
+    public function setInvoice(?Invoice $invoice): static
+    {
+        $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): static
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): static
+    {
+        $this->city = $city;
 
         return $this;
     }

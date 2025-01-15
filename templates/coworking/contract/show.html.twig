@@ -83,6 +83,16 @@
                 <th>Numéro contract</th>
                 <td>{{ contract.contractNumber }}</td>
             </tr>
+            {% if contract.status is same as(constant('App\\Entity\\Coworking\\Contract::STATUS_VALIDATED'))  %}
+            <tr>
+                <th>Contrat</th>
+                <td><a href="{{ path('app_coworking_contract_pdf', {'contractNumber': contract.contractNumber })}}" target="_blank"><i class="bi bi-filetype-pdf me-2 h5"></i>Voir le contrat</a></td>
+            </tr>
+            <tr>
+                <th>Facture</th>
+                <td><a href="{{ path('app_coworking_contract_invoice', {'contractNumber': contract.contractNumber })}}" target="_blank"><i class="bi bi-filetype-pdf me-2 h5"></i>Voir la facture</a></td>
+            </tr>                
+            {% endif %}
         </tbody>
     </table>
     <div class="d-flex justify-content-end w-100">
