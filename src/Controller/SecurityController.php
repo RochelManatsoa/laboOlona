@@ -28,6 +28,7 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login', options: ['sitemap' => true])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        $this->requestStack->getSession()->set('fromPath', 'app_home');
         if ($this->getUser()) {
             return $this->redirectToRoute('app_connect');
         }

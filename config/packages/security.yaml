@@ -50,11 +50,8 @@ security:
             logout:
                 path: app_logout
                 # where to redirect after logout
-                target: app_login
+                target: app_coworking_login
                 invalidate_session: true
-                clear_site_data:
-                    - cookies
-                    - storage
 
             remember_me:
                 secret: '%kernel.secret%'

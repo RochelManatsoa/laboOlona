@@ -1,0 +1,62 @@
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7LRZREN88L"></script>
+
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    // Consentement par défaut
+    gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'analytics_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied'
+    });
+</script>
+
+<script>
+    // Afficher la bannière si aucune préférence n'est définie
+    document.addEventListener('turbo:load', function () {
+        const consent = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('cookieOlonaTalents='));
+            if (!consent) {
+                document.querySelector('.cookie-consent').style.display = 'block';
+            }
+        });
+
+    // Accepter tous les cookies
+    function acceptAllCookies() {
+        const preferences = {
+            functionalCookies: true,
+            analyticsCookies: true,
+            advertisingCookies: true,
+        };
+        updateConsent(preferences);
+        document.querySelector('.cookie-consent').style.display = 'none';
+    }
+
+    // Enregistrer les préférences sélectionnées
+    function saveCookiePreferences() {
+        const preferences = {
+            functionalCookies: document.getElementById('functionalCookies').checked,
+            analyticsCookies: document.getElementById('analyticsCookies').checked,
+            advertisingCookies: document.getElementById('advertisingCookies').checked,
+        };
+        updateConsent(preferences);
+    }
+
+    // Mettre à jour le consentement avec gtag.js et stocker les préférences
+    function updateConsent(preferences) {
+        gtag('consent', 'update', {
+            'ad_storage': preferences.advertisingCookies ? 'granted' : 'denied',
+            'analytics_storage': preferences.analyticsCookies ? 'granted' : 'denied',
+            'ad_user_data': preferences.functionalCookies ? 'granted' : 'denied',
+            'ad_personalization': preferences.advertisingCookies ? 'granted' : 'denied'
+        });
+
+        document.cookie = `cookieOlonaTalents=${JSON.stringify(preferences)}; path=/; max-age=31536000`;
+        document.querySelector('.cookie-consent').style.display = 'none';
+    }
+</script>
