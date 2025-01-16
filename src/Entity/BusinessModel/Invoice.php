@@ -2,6 +2,7 @@
 
 namespace App\Entity\BusinessModel;
 
+use App\Entity\Coworking\Contract;
 use App\Repository\BusinessModel\InvoiceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,6 +17,9 @@ class Invoice
 
     #[ORM\OneToOne(inversedBy: 'invoice', cascade: ['persist', 'remove'])]
     private ?Order $commande = null;
+
+    #[ORM\OneToOne(inversedBy: 'invoice', cascade: ['persist', 'remove'])]
+    private ?Contract $contract = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
@@ -182,6 +186,23 @@ class Invoice
         return $num . $dateCommande . '/' . $type . $commandeId;
     }
 
+
+    public function getNumeroFactureContrat(){
+        $num = $this->getId();
+        $string = '0';
+        $length = 4;
+        $numlength = strlen((string)$num);
+        $restLength = $length - $numlength;
+        for($i= 0; $i < $restLength; $i++) {
+            $num =$string . (string)$num;
+        }
+        $dateCommande = $this->getCreatedAt()->format('Ym');
+        $type = 'CW';
+        $commandeId = $this->getContract()->getId();
+
+        return $num . $dateCommande . '/' . $type . $commandeId;
+    }
+
     public function getPostalCode(): ?string
     {
         return $this->postalCode;
@@ -202,6 +223,18 @@ class Invoice
     public function setCity(?string $city): static
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    public function getContract(): ?Contract
+    {
+        return $this->contract;
+    }
+
+    public function setContract(?Contract $contract): static
+    {
+        $this->contract = $contract;
 
         return $this;
     }

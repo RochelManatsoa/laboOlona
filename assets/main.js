@@ -33,6 +33,7 @@ $(function() {
         setupAvailabilityDropdown(); 
         setupCKEditors();
         setupDynamicLinks();
+        toggleFields();
     }
 
     function handlePageLoad() {
@@ -45,9 +46,34 @@ $(function() {
         setupImageUpload(); 
         setupAvailabilityDropdown();  
         handleLoading();
+        initializeSliders();
         initiateLoadMore();
+        toggleFields();
         initializeCarousels(); // Initialize carousels on page load
     }
+
+    // Fonction pour gérer l'affichage des champs en fonction de la sélection
+    function toggleFields() {
+        var selectedValue = $('#contract_typePerson').val(); 
+
+        if (selectedValue === "0") { 
+            $('#person-type').text("Je suis un");
+            $('#contract_socialReason').closest('.mb-3').hide(); 
+            $('#contract_siret').closest('.mb-3').hide(); 
+            $('#contract_firstName').closest('.mb-3').show(); 
+            $('#contract_lastName').closest('.mb-3').show(); 
+        } else { 
+            $('#person-type').text("Je suis une");
+            $('#contract_socialReason').closest('.mb-3').show();
+            $('#contract_siret').closest('.mb-3').show(); 
+            $('#contract_firstName').closest('.mb-3').hide(); 
+            $('#contract_lastName').closest('.mb-3').hide(); 
+        }
+    }
+
+    $('#contract_typePerson').on('change', function () {
+        toggleFields();
+    });
 
     function initializeCarousels() {
         const carousels = document.querySelectorAll('.carousel');
@@ -124,6 +150,7 @@ $(function() {
                     success: function(data) {
                         if (data.content && data.content.trim()) {
                             container.append(data.content);
+                            initializeSliders();
                             from += 6;
                             hasMore = data.hasMore;
                         } else {
@@ -239,7 +266,6 @@ $(function() {
             });
         });
         
-
         const editors = document.querySelectorAll('.ckeditor-textarea');
         if (editors.length > 0) {
             editors.forEach(editorElement => {
@@ -247,6 +273,28 @@ $(function() {
                     ClassicEditor.create(editorElement, {
                         toolbar: {
                             items: [
+                                'bold', 'italic', 'link', '|',
+                                'bulletedList', 'numberedList', '|',
+                                'blockQuote', '|',
+                                'undo', 'redo'
+                            ]
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+            });
+        }
+        
+        const editorsFull = document.querySelectorAll('.full-ckeditor-textarea');
+        if (editorsFull.length > 0) {
+            editorsFull.forEach(editorElement => {
+                if (editorElement) {
+                    ClassicEditor.create(editorElement, {
+                        toolbar: {
+                            items: [
+                                'heading', '|',
                                 'bold', 'italic', 'link', '|',
                                 'bulletedList', 'numberedList', '|',
                                 'blockQuote', '|',
@@ -1189,4 +1237,90 @@ $(function() {
             $(this).find('ul[data-form-collection-target="collectionContainer"]').empty();
         });
     });
+
+  
+    // On branche notre comportement à tous les éléments
+    function initializeSliders() {
+        Array.from(document.querySelectorAll("[data-slider]"))
+            .map(el => new Slider(el));
+    }
 });
+
+
+
+class Slider {
+
+    /**
+     * @param {HTMLDivElement} el
+     */
+    constructor(el) {
+      this.nextButton = el.querySelector('[data-slider-next]')
+      this.prevButton = el.querySelector('[data-slider-prev]')
+      this.wrapper = el.querySelector('[data-slider-wrapper]')
+      this.nextButton.addEventListener('click', () => this.move(1))
+      this.prevButton.addEventListener('click', () => this.move(-1))
+      this.wrapper.addEventListener('scrollend', () => this.updateUI())
+      this.updateUI()
+    }
+  
+    /**
+    * Utilise la variable --items pour déterminer le nombre d'élément visible
+    **/
+    get itemsToScroll () {
+      return parseInt(window.getComputedStyle(this.wrapper).getPropertyValue('--items'), 10);
+    }
+  
+    /**
+    * Nombre total de "pages" dans notre carrousel
+    * @returns {number}
+    **/
+    get pages () {
+      return Math.ceil(this.wrapper.children.length / this.itemsToScroll)
+    }
+  
+    /**
+    * Page courante
+    * @returns {number}
+    **/
+    get page () {
+      return Math.ceil(this.wrapper.scrollLeft / this.wrapper.offsetWidth)
+    }
+  
+    /**
+    * Affiche / Masque les boutons de navigation
+    **/
+    updateUI () {
+      if (this.page === 0) {
+        this.prevButton.setAttribute('hidden', 'hidden')
+      } else {
+        this.prevButton.removeAttribute('hidden')
+      }
+      if (this.page === this.pages - 1) {
+        this.nextButton.setAttribute('hidden', 'hidden')
+      } else {
+        this.nextButton.removeAttribute('hidden')
+      }
+    }
+  
+    /**
+     * Déplace le carousel de n pages
+     * @param {number} n
+     */
+  move (n) {
+    let newPage = this.page + n
+
+    if (newPage < 0) {
+      newPage = 0;
+    }
+
+    if (newPage >= this.pages) {
+      newPage = this.pages - 1
+    }
+
+    this.wrapper.scrollTo({
+      left: this.wrapper.children[newPage * this.itemsToScroll].offsetLeft,
+      behavior: 'smooth'
+    })
+  }
+  
+  }

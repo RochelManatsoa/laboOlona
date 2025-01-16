@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="{{ asset('images/favicon.ico') }}">
+        <title>{% block title %}Administration | Blog {% endblock %}</title>
+        {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
+    </head>
+    <body id="base-coworking">
+        <div class="">
+          {% block admin %}
+            <div class="">
+              {% include "blog/_nav_admin.html.twig" %}
+            </div>
+          {% endblock %}
+        </div>
+
+        <div class="container-fluid m-0 p-0">
+            <div class="row" id="blog">
+              <section class="p-0 m-0">
+                <div class="container my-5">
+                  <div class="row p-4 pb-0 pe-lg-0 py-lg-5 rounded-3 border shadow-lg">
+                    {% block body %}{% endblock %}
+                  </div>
+                </div>
+              </section>
+            </div>
+        </div>
+    
+        <script>
+    
+          function loadCKEditor() {
+            if (typeof ClassicEditor === 'undefined') {
+              var scriptTag = document.createElement('script');
+              scriptTag.src = "{{ asset('assets/ckeditor5/ckeditor.js') }}";
+              document.body.appendChild(scriptTag);
+            }
+          }
+    
+          loadCKEditor();
+          document.addEventListener('turbo:load', loadCKEditor);
+    
+        </script>
+    </body>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('main') }}
+    {% endblock %}
+</html>

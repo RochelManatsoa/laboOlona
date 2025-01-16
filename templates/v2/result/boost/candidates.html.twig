@@ -1,0 +1,76 @@
+<div class="boosts-container" data-slider>
+    <div class="boosts" data-slider-wrapper>
+        {% if candidates_boost|length > 0 %}
+            {% for candidat in candidates_boost %}
+                <div class="boost"> 
+                    <div class="card mt-3 text-center">
+                        <div class="">
+                            <span class="position-absolute top-0 start-0 ms-4 px-3 translate-middle badge bg-danger rounded-pill" style="z-index:999">PRO</span>
+                        </div>
+                        <div class="card-image-wrapper">
+                            <div class="job-image card-img-top" style="background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="{{ generatePseudoById(candidat.id) }}"></div>
+                            <div class="card-body-candidat">
+                                <p class="job-title">Ref: {{ generatePseudoById(candidat.id) }}</p>
+                                <div style="min-height:50px;display: flex; align-items: center; justify-content: center;">
+                                    <h2 class="fw-bold text-uppercase fs-6">
+                                        {% set title_words = candidat.titre|striptags|split(' ') %}
+                                        {% if title_words|length > 5 %}
+                                            {{ title_words|slice(0, 5)|join(' ') }}...
+                                        {% else %}
+                                            {{ title_words|join(' ') }}
+                                        {% endif %}
+                                    </h2>
+                                </div>
+                                <div class="">
+                                    <span class="card-text small">
+                                        <small class="card-text"><i class="mx-1 bi bi-trophy"></i>{{ candidat.experiences|length}} {{ 'app_catalog_expert.realised'|trans }}</small><br>
+                                        <small class="card-text"><i class="mx-1 bi bi-tags"></i>{{ candidat.tarifCandidat }} </small><br>
+                                        <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ 'app_catalog_expert.certificated'|trans }}</small>
+                                    </span>
+                                </div>
+                                {% if app.user %}
+                                    <a href="{{ path('app_v2_recruiter_view_profile', {'id': candidat.id}) }}" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto">Contacter</a>
+                                {% else %}
+                                    <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 mt-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_view_profile', {'id': candidat.id}) }}">Contacter</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if candidates_boost|length == 1 %}
+                <div class="card mt-3 text-center">
+                    <a href="{{ path('app_contact') }}">
+                        <img class="img-fluid rounded" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
+                    </a>
+                </div>
+                {% if not app.user %}
+                    <div class="card mt-3 text-center">
+                        <a href="{{ path('app_contact') }}">
+                            <img class="img-fluid rounded" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {% if candidates_boost|length == 2 %}
+                {% if not app.user %}
+                    <div class="card mt-3 text-center">
+                        <a href="{{ path('app_contact') }}">
+                            <img class="img-fluid rounded" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    </div>
+    {% if candidates_boost|length > 0 %}
+    <span class="boosts_navigation prev-boost shadow" data-slider-prev hidden>
+        <i class="bi bi-chevron-left"></i>
+    </span>
+    <span class="boosts_navigation next-boost shadow" data-slider-next>
+        <i class="bi bi-chevron-right"></i>
+    </span>
+    {% endif %}
+</div>

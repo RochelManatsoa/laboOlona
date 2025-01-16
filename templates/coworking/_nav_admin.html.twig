@@ -1,8 +1,8 @@
 
 <nav class="container navbar navbar-expand-lg px-5 bg-dark">
-    <a class="navbar-brand" href="{{ path('app_coworking_main')}}">
-      <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" style="height: 70px;" alt="logo" class="px-0 img-fluid">
-    </a>
+  <a class="navbar-brand" href="{{ path('app_coworking_main') }}">
+      <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" alt="logo" class="px-0 img-fluid" style="width: 100px;">
+  </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -13,8 +13,9 @@
         <a class="nav-link" href="{{ path('app_place_index')}}">Places</a>
         <a class="nav-link" href="{{ path('app_user_index')}}">Utilisateurs</a>
         <a class="nav-link" href="{{ path('app_order_index')}}">Commandes</a>
-        <a class="nav-link" href="{{ path('app_coworking_reservation_index')}}">En ligne</a>
         <a class="nav-link" href="{{ path('app_moderateur_invitation_index')}}">Invitations</a>
+        <a class="nav-link" href="{{ path('app_coworking_contract_index')}}">VIP</a>
+        <a class="nav-link" href="{{ path('app_blog_post_index')}}">Blog</a>
       </div>
     </div>
   </nav>

@@ -28,16 +28,32 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login', options: ['sitemap' => true])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        $this->requestStack->getSession()->set('fromPath', 'app_home');
         if ($this->getUser()) {
             return $this->redirectToRoute('app_connect');
         }
 
-        // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', [
+            'last_username' => $lastUsername, 
+            'error' => $error
+        ]);
+    }
+
+    #[Route(path: '/coworking/login', name: 'app_coworking_login', options: ['sitemap' => true])]
+    public function loginCoworking(AuthenticationUtils $authenticationUtils): Response
+    {
+        $this->requestStack->getSession()->set('fromPath', 'app_coworking_main');
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_coworking_main');
+        }
+
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login_coworking.html.twig', [
             'last_username' => $lastUsername, 
             'error' => $error
         ]);
@@ -52,10 +68,17 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/connect', name: 'app_connect')]
-    public function connect(): Response
+    public function connect(Request $request): Response
     {
         /** @var User|null $user */
         $user = $this->getUser();
+        $from = $request->get('fromPath', null);
+        if($from){
+            return $this->redirectToRoute($from);
+        }
+        if( $this->requestStack->getSession()->get('fromPath') === 'app_coworking_main'){
+            return $this->redirectToRoute('app_coworking_main');
+        }
         
         if (!$user instanceof User) {
             return $this->redirectToRoute('app_profile');
@@ -112,7 +135,29 @@ class SecurityController extends AbstractController
                 'message' => "User not found"
             ], Response::HTTP_FORBIDDEN);
         }else{
-            dd("etoile");
+            return $this->redirectToRoute('app_connect');
+        }
+    }
+    
+    #[Route(path: '/connect/facebook', name: 'connect_facebook_start')]
+    public function connectFacebookAction(ClientRegistry $clientRegistry)
+    {
+        return $clientRegistry
+            ->getClient('facebook_main') 
+            ->redirect([
+                'public_profile', 'email' 
+            ]);
+    }
+
+    #[Route(path: '/auth/facebook/callback', name: 'connect_facebook_check')]
+    public function connectFacebookCheckAction(Request $request, ClientRegistry $clientRegistry)
+    {
+        if(!$this->getUser()){
+            return $this->json([
+                'status' => false,
+                'message' => "User not found"
+            ], Response::HTTP_FORBIDDEN);
+        }else{
             return $this->redirectToRoute('app_connect');
         }
     }

@@ -1,42 +1,52 @@
-
 <nav class="container navbar navbar-expand-lg px-5">
-    <a class="navbar-brand" href="{{ path('app_coworking_main')}}">
-      <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" style="height: 70px;" alt="logo" class="px-0 img-fluid">
+    <a class="navbar-brand" href="{{ path('app_coworking_main') }}">
+        <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" alt="logo" class="px-0 img-fluid" style="width: 100px;">
     </a>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link px-3 mx-2 text-white" aria-current="page" href="{{ path('app_coworking_main')}}#available">Disponibilités</a>
-        <a class="nav-link px-3 mx-2 text-white" href="{{ path('app_event_index')}}">Mes réservations</a>
-        <a class="nav-link px-3 mx-2 text-white" href="{{ path('app_product_index')}}">Produits</a>
-      </div>
-    </div>
-    {% if app.user %}
-        {% if not is_granted('ROLE_ADMIN') %}
-            <a class="me-4 position-relative" href="{{ path('app_cart_index')}}" aria-expanded="false">
-            <i class="bi bi-basket h5 text-white"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{ component('cart_user_component') }}
-                <span class="visually-hidden">unread messages</span>
-            </span>
-            </a>
-        {% endif %}
-    {% else %}
-    <a href="{{ path('app_login')}}" class=""><i class="bi h4 me-3 bi-box-arrow-in-right"></i></a>
-    {% endif %}
-    <div class="dropdown-center">
-      {% if app.user %}
-        <a class="me-5 h4" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle text-white"></i></a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="{{ path('app_cart_index')}}">Mon panier</a></li>
-          <li><a class="dropdown-item" href="{{ path('app_order_index')}}">Mes commandes</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Olona Talents</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="{{ path('app_logout')}}">Logout <i class="bi bi-box-arrow-right"></i></a></li>
-        </ul>
-      {% endif %}
-    </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <i class="bi bi-list h4"></i>
+        <i class="bi bi-list h4"></i>
     </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_coworking_main') }}#available">Disponibilités</a>
+            <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_blog_index') }}">Le Blog</a>
+            <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_home_simulateur_portage') }}">Portage salarial</a>
+            <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_contact_us') }}">Nous contacter</a>
+            <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_home') }}">Olona Talents <i class="bi bi-box-arrow-in-right"></i></a>
+        </div>
+        {% if not app.user %}
+            <div class="ms-auto d-flex align-items-center">
+                <a href="{{ path('app_coworking_login') }}" class="text-white me-2">Se connecter</a>
+                <button id="switch-theme" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-moon-stars-fill"></i>
+                </button>
+            </div>
+        {% else %}
+            <div class="ms-auto d-flex align-items-center">
+                <div class="dropdown me-2">
+                    <button class="btn dropdown-toggle text-white d-inline-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item position-relative" href="{{ path('app_cart_index') }}">
+                                Mon panier
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ component('cart_user_component') }}
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ path('app_order_index') }}">Mes commandes</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ path('app_v2_dashboard') }}">Olona Talents</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">Logout <i class="bi bi-box-arrow-right"></i></a></li>
+                    </ul>
+                </div>
+                <button id="switch-theme" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-moon-stars-fill"></i>
+                </button>
+            </div>
+        {% endif %}
+    </div>
 </nav>

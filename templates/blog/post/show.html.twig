@@ -1,0 +1,69 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}Article {{ post.id }}{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Article {{ post.id }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>#</th>
+                <td>{{ post.id }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ post.title }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ post.slug }}</td>
+            </tr>
+            <tr>
+                <th>Contenu</th>
+                <td>{{ post.content|raw }}</td>
+            </tr>
+            <tr>
+                <th>Meta Title</th>
+                <td>{{ post.metaTitle }}</td>
+            </tr>
+            <tr>
+                <th>Meta Description</th>
+                <td>{{ post.metaDescription }}</td>
+            </tr>
+            <tr>
+                <th>Mots clés</th>
+                <td>{{ post.metaKeywords }}</td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ post.status }}</td>
+            </tr>
+            <tr>
+                <th>Création</th>
+                <td>{{ post.createdAt ? post.createdAt|date('d/m/Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Mise à jour</th>
+                <td>{{ post.updatedAt ? post.updatedAt|date('d/m/Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>
+                    {% if post.imageName %}
+                        <img src="{{ asset('images/blogs/' ~ post.imageName) }}" alt="{{ post.title }}" class="img-thumbnail" style="width: 200px;"/>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-end w-100">
+        <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_blog_post_edit', {'id': post.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+        {{ include('blog/post/_delete_form.html.twig') }}
+    </div>
+
+    <div>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_blog_post_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+    </div>
+
+{% endblock %}

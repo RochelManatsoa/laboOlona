@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Contrat N°{{ contract.contractNumber }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 20mm 15mm 20mm 15mm;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: justify;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            margin: 0 0 10px 20px;
+            padding: 0;
+            list-style-type: disc;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-4 {
+            margin-bottom: 20px;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        header, footer {
+            position: fixed;
+            left: 0;
+            right: 0;
+            font-size: 10px;
+            text-align: center;
+            line-height: 15px;
+        }
+
+        header {
+            top: 0;
+            height: 30px;
+        }
+
+        footer {
+            bottom: 0;
+            height: 20px;
+        }
+
+        .footer-content {
+            border-top: 1px solid #ddd;
+            padding-top: 5px;
+        }
+
+        .cols {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        .col-6 {
+            flex: 0 0 50%; /* Largeur de 50% */
+            max-width: 50%;
+            padding-right: 15px;
+            padding-left: 15px;
+            box-sizing: border-box;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+{% set fullName = "" %}
+{% set pageNumber = 1 %}
+{% set totalPages = 1 %}
+{% if contract.typePerson %}
+    {% set fullName = contract.socialReason %}
+{% else %}
+    {% set fullName = contract.firstName|upper ~ " " ~ contract.lastName|capitalize %}
+{% endif %}
+
+<body>
+
+    <footer>
+        <div class="footer-content">
+            Page {{ pageNumber }} sur {{ totalPages }}
+        </div>
+    </footer>
+
+    <div class="container">
+        <div class="invoice">
+            <div class="row">
+                <h1 class="display-5">Contrat Membre VIP Olona Talents</h1>
+                <p>
+                    Entre les soussignés :<br>
+                    Ci-après dénommé : {{ fullName }}<br>
+                    Adresse : {{ contract.adress }} {{ contract.postalCode }} {{ contract.city }}<br>
+                </p>
+                <p>ET</p>
+                <p>
+                    Ci-après dénommée : Société OLONAPROD, dont le siège est situé Lot VE 48 Bis Ambatovinaky, représentée par Madame Niaina RALISATA, La Gérante ; Monsieur Stephane MAUREL, Co-gérant.
+                </p>
+            </div>
+
+            <div class="row">
+                <!-- Préambule -->
+                <div class="mb-4">
+                    <p>
+                        <strong>Préambule :</strong> Les présentes conditions d'utilisation régissent les modalités et conditions applicables au Contrat Membre VIP Olona Talents. En souscrivant à ce contrat, le client accepte les présentes conditions dans leur intégralité.
+                    </p>
+                </div>
+
+                <!-- Article 1 -->
+                <div class="mb-4">
+                    <h2>Article 1 : Objet du contrat</h2>
+                    <p>
+                        Le Contrat Membre VIP Olona Talents offre des services exclusifs d'accès et d'utilisation des espaces de coworking, des outils numériques, et des avantages personnalisés.
+                    </p>
+                </div>
+
+                <!-- Article 2 -->
+                <div class="mb-4">
+                    <h2>Article 2 : Services inclus</h2>
+                    <ul>
+                        <li>Réservations illimitées pour les espaces de coworking (du lundi au vendredi, 8h-18h).</li>
+                        <li>Connexion haut débit via Starlink et service continu grâce aux groupes électrogènes.</li>
+                        <li>Publication facultative d’un post "Coworker du jour" sur notre page Facebook.</li>
+                        <li>Remises avantageuses : 25 % sur les autres services et 50 % pour les accompagnants.</li>
+                    </ul>
+                </div>
+
+                <!-- Article 3 -->
+                <div class="mb-4">
+                    <h2>Article 3 : Modalités de réservation</h2>
+                    <p>
+                        Les réservations doivent être effectuées à l'avance via l'un des canaux suivants :
+                    </p>
+                    <ul>
+                        <li>Moteur de réservation en ligne</li>
+                        <li>Messenger</li>
+                        <li>WhatsApp</li>
+                        <li>Téléphone</li>
+                    </ul>
+                </div>
+
+                <!-- Article 4 -->
+                <div class="mb-4">
+                    <h2>Article 4 : Engagement et renouvellement</h2>
+                    <p>
+                        Le contrat est conclu pour une durée mensuelle, renouvelable tacitement à chaque date d’anniversaire.
+                    </p>
+                    <p>
+                        Résiliation possible avec un préavis de <strong>3 jours avant la date d'anniversaire mensuelle.</strong>
+                    </p>
+                </div>
+
+                <!-- Article 5 -->
+                <div class="mb-4">
+                    <h2>Article 5 : Conditions de paiement</h2>
+                    <p>
+                        Premier paiement à la signature ; paiements récurrents à la date d’anniversaire mensuelle.
+                    </p>
+                    <ul>
+                        <li>Modes de paiement : Virement bancaire, Mobile Money, espèces.</li>
+                        <li>Retard supérieur à 7 jours : suspension des avantages et majoration de 10 % tous les 7 jours.</li>
+                    </ul>
+                </div>
+
+                <!-- Article 6 -->
+                <div class="mb-4">
+                    <h2>Article 6 : Engagement de la Société</h2>
+                    <p>
+                        La Société garantit les tarifs pour une période d’un an. Toute révision prendra effet le 1er janvier 2026.
+                    </p>
+                </div>
+
+                <!-- Article 7 -->
+                <div class="mb-4">
+                    <h2>Article 7 : Responsabilités et obligations</h2>
+                    <p>
+                        Le Client s'engage à respecter les conditions d'utilisation des espaces. La Société décline toute responsabilité en cas de mauvaise utilisation.
+                    </p>
+                </div>
+
+                <!-- Article 8 -->
+                <div class="mb-4">
+                    <h2>Article 8 : Législation applicable</h2>
+                    <p>
+                        Contrat régi par les lois en vigueur à Madagascar. Les litiges seront soumis à la juridiction compétente.
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <p>
+                        Fait le {{ contract.updatedAt | date('d/m/Y') }} à Antananarivo
+                    </p>
+                </div>
+
+                <!-- Article 8 -->
+				<div class="cols">
+					<div class="col-6">
+						Le Prestataire
+					</div>
+					<div class="col-6">
+						Le Client
+					</div>
+				</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -79,3 +79,11 @@ services:
     App\Service\PdfService:
         arguments:
             $wkhtmltopdfPath: '%env(WKHTMLTOPDF_PATH)%'
+
+    app.sitemap.blog_post_subscriber:
+        class: App\EventListener\SitemapSubscriber
+        arguments:
+            - '@App\Repository\Blog\PostRepository'
+            - '@App\Repository\Blog\CategoryRepository'
+        tags:
+            - { name: "kernel.event_subscriber", priority: 100 }

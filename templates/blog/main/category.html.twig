@@ -1,0 +1,85 @@
+{% extends 'base_blog.html.twig' %}
+
+{% block title %}Catégorie {{ category.title }} | Olona Talents{% endblock %}
+{% block meta %}
+<meta name="description" content="{{ category.metaDescription }}">
+<meta name="keywords" content="{{ category.metaKeywords }}">
+<meta property="og:title" content="{{ category.metaTitle }}">
+<meta property="og:description" content="{{ category.metaDescription }}">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/opengraph/coworking.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+
+{% block paralax %}
+<div class="paralax" style="background-image: url('{{ asset('images/blogs/' ~ category.imageName) }}');">
+  {% include "blog/_nav.html.twig" %}
+  <div class="main-content-min">
+    <div class="container">
+      <!-- Content Section -->
+      <div class="row">
+        <div class="col-12 col-sm-8 mx-auto text-center">
+          <h1 class="display-4 fw-bolder my-5">{{ category.title }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block body %}
+    
+<main id="blog-post">
+    <div class="container mt-5">
+        <h3 class="pb-4 mb-4 fst-italic border-bottom">
+            
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle col-12 col-sm-4 py-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ category.title }}
+            </button>
+            <ul class="dropdown-menu col-12 col-sm-4 py-3">
+                {% for category in categories %}
+                <li class="list-group-item w-100">
+                    <a href="{{ path('app_blog_category', {'slug': category.slug}) }}" 
+                       class="dropdown-item d-flex justify-content-between align-items-center w-100">
+                        {{ category.title }}
+                        <span class="badge bg-success rounded-pill">{{ category.posts|length }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        </h3>
+        {% for post in posts %}
+        <div class="row mx-auto my-5">      
+            <div class="col-md-4 px-4 d-flex justify-content-end">
+                <div class="border rounded shadow d-flex justify-content-end" style="background-image: url('{{ asset('images/blogs/' ~ post.imageName) }}');
+                    background-size: cover;
+                    background-position: center;
+                    width: 150px;
+                    height: 150px;
+                    float: right;
+                    ">
+                </div>
+            </div>
+            <div class="col-md-8">                        
+                <article class="blog-post">
+                    <h2 class="display-6 link-body-emphasis mb-1"><a href="{{ path('app_blog_view', {'slug': post.slug})}}">{{ post.title }}</a></h2>
+                    <p class="blog-post-meta">{{ post.createdAt|date('M Y')}} by <a href="#">{{ post.author }}</a></p>
+                    <div class="blog-content">
+                        {{ post.metaDescription|raw }}
+                    </div>
+                </article>
+            </div>
+        </div>
+    {% endfor %}
+        <div class="row">
+            <div class="col-12 col-sm-4"></div>
+            <div class="col-12 col-sm-8">
+                {{ knp_pagination_render(posts) }}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

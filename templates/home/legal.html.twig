@@ -1,4 +1,4 @@
-{% extends 'base_v21.html.twig' %}
+{% extends 'base_blog.html.twig' %}
 
 {% block title %}Mentions légales{% endblock %}
 
@@ -13,12 +13,27 @@
 <meta property="og:image:height" content="630"/>
 {% endblock %}
 
+{% block paralax %}
+<div class="paralax event-design">
+  {% include "blog/_nav.html.twig" %}
+  <div class="main-content-min">
+    <div class="container">
+      <!-- Content Section -->
+      <div class="row">
+        <div class="col-12 col-sm-8 mx-auto text-center">
+          <h1 class="display-4 fw-bolder my-5">{{ 'app_home.legal.h1'|trans }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
 {% block body %}
-<section id="legal" class="my-5">
+<section id="legal">
     <div class="container my-5 d-flex flex-column justify-content-center">
         <div class="row my-4">
             <div class="col d-flex flex-column justify-content-center">
-                <h1 class="text-center display-4 mb-3">{{ 'app_home.legal.h1'|trans }}</h1>
                 <h2 class="display-6 my-3">{{ 'app_home.legal.section1.h2'|trans }}</h2>
                 <div class="">
                     <p class="fs-6">{{ 'app_home.legal.section1.p1'|trans |raw }}</p>

@@ -7,6 +7,7 @@ use App\Entity\Moderateur\ContactForm;
 use App\Service\Annonce\AnnonceService;
 use App\Form\Moderateur\ContactFormType;
 use App\Manager\MailManager;
+use App\Service\Mailer\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,10 +25,31 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/contact', name: 'app_contact')]
-    public function contact(): Response
+    #[Route('/contact', name: 'app_contact_us')]
+    public function contact(Request $request, EntityManagerInterface $entityManager, MailerService $mailerService): Response
     {
-        return $this->redirectToRoute('app_home');
+        $contactForm = new ContactForm;
+        $contactForm->setCreatedAt(new \DateTime());
+        $form = $this->createForm(ContactFormType::class, $contactForm);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contactForm = $form->getData();
+            $entityManager->persist($contactForm);
+            $entityManager->flush();
+            $mailerService->sendMultiple(
+                ["contact@olona-talents.com", "support@olonatalents.com", "support@olonatalents.com"],
+                "Nouvelle entrée sur le formulaire de contact",
+                "contact.html.twig",
+                [
+                    'user' => $contactForm,
+                ]
+            );
+            $this->addFlash('success', 'Votre message a été bien envoyé. Nous vous repondrons dans le plus bref delais');
+        }
+
+        return $this->render('home/contact.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/service', name: 'app_home_service')]

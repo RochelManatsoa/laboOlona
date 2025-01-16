@@ -47,14 +47,12 @@ security:
             custom_authenticator: 
                 - App\Security\AppAuthenticator
                 - App\Security\GoogleAuthenticator
+                - App\Security\FacebookAuthenticator
             logout:
                 path: app_logout
                 # where to redirect after logout
-                target: app_login
+                target: app_coworking_login
                 invalidate_session: true
-                clear_site_data:
-                    - cookies
-                    - storage
 
             remember_me:
                 secret: '%kernel.secret%'
@@ -89,9 +87,11 @@ security:
         ROLE_FINANCE: [ROLE_CANDIDAT]
         ROLE_COOPTEUR: [ROLE_CANDIDAT]
         ROLE_EMPLOYE: [ROLE_CANDIDAT]
-        # Les rôles moderateur et entreprise n'ont pas de rôles enfants
         ROLE_MODERATEUR: []
-        ROLE_ENTREPRISE: []       []
+        ROLE_ENTREPRISE: [] 
+        ROLE_ADMIN_BLOG: [ROLE_USER] 
+        ROLE_COWORKING: [ROLE_USER]
+        ROLE_ADMIN: [ROLE_ADMIN_BLOG, ROLE_ENTREPRISE, ROLE_MODERATEUR, ROLE_COWORKING]
 
 when@test:
     security:

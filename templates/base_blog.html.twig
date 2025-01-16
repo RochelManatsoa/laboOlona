@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html data-bs-theme="light">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="{{ asset('images/favicon.ico') }}">
+        <title>{% block title %}Blog | Olona Talents{% endblock %}</title>
+        {% block meta %}
+          <meta name="description" content="Réservez votre espace dès aujourd'hui chez Olona Talents : 18 postes de coworking disponibles, modernes et connectés. Profitez d'un cadre inspirant pour booster votre productivité et travailler en toute sérénité.">
+          <meta name="keywords" content="coworking, antananarivo, madagascar, espace francophone, talents, freelance, projet, offre, portage salarial, cooptation, recrutement">
+          <meta property="og:title" content="Blog | Olona Talents">
+          <meta property="og:description" content="Réservez votre espace dès aujourd'hui chez Olona Talents : 18 postes de coworking disponibles, modernes et connectés. Profitez d'un cadre inspirant pour booster votre productivité et travailler en toute sérénité.">
+          <meta property="og:url" content="{{ app.request.uri }}">
+          <meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/opengraph/coworking.png') }}">
+          <meta property="og:image:width" content="1200"/>
+          <meta property="og:image:height" content="630"/>
+        {% endblock %}
+        {% block stylesheets %}
+          {{ encore_entry_link_tags('app') }}
+          {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+        {% include "gtag_cookie_script.html.twig" %}
+    </head>
+    <body class="bootstrap-light" id="base-coworking">
+        {% block paralax %}
+        <div class="paralax event-design">
+          {% include "blog/_nav.html.twig" %}
+          <div class="main-content-min">
+            <div class="container">
+              <!-- Content Section -->
+              <div class="row">
+                <div class="col-12 col-sm-8 mx-auto text-center">
+                  <h1 class="display-4 fw-bolder my-5">Le Blog</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endblock %}
+
+        <div class="container-fluid m-0 p-0">
+            <div class="row" id="coworking">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+        <footer class="py-3 my-4">
+          <div class="container">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+              <li class="nav-item"><a href="{{ path('app_v2_dashboard')}}" class="px-2 text-body-secondary">Olona Talents</a></li>
+              <li class="nav-item"><a href="{{ path('app_coworking_main')}}" class="px-2 text-body-secondary">Coworking</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_simulateur_portage')}}" class="px-2 text-body-secondary">Portage salarial</a></li>
+              <li class="nav-item"><a href="{{ path('app_blog_index')}}" class="px-2 text-body-secondary">Le blog</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_legal')}}" class="px-2 text-body-secondary">Mentions Légales</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_privacy')}}" class="px-2 text-body-secondary">Politique de Confidentialité</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_terms')}}" class="px-2 text-body-secondary">Conditions d'Utilisation</a></li>
+              <li class="nav-item"><a href="{{ path('app_contact_us')}}" class="px-2 text-body-secondary">Nous contacter</a></li>
+            </ul>
+            <p class="text-center text-body-secondary">© 2024 Olona Talents, Tous droits réservés.</p>
+          </div>
+        </footer>
+        {% include "cookies_management.html.twig" %}
+    
+        <script>
+    
+          function loadCKEditor() {
+            if (typeof ClassicEditor === 'undefined') {
+              var scriptTag = document.createElement('script');
+              scriptTag.src = "{{ asset('assets/ckeditor5/ckeditor.js') }}";
+              document.body.appendChild(scriptTag);
+            }
+          }
+    
+          loadCKEditor();
+          document.addEventListener('turbo:load', loadCKEditor);
+    
+        </script>
+        <!-- Bouton de retour en haut -->
+        <button id="backToTop" class="back-to-top" style="display: none;"><i class="bi bi-chevron-up"></i></button>
+    </body>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('main') }}
+    {% endblock %}
+</html>

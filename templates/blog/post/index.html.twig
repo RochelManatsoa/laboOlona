@@ -1,0 +1,49 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}Tous les articles{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Tous les articles</h1>
+    <div class="my-4">
+        <a class="btn btn-sm rounded-pill px-5 btn-primary" href="{{ path('app_blog_post_new') }}">Create new</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Titre</th>
+                <th class="text-center">Image</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+            <tr>
+                <td>{{ post.id }}</td>
+                <td> 
+                    {{ post.title }} {{ getPostStatus(post.status)|raw }}<br> 
+                    Par <span class="fw-bold">{{ post.author }}</span> <br>
+                    <span class="fw-lighter">{{ post.createdAt|time_ago }}</span> <br>
+                    <span class="badge bg-success rounded-pill">{{ post.category.title }}</span>
+                </td>
+                <td class="text-center">
+                    {% if post.imageName %}
+                        <img src="{{ asset('images/blogs/' ~ post.imageName) }}" alt="{{ post.title }}" class="img-thumbnail" style="width: 200px;"/>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-sm rounded-circle btn-primary" href="{{ path('app_blog_post_show', {'id': post.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-sm rounded-circle btn-secondary" href="{{ path('app_blog_post_edit', {'id': post.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ knp_pagination_render(posts) }}
+
+{% endblock %}

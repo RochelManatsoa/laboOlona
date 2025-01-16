@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail de notification</title>
+</head>
+<body style="font-family: 'Open Sans', Arial, sans-serif; margin: 0; padding: 20px; background-color: #EDEDED;">
+    <div style="max-width: 550px; margin: 0 auto; background-color: #FFFFFF; padding: 25px; border-radius: 10px; box-shadow: 0 6px 10px rgba(0,0,0,0.05);">
+        <div style="text-align: center;">
+            <img src="https://app.olona-talents.com/images/logo-light150x150.png" alt="Logo Olona-talents" style="width: 250px;">
+        </div>
+        <div>
+            <p>Bonjour,</p>
+            <p>Nous vous remercions d’avoir souscrit à notre contrat VIP Coworking Olona Talents. Votre souscription a bien été prise en compte, et nous sommes ravis de vous accueillir parmi nos membres privilégiés.</p>
+            <div>
+                Détails de votre souscription : 
+                <div>
+                <p><strong>Nom</strong> : {% if contract.typePerson %} Société {{ contract.socialReason }} {% else %} {{ contract.firstName }} {{ contract.lastName }}{% endif %}</p>
+                <p><strong>Date de souscription </strong> : {{ contract.createdAt|date('d/m/Y à h:i') }}</p>
+                <p><strong>Type de contrat</strong> : {{ contract.package.name }} </p>
+                <p><strong>Tarif mensuel</strong> : {{ contract.package.price }} </p>
+                <p><strong>N° contrat</strong> : {{ contract.contractNumber }} </p>
+                <p><strong>Durée</strong> : Reconduction tacite mensuelle </p>
+                </div>
+            </div>
+            <div>
+                Avantages inclus dans votre offre VIP : 
+                <div>
+                <p>Réservations illimitées et prioritaires (du lundi au vendredi, de 8h à 18h, sous réservation).</p>
+                <p>Connexion haut débit Starlink et service continu avec groupes électrogènes.</p>
+                <p>1 publication "Coworker du jour" (facultatif) sur notre page Facebook.</p>
+                <p>Remises : 25 % sur les services Olona Talents et 50 % pour les accompagnants.</p>
+                </div>
+            </div>
+            <div>
+                Besoin d’aide ? : 
+                <div>
+                <p>Notre équipe est disponible pour répondre à vos questions ou vous accompagner. Contactez-nous à <a href="mailto:contact@olona-talents.com" style="text-decoration: none; color: #0D6EFD;">contact@olona-talents.com</a> ou par téléphone au <a href="tel:+261320373432" style="text-decoration: none; color: #0D6EFD;">+261320373432</a>.</p>
+                <p>Merci de votre confiance, et bienvenue dans l’univers Olona Talents VIP Coworking. Nous sommes impatients de vous accompagner dans vos projets.</p>
+                </div>
+            </div>
+            
+        </div>
+        <div style="font-family: 'Poppins', Arial, sans-serif; background-color: #F2F2F2; padding: 15px 0; font-size: 12px; color: #666; margin-top: 25px;">
+            <a href="https://olona-talents.com/privacy-policy" style="text-decoration: none; color: #0D6EFD;">Politique de confidentialité</a> | 
+            <a href="https://olona-talents.com/terms-of-service" style="text-decoration: none; color: #0D6EFD;">Conditions d'utilisation</a> | 
+            <a href="https://olona-talents.com/cookie-policy" style="text-decoration: none; color: #0D6EFD;">Politique de cookies</a> | 
+            <a href="https://olona-talents.com/data-request" style="text-decoration: none; color: #0D6EFD;">Demande de données</a>
+        </div>
+    </div>
+</body>
+</html>

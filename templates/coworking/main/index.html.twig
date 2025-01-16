@@ -234,7 +234,7 @@
                             </div>
                             <div class="small text-nowrap">
                               <span class="fw-bolder text-nowrap">
-                                {{  category.places|length - countAvailableByCategory(availableTomorrow, category) }}
+                                {{  category.places|length - countAvailableByCategory(availableToday, category) }}
                               </span> 
                               disponibles sur 
                               <span class="fw-bolder text-nowrap">
@@ -492,7 +492,7 @@
                             </div>
                             <div class="small text-nowrap">
                               <span class="fw-bolder text-nowrap">
-                                {{  category.places|length - countAvailableByCategory(availableTomorrow, category) }}
+                                {{  category.places|length - countAvailableByCategory(availableDayAfterTomorrow, category) }}
                               </span> 
                               disponibles sur 
                               <span class="fw-bolder text-nowrap">

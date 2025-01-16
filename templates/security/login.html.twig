@@ -11,6 +11,8 @@
 <meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ path('app_login') }}">
 {% endblock %}
 
 {% block body %}
@@ -28,11 +30,6 @@
                         <p class="text-center mb-4">
                             Pas encore membre ? <a href="{{ path('app_olona_talents_register') }}" class="text-primary fw-bolder">Inscrivez-vous dès maintenant</a> et rejoignez la communauté Olona-talents.
                         </p>
-                        <div class="mb-4 text-center">
-                            <a href="{{ path('connect_google_start') }}" class="btn btn-outline-primary btn-block rounded-pill px-5">
-                                Se connecter avec <i class="bi bi-google"></i>
-                            </a>
-                        </div>
                         
                         {% if error %}
                         <div class="alert alert-danger">
@@ -73,9 +70,28 @@
 
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                             <div class="text-center my-3">
-                              <button type="submit" class="btn btn-primary rounded-pill px-5 mx-auto">Connexion</button>
+                              <button type="submit" class="btn btn-primary px-5 mx-auto">Connexion</button>
                             </div>
                         </form>
+                        <section class="mt-3">
+                            <div class="d-flex align-items-center my-3">
+                                <hr class="flex-grow-1">
+                                <h2 class="h5 text-center mx-3">Utiliser les réseaux sociaux</h2>
+                                <hr class="flex-grow-1">
+                            </div>
+                            <div class="d-grid gap-2 mt-3">
+                                <a href="{{ path('connect_google_start') }}" class="text-white btn btn-success">
+                                    <i class="bi bi-google me-3"></i>
+                                    Se connecter avec Google
+                                </a>
+                            </div>
+                            <div class="d-grid gap-2 mt-3">
+                                <a href="{{ path('connect_facebook_start') }}" class="text-white btn btn-info">
+                                    <i class="bi bi-facebook me-3"></i>
+                                    Se connecter avec Facebook
+                                </a>
+                            </div>
+                        </section>
                     </div>
                 </div>
             </div>

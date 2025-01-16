@@ -51,14 +51,16 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $routeName = $request->attributes->get('_route');
         $this->userPostAuthenticationService->updateLastLoginDate($token->getUser());
         $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_LOGIN, 'Connexion à Olona Talents', ActivityLog::LEVEL_INFO);
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-        // For example:
+        if ($routeName === 'coworking_login') {
+            return new RedirectResponse($this->urlGenerator->generate('app_coworking_main'));
+        }
         return new RedirectResponse($this->urlGenerator->generate('app_v2_dashboard'));
-        // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl(Request $request): string

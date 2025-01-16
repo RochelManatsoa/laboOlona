@@ -1,0 +1,42 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}Tous les commentaires{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Tous les commentaires</h1>
+    <div class="my-4">
+        <a class="btn btn-sm rounded-pill px-5 btn-primary" href="{{ path('app_blog_comment_new') }}">Create new</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom d'utilisateur</th>
+                <th>Statut</th>
+                <th>Créé</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for comment in comments %}
+            <tr>
+                <td>{{ comment.id }}</td>
+                <td>{{ comment.author }} <br> <span class="fw-lighter">{{ comment.email }}</span></td>
+                <td>{{ getCommentStatus(comment.status)|raw }}</td>
+                <td>{{ comment.createdAt ? comment.createdAt|time_ago : '' }}</td>
+                <td>
+                    <a class="btn btn-sm rounded-circle btn-primary" href="{{ path('app_blog_comment_show', {'id': comment.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-sm rounded-circle btn-secondary" href="{{ path('app_blog_comment_edit', {'id': comment.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ knp_pagination_render(comments) }}
+
+{% endblock %}

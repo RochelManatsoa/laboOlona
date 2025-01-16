@@ -1,0 +1,59 @@
+
+<!-- Cookie Consent Banner -->
+<div id="cookies">
+    <div class="cookie-consent" style="display:none;">
+        <div class="alert mb-0" role="alert">
+            <div class="container">
+                <div class="row p-4 align-items-center">
+                    <div class="col-12 col-sm-8">
+                        <h3>Cookies et confidentialité</h3>
+                        <p>
+                            Nous utilisons des cookies pour optimiser votre expérience sur notre site, analyser le trafic, et personnaliser le contenu.
+                            <a href="{{ path('app_home_privacy') }}" target="_blank">En savoir plus</a>.
+                        </p>
+                    </div>
+                    <div class="col-12 col-sm-4 text-center">
+                        <button class="btn btn-primary rounded-pill px-4" onclick="acceptAllCookies()">Tout accepter</button>
+                        <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#cookieSettingsModal">Paramétrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Cookie Settings -->
+    <div class="modal fade" id="cookieSettingsModal" tabindex="-1" aria-labelledby="cookieSettingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cookieSettingsModalLabel">Gérer vos préférences de cookies</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Sélectionnez les catégories de cookies que vous souhaitez activer :</p>
+                    <form id="cookiePreferencesForm">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="essentialCookies" checked disabled>
+                            <label class="form-check-label" for="essentialCookies">Cookies nécessaires (toujours activés)</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="functionalCookies">
+                            <label class="form-check-label" for="functionalCookies">Cookies fonctionnels</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="analyticsCookies">
+                            <label class="form-check-label" for="analyticsCookies">Cookies analytiques</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="advertisingCookies">
+                            <label class="form-check-label" for="advertisingCookies">Cookies publicitaires</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCookiePreferences()" data-bs-dismiss="modal">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
