@@ -13,6 +13,7 @@
 /public/images/blogs/*
 /public/video/*
 /public/assets/ckeditor5/
+/public/robots.txt
 /public/sitemap.blog.xml
 /public/sitemap.category.xml
 /public/sitemap.default.xml
