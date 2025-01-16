@@ -138,6 +138,29 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_connect');
         }
     }
+    
+    #[Route(path: '/connect/facebook', name: 'connect_facebook_start')]
+    public function connectFacebookAction(ClientRegistry $clientRegistry)
+    {
+        return $clientRegistry
+            ->getClient('facebook_main') 
+            ->redirect([
+                'public_profile', 'email' 
+            ]);
+    }
+
+    #[Route(path: '/auth/facebook/callback', name: 'connect_facebook_check')]
+    public function connectFacebookCheckAction(Request $request, ClientRegistry $clientRegistry)
+    {
+        if(!$this->getUser()){
+            return $this->json([
+                'status' => false,
+                'message' => "User not found"
+            ], Response::HTTP_FORBIDDEN);
+        }else{
+            return $this->redirectToRoute('app_connect');
+        }
+    }
 
     #[Route(path: '/store/target/path', name: 'store_target_path')]
     public function storeTargetPath(Request $request)
