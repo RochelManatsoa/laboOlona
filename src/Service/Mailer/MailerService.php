@@ -39,13 +39,13 @@ class MailerService
     ): void
     {
         $email = new TemplatedEmail();
-        $sender = $from === '' ? 'support@olonatalents.com': $from;
+        $sender = $from === '' ? 'support@olona-talents.com': $from;
         $env = 'Olona Talents';
         if ($this->env === 'prod') {
             $email->to($to);
         } else {
             $env = '[Preprod] Olona Talents';
-            $email->to('support@olonatalents.com'); 
+            $email->to('support@olona-talents.com'); 
             $email->addTo('jrandriamalala.olona@gmail.com');
             $email->addTo('miandrisoa.olona@gmail.com');
         }
@@ -82,12 +82,12 @@ class MailerService
             }
         } else {
             $env = '[Preprod] Olona Talents';
-            $email->to('support@olonatalents.com'); 
+            $email->to('support@olona-talents.com'); 
             $email->addTo('jrandriamalala.olona@gmail.com');
             $email->addTo('contact@olona-talents.com');
         }
         $email
-            ->from(new Address('support@olonatalents.com', $env))
+            ->from(new Address('support@olona-talents.com', $env))
             ->replyTo('contact@olona-talents.com')
             ->subject($subject)
             ->htmlTemplate("mails/$template")
@@ -107,13 +107,13 @@ class MailerService
 
         if ($emailTemplate) {
             $email = new TemplatedEmail();
-            $sender = 'support@olonatalents.com';
+            $sender = 'support@olona-talents.com';
             $env = 'Olona Talents';
             if ($this->env === 'prod') {
                 $email->to($profile->getCandidat()->getEmail());
             } else {
                 $env = '[Preprod] Olona Talents';
-                $email->to('support@olonatalents.com'); 
+                $email->to('support@olona-talents.com'); 
             }
             $email 
                 ->from(new Address($sender, $env))
@@ -144,13 +144,13 @@ class MailerService
     public function sendMultipleRelanceEmail(CandidateProfile $profile, string $titre, string $contenu)
     {
         $email = new TemplatedEmail();
-        $sender = 'support@olonatalents.com';
+        $sender = 'support@olona-talents.com';
         $env = 'Olona Talents';
         if ($this->env === 'prod') {
             $email->to($profile->getCandidat()->getEmail());
         } else {
             $env = '[Preprod] Olona Talents';
-            $email->to('support@olonatalents.com'); 
+            $email->to('support@olona-talents.com'); 
         }
         $email 
             ->from(new Address($sender, $env))

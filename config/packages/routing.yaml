@@ -9,4 +9,5 @@ framework:
 when@prod:
     framework:
         router:
+            default_uri: 'https://olona-talents.com'
             strict_requirements: null

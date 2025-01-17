@@ -150,7 +150,7 @@ class InvitationController extends AbstractController
     public function emailTest(Request $request): Response
     {
         $this->mailerService->send(
-            'jrandriamalala.olona@gmail.com',
+            'support@olona-talents.com',
             "Mail TEST pour entreprise Olona Talents",
             "entreprise/welcome.html.twig",
             [

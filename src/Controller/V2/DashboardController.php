@@ -333,7 +333,7 @@ class DashboardController extends AbstractController
             $this->em->persist($contactForm);
             $this->em->flush();
             $this->mailerService->sendMultiple(
-                ["contact@olona-talents.com", "support@olonatalents.com", "support@olonatalents.com"],
+                ["contact@olona-talents.com", "support@olona-talents.com", "miandrisoa.olona@gmail.com"],
                 "Nouvelle entrée sur le formulaire de contact",
                 "contact.html.twig",
                 [
