@@ -19,3 +19,5 @@ Disallow: /coworking/user/
 
 sitemap: https://olona-talents.com/sitemap.xml
 sitemap: https://olona-talents.com/sitemap.default.xml
+sitemap: https://olona-talents.com/sitemap.blog.xml
+sitemap: https://olona-talents.com/sitemap.category.xml

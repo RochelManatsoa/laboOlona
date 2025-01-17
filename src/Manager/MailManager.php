@@ -160,7 +160,7 @@ class MailManager
         ], UrlGeneratorInterface::ABSOLUTE_URL);
         
         return $this->mailerService->sendMultiple(
-            ['contact@olona-talents.com', 'rajaomia20@gmail.com', 'aolonaprodadmi@gmail.com', 'sm.affiliations@gmail.com'],
+            ['ambassadrices@olona-talents.com', 'admin@olona-talents.com','aolonaprodadmi@gmail.com', 'support@olona-talents.com', 'contact@olona-talents.com'],
             'Réservation au nom de '.$reservation->getFullName(),
             'reservation/coworking.mail.twig',
             [
@@ -187,7 +187,7 @@ class MailManager
         );
         
         return $this->mailerService->sendMultiple(
-            ['contact@olona-talents.com', 'rajaomia20@gmail.com', 'aolonaprodadmi@gmail.com', 'support@olona-talents.com'],
+            ['ambassadrices@olona-talents.com', 'admin@olona-talents.com','aolonaprodadmi@gmail.com', 'support@olona-talents.com', 'contact@olona-talents.com'],
             'Réservation au nom de '.$contract->getFirstName().' '.$contract->getLastName(),
             'reservation/contrat_vip.mail.twig',
             [
@@ -200,7 +200,7 @@ class MailManager
     public function contactForm(ContactForm $contactForm)
     {        
         return $this->mailerService->sendMultiple(
-            ["contact@olona-talents.com", "support@olonatalents.com", "support@olonatalents.com"],
+            ["contact@olona-talents.com", "support@olona-talents.com", "miandrisoa.olona@gmail.com"],
             "Nouvelle entrée sur le formulaire de contact Coworking",
             "contact.html.twig",
             [

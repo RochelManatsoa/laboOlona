@@ -156,8 +156,8 @@ class PaymentController extends AbstractController
             $transactionManager->save($transaction);
 
             /** On envoi un mail */
-            $this->mailerService->send(
-                "aolonaprodadmi@gmail.com",
+            $this->mailerService->sendMultiple(
+                ["contact@olona-talents.com", "admin@olona-talents.com", "aolonaprodadmi@gmail.com"],
                 "Paiement sur Olona Talents",
                 "notification_paiement.html.twig",
                 [
