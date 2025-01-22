@@ -1,0 +1,55 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Concours | Olona Talents{% endblock %}
+
+{% block meta %}
+<link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ path('app_concours_etape_1') }}">
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container">
+    <div class="row py-5">
+        <div class="col-md-4 d-none d-lg-block">
+            {% include "concours/side_nav.html.twig" with {'step': 4} %}
+        </div>
+        <div class="col-md-8">
+            <section>
+                <div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
+                    {% include "concours/nav_mobile.html.twig" %}
+                    <div id="contractFormStep">                        
+                        <div id="step_4" class="step-contest">
+                            <h3>Étape 4 : J'envoie mon CV</h3>
+                            
+                            {{ form_start(form) }}
+                                <div class="pt-5">
+                                    <div id="userInfo">
+                                        {{ form_row(form.candidateProfile.titre) }}
+                                        {{ form_row(form.candidateProfile.secteurs) }}
+                                        {% if app.user.candidateProfile is not null and app.user.candidateProfile.cv is not null %}
+                                        <div class="position-relative text-center text-muted pt-3 mb-3 bg-body border border-dashed rounded-2">
+                                            <p class="col-10 mx-auto lead">
+                                                Votre CV a été validé par l'équipe Olona Talents.
+                                            </p>
+                                            </div>
+                                        {% else %}
+                                        {{ form_row(form.candidateProfile.cv) }}
+                                        {% endif %}
+                                    </div>
+                                    <div style="display: none;">
+                                        {{ form_widget(form) }}
+                                    </div>
+                                </div>
+                                <a href="{{ path('app_concours_etape_3') }}" class="btn btn-secondary">Précédent</a>
+                                <button type="submit" class="btn btn-primary">Suivant</button>
+                            {{ form_end(form) }}
+
+                        </div>
+                    </div>
+                </div>              
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

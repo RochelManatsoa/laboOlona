@@ -10,6 +10,7 @@ use App\Entity\Candidate\Langages;
 use App\Entity\Candidate\Social;
 use App\Entity\Candidate\TarifCandidat;
 use App\Entity\Entreprise\Favoris;
+use App\Entity\Facebook\ContestEntry;
 use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\EditedCv;
 use App\Entity\Vues\CandidatVues;
@@ -210,6 +211,9 @@ class CandidateProfile
     #[ORM\ManyToOne(inversedBy: 'candidateProfiles')]
     private ?BoostFacebook $boostFacebook = null;
 
+    #[ORM\OneToMany(mappedBy: 'candidateProfile', targetEntity: ContestEntry::class)]
+    private Collection $contestEntries;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -228,11 +232,12 @@ class CandidateProfile
         $this->uid = new Uuid(Uuid::v4());
         $this->isValid = false;
         $this->status = self::STATUS_PENDING;
+        $this->contestEntries = new ArrayCollection();
     }
 
     public function __toString()
     {
-        return $this->getCandidat()->getPrenom();
+        return $this->getCandidat() ? $this->getCandidat()->getPrenom() : $this->titre;
     }
     
     public function __serialize(): array
@@ -1060,6 +1065,36 @@ class CandidateProfile
     public function setBoostFacebook(?BoostFacebook $boostFacebook): static
     {
         $this->boostFacebook = $boostFacebook;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ContestEntry>
+     */
+    public function getContestEntries(): Collection
+    {
+        return $this->contestEntries;
+    }
+
+    public function addContestEntry(ContestEntry $contestEntry): static
+    {
+        if (!$this->contestEntries->contains($contestEntry)) {
+            $this->contestEntries->add($contestEntry);
+            $contestEntry->setCandidateProfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContestEntry(ContestEntry $contestEntry): static
+    {
+        if ($this->contestEntries->removeElement($contestEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($contestEntry->getCandidateProfile() === $this) {
+                $contestEntry->setCandidateProfile(null);
+            }
+        }
 
         return $this;
     }

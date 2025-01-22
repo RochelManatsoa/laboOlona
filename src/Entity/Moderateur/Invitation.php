@@ -37,6 +37,13 @@ class Invitation
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $status = null;
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->status = self::STATUS_PENDING;
+        $this->uuid = Uuid::v4();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

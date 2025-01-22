@@ -1,0 +1,256 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Concours | Olona Talents{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement, travail, emploi, talents, candidat, recruteur, offres, agence, olona, olona talents, olona talents agence, talents agence, agence talents, candidature, candidature agence, candidature olona, candidature olona talents">
+<meta property="og:title" content="Conditions Générales d'Utilisations">
+<meta property="og:description" content="Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+
+
+{% block header %}
+	{% set last_query = app.request.query.get('q', '') %}
+	<!-- Boutons en haut à droite -->
+	<div class="fixed-top d-flex justify-content-end p-2">
+		{% if app.user %}
+			<a href="{{ path('app_v2_dashboard_notification', {'isRead':'0'}) }}" class="position-relative me-4">
+				<i class="bi bi-bell fs-4 "></i>
+				<span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
+				{{ component('count_notification_component')}}
+				<span class="visually-hidden">unread messages</span>
+				</span>
+			</a>
+			{{ component('credit_user_component') }}
+			<div class="dropdown me-3">
+				<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
+					{% if app.user.gravatar is not null %}
+					<img src="{{ app.user.gravatar }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+					{% else %}
+					<img src="{{ asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+					{% endif %}
+				</button>
+				<ul class="dropdown-menu text-small shadow">
+					<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Tableau de bord</a></li>
+					<li><a class="dropdown-item" href="{{ path('app_v2_prestation')}}">Mes prestations</a></li>
+					<li><a class="dropdown-item" href="{{ path('app_v2_dashboard_notification')}}">Mes notifications</a></li>
+					<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Mon profil</a></li>
+					<li><a class="dropdown-item" href="{{ path('app_v2_contacts')}}">Mon réseau</a></li>
+					<li><hr class="dropdown-divider"></li>
+					<li><a class="dropdown-item" href="{{ path('app_logout')}}">Se déconnecter</a></li>
+				</ul>
+			</div>
+		{% else %}
+			<a href="{{ path('app_login')}}" class="me-3 mt-2">Se connecter</a>
+		{% endif %}
+		<button id="switch-theme" class="btn btn-secondary btn-sm">
+			<i class="bi bi-moon-stars-fill"></i>
+		</button>
+	</div>
+	<header class="p-3 mb-2">
+		<div class="container">
+			<div class="row">
+				<div class="col-12 col-sm-4 mx-auto my-4">
+					<a href="{{ path('app_home') }}">
+						<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" class="img-fluid mx-auto" alt="Logo">
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 col-sm-10 text-center mx-auto">
+					<h1 class="fs-5 my-4">Le #1 moteur de recherche dédié à l'emploi à Madagascar.</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 col-sm-6 mx-auto">
+					<form action="{{ path('app_olona_talents_candidates') }}" class="input-group mb-3 rounded-4 shadow">
+						<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Faites une recherche dès maintenant et découvrez nos services..." style="font-size: 0.8em;">
+						<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</header>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row py-5">
+        <div class="col-md-4 d-none d-lg-block">
+            <div class="position-sticky" style="top: 2rem;">
+                <h2 class="text-center">Concours <i class="bi bi-facebook"></i></h2>
+                <hr>
+                <ul class="nav flex-column nav-pills justify-content-center mb-4" id="formStepsIndicator">
+                    <li class="nav-item d-inline-flex align-items-center">
+                        <button class="nav-link btn-sm rounded-circle active" type="button" data-step="1">1</button>
+                        <span class="ms-3">Déjà membre?</span>
+                    </li>
+                    <li class="nav-item d-inline-flex align-items-center">
+                        <button class="nav-link rounded-circle" type="button" data-step="2" disabled>2</button>
+                        <span class="ms-3">Régle de jeu</span>
+                    </li>
+                    <li class="nav-item d-inline-flex align-items-center">
+                        <button class="nav-link rounded-circle" type="button" data-step="3" disabled>3</button>
+                        <span class="ms-3">Mes infos</span>
+                    </li>
+                    <li class="nav-item d-inline-flex align-items-center">
+                        <button class="nav-link rounded-circle" type="button" data-step="4" disabled>4</button>
+                        <span class="ms-3">J'envoie mon CV</span>
+                    </li>
+                    <li class="nav-item d-inline-flex align-items-center">
+                        <button class="nav-link rounded-circle" type="button" data-step="5" disabled>5</button>
+                        <span class="ms-3">Participer au jeu</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <section>
+                <div class="container">  
+                    
+                    <div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
+                        <ul class="nav nav-pills justify-content-center mb-4 d-block d-lg-none" id="formStepsIndicator">
+                            <li class="nav-item d-inline-flex align-items-center">
+                                <button class="nav-link rounded-circle active" type="button" data-step="1">1</button>
+                            </li>
+                            <li class="nav-item d-inline-flex align-items-center">
+                                <button class="nav-link rounded-circle" type="button" data-step="2" disabled>2</button>
+                            </li>
+                            <li class="nav-item d-inline-flex align-items-center">
+                                <button class="nav-link rounded-circle" type="button" data-step="3" disabled>3</button>
+                            </li>
+                            <li class="nav-item d-inline-flex align-items-center">
+                                <button class="nav-link rounded-circle" type="button" data-step="4" disabled>4</button>
+                            </li>
+                            <li class="nav-item d-inline-flex align-items-center">
+                                <button class="nav-link rounded-circle" type="button" data-step="5" disabled>5</button>
+                            </li>
+                        </ul>
+                        <div id="contractFormStep">
+                            <div id="step-1" class="step">
+                                <h3>Étape 1 : Membre Olona Talents ?</h3>
+                                <div class="py-5">
+                                    <h4 class="fw-bolder">Identifiez-vous pour continuer</h4>
+                                    <p class="">Nous utiliserons cette information pour préremplir vos données et appliquer votre eligibilité.</p>
+                                    <div class="btn-group mt-3" role="group" aria-label="Basic outlined example">
+                                        <button type="button" class="btn btn-sm btn-outline-primary px-4 py-2" id="yesButton">Oui</button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary px-4 py-2" id="noButton">Non</button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary px-4 py-2 next-step">Passer</button>
+                                    </div>
+                                    <div id="user" class="mt-4" style="display: none;">
+                                        <form action="{{ path('app_home_identify_user')}}" method="post">
+                                            <div class="mb-3">
+                                                <label for="form_authenticate_user_email" class="form-label required">Adresse éléctronique</label>
+                                                <input type="email" id="form_authenticate_user_email" name="userEmail" class="form-control">    
+                                            </div>
+                                            <button type="submit" class="btn btn-sm btn-primary px-4 py-2">Vérifier mes infos</button>
+                                        </form>
+                                    </div>
+                                    <div id="newUser" class="mt-4" style="display: none;">
+                                        <form action="{{ path('app_home_registration_user')}}" method="post">
+                                            <div class="mb-3">
+                                                <label for="form_registration_user_first_name" class="form-label required">Nom</label>
+                                                <input type="text" id="form_registration_user_first_name" name="userFirstName" class="form-control">    
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="form_registration_user_last_name" class="form-label required">Prénom</label>
+                                                <input type="text" id="form_registration_user_last_name" name="userLastName" class="form-control">    
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="form_registration_user_phone" class="form-label required">Téléphone</label>
+                                                <input type="text" id="form_registration_user_phone" name="userPhone" class="form-control">    
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="form_registration_user_email" class="form-label required">Adresse éléctronique</label>
+                                                <input type="email" id="form_registration_user_email" name="userEmail" class="form-control">    
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="form_registration_user_password" class="form-label required">Mot de passe</label>
+                                                <input type="password" id="form_registration_user_password" name="userPassword" class="form-control">    
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="form_registration_user_repeat_password" class="form-label required">Confirmer le mot de passe</label>
+                                                <input type="password" id="form_registration_user_repeat_password" name="userRepeatPassword" class="form-control">    
+                                            </div>
+                                            <button type="submit" class="btn btn-sm btn-primary px-4 py-2">Je crée mon compte</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div id="step-2" class="step d-none">
+                                <h3>Étape 2 : Règle de jeu</h3>
+                                <div class="py-5">
+                                    {# {{ form_widget(form.motor) }} #}
+                                </div>
+
+                                <button type="button" class="btn btn-secondary prev-step">Précédent</button>
+                                <button type="button" class="btn btn-primary next-step">Suivant</button>
+                            </div>
+
+                        
+                            <div id="step-3" class="step d-none">
+                                <h3>Étape 3 : Mes infos</h3>
+                                {{form_start(formEntry) }}
+                                <div class="py-5">
+                                    <div id="userInfo">
+                                        {{ form_row(formEntry.user.nom) }}
+                                        {{ form_row(formEntry.user.prenom) }}
+                                        {{ form_row(formEntry.user.telephone) }}
+                                        {{ form_row(formEntry.user.email) }}
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-secondary prev-step">Précédent</button>
+                                <button type="button" class="btn btn-primary next-step">Suivant</button>
+                            </div>
+
+
+                        
+                            <div id="step-4" class="step d-none">
+                                <h3>Étape 4 : J'envoie mon CV</h3>
+                                <div class="py-5">
+                                    <div id="myInfo">
+                                        {{ form_row(formEntry.candidateProfile.titre) }}
+                                        {{ form_row(formEntry.candidateProfile.secteurs) }}
+                                        {{ form_row(formEntry.candidateProfile.cv) }}
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn btn-secondary prev-step">Précédent</button>
+                                <button type="button" class="btn btn-primary next-step">Suivant</button>
+                            </div>
+
+                        
+                            <div id="step-5" class="step d-none">
+                                <h3>Étape 5 : Je participe</h3>
+                                <div class="py-5">
+                                    <div id="participation">
+
+                                    </div>
+                                </div>
+                                <div id="buttons">
+                                    <button type="button" class="btn btn-secondary prev-step">Précédent</button>
+                                    <button type="submit" class="btn btn-primary">Participer</button>
+                                </div>
+                            </div>
+                            <div style="display: none;">
+                                {{ form_widget(formEntry)}}
+                            </div>
+                            {{ form_end(formEntry)}}
+                        </div>
+                    </div>              
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block preview %}{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}Edit Contest{% endblock %}
+
+{% block body %}
+<h1 class="h3">Modifier un concours</h1>
+
+<div id="coworking">
+{{ include('facebook/contest/_form.html.twig', {'button_label': 'Update'}) }}
+</div>
+
+<div class="my-5">
+<a class="btn btn-info px-5 rounded-pill" href="javascript:history.back()"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+</div>
+
+{{ include('facebook/contest/_delete_form.html.twig') }}
+{% endblock %}

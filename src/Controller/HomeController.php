@@ -2,17 +2,32 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Manager\MailManager;
+use App\Service\FileUploader;
+use App\Manager\ProfileManager;
+use Symfony\Component\Uid\Uuid;
+use App\Entity\CandidateProfile;
+use App\Entity\Facebook\Contest;
+use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
+use App\Security\AppAuthenticator;
+use App\Entity\Facebook\ContestEntry;
+use App\Entity\Moderateur\Invitation;
+use App\Service\Mailer\MailerService;
 use App\Entity\Moderateur\ContactForm;
 use App\Service\Annonce\AnnonceService;
 use App\Form\Moderateur\ContactFormType;
-use App\Manager\MailManager;
-use App\Service\Mailer\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\Facebook\ContestEntryFormType;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class HomeController extends AbstractController
 {
@@ -129,5 +144,67 @@ class HomeController extends AbstractController
     public function simulateurEntreprise(): Response 
     {
         return $this->redirectToRoute('app_v2_recruiter_simulator');
+    }
+
+    #[Route('/authenticate/user', name: 'app_home_authenticate_user', methods: ['POST'])]
+    public function authenticateUser(
+        Request $request, 
+        EntityManagerInterface $em,
+        UserAuthenticatorInterface $userAuthenticator,
+        AppAuthenticator $authenticator,
+        UserService $userService,
+    ): Response
+    {
+        $userEmail = $request->request->get('userEmail');
+        $userPassword = $request->request->get('userPassword');
+        $user = $em->getRepository(User::class)->findOneBy(['email' => $userEmail]);
+
+        if (!$user) {
+            $response = [
+                'status' => 'error',
+                'id' => 'user',
+                'message' => 'Aucun utilisateur trouvé avec cet e-mail.',
+            ];
+    
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('turbo_stream/error_message.html.twig', $response);
+            }
+    
+            return $this->json($response, Response::HTTP_NOT_FOUND);
+        }
+
+        if(!$userService->checkUserPassword($user, $userPassword)){
+            $response = [
+                'status' => 'error',
+                'id' => 'user',
+                'message' => 'Mot de passe incorrect.',
+            ];
+    
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('turbo_stream/error_message.html.twig', $response);
+            }
+    
+            return $this->json($response, Response::HTTP_NOT_FOUND);
+        }
+    
+        $response = $userAuthenticator->authenticateUser(
+            $user,
+            $authenticator,
+            $request
+        );
+    
+        if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+            $responseData = [
+                'status' => 'success',
+                'id' => 'user',
+                'message' => 'Connexion réussie, bienvenue ' . $user->getPrenom(),
+            ];
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('turbo_stream/success_message.html.twig', $responseData);
+        }
+    
+        return $response;
     }
 }

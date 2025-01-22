@@ -1,0 +1,149 @@
+{% set current_route = app.request.attributes.get('_route') %}
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+    <div class="offcanvas-header">
+      <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home') }}">
+          <img id="logoOffCanvas" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="100px" class="" alt="Logo">
+        </a>
+      </div>
+      <button type="button" class="btn btn-outline-dark" data-bs-dismiss="offcanvas" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="d-flex flex-column flex-shrink-0 p-3 " style="width: 280px;">
+  
+        <div class="d-flex justify-content-center my-2">
+            <div class="rounded-circle" style="
+                width: 85px;
+                height: 85px;
+                background-image: url('{{ app.user.candidateProfile.fileName ? asset('uploads/experts/' ~ app.user.candidateProfile.fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+                background-size: cover;
+                background-position: center;
+            ">
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="text-center fw-bold">
+            {{ app.user.nom }} {{ app.user.prenom }}
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="text-center fw-lighter">
+            {{ app.user.candidateProfile.titre }}
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <div id="checkBoost">
+          {{ checkBoost(app.user)|raw }}
+          </div>
+        </div>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li class="nav-item">
+            <a href="{{ path('app_v2_job_offer')}}" class="nav-link {{ current_route == 'app_v2_job_offer' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-search me-2"></i></span> Trouver une mission
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ path('app_v2_prestation')}}" class="nav-link {{ current_route == 'app_v2_prestation' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-journals me-2"></i> Annuaire de services
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ path('app_v2_profiles')}}" class="nav-link {{ current_route == 'app_v2_profiles' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-person-raised-hand me-2"></i> Trouver un collaborateur
+            </a>
+          </li>
+          {% if app.user.candidateProfile is defined and app.user.candidateProfile.prestations|length > 0 %}
+          <li class="nav-item">
+            <a href="{{ path('app_v2_prestation_my_created')}}" class="nav-link {{ current_route == 'app_v2_prestation_my_created' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-person-workspace me-2"></i></span> Mes prestations
+            </a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a href="{{ path('app_v2_applications')}}" class="nav-link {{ current_route == 'app_v2_applications' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-card-checklist me-2"></i></span> Mes candidatures
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ path('app_v2_contacts')}}" class="nav-link {{ current_route == 'app_v2_contacts' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-journal-check me-2"></i></i></span> Mon réseau professionnel
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ path('app_v2_candidate_simulator_create')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator_create' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-printer me-2"></i></span> Simulateur de salaire
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ path('app_v2_candidate_simulator')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-aspect-ratio me-2"></i></span> Mes simulations
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ path('app_v2_dashboard_notification')}}" class="nav-link {{ current_route == 'app_v2_dashboard_notification' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-bell me-2"></i></i></span> Mes notifications
+              {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ path('app_v2_user_order')}}" class="nav-link {{ current_route == 'app_v2_user_order' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-bookmark-star me-2"></i></span> Mes commandes
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ path('app_v2_dashboard_ai_tools') }}" class="nav-link {{ current_route in ['app_v2_dashboard_ai_tools', 'app_v2_dashboard_ai_tool_view', 'app_v2_dashboard_ai_tool_category', 'app_v2_dashboard_ai_tool_tag'] ? 'underline' : '' }}" aria-current="page">
+                <i class="bi bi-magic me-2"></i> Ai Tools
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ path('app_v2_dashboard_formation')}}" class="nav-link {{ (current_route == 'app_v2_dashboard_formation' or current_route == 'app_v2_dashboard_formation_playlist_view') ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-layers me-2"></i></span> Centre de formations
+            </a>
+          </li>
+          <hr>
+          <li class="nav-item">
+            <a href="{{ path('app_v2_candidate_dashboard')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-person-badge me-2"></i></span> Mes informations
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ path('app_v2_contact')}}" class="nav-link {{ current_route == 'app_v2_contact' ? 'underline' : '' }}" aria-current="page">
+              <i class="bi bi-envelope-at me-2"></i></span> Contacter le support
+            </a>
+          </li>
+        </ul>
+        <hr>
+        <a href="{{ path('app_v2_credit')}}" class="btn-primary btn px-2 text-uppercase fw-semibold">
+          <i class="bi bi-bookmark-star fw-bold"></i>
+          Recharger mes crédits
+        </a>
+        <hr>
+        <div class="nav-item">
+          <a href="{{ path('app_logout')}}" class="nav-link">
+            <i class="bi bi-box-arrow-right fw-bold"></i>
+            Se deconnecter
+          </a>
+        </div>
+      </div>
+    </div>
+</div>
+
+<ul class="nav nav-pills justify-content-center mx-auto text-center mb-4 d-block d-lg-none" >
+    <li class="nav-item d-inline-flex align-items-center">
+        <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_1' ? 'active' : 'disabled' }}" type="button" >1</button>
+    </li>
+    <li class="nav-item d-inline-flex align-items-center">
+        <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_2' ? 'active' : 'disabled' }}" type="button" >2</button>
+    </li>
+    <li class="nav-item d-inline-flex align-items-center">
+        <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_3' ? 'active' : 'disabled' }}" type="button" >3</button>
+    </li>
+    <li class="nav-item d-inline-flex align-items-center">
+        <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_4' ? 'active' : 'disabled' }}" type="button" >4</button>
+    </li>
+    <li class="nav-item d-inline-flex align-items-center">
+        <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_5' ? 'active' : '' }}" type="button" >5</button>
+    </li>
+</ul>

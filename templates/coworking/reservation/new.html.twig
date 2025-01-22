@@ -28,6 +28,7 @@
     <h1>Create new Reservation</h1>
 
     {{ include('coworking/reservation/_form.html.twig') }}
-
-    <a href="{{ path('app_coworking_reservation_index') }}">back to list</a>
+    <p>
+        <a href="{{ path('app_coworking_reservation_index') }}" class="btn btn-info">retour à la liste</a>
+    </p>
 {% endblock %}

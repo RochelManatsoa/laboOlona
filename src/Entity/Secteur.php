@@ -33,7 +33,7 @@ class Secteur
     #[ORM\ManyToMany(targetEntity: EntrepriseProfile::class, mappedBy: 'secteurs')]
     private Collection $entreprise;
 
-    #[ORM\ManyToMany(targetEntity: CandidateProfile::class, mappedBy: 'secteurs')]
+    #[ORM\ManyToMany(targetEntity: CandidateProfile::class, mappedBy: 'secteurs', cascade: ['persist', 'remove'])]
     private Collection $candidat;
 
     #[ORM\OneToMany(mappedBy: 'secteur', targetEntity: JobListing::class)]

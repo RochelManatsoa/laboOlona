@@ -1,0 +1,133 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Concours | Olona Talents{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Participez au concours exclusif Olona Talents sur Facebook et remportez des prix exceptionnels. Découvrez comment nous mettons en avant les talents et projets ambitieux de Madagascar et de l'espace francophone.">
+<meta name="keywords" content="concours, Facebook, talents, Madagascar, francophone, freelance, projets, emploi, recrutement, candidatures, Olona, Olona Talents, visibilité, carrière, opportunités">
+<meta property="og:title" content="Participez au Concours Facebook Olona Talents">
+<meta property="og:description" content="Rejoignez notre concours exclusif sur Facebook et mettez en lumière vos talents. À la clé, des opportunités uniques et des prix exceptionnels.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+
+
+{% block body %}
+<div class="container">
+    <div class="row py-5">
+        <div class="col-md-4 d-none d-lg-block">
+            {% include "concours/side_nav.html.twig" with {'step': 1} %}
+        </div>
+        <div class="col-md-8">
+            <section>
+                <div class="annonce-item shadow p-3 p-sm-5 m-0 m-sm-4">
+                    {% include "concours/nav_mobile.html.twig" %}
+                    <div id="contractFormStep">
+                        <div id="step_1" class="step-contest">
+                            <h3>Étape 1 : Membre Olona Talents ?</h3>
+                            <div class="py-5">
+                                <h4 class="fw-bolder">Identifiez-vous pour continuer</h4>
+                                <p class="">Nous utiliserons cette information pour préremplir vos données et appliquer votre eligibilité.</p>
+                                <div class="btn-group mt-3" role="group" aria-label="Basic outlined example">
+                                    {% if app.user %}
+                                    <button type="button" class="btn btn-sm btn-outline-success px-4 py-2 active">Oui</button>
+                                    <button type="button" class="btn btn-sm btn-outline-primary px-4 py-2" disabled>Non</button>
+                                    {% else %}
+                                    <button type="button" class="btn btn-sm btn-outline-primary px-4 py-2" id="yesButton">Oui</button>
+                                    <button type="button" class="btn btn-sm btn-outline-primary px-4 py-2" id="noButton">Non</button>
+                                    {% endif %}
+                                </div>
+                                {% if app.user %}
+                                    <div>
+                                        <a href="{{ path('app_concours_etape_2') }}" class="btn btn-primary my-4">Suivant</a>
+                                    </div>
+                                {% endif %}
+                                <div id="user" class="mt-4" style="display: none;">
+                                    <div id="error">
+                                        <form action="{{ path('app_home_authenticate_user')}}" method="post">
+                                            <div class="mb-3">
+                                                <label for="form_authenticate_user_email" class="form-label required">Adresse éléctronique</label>
+                                                <input type="email" id="form_authenticate_user_email" name="userEmail" class="form-control">    
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="form_authenticate_user_password" class="form-label required">Mot de passe</label>
+                                                <input type="password" id="form_authenticate_user_password" name="userPassword" class="form-control">    
+                                            </div>
+                                            <button type="submit" class="btn btn-sm btn-primary px-4 py-2">Vérifier mes infos</button>
+                                        </form>
+                                    </div>
+                                    <section class="mt-3">
+                                        <div class="d-flex align-items-center my-3">
+                                            <hr class="flex-grow-1">
+                                            <h2 class="h5 text-center mx-3">Utiliser les réseaux sociaux</h2>
+                                            <hr class="flex-grow-1">
+                                        </div>
+                                        <div class="d-grid gap-2 mt-3">
+                                            <a href="{{ path('connect_google_start') }}" class="text-white btn btn-success">
+                                                <i class="bi bi-google me-3"></i>
+                                                Se connecter avec Google
+                                            </a>
+                                        </div>
+                                        <div class="d-grid gap-2 mt-3">
+                                            <a href="{{ path('connect_facebook_start') }}" class="text-white btn btn-info">
+                                                <i class="bi bi-facebook me-3"></i>
+                                                Se connecter avec Facebook
+                                            </a>
+                                        </div>
+                                    </section>
+                                </div>
+                                <div id="newUser" class="mt-4" style="display: none;">
+                                    {{ form_start(form) }}
+
+                                    <div id="{{ form.nom.vars.id }}_row" class="form-group">
+                                        {{ form_row(form.nom) }}
+                                    </div>
+
+                                    <div id="{{ form.prenom.vars.id }}_row" class="form-group">
+                                        {{ form_row(form.prenom) }}
+                                    </div>
+
+                                    <div id="{{ form.email.vars.id }}_row" class="form-group">
+                                        {{ form_row(form.email) }}
+                                    </div>
+
+                                    <div id="{{ form.plainPassword.vars.id }}_row" class="form-group">
+                                        {{ form_row(form.plainPassword) }}
+                                    </div>
+
+                                    <div style="display: none;">
+                                        {{ form_widget(form) }}
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-primary px-4 py-2">Je crée mon compte</button>
+                                    {{ form_end(form) }}
+                                    <section class="mt-3">
+                                        <div class="d-flex align-items-center my-3">
+                                            <hr class="flex-grow-1">
+                                            <h2 class="h5 text-center mx-3">Utiliser les réseaux sociaux</h2>
+                                            <hr class="flex-grow-1">
+                                        </div>
+                                        <div class="d-grid gap-2 mt-3">
+                                            <a href="{{ path('connect_google_start') }}" class="text-white btn btn-success">
+                                                <i class="bi bi-google me-3"></i>
+                                                Se connecter avec Google
+                                            </a>
+                                        </div>
+                                        <div class="d-grid gap-2 mt-3">
+                                            <a href="{{ path('connect_facebook_start') }}" class="text-white btn btn-info">
+                                                <i class="bi bi-facebook me-3"></i>
+                                                Se connecter avec Facebook
+                                            </a>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>              
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

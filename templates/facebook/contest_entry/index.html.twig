@@ -1,0 +1,45 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}Toutes les participations{% endblock %}
+
+{% block body %}
+    <h1>Toutes les participations</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(contest_entries, '#', 'c.id') }}</th>
+                <th>{{ knp_pagination_sortable(contest_entries, 'Utilisateur', 'c.submittedAt') }}</th>
+                <th>{{ knp_pagination_sortable(contest_entries, 'Avec CV', 'c.cvSumbitted') }}</th>
+                <th>{{ knp_pagination_sortable(contest_entries, 'Statut', 'c.status') }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for contest_entry in contest_entries %}
+            <tr>
+                <td>{{ contest_entry.candidateProfile ? generatePseudo(contest_entry.candidateProfile) : '-' }}</td>
+                <td>
+                    {{ contest_entry.user }} <br>
+                    <small class="fw-bolder">{{ contest_entry.user.email }}</small> <br>
+                    <small class="fw-lighter">{{ contest_entry.submittedAt|time_ago  }}</small>
+                </td>
+                <td>{{ contest_entry.cvSumbitted ? 'Oui' : 'Non' }} <span class="fw-lighter"> (Étape {{ contest_entry.step }} )</span></td>
+                <td><span class="fw-bolder">{{ contest_entry.labels[contest_entry.status]|raw }}</span></td>
+                <td>
+                    <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_facebook_contest_entry_show', {'id': contest_entry.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_facebook_contest_entry_edit', {'id': contest_entry.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <p>
+        <a href="{{ path('app_facebook_contest_entry_new') }}" class="btn btn-info">Créer</a>
+    </p>
+{% endblock %}
