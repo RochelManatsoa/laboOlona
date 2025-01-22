@@ -1,4 +1,5 @@
 {% set current_route = app.request.attributes.get('_route') %}
+{% set candidate = null %}
 {% if app.user.candidateProfile is defined and app.user.candidateProfile is not null %}
   {% set candidate = app.user.candidateProfile %}
 {% endif %}
@@ -57,7 +58,7 @@
               <i class="bi bi-person-raised-hand me-2"></i> Trouver un collaborateur
             </a>
           </li>
-          {% if app.user.candidateProfile is defined and app.user.candidateProfile.prestations|length > 0 %}
+          {% if candidate is not null and candidate.prestations|length > 0 %}
           <li class="nav-item">
             <a href="{{ path('app_v2_prestation_my_created')}}" class="nav-link {{ current_route == 'app_v2_prestation_my_created' ? 'underline' : '' }}" aria-current="page">
               <i class="bi bi-person-workspace me-2"></i></span> Mes prestations
