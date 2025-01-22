@@ -34,6 +34,7 @@ $(function() {
         setupCKEditors();
         setupDynamicLinks();
         toggleFields();
+        contestFacebook();
     }
 
     function handlePageLoad() {
@@ -49,7 +50,25 @@ $(function() {
         initializeSliders();
         initiateLoadMore();
         toggleFields();
-        initializeCarousels(); // Initialize carousels on page load
+        initializeCarousels(); 
+        contestFacebook();
+    }
+
+    function contestFacebook() {
+
+        $('#yesButton').on('click', function () {
+            $(this).addClass('active'); 
+            $('#noButton').removeClass('active'); 
+            $('#user').show(); 
+            $('#newUser').hide(); 
+        });
+
+        $('#noButton').on('click', function () {
+            $(this).addClass('active'); 
+            $('#yesButton').removeClass('active');
+            $('#user').hide(); 
+            $('#newUser').show(); 
+        });
     }
 
     // Fonction pour gérer l'affichage des champs en fonction de la sélection

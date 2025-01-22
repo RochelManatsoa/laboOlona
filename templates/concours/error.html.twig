@@ -1,0 +1,34 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Concours | Olona Talents{% endblock %}
+
+{% block meta %}
+<link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ path('app_concours_etape_1') }}">
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container">
+    <div class="row py-5">
+        <div class="col-md-4 d-none d-lg-block">
+            {% include "concours/side_nav.html.twig" with {'step': 2} %}
+        </div>
+        <div class="col-md-8">
+            <section>
+                <div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
+                    {% include "concours/nav_mobile.html.twig" %}
+                    <div id="contractFormStep">   
+                        <div id="step_5" class="step-contest">
+                            <div class="container text-center my-5">
+                                <h1 class="mb-4">Accès réservé aux candidats</h1>
+                                <p class="lead">Cette page est exclusivement dédiée aux candidats. Pour en savoir plus sur nos solutions de recrutement et découvrir comment trouver les meilleurs talents, rendez-vous dans votre espace entreprise. 🚀</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>              
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

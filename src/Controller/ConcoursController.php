@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Service\FileUploader;
 use App\Manager\ProfileManager;
 use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Form\Facebook\RegistrationFormType;
@@ -97,6 +98,12 @@ class ConcoursController extends AbstractController
     {
         if (!$this->checkUser()) {
             return $this->redirectToRoute('app_concours_etape_1');
+        }
+
+        /** @var  User $user */
+        $user = $this->userService->getCurrentUser();
+        if ($user->getEntrepriseProfile() instanceof EntrepriseProfile) {
+            return $this->redirectToRoute('app_concours_error');
         }
 
         $contestEntryId = $this->requestStack->getCurrentRequest()->get('contestEntry', null);
@@ -197,6 +204,12 @@ class ConcoursController extends AbstractController
     public function confirmation(): Response
     {
         return $this->render('concours/confirmation.html.twig');
+    }
+
+    #[Route('/error', name: 'app_concours_error')]
+    public function error(): Response
+    {
+        return $this->render('concours/error.html.twig');
     }
 
     // --------- Private Helper Methods ---------

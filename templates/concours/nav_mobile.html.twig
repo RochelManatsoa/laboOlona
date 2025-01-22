@@ -1,5 +1,8 @@
 {% set current_route = app.request.attributes.get('_route') %}
-
+{% if app.user.candidateProfile is defined and app.user.candidateProfile is not null %}
+  {% set candidate = app.user.candidateProfile %}
+{% endif %}
+{% if app.user %}
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
     <div class="offcanvas-header">
       <div class="container">
@@ -16,7 +19,7 @@
             <div class="rounded-circle" style="
                 width: 85px;
                 height: 85px;
-                background-image: url('{{ app.user.candidateProfile.fileName ? asset('uploads/experts/' ~ app.user.candidateProfile.fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+                background-image: url('{{ asset('uploads/experts/avatar-default.jpg') }}');
                 background-size: cover;
                 background-position: center;
             ">
@@ -29,7 +32,7 @@
         </div>
         <div class="d-flex justify-content-center">
             <div class="text-center fw-lighter">
-            {{ app.user.candidateProfile.titre }}
+            {{ candidate ? candidate.titre : '' }}
             </div>
         </div>
         <div class="d-flex justify-content-center">
@@ -129,13 +132,14 @@
       </div>
     </div>
 </div>
+{% endif %}
 
 <ul class="nav nav-pills justify-content-center mx-auto text-center mb-4 d-block d-lg-none" >
     <li class="nav-item d-inline-flex align-items-center">
         <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_1' ? 'active' : 'disabled' }}" type="button" >1</button>
     </li>
     <li class="nav-item d-inline-flex align-items-center">
-        <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_2' ? 'active' : 'disabled' }}" type="button" >2</button>
+        <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_2' or current_route == 'app_concours_error' ? 'active' : 'disabled' }}" type="button" >2</button>
     </li>
     <li class="nav-item d-inline-flex align-items-center">
         <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_3' ? 'active' : 'disabled' }}" type="button" >3</button>
@@ -144,6 +148,6 @@
         <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_4' ? 'active' : 'disabled' }}" type="button" >4</button>
     </li>
     <li class="nav-item d-inline-flex align-items-center">
-        <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_5' ? 'active' : '' }}" type="button" >5</button>
+        <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_5' or current_route == 'app_concours_confirmation'  ? 'active' : '' }}" type="button" >5</button>
     </li>
 </ul>
