@@ -67,6 +67,12 @@ class ContestEntry
     #[ORM\Column(nullable: true)]
     private ?int $step = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $emailSend = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $details = null;
+
     public function __construct()
     {
         $this->status = self::STATUS_SEND;
@@ -160,6 +166,30 @@ class ContestEntry
     public function setStep(?int $step): static
     {
         $this->step = $step;
+
+        return $this;
+    }
+
+    public function isEmailSend(): ?bool
+    {
+        return $this->emailSend;
+    }
+
+    public function setEmailSend(?bool $emailSend): static
+    {
+        $this->emailSend = $emailSend;
+
+        return $this;
+    }
+
+    public function getDetails(): ?string
+    {
+        return $this->details;
+    }
+
+    public function setDetails(?string $details): static
+    {
+        $this->details = $details;
 
         return $this;
     }

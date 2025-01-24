@@ -48,6 +48,7 @@ class MailerService
             $email->to('support@olona-talents.com'); 
             $email->addTo('jrandriamalala.olona@gmail.com');
             $email->addTo('miandrisoa.olona@gmail.com');
+            $email->addTo('contact@olona-talents.com');
         }
         $email 
             ->from(new Address($sender, $env))
@@ -85,6 +86,7 @@ class MailerService
             $email->to('support@olona-talents.com'); 
             $email->addTo('jrandriamalala.olona@gmail.com');
             $email->addTo('contact@olona-talents.com');
+            $email->addTo('miandrisoa.olona@gmail.com');
         }
         $email
             ->from(new Address('support@olona-talents.com', $env))

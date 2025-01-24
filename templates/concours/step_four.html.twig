@@ -28,11 +28,13 @@
                                         {{ form_row(form.candidateProfile.titre) }}
                                         {{ form_row(form.candidateProfile.secteurs) }}
                                         {% if app.user.candidateProfile is not null and app.user.candidateProfile.cv is not null %}
-                                        <div class="position-relative text-center text-muted pt-3 mb-3 bg-body border border-dashed rounded-2">
-                                            <p class="col-10 mx-auto lead">
-                                                Votre CV a été validé par l'équipe Olona Talents.
+                                        <div class="mb-3">
+                                            <label class="fw-bold lead form-label" for="contest_entry_profile_form_candidateProfile_cv">Ajouter un CV</label>
+                                            <p class="border rounded py-2 ps-3 mb-0">
+                                                Votre CV en cours de validation par l'équipe Olona Talents.
                                             </p>
-                                            </div>
+                                            <small class="fw-lighter">Format PDF</small>
+                                        </div>
                                         {% else %}
                                         {{ form_row(form.candidateProfile.cv) }}
                                         {% endif %}

@@ -32,7 +32,11 @@ class RegistrationFormType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'form-control',
-                ]
+                ],
+                'label_attr' => [
+                    'class' => 'fw-bold lead' 
+                ],
+                'help' => 'Champs obligatoire',
             ])
             ->add('prenom', null, [
                 'label' => 'Prénom(s) *',
@@ -43,13 +47,21 @@ class RegistrationFormType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'form-control',
-                ]
+                ],
+                'label_attr' => [
+                    'class' => 'fw-bold lead' 
+                ],
+                'help' => 'Champs obligatoire',
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email *',
                 'attr' => [
                     'class' => 'form-control',
-                ]
+                ],
+                'label_attr' => [
+                    'class' => 'fw-bold lead' 
+                ],
+                'help' => 'Champs obligatoire',
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -58,9 +70,16 @@ class RegistrationFormType extends AbstractType
                 'required' => true,
                 'first_options'  => [ 
                     'label' => 'Mot de passe', 
+                    'label_attr' => [
+                        'class' => 'fw-bold lead' 
+                    ],
+                    'help' => 'Avec au moins une majuscule, une minuscule, un chiffre et un caractère spécial.',
                 ],
                 'second_options' => [ 
                     'label' => 'Repeter le mot de passe', 
+                    'label_attr' => [
+                        'class' => 'fw-bold lead' 
+                    ],
                 ],
                 'mapped' => false,
                 'attr' => [

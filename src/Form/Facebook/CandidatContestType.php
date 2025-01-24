@@ -19,7 +19,11 @@ class CandidatContestType extends AbstractType
         $builder
             ->add('titre', TextType::class, [
                 'required' => true,
-                'label' => 'Titre *',
+                'label' => 'Titre professionnel *',
+                'label_attr' => [
+                    'class' => 'fw-bold lead' 
+                ],
+                'help' => 'Ex: Assistante virtuelle',
             ])
             ->add('secteurs', EntityType::class, [
                 'class' => Secteur::class,
@@ -28,6 +32,10 @@ class CandidatContestType extends AbstractType
                 'autocomplete' => true,
                 'multiple' => true,
                 'required' => true,
+                'label_attr' => [
+                    'class' => 'fw-bold lead' 
+                ],
+                'help' => 'Vos secteurs d\'activité',
             ])
             ->add('cv', FileType::class, [
                 'label' => 'app_identity_expert.cv',
@@ -44,6 +52,10 @@ class CandidatContestType extends AbstractType
                         'mimeTypesMessage' => 'Veuillez télécharger un document PDF valide',
                     ])
                 ],
+                'label_attr' => [
+                    'class' => 'fw-bold lead' 
+                ],
+                'help' => 'Format PDF',
             ])
         ;
     }

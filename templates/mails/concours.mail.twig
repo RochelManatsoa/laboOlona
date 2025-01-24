@@ -14,23 +14,38 @@
             <img src="https://app.olona-talents.com/images/logo-light150x150.png" alt="Logo Olona-talents" style="width: 250px;">
         </div>
         <div>
-            <p>Hello Admin,</p>
-            <p>Une souscription VIP de place coworking a été effectuée par <strong>{{ contract.firstName }} {{ contract.lastName }}</strong></p>
+            <p>Bonjour {{ user.prenom }},</p>
+            <p>
+                Nous avons bien reçu votre participation au concours organisé par <strong>Olona Talents</strong>. 🎉
+            </p>
             <div>
-                Voici les détails : 
+                <strong>Rappel des détails du concours :</strong> 
                 <div>
-                <p><strong>Nom complet</strong> : {{ contract.firstName }} {{ contract.lastName }}</p>
-                <p><strong>Téléphone</strong> : {{ contract.telephone }} </p>
-                <p><strong>Email</strong> : {{ contract.email }} </p>
-                <p><strong>N° contrat</strong> : {{ contract.contractNumber }} </p>
-                <p><strong>Date de souscription </strong> : {{ contract.createdAt|date('d/m/Y à h:i') }}</p>
+                    <p>🏆 3 gagnants sont tirés au sort chaque semaine pendant 3 semaines.</p>
+                    <p>📅 Les tirages au sort ont lieu tous les vendredis à 16h.</p>
+                    <p>📢 Les résultats sont annoncés sur notre page Facebook.</p>
                 </div>
             </div>
-            <p>   
-                Voici le lien pour acceder au contrat
+            <p>
+                Pour ne rien manquer, suivez dès maintenant notre page Facebook afin d’être informé des résultats et des actualités de notre plateforme.
             </p>
-            <p style="text-align: center;">    
-            <a href="{{ url|raw }}" style="display: inline-block; padding: 12px 24px; background-color: #0D6EFD; color: #FFFFFF; border-radius: 5px; text-decoration: none; font-weight: 500; margin-bottom: 20px;">Détail réservation</a>
+            <p>
+                👉 <a href="https://www.facebook.com/olonatalents" style="text-decoration: none;">Suivre notre page Facebook</a>
+            </p>
+            <p>   
+                Vous avez déjà fait un pas vers une meilleure visibilité professionnelle. Pourquoi ne pas en profiter pour explorer tout ce que <strong>Olona Talents</strong> peut vous offrir ?
+            </p>
+            <div>
+                <strong>Ce que vous pouvez faire dès maintenant :</strong> 
+                <ul>
+                    <li><strong>Complétez votre profil</strong> pour attirer l’attention des recruteurs.</li>
+                    <li><strong>Consultez les offres d’emploi</strong> disponibles sur la plateforme.</li>
+                    <li><strong>Bénéficiez de nos services personnalisés</strong> pour propulser votre carrière.</li>
+                </ul>
+            </div>
+
+            <p>
+                👉 <a href="{{ dashboard_url|raw }}" style="text-decoration: none;">Connectez-vous à votre compte ici</a> et découvrez des opportunités sur-mesure pour vous !    
             </p>
             
             <p>Bonne chance dans vos recherches et n'hésitez pas à <span style="font-weight: 700;">nous contacter</span> si vous avez des questions ou besoin d'aide.</p>

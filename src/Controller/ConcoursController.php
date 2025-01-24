@@ -22,9 +22,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Facebook\ContestEntryAcceptFormType;
 use App\Form\Facebook\ContestEntryProfileFormType;
 use App\Manager\BusinessModel\CreditManager;
+use App\Service\Mailer\MailerService;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 #[Route('/concours/facebook')]
@@ -50,6 +52,7 @@ class ConcoursController extends AbstractController
         $this->requestStack->getSession()->set('fromPath', 'app_concours_etape_2');
         $user = new User();
         $user->setDateInscription(new \DateTime());
+        $user->setType(User::ACCOUNT_CANDIDAT);
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
@@ -115,6 +118,9 @@ class ConcoursController extends AbstractController
         if (!$contestEntry instanceof ContestEntry) {
             $contestEntry = $this->contestEntryManager->init($this->security->getUser());
         }
+        if ($contestEntry->getStatus() === ContestEntry::STATUS_VALIDATED) {
+            return $this->redirectToRoute('app_concours_confirmation');
+        }
         $form = $this->createForm(ContestEntryAcceptFormType::class, $contestEntry);
         if ($this->processForm($form, $request, 2)) {
             return $this->redirectToRoute('app_concours_etape_3');
@@ -129,7 +135,9 @@ class ConcoursController extends AbstractController
         if (!$contestEntry = $this->getContestEntryOrRedirect()) {
             return $contestEntry;
         }
-
+        if(!$contestEntry instanceof ContestEntry){
+            return $this->redirectToRoute('app_concours_etape_1');
+        }
         $form = $this->createForm(ContestEntryUserFormType::class, $contestEntry);
         if ($this->processForm($form, $request, 3)) {
             return $this->redirectToRoute('app_concours_etape_4');
@@ -146,6 +154,9 @@ class ConcoursController extends AbstractController
     ): Response {
         if (!$contestEntry = $this->getContestEntryOrRedirect()) {
             return $contestEntry;
+        }
+        if(!$contestEntry instanceof ContestEntry){
+            return $this->redirectToRoute('app_concours_etape_1');
         }
 
         /** @var  User $user */
@@ -170,10 +181,17 @@ class ConcoursController extends AbstractController
     }
 
     #[Route('/etape-5', name: 'app_concours_etape_5')]
-    public function stepFive(Request $request): Response
+    public function stepFive(
+        Request $request, 
+        MailerService $mailerService,
+        UrlGeneratorInterface $urlGenerator,
+    ): Response
     {
         if (!$contestEntry = $this->getContestEntryOrRedirect()) {
             return $contestEntry;
+        }
+        if(!$contestEntry instanceof ContestEntry){
+            return $this->redirectToRoute('app_concours_etape_1');
         }
 
         /** @var  User $user */
@@ -187,6 +205,24 @@ class ConcoursController extends AbstractController
 
         $form = $this->createForm(ContestEntryUserFormType::class, $contestEntry);
         if ($this->processForm($form, $request, 5)) {
+            if(!$contestEntry->isEmailSend()){
+                // send email
+                $mailerService->send(
+                    $user->getEmail(),
+                    "Votre participation au concours Olona Talents est confirmée !",
+                    "concours.mail.twig",
+                    [
+                        'user' => $user,
+                        'dashboard_url' => $urlGenerator->generate(
+                            'app_connect',
+                            [], 
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        ),
+                    ]
+                );
+                $contestEntry->setEmailSend(true);
+                $this->contestEntryManager->save($contestEntry);
+            }
 
             if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
                 $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
