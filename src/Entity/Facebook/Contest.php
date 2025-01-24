@@ -25,9 +25,9 @@ class Contest
     
     public static function getLabels() {
         return [
-            self::STATUS_PENDING =>        'En attente' ,
-            self::STATUS_PUBLISHED =>      'Publié' ,
-            self::STATUS_ARCHIVED =>       'Archivé' ,
+            self::STATUS_PENDING =>        '<span class="badge bg-info">En attente</span>' ,
+            self::STATUS_PUBLISHED =>      '<span class="badge bg-success">Publié</span>' ,
+            self::STATUS_ARCHIVED =>       '<span class="badge bg-warning">Archivé</span>' ,
         ];
     }
 

@@ -38,6 +38,7 @@
         {% endfor %}
         </tbody>
     </table>
+    {{ knp_pagination_render(contest_entries) }}
 
     <p>
         <a href="{{ path('app_facebook_contest_entry_new') }}" class="btn btn-info">Créer</a>

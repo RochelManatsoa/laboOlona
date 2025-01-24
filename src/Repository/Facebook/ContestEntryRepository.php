@@ -38,15 +38,15 @@ class ContestEntryRepository extends ServiceEntityRepository
         );
     }
 
-   public function findLastByUser(User $user): ?ContestEntry
-   {
-       return $this->createQueryBuilder('c')
+    public function findLastByUser(User $user): ?ContestEntry
+    {
+        return $this->createQueryBuilder('c')
             ->andWhere('c.user = :user') 
             ->setParameter('user', $user)
             ->orderBy('c.submittedAt', 'DESC')
             ->setMaxResults(1) 
             ->getQuery()
             ->getOneOrNullResult()
-       ;
-   }
+        ;
+    }
 }

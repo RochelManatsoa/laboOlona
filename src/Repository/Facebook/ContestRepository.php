@@ -37,13 +37,13 @@ class ContestRepository extends ServiceEntityRepository
         );
     }
 
-//    public function paginateContests($value): ?Contest
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findLast(): ?Contest
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults(1) 
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

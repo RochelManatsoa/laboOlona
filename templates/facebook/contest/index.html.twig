@@ -27,7 +27,7 @@
                     {{ contest.name }}<br>
                     <span class="fw-lighter">Créée le {{contest.createdAt|date('d/m/Y H:i')}}</span>
                 </td>
-                <td><span class="fw-bolder">{{ contest.labels[contest.status] }}</span></td>
+                <td><span class="fw-bolder">{{ contest.labels[contest.status]|raw }}</span></td>
                 <td>{{ contest.startDate ? contest.startDate|date('d/m/Y H:i') : '' }}</td>
                 <td>{{ contest.endDate ? contest.endDate|date('d/m/Y H:i') : '' }}</td>
                 <td>
@@ -42,5 +42,6 @@
         {% endfor %}
         </tbody>
     </table>
+    {{ knp_pagination_render(contests) }}
 
 {% endblock %}

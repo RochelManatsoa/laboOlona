@@ -31,6 +31,20 @@
                 <th>Profil</th>
                 <td>{{ contest_entry.candidateProfile ? generatePseudo(contest_entry.candidateProfile) : '-' }}</td>
             </tr>
+            {% if contest_entry.candidateProfile is not null %}
+                <tr>
+                    <th>Titre professionnel</th>
+                    <td>{{ contest_entry.candidateProfile.titre ? contest_entry.candidateProfile.titre : '-' }}</td>
+                </tr>
+                <tr>
+                    <th>Secteurs d'activités ({{ contest_entry.candidateProfile.secteurs|length }})</th>
+                    <td>
+                        {% for secteur in contest_entry.candidateProfile.secteurs %}
+                            <span class="badge bg-success rounded-pill">{{ secteur.nom }}</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
     <div class="d-flex justify-content-end w-100">

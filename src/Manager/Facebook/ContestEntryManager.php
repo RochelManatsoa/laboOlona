@@ -2,10 +2,11 @@
 
 namespace App\Manager\Facebook;
 
+use App\Entity\User;
 use Twig\Environment as Twig;
+use App\Entity\Facebook\Contest;
 use Symfony\Component\Form\Form;
 use App\Entity\Facebook\ContestEntry;
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -25,6 +26,10 @@ class ContestEntryManager
     {
         $contestEntry = new ContestEntry();
         $contestEntry->setUser($user);
+        $contest = $this->em->getRepository(Contest::class)->findLastByUser();
+        if ($contest) {
+            $contestEntry->setContest($contest);
+        }
 
         return $contestEntry;
     }
