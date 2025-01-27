@@ -41,7 +41,7 @@ class InvitationRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }       
 
-    public function paginateInvitation(array $data): PaginationInterface
+    public function paginateInvitation(int $page): PaginationInterface
     {
         $qb = $this->createQueryBuilder('i')
             ->orderBy('i.id', 'DESC')
@@ -49,8 +49,8 @@ class InvitationRepository extends ServiceEntityRepository
 
         return $this->paginator->paginate(
             $qb,
-            $data['page'],
-            20,
+            $page,
+            10,
             [
                 'distinct' => true,
                 'shortFieldAllowList' => ['i.id', 'i.status', 'i.createdAt', 'i.usedAt'],

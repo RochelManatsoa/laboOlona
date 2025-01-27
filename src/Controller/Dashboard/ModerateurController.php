@@ -883,6 +883,7 @@ class ModerateurController extends AbstractController
     public function invitation(Request $request, InvitationRepository $invitationRepository): Response
     {
         $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $page = $request->query->get('page', 1);
         $invitation = new Invitation();
         $invitation->setUuid(new Uuid(Uuid::v4()));
         $invitation->setCreatedAt(new DateTime());
@@ -917,7 +918,7 @@ class ModerateurController extends AbstractController
         }
         
         return $this->render('dashboard/moderateur/invitation/index.html.twig', [
-            'invitations' => $invitationRepository->findAll(),
+            'invitations' => $invitationRepository->paginateInvitation($page),
             'form' => $form->createView(),
         ]);
     }
