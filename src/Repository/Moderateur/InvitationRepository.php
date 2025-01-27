@@ -22,7 +22,24 @@ class InvitationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Invitation::class);
     }
-       
+
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function countPending(): int
+    {
+        return (int) $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->where('i.status = :pending')
+            ->setParameter('pending', Invitation::STATUS_PENDING)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }       
 
     public function paginateInvitation(array $data): PaginationInterface
     {

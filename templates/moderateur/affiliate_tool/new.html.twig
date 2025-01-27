@@ -1,0 +1,11 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Nouvel outils{% endblock %}
+
+{% block body %}
+    <h1>Créer nouvel outils</h1>
+
+    {{ include('moderateur/affiliate_tool/_form.html.twig') }}
+
+    <a href="{{ path('app_affiliate_tool_index') }}" class="btn btn-info px-3 rounded-pill">back to list</a>
+{% endblock %}

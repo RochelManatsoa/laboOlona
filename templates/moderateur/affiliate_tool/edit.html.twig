@@ -1,0 +1,13 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Modifier un outils IA{% endblock %}
+
+{% block body %}
+    <h1>Modifier un outils IA</h1>
+
+    {{ include('moderateur/affiliate_tool/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_affiliate_tool_index') }}" class="btn btn-info px-3 rounded-pill">back to list</a>
+
+    {{ include('moderateur/affiliate_tool/_delete_form.html.twig') }}
+{% endblock %}

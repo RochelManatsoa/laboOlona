@@ -21,6 +21,14 @@ class EntrepriseProfileRepository extends ServiceEntityRepository
         parent::__construct($registry, EntrepriseProfile::class);
     }
 
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('e')
+            ->select('COUNT(e.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function findTopRanked(): array
     {
         return $this->createQueryBuilder('e')

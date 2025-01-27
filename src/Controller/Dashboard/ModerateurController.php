@@ -69,6 +69,7 @@ use App\Form\Search\Entreprise\ModerateurEntrepriseSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Search\Annonce\ModerateurAnnonceEntrepriseSearchType;
+use App\Repository\PrestationRepository;
 
 #[Route('/dashboard/moderateur')]
 class ModerateurController extends AbstractController
@@ -98,6 +99,7 @@ class ModerateurController extends AbstractController
         private InvitationRepository $invitationRepository,
         private SimulateurRepository $simulateurRepository,
         private TransactionRepository $transactionRepository,
+        private PrestationRepository $prestationRepository,
         private AssignationManager $assignationManager,
         private PdfProcessor $pdfProcessor,
         private OpenAITranslator $openAITranslator,
@@ -113,24 +115,21 @@ class ModerateurController extends AbstractController
         $user = $this->userService->getCurrentUser();
 
         return $this->render('dashboard/moderateur/index.html.twig', [
-            'secteurs' => $this->moderateurManager->findAllOrderDesc($this->secteurRepository),
-            'simulations' => $this->moderateurManager->findAllOrderDesc($this->simulateurRepository),
-            'typeContrats' => $this->moderateurManager->findAllOrderDesc($this->typeContratRepository),
-            'annonces' => $this->moderateurManager->findAllOrderDesc($this->jobListingRepository),
-            'annonces_pending' => $this->jobListingRepository->findBy(['status' => JobListing::STATUS_PENDING], ['id' => 'DESC']),
-            'entreprises' => $this->moderateurManager->findAllOrderDesc($this->entrepriseProfileRepository),
-            'candidats' => $this->moderateurManager->findAllOrderDesc($this->candidateProfileRepository),
-            'candidats_pending' => $this->candidateProfileRepository->findBy(['status' => CandidateProfile::STATUS_PENDING], ['id' => 'DESC']),
-            'mettings' => $this->moderateurManager->findAllOrderDesc($this->mettingRepository),
-            'notifications_new' => $this->notificationRepository->findBy(['destinataire' => $user, 'isRead' => false],[], ['id' => 'DESC']),
-            'notifications' => $this->notificationRepository->findBy(['destinataire' => $user], ['id' => 'DESC']),
-            'assignations' => $this->moderateurManager->findAllOrderDesc($this->assignationRepository),
-            'assignations_new' => $this->assignationRepository->findBy(['status' => Assignation::STATUS_PENDING], ['id' => 'DESC']),
-            'candidatures' => $this->moderateurManager->findAllOrderDesc($this->applicationsRepository),
-            'candidatures_new' => $this->applicationsRepository->findBy(['status' => Applications::STATUS_PENDING], ['id' => 'DESC']),
-            'invitations' => $this->moderateurManager->findAllOrderDesc($this->invitationRepository),
-            'transactions' => $this->moderateurManager->findAllOrderDesc($this->transactionRepository),
-            'transactions_new' => $this->transactionRepository->findBy(['status' => Transaction::STATUS_PENDING], ['id' => 'DESC']),
+            'secteurs' => $this->secteurRepository->countAll(),
+            'simulations' => $this->simulateurRepository->countAll(),
+            'typeContrats' => $this->typeContratRepository->countAll(),
+            'annonces' => $this->jobListingRepository->countAll(),
+            'annonces_pending' => $this->jobListingRepository->countPending(),
+            'entreprises' => $this->entrepriseProfileRepository->countAll(),
+            'candidats' => $this->candidateProfileRepository->countAll(),
+            'candidats_pending' => $this->candidateProfileRepository->countPending(),
+            'prestations' => $this->prestationRepository->countAll(),
+            'prestations_new' => $this->prestationRepository->countPending(),
+            'candidatures' => $this->applicationsRepository->countAll(),
+            'candidatures_new' => $this->applicationsRepository->countPending(),
+            'invitations' => $this->invitationRepository->countAll(),
+            'transactions' => $this->transactionRepository->countAll(),
+            'transactions_new' => $this->transactionRepository->countPending(),
         ]);
     }
 

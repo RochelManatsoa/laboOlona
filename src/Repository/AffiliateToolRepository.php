@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\AffiliateTool;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<AffiliateTool>
@@ -16,9 +18,23 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AffiliateToolRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, AffiliateTool::class);
+    }
+
+    public function paginateTools($page): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('a')->select('a');
+        $queryBuilder
+            ->addOrderBy('a.creeLe', 'DESC');
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            10,
+            []
+        );
     }
 
    /**

@@ -1,0 +1,42 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Tous les outils IA{% endblock %}
+
+{% block body %}
+    <h1>Tous les outils IA</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Featured</th>
+                <th>ImageName</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for affiliate_tool in affiliate_tools %}
+            <tr>
+                <td>{{ affiliate_tool.id }}</td>
+                <td>{{ affiliate_tool.nom }}</td>
+                <td>{{ affiliate_tool.type }}</td>
+                <td>{{ affiliate_tool.featured ? 'Yes' : 'No' }}</td>
+                <td>{{ affiliate_tool.imageName }}</td>
+                <td>
+                    <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_affiliate_tool_show', {'id': affiliate_tool.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_affiliate_tool_edit', {'id': affiliate_tool.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="24">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ knp_pagination_render(affiliate_tools) }}
+
+    <a href="{{ path('app_affiliate_tool_new') }}" class="btn btn-success px-3 rounded-pill">Create new</a>
+{% endblock %}

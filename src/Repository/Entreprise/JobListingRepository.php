@@ -26,6 +26,24 @@ class JobListingRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, JobListing::class);
     }
+
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('j')
+            ->select('COUNT(j.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function countPending(): int
+    {
+        return (int) $this->createQueryBuilder('j')
+            ->select('COUNT(j.id)')
+            ->where('j.status = :pending')
+            ->setParameter('pending', JobListing::STATUS_PENDING)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
     
     public function findAllOrderedByIdDesc()
     {
