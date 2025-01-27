@@ -52,6 +52,19 @@ $(function() {
         toggleFields();
         initializeCarousels(); 
         contestFacebook();
+        checkAndShowTutorial();
+    }
+
+    function checkAndShowTutorial() {
+        const tutorialViewed = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('tutorialViewed='));
+    
+        if (!tutorialViewed) {
+            var tutorialModal1Toggle = new Modal($('#tutorialModal1Toggle')[0]);
+            tutorialModal1Toggle.show();
+            document.cookie = "tutorialViewed=true; path=/; max-age=31536000"; 
+        }
     }
 
     function contestFacebook() {
@@ -89,10 +102,6 @@ $(function() {
             $('#contract_lastName').closest('.mb-3').hide(); 
         }
     }
-
-    $('#contract_typePerson').on('change', function () {
-        toggleFields();
-    });
 
     function initializeCarousels() {
         const carousels = document.querySelectorAll('.carousel');
@@ -504,6 +513,10 @@ $(function() {
                     console.error('Error:', xhr.responseText);
                 }
             });
+        });
+
+        $('#contract_typePerson').on('change', function () {
+            toggleFields();
         });
     }
 

@@ -26,7 +26,7 @@ class ContestEntryManager
     {
         $contestEntry = new ContestEntry();
         $contestEntry->setUser($user);
-        $contest = $this->em->getRepository(Contest::class)->findLastByUser();
+        $contest = $this->em->getRepository(Contest::class)->findLast();
         if ($contest) {
             $contestEntry->setContest($contest);
         }
