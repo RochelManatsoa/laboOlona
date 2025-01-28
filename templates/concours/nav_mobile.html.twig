@@ -135,7 +135,9 @@
 </div>
 {% endif %}
 
-<ul class="nav nav-pills justify-content-center mx-auto text-center mb-4 d-block d-lg-none" >
+<div class="d-block d-lg-none" >
+  <img src="{{ asset('images/facebook_contest.png') }}" alt="facebook contest" class="img-fluid mb-4">
+  <ul class="nav nav-pills justify-content-center mx-auto text-center mb-4" >
     <li class="nav-item d-inline-flex align-items-center">
         <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_1' ? 'active' : 'disabled' }}" type="button" >1</button>
     </li>
@@ -152,3 +154,4 @@
         <button class="nav-link rounded-circle {{ current_route == 'app_concours_etape_5' or current_route == 'app_concours_confirmation'  ? 'active' : '' }}" type="button" >5</button>
     </li>
 </ul>
+</div>
