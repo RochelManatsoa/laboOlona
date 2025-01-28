@@ -41,7 +41,7 @@
                                 </div>
                             {% endfor %}
                             {% block body %}{% endblock %}
-                            <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
+                            <a href="javascript:history.back()" class="btn btn-info rounded-pill my-3 px-5">
                                 <i class="mx-2 bi bi-arrow-left"></i>Retour
                             </a>
                             {% block inner_footer %}{% endblock %}
@@ -58,6 +58,7 @@
         {% endblock %}
              
             
+        <button id="backToTop" class="back-to-top" style="display: none;"><i class="bi bi-chevron-up"></i></button>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var fromDatePicker = document.querySelector('#availability_nom_1');

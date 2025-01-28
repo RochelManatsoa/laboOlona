@@ -4,7 +4,11 @@
     {% set description = aitool.shortDescriptionFr ?? aitool.shortDescription %}
     <div class="col">
         <div class="card">
-            <img src="{{ aitool.image }}" class="img-fluid rounded-top" alt="thumbail">
+            {% if aitool.imageName %}
+                <img src="{{ vich_uploader_asset(aitool, 'imageFile') }}" alt="thumbail IA" class="img-fluid rounded-top">
+            {% else %}
+                <img src="{{ aitool.image }}" class="img-fluid rounded-top" alt="thumbail IA">
+            {% endif %}
             <div class="card-body">
                 <h5 class="card-title">
                     <a href="{{path('app_dashboard_moderateur_view_affiliate_tool', { 'slug': aitool.slug}) }}">

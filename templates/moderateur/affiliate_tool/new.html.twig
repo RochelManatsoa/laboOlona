@@ -3,9 +3,15 @@
 {% block title %}Nouvel outils{% endblock %}
 
 {% block body %}
-    <h1>Créer nouvel outils</h1>
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">Nouvel outils</h1>
 
-    {{ include('moderateur/affiliate_tool/_form.html.twig') }}
+            {{ include('moderateur/affiliate_tool/_form.html.twig') }}
 
-    <a href="{{ path('app_affiliate_tool_index') }}" class="btn btn-info px-3 rounded-pill">back to list</a>
+
+        </div>
+    </div>
+</section>
 {% endblock %}

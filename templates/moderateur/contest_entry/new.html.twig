@@ -1,0 +1,12 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}New ContestEntry{% endblock %}
+
+{% block body %}
+<h1 class="h3">Nouvelle entrée de concours</h1>
+
+<div id="coworking">
+    {{ include('facebook/contest_entry/_form.html.twig') }}
+</div>
+
+{% endblock %}

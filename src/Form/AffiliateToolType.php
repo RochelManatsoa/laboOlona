@@ -28,6 +28,7 @@ class AffiliateToolType extends AbstractType
             ])
             ->add('lienAffiliation', TextType::class, [
                 'label' => 'Lien d\'affiliation',
+                'required' => false,
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
@@ -47,12 +48,13 @@ class AffiliateToolType extends AbstractType
             ])
             ->add('image', TextType::class, [
                 'label' => 'Lien de l\'image',
+                'required' => false,
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
                 'help' => 'Lien de l\'image.',
             ])
-            ->add('shortDescription', TextareaType::class, [
+            ->add('shortDescriptionFr', TextareaType::class, [
                 'required' => false,
                 'label' => 'Description courte ',
                 'label_attr' => [

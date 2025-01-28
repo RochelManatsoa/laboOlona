@@ -16,6 +16,26 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[Vich\Uploadable]
 class AffiliateTool
 {
+    const STATUS_PUBLISHED = 'publish';
+    const STATUS_DRAFT = 'draft';
+    const STATUS_PENDING = 'pending';
+
+    public static function getStatuses() {
+        return [
+            'Publiée' => self::STATUS_PUBLISHED ,
+            'Brouillon' => self::STATUS_DRAFT ,
+            'En attente' => self::STATUS_PENDING ,
+        ];
+    }
+    
+    public static function getLabels() {
+        return [
+            self::STATUS_PUBLISHED =>   '<span class="badge bg-success">Publiée</span>' ,
+            self::STATUS_PENDING =>      '<span class="badge bg-primary">En attente</span>' ,
+            self::STATUS_DRAFT =>      '<span class="badge bg-dark">Brouillon</span>' ,
+        ];
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -24,13 +44,13 @@ class AffiliateTool
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $lienAffiliation = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $commission = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -100,6 +120,8 @@ class AffiliateTool
     {
         $this->categories = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->creeLe = new \DateTime();
+        $this->type = self::STATUS_DRAFT;
     }
 
     public function getId(): ?int

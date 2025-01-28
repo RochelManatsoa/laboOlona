@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Dashboard;
+namespace App\Controller\Moderateur;
 
 use App\Entity\Notification;
 use App\Entity\User;
@@ -8,7 +8,6 @@ use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
 use App\Manager\NotificationManager;
-use App\Manager\RendezVousManager;
 use App\Repository\NotificationRepository;
 use App\Service\Mailer\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +18,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
-#[Route('/dashboard/notification')]
+#[Route('/dashboard/moderateur/notification')]
 class NotificationController extends AbstractController
 {
     public function __construct(
@@ -35,7 +34,7 @@ class NotificationController extends AbstractController
     ) {
     }
     
-    #[Route('/', name: 'app_dashboard_notification')]
+    #[Route('/', name: 'app_dashboard_moderateur_notification')]
     public function index(Request $request): Response
     {
         $isRead = $request->query->get('isRead');
@@ -43,7 +42,7 @@ class NotificationController extends AbstractController
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
 
-        return $this->render('dashboard/notification/index.html.twig', [
+        return $this->render('moderateur/notification/index.html.twig', [
             'notifications' => $this->notificationRepository->findByDestinataire(
                 $user, 
                 ['id' => 'DESC'], 
@@ -54,7 +53,7 @@ class NotificationController extends AbstractController
         ]);
     }
     
-    #[Route('/view/{id}', name: 'app_dashboard_notification_view')]
+    #[Route('/{id}', name: 'app_dashboard_moderateur_notification_show')]
     public function view(Notification $notification): Response
     {
         /** @var User $user */
@@ -67,7 +66,7 @@ class NotificationController extends AbstractController
         ]);
     }
     
-    #[Route('/delete/{id}', name: 'app_dashboard_notification_delete')]
+    #[Route('/delete/{id}', name: 'app_dashboard_moderateur_notification_delete')]
     public function delete(Notification $notification): Response
     {
         /** @var User $user */
@@ -75,10 +74,10 @@ class NotificationController extends AbstractController
         $notification->setStatus(Notification::STATUS_DELETED);
         $this->notificationManager->save($notification);
 
-        return $this->redirectToRoute('app_dashboard_notification', []);
+        return $this->redirectToRoute('app_dashboard_moderateur_notification', []);
     }
     
-    #[Route('/see/all', name: 'app_dashboard_notification_see_all')]
+    #[Route('/see/all', name: 'app_dashboard_moderateur_notification_see_all')]
     public function seeAll(): Response
     {
         /** @var User $user */
@@ -95,6 +94,6 @@ class NotificationController extends AbstractController
             $this->notificationManager->save($notification);
         }
 
-        return $this->redirectToRoute('app_dashboard_notification', []);
+        return $this->redirectToRoute('app_dashboard_moderateur_notification', []);
     }
 }

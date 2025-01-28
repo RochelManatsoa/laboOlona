@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('dashboard/moderateur/tool')]
 class AffiliateToolController extends AbstractController
@@ -24,13 +25,18 @@ class AffiliateToolController extends AbstractController
     }
 
     #[Route('/new', name: 'app_affiliate_tool_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(
+        Request $request, 
+        EntityManagerInterface $entityManager,
+        SluggerInterface $sluggerInterface
+    ): Response
     {
         $affiliateTool = new AffiliateTool();
         $form = $this->createForm(AffiliateToolType::class, $affiliateTool);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $affiliateTool->setSlug($sluggerInterface->slug(strtolower($affiliateTool->getNom())));
             $entityManager->persist($affiliateTool);
             $entityManager->flush();
 
@@ -52,12 +58,18 @@ class AffiliateToolController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_affiliate_tool_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, AffiliateTool $affiliateTool, EntityManagerInterface $entityManager): Response
+    public function edit(
+        Request $request, 
+        AffiliateTool $affiliateTool, 
+        EntityManagerInterface $entityManager,
+        SluggerInterface $sluggerInterface
+    ): Response
     {
         $form = $this->createForm(AffiliateToolType::class, $affiliateTool);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $affiliateTool->setSlug($sluggerInterface->slug(strtolower($affiliateTool->getNom())));
             $entityManager->flush();
 
             return $this->redirectToRoute('app_affiliate_tool_index', [], Response::HTTP_SEE_OTHER);

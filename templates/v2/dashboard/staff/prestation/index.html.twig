@@ -19,10 +19,10 @@
           <table class="{{ tableClass }} table-striped">
               <thead>
                   <tr class="fw-bolder">
-                      <td scope="col" class="">Titre</td>
+                      <th scope="col">{{ knp_pagination_sortable(prestations, 'Titre', 'p.title') }}</th>
                       <td scope="col" class="text-center">Créée par</td>
-                      <td scope="col" class="">Statut</td>
-                      <td scope="col" class="">Action</td>
+                      <th scope="col">{{ knp_pagination_sortable(prestations, 'Statut', 'p.status') }}</th>
+                      <td scope="col" class=""></td>
                   </tr>
               </thead>
               <tbody>
@@ -54,6 +54,5 @@
 
       </div>
         </div>
-      </div>
   </div>
 {% endblock %}

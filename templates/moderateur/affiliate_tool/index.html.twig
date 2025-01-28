@@ -3,40 +3,55 @@
 {% block title %}Tous les outils IA{% endblock %}
 
 {% block body %}
-    <h1>Tous les outils IA</h1>
+<section class="p-0 m-0">
+  <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">Tous les outils IA</h1>
+        
+            <div>
+                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_affiliate_tool_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+            </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Type</th>
-                <th>Featured</th>
-                <th>ImageName</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for affiliate_tool in affiliate_tools %}
-            <tr>
-                <td>{{ affiliate_tool.id }}</td>
-                <td>{{ affiliate_tool.nom }}</td>
-                <td>{{ affiliate_tool.type }}</td>
-                <td>{{ affiliate_tool.featured ? 'Yes' : 'No' }}</td>
-                <td>{{ affiliate_tool.imageName }}</td>
-                <td>
-                    <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_affiliate_tool_show', {'id': affiliate_tool.id}) }}"><i class="bi bi-eye"></i></a>
-                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_affiliate_tool_edit', {'id': affiliate_tool.id}) }}"><i class="bi bi-pencil"></i></a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="24">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {{ knp_pagination_render(affiliate_tools) }}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">{{ knp_pagination_sortable(affiliate_tools, 'ID', 'a.id') }}</th>
+                        <th scope="col">{{ knp_pagination_sortable(affiliate_tools, 'Nom', 'a.nom') }}</th>
+                        <th scope="col">{{ knp_pagination_sortable(affiliate_tools, 'Statut', 'a.type') }}</th>
+                        <th scope="col">{{ knp_pagination_sortable(affiliate_tools, 'Mise en avant', 'a.featured') }}</th>
+                        <th>ImageName</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for affiliate_tool in affiliate_tools %}
+                    <tr>
+                        <td>{{ affiliate_tool.id }}</td>
+                        <td>{{ affiliate_tool.nom }}</td>
+                        <td>{{ affiliate_tool.type ? affiliate_tool.labels[affiliate_tool.type]|raw : '' }}</td>
+                        <td>{{ affiliate_tool.featured ? 'Oui' : 'Non' }}</td>
+                        <td>
+                            {% if affiliate_tool.imageName %}
+                                <img src="{{ vich_uploader_asset(affiliate_tool, 'imageFile') }}" alt="logo IA" class="img-thumbnail" style="width: 100px;"/>
+                            {% else %}
+                                <samll>Non disponible</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_affiliate_tool_show', {'id': affiliate_tool.id}) }}"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_affiliate_tool_edit', {'id': affiliate_tool.id}) }}"><i class="bi bi-pencil"></i></a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="24">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {{ knp_pagination_render(affiliate_tools) }}
 
-    <a href="{{ path('app_affiliate_tool_new') }}" class="btn btn-success px-3 rounded-pill">Create new</a>
+        </div>
+    </div>
+</section>
 {% endblock %}

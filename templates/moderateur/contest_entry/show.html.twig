@@ -1,0 +1,70 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Entrée concours {{ contest_entry.id }}{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+  <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">Entrée {{ contest_entry.id }}</h1>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ contest_entry.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Avec CV</th>
+                        <td>{{ contest_entry.cvSumbitted ? 'Oui' : 'Non' }}  <span class="ms-3 fw-lighter"> (Étape {{ contest_entry.step }} )</span></td>
+                    </tr>
+                    <tr>
+                        <th>Créée le</th>
+                        <td>{{contest_entry.submittedAt|date('d/m/y H:i:s')}}  <span class="ms-3 fw-lighter">  {{contest_entry.submittedAt|time_ago}} </span></td>
+                    </tr>
+                    <tr>
+                        <th>Statut</th>
+                        <td>{{ contest_entry.labels[contest_entry.status]|raw }}</td>
+                    </tr>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <td>
+                            {{ contest_entry.user }}
+                            <small class="ms-3 fw-bolder">{{ contest_entry.user.email }}</small>
+                            <small class="ms-3 fw-lighter"><a target="_blank" href="{{ path('app_v2_staff_history_user', {'user': contest_entry.user.id}) }}"> Activités <i class="bi bi-box-arrow-up-right"></i></a></small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Profil</th>
+                        <td>
+                            {% if contest_entry.candidateProfile is not null %}
+                                <a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id': contest_entry.candidateProfile.id}) }}">{{ generatePseudo(contest_entry.candidateProfile) }}</a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if contest_entry.candidateProfile is not null %}
+                        <tr>
+                            <th>Titre professionnel</th>
+                            <td>{{ contest_entry.candidateProfile.titre ? contest_entry.candidateProfile.titre : '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Secteurs d'activités ({{ contest_entry.candidateProfile.secteurs|length }})</th>
+                            <td>
+                                {% for secteur in contest_entry.candidateProfile.secteurs %}
+                                    <span class="badge bg-success rounded-pill">{{ secteur.nom }}</span>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end w-100">
+                <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_moderateur_facebook_contest_entry_edit', {'id': contest_entry.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                {{ include('moderateur/contest_entry/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

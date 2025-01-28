@@ -24,6 +24,14 @@ class ContestEntryRepository extends ServiceEntityRepository
         parent::__construct($registry, ContestEntry::class);
     }
 
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function paginateContestEntries($page): PaginationInterface
     {
         $queryBuilder = $this->createQueryBuilder('c')->select('c');

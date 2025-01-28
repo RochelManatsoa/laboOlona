@@ -18,7 +18,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  */
 class AffiliateToolRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
+    public function __construct(
+        ManagerRegistry $registry, 
+        private PaginatorInterface $paginator
+    )
     {
         parent::__construct($registry, AffiliateTool::class);
     }

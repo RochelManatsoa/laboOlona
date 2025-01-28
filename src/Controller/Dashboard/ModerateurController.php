@@ -878,51 +878,6 @@ class ModerateurController extends AbstractController
         ]);
     }
 
-
-    #[Route('/invitation', name: 'app_dashboard_moderateur_invitation')]
-    public function invitation(Request $request, InvitationRepository $invitationRepository): Response
-    {
-        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
-        $page = $request->query->get('page', 1);
-        $invitation = new Invitation();
-        $invitation->setUuid(new Uuid(Uuid::v4()));
-        $invitation->setCreatedAt(new DateTime());
-        $invitation->setStatus(Invitation::STATUS_PENDING);
-        $form = $this->createForm(InvitationType::class, $invitation);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $invitation = $form->getData();
-            $email = $invitation->getReader()->getEmail();
-            $invitation->setEmail($email);
-
-            $this->em->persist($invitation);
-            $this->em->flush();
-            $this->addFlash('success', 'Invitation envoyée');
-            /** Envoi email de mot de passe */
-            $this->mailerService->send(
-                $email,
-                "Invitation exclusive de Olona Talents : Débloquez votre potentiel dès maintenant !",
-                "invitation.html.twig",
-                [
-                    'user' => $invitation->getReader(),
-                    'dashboard_url' => $this->urlGenerator->generate(
-                        'app_invitation',
-                        [
-                            'uuid' => $invitation->getUuid()
-                        ], 
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    ),
-                ]
-            );
-
-        }
-        
-        return $this->render('dashboard/moderateur/invitation/index.html.twig', [
-            'invitations' => $invitationRepository->paginateInvitation($page),
-            'form' => $form->createView(),
-        ]);
-    }
-
     #[Route('/assignation/{profilId}', name: 'app_assignation')]
     public function assignate(Request $request, int $profilId): Response
     {

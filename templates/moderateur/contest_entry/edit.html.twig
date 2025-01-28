@@ -1,19 +1,18 @@
 {% extends 'dashboard/base.html.twig' %}
 
-{% block title %}Modifier un outils IA{% endblock %}
+{% block title %}Edit ContestEntry{% endblock %}
 
 {% block body %}
 <section class="p-0 m-0">
     <div class="container">
         <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
-            <h1 class="h3">Modifier un outils IA</h1>
+            <h1 class="h3">Modifier une entrée de concours</h1>
 
-            {{ include('moderateur/affiliate_tool/_form.html.twig', {'button_label': 'Update'}) }}
+            {{ include('moderateur/contest_entry/_form.html.twig', {'button_label': 'Update'}) }}
 
             <div class="d-flex justify-content-end w-100">
-                {{ include('moderateur/affiliate_tool/_delete_form.html.twig') }}
+                {{ include('moderateur/contest_entry/_delete_form.html.twig') }}
             </div>
-
         </div>
     </div>
 </section>
