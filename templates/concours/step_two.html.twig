@@ -1,0 +1,173 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Concours | Olona Talents{% endblock %}
+
+{% block meta %}
+<link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ path('app_concours_etape_1') }}">
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container">
+    <div class="row py-5">
+        <div class="col-md-4 d-none d-lg-block">
+            {% include "concours/side_nav.html.twig" with {'step': 2} %}
+        </div>
+        <div class="col-md-8">
+            <section>
+                <div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
+                    {% include "concours/nav_mobile.html.twig" %}
+                    <div id="contractFormStep">
+                    
+                        <div id="step_2" class="step-contest">
+                            <h3>Étape 2 : Règle de jeu</h3>
+                            {{ form_start(form) }}
+                                <div class="container my-5" style="height: 420px; overflow-y: auto;">
+
+                                    <!-- Section 1: Préambule -->
+                                    <div class="mb-4">
+                                    <h2 class="h4">1. Organisateur du concours</h2>
+                                    <p>
+                                        Le concours est organisé par Olona Talents, une plateforme dédiée à la mise en relation entre les talents malgaches et les entreprises locales et internationales.
+                                    </p>
+                                    </div>
+
+                                    <!-- Section 2: Objet du contrat -->
+                                    <div class="mb-4">
+                                    <h2 class="h4">2. Conditions de participation</h2>
+                                    <p>
+                                        Pour être éligible au concours, les participants doivent :
+                                    </p>
+                                    <ul>
+                                        <li>Être de nationalité malgache ou résident à Madagascar.</li>
+                                        <li>Avoir atteint l'âge minimum légal pour travailler (18 ans).</li>
+                                        <li>Déposer un CV complet et à jour sur la plateforme Olona Talents avant la date limite indiquée pour chaque tirage au sort.</li>
+                                        <li>Fournir une adresse e-mail et un numéro de téléphone valides, indispensables pour être contacté en cas de gain.</li>
+                                    </ul>
+                                        Remarque : Chaque participant ne peut soumettre qu’un seul CV. Toute tentative de participation multiple entraînera une disqualification.
+                                    </div>
+
+                                    <!-- Section 3: Services inclus -->
+                                    <div class="mb-4">
+                                    <h2 class="h4">3. Durée du concours</h2>
+                                    <p>Le concours se déroule pendant 1 mois, avec un tirage au sort chaque vendredi à 16h.</p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                    <h2 class="h4">4. Récompenses</h2>
+                                    <p>
+                                        💰 Plus de 2 millions d’ariary en récompenses cash à gagner !
+                                    </p>
+                                    <p>
+                                        🏆 12 gagnants au total, avec 3 gagnants désignés chaque semaine.
+                                    </p>
+                                    <p>
+                                        ✨ Chaque gagnant recevra 100 000 AR en espèces.
+                                    </p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                    <h2 class="h4">5. Modalités de participation</h2>
+                                    <p>
+                                        Pour participer, suivez les étapes suivantes :
+                                    </p>
+                                    <ul>
+                                        <li>Connectez-vous ou créez un compte sur Olona Talents.</li>
+                                        <li>Déposez votre CV en ligne en suivant les instructions du formulaire.</li>
+                                        <li>Vérifiez que votre e-mail et votre numéro de téléphone sont correctement renseignés, car ils seront utilisés pour vous informer en cas de gain.</li>
+                                        <li>C’est rapide et facile ! Déposer votre CV ne prend que 3 minutes, et vous pourriez être l’un des 12 grands gagnants du mois.</li>
+                                    </ul>
+                                    <p>
+                                        En cas de privatisation ou d'indisponibilité des espaces, la Société se réserve le droit de refuser certaines réservations.
+                                    </p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                    <h2 class="h4">6. Sélection des gagnants</h2>
+                                    <p>
+                                        Les gagnants seront sélectionnés par un tirage au sort aléatoire, réalisé grâce à un outil certifié d’intelligence artificielle.
+                                    </p>
+                                    <p>
+                                        Les résultats seront publiés chaque semaine sur notre page Facebook Olona Talents, et les gagnants seront contactés par téléphone ou par e-mail.
+                                    </p>
+                                    </div>
+
+                                    <!-- Section 6: Conditions de paiement -->
+                                    <div class="mb-4">
+                                    <h2 class="h4">7. Modalités de paiement</h2>
+                                    <p>
+                                        Les paiements seront effectués via :
+                                    </p>
+                                    <p>
+                                        Mobile Money pour les participants résidant hors d’Antananarivo.
+                                    </p>
+                                    <p>
+                                        Retrait direct dans notre espace coworking pour les habitants d’Antananarivo.
+                                    </p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                    <h2 class="h4">8. Responsabilité</h2>
+                                    <p>
+                                        Olona Talents décline toute responsabilité en cas de problème technique ou d’erreur lors de l’inscription.
+                                    </p>
+                                    <p>
+                                        Les participants sont responsables de fournir des informations exactes et complètes.
+                                    </p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                    <h2 class="h4">9. Disqualification</h2>
+                                    <p>
+                                        Les participants seront disqualifiés en cas de :
+                                    </p>
+                                    <ul>
+                                        <li>Informations incorrectes ou incomplètes dans le CV soumis.</li>
+                                        <li>Soupçon de fraude ou de participation multiple.</li>
+                                    </ul>
+                                    </div>
+
+                                    <div class="mb-4">
+                                    <h2 class="h4">10. Acceptation du règlement</h2>
+                                    <p>
+                                        En participant, chaque candidat accepte intégralement les termes et conditions de ce règlement.
+                                    </p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                    <h2 class="h4">11. Contact</h2>
+                                    <p>
+                                        Pour toute question ou assistance, veuillez nous contacter via :
+                                    </p>
+                                    <p>
+                                        📧 ambassadrices@olona-talents.com
+                                    </p>
+                                    <p>
+                                        📞 <a class="text-white" href="tel:+261320373432">+261 32 03 734 32</a>
+                                    </p>
+                                    </div>
+                                </div>
+                                <div class="mb-5 col-md-8 mx-auto">
+                                    <div class="row">
+                                        <div class="col-1 text-end">
+                                            {{ form_row(form.acceptTerms, {'attr': {'class': 'form-check-input', 'label': 'J\'accepte les conditions d\'utilisation'}}) }}
+                                        </div>
+                                        <div class="col">
+                                            <label class="form-check-label required" for="{{ form.acceptTerms.vars.id }}">J'accepte les conditions d'utilisation</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                            <a href="{{ path('app_concours_etape_1') }}" class="btn btn-secondary">Précédent</a>
+                            <button type="submit" class="btn btn-primary">Suivant</button>
+                            {{ form_end(form) }}
+                        </div>
+
+                    </div>
+                </div>              
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

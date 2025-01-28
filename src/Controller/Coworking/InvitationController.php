@@ -27,12 +27,9 @@ class InvitationController extends AbstractController
     public function index(InvitationRepository $invitationRepository, Request $request): Response
     {
         $page = $request->query->get('page', 1);
-        $array = [
-            'page' => is_numeric($page) && (int)$page > 0 ? (int)$page : 1,
-        ];
 
         return $this->render('coworking/invitation/index.html.twig', [
-            'invitations' => $invitationRepository->paginateInvitation($array),
+            'invitations' => $invitationRepository->paginateInvitation($page),
         ]);
     }
 

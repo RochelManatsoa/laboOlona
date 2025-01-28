@@ -183,4 +183,9 @@ class UserService
         return $user;
 
     }
+
+    public function checkUserPassword(User $user, string $plainPassword):bool
+    {
+        return $this->encoder->isPasswordValid($user, $plainPassword);
+    }
 }

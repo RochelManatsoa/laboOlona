@@ -1,0 +1,79 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Outils {{ affiliate_tool.nom }}{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">Outils {{ affiliate_tool.nom }}</h1>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ affiliate_tool.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom</th>
+                        <td>{{ affiliate_tool.nom }}</td>
+                    </tr>
+                    <tr>
+                        <th>Lien d'affiliation</th>
+                        <td>{{ affiliate_tool.lienAffiliation }}</td>
+                    </tr>
+                    <tr>
+                        <th>Lien d'image</th>
+                        <td>{{ affiliate_tool.image }}</td>
+                    </tr>
+                    <tr>
+                        <th>Slogan</th>
+                        <td>{{ affiliate_tool.sloganFr|raw }}</td>
+                    </tr>
+                    <tr>
+                        <th>Prix</th>
+                        <td>{{ affiliate_tool.prix }}</td>
+                    </tr>
+                    <tr>
+                        <th>Crée le</th>
+                        <td>{{ affiliate_tool.creeLe ? affiliate_tool.creeLe|date('Y-m-d H:i:s') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>{{ affiliate_tool.type ? affiliate_tool.labels[affiliate_tool.type]|raw : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Featured?</th>
+                        <td>{{ affiliate_tool.featured ? 'Oui' : 'Non' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ affiliate_tool.descriptionFr|raw }}</td>
+                    </tr>
+                    <tr>
+                        <th>Méta description</th>
+                        <td>{{ affiliate_tool.shortDescriptionFr|raw }}</td>
+                    </tr>
+                    <tr>
+                        <th>ImageName</th>
+                        <td>
+                            {% if affiliate_tool.imageName %}
+                                <img src="{{ vich_uploader_asset(affiliate_tool, 'imageFile') }}" alt="logo IA" class="img-thumbnail" style="width: 100px;"/>
+                            {% else %}
+                                <samll>Non disponible</small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <div class="d-flex justify-content-end w-100">
+                <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_affiliate_tool_edit', {'id': affiliate_tool.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                {{ include('moderateur/affiliate_tool/_delete_form.html.twig') }}
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

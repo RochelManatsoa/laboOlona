@@ -1,0 +1,17 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Nouvel outils{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">Nouvel outils</h1>
+
+            {{ include('moderateur/affiliate_tool/_form.html.twig') }}
+
+
+        </div>
+    </div>
+</section>
+{% endblock %}

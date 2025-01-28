@@ -24,6 +24,24 @@ class PrestationRepository extends ServiceEntityRepository
         parent::__construct($registry, Prestation::class);
     }
 
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function countPending(): int
+    {
+        return (int) $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->where('p.status = :pending')
+            ->setParameter('pending', Prestation::STATUS_PENDING)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function findPrestationsForReport()
     {
         $queryBuilder = $this->createQueryBuilder('p');

@@ -39,15 +39,17 @@ class NotificationController extends AbstractController
     public function index(Request $request): Response
     {
         $isRead = $request->query->get('isRead');
+        $page = $request->query->get('page', 1);
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
 
         return $this->render('dashboard/notification/index.html.twig', [
-            'notifications' => $this->notificationRepository->findByDestinataireAndStatusNot(
+            'notifications' => $this->notificationRepository->findByDestinataire(
                 $user, 
                 ['id' => 'DESC'], 
                 Notification::STATUS_DELETED,
-                $isRead
+                $isRead,
+                $page
             ),
         ]);
     }

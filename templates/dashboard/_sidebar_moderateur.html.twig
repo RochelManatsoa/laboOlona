@@ -26,6 +26,13 @@
         </a>
       </li>
       <li>
+        <a href="{{ path('app_moderateur_facebook_contest_entry_index')}}" 
+            class="nav-link {{ current_route == 'app_moderateur_facebook_contest_entry_index' ? 'active' : 'text-white' }}">
+            <i class="h5 mx-2 bi bi-controller"></i>
+            Concours   
+        </a>
+      </li>
+      <li>
         <a href="{{ path('app_dashboard_moderateur_profile_entreprise')}}" 
             class="nav-link {{ current_route == 'app_dashboard_moderateur_profile_entreprise' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-building"></i>
@@ -66,12 +73,19 @@
         <a href="{{ path('app_v2_staff_history')}}" 
             class="nav-link {{ current_route == 'app_v2_staff_history' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-calendar3"></i>
-            Utilisateurs  
+            Logs Utilisateurs  
         </a>
       </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_affiliate_tool')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_affiliate_tool' ? 'active' : 'text-white' }}">
+        <a href="{{ path('app_dashboard_moderateur_invitation')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_invitation' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-send"></i>
+            Invitations  
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_affiliate_tool_index')}}" 
+            class="nav-link {{ current_route == 'app_affiliate_tool_index' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-robot"></i>
             AI Tools  
         </a>
@@ -83,24 +97,6 @@
             Formations  
         </a>
       </li>
-      <li>
-        <a href="{{ path('app_dashboard_notification')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_notification' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-bell"></i>
-            Notifications  
-            {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
-        </a>
-      </li>
-
-      {# {% if 'ROLE_ADMIN' in app.user.roles %}
-      <li>
-        <a href="{{ path('app_dashboard_moderateur_csv_upload')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_csv_upload' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-box-arrow-in-right"></i>
-            Import CSV 
-        </a>
-      </li>
-      {% endif %} #}
     </ul>
 
     <hr>

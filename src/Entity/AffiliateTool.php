@@ -9,10 +9,33 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: AffiliateToolRepository::class)]
+#[Vich\Uploadable]
 class AffiliateTool
 {
+    const STATUS_PUBLISHED = 'publish';
+    const STATUS_DRAFT = 'draft';
+    const STATUS_PENDING = 'pending';
+
+    public static function getStatuses() {
+        return [
+            'Publiée' => self::STATUS_PUBLISHED ,
+            'Brouillon' => self::STATUS_DRAFT ,
+            'En attente' => self::STATUS_PENDING ,
+        ];
+    }
+    
+    public static function getLabels() {
+        return [
+            self::STATUS_PUBLISHED =>   '<span class="badge bg-success">Publiée</span>' ,
+            self::STATUS_PENDING =>      '<span class="badge bg-primary">En attente</span>' ,
+            self::STATUS_DRAFT =>      '<span class="badge bg-dark">Brouillon</span>' ,
+        ];
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -21,13 +44,13 @@ class AffiliateTool
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $lienAffiliation = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $commission = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -84,10 +107,21 @@ class AffiliateTool
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $shortDescriptionFr = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageName = null;
+
+    #[Vich\UploadableField(mapping: 'blogs', fileNameProperty: 'imageName')]
+    private ?File $imageFile = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->creeLe = new \DateTime();
+        $this->type = self::STATUS_DRAFT;
     }
 
     public function getId(): ?int
@@ -385,6 +419,44 @@ class AffiliateTool
     public function setShortDescriptionFr(?string $shortDescriptionFr): static
     {
         $this->shortDescriptionFr = $shortDescriptionFr;
+
+        return $this;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName(?string $imageName): static
+    {
+        $this->imageName = $imageName;
+
+        return $this;
+    }
+    
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            $this->updatedAt = new \DateTime();
+        }
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

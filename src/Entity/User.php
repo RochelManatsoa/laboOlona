@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Blog\Post;
 use App\Entity\Coworking\Contract;
+use App\Entity\Facebook\ContestEntry;
 use App\Entity\Vues\VideoVues;
 use Doctrine\DBAL\Types\Types;
 use App\Entity\Coworking\Event;
@@ -193,8 +194,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $facebookId = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ContestEntry::class)]
+    private Collection $contestEntries;
+
     public function __construct()
     {
+        $this->dateInscription = new \DateTime();
         $this->envois = new ArrayCollection();
         $this->recus = new ArrayCollection();
         $this->searchHistories = new ArrayCollection();
@@ -208,6 +213,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->events = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->contracts = new ArrayCollection();
+        $this->contestEntries = new ArrayCollection();
     }
 
     public function __toString()
@@ -981,6 +987,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFacebookId(?string $facebookId): static
     {
         $this->facebookId = $facebookId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ContestEntry>
+     */
+    public function getContestEntries(): Collection
+    {
+        return $this->contestEntries;
+    }
+
+    public function addContestEntry(ContestEntry $contestEntry): static
+    {
+        if (!$this->contestEntries->contains($contestEntry)) {
+            $this->contestEntries->add($contestEntry);
+            $contestEntry->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContestEntry(ContestEntry $contestEntry): static
+    {
+        if ($this->contestEntries->removeElement($contestEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($contestEntry->getUser() === $this) {
+                $contestEntry->setUser(null);
+            }
+        }
 
         return $this;
     }

@@ -21,6 +21,24 @@ class ApplicationsRepository extends ServiceEntityRepository
         parent::__construct($registry, Applications::class);
     }
 
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('a')
+            ->select('COUNT(a.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function countPending(): int
+    {
+        return (int) $this->createQueryBuilder('a')
+            ->select('COUNT(a.id)')
+            ->where('a.status = :pending')
+            ->setParameter('pending', Applications::STATUS_PENDING)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 //    /**
 //     * @return Applications[] Returns an array of Applications objects
 //     */

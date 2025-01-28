@@ -22,9 +22,26 @@ class InvitationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Invitation::class);
     }
-       
 
-    public function paginateInvitation(array $data): PaginationInterface
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function countPending(): int
+    {
+        return (int) $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->where('i.status = :pending')
+            ->setParameter('pending', Invitation::STATUS_PENDING)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }       
+
+    public function paginateInvitation(int $page): PaginationInterface
     {
         $qb = $this->createQueryBuilder('i')
             ->orderBy('i.id', 'DESC')
@@ -32,8 +49,8 @@ class InvitationRepository extends ServiceEntityRepository
 
         return $this->paginator->paginate(
             $qb,
-            $data['page'],
-            20,
+            $page,
+            10,
             [
                 'distinct' => true,
                 'shortFieldAllowList' => ['i.id', 'i.status', 'i.createdAt', 'i.usedAt'],

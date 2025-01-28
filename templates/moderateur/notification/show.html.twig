@@ -1,0 +1,50 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Détail de l'invitation{% endblock %}
+
+{% block paralax %}{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+          <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">Détail de l'invitation</h1>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ invitation.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ invitation.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Uuid</th>
+                        <td>{{ invitation.uuid }}</td>
+                    </tr>
+                    <tr>
+                        <th>Envoyé le</th>
+                        <td>{{ invitation.createdAt ? invitation.createdAt|date('d/m/Y H:i') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>{{ invitation.status ? invitation.labels[invitation.status]|raw : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Utilisé le</th>
+                        <td>{{ invitation.usedAt ? invitation.usedAt|date('d/m/Y H:i') : '' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end w-100">
+                {{ include('moderateur/invitation/_delete_form.html.twig') }}
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+

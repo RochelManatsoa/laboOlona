@@ -1,0 +1,45 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Concours | Olona Talents{% endblock %}
+
+{% block meta %}
+<link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ path('app_concours_etape_1') }}">
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container">
+    <div class="row py-5">
+        <div class="col-md-4 d-none d-lg-block">
+            {% include "concours/side_nav.html.twig" with {'step': 5} %}
+        </div>
+        <div class="col-md-8">
+            <section>
+                <div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
+                    {% include "concours/nav_mobile.html.twig" %}
+                    <div id="contractFormStep">   
+                        <div id="step_5" class="step-contest">
+                            <h3>Étape 5 : Je participe</h3>
+                            {{ form_start(form) }}
+                            <div class="py-5">
+                            <p class="lead text-center">Vous y êtes presque ! Validez votre participation pour tenter de remporter de magnifiques prix et booster votre carrière avec <strong>Olona Talents</strong>. 🌟</p>
+                            <p class="text-center text-muted">En participant, vous montrez votre ambition et votre envie de découvrir de nouvelles opportunités. Bonne chance ! 🍀</p>
+                                <div id="participation" style="display: none;">
+                                    {{ form_widget(form) }}
+                                </div>
+                            </div>
+                            <div id="buttons">
+                                <a href="{{ path('app_concours_etape_4') }}" class="btn btn-secondary">Précédent</a>
+                                <button type="submit" class="btn btn-primary">Participer</button>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>              
+            </section>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1/dist/confetti.browser.min.js"></script>
+{% endblock %}

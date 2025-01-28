@@ -30,11 +30,11 @@ class Notification
     }
     public static function getInverseStatuses() {
         return [
-            self::TYPE_ANNONCE => 'Annonce',
-            self::TYPE_PROFIL => 'Profil',
-            self::TYPE_CONTACT => 'Contact',
-            self::TYPE_MESSAGE => 'Message',
-            self::TYPE_RELANCE => 'Relance',
+            self::TYPE_ANNONCE => '<span class="badge bg-success">Annonce</span>' ,
+            self::TYPE_PROFIL => '<span class="badge bg-primary">Profil</span>' ,
+            self::TYPE_CONTACT => '<span class="badge bg-secondary">Contact</span>' ,
+            self::TYPE_MESSAGE => '<span class="badge bg-warning">Message</span>' ,
+            self::TYPE_RELANCE => '<span class="badge bg-danger">Relance</span>' ,
         ];
     }
     

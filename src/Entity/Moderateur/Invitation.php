@@ -12,7 +12,21 @@ use Symfony\Component\Uid\Uuid;
 class Invitation
 {
     const STATUS_PENDING = 'PENDING';
-    const STATUS_USED = 'USED';
+    const STATUS_USED = 'USED'; 
+
+    public static function getStatuses() {
+        return [
+            'En attente' => self::STATUS_PENDING ,
+            'Utilisée' => self::STATUS_USED ,
+        ];
+    }
+    
+    public static function getLabels() {
+        return [
+            self::STATUS_PENDING =>   '<span class="badge bg-primary">En attente</span>' ,
+            self::STATUS_USED =>      '<span class="badge bg-success">Utilisée</span>' ,
+        ];
+    }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -36,6 +50,13 @@ class Invitation
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $status = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->status = self::STATUS_PENDING;
+        $this->uuid = Uuid::v4();
+    }
 
     public function getId(): ?int
     {

@@ -1,0 +1,39 @@
+{% if id == 'user' %}
+    <turbo-stream action="replace" target="user">
+        <template>
+            <div class="alert alert-warning alert-dismissible fade show my-4" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div>
+                <a href="{{ path('app_concours_etape_2') }}" class="btn btn-primary my-4">Suivant</a>
+            </div>
+        </template>
+    </turbo-stream>
+{% endif %}
+
+{% if id == 'newUser' %}
+    <turbo-stream action="replace" target="newUser">
+        <template>
+            <div class="alert alert-warning alert-dismissible fade show my-4" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div>
+                <a href="{{ path('app_concours_etape_2') }}" class="btn btn-primary my-4">Suivant</a>
+            </div>
+        </template>
+    </turbo-stream>
+{% endif %}
+
+{% if id == 'participation' %}
+<turbo-stream action="replace" target="participation">
+    <template>
+        <div class="alert alert-warning alert-dismissible fade show my-4" role="alert">
+            {{ message|raw }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </template>
+</turbo-stream>
+<turbo-stream action="remove" target="buttons"></turbo-stream>
+{% endif %}

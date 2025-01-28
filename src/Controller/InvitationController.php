@@ -145,21 +145,4 @@ class InvitationController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-    #[Route('/invitation/entreprise/test', name: 'app_invitation_test')]
-    public function emailTest(Request $request): Response
-    {
-        $this->mailerService->send(
-            'support@olona-talents.com',
-            "Mail TEST pour entreprise Olona Talents",
-            "entreprise/welcome.html.twig",
-            [
-                'user' => 'Nirina',
-                'dashboard_url' => $this->urlGenerator->generate('app_connect', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]
-        );
-        $this->addFlash('success', 'Mail Test envoyé');
-
-        return $this->redirectToRoute('app_connect');
-    }
 }

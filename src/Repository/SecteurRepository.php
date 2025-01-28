@@ -20,21 +20,19 @@ class SecteurRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Secteur::class);
     }
-
-//    /**
-//     * @return Secteur[] Returns an array of Secteur objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    
+    /**
+     * Compte le nombre total de Secteurs dans la base de données.
+     *
+     * @return int Le nombre total de Secteurs.
+     */
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
 //    public function findOneBySomeField($value): ?Secteur
 //    {

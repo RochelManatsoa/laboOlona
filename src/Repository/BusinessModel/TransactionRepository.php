@@ -24,6 +24,24 @@ class TransactionRepository extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function countPending(): int
+    {
+        return (int) $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->where('t.status = :pending')
+            ->setParameter('pending', Transaction::STATUS_PENDING)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
    /**
     * @return Transaction[] Returns an array of Transaction objects
     */

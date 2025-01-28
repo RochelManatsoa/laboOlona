@@ -34,6 +34,7 @@ $(function() {
         setupCKEditors();
         setupDynamicLinks();
         toggleFields();
+        contestFacebook();
     }
 
     function handlePageLoad() {
@@ -49,7 +50,38 @@ $(function() {
         initializeSliders();
         initiateLoadMore();
         toggleFields();
-        initializeCarousels(); // Initialize carousels on page load
+        initializeCarousels(); 
+        contestFacebook();
+        checkAndShowTutorial();
+    }
+
+    function checkAndShowTutorial() {
+        const tutorialViewed = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('tutorialViewed='));
+    
+        if (!tutorialViewed) {
+            var tutorialModal1Toggle = new Modal($('#tutorialModal1Toggle')[0]);
+            tutorialModal1Toggle.show();
+            document.cookie = "tutorialViewed=true; path=/; max-age=31536000"; 
+        }
+    }
+
+    function contestFacebook() {
+
+        $('#yesButton').on('click', function () {
+            $(this).addClass('active'); 
+            $('#noButton').removeClass('active'); 
+            $('#user').show(); 
+            $('#newUser').hide(); 
+        });
+
+        $('#noButton').on('click', function () {
+            $(this).addClass('active'); 
+            $('#yesButton').removeClass('active');
+            $('#user').hide(); 
+            $('#newUser').show(); 
+        });
     }
 
     // Fonction pour gérer l'affichage des champs en fonction de la sélection
@@ -70,10 +102,6 @@ $(function() {
             $('#contract_lastName').closest('.mb-3').hide(); 
         }
     }
-
-    $('#contract_typePerson').on('change', function () {
-        toggleFields();
-    });
 
     function initializeCarousels() {
         const carousels = document.querySelectorAll('.carousel');
@@ -485,6 +513,10 @@ $(function() {
                     console.error('Error:', xhr.responseText);
                 }
             });
+        });
+
+        $('#contract_typePerson').on('change', function () {
+            toggleFields();
         });
     }
 

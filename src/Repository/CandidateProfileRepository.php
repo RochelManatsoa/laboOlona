@@ -30,6 +30,24 @@ class CandidateProfileRepository extends ServiceEntityRepository
         parent::__construct($registry, CandidateProfile::class);
     }
 
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function countPending(): int
+    {
+        return (int) $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.status = :pending')
+            ->setParameter('pending', CandidateProfile::STATUS_PENDING)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     /**
      * @return Expert[] Returns an array of Expert objects
      */

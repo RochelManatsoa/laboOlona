@@ -25,6 +25,19 @@ class SimulateurRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Simulateur::class);
     }
+    
+    /**
+     * Compte le nombre total de Simulations dans la base de données.
+     *
+     * @return int Le nombre total de Simulations.
+     */
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
     public function findSimulateursNotDeletedForEmploye(Employe $employe)
     {
