@@ -15,18 +15,16 @@ class ContestEntry
     const STATUS_PENDING = 'PENDING';
     const STATUS_VALIDATED = 'VALIDATED';
     const STATUS_CV_EMPTY = 'NO_CV';
-    const STATUS_INFOS_EMPTY = 'NO_CV';
-    const STATUS_PUBLISHED = 'PUBLISHED';
+    const STATUS_INFOS_EMPTY = 'NO_INFOS';
     const STATUS_ARCHIVED = 'ARCHIVED';   
 
     public static function getStatuses() {
         return [
             'Soumis' => self::STATUS_SEND ,
-            'En attente de validation' => self::STATUS_PENDING ,
+            'En attente de modération' => self::STATUS_PENDING ,
             'Validée' => self::STATUS_VALIDATED ,
             'Informations manquantes' => self::STATUS_INFOS_EMPTY ,
             'CV manquant' => self::STATUS_CV_EMPTY ,
-            'Publiée' => self::STATUS_PUBLISHED ,
             'Archivée' => self::STATUS_ARCHIVED ,
         ];
     }
@@ -34,12 +32,11 @@ class ContestEntry
     public static function getLabels() {
         return [
             self::STATUS_SEND =>          '<span class="badge bg-info">Soumis</span>' ,  
-            self::STATUS_PENDING =>        '<span class="badge bg-warning">En attente de validation</span>' ,  
+            self::STATUS_PENDING =>        '<span class="badge bg-warning">En attente de modération</span>' ,  
             self::STATUS_VALIDATED =>      '<span class="badge bg-success">Validée</span>' ,  
             self::STATUS_CV_EMPTY =>      '<span class="badge bg-danger">CV manquant</span>' ,  
             self::STATUS_INFOS_EMPTY =>      '<span class="badge bg-danger">Informations manquantes</span>' ,  
-            self::STATUS_PUBLISHED =>      '<span class="badge bg-success">Publié</span>' ,  
-            self::STATUS_ARCHIVED =>       '<span class="badge bg-danger">Archivé</span>' ,
+            self::STATUS_ARCHIVED =>       '<span class="badge bg-dark">Archivé</span>' ,
         ];
     }
 

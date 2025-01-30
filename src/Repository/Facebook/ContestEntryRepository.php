@@ -31,12 +31,27 @@ class ContestEntryRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+    
+    public function countStatus(string $status): int
+    {
+        return (int) $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.status = :status')
+            ->setParameter('status', $status)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
-    public function paginateContestEntries($page): PaginationInterface
+    public function paginateContestEntries($page, string $status = null): PaginationInterface
     {
         $queryBuilder = $this->createQueryBuilder('c')->select('c');
         $queryBuilder
             ->addOrderBy('c.submittedAt', 'DESC');
+        if ($status) {
+            $queryBuilder
+                ->andWhere('c.status = :status')
+                ->setParameter('status', $status);
+        }
 
         return $this->paginator->paginate(
             $queryBuilder,
@@ -56,5 +71,19 @@ class ContestEntryRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }
+
+    public function findEntryByStatus(string $status, int $maxResults = 50): array
+    {
+        $dateLimit = new \DateTimeImmutable('-24 hours'); 
+    
+        return $this->createQueryBuilder('c')
+            ->where('c.status = :status')
+            ->andWhere('c.submittedAt < :dateLimit') 
+            ->setParameter('status', $status)
+            ->setParameter('dateLimit', $dateLimit)
+            ->setMaxResults($maxResults)
+            ->getQuery()
+            ->getResult();
     }
 }
