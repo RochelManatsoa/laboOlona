@@ -75,7 +75,7 @@ class ContestEntryRepository extends ServiceEntityRepository
 
     public function findEntryByStatus(string $status, int $maxResults = 50): array
     {
-        $dateLimit = new \DateTimeImmutable('-24 hours'); 
+        $dateLimit = new \DateTimeImmutable('-6 hours'); 
     
         return $this->createQueryBuilder('c')
             ->where('c.status = :status')
