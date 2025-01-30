@@ -45,9 +45,6 @@ class CandidatContestType extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'custom-file-input'],
                 'constraints' =>  new Sequentially([
-                    new NotBlank([
-                        'message' => 'Champ obligatoire',
-                    ]),
                     new File([
                         'maxSize' => '1024k',
                         'maxSizeMessage' => 'La taille du fichier ne doit pas dépasser 1 Mo.', 
