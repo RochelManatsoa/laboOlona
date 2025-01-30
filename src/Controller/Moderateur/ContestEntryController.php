@@ -21,10 +21,14 @@ class ContestEntryController extends AbstractController
     ): Response
     {
         $page = $request->query->getInt('page', 1);
+        $status = $request->query->get('status', ContestEntry::STATUS_SEND);
 
         return $this->render('moderateur/contest_entry/index.html.twig', [
-            'contest_entries' => $contestEntryRepository->paginateContestEntries($page),
+            'contest_entries' => $contestEntryRepository->paginateContestEntries($page, $status),
             'count' => $contestEntryRepository->countAll(),
+            'countStatus' => $contestEntryRepository->countStatus($status),
+            'statuses' => ContestEntry::getStatuses(),
+            'selectedStatus' => $status,
         ]);
     }
 

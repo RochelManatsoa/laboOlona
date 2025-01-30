@@ -6,6 +6,7 @@ use App\Service\ActivityLogger;
 use App\Entity\Logs\ActivityLog;
 use App\Manager\IdentityManager;
 use App\Entity\Referrer\Referral;
+use App\Service\User\UserService;
 use App\Service\User\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +17,6 @@ use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Service\Mailer\MailerService as MailerMailerService;
-use App\Service\User\UserService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -26,6 +26,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 
 class FacebookAuthenticator extends OAuth2Authenticator
 {
@@ -53,6 +54,11 @@ class FacebookAuthenticator extends OAuth2Authenticator
                 $facebookUser = $client->fetchUserFromToken($accessToken);
 
                 $email = $facebookUser->getEmail();
+                // Vérifier si l'email est null et lever une exception
+                if (!$email) {
+                    throw new CustomUserMessageAuthenticationException('Impossible de récupérer l\'email depuis Facebook. Veuillez vérifier vos paramètres Facebook.');
+                }
+    
                 $tokenRegistration = $this->tokenGeneratorInterface->generateToken();
 
                 // have they logged in with Facebook before? Easy!
