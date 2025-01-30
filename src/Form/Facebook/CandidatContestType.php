@@ -8,9 +8,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\Sequentially;
 
 class CandidatContestType extends AbstractType
 {
@@ -42,20 +44,24 @@ class CandidatContestType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'attr' => ['class' => 'custom-file-input'],
-                'constraints' => [
+                'constraints' =>  new Sequentially([
+                    new NotBlank([
+                        'message' => 'Champ obligatoire',
+                    ]),
                     new File([
-                        'maxSize' => '4096k',
+                        'maxSize' => '1024k',
+                        'maxSizeMessage' => 'La taille du fichier ne doit pas dépasser 1 Mo.', 
                         'mimeTypes' => [
                             'application/pdf',
                             'application/x-pdf',
                         ],
                         'mimeTypesMessage' => 'Veuillez télécharger un document PDF valide',
-                    ])
-                ],
+                    ]),
+                ]),
                 'label_attr' => [
                     'class' => 'fw-bold lead' 
                 ],
-                'help' => 'Format PDF',
+                'help' => 'Format PDF | La taille du fichier ne doit pas dépasser 1 Mo.',
             ])
         ;
     }
