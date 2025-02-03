@@ -250,6 +250,48 @@ class MainController extends AbstractController
         ]);
     }
 
+    #[Route('/contrat/flexi', name: 'app_main_flexi_contract')]
+    public function flexi(
+        Request $request, 
+        MailManager $mailManager, 
+        Security $security, 
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        /** @var Package $package */
+        $package = $entityManager->getRepository(Package::class)->findOneBy([
+            'slug' => 'pack-flexi'
+        ]);
+        $form = $this->createForm(ContractType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contract = $form->getData();
+            if($security->getUser()){
+                $contract->setUser($security->getUser());
+            }
+            $contract->setPackage($package);
+            $entityManager->persist($contract);
+            $entityManager->flush();
+            $mailManager->contractFLEXI($contract);
+            $this->addFlash('success', 'Votre contrat a été bien enregistré.');
+
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('coworking/update.html.twig', ['id' => 'contractForm']);
+            }
+        
+        
+            return $this->json([
+                'message' => 'Success',
+            ], Response::HTTP_OK);
+        }
+
+        return $this->render('coworking/main/membre_flexi.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
     #[Route('/membre-vip/', name: 'app_main_view_vip_contract')]
     public function contractForm(
         Request $request, 

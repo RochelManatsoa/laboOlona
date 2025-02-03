@@ -197,6 +197,33 @@ class MailManager
         );
     }
 
+    public function contractFLEXI(Contract $contract)
+    {
+        $url = '';
+        $url = $this->urlGenerator->generate('app_coworking_contract_show', [
+            'id' => $contract->getId()
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $this->mailerService->send(
+            $contract->getEmail(), 
+            'Confirmation de votre souscription au contrat VIP Coworking Olona Talents',
+            'reservation/confirmation_contrat_flexi.mail.twig',
+            [
+                'contract' => $contract,
+            ]
+        );
+        
+        return $this->mailerService->sendMultiple(
+            ['ambassadrices@olona-talents.com', 'admin@olona-talents.com','aolonaprodadmi@gmail.com', 'support@olona-talents.com', 'contact@olona-talents.com'],
+            'Réservation au nom de '.$contract->getFirstName().' '.$contract->getLastName(),
+            'reservation/contrat_vip.mail.twig',
+            [
+                'contract' => $contract,
+                'url' => $url,
+            ]
+        );
+    }
+
     public function contactForm(ContactForm $contactForm)
     {        
         return $this->mailerService->sendMultiple(

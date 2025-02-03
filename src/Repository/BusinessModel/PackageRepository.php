@@ -21,20 +21,12 @@ class PackageRepository extends ServiceEntityRepository
         parent::__construct($registry, Package::class);
     }
 
-//    /**
-//     * @return Package[] Returns an array of Package objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findContractPackages()
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.type = :type')
+            ->setParameter('type', 'CONTRAT');
+    }
 
 //    public function findOneBySomeField($value): ?Package
 //    {

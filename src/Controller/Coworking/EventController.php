@@ -95,11 +95,22 @@ class EventController extends AbstractController
             }
             $entityManager->persist($event);
             $entityManager->flush();
-            foreach ($event->getPlaces() as $place) {
-                if($event->getDuration() == "demi_journee"){
-                    $cartService->addProduct($demiJournee->getId());
-                }else{
-                    $cartService->addProduct($journee->getId());
+            $contracts = $user->getContracts();
+            if(count($contracts) > 0){
+                foreach ($contracts as $contract) {
+                    if($contract->getFlexi() > 0){
+                        $contract->setFlexi($contract->getFlexi() - 1);
+                        $entityManager->persist($contract);
+                        $entityManager->flush();
+                    }
+                }
+            }else{
+                foreach ($event->getPlaces() as $place) {
+                    if($event->getDuration() == "demi_journee"){
+                        $cartService->addProduct($demiJournee->getId());
+                    }else{
+                        $cartService->addProduct($journee->getId());
+                    }
                 }
             }
             if($form->get('boissons')->getData()){

@@ -41,7 +41,14 @@
                     {{ contract.firstName }} {{ contract.lastName }}
                     {% endif %} <br> <span class="fw-lighter">{{ contract.email }}</span> <br> {{ contract.telephone }}</td>
                 <td>{{ contract.createdAt ? contract.createdAt|date('d/m/Y H:i:s') : '' }} <br>{{ getContractStatus(contract)|raw }}</td>
-                <td>{{ contract.contractNumber }}</td>
+                <td>
+                    {{ contract.contractNumber }}<br>
+                    {% if contract.package is not null %}
+                    <span class="text-secondary fw-bolder">{{ contract.package.name }}</span> | <span class="fw-bold">{{ contract.package.price }} Ar</span>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
                 <td>
                     <a class="btn btn-sm rounded-circle btn-primary" href="{{ path('app_coworking_contract_show', {'id': contract.id}) }}"><i class="bi bi-eye"></i></a>
                     <a class="btn btn-sm rounded-circle btn-danger" href="{{ path('app_coworking_contract_edit', {'id': contract.id}) }}"><i class="bi bi-pencil"></i></a>
