@@ -28,11 +28,7 @@
                       <div class="col-md-6 col-12 mx-auto">
                           <div class="card shadow-lg border-0 rounded mt-0">
                               <div class="card-body p-4 mt-4">                                  
-                                  {% if error %}
-                                  <div class="alert alert-danger">
-                                      {{ error.messageKey|trans(error.messageData, 'security') }}
-                                  </div>
-                                  {% endif %}
+                                  <div id="error"></div>
                                   
                                   {% if app.user %}
                                   <div class="alert alert-dark text-center">
@@ -41,7 +37,7 @@
                                   </div>
                                   {% endif %}
                                   
-                                  <form method="post" data-turbo="false">
+                                  <form method="post" action="{{ path('app_coworking_authennticate') }}">
           
                                   <div class="form-floating mb-3">
                                       <input type="email" class="form-control" id="email" name="email" required autofocus placeholder="Email">
@@ -65,7 +61,7 @@
                                           </label>
                                       </div>
           
-                                      <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                      {# <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"> #}
                                       <div class="my-3">
                                         <button type="submit" class="btn btn-primary px-5 mx-auto">Connexion</button>
                                       </div>

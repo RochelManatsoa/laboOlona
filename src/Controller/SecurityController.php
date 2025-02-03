@@ -3,18 +3,22 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Service\ActivityLogger;
 use App\Service\YouTubeService;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
-use App\Service\ActivityLogger;
 use App\Service\User\UserService;
+use Symfony\UX\Turbo\TurboBundle;
+use App\Security\AppAuthenticator;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class SecurityController extends AbstractController
 {
@@ -57,6 +61,58 @@ class SecurityController extends AbstractController
             'last_username' => $lastUsername, 
             'error' => $error
         ]);
+    }
+
+    #[Route(path: '/coworking/authenticate', name: 'app_coworking_authennticate', methods: ['POST'])]
+    public function authenticateCoworking(
+        Request $request,
+        EntityManagerInterface $em,
+        UserAuthenticatorInterface $userAuthenticator,
+        AppAuthenticator $authenticator,
+        UserService $userService,
+    ): Response
+    {
+        $email = $request->request->get('email', '');
+        $password = $request->request->get('password');
+        $user = $em->getRepository(User::class)->findOneBy(['email' => $email]);
+
+        if (!$user) {
+            $response = [
+                'status' => 'error',
+                'id' => 'error',
+                'message' => 'Aucun utilisateur trouvé avec cet e-mail.',
+            ];
+    
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('turbo_stream/error_message.html.twig', $response);
+            }
+    
+            return $this->json($response, Response::HTTP_NOT_FOUND);
+        }
+
+        if(!$userService->checkUserPassword($user, $password)){
+            $response = [
+                'status' => 'error',
+                'id' => 'error',
+                'message' => 'Mot de passe incorrect.',
+            ];
+    
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('turbo_stream/error_message.html.twig', $response);
+            }
+    
+            return $this->json($response, Response::HTTP_NOT_FOUND);
+        }
+    
+        $response = $userAuthenticator->authenticateUser(
+            $user,
+            $authenticator,
+            $request
+        );
+        
+        return $this->redirectToRoute('app_coworking_main');
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
