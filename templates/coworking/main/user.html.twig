@@ -454,13 +454,21 @@
                 <hr>
                 <div class="d-grid gap-2">
                   {% if app.user.contracts|length == 0 %}
-                    <a href="{{ path('app_main_vip_contract') }}" class="text-white btn btn-danger fw-bolder text-uppercase h5 text-white"> 
+                  <div class="card p-3">
+                    <a href="{{ path('app_main_vip_contract') }}" class="text-white btn btn-info fw-bolder text-uppercase h5 text-white"> 
                       <i class="bi bi-person-bounding-box me-3 h4"></i>
                       Devenir membre VIP
                     </a>
                     <a href="{{ path('app_main_vip_contract') }}">
                       <img src="{{ asset('images/coworking/vip-coworking.png') }}" alt="VIP contract" class="img-fluid">
                     </a>
+                  </div>
+                  <div class="card p-3">
+                    <h4 class="fw-bolder text-center">Pack FLEXI</h4>
+                    <a href="{{ path('app_main_flexi_contract') }}">
+                      <img src="{{ asset('images/coworking/pack-flexi.png') }}" alt="VIP contract" class="img-fluid">
+                    </a>
+                  </div>
                   {% else %}
                   <h4 class="fw-bolder">Contrat en cours</h4>
                     {% for contract in app.user.contracts %}
@@ -473,6 +481,9 @@
                         Montant Total : {{ contract.package.price }} Ar<br>
                         Mode de Paiement : À la caisse
                       </p>
+                      {% if contract.flexi is not null %}
+                          <p><span class="fw-bolder">{{ contract.flexi }}</span> accès Flexi restant(s)</p>
+                      {% endif %}
                       <hr>
                     {% endfor %}
                   {% endif %}

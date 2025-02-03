@@ -41,6 +41,8 @@ class ContractManager
         /** @var Contract $contract */
         $contract = $form->getData();
         if($contract->getStatus() === Contract::STATUS_VALIDATED){
+            $contract->setExpiredAt(new \DateTime('+1 month'));
+            $contract->setFlexi($contract->getPackage()->getCredit());
             $this->createInvoice($contract);
         }
         $this->save($contract);

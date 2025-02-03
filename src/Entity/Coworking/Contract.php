@@ -97,6 +97,12 @@ class Contract
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $city = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $flexi = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $expiredAt = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -351,6 +357,30 @@ class Contract
     public function setCity(?string $city): static
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    public function getFlexi(): ?int
+    {
+        return $this->flexi;
+    }
+
+    public function setFlexi(?int $flexi): static
+    {
+        $this->flexi = $flexi;
+
+        return $this;
+    }
+
+    public function getExpiredAt(): ?\DateTimeInterface
+    {
+        return $this->expiredAt;
+    }
+
+    public function setExpiredAt(?\DateTimeInterface $expiredAt): static
+    {
+        $this->expiredAt = $expiredAt;
 
         return $this;
     }

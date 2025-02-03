@@ -2,9 +2,11 @@
 
 namespace App\Form\Coworking;
 
+use App\Entity\BusinessModel\Package;
 use App\Entity\Coworking\Contract;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Autocomplete\UserAutocompleteField;
+use App\Repository\BusinessModel\PackageRepository;
 use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -17,9 +19,14 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class ContractType extends AbstractType
 {
+    public function __construct(
+        private PackageRepository $packageRepository
+    ){}
+    
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -137,6 +144,18 @@ class ContractType extends AbstractType
         
         if ($options['is_admin']) {
             $builder
+                ->add('package', EntityType::class, [
+                    'class' => Package::class,
+                    'query_builder' => function (PackageRepository $repo) {
+                        return $repo->findContractPackages();
+                    },
+                    'choice_label' => 'name',
+                    'label' => 'Pack',
+                    'label_attr' => [
+                        'class' => 'fw-bold fs-5' 
+                    ],
+                    'help' => 'Pack souhaité.',
+                ])
                 ->add('status', ChoiceType::class, [
                     'choices' => Contract::getStatuses(),
                     'label' => 'Statut',

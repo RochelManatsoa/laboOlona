@@ -28,17 +28,16 @@ class ContractController extends AbstractController
     }
 
     #[Route('/new', name: 'app_coworking_contract_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, ContractManager $contractManager): Response
     {
-        $contract = new Contract();
+        $contract = $contractManager->init();
         $form = $this->createForm(ContractType::class, $contract, [
             'is_admin' => $this->isGranted('ROLE_ADMIN'),
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($contract);
-            $entityManager->flush();
+            $contractManager->saveForm($form);
 
             return $this->redirectToRoute('app_coworking_contract_index', [], Response::HTTP_SEE_OTHER);
         }
