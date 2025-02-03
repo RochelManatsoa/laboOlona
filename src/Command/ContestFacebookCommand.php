@@ -40,65 +40,69 @@ class ContestFacebookCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $contestEntries = $this->contestEntryRepository->findEntryByStatus(ContestEntry::STATUS_SEND);
-
+        
+        $contestEntries = array_merge(
+            $this->contestEntryRepository->findEntryByStatus(ContestEntry::STATUS_SEND),
+            $this->contestEntryRepository->findEntryByStatus(ContestEntry::STATUS_CV_EMPTY)
+        );
+        
         foreach ($contestEntries as $contestEntry) {
-            $user = $contestEntry->getUser();
-
-            if (!$user instanceof User) {
-                $this->removeContestEntry($contestEntry);
-                $io->writeln(sprintf('Utilisateur non trouvé pour ContestEntry ID: %d', $contestEntry->getId()));
-                continue;
-            }
-
-            if (!$this->isUserInfoComplete($user)) {
-                $contestEntry->setStatus(ContestEntry::STATUS_INFOS_EMPTY);
-                $this->entityManager->persist($contestEntry);
-                $io->writeln(sprintf('Informations incomplètes pour ContestEntry ID: %d', $contestEntry->getId()));
-                continue;
-            }
-
-            $candidateProfile = $contestEntry->getCandidateProfile();
-            if (!$candidateProfile instanceof CandidateProfile) {
-                $this->handleMissingCv($contestEntry, $user);
-                $io->writeln(sprintf('Profil non trouvé - mail envoyé pour  pour ContestEntry ID: %d', $contestEntry->getId()));
-                continue;
-            }
-
-            if (!$candidateProfile->getTitre()) {
-                $contestEntry->setStatus(ContestEntry::STATUS_INFOS_EMPTY);
-                $this->entityManager->persist($contestEntry);
-                $io->writeln(sprintf('Titre manquant pour ContestEntry ID: %d', $contestEntry->getId()));
-                continue;
-            }
-
-            if (!$candidateProfile->getCv()) {
-                $this->handleMissingCv($contestEntry, $user, $candidateProfile);
-                $io->writeln(sprintf('CV manquant - mail envoyé pour ContestEntry ID: %d', $contestEntry->getId()));
-                continue;
-            }
-
-            if($candidateProfile->getLocalisation() === null){
-                $candidateProfile->setLocalisation('MG');
-                $this->entityManager->persist($candidateProfile);
-            }
-
-            if ($candidateProfile->getStatus() === CandidateProfile::STATUS_VALID || $candidateProfile->getStatus() === CandidateProfile::STATUS_FEATURED) {
-                $contestEntry->setStatus(ContestEntry::STATUS_VALIDATED);
-            }else{
-                $contestEntry->setStatus(ContestEntry::STATUS_PENDING);
-            }
-
-            $this->entityManager->persist($contestEntry);
-
-            $io->writeln(sprintf('ContestEntry ID %d traité avec succès.', $contestEntry->getId()));
+            $this->processContestEntry($contestEntry, $io);
         }
 
-        // Sauvegarde des modifications
         $this->entityManager->flush();
         $io->success('Traitement terminé avec succès.');
 
         return Command::SUCCESS;
+    }
+
+    private function processContestEntry(ContestEntry $contestEntry, SymfonyStyle $io): void
+    {
+        $user = $contestEntry->getUser();
+
+        if (!$user instanceof User) {
+            $this->removeContestEntry($contestEntry);
+            $io->writeln(sprintf('Utilisateur non trouvé pour ContestEntry ID: %d', $contestEntry->getId()));
+            return;
+        }
+
+        if (!$this->isUserInfoComplete($user)) {
+            $this->updateStatus($contestEntry, ContestEntry::STATUS_INFOS_EMPTY, $io);
+            return;
+        }
+
+        $candidateProfile = $contestEntry->getCandidateProfile();
+
+        if (!$candidateProfile instanceof CandidateProfile || !$candidateProfile->getCv()) {
+            if($candidateProfile->getRelanceCount() === 0){
+                $this->handleMissingCv($contestEntry, $user, $candidateProfile);
+                $io->writeln(sprintf('CV manquant - mail envoyé pour ContestEntry ID: %d', $contestEntry->getId()));
+            }
+            return;
+        }
+
+        if (!$candidateProfile->getTitre()) {
+            $this->updateStatus($contestEntry, ContestEntry::STATUS_INFOS_EMPTY, $io);
+            return;
+        }
+
+        if ($candidateProfile->getLocalisation() === null) {
+            $candidateProfile->setLocalisation('MG');
+            $this->entityManager->persist($candidateProfile);
+        }
+
+        $newStatus = in_array($candidateProfile->getStatus(), [CandidateProfile::STATUS_VALID, CandidateProfile::STATUS_FEATURED])
+            ? ContestEntry::STATUS_VALIDATED
+            : ContestEntry::STATUS_PENDING;
+
+        $this->updateStatus($contestEntry, $newStatus, $io);
+    }
+
+    private function updateStatus(ContestEntry $contestEntry, string $status, SymfonyStyle $io): void
+    {
+        $contestEntry->setStatus($status);
+        $this->entityManager->persist($contestEntry);
+        $io->writeln(sprintf('ContestEntry ID %d mis à jour avec le statut %s.', $contestEntry->getId(), $status));
     }
 
     private function removeContestEntry(ContestEntry $contestEntry): void
@@ -139,11 +143,12 @@ class ContestFacebookCommand extends Command
                 ),
             ]
         );
+        
         $notification = $this->notificationManager->createNotification(
-            $this->moderateurManager->getModerateurs()[1], 
-            $user, 
-            Notification::TYPE_PROFIL, 
-            'CV manquant pour votre candidature au concours Olona Talents', 
+            $this->moderateurManager->getModerateurs()[1],
+            $user,
+            Notification::TYPE_PROFIL,
+            'CV manquant pour votre candidature au concours Olona Talents',
             '
             <p>Bonjour '.$user->getPrenom().'</p>
 
@@ -189,8 +194,9 @@ class ContestFacebookCommand extends Command
             <p>
                 Bonne chance et à bientôt sur <strong>Olona Talents</strong> ! 🚀  
             </p>
-            '
+           '
         );
+        
         $this->entityManager->persist($notification);
     }
 }
