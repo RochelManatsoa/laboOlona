@@ -168,7 +168,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
     {
         $qb = $this
             ->createQueryBuilder('c')
-            ->select('c, c.id AS matricule, c.relanceCount AS level, u.id, u.nom, COUNT(DISTINCT s.id) AS nombreDeCompetences, COUNT(DISTINCT e.id) AS nombreDeExperiences, COUNT(DISTINCT n.id) AS nombreDeRelance')
+            ->select('c, c.id AS matricule, c.relanceCount AS level, u.id, u.nom, cr.total AS credit, COUNT(DISTINCT s.id) AS nombreDeCompetences, COUNT(DISTINCT e.id) AS nombreDeExperiences, COUNT(DISTINCT n.id) AS nombreDeRelance')
             ->leftJoin('c.competences', 's')
             ->leftJoin('c.experiences', 'e')
             ->leftJoin('c.secteurs', 'sect')
@@ -177,6 +177,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
             ->leftJoin('c.availability', 'dispo')
             ->join('c.candidat', 'u')
             ->leftJoin('u.recus', 'n')
+            ->leftJoin('u.credit', 'cr')
             ->groupBy('u.id')
             ->orderBy('c.id', 'DESC');
 
