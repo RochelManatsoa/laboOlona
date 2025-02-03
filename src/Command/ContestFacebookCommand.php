@@ -74,7 +74,7 @@ class ContestFacebookCommand extends Command
         $candidateProfile = $contestEntry->getCandidateProfile();
 
         if (!$candidateProfile instanceof CandidateProfile || !$candidateProfile->getCv()) {
-            if($candidateProfile->getRelanceCount() === 0){
+            if ($candidateProfile && $candidateProfile->getRelanceCount() === 0) {
                 $this->handleMissingCv($contestEntry, $user, $candidateProfile);
                 $io->writeln(sprintf('CV manquant - mail envoyé pour ContestEntry ID: %d', $contestEntry->getId()));
             }
