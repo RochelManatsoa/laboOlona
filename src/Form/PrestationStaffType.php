@@ -9,22 +9,23 @@ use App\Entity\EntrepriseProfile;
 use App\Entity\Candidate\Competences;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use App\Entity\Prestation\TypePrestation;
-use Symfony\Component\Validator\Constraints\Sequentially;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
+use App\Entity\Prestation\TypePrestation;
 use App\Form\Prestation\AvailabilityType;
 use App\Form\Prestation\TarifPrestationType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Length;
 use App\Form\DataTransformer\CompetencesTransformer;
+use App\Form\Autocomplete\CandidateAutocompleteField;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Validator\Constraints\Sequentially;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -48,7 +49,7 @@ class PrestationStaffType extends AbstractType
                     new NotBlank(message:'Le titre est obligatoire.'),
                     new Length(
                         min: 2,
-                        max: 50,
+                        max: 100,
                         minMessage: 'Le titre est trop court',
                         maxMessage: 'Le titre ne doit pas depasser 50 characters',
                     ),
@@ -136,6 +137,7 @@ class PrestationStaffType extends AbstractType
                 ],
             ])
             ->add('portfolioLinks', TextareaType::class, [
+                'required' => false, 
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
@@ -143,6 +145,17 @@ class PrestationStaffType extends AbstractType
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'
                 ],
+            ])
+            ->add('engagementQualite', TextareaType::class, [
+                'required' => false, 
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ],
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Décrivez vos engagements qualité pour cette prestation.',
             ])
             ->add('contactTelephone', TextType::class, [
                 'required' => false,
@@ -163,6 +176,7 @@ class PrestationStaffType extends AbstractType
                 ]),
             ])
             ->add('contactReseauxSociaux', TextareaType::class, [
+                'required' => false, 
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
@@ -181,6 +195,7 @@ class PrestationStaffType extends AbstractType
                 ]),
             ])
             ->add('conditionsParticulieres', TextareaType::class, [
+                'required' => false, 
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
@@ -189,24 +204,11 @@ class PrestationStaffType extends AbstractType
                     'class' => 'ckeditor-textarea'
                 ],
             ])
-            ->add('engagementQualite', TextareaType::class, [
+            ->add('candidateProfile', CandidateAutocompleteField::class, [
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
-                'attr' => [
-                    'rows' => 6,
-                    'class' => 'ckeditor-textarea'
-                ],
-            ])
-            ->add('candidateProfile', EntityType::class, [
-                'class' => CandidateProfile::class,
-                'label_attr' => [
-                    'class' => 'fw-bold fs-6' 
-                ],
-                'choice_label' => function(?CandidateProfile $candidateProfile) {
-                    return $candidateProfile ? $candidateProfile->getMatricule() : '';
-                },
-                'placeholder' => 'Choisir un profil', 
+                'label' => 'Choisir un candidat',
                 'required' => false,
             ])
             ->add('entrepriseProfile', EntityType::class, [
@@ -219,6 +221,7 @@ class PrestationStaffType extends AbstractType
                 },
                 'placeholder' => 'Choisir une entreprise', 
                 'required' => false,
+                'autocomplete' => true
             ])
             ->add('competences', TextType::class, [
                 'label' => "Compétences",

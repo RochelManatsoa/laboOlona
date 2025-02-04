@@ -14,10 +14,15 @@
           {% endif %}
         </h1>
         <div class="col-12 col-sm-10 mx-auto p-2 p-sm-4">
-          {{ form_start(form) }}
+          {{ form_start(form, {'attr': {'data-turbo':'false'}}) }}
           {{ form_widget(form) }}
           <button type="submit" class="btn btn-success btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
-            <i class="bi bi-save"></i> Créer
+            <i class="bi bi-save"></i>
+            {% if new == true %}
+            Créer
+            {% else %}
+            Modifier
+            {% endif %}
           </button>
           {% if prestation is defined and new == false %}
           <button type="button" id="generate-resume" data-prestation-id="{{ prestation.id }}" class="btn btn-secondary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
