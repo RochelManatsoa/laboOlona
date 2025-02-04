@@ -1,19 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mail de Bienvenue</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600;700&display=swap');
-    </style>
-</head>
-<body style="font-family: 'Poppins', Arial, sans-serif; margin: 0; padding: 20px; background-color: #EDEDED;">
-    <div style="max-width: 550px; margin: 0 auto; background-color: #FFFFFF; padding: 25px; border-radius: 10px; box-shadow: 0 6px 10px rgba(0,0,0,0.05);">
-        <div style="text-align: center;">
-            <img src="https://app.olona-talents.com/images/logo-light150x150.png" alt="Logo Olona-talents" style="width: 250px;">
-        </div>
-        <div>
+{% include "mails/_header.html.twig" %}
             <p>Bonjour Modérateur,</p>
             <p>Nouvelle entrée sur le formulaire de contact <strong>Olona-talents.com</strong> ! </p>
             <div style="background-color: #FFF3E0; padding: 15px; margin: 20px 0; border-radius: 5px; font-weight: 500;">
@@ -22,7 +7,5 @@
                 <p><span style="font-weight: 700;">Téléphone :</span> {{ user.numero }}</p>
                 <p><span style="font-weight: 700;">Message :</span> {{ user.message|raw }}</p>
             </div>
-        </div>
-    </div>
-</body>
-</html>
+            
+{% include "mails/_footer.html.twig" %}
