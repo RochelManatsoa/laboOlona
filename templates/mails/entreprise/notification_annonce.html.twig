@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 {% include "mails/_header.html.twig" %}
-            <p class="greeting">Bonjour {{ user.nom }},</p>
-            <p>Voici le statut de votre annonce déposée le {{ details_annonce.dateCreation|date('d/m/Y') }} sur  Olona-talents.com :  <span class="highlight">{{ getStatuses(details_annonce.status) }}</span>  .</p>
+            <p>Bonjour {{ user.nom }},</p>
+            <p>Voici le statut de votre annonce déposée le {{ details_annonce.dateCreation|date('d/m/Y') }} sur  <strong>olona-talents.com</strong> :  <strong>{{ getStatuses(details_annonce.status) }}</strong>  .</p>
             <p>Résumé de votre annonce :</p>
             <p><strong>Titre</strong> : {{ details_annonce.titre|raw }}</p>
             <p><strong>Date d'expiration</strong> : {{ details_annonce.dateExpiration|date('d/m/Y') }}</p>

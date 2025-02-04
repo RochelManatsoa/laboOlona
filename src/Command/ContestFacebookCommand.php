@@ -40,11 +40,8 @@ class ContestFacebookCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        
-        $contestEntries = array_merge(
-            $this->contestEntryRepository->findEntryByStatus(ContestEntry::STATUS_SEND),
-            $this->contestEntryRepository->findEntryByStatus(ContestEntry::STATUS_CV_EMPTY)
-        );
+
+        $contestEntries = $this->contestEntryRepository->findEntryByStatus(ContestEntry::STATUS_SEND);
         
         foreach ($contestEntries as $contestEntry) {
             $this->processContestEntry($contestEntry, $io);
@@ -74,21 +71,19 @@ class ContestFacebookCommand extends Command
         $candidateProfile = $contestEntry->getCandidateProfile();
 
         if (!$candidateProfile instanceof CandidateProfile || !$candidateProfile->getCv()) {
-            if ($candidateProfile && $candidateProfile->getRelanceCount() === 0) {
-                $this->handleMissingCv($contestEntry, $user, $candidateProfile);
-                $io->writeln(sprintf('CV manquant - mail envoyé pour ContestEntry ID: %d', $contestEntry->getId()));
-            }
-            return;
-        }
-
-        if (!$candidateProfile->getTitre()) {
-            $this->updateStatus($contestEntry, ContestEntry::STATUS_INFOS_EMPTY, $io);
+            $this->handleMissingCv($contestEntry, $user, $candidateProfile);
+            $io->writeln(sprintf('CV manquant - mail envoyé pour ContestEntry ID: %d', $contestEntry->getId()));
             return;
         }
 
         if ($candidateProfile->getLocalisation() === null) {
             $candidateProfile->setLocalisation('MG');
             $this->entityManager->persist($candidateProfile);
+        }
+
+        if (!$candidateProfile->getTitre()) {
+            $this->updateStatus($contestEntry, ContestEntry::STATUS_INFOS_EMPTY, $io);
+            return;
         }
 
         $newStatus = in_array($candidateProfile->getStatus(), [CandidateProfile::STATUS_VALID, CandidateProfile::STATUS_FEATURED])
