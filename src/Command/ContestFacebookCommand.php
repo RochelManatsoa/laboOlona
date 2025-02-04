@@ -86,11 +86,7 @@ class ContestFacebookCommand extends Command
             return;
         }
 
-        $newStatus = in_array($candidateProfile->getStatus(), [CandidateProfile::STATUS_VALID, CandidateProfile::STATUS_FEATURED])
-            ? ContestEntry::STATUS_VALIDATED
-            : ContestEntry::STATUS_PENDING;
-
-        $this->updateStatus($contestEntry, $newStatus, $io);
+        $this->updateStatus($contestEntry, ContestEntry::STATUS_PENDING, $io);
     }
 
     private function updateStatus(ContestEntry $contestEntry, string $status, SymfonyStyle $io): void
@@ -167,9 +163,9 @@ class ContestFacebookCommand extends Command
             <p>
                 🕒 <strong>Rappel :</strong>  
                 <ul>
-                    <li>🏆 3 gagnants sont tirés au sort chaque semaine pendant 3 semaines.</li>
-                    <li>📅 Les tirages au sort ont lieu tous les vendredis à 16h.</li>
-                    <li>📢 Les résultats sont annoncés sur notre page Facebook.</li>
+                    <p>🏆 12 gagnants seront tirés au sort à la fin du mois de février.</p>
+                    <p>📅 Le tirage au sort final aura lieu à la fin du mois.</p>
+                    <p>📢 Les résultats seront annoncés sur notre page Facebook.</p>
                 </ul>
             </p>
 
