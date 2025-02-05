@@ -103,6 +103,7 @@ class ContractManager
             $snappy = $this->pdfService->createPdf();
             $html = $this->twig->render("coworking/contract/pdf/contrat.pdf.twig", [
                 'contract' => $contract, 
+                'package' => $contract->getPackage()->getSlug(),
                 'pathToWeb' => $this->urlGeneratorInterface->generate('app_home', [], UrlGeneratorInterface::ABSOLUTE_URL)
             ]);
 

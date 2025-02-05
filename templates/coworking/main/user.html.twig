@@ -476,13 +476,19 @@
                       <p class="small">
                         Date de signature : {{ contract.createdAt|date('d/m/Y')}}<br>
                         Status : {{ getContractStatus(contract)|raw }} <br>
+                        {% if contract.flexi is not null %}
+                        Expire le {{ contract.invoice.createdAt|date('d/m/Y') }} à 18h<br>
+                        {% else %}
                         Durée : 1 mois<br>
+                        {% endif %}
                         Conditions Acceptées : Oui<br>
                         Montant Total : {{ contract.package.price }} Ar<br>
                         Mode de Paiement : À la caisse
                       </p>
                       {% if contract.flexi is not null %}
-                          <p><span class="fw-bolder">{{ contract.flexi }}</span> accès Flexi restant(s)</p>
+                          <p>
+                            <span class="fw-bolder">{{ contract.flexi }}</span> accès Flexi {{ contract.flexi == 1 ? 'restant' : 'restants' }}
+                          </p>
                       {% endif %}
                       <hr>
                     {% endfor %}
