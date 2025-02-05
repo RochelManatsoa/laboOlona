@@ -106,16 +106,13 @@
 
 <body>
 
-    <footer>
-        <div class="footer-content">
-            Page {{ pageNumber }} sur {{ totalPages }}
-        </div>
-    </footer>
-
     <div class="container">
         <div class="invoice">
             <div class="row">
-                <h1 class="display-5">Contrat Membre VIP Olona Talents</h1>
+                <h1 class="display-5">Contrat Coworking Olona Talents</h1>
+                <br>
+                <br>
+                <br>
                 <p>
                     Entre les soussignés :<br>
                     Ci-après dénommé : {{ fullName }}<br>
@@ -131,7 +128,7 @@
                 <!-- Préambule -->
                 <div class="mb-4">
                     <p>
-                        <strong>Préambule :</strong> Les présentes conditions d'utilisation régissent les modalités et conditions applicables au Contrat Membre VIP Olona Talents. En souscrivant à ce contrat, le client accepte les présentes conditions dans leur intégralité.
+                        <strong>Préambule :</strong> Les présentes conditions d'utilisation régissent les modalités et conditions applicables au Contrat Coworking Olona Talents. En souscrivant à ce contrat, le client accepte les présentes conditions dans leur intégralité.
                     </p>
                 </div>
 
@@ -139,7 +136,11 @@
                 <div class="mb-4">
                     <h2>Article 1 : Objet du contrat</h2>
                     <p>
+                    {% if package == 'pack-flexi' %}
+                        Le Contrat Pack FLEXI Olona Talents offre des services exclusifs de 10 accès journée et d'utilisation des espaces de coworking, des outils numériques, et des avantages personnalisés.
+                    {% else %}
                         Le Contrat Membre VIP Olona Talents offre des services exclusifs d'accès et d'utilisation des espaces de coworking, des outils numériques, et des avantages personnalisés.
+                    {% endif %}
                     </p>
                 </div>
 
@@ -147,7 +148,11 @@
                 <div class="mb-4">
                     <h2>Article 2 : Services inclus</h2>
                     <ul>
+                        {% if package == 'pack-flexi' %}
+                        <li>10 accès journée complète (du lundi au vendredi, de 8h à 18h).</li>
+                        {% else %}
                         <li>Réservations illimitées pour les espaces de coworking (du lundi au vendredi, 8h-18h).</li>
+                        {% endif %}
                         <li>Connexion haut débit via Starlink et service continu grâce aux groupes électrogènes.</li>
                         <li>Publication facultative d’un post "Coworker du jour" sur notre page Facebook.</li>
                         <li>Remises avantageuses : 25 % sur les autres services et 50 % pour les accompagnants.</li>
@@ -214,13 +219,14 @@
                         Contrat régi par les lois en vigueur à Madagascar. Les litiges seront soumis à la juridiction compétente.
                     </p>
                 </div>
+                <br>
+                <br>
 
                 <div class="mb-4">
                     <p>
-                        Fait le {{ contract.updatedAt | date('d/m/Y') }} à Antananarivo
+                        Fait le {{ contract.invoice.createdAt | date('d/m/Y') }} à Antananarivo
                     </p>
                 </div>
-
                 <!-- Article 8 -->
 				<div class="cols">
 					<div class="col-6">

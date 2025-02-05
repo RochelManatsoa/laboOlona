@@ -35,6 +35,7 @@ use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 
 #[Route('/v2/dashboard')]
 class PrestationController extends AbstractController
@@ -270,8 +271,13 @@ class PrestationController extends AbstractController
     
     #[Route('/prestation/view/{prestation}', name: 'app_v2_view_prestation')]
     #[IsGranted(PrestationVoter::VIEW, subject: 'prestation')]
-    public function viewPrestation(Request $request, Prestation $prestation): Response
+    public function viewPrestation(Request $request, Prestation $prestation, Security $security): Response
     {
+        if($security->isGranted(PrestationVoter::EDIT, null, $prestation)){
+            if (!in_array($prestation->getStatus(), [Prestation::STATUS_VALID, Prestation::STATUS_FEATURED])) {
+                throw $this->createNotFoundException('Cette prestation n\'existe pas ou n\'est pas disponible.');
+            }
+        }
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $showContactPrice = $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
