@@ -28,6 +28,7 @@ class EntrepriseProfile
 
     const STATUS_VALID = 'VALID';
     const STATUS_PENDING = 'PENDING';
+    const STATUS_FULL_PREMIUM = 'FULL_PREMIUM';
     const STATUS_PREMIUM = 'PREMIUM';
     const STATUS_BANNED = 'BANNED';
 
@@ -42,7 +43,35 @@ class EntrepriseProfile
         'En attente' => self::STATUS_PENDING,
         'Premium' => self::STATUS_PREMIUM,
         'Banni' => self::STATUS_BANNED,
-    ];
+    ];  
+
+    public static function getTailles() {
+        return [
+            self::SIZE_SMALL =>        'Petite' ,
+            self::SIZE_MEDIUM =>        'Moyenne' ,
+            self::SIZE_LARGE =>        'Grande' ,
+        ];
+    }
+
+    public static function getStatuses() {
+        return [
+            'En attente' => self::STATUS_PENDING ,
+            'Validée' => self::STATUS_VALID ,
+            'Accès Illimité' => self::STATUS_FULL_PREMIUM ,
+            'Premium' => self::STATUS_PREMIUM ,
+            'Banni' => self::STATUS_BANNED ,
+        ];
+    }
+    
+    public static function getLabels() {
+        return [
+            self::STATUS_PENDING =>        '<span class="badge bg-warning">En attente</span>' ,  
+            self::STATUS_VALID =>      '<span class="badge bg-success">Validée</span>' ,  
+            self::STATUS_PREMIUM =>      '<span class="badge bg-dark">Premium</span>' ,  
+            self::STATUS_FULL_PREMIUM =>      '<span class="badge bg-info">Accès Illimité</span>' ,  
+            self::STATUS_BANNED =>       '<span class="badge bg-danger">Banni</span>' ,
+        ];
+    }
     
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -118,6 +147,7 @@ class EntrepriseProfile
         $this->favoris = new ArrayCollection();
         $this->prestations = new ArrayCollection();
         $this->createdAt = new \DateTime();
+        $this->status = self::STATUS_PENDING;
     }
 
     public function __toString()

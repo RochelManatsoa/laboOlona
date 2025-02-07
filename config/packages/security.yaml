@@ -75,7 +75,6 @@ security:
         - { path: ^/moderateur, roles: ROLE_ADMIN }
         - { path: ^/profile/, roles: ROLE_USER }
         - { path: ^/dashboard/, roles: ROLE_USER }
-        - { path: ^/v2/dashboard/, roles: ROLE_USER }
         - { path: ^/v2/candidate, roles: ROLE_USER }
         - { path: ^/v2/recruiter, roles: ROLE_USER }
         - { path: ^/v2/staff, roles: ROLE_USER }

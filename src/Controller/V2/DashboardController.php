@@ -68,6 +68,9 @@ class DashboardController extends AbstractController
     {
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
+        if(!$currentUser instanceof User){
+            return $this->redirectToRoute('app_login');
+        }
         $profile = $this->userService->checkProfile();
         if($profile instanceof EntrepriseProfile){
             return $this->redirectToRoute('app_v2_recruiter_dashboard');

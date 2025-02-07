@@ -76,6 +76,21 @@ class JobListing
              self::STATUS_RESERVED ,
         ];
     }
+
+    public static function getLabels() {
+        return [
+             self::STATUS_DRAFT =>        '<span class="badge bg-info">Brouillon</span>' ,
+             self::STATUS_PUBLISHED =>        '<span class="badge bg-success">Publiée</span>' ,
+             self::STATUS_PENDING =>        '<span class="badge bg-warning">En attente</span>' ,
+             self::STATUS_REJECTED =>        '<span class="badge bg-danger">Rejetée</span>' ,
+             self::STATUS_EXPIRED =>        '<span class="badge bg-danger">Expirée</span>' ,
+             self::STATUS_ARCHIVED =>        '<span class="badge bg-dark">Archivée</span>' ,
+             self::STATUS_UNPUBLISHED =>        '<span class="badge bg-warning">Non publiée</span>' ,
+             self::STATUS_DELETED =>        '<span class="badge bg-dark">Effacée</span>' ,
+             self::STATUS_FEATURED =>        '<span class="badge bg-primary">Mis en avant</span>' ,
+             self::STATUS_RESERVED =>        '<span class="badge bg-secondary">Réservée</span>' ,
+        ];
+    }
     
     #[ORM\Id]
     #[ORM\GeneratedValue]

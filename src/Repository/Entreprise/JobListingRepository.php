@@ -44,6 +44,52 @@ class JobListingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function countAllByEntreprise(EntrepriseProfile $entrepriseProfile): int
+    {
+        return (int) $this->createQueryBuilder('j')
+            ->select('COUNT(j.id)')
+            ->andWhere('j.entreprise = :entreprise')
+            ->setParameter('entreprise', $entrepriseProfile)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function countStatusByEntreprise(EntrepriseProfile $entrepriseProfile, ?string $status): int
+    {
+        if (!$status || $status == 'ALL') {
+            return $this->countAllByEntreprise($entrepriseProfile);
+        }
+        return (int) $this->createQueryBuilder('j')
+            ->select('COUNT(j.id)')
+            ->where('j.status = :status')
+            ->andWhere('j.entreprise = :entreprise')
+            ->setParameter('status', $status)
+            ->setParameter('entreprise', $entrepriseProfile)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function paginateJobListingsEntrepriseProfiles($page, EntrepriseProfile $entrepriseProfile, string $status = null): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('j')->select('j');
+        $queryBuilder
+            ->addOrderBy('j.id', 'DESC')
+            ->andWhere('j.entreprise = :entreprise')
+            ->setParameter('entreprise', $entrepriseProfile);
+        if ($status && $status != 'ALL') {
+            $queryBuilder
+                ->andWhere('j.status = :status')
+                ->setParameter('status', $status);
+        }
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            20,
+            []
+        );
+    }
     
     public function findAllOrderedByIdDesc()
     {
