@@ -1,0 +1,71 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}EntrepriseProfile{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">{{ entreprise_profile.nom }} </h1>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th class="col-3">Réf</th>
+                        <td>{{ generateReference(entreprise_profile) }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Inscrit le</th>
+                        <td>{{ entreprise_profile.createdAt ? entreprise_profile.createdAt|date('d/m/Y') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Taille</th>
+                        <td>{{ entreprise_profile.tailles[entreprise_profile.taille]|raw }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Localisation</th>
+                        <td><i class="bi bi-geo-alt-fill"></i> {{ show_country(entreprise_profile.localisation) }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">SiteWeb</th>
+                        <td>{{ entreprise_profile.siteWeb }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Status</th>
+                        <td>{{ entreprise_profile.labels[entreprise_profile.status]|raw }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Annonces</th>
+                        <td>
+                            {% if (entreprise_profile.jobListings|length > 0) %}
+                            <a href="{{ path('app_moderateur_entreprise_profile_job_offers', {'id': entreprise_profile.id}) }}">
+                                {{ entreprise_profile.jobListings|length }} postées
+                            </a>
+                            {% else %}
+                            Aucune annonce
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Description</th>
+                        <td>{{ entreprise_profile.description|raw }}</td>
+                    </tr>
+                    {% if entreprise_profile.fileName %}
+                    <tr>
+                        <th class="col-3">Logo</th>
+                        <td>
+                            <img src="{{ asset('uploads/compagnies/' ~ entreprise_profile.fileName) }}" alt="Logo" class="img-thumbnail" style="width: 100px;"/>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end w-100">
+                <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_moderateur_entreprise_profile_edit', {'id': entreprise_profile.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                {{ include('moderateur/entreprise_profile/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}New EntrepriseProfile{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">Créer un EntrepriseProfile</h1>
+
+            {{ include('moderateur/entreprise_profile/_form.html.twig') }}
+        </div>
+    </div>
+</section>
+{% endblock %}

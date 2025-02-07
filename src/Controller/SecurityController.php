@@ -49,7 +49,6 @@ class SecurityController extends AbstractController
     #[Route(path: '/coworking/login', name: 'app_coworking_login', options: ['sitemap' => true])]
     public function loginCoworking(AuthenticationUtils $authenticationUtils): Response
     {
-        $this->requestStack->getSession()->set('fromPath', 'app_coworking_main');
         if ($this->getUser()) {
             return $this->redirectToRoute('app_coworking_main');
         }
@@ -72,6 +71,8 @@ class SecurityController extends AbstractController
         UserService $userService,
     ): Response
     {
+        $redirect = $this->requestStack->getSession()->get('fromPath', 'app_coworking_main');
+        $place = $this->requestStack->getSession()->get('place', []);
         $email = $request->request->get('email', '');
         $password = $request->request->get('password');
         $user = $em->getRepository(User::class)->findOneBy(['email' => $email]);
@@ -111,7 +112,9 @@ class SecurityController extends AbstractController
             $authenticator,
             $request
         );
-        
+        if(!empty($place)){
+            return $this->redirectToRoute($redirect, $place);
+        }
         return $this->redirectToRoute('app_coworking_main');
     }
 

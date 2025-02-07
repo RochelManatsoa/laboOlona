@@ -17,9 +17,9 @@ use App\Repository\Coworking\ProductRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 #[Route('/coworking/event')]
-#[IsGranted('ROLE_USER')]
 class EventController extends AbstractController
 {
     #[Route('/', name: 'app_event_index', methods: ['GET'])]
@@ -48,15 +48,27 @@ class EventController extends AbstractController
         EntityManagerInterface $entityManager,
         Cart $cartService,
         Security $security,
+        RequestStack $requestStack,
         ProductRepository $productRepository
     ): Response
     {
+        /** @var User $user */
+        $user = $security->getUser();
+        if(!$user instanceof User){
+            $placeId = $request->query->get('placeId', null);
+            $date = $request->query->get('date', 'today');
+            $place = $requestStack->getSession()->get('place', []);
+            $place['placeId'] = $placeId;
+            $place['date'] = $date;
+            $requestStack->getSession()->set('fromPath', 'app_event_new');
+            $requestStack->getSession()->set('place', $place);
+
+            return $this->redirectToRoute('app_coworking_login');
+        }
         $date = $request->query->get('date', 'today');
         $placeId = $request->query->get('placeId', null);
         $journee = $productRepository->findOneBy(['slug' => 'place-journee']);
         $demiJournee = $productRepository->findOneBy(['slug' => 'place-demi-journee']);
-        /** @var User $user */
-        $user = $security->getUser();
         $place = $entityManager->getRepository(Place::class)->findOneBy(['id' => $placeId]);
         $event = new Event();
         if ($date === 'dayAfterTomorrow') {

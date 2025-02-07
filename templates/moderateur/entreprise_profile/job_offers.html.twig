@@ -1,0 +1,67 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}EntrepriseProfile index{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">Offres de {{ entreprise_profile.nom }}</h1>
+            <div class="row mb-3">
+                <div class="col">
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <form action="{{ path('app_moderateur_entreprise_profile_job_offers', {'id': entreprise_profile.id})}}" method="get">
+                                <select class="form-select" name="status" onchange="this.form.submit()" aria-label="Default select example">
+                                    {% for label, status in statuses %}
+                                        <option value="{{ status }}" {% if selectedStatus == status %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </div>
+                        <div class="col-auto">
+                            <span class="badge bg-success">{{ countStatus }} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {# 
+            <div>
+                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_moderateur_entreprise_profile_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+            </div> #}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(job_listings, '#', 'j.id') }}</th>
+                        <th>{{ knp_pagination_sortable(job_listings, 'Titre', 'j.titre') }}</th>
+                        <th>{{ knp_pagination_sortable(job_listings, 'Status', 'j.status') }}</th>
+                        <th>{{ knp_pagination_sortable(job_listings, 'Offres', 'j.applications|length') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for job_listing in job_listings %}
+                    <tr>
+                        <td>{{ job_listing.id }}</td>
+                        <td>{{ job_listing.titre }}<br><span class="small text-muted">Créé le {{ job_listing.dateCreation|date('d/m/Y') }}</span></td>
+                        <td>{{ job_listing.labels[job_listing.status]|raw }}<br><span class="small text-muted">{{ job_listing.dateCreation|time_ago }}</span></td>
+                        <td><span class="small text-muted">{{ job_listing.applications|length }} offres</span><br><span class="small text-muted">{{ job_listing.annonceVues|length }} vues</span></td>
+                        <td>
+                            <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_dashboard_moderateur_annonce_view', {'id': job_listing.id}) }}"><i class="bi bi-eye"></i></a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="11">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {{ knp_pagination_render(job_listings) }}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

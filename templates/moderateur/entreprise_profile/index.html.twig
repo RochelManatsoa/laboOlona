@@ -1,0 +1,72 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}EntrepriseProfile index{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <div class="row mb-3">
+                <div class="col">
+                    <h1 class="h3">Toutes les entreprises ({{ count }})</h1>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <form action="{{ path('app_moderateur_entreprise_profile_index')}}" method="get">
+                                <select class="form-select" name="status" onchange="this.form.submit()" aria-label="Default select example">
+                                    {% for label, status in statuses %}
+                                        <option value="{{ status }}" {% if selectedStatus == status %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </div>
+                        <div class="col-auto">
+                            <span class="badge bg-success">{{ countStatus }} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_moderateur_entreprise_profile_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(entreprise_profiles, '#', 'e.id') }}</th>
+                        <th>{{ knp_pagination_sortable(entreprise_profiles, 'Nom', 'e.nom') }}</th>
+                        <th>{{ knp_pagination_sortable(entreprise_profiles, 'Taille', 'e.taille') }}</th>
+                        <th>{{ knp_pagination_sortable(entreprise_profiles, 'Localisation', 'e.localisation') }}</th>
+                        <th>{{ knp_pagination_sortable(entreprise_profiles, 'Status', 'e.status') }}</th>
+                        <th>{{ knp_pagination_sortable(entreprise_profiles, 'Annonces', 'e.joblistings|length') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for entreprise_profile in entreprise_profiles %}
+                    <tr>
+                        <td>{{ entreprise_profile.id }}</td>
+                        <td>{{ entreprise_profile.nom }}</td>
+                        <td>{{ entreprise_profile.tailles[entreprise_profile.taille]|raw }}</td>
+                        <td><i class="bi bi-geo-alt-fill"></i> {{ show_country(entreprise_profile.localisation) }} </td>
+                        <td>{{ entreprise_profile.labels[entreprise_profile.status]|raw }}</td>
+                        <td>{{ entreprise_profile.jobListings|length }}</td>
+                        <td>
+                            <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_moderateur_entreprise_profile_show', {'id': entreprise_profile.id}) }}"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_moderateur_entreprise_profile_edit', {'id': entreprise_profile.id}) }}"><i class="bi bi-pencil"></i></a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="11">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {{ knp_pagination_render(entreprise_profiles) }}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
