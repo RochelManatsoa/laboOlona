@@ -51,7 +51,7 @@ security:
             logout:
                 path: app_logout
                 # where to redirect after logout
-                target: app_coworking_login
+                target: app_home
                 invalidate_session: true
 
             remember_me:
@@ -78,6 +78,7 @@ security:
         - { path: ^/v2/candidate, roles: ROLE_USER }
         - { path: ^/v2/recruiter, roles: ROLE_USER }
         - { path: ^/v2/staff, roles: ROLE_USER }
+        - { path: ^/v2/dashboard, roles: ROLE_USER }
         - { path: ^/finance, roles: ROLE_FINANCE }
         - { path: ^/employes-hub, roles: ROLE_EMPLOYE }
         - { path: ^/youtube/playlist, roles: ROLE_USER }
