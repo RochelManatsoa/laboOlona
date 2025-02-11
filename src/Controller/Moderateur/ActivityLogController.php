@@ -38,8 +38,9 @@ class ActivityLogController extends AbstractController
         }
 
         $pageViewData = $activityLogRepository->getUniqueUserPageViewsByDate($array);
-        // dd($pageViewData);
-
+        $dates = [];
+        $uniqueUsers = [];
+        
         foreach ($pageViewData as $data) {
             $dates[] = $data['date'];
             $uniqueUsers[] = $data['uniqueUsers'];
