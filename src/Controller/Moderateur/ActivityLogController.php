@@ -64,7 +64,6 @@ class ActivityLogController extends AbstractController
             'statuses' => [
                 'Utilisateur' => null ,
                 'Crédit' => 'app_v2_credit' ,
-                'Pack' => 'app_v2_credit' ,
                 'Simulateur' => 'app_v2_recruiter_simulator_create' ,
                 'Profils' => 'app_v2_profiles' ,
                 'Prestation' => 'app_v2_prestation' ,
