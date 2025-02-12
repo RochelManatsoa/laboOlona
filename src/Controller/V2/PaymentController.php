@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\TransactionManager;
+use App\Service\ActivityLogger;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -28,11 +29,16 @@ class PaymentController extends AbstractController
         private CreditManager $creditManager,
         private MailerService $mailerService,
         private UserService $userService,
+        private ActivityLogger $activityLogger
     ){}
 
     #[Route('/paypal/checkout/{orderNumber}', name: 'app_v2_paypal_checkout')]
     public function checkout(string $orderNumber, EntityManagerInterface $entityManager): Response
     {
+        $currentUser = $this->userService->getCurrentUser();
+        if($currentUser instanceof User) {
+            $this->activityLogger->logPageViewActivity($currentUser, '/paypal/checkout/_order');
+        }
         $order = $entityManager->getRepository(Order::class)->findOneBy(['orderNumber' => $orderNumber]);
 
         $paymentData = [
@@ -145,6 +151,7 @@ class PaymentController extends AbstractController
         $transaction->setCommand($order);
         $form = $this->createForm(TransactionType::class, $transaction);
         $form->handleRequest($request);
+        $this->activityLogger->logPageViewActivity($currentUser, '/mobile-money/_order');
         
         if ($form->isSubmitted() && $form->isValid()) {
             $transaction = $form->getData();
