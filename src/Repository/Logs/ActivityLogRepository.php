@@ -127,33 +127,35 @@ class ActivityLogRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-
+    
     public function findLikeLogsByUrls(array $urls, int $days = 0): array
     {
         $qb = $this->createQueryBuilder('al')
             ->select('al.pageUrl, COUNT(al.pageUrl) as pageCount');
 
-        if($days !== 0) {
+        if ($days !== 0) {
             $date = new \DateTime();
             $date->modify('-' . (int)$days . ' days');
-            $qb
-            ->andWhere('al.timestamp >= :date')
+            $qb->andWhere('al.timestamp >= :date')
             ->setParameter('date', $date);
         }
 
         $orX = $qb->expr()->orX();
-
         foreach ($urls as $index => $url) {
             $paramName = 'url' . $index;
             $orX->add($qb->expr()->like('al.pageUrl', ':' . $paramName));
             $qb->setParameter($paramName, '%' . $url . '%');
         }
 
-        $qb->where($orX)
-            ->groupBy('al.pageUrl')
-            ->orderBy('pageCount', 'DESC');
+        if (count($urls) > 0) {
+            $qb->andWhere($orX);  
+        }
+
+        $qb->groupBy('al.pageUrl')
+        ->orderBy('pageCount', 'DESC');
 
         return $qb->getQuery()->getResult();
     }
+
 
 }
