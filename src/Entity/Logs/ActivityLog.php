@@ -55,6 +55,18 @@ class ActivityLog
     #[ORM\Column]
     private ?int $userCredit = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pageUrl = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $derationInSeconds = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $deviceType = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $referrer = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -152,6 +164,54 @@ class ActivityLog
     public function setUserCredit(int $userCredit): static
     {
         $this->userCredit = $userCredit;
+
+        return $this;
+    }
+
+    public function getPageUrl(): ?string
+    {
+        return $this->pageUrl;
+    }
+
+    public function setPageUrl(?string $pageUrl): static
+    {
+        $this->pageUrl = $pageUrl;
+
+        return $this;
+    }
+
+    public function getDerationInSeconds(): ?int
+    {
+        return $this->derationInSeconds;
+    }
+
+    public function setDerationInSeconds(?int $derationInSeconds): static
+    {
+        $this->derationInSeconds = $derationInSeconds;
+
+        return $this;
+    }
+
+    public function getDeviceType(): ?string
+    {
+        return $this->deviceType;
+    }
+
+    public function setDeviceType(?string $deviceType): static
+    {
+        $this->deviceType = $deviceType;
+
+        return $this;
+    }
+
+    public function getReferrer(): ?string
+    {
+        return $this->referrer;
+    }
+
+    public function setReferrer(?string $referrer): static
+    {
+        $this->referrer = $referrer;
 
         return $this;
     }

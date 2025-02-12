@@ -5,15 +5,14 @@ use App\Entity\BusinessModel\Credit;
 use App\Entity\User;
 use App\Entity\Logs\ActivityLog;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ActivityLogger
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private RequestStack $requestStack
+    ){}
 
     /**
      * Log an activity for a user
@@ -23,7 +22,16 @@ class ActivityLogger
      * @param string|null $details
      * @param int $level
      */
-    public function logActivity(User $user, string $activityType, ?string $details = null, int $level = ActivityLog::LEVEL_INFO): void
+    public function logActivity(
+        User $user, 
+        string $activityType, 
+        ?string $details = null, 
+        int $level = ActivityLog::LEVEL_INFO, 
+        ?string $pageUrl = null,
+        ?int $durationInSeconds = null,
+        ?string $deviceType = null,
+        ?string $referrer = null,
+    ): void
     {
         try {
             $credit = $user->getCredit();
@@ -44,6 +52,10 @@ class ActivityLogger
             $log->setUserCredit($credit->getTotal());
             $log->setIpAddress($this->getIpAddress());
             $log->setUserAgent($this->getUserAgent());
+            $log->setPageUrl($pageUrl);
+            $log->setDerationInSeconds($durationInSeconds);
+            $log->setDeviceType($deviceType);
+            $log->setReferrer($referrer);
             $this->entityManager->persist($log);
             $this->entityManager->flush();
         }catch (\Exception $e) {
@@ -101,8 +113,21 @@ class ActivityLogger
      */
     public function logPageViewActivity(User $user, string $pageUrl): void
     {
+        $request = $this->requestStack->getCurrentRequest();
+        $durationInSeconds = $this->calculateDuration(); 
+        $referrer = $request->headers->get('referer') ?? '';
+        $deviceType = $this->getDeviceType($request->headers->get('User-Agent'));
         $details = sprintf('Page consultée: %s', $pageUrl);
-        $this->logActivity($user, ActivityLog::ACTIVITY_PAGE_VIEW, $details, ActivityLog::LEVEL_WARNING);
+        $this->logActivity(
+            $user, 
+            ActivityLog::ACTIVITY_PAGE_VIEW, 
+            $details, 
+            ActivityLog::LEVEL_WARNING,
+            $pageUrl,
+            $durationInSeconds,
+            $deviceType,
+            $referrer,
+        );
     }
 
     /**
@@ -140,6 +165,25 @@ class ActivityLogger
     private function getUserAgent(): ?string
     {
         return $_SERVER['HTTP_USER_AGENT'] ?? null;
+    }
+
+    private function getDeviceType(string $userAgent): string
+    {
+        // Simple example function to infer device type via user agent string
+        if (stripos($userAgent, 'mobile')) {
+            return 'Mobile';
+        } elseif (stripos($userAgent, 'tablet')) {
+            return 'Tablet';
+        }
+        return 'Desktop';
+    }
+    
+    private function calculateDuration(): int
+    {
+        // Placeholder logic: replace with actual duration calculation
+        // For example, use JavaScript on the frontend to track user time on page
+        // and send the duration back to the backend.
+        return 0;
     }
 
     private function getType($type): string

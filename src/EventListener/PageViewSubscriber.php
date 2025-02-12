@@ -39,7 +39,7 @@ class PageViewSubscriber implements EventSubscriberInterface
                             return;
                         }
                     }
-                    // $this->activityLogger->logPageViewActivity($user, $request->getUri());
+                    $this->activityLogger->logPageViewActivity($user, $request->getUri());
                 }
             } catch (ResourceNotFoundException | MethodNotAllowedException $e) {
                 // Ne rien faire
