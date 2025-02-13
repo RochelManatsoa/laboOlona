@@ -72,11 +72,14 @@ class JobListingRepository extends ServiceEntityRepository
 
     public function paginateJobListingsEntrepriseProfiles($page, EntrepriseProfile $entrepriseProfile, string $status = null): PaginationInterface
     {
-        $queryBuilder = $this->createQueryBuilder('j')->select('j');
-        $queryBuilder
+        $queryBuilder = $this->createQueryBuilder('j')
+            ->select('j, COUNT(a.id) AS applicationCount')
+            ->leftJoin('j.applications', 'a') 
+            ->groupBy('j.id') 
             ->addOrderBy('j.id', 'DESC')
             ->andWhere('j.entreprise = :entreprise')
             ->setParameter('entreprise', $entrepriseProfile);
+
         if ($status && $status != 'ALL') {
             $queryBuilder
                 ->andWhere('j.status = :status')

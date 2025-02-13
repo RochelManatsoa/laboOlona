@@ -17,11 +17,17 @@
                     <input type="radio" class="btn-check" name="days" id="option0" value="0" {% if selectedDays == '0' %}checked{% endif %} onchange="this.form.submit()">
                     <label class="btn btn-sm btn-outline-secondary" for="option0">Tous</label>
 
-                    <input type="radio" class="btn-check" name="days" id="option1" value="7" {% if selectedDays == '7' %}checked{% endif %} onchange="this.form.submit()">
-                    <label class="btn btn-sm btn-outline-secondary" for="option1">7 jour</label>
+                    <input type="radio" class="btn-check" name="days" id="option1" value="1" {% if selectedDays == '1' %}checked{% endif %} onchange="this.form.submit()">
+                    <label class="btn btn-sm btn-outline-secondary" for="option1">1 jour</label>
 
-                    <input type="radio" class="btn-check" name="days" id="option7" value="14" {% if selectedDays == '14' %}checked{% endif %} onchange="this.form.submit()">
-                    <label class="btn btn-sm btn-outline-secondary" for="option7">14 jours</label>
+                    <input type="radio" class="btn-check" name="days" id="option2" value="2" {% if selectedDays == '2' %}checked{% endif %} onchange="this.form.submit()">
+                    <label class="btn btn-sm btn-outline-secondary" for="option2">2 jours</label>
+
+                    <input type="radio" class="btn-check" name="days" id="option7" value="7" {% if selectedDays == '7' %}checked{% endif %} onchange="this.form.submit()">
+                    <label class="btn btn-sm btn-outline-secondary" for="option7">7 jours</label>
+
+                    <input type="radio" class="btn-check" name="days" id="option14" value="14" {% if selectedDays == '14' %}checked{% endif %} onchange="this.form.submit()">
+                    <label class="btn btn-sm btn-outline-secondary" for="option14">14 jours</label>
 
                     <input type="radio" class="btn-check" name="days" id="option30" value="30" {% if selectedDays == '30' %}checked{% endif %} onchange="this.form.submit()">
                     <label class="btn btn-sm btn-outline-secondary" for="option30">30 jours</label>

@@ -27,6 +27,18 @@
                         <td><i class="bi bi-geo-alt-fill"></i> {{ show_country(entreprise_profile.localisation) }}</td>
                     </tr>
                     <tr>
+                        <th class="col-3">Gérant(e)</th>
+                        <td>{{ entreprise_profile.entreprise }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Adresse email</th>
+                        <td>{{ entreprise_profile.entreprise.email }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Téléphone</th>
+                        <td> {{ entreprise_profile.entreprise.telephone }}</td>
+                    </tr>
+                    <tr>
                         <th class="col-3">SiteWeb</th>
                         <td>{{ entreprise_profile.siteWeb }}</td>
                     </tr>
@@ -38,7 +50,7 @@
                         <th class="col-3">Annonces</th>
                         <td>
                             {% if (entreprise_profile.jobListings|length > 0) %}
-                            <a href="{{ path('app_moderateur_entreprise_profile_job_offers', {'id': entreprise_profile.id}) }}">
+                            <a href="{{ path('app_moderateur_entreprise_profile_job_offers', {'id': entreprise_profile.id}) }}" class="btn btn-sm rounded-pill px-4 btn-info">
                                 {{ entreprise_profile.jobListings|length }} postées
                             </a>
                             {% else %}
@@ -47,17 +59,19 @@
                         </td>
                     </tr>
                     <tr>
+                        <th class="col-3">Logo</th>
+                        <td>
+                            {% if entreprise_profile.fileName %}
+                            <img src="{{ asset('uploads/compagnies/' ~ entreprise_profile.fileName) }}" alt="Logo" class="img-thumbnail" style="width: 100px;"/>
+                            {% else %}
+                            Aucun logo
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
                         <th class="col-3">Description</th>
                         <td>{{ entreprise_profile.description|raw }}</td>
                     </tr>
-                    {% if entreprise_profile.fileName %}
-                    <tr>
-                        <th class="col-3">Logo</th>
-                        <td>
-                            <img src="{{ asset('uploads/compagnies/' ~ entreprise_profile.fileName) }}" alt="Logo" class="img-thumbnail" style="width: 100px;"/>
-                        </td>
-                    </tr>
-                    {% endif %}
                 </tbody>
             </table>
             <div class="d-flex justify-content-end w-100">

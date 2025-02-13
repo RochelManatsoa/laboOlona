@@ -39,12 +39,13 @@
                         <th>{{ knp_pagination_sortable(entreprise_profiles, 'Taille', 'e.taille') }}</th>
                         <th>{{ knp_pagination_sortable(entreprise_profiles, 'Localisation', 'e.localisation') }}</th>
                         <th>{{ knp_pagination_sortable(entreprise_profiles, 'Status', 'e.status') }}</th>
-                        <th>{{ knp_pagination_sortable(entreprise_profiles, 'Annonces', 'e.joblistings|length') }}</th>
+                        <th>{{ knp_pagination_sortable(entreprise_profiles, 'Annonces', 'jobCount') }}</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for entreprise_profile in entreprise_profiles %}
+                {% for item in entreprise_profiles %}
+                    {% set entreprise_profile = item[0] %}
                     <tr>
                         <td>{{ entreprise_profile.id }}</td>
                         <td>{{ entreprise_profile.nom }}</td>
