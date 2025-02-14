@@ -72,7 +72,7 @@ security:
         # - { path: ^/admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # - { path: ^/admin/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/moderateur, roles: ROLE_ADMIN }
+        - { path: ^/moderateur, roles: ROLE_USER }
         - { path: ^/profile/, roles: ROLE_USER }
         - { path: ^/dashboard/, roles: ROLE_USER }
         - { path: ^/v2/candidate, roles: ROLE_USER }

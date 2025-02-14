@@ -199,10 +199,10 @@ class SimulateurEntrepriseManager
     private function getCoeffSocial(float $salaireBrut) : float
     {
         $coeff = 0;
-        if($salaireBrut < 1910400){
+        if($salaireBrut < 2101440){
             $coeff = $salaireBrut / 100;
         }else{
-            $coeff = 19104;
+            $coeff = 21014.4;
         }
 
         return $coeff;
@@ -268,10 +268,10 @@ class SimulateurEntrepriseManager
 
     private function getChargesPatronales(float $salaire_brut):float
     {
-        if($salaire_brut < 1910400 ){
+        if($salaire_brut < 2101440 ){
             return $salaire_brut * 19 / 100;
         }
-        return 1910400 * 19 / 100;
+        return 2101440 * 19 / 100;
     }
 
     private function getChargesSalarial(float $salaire_brut, int $nbrEnfant):float

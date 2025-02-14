@@ -184,10 +184,10 @@ class FinanceExtension extends AbstractExtension
     private function getCoeffSocial(float $salaireBrut) : float
     {
         $coeff = 0;
-        if($salaireBrut < 1910400){
+        if($salaireBrut < 2101440){
             $coeff = $salaireBrut / 100;
         }else{
-            $coeff = 19104;
+            $coeff = 21014.4;
         }
 
         return $coeff;
