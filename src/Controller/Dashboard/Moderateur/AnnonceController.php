@@ -186,40 +186,27 @@ class AnnonceController extends AbstractController
         $status = $request->request->get('status');
         if ($status && in_array($status, JobListing::getArrayStatuses())) {
             $annonce->setStatus($status);
-            $entityManager->flush();
+            $annonce->setUpdatedAt(new \DateTime());
             /** Envoi email à l'entreprise si validée*/
             if($annonce->getStatus() === JobListing::STATUS_PUBLISHED || $annonce->getStatus() === JobListing::STATUS_FEATURED ){
-                $secteurAnnonce = $annonce->getSecteur();
-                $candidats = $entityManager->getRepository(CandidateProfile::class)->findBySecteur($secteurAnnonce);
-
-                foreach ($candidats as $candidat) {
-                    if ($candidat->getCandidat() && $candidat->getCandidat()->getEmail()) {
-                        // Envoi de l'email au candidat
-                        $this->mailerService->send(
-                            $candidat->getCandidat()->getEmail(),
-                            "Nouvelle opportunité dans votre secteur d'activité",
-                            "candidat/nouvelle_opportunite.html.twig",
-                            [
-                                'user' => $candidat->getCandidat(),
-                                'details_annonce' => $annonce,
-                                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_candidat_annonce_show', ['jobId' => $annonce->getJobId()], UrlGeneratorInterface::ABSOLUTE_URL),
-                            ]
-                        );
-                    }
+                if($annonce->isIsNotified()){
+                    $this->addFlash('success', 'Le statut a été mis à jour avec succès.');
+                }else{
+                    $annonce->setIsNotified(false);
+                    $this->mailerService->send(
+                        $annonce->getEntreprise()->getEntreprise()->getEmail(),
+                        "Statut de votre annonce sur Olona Talents",
+                        "entreprise/notification_annonce.html.twig",
+                        [
+                            'user' => $annonce->getEntreprise()->getEntreprise(),
+                            'details_annonce' => $annonce,
+                            'dashboard_url' => $this->urlGenerator->generate('app_dashboard_entreprise_view_annonce', ['id' => $annonce->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                        ]
+                    );
+                    $this->addFlash('success', 'Le statut a été mis à jour avec succès.');
                 }
-                
-                $this->mailerService->send(
-                    $annonce->getEntreprise()->getEntreprise()->getEmail(),
-                    "Statut de votre annonce sur Olona Talents",
-                    "entreprise/notification_annonce.html.twig",
-                    [
-                        'user' => $annonce->getEntreprise()->getEntreprise(),
-                        'details_annonce' => $annonce,
-                        'dashboard_url' => $this->urlGenerator->generate('app_dashboard_entreprise_view_annonce', ['id' => $annonce->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-                    ]
-                );
             }
-            $this->addFlash('success', 'Le statut a été mis à jour avec succès.');
+            $entityManager->flush();
         } else {
             $this->addFlash('error', 'Statut invalide.');
         }
