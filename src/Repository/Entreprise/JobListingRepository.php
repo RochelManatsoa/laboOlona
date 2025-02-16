@@ -198,6 +198,37 @@ class JobListingRepository extends ServiceEntityRepository
         return $query->getResult();
     }    
 
+    public function findJoblistingsForNotification()
+    {
+        $queryBuilder = $this->createQueryBuilder('j');
+
+        $orConditions = $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->eq('j.status', ':statusValid'),
+            $queryBuilder->expr()->eq('j.status', ':statusFeatured')
+        );
+
+        $updatedAtCondition = $queryBuilder->expr()->gte(
+            'j.updatedAt',
+            ':yesterday'
+        );
+
+        $isNotifiedCondition = $queryBuilder->expr()->eq('j.isNotified', ':isNotifiedFalse');
+
+        $query = $queryBuilder
+            ->andWhere($orConditions)
+            ->andWhere($updatedAtCondition)
+            ->andWhere($isNotifiedCondition)
+            ->setParameter('statusValid', JobListing::STATUS_PUBLISHED)
+            ->setParameter('statusFeatured', JobListing::STATUS_FEATURED)
+            ->setParameter('yesterday', new \DateTime('-1 day'))
+            ->setParameter('isNotifiedFalse', false)
+            ->orderBy('j.id', 'DESC')
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
+
     /**
      * @param EntrepriseProfile $entreprise
      * @param string $status

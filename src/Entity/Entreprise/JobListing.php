@@ -187,6 +187,12 @@ class JobListing
     #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: BoostVisibility::class)]
     private Collection $boostVisibilities;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isNotified = null;
+
     public function __toString()
     {
         return $this->titre;        
@@ -720,6 +726,30 @@ class JobListing
                 $boostVisibility->setJobListing(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function isIsNotified(): ?bool
+    {
+        return $this->isNotified;
+    }
+
+    public function setIsNotified(?bool $isNotified): static
+    {
+        $this->isNotified = $isNotified;
 
         return $this;
     }

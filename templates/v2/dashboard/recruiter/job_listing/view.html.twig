@@ -99,10 +99,6 @@
 						{% if annonce.boostFacebook is not null %}
 					 		{{ getJobListingBoostVisibilityFB(annonce, app.user)|raw }}
 						{% endif %}
-					{% else %}
-						<button type="button" data-bs-toggle="modal" data-bs-target="#boostAnnonce_{{ annonce.id }}" data-bs-type="boost-annonce" data-bs-annonce="{{ annonce.id }}" class="btn btn-dark  texte-uppercase  my-3 px-5">
-							<i class="mx-2 bi bi-rocket-takeoff"></i>Booster
-						</button>
 					{% endif %}
 			</div>
 		</div>
