@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}{{ meta_title() }}{% endblock %}</title>
+        <link rel="icon" href="{{ asset('images/favicon.ico')}}">
+        <meta name="description" content="{{ meta_description() }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}            
+	        <script src="{{asset('assets/errorLogger.js')}}"></script>
+        {% endblock %}
+    </head>
+    <body>
+        {% block header %} {% include "parts/_navbar-none.html.twig" with { 'title': 'Hello modérateur'} %} {% endblock %}
+        <div class="text-white">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-3 bg-dark">
+                        {% block sidebar %}
+                            {% if app.user.type == 'MODERATEUR' %}
+                            {% include "dashboard/_sidebar_moderateur.html.twig" %} 
+                            {% endif %}
+                        {% endblock %}
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="div-plein-ecran bg-light text-dark p-3">
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+
+                            <section class="p-0 m-0">
+                                <div class="container">
+                                    <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+                                        <div class="row mb-3">
+                                            {% block body %}{% endblock %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <a href="javascript:history.back()" class="btn btn-info rounded-pill my-3 px-5">
+                                <i class="mx-2 bi bi-arrow-left"></i>Retour
+                            </a>
+                            {% block inner_footer %}{% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block footer %}  {% endblock %}
+        {% block modal %}
+        {% if app.user.type == 'CANDIDAT' %}
+            {{ render(controller('App\\Controller\\Dashboard\\CandidatController::availabilityFormView')) }}
+        {% endif %}
+        {% endblock %}
+             
+            
+        <button id="backToTop" class="back-to-top" style="display: none;"><i class="bi bi-chevron-up"></i></button>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var fromDatePicker = document.querySelector('#availability_nom_1');
+                var datePickerContainer = document.querySelector('.date-picker-container');
+                var labelForFromDate = document.querySelector('label[for="availability_nom_1"]');
+            
+                if (labelForFromDate) {
+                    var formCheck = labelForFromDate.closest('.form-check');
+                    // Insérer le datePicker après le label "A partir du" tout en restant à l'intérieur de .form-check
+                    formCheck.insertBefore(datePickerContainer, labelForFromDate.nextSibling);
+                
+                    // Appliquer les classes Bootstrap pour aligner les éléments
+                    formCheck.classList.add('d-flex', 'align-items-center');
+                    labelForFromDate.classList.add('flex-grow-1', 'mx-2'); // Assurez-vous que le label prend l'espace nécessaire
+                    datePickerContainer.classList.add('flex-shrink-1'); // Empêcher le datePicker de s'étendre trop
+                
+                    // Ajouter/Retirer l'attribut required basé sur la sélection
+                    var radios = document.querySelectorAll('input[name="availability[nom]"]');
+                    radios.forEach(function(radio) {
+                        radio.addEventListener('change', function() {
+                            var isFromDateSelected = fromDatePicker.checked;
+                            setDatePickerRequired(isFromDateSelected);
+                        });
+                    });
+                
+                    // Fonction pour ajuster l'attribut required du datePicker
+                    function setDatePickerRequired(isRequired) {
+                        ['day', 'month', 'year'].forEach(function(part) {
+                            var element = document.querySelector('#availability_dateFin_' + part);
+                            if (element) {
+                                element.required = isRequired;
+                            }
+                        });
+                    }
+                
+                    // Vérifier l'état initial
+                    setDatePickerRequired(fromDatePicker.checked);
+                }
+            });
+            </script>
+            <script>
+
+                function loadCKEditor() {
+                    if (typeof ClassicEditor === 'undefined') {
+                        var scriptTag = document.createElement('script');
+                        scriptTag.src = "{{ asset('assets/ckeditor5/ckeditor.js') }}";
+                        document.body.appendChild(scriptTag);
+                    }
+                }
+
+                loadCKEditor();
+                document.addEventListener('turbo:load', loadCKEditor);
+
+            </script>
+    </body>
+	{{ encore_entry_script_tags('main') }}
+</html>
