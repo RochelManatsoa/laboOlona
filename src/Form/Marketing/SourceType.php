@@ -22,6 +22,14 @@ class SourceType extends AbstractType
                 ],
                 'help' => 'Ex: "Candidature", "Formulaire de contact", "Entreprises partenaires" ...',
             ])
+            ->add('nameSpace', TextType::class, [
+                'required' => true,
+                'label' => 'Nom de la classe',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Ne pas modifier, il est automatiquement généré.',
+            ])
             ->add('description', TextareaType::class, [
                 'required' => false,
                 'label' => 'Description',

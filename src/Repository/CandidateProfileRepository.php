@@ -510,8 +510,13 @@ class CandidateProfileRepository extends ServiceEntityRepository
             $queryBuilder->expr()->eq('c.status', ':statusFeatured')
         );
 
+        $generatedCondition = $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->eq('c.isGeneretated', ':isGenerated'),
+            $queryBuilder->expr()->isNull('c.isGeneretated')
+        );
+
         $query = $queryBuilder
-            ->andWhere('c.isGeneretated = :isGenerated')
+            ->andWhere($generatedCondition)
             ->andWhere($orConditions)
             ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
             ->setParameter('statusFeatured', CandidateProfile::STATUS_FEATURED)
@@ -519,9 +524,10 @@ class CandidateProfileRepository extends ServiceEntityRepository
             ->setMaxResults(6)
             ->orderBy('c.id', 'DESC')
             ->getQuery();
-            
+
         return $query->getResult();
     }
+
 
     public function findProfilesForDictionary()
     {

@@ -30,6 +30,9 @@ class Source
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $nameSpace = null;
+
     public function __construct()
     {
         $this->leads = new ArrayCollection();
@@ -102,6 +105,18 @@ class Source
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getNameSpace(): ?string
+    {
+        return $this->nameSpace;
+    }
+
+    public function setNameSpace(?string $nameSpace): static
+    {
+        $this->nameSpace = $nameSpace;
 
         return $this;
     }
