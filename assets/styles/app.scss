@@ -8,16 +8,16 @@
 @import "dark-theme";
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Outfit", serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Outfit", serif;
 }
 
 a:not(.btn-primary):not(.btn-success):not(.btn-info){
     text-decoration: none !important;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Outfit", serif;
     color: inherit !important;
 }
 
@@ -96,9 +96,12 @@ a:hover {
 @import 'css/radio.scss';
 @import 'css/coworking.scss';
 @import 'css/boost.scss';
+@import 'css/dashboard.scss';
 // @import 'css/variables.scss';
 // @import 'css/media-queries.scss';
 // @import 'css/navbar.scss';
 // @import 'css/body.scss';
 // @import 'css/perso.scss';
 // @import 'css/profile.scss';
+
+

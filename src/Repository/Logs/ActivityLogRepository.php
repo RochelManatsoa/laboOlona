@@ -69,7 +69,7 @@ class ActivityLogRepository extends ServiceEntityRepository
             ->andWhere('a.derationInSeconds IS NULL')
             ->setParameter('type', ActivityLog::ACTIVITY_PAGE_VIEW)
             ->orderBy('a.id', 'DESC')
-            ->setMaxResults(200)
+            //->setMaxResults(200)
             ->getQuery()
             ->getResult();
     }

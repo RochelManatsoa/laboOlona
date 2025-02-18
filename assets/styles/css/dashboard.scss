@@ -1,0 +1,283 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+body {
+    font-family: "Outfit", sans-serif;
+    font-size: 16px;
+    letter-spacing: .4px;
+    color: #767474;
+  }
+  .header-area {
+    top: 25px;
+    left: 322px;
+    right: 25px;
+    z-index: 101;
+    height: auto;
+    padding: 12px;
+    position: fixed;
+    border-radius: 10px;
+    box-shadow: 0 0 35px #9aa1ab26;
+  }
+  /*sidebar*/
+  .sidebar-area {
+    transition: .5s;
+    padding: 35px 25px;
+    overflow: hidden;
+    position: fixed;
+    height: 100vh;
+    width: 300px;
+    z-index: 222;
+    left: 0;
+    top: 0;
+  }
+  /*content*/
+  .db-content {
+    overflow: hidden;
+    min-height: 100vh;
+    padding-top: 118px;
+    padding-left: 322px;
+    padding-right: 25px;
+  }
+  .border-radius {
+    border-radius: 10px !important;
+}
+.db-content {
+    background-color: #D9E6FF;
+}
+.content-db_ {
+    background-color: white;
+}
+.menu-icon {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    border: 0;
+    background: none;
+    span {
+        width: 40px;
+        height: 2px;
+        background-color: #000000;
+        margin: 4px 0;
+    }
+}
+.info_db {
+    gap: 23px;
+    .translate-middle {
+        transform: translate(-75%, -20%) !important;
+    }
+    .dropdown-toggle::after {
+        margin-left: 8px;
+    }
+    .link-body-emphasis {
+        padding-top: 0;
+        padding-bottom: 0
+    }
+}
+#switch-theme {
+    border: 0;
+    background-color: transparent;
+    line-height: 100%;
+    padding: 0;
+}
+.bagde-circle {
+    align-items: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    font-size: 8px;
+}
+.block-credit {
+    font-size: 12px;
+    #current-user-credit {
+        margin-left: 5px;
+        background-color: #F0B621;
+        padding: 0 5px;
+        border-radius: 25px;
+    }
+}
+.db-search {
+    .input-group {
+        background-color: #EEF0F4;
+        border-radius: 0 !important;
+        .form-control {
+            border: 0;
+            font-size: 12px;
+            background-color: transparent;
+            &:focus {
+                outline: none;
+                box-shadow: none;
+            }
+        }
+        .btn {
+            i {
+                font-size: 11px;
+            }
+        }
+    }  
+}
+.breadcrumb-card {
+    margin-bottom: 1rem;
+    font-size: 12px;
+    .breadcrumb li:nth-child(1) {
+        color: #A7AFBF;
+    }
+}
+
+.profil-banner {
+    border-radius: 10px;
+    overflow: hidden;
+    .couverture-banner-bg {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: #f1b92a;
+        height: 240px;
+    }
+    .left-infos-profils {
+        background-color: white;
+        display: flex;
+        padding-left: 45px;
+        padding-bottom: 45px;
+        padding-right: 45px;
+        .img-profils {
+            margin-top: -4rem;
+            margin-right: 25px;
+            .bg-image-candidat-account {
+                border: 4px solid white;
+                background-color: gray;
+            }
+        }
+        .detail-profils {
+            padding-top: 25px;
+            .nomBlock  {
+                .Noms__ {
+                    font-size: 28px;
+                    margin-right: 15px;
+                    font-weight: 600;
+                    color: #475569;
+                }
+                .Tarif-indicatif {
+                    font-weight: bold;
+                    span {
+                        &::after {
+                            content: "";
+                            display: block;
+                            margin: 1px auto;
+                            width: 90%;
+                            border-bottom: 2px solid;
+                        }
+                    }
+                }
+            }
+            
+        }
+        .btn-profils {
+            padding-top: 25px;
+        }
+    }
+    .btn-profils a {
+        display: block !important;
+        margin-bottom: 0px;
+        line-height:31px;
+        border: 1px solid #A8B1BE;
+        color: #A8B1BE !important;
+        font-size: 15px;
+        letter-spacing: 1px;
+        transition: .5s;
+        &:first-child {
+            margin-bottom: 24px;
+            color: #A8B1BE !important;
+            &:hover {
+                background-color: #516BFF;
+                color: white !important;
+                border-color: #516BFF;
+            }
+         }
+        &:last-child {
+            background: #516BFF;
+            border-color: #516BFF;
+            color: white !important;
+            &:hover {
+                background-color: transparent;
+                color: gray !important;
+                border-color: gray;
+            }
+        }
+        
+    }
+}
+.bp_ {
+    gap: 24px;
+}
+.btn_divers {
+    .cv-pdf {
+        flex: 2;
+        border-radius: 10px;
+        background-color: white;
+        padding: 25px;
+        text-align: center;
+    }
+    .btn-custom_ {
+        flex: 1;
+        text-align: center;
+        img {
+            display: block;
+            margin: 1rem auto;
+        }
+    }
+    .recharge-credit {
+        background-color: #F0B621;
+        color: #5C4305;
+        border-radius: 10px;
+        span {
+            text-transform: uppercase;
+            display: block;
+        }
+    }
+
+}
+.biographie-profil {
+    background-color: white;
+    border-radius: 10px;
+    color: #767474;
+    font-size: 15px;
+    line-height: 32px;
+    font-weight: 300;
+    flex: 1 1 50%;
+    .flex-box_ {
+        gap: 15px;
+        align-items: center;
+        margin: 5px 0;
+        .lh-base {
+            color: #767474;
+        }
+        .info-bx {
+            color: black;
+        }
+    }
+    .bg-secteur {
+        background: #54319b;
+        border-radius: 25px;
+    }
+}
+.st-title {
+    color: #475569;
+    display: inline-block;
+}
+.link-social {
+    a {
+        margin-right: 10px;
+        display: inline-block;
+        img {
+            width: 24px;
+            height: 24px;
+        }
+    }
+}
+footer {
+    background-color: #D9E6FF;
+    padding-left: 320px;
+    margin: 0 !important;
+    padding-bottom: 0 !important;
+}

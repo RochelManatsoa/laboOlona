@@ -10,10 +10,11 @@
 
 {% block stylesheets %}
 	{{ parent() }}
+  <link rel="stylesheet" href="{{ asset('css/dashboard.scss') }}">
 {% endblock %}
 
 {% block sidebar %}
-  {% include "v2/dashboard/layout_candidat.html.twig" %}
+  {% include "v2/dashboard/layout_candidat_v2.html.twig" %}
 {% endblock %}
 
 {% block body %}
