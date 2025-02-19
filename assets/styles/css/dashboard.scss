@@ -20,7 +20,7 @@ body {
   /*sidebar*/
   .sidebar-area {
     transition: .5s;
-    padding: 35px 25px;
+    padding: 35px 0;
     overflow: hidden;
     position: fixed;
     height: 100vh;
@@ -28,6 +28,95 @@ body {
     z-index: 222;
     left: 0;
     top: 0;
+    .logo-brand {
+        padding: 0 25px;
+    }
+    .scroll-container {
+        max-height: 75vh;
+        overflow-y: hidden;
+        &:hover {
+            overflow-y: auto;
+        }
+        &::-webkit-scrollbar {
+            width: 3px;
+        }
+        &::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+            border-radius: 10px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+            border: 2px solid #f1f1f1;
+            &:hover {
+                background-color: #555;
+            }
+        }
+        .nav-pills {
+            padding: 0 25px;
+            .nav-item {
+                margin-bottom: 25px;
+                transition: .5s;
+                &:hover,
+                .underline {
+                    color: #6E61F0;
+                }
+                .nav-link {
+                    position: relative;
+                    position: relative;
+                    img {
+                        margin-right: 7px;
+                    }
+                    .link-bulle {
+                        align-items: center;
+                        position: absolute;
+                        right: 0;
+                        font-size: 12px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        width: 25px;
+                        height: 25px;
+                        background: #eef0f4;
+                        display: flex;
+                        justify-content: center;
+                        border-radius: 100%;
+                        color: #dc3545;
+                    }
+                }
+                .sep-menu {
+                    border-top: 1px solid #d3d3d3;
+                    display: block;
+                    padding-top: 25px;
+                }
+                .sub-nav-pills {
+                    padding-left: 0;
+                    list-style: none;
+                    .sub-nav-item {
+                        position: relative;
+                        padding-left: 75px;
+                        margin: 7px 0;
+                        transition: .5s;
+                        &:hover {
+                            color: #6E61F0;
+                            &::before {
+                                background-color: #6E61F0;
+                            }
+                        }
+                        &::before {
+                            content: "";
+                            position: absolute;
+                            left: 46px;
+                            width: 8px;
+                            height: 8px;
+                            background-color: #D9D9D9;
+                            top: 8px;
+                            border-radius: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
   }
   /*content*/
   .db-content {
@@ -276,7 +365,6 @@ body {
     }
 }
 footer {
-    background-color: #D9E6FF;
     padding-left: 320px;
     margin: 0 !important;
     padding-bottom: 0 !important;

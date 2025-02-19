@@ -273,7 +273,7 @@
 </div>
 
 <div class="sidebar-area bg-white">
-	<div class="d-flex justify-content-between align-items-center">
+	<div class="logo-brand d-flex justify-content-between align-items-center">
 	{#<a href="{{ path('app_v2_candidate_dashboard')}}">
 	<div class="d-flex justify-content-center my-2">
 		<div class="rounded-circle" style="
@@ -310,78 +310,127 @@
 	</div>
 	</div>
 	<hr>#}
-	<ul class="nav nav-pills flex-column mb-auto mt-5 pt-3">
-	{#<li class="nav-item">
-		<a href="{{ path('app_v2_job_offer')}}" class="nav-link {{ (current_route == 'app_v2_job_offer' or current_route == 'app_v2_candidate_view_job_offer' or current_route == 'app_olona_talents_joblistings') ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-search me-2"></i><span class="link-text">Trouver une mission</span> 
-		</a>
-	</li>
-	<li class="nav-item">
-		<a href="{{ path('app_v2_prestation')}}" class="nav-link {{ (current_route == 'app_v2_prestation' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-journals me-2"></i><span class="link-text"> Annuaire de services</span>
-		</a>
-	</li>
-	<li class="nav-item">
-		<a href="{{ path('app_v2_profiles')}}" class="nav-link {{ (current_route == 'app_v2_profiles' or current_route == 'app_v2_recruiter_view_profile' or current_route == 'app_olona_talents_candidates') ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-person-raised-hand me-2"></i><span class="link-text"> Trouver un collaborateur</span>
-		</a>
-	</li>
-	{% if app.user.candidateProfile is defined and app.user.candidateProfile.prestations|length > 0 %}
-	<li class="nav-item">
-		<a href="{{ path('app_v2_prestation_my_created')}}" class="nav-link {{ (current_route == 'app_v2_prestation_my_created' or current_route == 'app_v2_create_prestation' or current_route == 'app_v2_edit_prestation') ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-person-workspace me-2"></i><span class="link-text"> Mes prestations</span>
-		</a>
-	</li>
-	{% endif %}
-	<li class="nav-item">
-		<a href="{{ path('app_v2_applications')}}" class="nav-link {{ current_route == 'app_v2_applications' ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-card-checklist me-2"></i><span class="link-text"> Mes candidatures</span> 
-		</a>
-	</li>
-	<li class="nav-item">
-		<a href="{{ path('app_v2_contacts')}}" class="nav-link {{ current_route == 'app_v2_contacts' ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-journal-check me-2"></i></i><span class="link-text"> Mon réseau professionnel</span> 
-		</a>
-	</li>
-	<li class="nav-item">
-		<a href="{{ path('app_v2_candidate_simulator_create')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator_create' ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-printer me-2"></i><span class="link-text"> Simulateur de salaire</span> 
-		</a>
-	</li>
-	<li class="nav-item">
-		<a href="{{ path('app_v2_candidate_simulator')}}" class="nav-link {{ (current_route == 'app_v2_candidate_simulator' or current_route == 'app_v2_candidate_simulator_view') ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-aspect-ratio me-2"></i><span class="link-text"> Mes simulations</span> 
-		</a>
-	</li>#}
-	<li class="nav-item">
-		<a href="{{ path('app_v2_candidate_dashboard')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard' ? 'underline' : '' }}" aria-current="page">
-		<img src="{{ asset('v2/images/dashboard/dashboard.svg')}}" alt=""><span class="link-text"> Tableau de bord</span> 
-		</a>
-	</li>
-	<li class="nav-item">
-		<a href="{{ path('app_v2_dashboard_notification')}}" class="nav-link {{ current_route == 'app_v2_dashboard_notification' ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-bell me-2"></i></i><span class="link-text"> Notifications</span> 
-		{% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
-		</a>
-	</li>
-	{#<li class="nav-item">
-		<a href="{{ path('app_v2_user_order')}}" class="nav-link {{ (current_route == 'app_v2_user_order' or current_route == 'app_v2_user_order_show') ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-bookmark-star me-2"></i><span class="link-text"> Mes commandes</span> 
-		</a>
-	</li>
-	<li class="nav-item">
-		<a href="{{ path('app_v2_dashboard_formation')}}" class="nav-link {{ (current_route == 'app_v2_dashboard_formation' or current_route == 'app_v2_dashboard_formation_playlist_view') ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-layers me-2"></i><span class="link-text"> Centre de formations</span> 
-		</a>
-	</li>
-	<hr>#}
-	<li class="nav-item">
-		<a href="{{ path('app_v2_contact')}}" class="nav-link {{ current_route == 'app_v2_contact' ? 'underline' : '' }}" aria-current="page">
-		<i class="bi bi-envelope-at me-2"></i><span class="link-text"> Besoin d'assistance ?</span> 
-		</a>
-	</li>
-	</ul>
-	<hr>
+  <div class="scroll-container">
+    <ul class="nav nav-pills flex-column mb-auto mt-5 pt-3">
+    {#<li class="nav-item">
+      <a href="{{ path('app_v2_job_offer')}}" class="nav-link {{ (current_route == 'app_v2_job_offer' or current_route == 'app_v2_candidate_view_job_offer' or current_route == 'app_olona_talents_joblistings') ? 'underline' : '' }}" aria-current="page">
+      <i class="bi bi-search me-2"></i><span class="link-text">Trouver une mission</span> 
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_v2_prestation')}}" class="nav-link {{ (current_route == 'app_v2_prestation' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+      <i class="bi bi-journals me-2"></i><span class="link-text"> Annuaire de services</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_v2_profiles')}}" class="nav-link {{ (current_route == 'app_v2_profiles' or current_route == 'app_v2_recruiter_view_profile' or current_route == 'app_olona_talents_candidates') ? 'underline' : '' }}" aria-current="page">
+      <i class="bi bi-person-raised-hand me-2"></i><span class="link-text"> Trouver un collaborateur</span>
+      </a>
+    </li>
+    {% if app.user.candidateProfile is defined and app.user.candidateProfile.prestations|length > 0 %}
+    <li class="nav-item">
+      <a href="{{ path('app_v2_prestation_my_created')}}" class="nav-link {{ (current_route == 'app_v2_prestation_my_created' or current_route == 'app_v2_create_prestation' or current_route == 'app_v2_edit_prestation') ? 'underline' : '' }}" aria-current="page">
+      <i class="bi bi-person-workspace me-2"></i><span class="link-text"> Mes prestations</span>
+      </a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a href="{{ path('app_v2_applications')}}" class="nav-link {{ current_route == 'app_v2_applications' ? 'underline' : '' }}" aria-current="page">
+      <i class="bi bi-card-checklist me-2"></i><span class="link-text"> Mes candidatures</span> 
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_v2_contacts')}}" class="nav-link {{ current_route == 'app_v2_contacts' ? 'underline' : '' }}" aria-current="page">
+      <i class="bi bi-journal-check me-2"></i></i><span class="link-text"> Mon réseau professionnel</span> 
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_v2_candidate_simulator_create')}}" class="nav-link {{ current_route == 'app_v2_candidate_simulator_create' ? 'underline' : '' }}" aria-current="page">
+      <i class="bi bi-printer me-2"></i><span class="link-text"> Simulateur de salaire</span> 
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_v2_candidate_simulator')}}" class="nav-link {{ (current_route == 'app_v2_candidate_simulator' or current_route == 'app_v2_candidate_simulator_view') ? 'underline' : '' }}" aria-current="page">
+      <i class="bi bi-aspect-ratio me-2"></i><span class="link-text"> Mes simulations</span> 
+      </a>
+    </li>#}
+    <li class="nav-item">
+      <a href="{{ path('app_v2_candidate_dashboard')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/dashboard.svg')}}" alt="">Tableau de bord <span class="link-bulle">2</span> 
+      </a>
+    </li>
+    {#nouveau menu statique#}
+    <li class="nav-item">
+      <a href="{{ path('app_v2_candidate_dashboard')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/discussions.svg')}}" alt="">Message <span class="link-bulle">2</span> 
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_v2_prestation')}}" class="nav-link {{ (current_route == 'app_v2_prestation' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/missions.svg')}}" alt="">Missions
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_v2_candidate_dashboard')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/profil.svg')}}" alt="">Profil <i class=""></i> 
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_v2_dashboard_notification')}}" class="nav-link {{ current_route == 'app_v2_dashboard_notification' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt="">Notifications
+      {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_v2_dashboard_notification')}}" class="nav-link {{ current_route == 'app_v2_dashboard_notification' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/taches.svg')}}" alt="">Mes tâches
+      {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
+      </a>
+    </li>
+    <li class="nav-item">
+      <span class="sep-menu"></span> 
+      <a href="{{ path('app_v2_dashboard_notification')}}" class="nav-link {{ current_route == 'app_v2_dashboard_notification' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/setting.svg')}}" alt="">Paramètres
+      {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
+      </a>
+      <ul class="sub-nav-pills">
+        <li class="sub-nav-item">
+          <a href="{{ path('app_v2_contact')}}" class="sub-nav-link {{ current_route == 'app_v2_contact' ? 'underline' : '' }}" aria-current="page">
+          Mon compte
+          </a>
+        </li>
+        <li class="sub-nav-item">
+          <a href="{{ path('app_v2_contact')}}" class="sub-nav-link {{ current_route == 'app_v2_contact' ? 'underline' : '' }}" aria-current="page">
+          Modifier mon mot de passe
+          </a>
+        </li>
+        <li class="sub-nav-item">
+          <a href="{{ path('app_v2_contact')}}" class="sub-nav-link {{ current_route == 'app_v2_contact' ? 'underline' : '' }}" aria-current="page">
+          Besoin d'assistance ?
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <span class="sep-menu"></span> 
+      <a href="{{ path('app_logout')}}" class="nav-link">
+      <img src="{{ asset('v2/images/dashboard/logout.svg')}}" alt=""><span class="link-text"> Se déconnecter</span> 
+      {% if countUnReadNotification(app.user) > 0  %}{{ component('count_notification_component')}}{% endif %}
+      </a>
+    </li>
+    {#<li class="nav-item">
+      <a href="{{ path('app_v2_user_order')}}" class="nav-link {{ (current_route == 'app_v2_user_order' or current_route == 'app_v2_user_order_show') ? 'underline' : '' }}" aria-current="page">
+      <i class="bi bi-bookmark-star me-2"></i><span class="link-text"> Mes commandes</span> 
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_v2_dashboard_formation')}}" class="nav-link {{ (current_route == 'app_v2_dashboard_formation' or current_route == 'app_v2_dashboard_formation_playlist_view') ? 'underline' : '' }}" aria-current="page">
+      <i class="bi bi-layers me-2"></i><span class="link-text"> Centre de formations</span> 
+      </a>
+    </li>
+    <hr>#}
+    </ul>
+  </div>
 	{#<a href="{{ path('app_v2_credit')}}" class="btn-primary btn px-2 text-uppercase fw-semibold">
 	<i class="bi bi-bookmark-star fw-bold"></i>
 	Recharger mes crédits
