@@ -6,5 +6,8 @@
     <h1 class="h3">Créer une Source</h1>
 
     {{ include('marketing/source/_form.html.twig') }}
+    <div class="d-flex justify-content-end w-100">
+        <a class="btn btn-warning my-3 px-5 rounded-pill" href="{{ path('app_marketing_source_index') }}"><i class="bi me-2 bi-list"></i>Toutes les sources</a>
+    </div>
 
 {% endblock %}
