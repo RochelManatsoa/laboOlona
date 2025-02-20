@@ -2,6 +2,7 @@
 
 namespace App\Controller\Marketing;
 
+use App\Entity\User;
 use App\Entity\Notification;
 use App\Entity\Marketing\Lead;
 use App\Form\Marketing\LeadType;
@@ -104,6 +105,10 @@ class LeadController extends AbstractController
     #[Route('/{id}/email', name: 'app_marketing_lead_show_email', methods: ['GET', 'POST'])]
     public function email(Request $request, Lead $lead, EntityManagerInterface $entityManager): Response
     {
+        $fullName = $lead->getFullName();
+        if($lead->getUser() instanceof User) {
+            $fullName = $lead->getUser()->getPrenom();
+        }
         $notification = new Notification();
         $notification->setDateMessage(new \DateTime());
         $notification->setExpediteur($this->userService->getCurrentUser());
@@ -113,7 +118,7 @@ class LeadController extends AbstractController
         $notification->setTitre($lead->getSource()->getName()." - Olona Talents");
         $notification->setContenu(
             "
-            <p>Bonjour ".$lead->getUser()->getPrenom().",</p>
+            <p>Bonjour ".$fullName.",</p>
             <p>Nous avons récemment examiné votre profil sur <strong>Olona Talents </strong>et avons remarqué qu'il manque certaines informations essentielles pour que votre profil soit pleinement actif et visible pour les autres utilisateurs.</p>
             <p>Vous pouvez mettre à jour votre profil en vous connectant à votre compte et en naviguant vers la section [Nom de la section appropriée]. La mise à jour de ces informations augmentera vos chances de [objectif ou avantage lié à l'utilisation du site] .</p>
             <p>Si vous avez besoin d'aide ou si vous avez des questions concernant la mise à jour de votre profil, n'hésitez pas à nous contacter. Nous sommes là pour vous aider.</p>

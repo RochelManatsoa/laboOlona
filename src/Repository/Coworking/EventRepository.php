@@ -60,4 +60,15 @@ class EventRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
+    
+    public function findUserEvents(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('u, COUNT(e.id) AS eventCount') // Sélectionne l'entité User complète et le compte des événements
+            ->innerJoin('e.user', 'u') // Jointure interne avec l'entité User sur l'alias 'u'
+            ->groupBy('u.id') // Groupe les résultats par ID utilisateur pour obtenir le compte des événements pour chaque utilisateur
+            ->getQuery()
+            ->getResult();
+    }
+    
 }

@@ -518,6 +518,7 @@ class CandidateProfileRepository extends ServiceEntityRepository
         $query = $queryBuilder
             ->andWhere($generatedCondition)
             ->andWhere($orConditions)
+            ->andWhere('c.cv IS NOT NULL') 
             ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
             ->setParameter('statusFeatured', CandidateProfile::STATUS_FEATURED)
             ->setParameter('isGenerated', false)
@@ -527,7 +528,6 @@ class CandidateProfileRepository extends ServiceEntityRepository
 
         return $query->getResult();
     }
-
 
     public function findProfilesForDictionary()
     {

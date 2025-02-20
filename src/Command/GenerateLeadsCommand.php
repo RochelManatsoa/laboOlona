@@ -2,12 +2,14 @@
 
 namespace App\Command;
 
+use App\Entity\Coworking\Event;
+use App\Entity\Coworking\Reservation;
 use App\Entity\User;
 use App\Entity\Marketing\Lead;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Moderateur\ContactForm;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\Finance\ContratRepository;
-use App\Repository\Logs\ActivityLogRepository;
 use App\Repository\Marketing\SourceRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -47,26 +49,99 @@ class GenerateLeadsCommand extends Command
         $slug = $input->getArgument('source');
         $source = $this->sourceRepository->findOneBy(['slug' => $slug]);
         $repository = $this->entityManager->getRepository($source->getNameSpace());
-        $elements = $repository->findAll();
         $io->writeln('Génération des leads pour '. $source->getName());
-        foreach ($elements as $element) {
-            if($element instanceof EntrepriseProfile){
-                $user = null;
-                if(count($element->getJobListings()) > 0){
-                   $user = $element->getEntreprise();
+
+        if($slug == 'annonce-entreprise'){ 
+            $elements = $repository->findAll();
+            $sourceEntreprise = $this->sourceRepository->findOneBy(['slug' => 'entreprise']);
+            foreach ($elements as $element) {
+                if($element instanceof EntrepriseProfile && $element->getStatus() !== EntrepriseProfile::STATUS_BANNED && $element->getStatus() !== EntrepriseProfile::STATUS_PENDING ){
+                    $user = $element->getEntreprise();
+                    if($user instanceof User){
+                        $lead = new Lead();
+                        if(count($element->getJobListings()) > 0){
+                            $lead->setSource($source);
+                            $lead->setComment($source->getDescription());
+                            $io->writeln(sprintf('Lead annonce entreprise créé : %d', $element->getId()));
+                        }else{
+                            $lead->setSource($sourceEntreprise);
+                            $lead->setComment($sourceEntreprise->getDescription());
+                            $io->writeln(sprintf('Lead entreprise créé : %d', $element->getId()));
+                        }
+                        $lead->setFullName($user);
+                        $lead->setEmail($user->getEmail());
+                        $lead->setPhone($user->getTelephone());
+                        $lead->setUser($user);
+                        $this->entityManager->persist($lead);
+                    }
                 }
             }
-            if($user instanceof User){
+        }
+
+        if($slug == 'coworking'){ 
+            $elements = $repository->findAll();
+            $emails = [];  
+
+            foreach ($elements as $element) {
+                $user = $element->getUser();
+                if ($user instanceof User) {
+                    $email = $user->getEmail(); 
+
+                    if (!isset($emails[$email])) {
+                        $emails[$email] = [
+                            'count' => 0,
+                            'user' => $user
+                        ];
+                    }
+                    $emails[$email]['count']++;  
+                }
+            }
+
+            foreach ($emails as $email => $data) {
+                $user = $data['user'];
+                $count = $data['count'];
+
                 $lead = new Lead();
                 $lead->setSource($source);
-                $lead->setFullName($user);
-                $lead->setComment($source->getDescription());
-                $lead->setEmail($user->getEmail());
-                $lead->setPhone($user->getTelephone());
+                $lead->setComment($source->getDescription() . ' - ' . $count . ' évènements');
+                $lead->setFullName($user->getFullName()); 
+                $lead->setEmail($email);
+                $lead->setPhone($user->getTelephone());  
                 $lead->setUser($user);
                 $this->entityManager->persist($lead);
+                $this->entityManager->flush();  
+
                 $io->writeln(sprintf('Lead créé : %s', $source->getName()));
             }
+
+        }
+
+        if($slug == 'formulaire-de-contact-site-coworking' || $slug == 'formulaire-de-contact-site-olona-talents'){ 
+            $elements = $repository->findLatestReservationByUniqueEmail();
+            foreach ($elements as $element) {
+                $lead = new Lead();
+                $lead->setSource($source);
+                $lead->setEmail($element->getEmail());
+                $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $element->getEmail()]);
+                if($user){
+                    $lead->setUser($user);
+                }
+                if($element instanceof Reservation){
+                    $lead->setComment($source->getDescription() . ' - ' . $element->getDescription());
+                    $lead->setFullName($element->getFullName());
+                    $lead->setPhone($element->getPhone());
+                    $this->entityManager->persist($lead);
+                    $io->writeln(sprintf('Lead créé : %s', $source->getName()));
+                }
+                if($element instanceof ContactForm){
+                    $lead->setComment($source->getDescription() . ' - ' . $element->getMessage());
+                    $lead->setFullName($element->getTitre());
+                    $lead->setPhone($element->getNumero());
+                    $this->entityManager->persist($lead);
+                    $io->writeln(sprintf('Lead créé : %s', $source->getName()));
+                }
+            }
+
         }
 
         $this->entityManager->flush();
