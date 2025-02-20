@@ -55,11 +55,11 @@ services:
         arguments:
             $apiKey: '%env(YOUTUBE_API_KEY)%'
             
-    # App\EventListener\ExceptionListener:
-    #     tags:
-    #         - { name: kernel.event_listener, event: kernel.exception, priority: 10 }
-    #     arguments:
-    #         - '@twig'
+    App\EventListener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, priority: 10 }
+        arguments:
+            - '@twig'
     
     App\Service\JitsiMeetService:
         arguments:
