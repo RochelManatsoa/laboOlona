@@ -61,9 +61,25 @@ body {
                 .underline {
                     color: #6E61F0;
                 }
+                
                 .nav-link {
                     position: relative;
-                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    &.sous-menu_::after {
+                        content: "";
+                        width: 10px;
+                        height: 10px;
+                        display: block;
+                        position: absolute;
+                        right: 0;
+                        background-image: url(/public/v2/images/dashboard/arrow-down.svg);
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: contain;
+                        transform: rotate(-90deg);
+                        transition: .5s;
+                    }
                     img {
                         margin-right: 7px;
                     }
@@ -88,9 +104,20 @@ body {
                     display: block;
                     padding-top: 25px;
                 }
+                &.visible {
+                    .nav-link {
+                        &.sous-menu_::after {
+                            transform: none;
+                        }
+                    }
+                    .sub-nav-pills {
+                        display: block;
+                    }
+                }
                 .sub-nav-pills {
                     padding-left: 0;
                     list-style: none;
+                    display: none;
                     .sub-nav-item {
                         position: relative;
                         padding-left: 75px;
@@ -362,6 +389,165 @@ body {
             width: 24px;
             height: 24px;
         }
+    }
+}
+svg {
+    .apexcharts-flip-y {
+        transform: scaleY(-1) translateY(-100%);
+        transform-origin: top;
+        transform-box: fill-box;
+    }
+    .apexcharts-flip-x {
+        transform: scaleX(-1);
+        transform-origin: center;
+        transform-box: fill-box;
+    }
+    .apexcharts-legend {
+        display: flex;
+        overflow: auto;
+        padding: 0 10px;
+        &.apexcharts-legend-group-horizontal {
+            flex-direction: column;
+        }
+    }
+    .apexcharts-legend-group {
+        display: flex;
+    }
+    .apexcharts-legend-group-vertical {
+        flex-direction: column-reverse;
+    }
+    .apexcharts-legend.apx-legend-position-bottom, 
+    .apexcharts-legend.apx-legend-position-top {
+        flex-wrap: wrap
+    }
+    .apexcharts-legend.apx-legend-position-right, 
+    .apexcharts-legend.apx-legend-position-left {
+        flex-direction: column;
+        bottom: 0;
+    }
+    .apexcharts-legend.apx-legend-position-bottom.apexcharts-align-left, 
+    .apexcharts-legend.apx-legend-position-top.apexcharts-align-left, 
+    .apexcharts-legend.apx-legend-position-right, 
+    .apexcharts-legend.apx-legend-position-left {
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+    .apexcharts-legend.apx-legend-position-bottom.apexcharts-align-center, 
+    .apexcharts-legend.apx-legend-position-top.apexcharts-align-center {
+        justify-content: center;
+        align-items: center;
+    }
+    .apexcharts-legend.apx-legend-position-bottom.apexcharts-align-right,
+    .apexcharts-legend.apx-legend-position-top.apexcharts-align-right {
+        justify-content: flex-end;
+        align-items: flex-end;
+    }
+    .apexcharts-legend-series {
+        cursor: pointer;
+        line-height: normal;
+        display: flex;
+        align-items: center;
+    }
+    .apexcharts-legend-text {
+        position: relative;
+        font-size: 14px;
+    }
+      .apexcharts-legend-text *, .apexcharts-legend-marker * {
+        pointer-events: none;
+    }
+      .apexcharts-legend-marker {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-right: 1px;
+      }
+
+      .apexcharts-legend-series.apexcharts-no-click {
+        cursor: auto;
+      }
+      .apexcharts-legend .apexcharts-hidden-zero-series, .apexcharts-legend .apexcharts-hidden-null-series {
+        display: none !important;
+      }
+      .apexcharts-inactive-legend {
+        opacity: 0.45;
+    }
+}
+.top-dashboard {
+    background: rgb(93,79,227);
+    background: linear-gradient(45deg, rgba(93,79,227,1) 0%, rgba(130,118,255,1) 100%);
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    color: white;
+    .left-inner-block {
+        font-size: 24px;
+        h1 {
+            display: flex;
+            align-items: center;
+            font-size: 48px;
+            margin-top: 1rem;
+            img {
+                margin-right: 9px;
+            }
+        }
+    }
+    .rightt-inner-block {
+        text-align: center;
+        font-size: 20px;
+        .profil-complete-radial {
+            height: 100px;
+        }
+    }
+}
+.visibility_p { 
+    .biographie-profil {
+        color:#475569;
+        text-align: center;
+        > div {
+            font-size: 64px;
+            font-weight: 600;
+            justify-content: center;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            span {
+                background-color: #EEEEEF;
+                width: 80px;
+                height: 80px;
+                border-radius: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 15px;
+            }
+        }
+        &.apparition_ > div {
+            color: #F0B621;
+        }
+        &.vu_ > div {
+            color: #0E7AEE;
+        }
+        &.mission_ > div {
+            color: #796DF6;
+        }
+    } 
+}
+.detail_db {
+    .detail_left {
+        flex: 1;
+        line-height: 130%;
+        .bg-image-candidat-account {
+            margin: 0 auto 2rem;
+            background-color: #f7f7f7;
+        }
+        .title_resume {
+            font-weight: bold;
+            color: black;
+        }
+    }
+    .detail_right {
+        flex: 2;
     }
 }
 footer {

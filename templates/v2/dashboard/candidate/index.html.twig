@@ -835,7 +835,7 @@
 			</div>
 		</div>#}
 	</section>
-
+	{#Page dashboard#}
 <script>
     document.querySelector('.profile-img').addEventListener('click', function() {
         document.getElementById('{{ form_one.file.vars.id }}').click();
@@ -850,6 +850,11 @@
             reader.readAsDataURL(event.target.files[0]);
         }
     });
+	document.addEventListener('DOMContentLoaded', function() {
+		document.querySelector('.nav-item').addEventListener('click', function() {
+			document.querySelector('.sub-nav-pills').classList.toggle('visible');
+		});
+	});
 </script>
 
 {% include "tuto_credits_candidate.html.twig" %}
