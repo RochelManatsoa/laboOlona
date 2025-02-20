@@ -234,6 +234,7 @@ class CandidateProfile
         $this->status = self::STATUS_PENDING;
         $this->contestEntries = new ArrayCollection();
         $this->localisation = 'MG';
+        $this->isGeneretated = false;
     }
 
     public function __toString()

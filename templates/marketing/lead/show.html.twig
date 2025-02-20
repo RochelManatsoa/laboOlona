@@ -1,0 +1,53 @@
+{% extends 'moderateur/base.html.twig' %}
+
+{% block title %}Lead #{{ lead.id }}{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Lead #{{ lead.id }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nom complet</th>
+                <td>{{ lead.fullName }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>
+                    <a href="{{ path('app_marketing_lead_show_email', {'id': lead.id}) }}" class="text-primary">
+                        {{ lead.email }} {% if lead.emailSent > 0 %} <span class="badge bg-success">{{ lead.emailSent }} email envoyé</span>{% endif %}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Télephone</th>
+                <td>{{ lead.phone }}</td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ lead.labels[lead.status]|raw }}</td>
+            </tr>
+            <tr>
+                <th>Source</th>
+                <td>{{ lead.source ? lead.source.name : 'Non renseigné' }}</td>
+            </tr>
+            <tr>
+                <th>Création</th>
+                <td>{{ lead.createdAt ? lead.createdAt|date('d/m/Y') : '-' }} </td>
+            </tr>
+            <tr>
+                <th>Dernière contact</th>
+                <td>{{ lead.lastContacted ? lead.lastContacted|date('d/m/Y') : '-' }} </td>
+            </tr>
+            <tr>
+                <th>Commentaire</th>
+                <td>{{ lead.comment|raw }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-end w-100">
+        <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_marketing_lead_edit', {'id': lead.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+        {{ include('marketing/lead/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

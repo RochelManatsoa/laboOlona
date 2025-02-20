@@ -1,0 +1,34 @@
+{% extends 'moderateur/base.html.twig' %}
+
+{% block title %} {{ source.name }} {% endblock %}
+
+{% block body %}
+    <h1 class="h3">{{ source.name }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>#</th>
+                <td>{{ source.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ source.name }}</td>
+            </tr>
+            <tr>
+                <th>Nombre de leads</th>
+                <td>{{ source.leads|length }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ source.description|raw }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div class="d-flex justify-content-end w-100">
+        <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_marketing_source_edit', {'id': source.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+        {{ include('marketing/source/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'moderateur/base.html.twig' %}
+
+{% block title %}Toutes les sources{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Toutes les sources</h1>
+    <div>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_marketing_source_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(sources, '#', 's.id') }}</th>
+                <th>{{ knp_pagination_sortable(sources, 'Nom', 's.name') }}</th>
+                <th>{{ knp_pagination_sortable(sources, 'Leads', 'leadCount') }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in sources %}
+        {% set source = item[0] %}
+            <tr>
+                <td>{{ source.id }}</td>
+                <td>{{ source.name }}</td>
+                <td>{{ item['leadCount'] }}</td>
+                <td>
+                    <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_marketing_source_show', {'id': source.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_marketing_source_edit', {'id': source.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ knp_pagination_render(sources) }}
+
+{% endblock %}

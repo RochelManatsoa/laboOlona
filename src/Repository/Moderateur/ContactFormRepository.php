@@ -21,28 +21,16 @@ class ContactFormRepository extends ServiceEntityRepository
         parent::__construct($registry, ContactForm::class);
     }
 
-//    /**
-//     * @return ContactForm[] Returns an array of ContactForm objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findLatestReservationByUniqueEmail()
+    {
+        $subQuery = $this->createQueryBuilder('sub')
+            ->select('MAX(sub.id)')
+            ->groupBy('sub.email');
 
-//    public function findOneBySomeField($value): ?ContactForm
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $this->createQueryBuilder('c')
+            ->select('c') 
+            ->where('c.id IN (' . $subQuery->getDQL() . ')')
+            ->getQuery()
+            ->getResult();
+    }
 }
