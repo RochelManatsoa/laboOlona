@@ -115,14 +115,21 @@ class LeadController extends AbstractController
         $notification->setDestinataire($lead->getUser());
         $notification->setType(Notification::TYPE_PROFIL);
         $notification->setIsRead(false);
-        $notification->setTitre($lead->getSource()->getName()." - Olona Talents");
+        $notification->setTitre("CVthèque - Olona Talents");
         $notification->setContenu(
             "
             <p>Bonjour ".$fullName.",</p>
-            <p>Nous avons récemment examiné votre profil sur <strong>Olona Talents </strong>et avons remarqué qu'il manque certaines informations essentielles pour que votre profil soit pleinement actif et visible pour les autres utilisateurs.</p>
-            <p>Vous pouvez mettre à jour votre profil en vous connectant à votre compte et en naviguant vers la section [Nom de la section appropriée]. La mise à jour de ces informations augmentera vos chances de [objectif ou avantage lié à l'utilisation du site] .</p>
-            <p>Si vous avez besoin d'aide ou si vous avez des questions concernant la mise à jour de votre profil, n'hésitez pas à nous contacter. Nous sommes là pour vous aider.</p>
-            <p>Nous vous remercions pour votre attention à ce détail et nous sommes impatients de vous voir tirer pleinement parti de tout ce que <strong>Olona Talents</strong> a à offrir.</p>
+            <p>Je me permets de vous écrire car je sais à quel point il peut être complexe et chronophage de dénicher les profils  qui répondent parfaitement à vos besoins spécifiques.</p>
+            <p>C'est exactement pour résoudre ce défi que nous avons créé Olona-Talent , une plateforme innovante conçue pour simplifier et accélérer vos processus de recrutement.</p>
+            <p>Grâce à notre base de plus de 10 000 CV tech réindexés par intelligence artificielle , vous pouvez identifier les talents dont vous avez besoin en quelques clics seulement, sans attendre que les candidats postulent à vos annonces.</p>
+            <p>En plus, notre plateforme vous offre la possibilité de :</p>
+            <ul>
+            <li>Publier vos offres d'emploi sur la plateforme.</li>
+            <li>nous pouvons mettre en avant vos opportunités sur notre page Facebook pour toucher une large communauté de professionnels .</li>
+            </ul>
+            <p>Je serais ravie de vous montrer comment Olona-Talent peut transformer votre manière de recruter. Êtes-vous disponible pour un appel ou une démonstration personnalisée ?</p>
+            <p>Merci pour votre attention, et j'espère avoir l'opportunité de collaborer avec vous.</p>
+            <p>Cordialement,</p>
             <p>Ravaka, de l'équipe Olona Talents</p>
             "
         );
