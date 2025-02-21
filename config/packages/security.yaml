@@ -82,6 +82,7 @@ security:
         - { path: ^/finance, roles: ROLE_FINANCE }
         - { path: ^/employes-hub, roles: ROLE_EMPLOYE }
         - { path: ^/youtube/playlist, roles: ROLE_USER }
+        - { path: ^/tableau-de-bord/, roles: ROLE_USER }
 
     
     role_hierarchy:

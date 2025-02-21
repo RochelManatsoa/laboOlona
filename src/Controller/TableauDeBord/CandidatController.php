@@ -2,27 +2,55 @@
 
 namespace App\Controller\TableauDeBord;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Logs\ActivityLog;
+use App\Manager\CandidatManager;
+use App\Service\User\UserService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/tableau-de-bord/candidat')]
 
 class CandidatController extends AbstractController
 {
+    public function __construct(
+        private EntityManagerInterface $em,
+        private UserService $userService,
+        private CandidatManager $candidatManager,
+    ){}
+
     #[Route('/', name: 'app_tableau_de_bord_candidat')]
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement.');
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $candidat = $this->userService->checkProfile();
+
         return $this->render('tableau_de_bord/candidat/index.html.twig', [
-            
+            'candidat' => $candidat,
+            'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
+            'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
+            'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
+            'activities' => $this->em->getRepository(ActivityLog::class)->findUserLogs($currentUser),
         ]);
     }
 
     #[Route('/mon-profil', name: 'app_tableau_de_bord_candidat_profil')]
     public function profile(): Response
     {
+        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement.');
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $candidat = $this->userService->checkProfile();
+
         return $this->render('tableau_de_bord/candidat/mon_profil.html.twig', [
-            
+            'candidat' => $candidat,
+            'experiences' => $this->candidatManager->getExperiencesSortedByDate($candidat),
+            'competences' => $this->candidatManager->getCompetencesSortedByNote($candidat),
+            'langages' => $this->candidatManager->getLangagesSortedByNiveau($candidat),
+            'activities' => $this->em->getRepository(ActivityLog::class)->findUserLogs($currentUser),
         ]);
     }
     #[Route('/messages', name: 'app_tableau_de_bord_candidat_messages')]
