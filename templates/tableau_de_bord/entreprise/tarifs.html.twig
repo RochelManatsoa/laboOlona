@@ -1,0 +1,66 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <h5 class="mb-0"> Tarifs d'abonnement</h5>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> tarifs </li>
+            </ol>
+        </div>
+    </section>
+    <section class="tarfis-container d-block p-5 mb-4">
+        <div class="wrapper-abonnement-c">
+            <div class="title-abonnement-c">
+                <h1>Tarifs Olona talents</h1>
+                <p>Choisissez la solution adaptée à vos besoins en recrutement.</p>
+            </div>
+            <div class="item-abonnement-c">
+                <div class="">
+                </div>
+                <div class="box-abonnement-standard">
+                    <div class="heading-abonnement">
+                        <h2>Standard</h2>
+                        <p>Choisissez la solution adaptée à vos besoins en recrutement.</p>
+                        <div class="price_block">
+                            <span>A partir de</span>
+                            <div class="price_">20,000Ar <span>/jour</span></div>
+                        </div>
+                        <a class="btn" href="">Choisir</a>
+                    </div>
+                    <div class="description-abonnement">
+                    </div>
+                    <div class="other-include_">
+                    </div>
+                </div>
+                <div class=" box-abonnement-c box-abonnement-pro">
+                    <div class="heading-abonnement">
+                        <h2>Pro</h2>
+                        <p>Inclut l'accès à la CVthèque</p>
+                        <div class="price_block">
+                            <span>A partir de</span>
+                            <div class="price_">120,000Ar <span>/mois</span></div>
+                        </div>
+                        <a class="btn" href="">Choisir</a>
+                    </div>
+                    <div class="description-abonnement">
+                    </div>
+                    <div class="other-include_">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

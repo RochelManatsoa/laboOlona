@@ -4,6 +4,7 @@ $(function() {
 
 function handlePageLoad() {
     $('.click-sub').on('click', '.sous-menu_', function(){            
-        $(this).siblings('.sub-nav-pills').toggle();
+        $(this).toggleClass('visible');
+        $(this).siblings('.sub-nav-pills').toggle()
     });
 }

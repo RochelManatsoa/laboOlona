@@ -32,33 +32,33 @@
     <li class="nav-item click-sub">
       <span class="nav-link sous-menu_"><img src="{{ asset('v2/images/dashboard/profil.svg')}}" alt="">Profil </span>
       <ul class="sub-nav-pills">
-        <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_profil')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_profil' ? 'underline' : '' }}" aria-current="page">
+        <li class="sub-nav-item {{ current_route == 'underline' : '' }}">
+          <a href="{{ path('app_tableau_de_bord_candidat_profil')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_profil' }}" aria-current="page">
           Voir ou modifier mon profil
           </a>
         </li>
-        <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_mes_prestations')}}" class="sub-nav-link {{ (current_route == 'app_tableau_de_bord_candidat_mes_prestations' or current_route == 'app_v2_create_prestation' or current_route == 'app_v2_edit_prestation') ? 'underline' : '' }}" aria-current="page">
+        <li class="sub-nav-item {{ current_route == 'underline' : '' }}">
+          <a href="{{ path('app_tableau_de_bord_candidat_mes_prestations')}}" class="sub-nav-link {{ (current_route == 'app_tableau_de_bord_candidat_mes_prestations' or current_route == 'app_v2_create_prestation' or current_route == 'app_v2_edit_prestation') }}" aria-current="page">
           Mes prestations
           </a>
         </li>
-        <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_mes_candidatures')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_mes_candidatures' ? 'underline' : '' }}" aria-current="page">
+        <li class="sub-nav-item {{ current_route == 'underline' : '' }}">
+          <a href="{{ path('app_tableau_de_bord_candidat_mes_candidatures')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_mes_candidatures' }}" aria-current="page">
           Mes candidatures
           </a>
         </li>
-        <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_missions_obtenues')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_missions_obtenues' ? 'underline' : '' }}" aria-current="page">
+        <li class="sub-nav-item {{ current_route == 'underline' : '' }}">
+          <a href="{{ path('app_tableau_de_bord_candidat_missions_obtenues')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_missions_obtenues' }}" aria-current="page">
           Missions obtenus
           </a>
         </li>
-        <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_reseaux_professionnelles')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_reseaux_professionnelles' ? 'underline' : '' }}" aria-current="page">
+        <li class="sub-nav-item {{ current_route == 'underline' : '' }}">
+          <a href="{{ path('app_tableau_de_bord_candidat_reseaux_professionnelles')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_reseaux_professionnelles' }}" aria-current="page">
           Réseaux professionnels
           </a>
         </li>
-        <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_se_faire_recommander')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_se_faire_recommander' ? 'underline' : '' }}" aria-current="page">
+        <li class="sub-nav-item {{ current_route == 'underline' : '' }}">
+          <a href="{{ path('app_tableau_de_bord_candidat_se_faire_recommander')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_se_faire_recommander' }}" aria-current="page">
           Se faire recommander
           </a>
         </li>
@@ -78,18 +78,18 @@
       <span class="sep-menu"></span> 
       <span class="nav-link sous-menu_"><img src="{{ asset('v2/images/dashboard/setting.svg')}}" alt="">Paramètres </span>
       <ul class="sub-nav-pills">
-        <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_mon_compte')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_mon_compte' ? 'underline' : '' }}" aria-current="page">
+        <li class="sub-nav-item {{ current_route == 'underline' : '' }}">
+          <a href="{{ path('app_tableau_de_bord_candidat_mon_compte')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_mon_compte' }}" aria-current="page">
           Mon compte
           </a>
         </li>
-        <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_mise_a_jour_mot_de_passe')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_mise_a_jour_mot_de_passe' ? 'underline' : '' }}" aria-current="page">
+        <li class="sub-nav-item {{ current_route == 'underline' : '' }}">
+          <a href="{{ path('app_tableau_de_bord_candidat_mise_a_jour_mot_de_passe')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_mise_a_jour_mot_de_passe' }}" aria-current="page">
           Modifier mon mot de passe
           </a>
         </li>
-        <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_assistance')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_assistance' ? 'underline' : '' }}" aria-current="page">
+        <li class="sub-nav-item {{ current_route == 'underline' : '' }}">
+          <a href="{{ path('app_tableau_de_bord_candidat_assistance')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_assistance' }}" aria-current="page">
           Besoin d'assistance ?
           </a>
         </li>

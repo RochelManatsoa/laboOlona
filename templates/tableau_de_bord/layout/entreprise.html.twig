@@ -1,0 +1,88 @@
+
+{% set current_route = app.request.attributes.get('_route') %}
+<div class="sidebar-area bg-white">
+	<div class="logo-brand d-flex justify-content-between align-items-center">
+	<a class="navbar-brand" href="{{ path('app_home') }}">
+		<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="150" height="56" class="" alt="Logo">
+	</a>
+	<button id="menuIcon" class="menu-icon" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" aria-expanded="false" aria-label="Toggle navigation">
+		<span></span>
+        <span></span>
+        <span></span>
+	</button>
+	</div>
+  <div class="scroll-container">
+    <ul class="nav nav-pills flex-column mb-auto mt-5 pt-3">
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/dashboard.svg')}}" alt="">Tableau de bord  
+      </a>
+    </li>
+    {#nouveau menu statique#}
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_entreprise_cvtheque' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/cvtheque.svg')}}" alt="" width="23" height="23">Acceder à la CVthèque
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise_offre_emploi')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_offre_emploi' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/gerer.svg')}}" alt="" width="23" height="23">Offre d'emploi
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise_listes_candidatures')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_listes_candidatures' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/search-people.svg')}}" alt="" width="23" height="23">Listes candidatures
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise_favoris')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_favoris' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/favoris.svg')}}" alt="" width="23" height="23">Favoris<span class="link-bulle">2</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise_publier_une_annonce')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_publier_une_annonce' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/announcement.svg')}}" alt="" width="23" height="23">Publier une annonce
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_tarifs' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/tarif.svg')}}" alt="" width="23" height="23">Tarifs
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise_notification')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_notification' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt="">Notifications<span class="link-bulle">2</span>
+      </a>
+    </li>
+    <li class="nav-item click-sub">
+      <span class="sep-menu"></span> 
+      <span class="nav-link sous-menu_"><img src="{{ asset('v2/images/dashboard/setting.svg')}}" alt="">Paramètres </span>
+      <ul class="sub-nav-pills">
+        <li class="sub-nav-item">
+          <a href="{{ path('app_tableau_de_bord_entreprise_mon_compte')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_entreprise_mon_compte' ? 'underline' : '' }}" aria-current="page">
+          Mon compte
+          </a>
+        </li>
+        <li class="sub-nav-item">
+          <a href="{{ path('app_tableau_de_bord_entreprise_mise_a_jour_mot_de_passe')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_entreprise_mise_a_jour_mot_de_passe' ? 'underline' : '' }}" aria-current="page">
+          Modifier mon mot de passe
+          </a>
+        </li>
+        <li class="sub-nav-item">
+          <a href="{{ path('app_tableau_de_bord_entreprise_assistance')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_entreprise_assistance' ? 'underline' : '' }}" aria-current="page">
+          Besoin d'assistance ?
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <span class="sep-menu"></span> 
+      <a href="{{ path('app_logout')}}" class="nav-link">
+      <img src="{{ asset('v2/images/dashboard/logout.svg')}}" alt="">Se déconnecter
+      </a>
+    </li>
+    </ul>
+  </div>
+</div>
+</div>
+<div class="db-content d-flex flex-column">
