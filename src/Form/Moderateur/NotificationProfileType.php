@@ -20,7 +20,7 @@ class NotificationProfileType extends AbstractType
                 'required' => false ,
                 'attr' => [
                     'rows' => 6,
-                    'class' => 'ckeditor-textarea'
+                    // 'class' => 'ckeditor-textarea'
                 ]
             ])
             // ->add('type')

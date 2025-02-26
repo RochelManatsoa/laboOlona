@@ -35,7 +35,8 @@ class MailerService
         string $subject,
         string $template,
         array $context,
-        string $from = ''
+        string $from = '',
+        string $replyTo = '',
     ): void
     {
         $email = new TemplatedEmail();
@@ -50,13 +51,15 @@ class MailerService
             $email->addTo('miandrisoa.olona@gmail.com');
             $email->addTo('contact@olona-talents.com');
         }
-        $email 
-            ->from(new Address($sender, $env))
-            ->replyTo('contact@olona-talents.com')
+        $email->from(new Address($sender, $env));
+        if ($replyTo !== '') {
+            $email->replyTo($replyTo);
+        }
+        $email->replyTo('contact@olona-talents.com')
             ->subject($subject)
             ->htmlTemplate("mails/$template")
             ->context($context)
-            ;
+        ;
 
         try{
 
