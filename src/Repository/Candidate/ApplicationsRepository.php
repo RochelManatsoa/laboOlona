@@ -3,8 +3,10 @@
 namespace App\Repository\Candidate;
 
 use App\Entity\Candidate\Applications;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Applications>
@@ -16,7 +18,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ApplicationsRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, Applications::class);
     }
@@ -38,6 +40,24 @@ class ApplicationsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function findByEntrepriseProfile(int $page, int $entrepriseId): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('a')
+            ->join('a.annonce', 'j')
+            ->join('j.entreprise', 'e')
+            ->where('e.id = :entrepriseId')
+            ->setParameter('entrepriseId', $entrepriseId)
+            ->orderBy('a.dateCandidature', 'DESC');
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            10,
+            []
+        );
+    }
+
 
 //    /**
 //     * @return Applications[] Returns an array of Applications objects

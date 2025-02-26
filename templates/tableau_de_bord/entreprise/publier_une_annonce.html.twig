@@ -1,0 +1,42 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <h5 class="mb-0"> Entreprise </h5>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> publier une annonce </li>
+            </ol>
+        </div>
+    </section>
+    <section class="recruteur-container">
+        <div class="recruteur-block d-block p-5 mb-4">
+            <div class="recruteur-top-item">
+                <h1>Publier une annonce</h1>
+                {{form(form) }}
+            </div>
+        </div>
+        <div class="recruteur-block box-recrutement_ p-5 pb-3">
+            <div class="recruteur-item d-md-flex justify-content-between align-items-center">
+                <div>
+                    <h2>Prêt à recruter ?</h2>
+                    <p>Sélectionnez l'offre qui correspond à vos besoins.</p>
+                </div>
+                <div class="recruteur-btn">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="d-inline-block position-relative btn btn-pdp" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">Commencer maintenant</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

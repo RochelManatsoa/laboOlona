@@ -43,18 +43,20 @@
 								<a href="{{ path('app_tableau_de_bord_candidat_messages', {'isRead':'0'}) }}" class="position-relative">
 									<img src="{{ asset('v2/images/dashboard/discussions.svg')}}" alt="">
 									<span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
-									{{ component('count_notification_component')}}
+									<span class="badge bagde-circle text-bg-danger">0</span>
 									<span class="visually-hidden">unread messages</span>
 									</span>
 								</a>
 								<a href="{{ path('app_v2_dashboard_notification', {'isRead':'0'}) }}" class="position-relative">
 									<img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt="">
 									<span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
-									{{ component('count_notification_component')}}
+									<span class="badge bagde-circle text-bg-danger">{{ notificationsCount }}</span>
 									<span class="visually-hidden">unread messages</span>
 									</span>
 								</a>
-								{{ component('credit_user_component') }}
+								<div class="small my-auto text-center block-credit">
+									Mes crédits <span class="fw-bold" id="current-user-credit">{{ credit }}</span>
+								</div>
 								<div class="dropdown">
 									<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
 										{% if app.user.gravatar is not null %}
