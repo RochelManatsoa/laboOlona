@@ -47,16 +47,16 @@ class MailerService
         } else {
             $env = '[Preprod] Olona Talents';
             $email->to('support@olona-talents.com'); 
-            $email->addTo('jrandriamalala.olona@gmail.com');
             $email->addTo('miandrisoa.olona@gmail.com');
             $email->addTo('contact@olona-talents.com');
         }
         $email->from(new Address($sender, $env));
         if ($replyTo !== '') {
             $email->replyTo($replyTo);
+        }else{
+            $email->replyTo('contact@olona-talents.com');
         }
-        $email->replyTo('contact@olona-talents.com')
-            ->subject($subject)
+        $email->subject($subject)
             ->htmlTemplate("mails/$template")
             ->context($context)
         ;
@@ -87,7 +87,6 @@ class MailerService
         } else {
             $env = '[Preprod] Olona Talents';
             $email->to('support@olona-talents.com'); 
-            $email->addTo('jrandriamalala.olona@gmail.com');
             $email->addTo('contact@olona-talents.com');
             $email->addTo('miandrisoa.olona@gmail.com');
         }
