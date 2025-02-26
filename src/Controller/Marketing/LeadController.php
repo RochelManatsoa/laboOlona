@@ -4,6 +4,7 @@ namespace App\Controller\Marketing;
 
 use App\Entity\User;
 use App\Entity\Notification;
+use App\Entity\TemplateEmail;
 use App\Entity\Marketing\Lead;
 use App\Form\Marketing\LeadType;
 use App\Service\User\UserService;
@@ -151,7 +152,9 @@ class LeadController extends AbstractController
                     'user' => $lead->getUser(),
                     'contenu' => $notification->getContenu(),
                     'dashboard_url' => $this->urlGenerator->generate('app_dashboard_candidat_compte', [], UrlGeneratorInterface::ABSOLUTE_URL),
-                ]
+                ],
+                'partenaires@olona-talents.com',
+                'partenaires@olona-talents.com',
             );
             $this->addFlash('success', 'Un email a été envoyé au candidat');
 
@@ -160,6 +163,7 @@ class LeadController extends AbstractController
         return $this->render('marketing/lead/email.html.twig', [
             'lead' => $lead,
             'form' => $form->createView(),
+            'templateEmails' => $entityManager->getRepository(TemplateEmail::class)->findAll(),
             'notifications' => $entityManager->getRepository(Notification::class)->findBy([
                 'destinataire' => $lead->getUser()
             ], ['id' => 'DESC']),
