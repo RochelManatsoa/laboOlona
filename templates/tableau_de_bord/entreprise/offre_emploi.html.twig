@@ -22,19 +22,110 @@
     </section>
     <section class="recruteur-container">
         <div class="recruteur-block d-block p-5 mb-4">
-            <div class="recruteur-top-item">
-                <h1>Mes offres d'emploi</h1>
-                {{ dump(offres) }}
-            </div>
-        </div>
-        <div class="recruteur-block box-recrutement_ p-5 pb-3">
-            <div class="recruteur-item d-md-flex justify-content-between align-items-center">
+            <div class="offre-emploi-item d-flex align-items-center justify-content-between">
                 <div>
-                    <h2>Prêt à recruter ?</h2>
-                    <p>Sélectionnez l'offre qui correspond à vos besoins.</p>
+                    <h1>Liste des offres d'emploi</h1>
+                    <p>Vous avez 3 offres d'emploi encore ouvert</p>
                 </div>
-                <div class="recruteur-btn">
-                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="d-inline-block position-relative btn btn-pdp" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">Commencer maintenant</a>
+                <a href="{{ path('app_tableau_de_bord_entreprise_publier_une_annonce')}}" class="btn btn-primary">Créer une annonce</a>
+                {#{ dump(offres) }#}
+            </div>
+            <div class="offre-emploi-list">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <article class="article-item_">
+                            <div class="row">
+                                <div class="col-md-2 aside-left-item_">
+                                    <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                                </div>
+                                <div class="col-md-10 aside-right-item_">
+                                    <div class="detail_annonce_">
+                                        <h2><a href="" class="btn-primary">Chargé de la relation client/fournisseurs</a></h2>
+                                        <h3><a href="" class="btn-primary">SOCIETE</a></h3>
+                                        <div class="type_contact_">Contrat CDI</div>
+                                        <div class="description_courte_">
+                                            Je rends concret ce qui a été vendu par votre service commercial ou le business developer. En parallèle, je suis un observatoire pour votre service marketing. Le cœur de mon métier consiste à gérer la communication avec vos clients et/ou fournisseurs. L'objectif est de créer un climat de confiance et bénéficier d'une publicité hyper efficace via le bouche-à-oreille.
+                                        </div>
+                                        <div class="info_publication_">
+                                            <span class="small fw-light">
+                                                <span class="badge rounded-pill px-2 text-bg-danger">Validée</span>
+                                                <span class="badge rounded-pill px-2 text-bg-success">Ouvert</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <span class="">Publié
+                                                    il y a 2 semaines</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-eye"></i> 11 vues
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="mx-2 bi bi-person-workspace"></i> DISTANCE
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="article-item_">
+                            <div class="row">
+                                <div class="col-md-2 aside-left-item_">
+                                    <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                                </div>
+                                <div class="col-md-10 aside-right-item_">
+                                    <div class="detail_annonce_">
+                                        <h2><a href="" class="btn-primary">Chargé de la relation client/fournisseurs</a></h2>
+                                        <h3><a href="" class="btn-primary">SOCIETE</a></h3>
+                                        <div class="type_contact_">Contrat CDI</div>
+                                        <div class="description_courte_">
+                                            Je rends concret ce qui a été vendu par votre service commercial ou le business developer. En parallèle, je suis un observatoire pour votre service marketing. Le cœur de mon métier consiste à gérer la communication avec vos clients et/ou fournisseurs. L'objectif est de créer un climat de confiance et bénéficier d'une publicité hyper efficace via le bouche-à-oreille.
+                                        </div>
+                                        <div class="info_publication_">
+                                            <span class="small fw-light">
+                                                <span class="badge rounded-pill px-2 text-bg-danger">Validée</span>
+                                                <span class="badge rounded-pill px-2 text-bg-success">Ouvert</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <span class="">Publié
+                                                    il y a 2 semaines</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-eye"></i> 11 vues
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="mx-2 bi bi-person-workspace"></i> DISTANCE
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="article-item_">
+                            <div class="row">
+                                <div class="col-md-2 aside-left-item_">
+                                    <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                                </div>
+                                <div class="col-md-10 aside-right-item_">
+                                    <div class="detail_annonce_">
+                                        <h2><a href="" class="btn-primary">Chargé de la relation client/fournisseurs</a></h2>
+                                        <h3><a href="" class="btn-primary">SOCIETE</a></h3>
+                                        <div class="type_contact_">Contrat CDI</div>
+                                        <div class="description_courte_">
+                                            Je rends concret ce qui a été vendu par votre service commercial ou le business developer. En parallèle, je suis un observatoire pour votre service marketing. Le cœur de mon métier consiste à gérer la communication avec vos clients et/ou fournisseurs. L'objectif est de créer un climat de confiance et bénéficier d'une publicité hyper efficace via le bouche-à-oreille.
+                                        </div>
+                                        <div class="info_publication_">
+                                            <span class="small fw-light">
+                                                <span class="badge rounded-pill px-2 text-bg-danger">Validée</span>
+                                                <span class="badge rounded-pill px-2 text-bg-success">Ouvert</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <span class="">Publié
+                                                    il y a 2 semaines</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-eye"></i> 11 vues
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="mx-2 bi bi-person-workspace"></i> DISTANCE
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="col-lg-4">
+                    </div>
                 </div>
             </div>
         </div>

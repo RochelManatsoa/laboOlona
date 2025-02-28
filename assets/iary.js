@@ -1,3 +1,5 @@
+import { Popover } from 'bootstrap';
+
 $(function() {
     document.addEventListener('turbo:load', handlePageLoad);
 });
@@ -7,4 +9,5 @@ function handlePageLoad() {
         $(this).toggleClass('visible');
         $(this).siblings('.sub-nav-pills').toggle()
     });
+    
 }

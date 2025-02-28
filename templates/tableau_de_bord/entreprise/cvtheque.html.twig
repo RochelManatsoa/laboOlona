@@ -196,7 +196,7 @@
                                         Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
                                     </div>
                                     <div class="infos-footer d-flex align-items-center">
-                                        <a class="btn btn-outline" href="">Voir son profil</a>
+                                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat')}}">Voir son profil</a>
                                         <a class="btn" href="">Consulter son CV directement</a>
                                     </div>
                                 </div>
@@ -213,7 +213,7 @@
                                         <div class="candidate-info-content">
                                             <h2>Nom & prénoms</h2>
                                             <div class="featured d-md-flex align-items-center">Marketing <span class="certificated">Certifié</span></div>
-                                            <button class="favoris-add active"><i class="bi bi-star"></i></span>
+                                            <button class="favoris-add active"><i class="bi bi-star"></i></button>
                                         </div>
                                     </div>
                                     <div class="infos-middle d-flex align-items-center">
@@ -224,7 +224,7 @@
                                         Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
                                     </div>
                                     <div class="infos-footer d-flex align-items-center">
-                                        <a class="btn btn-outline" href="">Voir son profil</a>
+                                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat')}}">Voir son profil</a>
                                         <a class="btn" href="">Consulter son CV directement</a>
                                     </div>
                                 </div>
@@ -239,9 +239,16 @@
                                             <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
                                         </div>
                                         <div class="candidate-info-content">
-                                            <h2>Nom & prénoms <span class="diamond_" data-toggle="popover" data-content="Profil le plus visité"><img src="{{ asset('v2/images/dashboard/diamond_icon.svg')}}" alt=""></span></h2>
+                                            <h2>Nom & prénoms 
+                                                <span class="diamond_">
+                                                    <img src="{{ asset('v2/images/dashboard/diamond_icon.svg')}}" alt="">
+                                                    <div class="popover">
+                                                        <div class="popover-content">Profil le plus visité</div>
+                                                    </div>
+                                                </span>
+                                            </h2>
                                             <div class="featured d-md-flex align-items-center">Marketing <span class="certificated">Certifié</span></div>
-                                            <button class="favoris-add active"><i class="bi bi-star"></i></span>
+                                            <button class="favoris-add active"><i class="bi bi-star"></i></button>
                                         </div>
                                     </div>
                                     <div class="infos-middle d-flex align-items-center">
@@ -252,7 +259,7 @@
                                         Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
                                     </div>
                                     <div class="infos-footer d-flex align-items-center">
-                                        <a class="btn btn-outline" href="">Voir son profil</a>
+                                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat')}}">Voir son profil</a>
                                         <a class="btn" href="">Consulter son CV directement</a>
                                     </div>
                                 </div>

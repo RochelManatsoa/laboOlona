@@ -52,6 +52,18 @@
                         <div class="TitreBlock">
                             {{ candidat.titre }}
                         </div>
+                        <div class="rating_block d-flex align-items-center">
+                            <div class="rating">
+                                <span data-value="1" class="selected">&#9733;</span>
+                                <span data-value="2" class="selected">&#9733;</span>
+                                <span data-value="3" class="selected">&#9733;</span>
+                                <span data-value="4">&#9733;</span>
+                                <span data-value="5">&#9733;</span>
+                            </div>
+                            <div class="rating_avis">
+                                <a href="{{ path('app_tableau_de_bord_candidat_se_faire_recommander')}}">5 avis</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="btn-profils">

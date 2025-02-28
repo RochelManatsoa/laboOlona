@@ -10,31 +10,74 @@
 
     <section class="">
         <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
-            <h5 class="mb-0"> Entreprise </h5>
+            <h5 class="mb-0"> Profil favoris </h5>
             <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
                 <li class="breadcrumb-item position-relative">
                     <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
                     <i class="ri-home-8-line"></i> Tableau de bord </a>
                 </li>
-                <li class="breadcrumb-item position-relative"> entreprise </li>
+                <li class="breadcrumb-item position-relative"> favoris </li>
             </ol>
         </div>
     </section>
     <section class="recruteur-container">
         <div class="recruteur-block d-block p-5 mb-4">
-            <div class="recruteur-top-item">
-                <h1>Mes favoris</h1>
-                {{ dump(favoris) }}
+            <div class="favoris-list-item mb-4">
+                <h1>Liste des favoris</h1>
+                {#{ dump(favoris) }#}
             </div>
-        </div>
-        <div class="recruteur-block box-recrutement_ p-5 pb-3">
-            <div class="recruteur-item d-md-flex justify-content-between align-items-center">
-                <div>
-                    <h2>Prêt à recruter ?</h2>
-                    <p>Sélectionnez l'offre qui correspond à vos besoins.</p>
+            <div class="biographie-profil-list">
+                <div class="profil-list-item d-md-flex align-items-center justify-content-between">
+                    <div class="profil-list-name d-flex align-items-center">
+                        <span class="profil-photo_"><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                        <div class="profil-info_">
+                            Nom & prénoms
+                            <span class="profil-titire_">Marketing</span>
+                        </div>
+                    </div>
+                    <div class="profil-list-link d-flex align-items-center">
+                        <button class="favoris-add active"><i class="bi bi-star"></i></button>
+                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat')}}">Voir son profil</a>
+                    </div>
                 </div>
-                <div class="recruteur-btn">
-                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="d-inline-block position-relative btn btn-pdp" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">Commencer maintenant</a>
+                <div class="profil-list-item d-md-flex align-items-center justify-content-between">
+                    <div class="profil-list-name d-flex align-items-center">
+                        <span class="profil-photo_"><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                        <div class="profil-info_">
+                            Nom & prénoms
+                            <span class="profil-titire_">Marketing</span>
+                        </div>
+                    </div>
+                    <div class="profil-list-link d-flex align-items-center">
+                        <button class="favoris-add active"><i class="bi bi-star"></i></button>
+                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat')}}">Voir son profil</a>
+                    </div>
+                </div>
+                <div class="profil-list-item d-md-flex align-items-center justify-content-between">
+                    <div class="profil-list-name d-flex align-items-center">
+                        <span class="profil-photo_"><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                        <div class="profil-info_">
+                            Nom & prénoms
+                            <span class="profil-titire_">Marketing</span>
+                        </div>
+                    </div>
+                    <div class="profil-list-link d-flex align-items-center">
+                        <button class="favoris-add active"><i class="bi bi-star"></i></button>
+                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat')}}">Voir son profil</a>
+                    </div>
+                </div>
+                <div class="profil-list-item d-md-flex align-items-center justify-content-between">
+                    <div class="profil-list-name d-flex align-items-center">
+                        <span class="profil-photo_"><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                        <div class="profil-info_">
+                            Nom & prénoms
+                            <span class="profil-titire_">Marketing</span>
+                        </div>
+                    </div>
+                    <div class="profil-list-link d-flex align-items-center">
+                        <button class="favoris-add active"><i class="bi bi-star"></i></button>
+                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat')}}">Voir son profil</a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -23,7 +23,7 @@
     <section class="recruteur-container">
         <div class="recruteur-block recruteur-block-bg p-5 pb-3 mb-4">
             <div class="recruteur-top-item">
-                <h1>Trouvez et recrutez les bons candidats</h1>
+                <h1>Trouvez et recrutez les bons entreprises</h1>
                 <ul>
                     <li>Trouvez les profis clés pour votre entreprise.</li>
                     <li>Boostez votre offre et touchez les meilleurs talents.</li>
@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <div class="recruteur-block box-recrutement_ p-5 pb-3">
+        <div class="recruteur-block box-recrutement_ p-5 pb-3 mb-4">
             <div class="recruteur-item d-md-flex justify-content-between align-items-center">
                 <div>
                     <h2>Prêt à recruter ?</h2>
@@ -43,6 +43,196 @@
                 </div>
                 <div class="recruteur-btn">
                     <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="d-inline-block position-relative btn btn-pdp" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">Commencer maintenant</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="detail_db d-md-flex bp_">
+        <div class="detail_left">
+            <div class="biographie-profil mb-4 p-4 ">
+                <div class="resume_profil text-center">
+                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ entreprise.fileName ? asset('uploads/compagnies/' ~ entreprise.fileName) : asset('uploads/experts/company-default.jpg') }}');" alt="Avatar"></div>
+                    <div class="name_ fw-bold">
+                        <span class="fs-5 mb-1 fw-bold lh-base st-title">{{ app.user.nom }} {{ app.user.prenom }}</span> 
+                    </div>
+                    <div class="title_resume">{{ entreprise.description|raw}}</div>
+                    <div class="block-rating"></div>
+                    <p>Molestie tincidunt ut consequat a urna tortor. Vitae velit ac nisl velit mauris placerat nisi placerat. Pellentesque viverra lorem malesuada nunc tristique sapien. Imperdiet sit hendrerit tincidunt bibendum donec adipiscing.</p>
+                    <br/>
+                    <span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
+                    <div class="link-social">
+                        <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a>
+                        <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/linkedin.svg')}}" alt=""></a>
+                        <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/mail_icon.svg')}}" alt=""></a>
+                    </div>
+                </div>
+            </div>
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 mb-3 fw-bold lh-base st-title">Informations générales</span>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Nom de l'entreprise</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ entreprise.nom }}
+                    </div>
+                </div>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Site web</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ entreprise.siteweb }}
+                    </div>
+                </div>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Taille de l'entreprise</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ tailleEntreprise(entreprise.taille) }}		
+                    </div>
+                </div>	
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Adresse email</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ entreprise.entreprise.email }}
+                    </div>
+                </div>	
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Numéro de téléphone</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ entreprise.entreprise.telephone }}
+                    </div>
+                </div>	
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Référence</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ generateReference(entreprise) }}
+                    </div>
+                </div>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Localisation</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ entreprise.localisation|countryName }}
+                    </div>
+                </div>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Secteur(s) d'activité</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {% for item in entreprise.secteurs %}
+                        <span class="badge rounded-pill bg-primary">
+                            {{ item.nom }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="detail_right">
+            <section class="visibility_p d-md-flex bp_">
+                <div class="biographie-profil mb-4 p-4 vu_">
+                    <strong>Annonces créées</strong>
+                    <div class="d-flex align-items-center">
+                        <span><img src="{{ asset('v2/images/dashboard/vu-eye.svg')}}" alt=""></span>
+                        {{ entreprise.jobListings|length }}
+                    </div>
+                </div>
+                <div class="biographie-profil mb-4 p-4 mission_">
+                    <strong>Prestations créées</strong>
+                    <div class="d-flex align-items-center">
+                        <span><img src="{{ asset('v2/images/dashboard/mission-obtenu.svg')}}" alt=""></span>
+                        {{ entreprise.prestations|length }}
+                    </div>
+                </div>
+                <div class="biographie-profil mb-4 p-4 apparition_">
+                    <strong>Profiles retenus</strong>
+                    <div class="d-flex align-items-center">
+                    <span><img src="{{ asset('v2/images/dashboard/search-icon.svg')}}" alt=""></span>10
+                    </div>
+                </div>
+            </section>
+            {# Espace accès à l'espace pub pour les entreprise  #}
+            <div class="biographie-profil espace-pubs mb-4 p-4">
+                <div class="d-md-flex align-items-center justify-content-between">
+                    <div class="item-espace-pub">
+                        <h2>Démarquez-vous des autres recruteurs !</h2>
+                        <p>Votre visibilité est importante pour trouver la perle rare.</p>
+                        <a routerlink="" class="d-inline-block position-relative btn  btn-primary btn-outline" href="">Commencer maintenant</a>
+                    </div>
+                    <div class="item-espace-pub img-espace-pub"><img src="{{ asset('images/dashboard/espace_pubs.webp')}}" alt="" width="360" height="184"></div>
+                </div>
+            </div>
+            {# End Espace accès à l'espace pub pour les entreprise  #}
+
+            <div class="biographie-profil mb-4 p-4">
+                <div class="biographie-profil-title mb-4">
+                    <h3>CVthèque</h3>
+                    <div class="d-md-flex justify-content-between">
+                        <span class="fs-5 mb-3 fw-bold lh-base st-title">Deniers profiles consultés</span>
+                        {% set last_query = app.request.query.get('q', '') %}
+                        <div class="db-search">
+                            {% if action is defined %}
+                                <form action="{{ action }}" class="input-group rounded-pill w-100">
+                                    <button class="btn" type="submit"><i class="bi bi-search"></i></button>
+                                    <input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+                                </form>
+                            {% else %}
+                                <form action="{{ path('app_olona_talents_candidates') }}" class="input-group rounded-pill w-100">
+                                    <button class="btn" type="submit"><i class="bi bi-search"></i></button>
+                                    <input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="biographie-profil-list">
+                    <div class="profil-list-item d-md-flex align-items-center justify-content-between">
+                        <div class="profil-list-name d-flex align-items-center">
+                            <span class="profil-photo_"><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                            <div class="profil-info_">
+                                Nom & prénoms
+                                <span class="profil-titire_">Marketing</span>
+                            </div>
+                        </div>
+                        <div class="profil-list-link d-flex align-items-center">
+                            <button class="favoris-add"><i class="bi bi-star"></i></button>
+                            <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat')}}">Voir son profil</a>
+                        </div>
+                    </div>
+                    <div class="profil-list-item d-md-flex align-items-center justify-content-between">
+                        <div class="profil-list-name d-flex align-items-center">
+                            <span class="profil-photo_"><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                            <div class="profil-info_">
+                                Nom & prénoms
+                                <span class="profil-titire_">Marketing</span>
+                            </div>
+                        </div>
+                        <div class="profil-list-link d-flex align-items-center">
+                            <button class="favoris-add"><i class="bi bi-star"></i></button>
+                            <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat')}}">Voir son profil</a>
+                        </div>
+                    </div>
+                    <div class="profil-list-item d-md-flex align-items-center justify-content-between">
+                        <div class="profil-list-name d-flex align-items-center">
+                            <span class="profil-photo_"><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                            <div class="profil-info_">
+                                Nom & prénoms
+                                <span class="profil-titire_">Marketing</span>
+                            </div>
+                        </div>
+                        <div class="profil-list-link d-flex align-items-center">
+                            <button class="favoris-add"><i class="bi bi-star"></i></button>
+                            <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat')}}">Voir son profil</a>
+                        </div>
+                    </div>
+                    <div class="profil-list-item d-md-flex align-items-center justify-content-between">
+                        <div class="profil-list-name d-flex align-items-center">
+                            <span class="profil-photo_"><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                            <div class="profil-info_">
+                                Nom & prénoms
+                                <span class="profil-titire_">Marketing</span>
+                            </div>
+                        </div>
+                        <div class="profil-list-link d-flex align-items-center">
+                            <button class="favoris-add"><i class="bi bi-star"></i></button>
+                            <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat')}}">Voir son profil</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
