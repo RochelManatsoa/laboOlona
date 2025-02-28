@@ -45,6 +45,11 @@ class Experiences
     #[Groups(['identity'])]
     private ?\DateTimeInterface $dateFin = null;
 
+    public function __construct()
+    {
+        $this->dateDebut = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
