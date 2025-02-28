@@ -66,7 +66,7 @@
     </li>
     <li class="nav-item">
       <a href="{{ path('app_tableau_de_bord_candidat_notification')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_candidat_notification' ? 'underline' : '' }}" aria-current="page">
-      <img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt="">Notifications<span class="link-bulle">2</span>
+      <img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt="">Notifications<span class="link-bulle">{{ notificationsCount }}</span>
       </a>
     </li>
     <li class="nav-item">
