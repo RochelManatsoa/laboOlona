@@ -94,7 +94,7 @@ class EntrepriseController extends AbstractController
     {
         $page = $request->query->get('page', 1);
         $params = $this->getData();
-        $entreprise = $params['entreprise'];
+        $entreprise = $params['entreprise'];  
         $favoris = $this->em->getRepository(Favoris::class)->paginateFavoris($page, $entreprise);
         $params['favoris'] = $favoris;
 
