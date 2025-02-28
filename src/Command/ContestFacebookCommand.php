@@ -44,9 +44,9 @@ class ContestFacebookCommand extends Command
         $contestEntries = $this->contestEntryRepository->findEntryByStatus(ContestEntry::STATUS_SEND);
         $pendingContestEntries = $this->contestEntryRepository->findEntryByStatus(ContestEntry::STATUS_PENDING);
         
-        foreach ($contestEntries as $contestEntry) {
-            $this->processContestEntry($contestEntry, $io);
-        }
+        // foreach ($contestEntries as $contestEntry) {
+        //     $this->processContestEntry($contestEntry, $io);
+        // }
 
         foreach ($pendingContestEntries as $contestEntry) {
             $candidateProfile = $contestEntry->getCandidateProfile();
