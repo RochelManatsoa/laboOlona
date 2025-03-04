@@ -2,21 +2,22 @@
 
 namespace App\Controller\TableauDeBord;
 
-use App\Entity\Candidate\Applications;
-use App\Entity\Entreprise\Favoris;
-use App\Entity\Entreprise\JobListing;
-use App\Entity\Notification;
 use App\Entity\User;
-use App\Form\Entreprise\JobListingType;
+use App\Entity\Notification;
 use App\Manager\ProfileManager;
 use App\Service\ActivityLogger;
 use App\Service\User\UserService;
+use App\Entity\Entreprise\Favoris;
+use App\Entity\Entreprise\JobListing;
+use App\Entity\Candidate\Applications;
+use App\Form\Entreprise\JobListingType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Manager\BusinessModel\CreditManager;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\BusinessModel\PackageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 
 #[Route('/tableau-de-bord/entreprise')]
 
@@ -137,19 +138,34 @@ class EntrepriseController extends AbstractController
     #[Route('/mon-compte', name: 'app_tableau_de_bord_entreprise_mon_compte')]
     public function mycompte(): Response
     {
-        return $this->render('tableau_de_bord/candidat/mon_compte.html.twig', $this->getData());
+        return $this->render('tableau_de_bord/entreprise/mon_compte.html.twig', $this->getData());
     }
 
     #[Route('/mise-a-jour-mot-de-passe', name: 'app_tableau_de_bord_entreprise_mise_a_jour_mot_de_passe')]
     public function updatepassword(): Response
     {
-        return $this->render('tableau_de_bord/candidat/mise_a_jour_mot_de_passe.html.twig', $this->getData());
+        return $this->render('tableau_de_bord/entreprise/mise_a_jour_mot_de_passe.html.twig', $this->getData());
     }
 
     #[Route('/assistance', name: 'app_tableau_de_bord_entreprise_assistance')]
     public function assistance(): Response
     {
-        return $this->render('tableau_de_bord/candidat/assistance.html.twig', $this->getData());
+        return $this->render('tableau_de_bord/entreprise/assistance.html.twig', $this->getData());
+    }
+
+    #[Route('/credit', name: 'app_tableau_de_bord_entreprise_credit')]
+    public function credit(PackageRepository $packageRepository): Response
+    {
+        $params = $this->getData();
+        $params['packages'] = $packageRepository->findBy(['type' => 'CREDIT'], ['id' => 'DESC']);
+        
+        return $this->render('tableau_de_bord/entreprise/credit.html.twig', $params);
+    }
+
+    #[Route('/boost', name: 'app_tableau_de_bord_entreprise_boost')]
+    public function boost(): Response
+    {
+        return $this->render('tableau_de_bord/entreprise/boost.html.twig', $this->getData());
     }
 
     private function getData()

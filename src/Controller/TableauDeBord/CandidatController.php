@@ -8,6 +8,7 @@ use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use App\Entity\Entreprise\JobListing;
+use App\Repository\BusinessModel\PackageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -141,6 +142,21 @@ class CandidatController extends AbstractController
     public function assistance(): Response
     {
         return $this->render('tableau_de_bord/candidat/assistance.html.twig', $this->getData());
+    }
+
+    #[Route('/credit', name: 'app_tableau_de_bord_candidat_credit')]
+    public function credit(PackageRepository $packageRepository): Response
+    {
+        $params = $this->getData();
+        $params['packages'] = $packageRepository->findBy(['type' => 'CREDIT'], ['id' => 'DESC']);
+        
+        return $this->render('tableau_de_bord/candidat/credit.html.twig', $params);
+    }
+
+    #[Route('/boost', name: 'app_tableau_de_bord_candidat_boost')]
+    public function boost(): Response
+    {
+        return $this->render('tableau_de_bord/candidat/boost.html.twig', $this->getData());
     }
 
     private function getData()
