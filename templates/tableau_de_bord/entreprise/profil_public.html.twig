@@ -1,0 +1,119 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <h5 class="mb-0"> Entreprise </h5>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> Profil public </li>
+            </ol>
+        </div>
+        <section class="warning_freemium mb-4 d-flex align-items-center">
+            <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+            <div class="warning-block">
+                Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="" class="btn-primary" href="">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
+            </div>
+        </section>
+        <div class="profil-banner mb-4">
+            <div class="couverture-banner-bg"></div>
+            <div class="left-infos-profils d-md-flex justify-content-between">
+                <div class="infos-profils d-md-flex justify-content-between">
+                    <div class="img-profils">
+                        <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ entreprise.fileName ? asset('uploads/experts/' ~ entreprise.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
+                    </div>
+                    <div class="detail-profils">
+                        <div class="nomBlock d-md-flex align-items-center">
+                            <div class="Noms__">{{ entreprise.nom }}</div>
+                        </div>
+                        <div class="TitreBlock">
+                            {{ entreprise.siteweb }}
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-profils">
+                    <a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="">Partager mon entreprise</a>
+                    {#<a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="">Voir mon CV</a>#}
+                </div>
+            </div>	
+        </div>	
+        <div class="biographie-profil mb-4 p-4">
+            <span class="fs-5 mb-3 fw-bold lh-base st-title">A propos de {{ entreprise.nom }}</span>
+            {{ entreprise.description|raw}}
+            <br/>
+            <br/>
+            <span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
+            <div class="link-social">
+                <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a>
+                <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/linkedin.svg')}}" alt=""></a>
+                <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/mail_icon.svg')}}" alt=""></a>
+            </div>
+        </div>
+        <div class="biographie-profil mb-4 p-4">
+            <span class="fs-5 mb-3 fw-bold lh-base st-title">Informations générales</span>
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Nom de l'entreprise</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ entreprise.nom }}
+                </div>
+            </div>
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Site web</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ entreprise.siteweb }}
+                </div>
+            </div>
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Taille de l'entreprise</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ tailleEntreprise(entreprise.taille) }}		
+                </div>
+            </div>	
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Adresse email</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ entreprise.entreprise.email }}
+                </div>
+            </div>	
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Numéro de téléphone</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ entreprise.entreprise.telephone }}
+                </div>
+            </div>	
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Référence</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ generateReference(entreprise) }}
+                </div>
+            </div>
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Localisation</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ entreprise.localisation|countryName }}
+                </div>
+            </div>
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Secteur(s) d'activité</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {% for item in entreprise.secteurs %}
+                    <span class="badge rounded-pill bg-primary">
+                        {{ item.nom }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

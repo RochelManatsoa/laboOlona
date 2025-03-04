@@ -111,6 +111,16 @@ class EntrepriseController extends AbstractController
     {
         return $this->render('tableau_de_bord/entreprise/profil_candidat.html.twig', $this->getData());
     }
+    #[Route('/annuaire-de-services', name: 'app_tableau_de_bord_entreprise_annuaire_de_services')]
+    public function annuaire(): Response
+    {
+        return $this->render('tableau_de_bord/entreprise/annuaire_de_services.html.twig', $this->getData());
+    }
+    #[Route('/profil-public', name: 'app_tableau_de_bord_entreprise_profil_public')]
+    public function profilpublic(): Response
+    {
+        return $this->render('tableau_de_bord/entreprise/profil_public.html.twig', $this->getData());
+    }
 
     #[Route('/notification', name: 'app_tableau_de_bord_entreprise_notification')]
     public function notification(Request $request): Response

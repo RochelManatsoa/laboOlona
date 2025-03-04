@@ -1,4 +1,4 @@
-{% extends 'tableau_de_bord/base.html.twig' %}
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
 
 {% block title %}Tableau de bord{% endblock %}
 
@@ -23,8 +23,8 @@
     <section class="detail_db d-md-flex bp_">
         <div class="biographie-profil mb-4 p-4">
             <div class="mission-list-title">
-                <h1>Saisissez de nouvelles opportunités pour votre carrière</h1>
-                <p> Accédez aux offres d'emploi publiées par des entreprises dans votre secteur. Positionnez-vous sur des projets pertinents pour élargir vos compétences et collaborer avec de nouveaux partenaires. Explorez des possibilités qui peuvent dynamiser votre trajectoire professionnelle et ouvrir la porte à de nouvelles expériences enrichissantes.
+                <h1>Bienvenue dans votre Annuaire de services.</h1>
+                <p> Découvrez ou proposez des solutions professionnelles sur mesure. Boostez votre entreprise, avancez dans votre carrière et valorisez vos compétences. Trouvez le partenaire idéal pour votre réussite.
                 </p>
             </div>
             <div class="ils_recrutentBlock mb-4">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
             </div>
-            <div class="offre-emploi-list">
+            {#<div class="offre-emploi-list">
                 <div class="row">
                     <div class="col-lg-8">
                         {% for job in offres  %}
@@ -114,7 +114,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>#}
         </div>
     </section>
 {% endblock %}

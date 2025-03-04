@@ -1381,16 +1381,19 @@ span.certificated {
     color: black;
 }
 .offre-emploi-item,
-.notification-top-item {
+.notification-top-item,
+.mission-list-title {
     border-bottom: 1px solid #dddddd;
     padding-bottom: 2rem;
     margin-bottom: 3rem;
     h1 {
         color: #000;
+        font-size: 30px;
     }
     p {
         color: #21284b;
-        font-size: 20px;
+        font-size: 16px;
+        line-height: 24px;
     }
 }
 .article-item_ {
@@ -1406,28 +1409,31 @@ span.certificated {
     -ms-border-radius: 8px;
     -o-border-radius: 8px;
     margin-bottom: 30px; 
-    background-color: rgb(0 128 55 / 13%);
-    border: 1px solid rgb(0 128 55 / 19%);
-    -webkit-box-shadow: none;
-    box-shadow: none;
+    background-color: white;
+    border: 1px solid rgb(218, 219, 219);
+    
+    -webkit-box-shadow: 0 6px 15px 0 rgba(64, 79, 104, 0.05);
+    box-shadow: 0 6px 15px 0 rgba(64, 79, 104, 0.05);
     &:hover {
+        
         border-color: rgb(0 128 55 / 42%);
-        -webkit-box-shadow: 0 6px 15px 0 rgba(64, 79, 104, 0.05);
-        box-shadow: 0 6px 15px 0 rgba(64, 79, 104, 0.05);
+        background-color: rgb(0 128 55 / 13%);
+        /*border: 1px solid rgb(0 128 55 / 19%);*/
+        -webkit-box-shadow: none;
+        box-shadow: none;
     }
     .aside-left-item_ {
-        a {
-            display: block;
-            background-color: #f9f9f9;
+        .date_p {
+            display: flex;
+            background-color: #88cca4;
             width: 100px;
             height: 100px;
             border-radius: 100%;
-            overflow: hidden;
-            img {
-                width: 100%;
-                height: auto;
-                object-fit: cover;
-            }
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+            color: black;
+            line-height: 130%;
         }
     }
     h2,
@@ -1440,11 +1446,21 @@ span.certificated {
             font-size: 20px;
             text-transform: uppercase;
             text-decoration: none !important;
+            display: inline-block;
+            line-height: 130%;
         }
+    }
+    h2 {
+        max-width: 90%;
     }
     h3 {
         a {
             color: #008037 !important;
+        }
+        span {
+            font-size: 12px;
+            color: black;
+            margin-left: 22px;
         }
     }
     .description_courte_ {
@@ -1458,11 +1474,74 @@ span.certificated {
     }
 }
 .type_contact_ {
-    background: #f6872c;
+    background: #57379c;
     display: inline-block;
     padding: 1px 10px;
     line-height: 130%;
-    color: black;
+    color: white;
     border-radius: 25px;
-    font-weight: bold;
+}
+.ils_recrutentBlock {
+    padding: 1rem;
+    padding-top: 4rem;
+    border: 1px solid #54319b;
+    position: relative;
+    border-radius: 10px;
+    box-shadow: 4px 6px 0px 0px #54319b;
+    h2 {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        color: black;
+        background-color: white;
+        margin-top: -90px;
+        padding: 7px 35px;
+        border: 1px solid #54319b;
+    }
+    .inner-recruter {
+        gap: 20px;
+    }
+    .item-recruter-box {
+        flex: 1 1 1;
+        &:nth-child(2) {
+            flex: 2;
+        }
+        .recruter_box {
+            flex-wrap: wrap;
+            gap: 20px;
+            a {
+                display: flex;
+                width: 90px;
+                height: 90px;
+                background: #f7f7f7;
+                border-radius: 100%;
+                flex: 0 0 90px;
+                overflow: hidden;
+                border: 1px solid #ebebeb;
+                img {
+                    width: 100%;
+                    height: auto;
+                }
+            }
+        }
+    }
+}
+.warning_freemium {
+    background: #ffecdd;
+    border-radius: 10px;
+    border: 1px solid #f6872c;
+    color: #ff780a;
+    padding: .5rem 1rem;
+    .btn-primary {
+        background-color: transparent !important;
+        border: 0 !important;
+        text-decoration: underline !important;
+        font-weight: bold;
+    }
+    span {
+        max-width: 33px;
+        flex: 0 0 33px;
+        opacity: .5;
+        margin-right: 1rem;
+    }
 }

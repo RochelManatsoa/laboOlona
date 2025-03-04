@@ -30,6 +30,10 @@
       </a>
     </li>
     <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise_annuaire_de_services')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_entreprise_annuaire_de_services' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/missions.svg')}}" alt="">Annuaire de service</a>
+    </li>
+    <li class="nav-item">
       <a href="{{ path('app_tableau_de_bord_entreprise_listes_candidatures')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_listes_candidatures' ? 'underline' : '' }}" aria-current="page">
       <img src="{{ asset('v2/images/dashboard/search-people.svg')}}" alt="" width="23" height="23">Listes candidatures<span class="link-bulle">3</span>
       </a>
@@ -53,6 +57,10 @@
       <a href="{{ path('app_tableau_de_bord_entreprise_notification')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_notification' ? 'underline' : '' }}" aria-current="page">
       <img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt="">Notifications<span class="link-bulle">{{ notificationsCount }}</span>
       </a>
+    </li>
+    <li class="nav-item click-sub">
+      <span class="sep-menu"></span> 
+      <a href="{{ path('app_tableau_de_bord_entreprise_profil_public')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_profil_public' ? 'underline' : '' }}"><img src="{{ asset('v2/images/dashboard/profil.svg')}}" alt="">Profil Entreprise</a>
     </li>
     <li class="nav-item click-sub">
       <span class="sep-menu"></span> 
