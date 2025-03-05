@@ -1,7 +1,60 @@
 {% extends 'tableau_de_bord/base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Tableau de bord{% endblock %}
 
 {% block body %}
-
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <h5 class="mb-0"> Profile</h5>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Mes prestations </li>
+        </ol>
+    </div>
+</section>
+<section class="detail_db d-md-flex bp_">
+    <div class="biographie-profil mb-4 p-4">
+        <div class="mission-list-title">
+            <h1>Liste de mes prestations</h1>
+        </div>
+    </div>
+</section>
+{#% for prestation in prestations %}
+	<div class="card my-3 small px-5 py-4">
+		<div class="row">
+            <div class="col-1 me-3">
+                <div class="rounded-circle" style="
+                    width: 45px;
+                    height: 45px;
+                    background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}');
+                    background-size: cover;
+                    background-position: center;
+                ">
+                </div>
+            </div>
+            <div class="col">
+                <span class="fs-6">
+                    <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">
+                        {{ prestation.titre }}
+                    </a>
+                </span><br>
+                <span class="small fw-lighter">{{ getAuthor(prestation)}}</span>
+            </div>
+		</div>
+		<div class="small">
+			{{ prestation.openai|raw }}
+		</div>
+		<div class="d-flex ms-auto small my-2 me-2">
+			<a class="btn btn-sm btn-primary rounded-pill px-3 me-2 mt-2" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
+		</div>
+		<div class="">
+            <span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
+                <i class="bi bi-tags"></i> {{ prestation.secteurs.nom}}
+            </span>
+		</div>
+	</div>
+{% endfor %#}
 {% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <h5 class="mb-0"> Tarifs d'abonnement</h5>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> tarifs </li>
+            </ol>
+        </div>
+    </section>
+    <section class="tarfis-container d-block p-5 mb-4">
+        <div class="wrapper-abonnement-c">
+            <div class="title-abonnement-c">
+                <h1>Tarifs Olona talents</h1>
+                <p>Sélectionnez la solution qui correspond le mieux à vos objectifs pour renforcer votre visibilité.</p>
+            </div>
+            <div class="item-abonnement-c">
+                <div class="heading-abonnement d-md-flex">
+                    <div class="heading-abonnement-item heading-abonnement-item-c">
+                        <div class="item-block-c">
+                            <h3>Qu'est-ce que vous gagnez en choisissant d'être en premium ?</h3>
+                            <ul>
+                                <li>Sed fruatur sane hoc solacio atque hanc insignem</li>
+                                <li>Alii summum decus in carruchis solito altioribus</li>
+                                <li>Duplexque isdem diebus acciderat malum, quod et</li>
+                                <li>Haec et huius modi quaedam innumerabilia ultrix</li>
+                                <li>Primi igitur omnium statuuntur Epigonus et</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="heading-abonnement-item">
+                        <div class="heading-abonnement--item">
+                            <h2>Standard</h2>
+                            <p>Choisissez la solution si votre budget est limité</p>
+                            <div class="price_block">
+                                <span>A partir de</span>
+                                <div class="price_">0,00Ar <span>/jour</span></div>
+                            </div>
+                        </div>
+                        <div class="description-abonnement box-abonnement-standard">
+                            <ul>
+                                <li>Contrôle total de votre budget</li>
+                                <li>Gestion simplifiée des candidatures</li>
+                                <li>Solution optimisée pour les recruteurs individuels</li>
+                                <li>Gestion simplifiée des candidatures </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="heading-abonnement-item">
+                        <div class="heading-abonnement--item">
+                            <h2>Pro</h2>
+                            <p>Inclut l'accès à la CVthèque</p>
+                            <div class="price_block">
+                                <span>A partir de</span>
+                                <div class="price_">0,00Ar <span>/mois</span></div>
+                            </div>
+                        </div>
+                        <div class="description-abonnement box-abonnement-pro">
+                            <p>Notre formule d’abonnement mensuel vous propose des Crédits Pro pour publier autant d’annonces que vous le souhaitez et explorer notre base de données de profils qualifiés.</p>
+                            <p>Cette offre est sans engagement.</p>
+                        </div> 
+                    </div> 
+                </div>
+                <div class="box-abonnement-footer">
+                    <div class="item-other-include_ other-include_">
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Suivi des candidats</li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Accès multi-utilisateurs</li>
+                            <li><img src="{{ asset('images/dashboard/remove.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Accès à la CVthèque</li>
+                            <li><img src="{{ asset('images/dashboard/remove.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                    </div>
+                    <div class="btn-other-include_ d-md-flex">
+                        <div class="item-other-include_"></div>
+                        <div class="item-other-include_">
+                            <a class="btn btn-primary" href="">Choisir</a>
+                        </div>
+                        <div class="item-other-include_">
+                            <a class="btn btn-primary" href="">Choisir</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

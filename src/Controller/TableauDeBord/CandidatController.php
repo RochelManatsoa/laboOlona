@@ -55,6 +55,12 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/mon_profil.html.twig', $params);
     }
 
+    #[Route('/modification-profil', name: 'app_tableau_de_bord_candidat_modification_profil')]
+    public function modifprofil(): Response
+    {
+        return $this->render('tableau_de_bord/candidat/modification_profil.html.twig', $this->getData());
+    }
+    
     #[Route('/messages', name: 'app_tableau_de_bord_candidat_messages')]
     public function message(): Response
     {
@@ -120,12 +126,6 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/notification.html.twig', $this->getData());
     }
 
-    #[Route('/mes-taches', name: 'app_tableau_de_bord_candidat_mes_taches')]
-    public function taches(): Response
-    {
-        return $this->render('tableau_de_bord/candidat/mes_taches.html.twig', $this->getData());
-    }
-
     #[Route('/mon-compte', name: 'app_tableau_de_bord_candidat_mon_compte')]
     public function mycompte(): Response
     {
@@ -157,6 +157,11 @@ class CandidatController extends AbstractController
     public function boost(): Response
     {
         return $this->render('tableau_de_bord/candidat/boost.html.twig', $this->getData());
+    }
+    #[Route('/tarifs', name: 'app_tableau_de_bord_candidat_tarifs')]
+    public function tarifs(): Response
+    {
+        return $this->render('tableau_de_bord/candidat/tarifs.html.twig', $this->getData());
     }
 
     private function getData()

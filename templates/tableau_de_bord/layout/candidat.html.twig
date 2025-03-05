@@ -69,10 +69,20 @@
       <img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt="">Notifications<span class="link-bulle">{{ notificationsCount }}</span>
       </a>
     </li>
-    <li class="nav-item">
-      <a href="{{ path('app_tableau_de_bord_candidat_mes_taches')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_candidat_mes_taches' ? 'underline' : '' }}" aria-current="page">
-      <img src="{{ asset('v2/images/dashboard/taches.svg')}}" alt="">Mes tâches
-      </a>
+    <li class="nav-item click-sub">
+      <span class="nav-link sous-menu_"><img src="{{ asset('v2/images/dashboard/taches.svg')}}" alt="">Mes abonnements </span>
+      <ul class="sub-nav-pills">
+        <li class="sub-nav-item">
+          <a href="{{ path('app_tableau_de_bord_candidat_boost')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_boost' ? 'underline' : '' }}" aria-current="page">
+          Mode freemium
+          </a>
+        </li>
+        <li class="sub-nav-item">
+          <a href="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_tarifs' ? 'underline' : '' }}" aria-current="page">
+          Mode premium
+          </a>
+        </li>
+      </ul>
     </li>
     <li class="nav-item click-sub">
       <span class="sep-menu"></span> 

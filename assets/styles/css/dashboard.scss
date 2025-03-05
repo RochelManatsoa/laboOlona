@@ -389,6 +389,7 @@ body {
 }
 
 .btn_divers {
+    gap: 25px;
     .cv-pdf {
         flex: 2;
         border-radius: 10px;
@@ -410,6 +411,16 @@ body {
     .recharge-credit {
         background-color: #F0B621;
         color: #5C4305;
+        border-radius: 10px;
+
+        span {
+            text-transform: uppercase;
+            display: block;
+        }
+    }
+    .boost-profil {
+        background-color: #0E7AEE;
+        color: #ffffff;
         border-radius: 10px;
 
         span {
@@ -776,6 +787,12 @@ footer {
     }
     .advance-search-wrapper {
         margin-top: 35px;
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 24px;
+            color: black;
+        }
         .advance-search-wrapper-fields {
             padding-left: 10px;
             padding-right: 10px;
@@ -1544,4 +1561,9 @@ span.certificated {
         opacity: .5;
         margin-right: 1rem;
     }
+}
+span.vue_profil {
+    font-size: 12px;
+    color: #9f9f9f;
+    margin-left: 2rem;
 }

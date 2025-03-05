@@ -3,5 +3,68 @@
 {% block title %}Boost profil{% endblock %}
 
 {% block body %}
-
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <h5 class="mb-0"> Profile </h5>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Boost profil </li>
+        </ol>
+    </div>
+</section>
+<section class="tarfis-container d-block p-5 mb-4">
+    <div class="wrapper-abonnement-c">
+        <div class="title-abonnement-c">
+            <h1>Boostez votre Visibilité !</h1>
+            <p>Augmentez vos chances d'être vu par les recruteurs en boostant votre profil !<br/> Cela vous garantit une meilleure visibilité et une place prioritaire dans les résultats de recherche.</p>
+        </div>
+        <div class="item-boost">
+            <div class="boost-box boost-description">
+            </div>
+            {#<div id="annonce_boost_boost_{{ offres.id }}" class="boost-box boost-choice">
+                <div class="boost-choice-item form-check selected">
+                    <input type="radio" data-annonce="{{ offres.id }}" id="annonce_boost_boost_placeholder_{{ offres.id }}" name="annonce_boost[boost]" value="" >
+                    <label for="annonce_boost_boost_placeholder_{{ offres.id }}">Pas de boost</label>
+                </div>
+                <div class="boost-choice-item form-check">
+                    <input type="radio" data-annonce="{{ offres.id }}" id="annonce_boost_boost_8_{{ offres.id }}" name="annonce_boost[boost]" value="5" data-value="600">
+                    <label for="annonce_boost_boost_8_{{ offres.id }}">Boost 7 jours (600 crédits)</label>
+                </div>
+                <div class="boost-choice-item form-check">
+                    <input type="radio" data-annonce="{{ offres.id }}" id="annonce_boost_boost_7_{{ offres.id }}" name="annonce_boost[boost]" value="4" data-value="100">
+                    <label for="annonce_boost_boost_7_{{ offres.id }}">Boost 1 jour (100 crédits)</label>
+                </div>
+                
+                <div class="boost-choice-item form-check">
+                    <input type="radio" data-annonce="{{ offres.id }}" id="annonce_boost_boost_9_{{ offres.id }}" name="annonce_boost[boost]" value="6" data-value="1000">
+                    <label for="annonce_boost_boost_9_{{ offres.id }}">Boost 15 jours (1000 crédits)</label>
+                </div>
+                <div id="annonce_boost_boostFacebook_{{ offres.id }}" style="display:none;">
+                    <h4 class="text-center fw-bolder h5 mb-2">Augmentez votre influence sur Facebook</h4>
+                    <div class="radio-grid">
+                        <div class="form-check selected-facebook">
+                            <input type="radio" id="annonce_boost_boostFacebook_placeholder_{{ offres.id }}" name="annonce_boost[boostFacebook]" value="" >
+                            <label for="annonce_boost_boostFacebook_placeholder_{{ offres.id }}">Pas de boost <i class="bi bi-facebook mx-2 h5"></i></label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" id="annonce_boost_boostFacebook_1_{{ offres.id }}" name="annonce_boost[boostFacebook]" value="1" data-value="2100">
+                            <label for="annonce_boost_boostFacebook_1_{{ offres.id }}">Boost <i class="bi bi-facebook mx-2 h5"></i> 7 jours (2100 crédits)</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" id="annonce_boost_boostFacebook_2_{{ offres.id }}" name="annonce_boost[boostFacebook]" value="2" data-value="4500">
+                            <label for="annonce_boost_boostFacebook_2_{{ offres.id }}">Boost <i class="bi bi-facebook mx-2 h5"></i> 15 jours (4500 crédits)</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" id="annonce_boost_boostFacebook_3_{{ offres.id }}" name="annonce_boost[boostFacebook]" value="3" data-value="9000">
+                            <label for="annonce_boost_boostFacebook_3_{{ offres.id }}">Boost <i class="bi bi-facebook mx-2 h5"></i> 30 jours (9000 crédits)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>#}
+        </div>
+    </div>
+</section>
 {% endblock %}

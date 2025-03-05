@@ -29,10 +29,47 @@
                         <div class="main-inner clearfix">
                             <div class="content-main-inner">
                                 <div class="row">
-                                    <div class="col-xs-12 col-md-10 has-border">
+                                    <div class="col-xs-12 col-md-4 has-border">
                                         <div class="form-group-inner has-icon">
                                             <i class="bi bi-search"></i>
                                             <input type="text" name="filter-title" class="form-control " value="" placeholder="profil recherche, mot cle">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3 has-border">
+                                        <div class="form-group-inner form-group-location has-icon">
+                                            <i class="bi bi-pin"></i>
+                                            <select name="filter-location" class="form-control select2-hidden-accessible" data-placeholder="ville" tabindex="-1" aria-hidden="true">
+                                                <option value="">Ville</option>
+                                                <option class="level-0" value="">Antananarivo</option>
+                                            </select>
+                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
+                                                <span class="selection">
+                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_location-container" role="combobox">
+                                                        <span class="select2-selection__rendered" id="select2_location-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Ville</span></span>
+                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+                                                    </span>
+                                                </span>
+                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3">
+                                        <div class="form-group-inner form-group-categories has-icon">
+                                            <i class="bi bi-briefcase"></i>
+                                            <select name="filter-category" class="form-control select2-hidden-accessible" data-placeholder="Toutes les Categories" tabindex="-1" aria-hidden="true">
+                                                <option value="">Toutes les Categories</option>
+                                                <option class="level-0" value="">Marketing</option>
+                                                <option class="level-0" value="">Dévelopeur</option>
+                                            </select>
+                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
+                                                <span class="selection">
+                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_category-container" role="combobox">
+                                                        <span class="select2-selection__rendered" id="select2_category-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Toutes les categories</span></span>
+                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+                                                    </span>
+                                                </span>
+                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-md-2 wrapper-submit flex-middle">
@@ -41,12 +78,10 @@
                                 </div>
                             </div>
                         </div>
-                        {#Sous filtre - il s'affiche après la première recherche pour une recherche plus poussée#}
                         <div class="advance-search-wrapper">
-                            <h2>Une recherche plus précise ?</h2>
                             <div class="advance-search-wrapper-fields">
                                 <div class="row">
-                                    <div class="col-xs-12 col-md-4 has-border">
+                                    <div class="col-xs-12 col-md-3 has-border">
                                         <div class="form-group-inner form-group-genre">
                                             <select name="filter-gender" class="form-control select2-hidden-accessible" data-placeholder="Genres" tabindex="-1" aria-hidden="true">
                                                 <option value="">Genres</option>
@@ -65,7 +100,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-md-4 has-border">
+                                    <div class="col-xs-12 col-md-3 has-border">
                                         <div class="form-group-inner form-group-degree">
                                             <select name="filter-degree" class="form-control select2-hidden-accessible" data-placeholder="Qualification" tabindex="-1" aria-hidden="true">
                                                 <option value="">Qualification</option>
@@ -86,7 +121,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-md-4 has-border">
+                                    <div class="col-xs-12 col-md-3 has-border">
                                         <div class="form-group-inner form-group-year">
                                             <select name="filter-year" class="form-control select2-hidden-accessible" data-placeholder="Experiences" tabindex="-1" aria-hidden="true">
                                                 <option value="">Experiences</option>
@@ -100,6 +135,25 @@
                                                 <span class="selection">
                                                     <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_year-container" role="combobox">
                                                         <span class="select2-selection__rendered" id="select2_year-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Experiences</span></span>
+                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+                                                    </span>
+                                                </span>
+                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3">
+                                        <div class="form-group-inner form-group-languages">
+                                            <select name="filter-languages" class="form-control select2-hidden-accessible" data-placeholder="Langues" tabindex="-1" aria-hidden="true">
+                                                <option value="">Langues</option>
+                                                <option value="">Français</option>
+                                                <option value="">Anglais</option>
+                                                <option value="">Allemand</option>
+                                            </select>
+                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
+                                                <span class="selection">
+                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_langues-container" role="combobox">
+                                                        <span class="select2-selection__rendered" id="select2_langues-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Langues</span></span>
                                                         <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
                                                     </span>
                                                 </span>
