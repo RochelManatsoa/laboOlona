@@ -89,3 +89,9 @@ services:
             - '@App\Repository\Blog\CategoryRepository'
         tags:
             - { name: "kernel.event_subscriber", priority: 100 }
+        
+    App\Service\MobileMoney\AirtelMoneyService:
+        arguments:
+            $clientId: '%env(AIRTEL_CLIENT_ID)%'
+            $clientSecret: '%env(AIRTEL_CLIENT_SECRET)%'
+            $apiUrl: '%env(AIRTEL_API_URL)%'
