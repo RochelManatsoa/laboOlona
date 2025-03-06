@@ -1,31 +1,3 @@
-<!DOCTYPE html>
-<html data-bs-theme="light">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>{% block title %}Olona Talents{% endblock %}</title>
-		{#<link rel="icon" href="{{ asset('images/favicon.ico') }}">#}
-		{% block meta %}{% endblock %}
-		{% block stylesheets %}
-			<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-			{{ encore_entry_link_tags('app') }}
-		{% endblock %}
-
-		{% block javascripts %}
-			{{ encore_entry_script_tags('app') }}
-		{% endblock %}
-		{% include "gtag_cookie_script.html.twig" %}
-	</head>
-	<body class="bootstrap-light">
-		<div class="transition-fade">
-			{% block header %}
-			{% set last_query = app.request.query.get('q', '') %}
-				<nav class="navbar navbar-expand-lg shadow-custom w-100">
-					<div class="container">
-						<a class="navbar-brand" href="{{ path('app_home') }}">
-							<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="100px" class="" alt="Logo">
-						</a>
-						<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" aria-expanded="false" aria-label="Toggle navigation">
 							<span class="navbar-toggler-icon"></span>
 						</button>
 						<div class="col-12 col-sm-6 mx-auto d-block d-md-none">
