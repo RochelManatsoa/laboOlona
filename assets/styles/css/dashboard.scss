@@ -1567,3 +1567,12 @@ span.vue_profil {
     color: #9f9f9f;
     margin-left: 2rem;
 }
+.badge_pro {
+    position: absolute;
+    right: 0;
+    background: red;
+    font-size: 10px;
+    padding: 3px 7px;
+    color: white;
+    top: -6px;
+}

@@ -63,58 +63,42 @@
                     </div>
                 </div>
             </div>
-            {#<div class="offre-emploi-list">
+            <div class="offre-emploi-list">
                 <div class="row">
                     <div class="col-lg-8">
-                        {% for job in offres  %}
+                        {% for prestation in prestations %}
                         <article class="article-item_">
                             <div class="row">
                                 <div class="col-md-2 aside-left-item_">
-                                    <span class="date_p">Publié {{ job.dateCreation|date('d/m/Y') }}</span>
+                                    <div class="rounded-circle" style="
+                                        width: 45px;
+                                        height: 45px;
+                                        background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}');
+                                        background-size: cover;
+                                        background-position: center;
+                                    ">
+                                    </div>
                                 </div>
                                 <div class="col-md-10 aside-right-item_">
                                     <div class="detail_annonce_">
                                         <h2>
-                                            {% if app.user %}
-                                                <a href="{{ path('app_v2_candidate_view_job_offer', {'id': job.id })}}" class="btn-primary">
-                                                    {{ job.titre }}
-                                                </a>
-                                            {% else %}
-                                                <span style="cursor:pointer;" class="annonce-link" data-id="{{ job.id }}">{{ job.titre }}</span>
-                                            {% endif %}
+                                            <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}" class="btn-primary">
+                                                {{ prestation.titre }}
+                                            </a>
                                         </h2>
-                                        <h3><a href="" class="btn-primary">SOCIETE</a> <span class="secteur_job"><i class="bi bi-tags"></i> {{ job.secteur.nom}}</span></h3>
-                                        <div class="type_contact_">{{ job.typeContrat }}</div>
-                                        <div class="description_courte_">{{ job.shortDescription|raw }}</div>
+                                        <h3><a href="" class="btn-primary">{{ getAuthor(prestation)}}</a> <span class="secteur_job"><i class="bi bi-tags"></i> {{ prestation.secteurs.nom}}</span></h3>
+                                        <div class="description_courte_">{{ prestation.openai|raw }}</div>
                                         <div class="info_publication_">
-                                            <span class="small fw-light">
-                                                <span class="badge bg-info rounded-pill px-2"></span>
-                                                <span class="badge rounded-pill px-2 text-bg-success">Ouvert</span>
-                                                <span class="small text-center mx-2">|</span>
-                                                <span class="">Date limite {{ job.dateCreation|date('d/m/Y') }}</span>
-                                                <span class="small text-center mx-2">|</span>
-                                                <i class="bi bi-eye"></i> {{ job.annonceVues|length }}
-                                                <span class="small text-center mx-2">|</span>
-                                                <i class="bi bi-bookmark-check"></i> {{ job.applications|length }} offres
-                                            </span>
+                                            <a class="btn btn-sm btn-primary rounded-pill px-3 me-2 mt-2" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </article>
-                        <span data-annonce="{{ job.id }}" style="display:none">
-                            {% include "v2/preview/_prev_joblistings.html.twig" %}
-                        </span>
                         {% endfor %}
                     </div>
-                    <div class="col-lg-4">
-                        <div class="aside_filter position-sticky">
-                            <h4>Filtrer</h4>
-
-                        </div>
-                    </div>
                 </div>
-            </div>#}
+            </div>
         </div>
     </section>
 {% endblock %}

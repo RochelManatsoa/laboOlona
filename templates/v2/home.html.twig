@@ -1,4 +1,4 @@
-{% extends 'base_v21.html.twig' %}
+{% extends 'v2/base_home.html.twig' %}
 
 {% block title %}Olona Talents{% endblock %}
 
@@ -16,70 +16,453 @@
 {% block header %}
 	{% set last_query = app.request.query.get('q', '') %}
 	<!-- Boutons en haut à droite -->
-	<div class="fixed-top d-flex justify-content-end p-2">
-		{% if app.user %}
-			<a href="{{ path('app_v2_dashboard_notification', {'isRead':'0'}) }}" class="position-relative me-4">
-				<i class="bi bi-bell fs-4 "></i>
-				<span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
-				{{ component('count_notification_component')}}
-				<span class="visually-hidden">unread messages</span>
-				</span>
-			</a>
-			{{ component('credit_user_component') }}
-			<div class="dropdown me-3">
-				<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
-					{% if app.user.gravatar is not null %}
-					<img src="{{ app.user.gravatar }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
-					{% else %}
-					<img src="{{ asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
-					{% endif %}
-				</button>
-				<ul class="dropdown-menu text-small shadow">
-					<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Tableau de bord</a></li>
-					<li><a class="dropdown-item" href="{{ path('app_v2_prestation')}}">Mes prestations</a></li>
-					<li><a class="dropdown-item" href="{{ path('app_v2_dashboard_notification')}}">Mes notifications</a></li>
-					<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Mon profil</a></li>
-					<li><a class="dropdown-item" href="{{ path('app_v2_contacts')}}">Mon réseau</a></li>
-					<li><hr class="dropdown-divider"></li>
-					<li><a class="dropdown-item" href="{{ path('app_logout')}}">Se déconnecter</a></li>
-				</ul>
-			</div>
-		{% else %}
-			<a href="{{ path('app_login')}}" class="me-3 mt-2">Se connecter</a>
-		{% endif %}
-		<button id="switch-theme" class="btn btn-secondary btn-sm">
-			<i class="bi bi-moon-stars-fill"></i>
-		</button>
+	<div class="home-header-top">
+        <div class="container d-flex justify-content-between p-2">
+            <div class="logo_to_home">
+                <a href="/" class="login_home"><img src="{{ asset('images/logo-olona-talents-white600x200.png')}}" alt="Olona Talents" width="150" height="56"></a>
+            </div>
+            {% if app.user %}
+                <a href="{{ path('app_v2_dashboard_notification', {'isRead':'0'}) }}" class="position-relative me-4">
+                    <i class="bi bi-bell fs-4 "></i>
+                    <span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
+                    {{ component('count_notification_component')}}
+                    <span class="visually-hidden">unread messages</span>
+                    </span>
+                </a>
+                {{ component('credit_user_component') }}
+                <div class="dropdown me-3">
+                    <button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if app.user.gravatar is not null %}
+                        <img src="{{ app.user.gravatar }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+                        {% else %}
+                        <img src="{{ asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+                        {% endif %}
+                    </button>
+                    <ul class="dropdown-menu text-small shadow">
+                        <li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Tableau de bord</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_v2_prestation')}}">Mes prestations</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_v2_dashboard_notification')}}">Mes notifications</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Mon profil</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_v2_contacts')}}">Mon réseau</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ path('app_logout')}}">Se déconnecter</a></li>
+                    </ul>
+                </div>
+            {% else %}
+                <a href="{{ path('app_login')}}" class="login_home btn-primary me-3 mt-2">Se connecter</a>
+            {% endif %}
+        </div>
 	</div>
-	<header class="p-3 mb-2">
-		<div class="container">
-			<div class="row">
-				<div class="col-12 col-sm-4 mx-auto my-4">
-					<a href="{{ path('app_home') }}">
-						<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" class="img-fluid mx-auto" alt="Logo">
-					</a>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-12 col-sm-10 text-center mx-auto">
-					<h1 class="fs-5 my-4">Le #1 moteur de recherche dédié à l'emploi à Madagascar.</h1>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-12 col-sm-6 mx-auto">
-					<form action="{{ path('app_olona_talents_candidates') }}" class="input-group mb-3 rounded-4 shadow">
-						<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Faites une recherche dès maintenant et découvrez nos services..." style="font-size: 0.8em;">
-						<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
-					</form>
-				</div>
-			</div>
+	<header class="header-home">
+		<div class="page-content">
+			<div class="home-banner-section bg-cover" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
+                <div class="home-inner-section">
+                    <div class="mid-section">
+                        <div class="title-large">Le <span>#1</span> moteur de recherche</div>
+                        <div class="title-light">dédié à l'emploi à Madagascar</div>
+                        <div class="description">Faites une recherche dès maintenant et découvrez nos services!</div>
+
+                        <div class="search-bar">
+							<form action="{{ path('app_olona_talents_candidates') }}">
+								<div class="row">
+                                    <div class="form-group col-xl-9 col-md-8">
+                                        <label>Champ de recherche</label>
+                                        <div class="inputicon-box">
+											<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="tapez ce que vous chercher...">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-xl-3 col-md-4">
+										<button class="btn btn-search_" type="submit">Chercher</button>
+                                    </div>
+                                </div>
+							</form>
+                        </div>
+
+                        <div class="popular-search">
+                            <span class="ot-title">Recherche populaire :</span>
+                            <a href="">Developpeur</a> ,
+                            <a href="">UI/UX designer</a> ,
+                            <a href="">Marketing</a> ,
+                            <a href="">Ingenieur</a> ...
+                        </div>
+                    </div>
+                    <div class="bottom-section">
+                        <div class="ot-cvth">+ De 5000 CVthèque</div>
+                        <div class="blocks-wrap">
+                            <!--icon-block-1-->
+                            <div class="blocks blocks-position-1">
+                                <div class="ot-content">
+                                    <div class="count-number text-clr-pink">
+                                        + <span class="counter">500</span>
+                                    </div>
+                                    <p class="icon-content-info">Entreprises</p>
+                                </div>
+                            </div>
+
+                            <!--icon-block-2-->
+                            <div class="blocks blocks-position-2">
+                                <div class="ot-content">
+                                    <div class="count-number text-clr-yellow">
+                                        + <span class="counter">300</span>
+                                    </div>
+                                    <p class="icon-content-info">Offres d'emploi </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 		</div>
 	</header>
 {% endblock %}
 
 {% block body %}
+<section class="section-ccm ot-ccm">                   
+    <div class="container">
+        <div class="section-head">
+            <div class="small-separator ot-text-primary">
+                <div>Vous êtes un prestataire?</div>                                
+            </div>
+            <h2 class="title">Voici comment ça marche</h2>
+        </div>               
+        <div class="ot-ccm-section">
+            <div class="row">
+                <div class="col-xl-4 col-lg-6 col-md-6">
+                    <div class="process-step box-red">
+                        <div class="pro-top">
+                            <span class="large-number">01</span>
+                        </div>
+                        <h4 class="title">Enregistrez votre compte</h4>
+                        <p>Inscrivez-vous pour découvrir des opportunités professionnelles stratégiques et motivantes.</p>
+                    </div>
+                </div>
 
-	<section class="">
+                <div class="col-xl-4 col-lg-6 col-md-6">
+                    <div class="process-step box-purple">
+                        <div class="pro-top">
+                            <span class="large-number">02</span>
+                        </div>
+                        <h4 class="title">Trouvez et postulez à votre emploi de rêve</h4>
+                        <p>Créez un compte pour accéder aux offres d'emploi les plus adaptées à votre profil</p>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-lg-6 col-md-6">
+                    <div class="process-step box-green">
+                        <div class="pro-top">
+                            <span class="large-number">03</span>
+                        </div>
+                        <h4 class="title">Posez votre CV</h4>
+                        <p>Posez votre CV pour permettre au recruteur de consulter facilement votre profil et de vous contacter rapidement si votre candidature retient son attention.</p>
+                    </div>
+                </div>                  
+            </div>
+            <div class="btn-signUp">
+                <a href="{{ path('app_olona_talents_register') }}" class="btn btn-primary">Commencer maintenant</a>
+            </div>
+        </div>  
+    </div>
+</section>
+<section class="section-ils-recrutent bg-white">
+    <div class="section-head">
+        <div class="ot-text-primary">
+            <div>Entreprises</div>                                
+        </div>
+        <h2 class="title">Ils recrutent</h2>
+    </div>             
+    <div class="featured-area">
+        <div class="featured-bg-warp">
+            <div class="media">
+                <img src="{{ asset('v2/images/home/ils_recrutent_img.webp')}}" alt="ils_recrutent_img">
+            </div>
+        </div>
+        <div class="container">
+            <div class="featured-content-warp mb-5">
+                <div class="row">
+                    <div class="col-lg-8 col-md-12">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 mb-5">
+                                <div class="featured-block">
+                                    <div class="inner-content">
+                                        <div class="mid-content">
+                                            <span class="job-time">Plein temps</span>
+                                            <div class="company-logo">
+                                                <img src="" alt="#">
+                                            </div>
+                                            <div class="company-info">
+                                                <a href="" class="company-name">Societe</a>
+                                                <p class="company-secteur">Secteur</p>
+                                            </div>
+                                        </div>
+                                        <div class="bottom-content">
+                                            <h4 class="job-name-title">Developpeur Backend</h4>
+                                            <span class="job-post-time">il y 1 semaine</span>
+                                        </div>
+                                        <div class="aply-btn-area">
+                                            <a href="" class="aplybtn btn-primary">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 mb-5">
+                                <div class="featured-block">
+                                    <div class="inner-content">
+                                        <div class="mid-content">
+                                            <span class="job-time">Plein temps</span>
+                                            <div class="company-logo">
+                                                <img src="" alt="#">
+                                            </div>
+                                            <div class="company-info">
+                                                <a href="" class="company-name">Societe</a>
+                                                <p class="company-secteur">Secteur</p>
+                                            </div>
+                                        </div>
+                                        <div class="bottom-content">
+                                            <h4 class="job-name-title">Developpeur Backend</h4>
+                                            <span class="job-post-time">il y 1 semaine</span>
+                                        </div>
+                                        <div class="aply-btn-area">
+                                            <a href="" class="aplybtn btn-primary">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="featured-block">
+                            <div class="inner-content">
+                                <div class="mid-content">
+                                    <span class="job-time">Plein temps</span>
+                                    <div class="company-logo">
+                                        <img src="" alt="#">
+                                    </div>
+                                    <div class="company-info">
+                                        <a href="" class="company-name">Societe</a>
+                                        <p class="company-secteur">Secteur</p>
+                                    </div>
+                                </div>
+                                <div class="bottom-content">
+                                    <h4 class="job-name-title">Developpeur Backend</h4>
+                                    <span class="job-post-time">il y 1 semaine</span>
+                                </div>
+                                <div class="aply-btn-area">
+                                    <a href="" class="aplybtn btn-primary">
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="featured-block">
+                            <div class="inner-content">
+                                <div class="mid-content">
+                                    <span class="job-time">Plein temps</span>
+                                    <div class="company-logo">
+                                        <img src="" alt="#">
+                                    </div>
+                                    <div class="company-info">
+                                        <a href="" class="company-name">Societe</a>
+                                        <p class="company-secteur">Secteur</p>
+                                    </div>
+                                </div>
+                                <div class="bottom-content">
+                                    <h4 class="job-name-title">Developpeur Backend</h4>
+                                    <span class="job-post-time">il y 1 semaine</span>
+                                </div>
+                                <div class="aply-btn-area">
+                                    <a href="" class="aplybtn btn-primary">
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="featured-block">
+                            <div class="inner-content">
+                                <div class="mid-content">
+                                    <span class="job-time">Plein temps</span>
+                                    <div class="company-logo">
+                                        <img src="" alt="#">
+                                    </div>
+                                    <div class="company-info">
+                                        <a href="" class="company-name">Societe</a>
+                                        <p class="company-secteur">Secteur</p>
+                                    </div>
+                                </div>
+                                <div class="bottom-content">
+                                    <h4 class="job-name-title">Developpeur Backend</h4>
+                                    <span class="job-post-time">il y 1 semaine</span>
+                                </div>
+                                <div class="aply-btn-area">
+                                    <a href="" class="aplybtn btn-primary">
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                                    </div>
+                                </div>
+                    </div>
+                </div>
+                <div class="btn-signUp">
+                    <a href="" class="btn btn-primary">Afficher tous les recruteurs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section-coworking">
+    <div class="container">
+        <div class="section-content">
+            <div class="coworking-content">
+                <div class="row">
+                    <div class="col-xl-7 col-lg-12 col-md-12">
+                        <div class="right-section">
+                            <div class="media">
+                                <div class="employee-pic"><img src="{{ asset('v2/images/home/coworking_.webp')}}" alt=""></div>
+                                <div class="shot-pic1"><img src="{{ asset('v2/images/home/sq-1.png')}}" alt=""></div>
+                                <div class="shot-pic2"><img src="{{ asset('v2/images/home/triangle.png')}}" alt=""></div>
+                                <div class="shot-pic3"><img src="{{ asset('v2/images/home/circle.png')}}" alt=""></div>
+                            </div>
+                            <div class="counter-outer-two one">
+                                <div class="icon-content">
+                                    <img src="{{ asset('v2/images/home/wifi_icon.svg')}}" alt="">
+                                    <p class="icon-content-info">Wi-Fi ultra-rapide</p>
+                                </div>
+                            </div>
+                            <div class="counter-outer-two two">
+                                <div class="icon-content">
+                                    <img src="{{ asset('v2/images/home/coffee_icon.svg')}}" alt="">
+                                    <p class="icon-content-info">Services inclus</p>
+                                </div>
+                            </div>
+                            <div class="counter-outer-two three">
+                                <div class="icon-content">
+                                    <img src="{{ asset('v2/images/home/map_icon.svg')}}" alt="">
+                                    <p class="icon-content-info">Emplacement central</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-lg-12 col-md-12">
+                        <div class="content-block">
+                            <div class="top-section">
+                                <div class="section-head">
+                                    <div class="ot-text-primary">
+                                        <div>Espace coworking</div>                                
+                                    </div>
+                                    <h2>Besoin d'un environnement collaboratif et inspirant?</h2>
+                                    <p>Découvrez nos espaces de travail conçus pour votre confort et votre productivité. Profitez de chaises ergonomiques, d'une lumière naturelle abondante, d'une connexion Wi-Fi fibre ultra-rapide et d'une ambiance professionnelle stimulante avec coin café et espaces communs.</p>
+                                </div>
+                                <div class="btn-signUp">
+                                    <a href="/coworking/" class="btn btn-primary">Découvrir</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer class="footer-light bg-cover">
+    <div class="container">
+        <div class="footer-top">
+            <div class="row">
+                <div class="col-lg-3 col-md-12">
+                    <div class="ot_about">
+                        <div class="logo-footer clearfix">
+                            <a href="/"><img src="{{ asset('images/logo-olona-talents-black.png')}}" alt="Olona Talents" width="250" height="103"></a>
+                        </div>
+                        <p>Olona Talents, le <span>#1</span> moteur de recherche</p>
+                        <ul class="ftr-list">
+                            <li><p><span>Address :</span>Ambatonakanga, Antananarivo, Madagascar </p></li>
+                            <li><p><span>Horaire :</span>Lundi au Vendredi de 8h à 18h</p></li>
+                            <li><p><span>Tel. :</span>+261 32 03 734 32</p></li>
+                        </ul>
+                    </div>                            
+                    
+                </div> 
+
+                <div class="col-lg-9 col-md-12">
+                    <div class="row">
+                        
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="ot_services ftr-list-center">
+                                <h3 class="title">Pour les candidats</h3>
+                                <ul>
+                                    <li><a href="#">Tableau de bord utilisateur</a></li>
+                                    <li><a href="#">Alerte d'emploi</a></li>
+                                    <li><a href="#">Candidature</a></li>
+                                    <li><a href="#">Annonces de services</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="ot_services ftr-list-center">
+                                <h3 class="title">Pour les entreprises</h3>
+                                <ul>
+                                    <li><a href="#">Tableau de bord utilisateur</a></li>
+                                    <li><a href="#">Consultation CVthèque</a></li>
+                                    <li><a href="#">Offre d'emploi</a></li>
+                                    <li><a href="#">Contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">  
+                            <div class="ot_services ftr-list-center">
+                                <h3 class="title">Infos</h3>
+                                <ul>
+                                    <li><a href="/legal-mentions">Mentions Légales</a></li>
+                                    <li><a href="/privacy-policy">Politique de Confidentialité</a></li>
+                                    <li><a href="/terms-and-conditions">Conditions d'Utilisation</a></li>
+                                    <li><a href="/contact">Nous contacter</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">  
+                            <div class="ot_services ftr-list-center">
+                                <h3 class="title">Liens divers</h3>
+                                <ul>
+                                    <li><a href="#">Accueil</a></li>
+                                    <li><a href="/portage-salarial">Portage salariale</a></li>
+                                    <li><a href="/coworking/">coworking</a></li>
+                                    <li><a href="#">Prestations</a></li>
+                                    <li><a href="/blog/">Le Blog</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>  
+
+                </div> 
+
+            </div>
+        </div>
+        <!-- FOOTER COPYRIGHT -->
+        <div class="footer-bottom">
+        
+            <div class="footer-bottom-info">
+                <div class="footer-copy-right">
+                    <span class="copyrights-text">Copyright © 2025 OlonaTalents.</span>
+                </div>
+                <ul class="social-icons">
+                    <li><a href="" class="profil-social"><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+	{#<section class="">
 		<div class="row">
 			<div class="col-12 col-sm-7 mx-auto border rounded-4 shadow-custom">
 				<div class="text-center p-2 p-sm-5">
@@ -92,7 +475,7 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</section>#}
 
 {% endblock %}
 

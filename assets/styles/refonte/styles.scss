@@ -1,10 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-
+@import 'media_q.scss';
 body {
     font-family: "Outfit", sans-serif;
     font-size: 16px;
     letter-spacing: .4px;
     color: #767474;
+}
+.login_home {
+    color: $white !important;
+    text-decoration: none !important;
+    &:hover {
+        text-decoration: underline !important;
+    }
 }
 $white: #ffffff;
 $black: #000000;
