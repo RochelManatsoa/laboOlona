@@ -2,8 +2,9 @@
 
 .login-wrap {
     position: relative;
-    position: fixed;
-    height: 100vh;
+    display: table;
+    min-height: 100vh;
+    height: 100%;
     width: 100%;
     .bg-mask {
         background-color: $purple-primary;
@@ -34,7 +35,8 @@
         }
     }
     .login-content {
-        padding-top: 60px;
+        padding-top: 160px;
+        padding-bottom: 80px;
         display: flex;
         height: 100%;
         align-items: center;

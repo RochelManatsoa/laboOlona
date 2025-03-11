@@ -1,0 +1,82 @@
+@import 'styles.scss';
+@import 'login.scss';
+
+.register-left {
+    background-color: $white;
+    border-radius: 10px;
+    h1 {
+        text-transform: uppercase;
+    }
+    h2 {
+        text-align: center;
+        font-size: 24px;
+        color: $purple-primary;
+    }
+    .custom-control {
+        > .form-check {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+        }
+        .custom-control-label {
+            border: 1px solid #54309c;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #54309c;
+            color: white;
+            letter-spacing: 3px;
+            .img-fluid {
+                border: none !important;
+                cursor: pointer;
+            }
+        }
+    }
+}
+.ml-5 {
+    margin-left: 15px;
+}
+.btn-primary {
+    background-color: $purple-primary !important;
+    border-color: $purple-primary !important;
+    &:hover {
+        background-color: $purple-light !important;
+        border-color: $purple-light !important;
+    }
+}
+.btn-outline-primary {
+    color: $purple-primary !important;
+    background-color: transparent !important;
+    border-color: $purple-primary !important;
+    &:hover {
+        background-color: $purple-light !important;
+        border-color: $purple-light !important;
+        color: $white !important;
+    }
+}
+.register-sidebar {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    background: $yelow-primary;
+    border-radius: 10px;
+}
+.register-sidebar {
+    h3 {
+        text-align: center;
+        span {
+            display: flex;
+            text-align: center;
+            margin: 0 auto 20px;
+            width: 70px;
+            height: 70px;
+            background: #ffe39a;
+            align-items: center;
+            justify-content: center;
+            border-radius: 100%;
+        }
+    }
+    ul {
+        padding-left: 0;
+    }
+    .bi-check {
+        color: $white;
+    }
+}

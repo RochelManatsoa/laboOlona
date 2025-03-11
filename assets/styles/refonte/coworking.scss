@@ -1,0 +1,172 @@
+@import 'styles.scss';
+@import 'home.scss';
+
+.text-espace {
+    h2 {
+        color: $purple-primary;
+        font-size: bolder;
+    }
+}
+.figure-espace {
+    overflow: hidden;
+    border-radius: 20px;
+    height: 100%;
+    img {
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+#coworking {
+    .card {
+        border: none !important;
+        position: relative;
+        border-radius: 25px;
+        min-height: 300px;
+        margin-bottom: 30px;
+        padding: 32px;
+        text-align: left;
+        background-color: $yelow-primary;
+        --flex-direction: column;
+        --flex-basis: auto;
+        --flex-grow: 0;
+        --flex-shrink: 1;
+        flex: var(--flex-grow) var(--flex-shrink) var(--flex-basis);
+        .card-middle {
+            h3 {
+                color: #282a29;
+                font-size: 24px;
+            }
+        }
+    }
+    .btn-primary {
+        padding: 15px 35px;
+    }
+}
+.choisir-notre-espace,
+.vister_notre_espace {
+    background: #fbf5e5;
+    padding: 80px 0;
+}
+.reservation_espace {
+    background-color: $yelow-primary;
+    padding: 80px 0;
+    #reservationForm {
+        .form-control,
+        .form-select {
+            background-color: #ffdf7f;
+            border-color: transparent;
+            border-radius: 0;
+            padding: 15px 15px;
+            transition: all .3s ease;
+            &:focus {
+                border-color: #c59609;
+                outline: 0;
+                box-shadow: none !important;
+            }
+        }
+    }
+}
+#base-coworking {
+    .place_dispo {
+        padding: 80px 0;
+        .title_item {
+            padding-right: 20rem;
+            h2 {
+                color:$purple-primary;
+            }
+        }
+        #liveDateTime {
+            border: 3px solid $yelow-primary;
+            margin-top: 1rem;
+            padding: 7px 15px;
+            font-size: 22px;
+        }
+        .list-group {
+            a {
+                height: 100%;
+            }
+        }
+       .time_right {
+            min-width: 460px;
+            flex: 0 0 460px;
+       } 
+        #menuTabs {
+            margin-top: 3rem;
+        }
+        a.nav-link {
+            color: $black !important;
+            border: 1px solid;
+            margin: 0 5px;
+            transition: all .3s ease;
+            text-shadow: none !important;
+            &.active,
+            &:hover {
+                border-bottom: inherit !important;
+                border-color: $yelow-primary !important;
+                color: $black !important;
+                background-color: $yelow-primary;
+            }
+        }
+        .tab-content {
+            padding-top: 35px;
+            .bloc-tab_ {
+                h3 {
+                    color: $purple-primary;
+                }
+            }
+            .btn-primary {
+                padding-top: 7px;
+                padding-bottom: 7px;
+            }
+        }
+    }
+}
+#base-coworking .footer-light {
+    color: $white;
+    background-color: #212529 !important;
+    .title {
+        color: $yelow-primary;
+        &:before {
+            background-color: $white;
+        }
+    }
+    .footer-top {
+        border-bottom-color: rgb(233 231 231 / 30%);
+    }
+    .footer-bottom .footer-copy-right .copyrights-text {
+        color: $white;
+    }
+}
+.vister_notre_espace {
+    h2 {
+        color: $purple-primary;
+        margin-bottom: 35px;
+    }
+    .block_contactForm {
+        background-color: $white;
+        .block_contact_ {
+            padding: 40px;
+            #contactForm {
+                border-top: 1px solid #ddd;
+                padding-top: 25px;
+                margin-top: 27px;
+                h3 {
+                    color: $purple-primary;
+                }
+                .form-control {
+                    background-color: #f3f3f3;
+                    border-color: transparent;
+                    border-radius: 0;
+                    padding: 10px 15px;
+                    transition: all .3s ease;
+                    &:focus {
+                        border-color: $purple-primary;
+                        outline: 0;
+                        box-shadow: none !important;
+                    }
+                }
+            }
+        }
+    }
+}
