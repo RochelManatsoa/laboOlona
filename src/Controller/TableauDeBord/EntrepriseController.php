@@ -10,6 +10,7 @@ use App\Service\User\UserService;
 use App\Entity\Entreprise\Favoris;
 use App\Entity\Entreprise\JobListing;
 use App\Entity\Candidate\Applications;
+use App\Entity\Prestation;
 use App\Form\Entreprise\JobListingType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Manager\BusinessModel\CreditManager;
@@ -96,7 +97,7 @@ class EntrepriseController extends AbstractController
         $page = $request->query->get('page', 1);
         $params = $this->getData();
         $entreprise = $params['entreprise'];  
-        $favoris = $this->em->getRepository(Favoris::class)->paginateFavoris($page, $entreprise);
+        $favoris = $this->em->getRepository(Favoris::class)->paginateFavoris($entreprise, $page);
         $params['favoris'] = $favoris;
 
         return $this->render('tableau_de_bord/entreprise/favoris.html.twig', $params);
@@ -107,16 +108,24 @@ class EntrepriseController extends AbstractController
     {
         return $this->render('tableau_de_bord/entreprise/tarifs.html.twig', $this->getData());
     }
+
     #[Route('/profil-candidat', name: 'app_tableau_de_bord_entreprise_profil_candidat')]
     public function profilcandidat(): Response
     {
         return $this->render('tableau_de_bord/entreprise/profil_candidat.html.twig', $this->getData());
     }
+
     #[Route('/annuaire-de-services', name: 'app_tableau_de_bord_entreprise_annuaire_de_services')]
-    public function annuaire(): Response
+    public function annuaire(Request $request): Response
     {
-        return $this->render('tableau_de_bord/entreprise/annuaire_de_services.html.twig', $this->getData());
+        $page = $request->query->get('page', 1);
+        $params = $this->getData();
+        $prestations = $this->em->getRepository(Prestation::class)->paginatePrestations(Prestation::STATUS_VALID, $page);
+        $params['prestations'] = $prestations;
+
+        return $this->render('tableau_de_bord/entreprise/annuaire_de_services.html.twig', $params);
     }
+    
     #[Route('/profil-public', name: 'app_tableau_de_bord_entreprise_profil_public')]
     public function profilpublic(): Response
     {

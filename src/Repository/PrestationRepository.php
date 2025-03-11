@@ -42,6 +42,21 @@ class PrestationRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function paginatePrestations(string $status, int $page = 1): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('p')->select('p')
+            ->andWhere('p.status = :status')
+            ->setParameter('status', $status)
+            ->addOrderBy('p.createdAt', 'DESC');
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            10,
+            []
+        );
+    }
+
     public function findPrestationsForReport()
     {
         $queryBuilder = $this->createQueryBuilder('p');

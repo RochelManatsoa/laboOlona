@@ -24,9 +24,11 @@ class FavorisRepository extends ServiceEntityRepository
         parent::__construct($registry, Favoris::class);
     }
 
-    public function paginateFavoris(int $page = 1, EntrepriseProfile $entreprise): PaginationInterface
+    public function paginateFavoris(EntrepriseProfile $entreprise, int $page = 1): PaginationInterface
     {
-        $queryBuilder = $this->createQueryBuilder('f')->select('f')
+        $queryBuilder = $this->createQueryBuilder('f')->select('f, c.titre as titre, u.lastLogin as lastLogin')
+            ->leftJoin('f.candidat', 'c')
+            ->leftJoin('c.candidat', 'u')
             ->andWhere('f.entreprise = :entreprise')
             ->setParameter('entreprise', $entreprise)
             ->addOrderBy('f.createdAt', 'DESC');
