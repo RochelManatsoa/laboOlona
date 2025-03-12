@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Availability;
 use App\Entity\CandidateProfile;
+use App\Entity\Vues\CandidatVues;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
 use App\Entity\Entreprise\JobListing;
@@ -293,5 +294,24 @@ class CandidatManager
         });
         
         return $langages;
+    }
+    
+    public function incrementView(CandidateProfile $candidat, string $ipAddress) {        
+        $viewRepository = $this->em->getRepository(CandidatVues::class);
+        $existingView = $viewRepository->findOneBy([
+            'candidat' => $candidat,
+            'ipAddress' => $ipAddress,
+        ]);
+
+        if (!$existingView) {
+            $view = new CandidatVues();
+            $view->setCandidat($candidat);
+            $view->setIpAddress($ipAddress);
+            $view->setCreatedAt(new \DateTime());
+
+            $this->em->persist($view);
+            $candidat->addVue($view);
+            $this->em->flush();
+        }
     }
 }

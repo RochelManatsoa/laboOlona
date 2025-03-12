@@ -16,7 +16,7 @@
                     <a routerlink="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}">
                     <i class="ri-home-8-line"></i> CVthèque </a>
                 </li>
-                <li class="breadcrumb-item position-relative"> Profil de {#noms de la personne#} </li>
+                <li class="breadcrumb-item position-relative"> Profil {{ generatePseudo(candidat) }} </li>
             </ol>
         </div>
         <div class="profil-banner mb-4">
@@ -24,12 +24,12 @@
             <div class="left-infos-profils d-md-flex justify-content-between">
                 <div class="infos-profils d-md-flex justify-content-between">
                     <div class="img-profils">
-                        <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url();" alt="Avatar"></div>
+                        <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url({{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }});" alt="Avatar"></div>
                     </div>
                     <div class="detail-profils">
                         <div class="nomBlock d-md-flex align-items-center">
                             <div class="Noms__">
-                            Nom & prénoms
+                            {{ generatePseudo(candidat) }}
                             </div>
                             <div class="Tarif-indicatif">
                                 <span>Tarif indicatif : </span>
@@ -49,8 +49,8 @@
                             </div>
                         </div>
                         <div class="TitreBlock">
-                            {#{ candidat.titre }#}
-                            Marketing <span class="certificated">Certifié</span><span class="vue_profil"><i class="bi bi-eye mr-1"></i>Ce profil a été vue 5 fois</span>
+                            {{ candidat.titre }}
+                             <span class="certificated">Certifié</span><span class="vue_profil"><i class="bi bi-eye mr-1"></i>Ce profil a été vue {{ candidat.vues|length }} fois</span>
                         </div>
                         <div class="rating_block d-flex align-items-center">
                             <div class="rating">
@@ -76,7 +76,7 @@
             <div class="col-lg-8">
                 <div class="biographie-profil mb-4 p-4">
                     <span class="fs-5 mb-3 fw-bold lh-base st-title">A propos de moi</span>
-                    {#{ candidat.resume|raw}#}
+                    {{ candidat.resume|raw}}
                     <br/>
                     <br/>
                     <span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
@@ -92,26 +92,26 @@
                         <div class="d-md-flex flex-box_">
                             <span class="fs-6 lh-base">Nom complet</span>
                             <div class="d-md-flex fw-bold info-bx flex-box_">
-                                {#{ candidat.candidat.nom }}
-                                {{ candidat.candidat.prenom }#}
+                                {{ candidat.candidat.nom }}
+                                {{ candidat.candidat.prenom }}
                             </div>
                         </div>
                         <div class="d-md-flex flex-box_">
                             <span class="fs-6 lh-base">Adresse email</span>
                             <div class="d-md-flex fw-bold info-bx flex-box_">
-                                {#{ candidat.candidat.email }#}
+                                {{ candidat.candidat.email }}
                             </div>
                         </div>	
                         <div class="d-md-flex flex-box_">
                             <span class="fs-6 lh-base">Numéro de téléphone</span>
                             <div class="d-md-flex fw-bold info-bx flex-box_">
-                                {#{ candidat.candidat.telephone }#}			
+                                {{ candidat.candidat.telephone }}			
                             </div>
                         </div>	
                         <div class="d-md-flex flex-box_">
                             <span class="fs-6 lh-base">Référence</span>
                             <div class="d-md-flex fw-bold info-bx flex-box_">
-                                {#{ generatePseudo(candidat) }#}
+                                {{ generatePseudo(candidat) }}
                             </div>
                         </div>	
                     </div>
@@ -120,21 +120,21 @@
                         <div class="d-md-flex flex-box_">
                             <span class="fs-6 lh-base">Titre</span>
                             <div class="d-md-flex fw-bold info-bx flex-box_">
-                                {#{ candidat.titre }#}
+                                {{ candidat.titre }}
                             </div>
                         </div>	
                         <div class="d-md-flex flex-box_">
                             <span class="fs-6 lh-base">Secteur(s) d'activité</span>
                             <div class="d-md-flex fw-bold info-bx flex-box_">
-                                {#% for secteur in candidat.secteurs %}
+                                {% for secteur in candidat.secteurs %}
                                 <span class="badge bg-secteur">{{ secteur.nom }}</span>
-                                {% endfor %#}
+                                {% endfor %}
                             </div>
                         </div>	
                         <div class="d-md-flex flex-box_">
                             <span class="fs-6 lh-base">Prétention salariale</span>
                             <div class="d-md-flex fw-bold info-bx flex-box_">
-                                {#% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+                                {% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
                                     <span class="fw-lighter">Base mensuel :</span>
                                     <span class="mx-4 text-strong">{{ candidat.tarifCandidat.simulation.salaireNet|number_format(2, '.', '') }}
                                         {{ candidat.tarifCandidat.simulation.devise.symbole }}
@@ -146,7 +146,7 @@
                                         </a>
                                     </span>
                                     {% else %}
-                                {% endif %#}
+                                {% endif %}
                             </div>
                         </div>				
                     </div>
@@ -154,7 +154,7 @@
                 <div class="biographie-profil mb-4 p-4">
                     <span class="fs-5 mb-3 fw-bold lh-base st-title">Experiences</span>
                     <div class="exp-block">
-                        {#% if experiences|length > 0 %}
+                        {% if experiences|length > 0 %}
                             {% for experience in experiences %}
                                 <div class="experience" data-experience-id="{{ experience.id }}">
                                     <span class="justify-content-between align-items-center">
@@ -185,13 +185,13 @@
                                 <i class="bi bi-info-circle"></i>
                                 Aucune expérience renseignée.
                             </div>
-                        {% endif %#}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="biographie-profil mb-4 p-4">
                     <span class="fs-5 fw-bold mb-3 lh-base st-title">Compétences</span>
                     <div class="compt-block">
-                        {#% if competences|length > 0 %}
+                        {% if competences|length > 0 %}
                             {% for competence in competences %}
                                 <div class="competence" data-competence-id="{{ competence.id }}">
                                     <p class="small">
@@ -213,12 +213,12 @@
                                 <i class="bi bi-info-circle"></i>
                                 Aucune expérience renseignée.
                             </div>
-                        {% endif %#}
+                        {% endif %}
                     </div>				
                 </div>
                 <div class="biographie-profil mb-4 p-4">
                     <span class="fs-5 mb-3 fw-bold lh-base st-title">Langue</span>
-                    {#% if langages|length > 0 %}
+                    {% if langages|length > 0 %}
                         <div class="row">
                             {% for langue in langages %}
                                 <div class="langue" data-langue-id="{{ langue.id }}">
@@ -241,7 +241,11 @@
                             <i class="bi bi-info-circle"></i>
                             Aucune expérience renseignée.
                         </div>
-                    {% endif %#}
+                    {% endif %}
+                </div>
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 mb-3 fw-bold lh-base st-title">Résumé Olona Talents</span>
+                    <div>{{ candidat.resultFree|raw}}</div>
                 </div>
             </div>
             <div class="col-lg-4">
