@@ -21,72 +21,16 @@
         {% endblock %}
         {% include "gtag_cookie_script.html.twig" %}
     </head>
-    <body  class="bootstrap-light" id="base-coworking">
-        {% block paralax %}
-          <div class="paralax default-design">
+    <body id="base-coworking">
+        {% block header %}
+            <!-- Boutons en haut à droite -->
             {% include "coworking/_nav.html.twig" %}
-            <div class="main-content">
-              <div class="container">
-                <!-- Content Section -->
-                <div class="row">
-                  <div class="col-12 col-sm-10 mx-auto text-center">
-                    <h1 class="display-5 fw-bolder">Un espace de travail inspirant pour booster votre productivité</h1>
-                    <p class="lead my-4">Espaces modernes, connectés et modulables, pensés pour votre réussite.</p>
-                    <a href="{{path('app_coworking_main')}}#reservationForm" class="text-white btn btn-outline-warning px-5">Réserver votre espace dès maintenant</a>
-                  </div>
-                </div>
-                <!-- Social Links and Address Section in Line -->
-                <div class="row">
-                  <div class="col-md-6 d-flex align-items-center justify-content-center">
-                    <!-- Social links -->
-                    <ul class="list-inline">
-                      <li class="list-inline-item">
-                        <a class="text-white text-opacity-75 text-primary-hover" target="_blank" href="https://www.linkedin.com/company/emploi-madagascar/posts?lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BiwUwllhjTX2REM32%2BAYkfQ%3D%3D">
-                          <i class="bi bi-linkedin"></i>
-                        </a>
-                      </li>
-                      <li class="list-inline-item ms-3">
-                        <a class="text-white text-opacity-75 text-primary-hover" target="_blank" href="https://www.facebook.com/olonatalents">
-                          <i class="bi bi-facebook"></i>
-                        </a>
-                      </li>
-                      <li class="list-inline-item ms-3">
-                        <a class="text-white text-opacity-75 text-primary-hover" href="#">
-                          <i class="bi bi-instagram"></i>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="col-md-6">
-                    <!-- Address -->
-                    <p class="font-serif text-white text-opacity-75 text-md-end">
-                      <i class="bi bi-geo-alt-fill"></i> Ambatonakanga, Antananarivo, Madagascar
-                    <br>
-                      <i class="bi bi-clock-history"></i>
-                      Lundi au Vendredi de 8h à 18h
-                    <br>
-                      Week-end - Privatisation uniquement
-                    <br>
-                    <i class="bi bi-phone"></i><a class="text-white" href="tel:+261320373432">+261 32 03 734 32</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            {% block admin %}
+                {% include "coworking/_nav_admin.html.twig" %}
+            {% endblock %}
         {% endblock %}
 
-        {% block admin %}
-          <div class="">
-            {% include "coworking/_nav_admin.html.twig" %}
-          </div>
-        {% endblock %}
-
-        <div class="container-fluid m-0 p-0">
-            <div class="row" id="coworking">
-                {% block body %}{% endblock %}
-            </div>
-        </div>
+        {% block body %}{% endblock %}
         <footer class="footer-light bg-cover">
             <div class="container">
                 <div class="footer-top">

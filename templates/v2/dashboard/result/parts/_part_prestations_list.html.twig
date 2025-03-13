@@ -2,7 +2,7 @@
 {% include "v2/result/boost/prestations.html.twig" %}
 {% endif %}
 
-<div class="card position-relative text-center d-none d-md-block">
+{#<div class="card position-relative text-center d-none d-md-block">
     <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
         <img class="img-fluid" src="{{ asset('images/pubs/espace-pub-horizontal-regard-beauty-_1_.webp')}}">
     </a>
@@ -12,72 +12,69 @@
     <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
         <img class="img-fluid" src="{{ asset('images/pubs/espace-pub-carre-regard-beauty.webp')}}">
     </a>
-</div>
+</div>#}
+<div class="jobs-list-wrap">
+        {% for prestation in prestations %}
+		<article class="article-item_">
+			<div class="row">
+				<div class="col-md-2 aside-left-item_">
+					<a href=""><img src="{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}" alt=""></a>
+				</div>
+				<div class="col-md-10 aside-right-item_">
+					<div class="detail_annonce_">
+						<h2>
+                            {% if app.user %}
+                                <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}" class="btn-primary">
+                                    {{ prestation.titre }}
+                                </a>
+                            {% else %}
+                                <span style="cursor:pointer;" class="prestation-link" data-id="{{ prestation.id }}">{{ prestation.titre }}</span>
+                            {% endif %}
 
-{% for prestation in prestations %}
-<div class="card my-3 small px-3 px-sm-5 py-4">
-    <div class="d-flex align-items-center">
-        <div class="me-3">
-            <div class="rounded-circle" style="
-                        width: 45px;
-                        height: 45px;
-                        background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}');
-                        background-size: cover;
-                        background-position: center;
-                    ">
-            </div>
-        </div>
-        <div class="flex-grow-1">
-            <span class="fs-6">
-                {% if app.user %}
-                    <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">
-                        {{ prestation.titre }}
-                    </a>
-                {% else %}
-                    <span style="cursor:pointer;" class="prestation-link" data-id="{{ prestation.id }}">{{ prestation.titre }}</span>
-                {% endif %}
-            </span><br>
-            <span class="small fw-lighter">{{ getAuthor(prestation)}}</span>
-        </div>
-    </div>
-    <div class="small">
-        {% if prestation.openai is not null %}
-        {{ prestation.openai|raw }}
-        {% else %}
-        {{ prestation.description|raw }}
-        {% endif %}
-    </div>
-    <span class="small fw-light">
-        {{ satusPrestation(prestation)|raw }}
-        <span class="small text-center mx-2">|</span>
-        <span class="">Publié
-            {{ prestation.createdAt|time_ago }}</span>
-        <span class="small text-center mx-2">|</span>
-        <i class="bi bi-eye"></i> {{ prestation.prestationVues|length}} vues
-        <span class="small text-center mx-2">|</span>
-        <i class="mx-2 bi bi-person-workspace"></i> {{ prestation.modalitesPrestation }}
-    </span>
-    <div class="d-flex ms-auto small mt-2">
-        {% if app.user %}
-            <a class="btn btn-sm btn-primary rounded-pill px-3" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
-        {% else %}
-            <div class="d-none d-md-block">
-                <button class="btn btn-sm btn-primary rounded-pill px-3 me-2 prestation-link" type="button" data-id="{{ prestation.id }}">Plus de details</button>
-            </div>
-            
-            <div class="d-block d-md-none">
-                <button type="button" class="btn btn-outline-primary btn-sm rounded fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_view_prestation', {'prestation':prestation.id}) }}">Plus de détails</button>
-            </div>
-        {% endif %}
-    </div>
-    <div class="">
-        <span
-            class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
-            <i class="bi bi-tags"></i> {{ prestation.secteurs.nom}}
+							<span class="badge-cetification">
+                                {{ prestation.secteurs.nom}}
+                            </span>
+						</h2>
+						<h3><span class="small">{{ getAuthor(prestation)}}</span></h3>
+						<div class="description_courte_">
+							{% if prestation.openai is not null %}
+                            {{ prestation.openai|raw }}
+                            {% else %}
+                            {{ prestation.description|raw }}
+                            {% endif %}
+						</div>
+						<div class="info_publication_">
+							<p class="small fw-light">
+                                {{ satusPrestation(prestation)|raw }}
+                                <span class="small text-center mx-2">|</span>
+                                <span class="">Publié
+                                    {{ prestation.createdAt|time_ago }}</span>
+                                <span class="small text-center mx-2">|</span>
+                                <i class="bi bi-eye"></i> {{ prestation.prestationVues|length}} vues
+                                <span class="small text-center mx-2">|</span>
+                                <i class="mx-2 bi bi-person-workspace"></i> {{ prestation.modalitesPrestation }}
+                            </p>
+						</div>
+                        <div class="right-content d-flex ms-auto my-2 me-2">
+                            {% if app.user %}
+                                <a class="btnbtn-primary" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
+                            {% else %}
+                                <div class="d-none d-md-block">
+                                    <button class="btnbtn-primary prestation-link" type="button" data-id="{{ prestation.id }}">Plus de details</button>
+                                </div>
+                                
+                                <div class="d-block d-md-none">
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_view_prestation', {'prestation':prestation.id}) }}">Plus de détails</button>
+                                </div>
+                            {% endif %}
+                        </div>
+					</div>
+				</div>
+			</div>
+		</article>
+		<span data-prestation="{{ prestation.id }}" style="display:none">
+            {% include "v2/preview/_prev_prestations.html.twig" %}
         </span>
-    </div>
+		{% endfor %}
 </div>
-<span data-prestation="{{ prestation.id }}" style="display:none">
-    {% include "v2/preview/_prev_prestations.html.twig" %}
-</span>
 {% endfor %}

@@ -12,106 +12,107 @@
 <meta property="og:image:height" content="630"/>
 {% endblock %}
 
-{% block paralax %}
-<div class="paralax" style="background-image: url('{{ asset('images/blogs/' ~ post.imageName) }}');">
-  {% include "blog/_nav.html.twig" %}
-  <div class="main-content-min">
-    <div class="container">
-      <!-- Content Section -->
-      <div class="row my-4">
-        <div class="col-12 col-sm-8 mx-auto text-center">
-          <h1 class="display-4 fw-bolder">{{ post.title }}</h1>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
-
 {% block body %}
-    <main id="blog-post">
-        <div class="container mt-5">
-            <div class="row g-5">
-                <div class="col-md-8">
-                  <h3 class="pb-4 mb-4 fst-italic border-bottom">
-                      {{ post.category.title }}
-                  </h3>
-                  {{ post.content|raw }}
-                  <div class="border-bottom mt-4">
-                    <h3>{{ comments|length }} {{ comments|length > 1 ? 'commentaires' : 'commentaire' }}</h3>
-                  </div>
-                  <div class="border-bottom my-5">
-                    {{ form_start(form) }}
-                    <div class="row">
-                      <div class="col-12 col-sm-6">{{ form_row(form.author) }}</div>
-                      <div class="col-12 col-sm-6">{{ form_row(form.email) }}</div>
-                    </div>
-                    <div class="row">
-                      {{ form_row(form.content) }}
-                    </div>
-                    <div class="col-12 col-sm-4 text-center">
-                      <button type="submit" class="btn btn-primary w-100 my-3 ">Envoyer</button>
-                    </div>
-                    <div style="display: none;">
-                      {{ form_widget(form)}}
-                    </div>
-                    {{ form_end(form) }}
-                  </div>
-                  <div class="row">
-                    {% for comment in comments %}
-                    <div class="d-flex align-items-center">
-                      <div class="me-3">
-                          <div class="rounded-circle" style="
-                              width: 45px;
-                              height: 45px;
-                              background-image: url('{{asset('uploads/experts/avatar-default.jpg')}}');
-                              background-size: cover;
-                              background-position: center;
-                          ">
-                          </div>
-                      </div>
-                      <div class="flex-grow-1">
-                          <span class="fs-6">
-                            <span class="fw-bold">{{ comment.author }}</span>
-                          </span><br>
-                          <div class="flex-grow-1">
-                              <span class="small fw-lighter">{{ comment.createdAt|time_ago }}</span>
-                          </div>
-                      </div>
-                    </div>
-                    <p class="fw-light mb-3">{{ comment.content }}</p>
-                    {% endfor %}
-                  </div>
+<header class="header-home">
+    <div class="page-content">
+        <div class="home-banner-section bg-cover" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
+            <div class="home-inner-section">
+                <div class="mid-section">
+                    <h1 class="title-large">{{ post.title }}</div>
                 </div>
-                <div class="col-md-4">
-                <div class="position-sticky" style="top: 2rem;">
-                    <div class="p-4 mb-3 bg-body-tertiary rounded">
-                      <h4 class="fst-italic">A propos</h4>
-                      <p class="mb-0">{{ post.metaDescription}}</p>
-                    </div>            
-                    <div>
-                      <h4 class="fst-italic">Articles récents</h4>
-                      <ul class="list-unstyled">
-                        {% for post in posts %}
-                        <li>
-                          <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="{{ path('app_blog_view', {'slug': post.slug}) }}">
-
-                              <div class="col-lg-4" style="background-image: url('{{ asset('images/blogs/' ~ post.imageName) }}');
-                              background-size: cover;
-                              background-position: center;
-                              height: 96px;"></div>
-                              <div class="col-lg-8">
-                              <h6 class="mb-0">{{ post.title }}</h6>
-                              <small class="text-body-secondary">{{ post.createdAt|date('M Y')}}</small>
-                              </div>
-                          </a>
-                        </li>                          
-                        {% endfor %}
-                      </ul>
-                    </div>
-                  </div>
             </div>
         </div>
-    </main>
+    </div>
+</header>
+<main id="blog-post">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <div class="detail_article">
+                    <div class="img_detail_article">
+                        <img src="{{ asset('images/blogs/' ~ post.imageName) }}" class="img-fluid" alt="">
+                    </div>
+                    <h2>{{ post.category.title }}</h2>
+                    {{ post.content|raw }}
+                    <div class="border-bottom mt-4">
+                        <h3>{{ comments|length }} {{ comments|length > 1 ? 'commentaires' : 'commentaire' }}</h3>
+                    </div>
+                    <div class="border-bottom my-5">
+                        {{ form_start(form) }}
+                        <div class="row">
+                            <div class="col-12 col-sm-6">{{ form_row(form.author) }}</div>
+                            <div class="col-12 col-sm-6">{{ form_row(form.email) }}</div>
+                        </div>
+                        <div class="row">
+                        {{ form_row(form.content) }}
+                        </div>
+                        <div class="col-12 col-sm-4 text-center">
+                            <button type="submit" class="btn btn-primary w-100 my-3 ">Envoyer</button>
+                        </div>
+                        <div style="display: none;">
+                        {{ form_widget(form)}}
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                    <div class="row">
+                        {% for comment in comments %}
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <div class="rounded-circle" style="
+                                    width: 45px;
+                                    height: 45px;
+                                    background-image: url('{{asset('uploads/experts/avatar-default.jpg')}}');
+                                    background-size: cover;
+                                    background-position: center;
+                                ">
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <span class="fs-6">
+                                    <span class="fw-bold">{{ comment.author }}</span>
+                                </span><br>
+                                <div class="flex-grow-1">
+                                    <span class="small fw-lighter">{{ comment.createdAt|time_ago }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="fw-light mb-3">{{ comment.content }}</p>
+                        {% endfor %}
+                    </div>
+                    </div>
+            </div>
+            <div class="col-lg-4 col-md-12 rightSidebar">
+                <div class="position-sticky sidebar" style="top: 2rem;">
+                    <div class="sidebar-ele-filter">
+                        <div class="about_article">
+                            <h4>A propos</h4>
+                            <p class="mb-0">{{ post.metaDescription}}</p>
+                        </div> 
+                        <div class="recent_article">
+                            <h4>Articles récents</h4>
+                            <ul class="list-unstyled">
+                                {% for post in posts %}
+                                <li>
+                                    <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none" href="{{ path('app_blog_view', {'slug': post.slug}) }}">
+
+                                        <div class="col-lg-4" style="background-image: url('{{ asset('images/blogs/' ~ post.imageName) }}');
+                                        background-size: cover;
+                                        background-position: center;
+                                        height: 96px;"></div>
+                                        <div class="col-lg-8">
+                                        <h6 class="mb-0">{{ post.title }}</h6>
+                                        <small class="text-body-secondary">{{ post.createdAt|date('M Y')}}</small>
+                                        </div>
+                                    </a>
+                                </li>                          
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
 {% endblock %}

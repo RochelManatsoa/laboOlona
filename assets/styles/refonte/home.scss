@@ -9,6 +9,16 @@
     top: 0;
     z-index: 2;
 }
+.home-ot {
+    .btn-signUp {
+        text-align: center !important;
+    }
+    .content-block {
+        .btn-signUp {
+            text-align: left !important;
+        }
+    }
+}
 .page-content {
     background-color: $white;
     .home-banner-section{
@@ -20,6 +30,18 @@
         }
         @include breakpoint-767{
             padding-top: 170px;	
+        }
+        &.header-home-user {
+            #liveDateTime {
+                color: #f0b722;
+                margin-bottom: 2rem;
+                font-size: 24px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
+            @include breakpoint-1600{
+                padding-top: 140px;	
+            }
         }
     
         .home-inner-section{

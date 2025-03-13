@@ -28,9 +28,11 @@
 	.banner-title-outer {
 		position: relative;
 		.title{
-			font-size: 28px;
+			font-size: 52px;
 			margin-bottom: 0px;
 			position: relative;
+			text-transform: uppercase;
+			letter-spacing: 4px;
 		}
 		.banner-title-name {
 			display: inline-block;
@@ -40,9 +42,27 @@
 			}
 		}
 	}
-	.nav-underline {
-		justify-content: center;
+	.nav {
+		margin-bottom: 2rem;
+		&.nav-underline {
+			justify-content: center;
+			.nav-item {
+				.nav-link {
+					border: 2px solid;
+					padding: 8 15px !important;
+					min-width: 150px;
+					&.active,
+					&:focus,
+					&:hover {
+						background-color: $yelow-primary !important;
+						color: $black !important;
+						border-color: $yelow-primary !important;
+					}
+				}
+			}
+		}
 	}
+	
 }
 /*Blog Side Bar*/
 .side-bar {
@@ -334,6 +354,7 @@
 .m-b30 {
     margin-bottom: 30px;
 }
+span.bg-pro,
 span.bg-urgent,
 .badge-cetification {
     background: #ef2121;

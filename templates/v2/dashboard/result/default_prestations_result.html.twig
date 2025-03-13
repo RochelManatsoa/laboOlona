@@ -14,25 +14,24 @@
 
 {% block body %}
 <input type="hidden" id="hidden-query" value="{{ getSearchQuery('q') }}">
-<div class="bnr-inr overlay-wraper bg-center" style="background-image:url(images/banner/1.jpg);">
-	<div class="overlay-main site-bg-white opacity-01"></div>
+<div class="bnr-inr overlay-wraper bg-center" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
 	<div class="container">
 		<div class="bnr-inr-entry">
 			<div class="banner-title-outer">
 				<div class="banner-title-name">
-					<h2 class="title">Les métiers les plus passionnants</h2>
+					<h2 class="title">Liste des préstations de services</h2>
 				</div>
 			</div>
 			<div>
 				<ul class="nav nav-underline">
 					<li class="nav-item">
-						<a class="nav-link" aria-current="page" id="candidats-tab" href="{{ path('app_olona_talents_candidates', {'q': getSearchQuery('q')})}}">Candidats</a>
+						<a class="nav-link" id="candidats-tab" href="{{ path('app_olona_talents_candidates', {'q': getSearchQuery('q')})}}">Candidats</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link active" id="annonces-tab" href="{{ path('app_olona_talents_joblistings', {'q': getSearchQuery('q')})}}">Offre d'emploi</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" id="services-tab" href="{{ path('app_olona_talents_prestations', {'q': getSearchQuery('q')})}}">Services</a>
+						<a class="nav-link" aria-current="page" id="services-tab" href="{{ path('app_olona_talents_prestations', {'q': getSearchQuery('q')})}}">Services</a>
 					</li>
 				</ul>
 			</div>
