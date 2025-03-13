@@ -75,6 +75,26 @@ $blue-primary: #3b5998;
                     }
                 }
             }
+            &.nav_portage {
+                .nav--link {
+                    background:#308a57;
+                    transition: all .3s ease;
+                    &:hover {
+                        background-color: $white !important;
+                        color: $black !important;
+                    }
+                }
+            }
+            &.nav_contact {
+                .nav--link {
+                    background:$black;
+                    transition: all .3s ease;
+                    &:hover {
+                        background-color: $white !important;
+                        color: $black !important;
+                    }
+                }
+            }
             .nav--link {
                 color: $white !important;
                 letter-spacing: 1px;
@@ -104,5 +124,25 @@ $blue-primary: #3b5998;
             text-decoration: none !important;
             color: $yelow-primary !important;
         }
+    }
+}
+.btn-signUp {
+    &.portage-btn {
+        text-align: center !important;
+    }
+}
+
+.contactBlock {
+    color: $black;
+    .info-text {
+        text-align: center;
+        font-size: 24px;
+    }
+    .formBlock {
+        background-color: $white;
+        padding: 40px;
+    }
+    .info__ {
+        background-color: $yelow-primary !important;
     }
 }

@@ -18,21 +18,21 @@
     <div class="login-header">
         <div class="container pt-5">
             <div class="row">
-                <div class="col-md-4 col-sm-6">
+                <div class="col-md-4">
                     <img src="{{ asset('images/login_olona_talents.webp') }}" class="img-fluid" alt="Image">
                 </div>
-                <div class="col-md-8 -col-sm-6">
+            	{#<div class="col-md-8">
                     <div class="sign-up_">
                         Déjà membre ? <a href="{{ path('app_login') }}" class="fw-bolder">Connectez-vous</a> et profitez des avantages de Olona-talents.
                     </div>
-                </div>
+                </div>#}
             </div>
         </div>
     </div>
 	<div class="login-content">
 		<div class="container">
 			<div class="row">
-				<div class="col-12 col-md-8">
+				<div class="col-12 col-lg-8">
 					<div class="register-left p-5">
 						<div class="register-item">
 							<h1 class="fs-2 text-center">
@@ -43,10 +43,10 @@
 								{{ form_start(form, {'attr': {'data-turbo': 'false'}})}}
 								{{ form_errors(form)}}
 								<div class="row mb-3">
-									<div class="col">
+									<div class="col-lg-6">
 										{{ form_row(form.nom) }}
 									</div>
-									<div class="col">
+									<div class="col-lg-6">
 										{{ form_row(form.prenom) }}
 									</div>
 								</div>
@@ -54,10 +54,10 @@
 								{{ form_row(form.telephone) }}
 								{{ form_row(form.adress) }}
 								<div class="row mb-3">
-									<div class="col">
+									<div class="col-lg-6">
 										{{ form_row(form.postalCode) }}
 									</div>
-									<div class="col">
+									<div class="col-lg-6">
 										{{ form_row(form.city) }}
 									</div>
 								</div>
@@ -76,7 +76,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-12 col-md-4">
+				<div class="col-12 col-lg-4">
 					{% include "v2/dashboard/provider/_sticky_sidebar.html.twig" %}
 				</div>
 			</div>

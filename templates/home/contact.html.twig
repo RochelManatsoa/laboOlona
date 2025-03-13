@@ -1,4 +1,4 @@
-{% extends 'base_blog.html.twig' %}
+{% extends 'base_contact.html.twig' %}
 {% block title %}Nous contacter{% endblock %}
 {% block meta %}
 <meta name="description" content="Contactez-nous via le formulaire de contact de https://olona-talents.com/ pour toute question, demande d'information ou assistance. Notre équipe est à votre écoute pour vous répondre rapidement.">
@@ -10,30 +10,27 @@
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 {% endblock %}
-{% block paralax %}
-<div class="paralax event-design">
-  {% include "blog/_nav.html.twig" %}
-  <div class="main-content-min">
-    <div class="container">
-      <!-- Content Section -->
-      <div class="row">
-        <div class="col-12 col-sm-8 mx-auto text-center">
-          <h1 class="display-4 fw-bolder my-5">Nous contacter</h1>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
 {% block body %}
-<main id="blog-post">
-    <div class="container mt-5">
+<header class="header-home">
+    <div class="page-content">
+        <div class="home-banner-section bg-cover" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
+            <div class="home-inner-section">
+                <div class="mid-section">
+                    <div class="title-large">Nous contacter</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main id="blog-post" class="contactBlock">
+    <div class="container">
         <div class="row g-5">
             <div class="col-md-8">
-                <p>Nous sommes là pour vous aider! Que vous ayez une question sur votre compte, besoin d'assistance pour une fonctionnalité de la plateforme, ou que vous souhaitiez signaler un problème, notre équipe de support est prête à vous fournir l'assistance nécessaire.</p>
-                <p>Veuillez remplir le formulaire ci-dessous avec les détails de votre demande, et nous vous répondrons dans les plus brefs délais.</p>
-
-                <div class="col-lg-10 col-md-10 col-sm-12 mx-auto">
+                <div class="info-text">
+                    <p>Nous sommes là pour vous aider! Que vous ayez une question sur votre compte, besoin d'assistance pour une fonctionnalité de la plateforme, ou que vous souhaitiez signaler un problème, notre équipe de support est prête à vous fournir l'assistance nécessaire.</p>
+                    <p>Veuillez remplir le formulaire ci-dessous avec les détails de votre demande, et nous vous répondrons dans les plus brefs délais.</p>
+                </div>
+                <div class="formBlock">
                     {% for message in app.flashes('success') %}
                         <div class="alert alert-primary alert-dismissible fade show small" role="alert">
                             {{ message }}
@@ -41,8 +38,6 @@
                         </div>
                     {% endfor %}
                     {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
-
-
                     <div class="row">
                         <div class="col">
                             <div class="mb-3">
@@ -88,31 +83,27 @@
                     </div>
                     {{ form_end(form) }}
                 </div>                
-                <p class="text-center my-sm-5 my-4 fw-lighter">
+                <p class="text-center my-sm-5 my-4">
                     Pour les questions urgentes, vous pouvez également nous contacter par téléphone au <a href="tel:+261345052132">+261 34 50 521 32</a> ou au <a href="tel:+261320373420">+261 32 03 734 20</a>, disponible de 09h à 18h, du lundi au vendredi.
                 </p>
             </div>
             <div class="col-md-4">
-            <div class="position-sticky" style="top: 2rem;">
-                <div class="p-4 mb-3 bg-body-tertiary rounded">
-
-                        <p class="font-serif text-opacity-75 text-md-end">
+                <div class="position-sticky" style="top: 2rem;">
+                    <div class="p-4 mb-3 bg-body-tertiary info__ rounded">
+                        <p class="font-serif text-opacity-75">
                             <i class="bi bi-geo-alt-fill"></i> Ambatonakanga, Antananarivo, Madagascar
-                          <br>
+                            <br>
                             <i class="bi bi-clock-history"></i>
                             Lundi au Vendredi de 8h à 18h
-                          <br>
+                            <br>
                             <i class="bi bi-phone"></i><a href="tel:+261320373432">+261 32 03 734 32</a>
-                    </p>
-                </div>            
+                        </p>
+                    </div>            
                 <div>
                     <img src="{{ asset('images/coworking/map_olona-talents_compressed.png')}}" alt="map" class="img-fluid my-3">
                 </div>
-              </div>
+            </div>
         </div>
     </div>
 </main>
-
-<div class="shadow-custom col-12 col-sm-10 col-md-8 col-lg-8 p-2 p-sm-4 mx-auto">
-</div>
 {% endblock %}

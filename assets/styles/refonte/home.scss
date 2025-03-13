@@ -382,6 +382,10 @@
             border-radius: 10px;
             height: 100%;
             border: 1px solid;
+            @include breakpoint_1023{
+                margin: 15px 0;
+                height: auto;
+            }
             p{
                 margin-bottom: 0px;
             }
@@ -759,6 +763,9 @@
             .btn-signUp {
                 margin-top: -25px;
                 text-align: left;
+                &.text-center {
+                    text-align: center !important;
+                }
             }
 		}
 		.right-section{

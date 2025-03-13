@@ -13,232 +13,194 @@
 <meta property="og:image:height" content="630"/>
 {% endblock %}
 
-{% block paralax %}
-<div class="paralax product-design">
-    {% include "coworking/_nav.html.twig" %}
-    <div class="main-content-min">
-      <div class="container">
-        <!-- Content Section -->
-        <div class="row">
-          <div class="col-12 col-sm-8 mx-auto text-center">
-            <h1 class="display-4 fw-bolder">Contrat Membre VIP Olona Talents</h1>
-          </div>
-        </div>
-        <!-- Social Links and Address Section in Line -->
-        <div class="row">
-          <div class="col-md-6 d-flex align-items-center justify-content-center">
-            <!-- Social links -->
-            <ul class="list-inline">
-              <li class="list-inline-item">
-                <a class="text-white text-opacity-75 text-primary-hover" target="_blank" href="https://www.linkedin.com/company/emploi-madagascar/posts?lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BiwUwllhjTX2REM32%2BAYkfQ%3D%3D">
-                  <i class="bi bi-linkedin"></i>
-                </a>
-              </li>
-              <li class="list-inline-item ms-3">
-                <a class="text-white text-opacity-75 text-primary-hover" target="_blank" href="https://www.facebook.com/olonatalents">
-                  <i class="bi bi-facebook"></i>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="col-md-6 small">
-            <!-- Address -->
-            <p class="font-serif text-white text-opacity-75 text-md-end">
-              <i class="bi bi-geo-alt-fill"></i> Ambatonakanga, Antananarivo, Madagascar
-            <br>
-              <i class="bi bi-clock-history"></i>
-              Lundi au Vendredi de 8h à 18h
-            <br>
-              Week-end - Privatisation uniquement
-              <br>
-              <i class="bi bi-phone"></i><a class="text-white" href="tel:+261320373432">+261 32 03 734 32</a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-{% endblock %}
-
 {% block admin %}{% endblock %}
 
 {% block body %}
-<section class="p-0 m-0">
-    <div class="container my-5">
-        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
-            <div class="row mb-5">
-                <section class="py-5">
-                    <div class="container">
-                        
-                        <div class="row align-items-center mb-5">
-                            <div class="col-md-6 text-center">
-                                <img src="{{ asset('images/coworking/vip-service.jpg') }}" alt="Service VIP Olona Talents" class="img-fluid rounded">
-                            </div>
-                            <div class="col-md-6">
-                                <h2 class="display-6 fw-bold">Pourquoi choisir notre Contrat Membre VIP ?</h2>
-                                <p class="lead">En souscrivant au service <b>VIP Olona Talents</b>, vous intégrez une communauté d'élite bénéficiant de privilèges exclusifs. Profitez d'un environnement de travail optimisé avec des avantages conçus pour booster votre productivité.</p>
-                            </div>
-                        </div>
-                
-                        <hr>
-                
-                        <h3 class="mt-5 mb-3 display-6 fw-bold">Avantages exclusifs</h3>
-                        <ul class="list-group list-group-flush mb-5">
-                            <li class="list-group-item"><i class="bi bi-check h5 text-danger me-2"></i> Réservations illimitées et prioritaires (du lundi au vendredi, de 8h à 18h).</li>
-                            <li class="list-group-item"><i class="bi bi-check h5 text-danger me-2"></i> Flexibilité élargie dans les heures d'accès.</li>
-                            <li class="list-group-item"><i class="bi bi-check h5 text-danger me-2"></i> Connexion haut débit Starlink pour une productivité optimale.</li>
-                            <li class="list-group-item"><i class="bi bi-check h5 text-danger me-2"></i> Contingence assurée avec des groupes électrogènes.</li>
-                            <li class="list-group-item"><i class="bi bi-check h5 text-danger me-2"></i> 600 crédits mensuels à dépenser sur Olona Talents.</li>
-                            <li class="list-group-item"><i class="bi bi-check h5 text-danger me-2"></i> Promotion facultative dans le post "Coworker du jour" sur Facebook.</li>
-                            <li class="list-group-item"><i class="bi bi-check h5 text-danger me-2"></i> Réduction de 25 % sur nos services complementaires.</li>
-                            <li class="list-group-item"><i class="bi bi-check h5 text-danger me-2"></i> Remise de 50 % pour vos accompagnants.</li>
-                        </ul>
-                
-                        <div class="row">
-                            <div class="col-md-8 mb-4">
-                                <h4 class="display-6 fw-bold">Des conditions de réservation flexibles</h4>
-                                <p class="lead">Réservez facilement votre espace de travail à l'avance grâce à notre moteur de réservation en ligne, ou directement via Messenger, WhatsApp, ou par téléphone.</p>
-                            </div>
-                            <div class="col-md-4 text-center align-self-center">
-                                <a href="{{ path('app_v2_contact') }}" class="btn rounded-pill px-5 btn-primary btn-lg">En savoir plus</a>
-                            </div>
-                        </div>
-                
-                        <p class="mt-5"><small>Le Contrat Membre VIP Olona Talents est régie par les lois de Madagascar. Les tarifs sont garantis pour une durée d’un an avec une possibilité de révision à partir du 1er janvier 2026. Souscrivez aujourd'hui pour accéder à un monde d'optimisation et de qualité de service.</small></p>
-                    </div>
-                </section>
-
+<header class="header-home">
+    <div class="page-content">
+        <div class="home-banner-section header-home-user bg-cover" style="background-image:url({{ asset('v2/images/coworking-olona-talents.webp')}})">
+            <div class="home-inner-section">
+                <div class="mid-section">
+                    <div id="liveDateTime" data-initial-date="{{ 'now'|date('Y-m-d H:i:s') }}"></div>
+                    <div class="title-large">Contrat Membre <span>VIP</span> <br>Olona Talents</div>
+                </div>
             </div>
         </div>
     </div>
-</section>
-<section class="container-fluid py-5">
-
-  <div class="bg-dark text-secondary px-4 py-5 text-center" data-bs-theme="dark">
-      <div class="py-5">
-        <h2 class="display-5 fw-bold text-white mb-3">Devenir membre VIP</h2>
-        <div class="col-lg-6 mx-auto">
-          <p class="text-center lead mb-4 text-white">
-            Transformez votre expérience de travail avec notre offre VIP exclusive. Remplissez le formulaire ci-dessous pour réserver votre espace et bénéficiez d'un accès prioritaire à nos installations de premier ordre. Que ce soit pour un passage rapide ou une quête de productivité prolongée, notre service VIP répond à toutes vos attentes.
-          </p>
-          <div class="row justify-content-lg-center">
-            <div class="col-12 col-sm-10" id="contractForm">
-              <!-- Form -->
-              {{ form_start(form) }}
-                <div class="row gx-3">
-                  <div class="col-md-6">        
-                    <!-- Full name -->
-                    <div class="mb-3 h6 text-white mt-2 text-end" id="person-type">
-                      Je suis une
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <!-- Guests -->
-                    <div class="mb-3">
-                      {{ form_widget(form.typePerson, {'attr': {'placeholder': 'Prénom(s)'}}) }}
-                    </div>  
-                  </div>
-                </div>
-                <div class="row gx-3">
-                  <div class="col-md-6">        
-                    <!-- Full name -->
-                    <div class="mb-3">
-                      {{ form_widget(form.socialReason, {'attr': {'placeholder': 'Raison sociale'}}) }}
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <!-- Guests -->
-                    <div class="mb-3">
-                      {{ form_widget(form.siret, {'attr': {'placeholder': 'Numéro de SIRET'}}) }}
-                    </div>  
-                  </div>
-                </div>
-                <div class="row gx-3">
-                  <div class="col-md-6">        
-                    <!-- Full name -->
-                    <div class="mb-3">
-                      {{ form_widget(form.firstName, {'attr': {'placeholder': 'Nom'}}) }}
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <!-- Guests -->
-                    <div class="mb-3">
-                      {{ form_widget(form.lastName, {'attr': {'placeholder': 'Prénom(s)'}}) }}
-                    </div>  
-                  </div>
-                </div>
-                <div class="row gx-3">
-                  <div class="col-md-6">   
-                    <div class="mb-3">
-                      {{ form_widget(form.telephone, {'attr': {'placeholder': 'Téléphone'}}) }}
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-  
-                    <!-- Date -->
-                    <div class="mb-3">
-                      {{ form_widget(form.email, {'attr': {'placeholder': 'Email'}}) }}
-                    </div>
-                  </div>
-                </div>
-                <div class="row gx-3">
-                  <div class="col-md-6">   
-                    <!-- Email address -->
-                    <div class="mb-3">
-                      {{ form_widget(form.adress, {'attr': {'placeholder': 'Adresse'}}) }}
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="mb-3">
-                      {{ form_widget(form.postalCode, {'attr': {'placeholder': 'Code postale'}}) }}
-                    </div>
-                  </div>
-                </div>
-                <div class="row gx-3">
-                  <div class="col-md-6">   
-                    <!-- Email address -->
-                    <div class="mb-3">
-                      {{ form_widget(form.city, {'attr': {'placeholder': 'Ville'}}) }}
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="mb-3">
-                      {{ form_widget(form.localisation, {'attr': {'placeholder': 'Pays'}}) }}
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-
-                  <div class="mb-3 col-md-8 mx-auto">
-                    <div class="row">
-                        <div class="col-auto">
-                          {{ form_widget(form.acceptTerms) }}
-                        </div>
-                        <div class="col-auto">
-                          <label class="form-check-label required" for="contract_acceptTerms">J'accepte les <a class="text-warning fw-bolder" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: pointer;">conditions d'utilisation</a></label>
+</header>
+<div class="section-membre-vip">
+    <div class="container">
+        <div class="section-content">
+            <div class="row">
+                <div class="col-lg-7 col-md-12">
+                    <div class="explore-content">
+                        <div class="explore-content_">
+                            <div class="title-small">Membre VIP</div>
+                            <div class="title-large">
+                                <h2 class="display-5 fw-bold">Pourquoi choisir notre Contrat Membre VIP ?</h2>
+                                <p>En souscrivant au service VIP Olona Talents, vous intégrez une communauté d'élite bénéficiant de privilèges exclusifs. Profitez d'un environnement de travail optimisé avec des avantages conçus pour booster votre productivité.</p>
+                                <h3 class="mt-5 mb-3 display-6 fw-bold">Avantages exclusifs</h3>
+                                <ul class="mb-5">
+                                    <li><i class="bi bi-check h5 text-danger me-2"></i> Réservations illimitées et prioritaires (du lundi au vendredi, de 8h à 18h).</li>
+                                    <li><i class="bi bi-check h5 text-danger me-2"></i> Flexibilité élargie dans les heures d'accès.</li>
+                                    <li><i class="bi bi-check h5 text-danger me-2"></i> Connexion haut débit Starlink pour une productivité optimale.</li>
+                                    <li><i class="bi bi-check h5 text-danger me-2"></i> Contingence assurée avec des groupes électrogènes.</li>
+                                    <li><i class="bi bi-check h5 text-danger me-2"></i> 600 crédits mensuels à dépenser sur Olona Talents.</li>
+                                    <li><i class="bi bi-check h5 text-danger me-2"></i> Promotion facultative dans le post "Coworker du jour" sur Facebook.</li>
+                                    <li><i class="bi bi-check h5 text-danger me-2"></i> Réduction de 25 % sur nos services complementaires.</li>
+                                    <li><i class="bi bi-check h5 text-danger me-2"></i> Remise de 50 % pour vos accompagnants.</li>
+                                </ul>
+                            </div>
+                            <div class="more-btn_">
+                                 <a href="{{ path('app_v2_contact') }}" class="btn btn-primary">En savoir plus</a>
+                            </div>
                         </div>
                     </div>
-                  </div>
                 </div>
-                <div class="row">
-
-                  <div class="col mx-auto text-center">
-                    <!-- Button -->
-                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                        <button type="submit" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Je veux devenir membre VIP</button>
+                <div class="col-lg-5 col-md-12">
+                    <div class="explore-media-wrap">
+                        <div class="media">
+                            <img src="{{ asset('v2/images/membre_vip.webp') }}" alt="">
+                        </div>
                     </div>
-                  </div>
                 </div>
-                <div style="display: none;">
-                  {{ form_widget(form) }}
-                </div>
-                {{ form_end(form) }}
             </div>
-          </div>
         </div>
-      </div>
-  </div>
-
+        <hr/>
+        <div class="row mt-5">
+            <div class="col-md-5">
+                <h2 class="display-6 fw-bold">Des conditions de réservation flexibles</h2>
+            </div>
+            <div class="col-md-7">
+                <p>Réservez facilement votre espace de travail à l'avance grâce à notre moteur de réservation en ligne, ou directement via Messenger, WhatsApp, ou par téléphone.</p>           
+                <p>Le Contrat Membre VIP Olona Talents est régie par les lois de Madagascar. Les tarifs sont garantis pour une durée d’un an avec une possibilité de révision à partir du 1er janvier 2026. Souscrivez aujourd'hui pour accéder à un monde d'optimisation et de qualité de service.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="reservation_espace">
+    <div class="container" >
+        <div class="row justify-content-between">
+            <div class="col-lg-7">
+                <div class="bg-reservationE" style="background-image:url({{ asset('images/coworking/vip-coworking.png')}})"></div>
+            </div>
+            <div class="col-lg-5">
+                <h2 class="display-5 fw-bold mb-3">Devenir membre VIP</h2>
+                <p class="lead mb-4">
+                    Transformez votre expérience de travail avec notre offre VIP exclusive. Remplissez le formulaire ci-dessous pour réserver votre espace et bénéficiez d'un accès prioritaire à nos installations de premier ordre. Que ce soit pour un passage rapide ou une quête de productivité prolongée, notre service VIP répond à toutes vos attentes.
+                </p>
+                <div id="reservationForm">
+                    <!-- Form -->
+                    {{ form_start(form) }}
+                    <div class="row gx-3">
+                        <div class="col-md-6">        
+                            <!-- Full name -->
+                            <div class="mb-3 h6 text-white mt-2 text-end" id="person-type">
+                            Je suis une
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Guests -->
+                            <div class="mb-3">
+                            {{ form_widget(form.typePerson, {'attr': {'placeholder': 'Prénom(s)'}}) }}
+                            </div>  
+                        </div>
+                    </div>
+                    <div class="row gx-3">
+                        <div class="col-md-6">        
+                            <!-- Full name -->
+                            <div class="mb-3">
+                            {{ form_widget(form.socialReason, {'attr': {'placeholder': 'Raison sociale'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Guests -->
+                            <div class="mb-3">
+                            {{ form_widget(form.siret, {'attr': {'placeholder': 'Numéro de SIRET'}}) }}
+                            </div>  
+                        </div>
+                    </div>
+                    <div class="row gx-3">
+                        <div class="col-md-6">        
+                            <!-- Full name -->
+                            <div class="mb-3">
+                            {{ form_widget(form.firstName, {'attr': {'placeholder': 'Nom'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Guests -->
+                            <div class="mb-3">
+                            {{ form_widget(form.lastName, {'attr': {'placeholder': 'Prénom(s)'}}) }}
+                            </div>  
+                        </div>
+                    </div>
+                    <div class="row gx-3">
+                        <div class="col-md-6">   
+                            <div class="mb-3">
+                            {{ form_widget(form.telephone, {'attr': {'placeholder': 'Téléphone'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Date -->
+                            <div class="mb-3">
+                            {{ form_widget(form.email, {'attr': {'placeholder': 'Email'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row gx-3">
+                        <div class="col-md-6">   
+                            <!-- Email address -->
+                            <div class="mb-3">
+                            {{ form_widget(form.adress, {'attr': {'placeholder': 'Adresse'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                            {{ form_widget(form.postalCode, {'attr': {'placeholder': 'Code postale'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row gx-3">
+                        <div class="col-md-6">   
+                            <!-- Email address -->
+                            <div class="mb-3">
+                            {{ form_widget(form.city, {'attr': {'placeholder': 'Ville'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                            {{ form_widget(form.localisation, {'attr': {'placeholder': 'Pays'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-8 mx-auto">
+                            <div class="row">
+                                <div class="col-auto">
+                                {{ form_widget(form.acceptTerms) }}
+                                </div>
+                                <div class="col-auto">
+                                <label class="form-check-label required" for="contract_acceptTerms">J'accepte les <a class="text-warning fw-bolder" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: pointer;">conditions d'utilisation</a></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mx-auto text-center">
+                            <!-- Button -->
+                            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                                <button type="submit" class="btn btn-primary">Je veux devenir membre VIP</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: none;">
+                    {{ form_widget(form) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

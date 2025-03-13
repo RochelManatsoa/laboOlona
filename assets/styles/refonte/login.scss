@@ -18,6 +18,9 @@
         position: absolute;
         width: 100%;
         top: 0;
+        @include breakpoint_991{
+            text-align: center;
+        }
         .img-fluid {
             width: 200px;
             height: 56px;
@@ -28,8 +31,12 @@
             font-weight: 300;
             font-size: 14px;
             text-align: right;
+            @include breakpoint_991{
+                text-align: center;
+                margin-top: 1.5rem;
+            }
             a {
-                font-size: 17px;
+                font-size: 17px; 
                 text-decoration: underline !important;
             }
         }
@@ -40,6 +47,17 @@
         display: flex;
         height: 100%;
         align-items: center;
+        @include breakpoint_991{
+            padding-top: 210px;
+            .container {
+                > .row {
+                    flex-direction: column-reverse;
+                }
+            }
+            .register-left {
+                margin-bottom: 1rem;
+            }
+        }
         .login-left-block {
             color: $white;
             h1 {
@@ -52,6 +70,17 @@
                     color: $yelow-primary;
                     font-weight: 500;
                 }
+                @include breakpoint_991{
+                    font-size: 30px;
+                    line-height: 130%;
+                    max-width: 100%;
+                    margin-top: 3rem;
+                }
+                @include breakpoint_1199{
+                    font-size: 40px;
+                    line-height: 130%;
+                    max-width: 100%;
+                }
             }
             .features_list_ {
                 list-style: none;
@@ -61,6 +90,10 @@
                     display: inline-block;
                     margin-right: 15px;
                     margin-bottom: 15px;
+                    @include breakpoint_767{
+                        display: block;
+                        text-align: center;
+                    }
                     a {
                         display: block;
                         padding: 10px 15px;
