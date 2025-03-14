@@ -59,10 +59,10 @@ class OlonaTalentsController extends AbstractController
             return $this->redirectToRoute('app_v2_dashboard');
         }
         return $this->render('v2/home.html.twig', [
-            'candidats' => $this->candidatRepository->findBy(
-                ['status' => CandidateProfile::STATUS_VALID],
+            'job_offers' => $this->annonceRepository->findBy(
+                ['status' => JobListing::STATUS_PUBLISHED],
                 ['id' => 'DESC'],
-                18
+                5
             ),
         ]);
     }
