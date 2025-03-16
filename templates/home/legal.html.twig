@@ -1,4 +1,4 @@
-{% extends 'base_blog.html.twig' %}
+{% extends 'base_page.html.twig' %}
 
 {% block title %}Mentions légales{% endblock %}
 
@@ -13,23 +13,18 @@
 <meta property="og:image:height" content="630"/>
 {% endblock %}
 
-{% block paralax %}
-<div class="paralax event-design">
-  {% include "blog/_nav.html.twig" %}
-  <div class="main-content-min">
-    <div class="container">
-      <!-- Content Section -->
-      <div class="row">
-        <div class="col-12 col-sm-8 mx-auto text-center">
-          <h1 class="display-4 fw-bolder my-5">{{ 'app_home.legal.h1'|trans }}</h1>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
-
 {% block body %}
+<header class="header-home">
+    <div class="page-content">
+        <div class="home-banner-section bg-cover" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
+            <div class="home-inner-section">
+                <div class="mid-section">
+                    <h1 class="title-large">{{ 'app_home.legal.h1'|trans }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
 <section id="legal">
     <div class="container my-5 d-flex flex-column justify-content-center">
         <div class="row my-4">

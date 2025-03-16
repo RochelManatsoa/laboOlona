@@ -4,11 +4,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" href="{{ asset('images/favicon.ico') }}">
-        <title>{% block title %}Coworking | Olona Talents{% endblock %}</title>
+        <title>{% block title %}Blog | Olona Talents{% endblock %}</title>
         {% block meta %}
           <meta name="description" content="Réservez votre espace dès aujourd'hui chez Olona Talents : 18 postes de coworking disponibles, modernes et connectés. Profitez d'un cadre inspirant pour booster votre productivité et travailler en toute sérénité.">
           <meta name="keywords" content="coworking, antananarivo, madagascar, espace francophone, talents, freelance, projet, offre, portage salarial, cooptation, recrutement">
-          <meta property="og:title" content="Coworking | Olona Talents">
+          <meta property="og:title" content="Blog | Olona Talents">
           <meta property="og:description" content="Réservez votre espace dès aujourd'hui chez Olona Talents : 18 postes de coworking disponibles, modernes et connectés. Profitez d'un cadre inspirant pour booster votre productivité et travailler en toute sérénité.">
           <meta property="og:url" content="{{ app.request.uri }}">
           <meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/opengraph/coworking.png') }}">
@@ -16,18 +16,15 @@
           <meta property="og:image:height" content="630"/>
         {% endblock %}
         {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
-        {{ encore_entry_script_tags('app') }}
+          {{ encore_entry_link_tags('app') }}
+          {{ encore_entry_script_tags('app') }}
         {% endblock %}
         {% include "gtag_cookie_script.html.twig" %}
     </head>
     <body id="base-coworking">
         {% block header %}
             <!-- Boutons en haut à droite -->
-            {% include "coworking/_nav.html.twig" %}
-            {% block admin %}
-                {% include "coworking/_nav_admin.html.twig" %}
-            {% endblock %}
+            {% include "_nav_page.html.twig" %}
         {% endblock %}
 
         {% block body %}{% endblock %}
@@ -121,6 +118,7 @@
             </div>
         </footer>
         {% include "cookies_management.html.twig" %}
+    
         <script>
     
           function loadCKEditor() {

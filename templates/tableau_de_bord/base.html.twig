@@ -22,6 +22,9 @@
 			{% set last_query = app.request.query.get('q', '') %}
 				<nav class="header-area bg-white">
 					<div class="d-flex justify-content-between align-items-center">
+						<a class="navbar-brand d-block d-lg-none" href="{{ path('app_home') }}">
+							<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="150" height="56" class="" alt="Logo">
+						</a>
 						<div class="db-search">
 						{% if action is defined %}
 							<form action="{{ action }}" class="input-group rounded-pill w-100">
@@ -35,7 +38,7 @@
 							</form>
 						{% endif %}
 						</div>
-						<div class="d-flex justify-content-end align-items-center info_db">
+						<div class="d-none d-lg-flex justify-content-end align-items-center info_db">
 							{% if app.user %}
 								<button id="switch-theme">
 									<i class="bi bi-moon-stars-fill"></i>
@@ -91,6 +94,11 @@
 								<a href="{{ path('app_login')}}" class="me-3 mt-2">Se connecter</a>
 							{% endif %}
 						</div>
+						<button id="menuMobile" class="d-lg-none menu-icon" type="button" aria-controls="offcanvasScrolling" aria-expanded="false" aria-label="Toggle navigation">
+							<span></span>
+							<span></span>
+							<span></span>
+						</button>
 					</div>
 				</nav>
 			{% endblock %}

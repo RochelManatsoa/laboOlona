@@ -12,6 +12,7 @@
         margin-left: 5rem;
         @include breakpoint-991{
             margin-bottom: 30px;
+            margin-left: 0;
         }
         @include breakpoint-575{
             padding: 15px;
@@ -47,6 +48,10 @@
         background-color: #ffffff;
         background-position: center;
         position: relative;
+        @include breakpoint_767{
+            height: 250px;
+            margin-bottom: 1rem;
+        }
         .datePosted {
             background-color: $red-primary;
             color: $white;

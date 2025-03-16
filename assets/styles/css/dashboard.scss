@@ -17,6 +17,9 @@ body {
     padding: 12px;
     border-radius: 10px;
     box-shadow: 0 0 35px #9aa1ab26;
+    @include breakpoint_991{
+       left: 25px;
+    }
 }
 
 .sidebar-area {
@@ -29,9 +32,18 @@ body {
     padding: 35px 0;
     overflow: hidden;
     transition: .5s;
+    @include breakpoint_991{
+        left: -300px;
+        &.active {
+            left: 0;
+        }
+    }
 
     .logo-brand {
         padding: 0 25px;
+    }
+    .navbar-brand {
+        transition: all 0.3s ease;
     }
 
     .scroll-container {
@@ -176,7 +188,9 @@ body {
     padding-left: 322px;
     padding-right: 25px;
     background-color: #D9E6FF;
-
+    @include breakpoint_991{
+        padding-left: 25px;
+    }
     .content-db_ {
         background-color: white;
     }
@@ -192,12 +206,17 @@ body {
     cursor: pointer;
     border: 0;
     background: none;
-
+    
     span {
         width: 40px;
         height: 2px;
         background-color: #000000;
         margin: 4px 0;
+    }
+}
+#menuIcon {
+    @include breakpoint_991{
+        display: none !important;
     }
 }
 
@@ -649,6 +668,11 @@ svg {
 }
 
 .detail_db {
+    @include breakpoint_1199{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+    }
     .detail_left {
         flex: 1;
         line-height: 130%;
@@ -673,6 +697,9 @@ footer {
     padding-left: 320px;
     margin: 0 !important;
     padding-bottom: 0 !important;
+    @include breakpoint_991{
+        padding-left: 25px;
+    }
 }
 
 /* CV thèque */
@@ -697,10 +724,16 @@ footer {
             top: 0;
             width: 330px;
             height: 100%;
+            @include breakpoint_1199{
+                display: none !important;
+            }
         }
         .recruteur-top-item {
             position: relative;
             padding-right: 16rem;
+            @include breakpoint_1199{
+                padding-right: 0;
+            }
             &.recruteur-filter {
                 padding-right: 0;
             }
@@ -714,6 +747,9 @@ footer {
                 padding-left: 0;
                 display: flex;
                 gap: 15px;
+                @include breakpoint_767{
+                    flex-wrap: wrap;
+                }
                 li {
                     flex:1 1 25%;
                     padding: 12px;
@@ -752,6 +788,9 @@ footer {
                 &:hover {
                     background: #516BFF;
                 }
+                @include breakpoint_1199{
+                    padding: 10p !important;
+                }
             }
         }
         &.box-recrutement_ {
@@ -769,6 +808,11 @@ footer {
                         background: transparent;
                         color: white !important;
                     }
+                }
+            }
+            .recruteur-item {
+                @include breakpoint_767{
+                    text-align: center;
                 }
             }
         }
@@ -799,6 +843,10 @@ footer {
             > .row > [class*="col-"] {
                 padding-right: 5px;
                 padding-left: 5px;
+                @include breakpoint_767{
+                    margin-top: 15px;
+                    border-right: 0;
+                }
             }
             
         }
@@ -917,6 +965,10 @@ footer {
             padding: 10px;
             color: white !important;
             border-radius: 8px;
+            @include breakpoint_575{
+                width: 100%;
+                display: block;
+            }
         }
     }
 }
@@ -985,7 +1037,7 @@ footer {
                             border-radius: 100%;
                             top: 50%;
                             transform: translateY(-50%);
-                            right: -8px;
+                            right: -33px;
                             transition: all .3s ease;
                             img {
                                 width: 20px;
@@ -1093,7 +1145,7 @@ span.certificated {
     padding: 0;
     line-height: 100%;
     position: absolute;
-    right: -7rem;
+    right: 0;
     top: 12px;
     transform: translateY(-50%);
     font-size: 24px;
@@ -1112,6 +1164,9 @@ span.certificated {
     }
 }
 .profil-list-link {
+    @include breakpoint_575{
+        justify-content: center;
+    }
     .favoris-add {
         position: static;
         transform: none;
@@ -1160,6 +1215,9 @@ span.certificated {
             margin-bottom: 0;
         }
         .profil-list-name {
+            @include breakpoint_767{
+                justify-content: center;
+            }
             .profil-photo_ {
                 background-color: #f9f9f9;
                 width: 60px;
@@ -1202,6 +1260,13 @@ span.certificated {
 .espace-pubs  {
     background: #008037;
     color: white;
+    @include breakpoint_767{
+        >div {
+            flex-direction: column-reverse;
+            display: flex;
+            flex-wrap: wrap;
+        }
+    }
     .item-espace-pub {
         font-size: 20px;
         line-height: 130%;
@@ -1226,6 +1291,10 @@ span.certificated {
         border: 1px solid #54319b;
         border-radius: 10px;
         position: relative;
+        @include breakpoint_767{
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
         &::after {
             content: "";
             position: absolute;
@@ -1236,6 +1305,9 @@ span.certificated {
             left: 50%;
             transform: translateX(-50%);
             bottom: -59px;
+            @include breakpoint_767{
+                display: none !important;
+            }
         }
         &.heading-abonnement-item-c {
             &::after {
@@ -1355,6 +1427,9 @@ span.certificated {
             background-color: #54319b;
             border-color: #54319b;
             min-width: 200px;
+            @include breakpoint_575{
+               min-width: inherit;
+            }
             &:hover {
                 background-color: transparent;
                 color: #54319b
@@ -1574,6 +1649,10 @@ span.vue_profil {
     font-size: 12px;
     color: #9f9f9f;
     margin-left: 2rem;
+    @include breakpoint_767{
+        margin-left: 0;
+        display: block;
+    }
 }
 .badge_pro {
     position: absolute;
@@ -1583,4 +1662,46 @@ span.vue_profil {
     padding: 3px 7px;
     color: white;
     top: -6px;
+}
+
+#sidebarT {
+    transition: all 0.3s ease;
+    .sidebar-text {
+        transition: opacity 0.3s ease, margin-left 0.3s ease;
+    }
+}
+.sidebar-collapsed {
+    transition: all 0.3s ease;
+    .sidebar-area {
+        width: 60px;
+    }
+    .db-content {
+        padding-left: 90px;
+    }
+    .header-area {
+        left: 90px;
+    }
+    .logo-brand {
+        padding: 3px;
+    }
+    .scroll-container .nav-pills {
+        padding: 0 !important;
+    }
+    .navbar-brand {
+        display: none;
+    }
+    .sidebar-text {
+        opacity: 0;
+        margin-left: -10px;
+    }
+}
+
+.aside-right-item_ {
+    h2 {
+        .btn-primary {
+            &:hover {
+                background-color: transparent !important;
+            }
+        }
+    }
 }

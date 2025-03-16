@@ -47,13 +47,28 @@ $blue-primary: #3b5998;
     }
 }
 .nav-top-right {
+    @include breakpoint_991{
+        display: none;
+        position: absolute;
+        top: 100%;
+        width: 100%;
+        left: 0;
+    }
     .nav-list-top {
         display: table;
         margin-bottom: 0;
+        @include breakpoint_991{
+            background: $white;
+            padding: 20px;
+            display: block;
+        }
         .nav-item-top {
             display: table-cell;
             vertical-align: middle;
             padding: 0 5px;
+            @include breakpoint_991{
+                display: block;
+            }
             &.nav_coworking {
                 .nav--link {
                     background:$yelow-primary;
@@ -102,6 +117,15 @@ $blue-primary: #3b5998;
                 font-weight: 300;
                 padding: 7px 10px;
                 border-radius: 3px;
+                @include breakpoint_991{
+                    display: block;
+                    width: 100%;
+                    color: $black !important;
+                    border-top: 1px dashed #ddd;
+                    border-radius: 0;
+                    border-bottom: 1px dashed #ddd;
+                    padding: 15px 0;
+                }
             }
         }
     }
@@ -117,8 +141,17 @@ $blue-primary: #3b5998;
     }
 }
 .home-header-top {
+    .navbar-toggler {
+        display: none;
+        @include breakpoint_991{
+            display: block;
+        }
+    }
     .login_home {
         background-color: transparent !important;
+        @include breakpoint_991{
+            margin-right: 0 !important;
+        }
         &:hover {
             background-color: transparent !important;
             text-decoration: none !important;
@@ -137,6 +170,9 @@ $blue-primary: #3b5998;
     .info-text {
         text-align: center;
         font-size: 24px;
+        @include breakpoint-991{
+            font-size: 14px;
+        }
     }
     .formBlock {
         background-color: $white;

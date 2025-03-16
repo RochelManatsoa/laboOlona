@@ -9,5 +9,13 @@ function handlePageLoad() {
         $(this).toggleClass('visible');
         $(this).siblings('.sub-nav-pills').toggle()
     });
-    
+    $('.navbar-toggler').on('click', function()  {
+        $('.nav-top-right').toggle();
+    });
+    $('#menuIcon').on('click', function () {
+        $('.bootstrap-light').toggleClass('sidebar-collapsed');
+    });
+    $('#menuMobile').on('click', function () {
+        $('.sidebar-area').toggleClass('active');
+    });
 }

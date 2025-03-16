@@ -111,6 +111,11 @@ class EntrepriseController extends AbstractController
     {
         return $this->render('tableau_de_bord/entreprise/tarifs.html.twig', $this->getData());
     }
+    #[Route('/choix', name: 'app_tableau_de_bord_entreprise_tarif_choice')]
+    public function tchoice(): Response
+    {
+        return $this->render('tableau_de_bord/entreprise/tarif_choice.html.twig', $this->getData());
+    }
 
     #[Route('/profil-candidat/{id}', name: 'app_tableau_de_bord_entreprise_profil_candidat')]
     public function profilcandidat(Request $request, int $id, CandidatManager $candidatManager, AppExtension $appExtension): Response

@@ -5,14 +5,14 @@
         </div>
         <div class="nav-top-right">
             <ul class="nav-list-top">
-                <li class="nav-item-top nav_coworking">
+                <li class="nav-item-top">
                     <a class="nav--link" href="{{ path('app_coworking_main') }}">Coworking</a>
                 </li>
                 <li class="nav-item-top">
-                    <a class="nav--link" href="{{ path('app_blog_index') }}">Le Blog</a>
+                    <a class="nav--link" href="{{ path('app_home_simulateur_portage') }}">Portage salarial</a>
                 </li>
                 <li class="nav-item-top">
-                    <a class="nav--link" href="{{ path('app_home_simulateur_portage') }}">Portage salarial</a>
+                    <a class="nav--link" href="{{ path('app_blog_index') }}">Le Blog</a>
                 </li>
                 <li class="nav-item-top">
                     <a class="nav--link" href="{{ path('app_contact_us') }}">Nous contacter</a>
@@ -54,7 +54,7 @@
             </button>#}
         </div>
         {% endif %}
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <i class="bi bi-list h4"></i>
         </button>
     </div>
