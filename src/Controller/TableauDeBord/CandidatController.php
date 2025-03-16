@@ -2,21 +2,27 @@
 
 namespace App\Controller\TableauDeBord;
 
-use App\Entity\BusinessModel\PurchasedContact;
 use App\Entity\User;
 use App\Entity\Prestation;
 use App\Entity\Notification;
 use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
+use App\Form\ChangePasswordFormType;
 use App\Entity\Entreprise\JobListing;
+use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
+use App\Entity\Moderateur\ContactForm;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\TableauDeBord\AssistanceType;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\BusinessModel\PackageRepository;
+use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/tableau-de-bord/candidat')]
 
@@ -133,27 +139,82 @@ class CandidatController extends AbstractController
     }
 
     #[Route('/notification', name: 'app_tableau_de_bord_candidat_notification')]
-    public function notification(): Response
+    public function notification(Request $request): Response
     {
-        return $this->render('tableau_de_bord/candidat/notification.html.twig', $this->getData());
+        $page = $request->query->get('page', 1);
+        $params = $this->getData();
+        $currentUser = $params['currentUser'];
+        $params['notifications'] = $this->em->getRepository(Notification::class)->findByDestinataire($currentUser,null, [], null, $page);
+        return $this->render('tableau_de_bord/candidat/notification.html.twig', $params);
     }
 
     #[Route('/mon-compte', name: 'app_tableau_de_bord_candidat_mon_compte')]
-    public function mycompte(): Response
+    public function mycompte(Request $request): Response
     {
-        return $this->render('tableau_de_bord/candidat/mon_compte.html.twig', $this->getData());
+        $params = $this->getData();
+        $candidat = $params['candidat'];
+        $form = $this->createForm(EditCandidateProfile::class, $candidat);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $this->em->persist($candidat);
+            $this->em->flush();
+            $this->addFlash('success', 'Informations enregistrées');
+        }
+        $params['form'] = $form->createView();
+
+        return $this->render('tableau_de_bord/candidat/mon_compte.html.twig', $params);
     }
 
     #[Route('/mise-a-jour-mot-de-passe', name: 'app_tableau_de_bord_candidat_mise_a_jour_mot_de_passe')]
-    public function updatepassword(): Response
+    public function updatepassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
-        return $this->render('tableau_de_bord/candidat/mise_a_jour_mot_de_passe.html.twig', $this->getData());
+        $params = $this->getData();
+        $currentUser = $params['currentUser'];
+        $form = $this->createForm(ChangePasswordFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $encodedPassword = $passwordHasher->hashPassword(
+                $currentUser,
+                $form->get('plainPassword')->getData()
+            );
+
+            $currentUser->setPassword($encodedPassword);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        $params['form'] = $form->createView();
+
+        return $this->render('tableau_de_bord/candidat/mise_a_jour_mot_de_passe.html.twig', $params);
     }
 
     #[Route('/assistance', name: 'app_tableau_de_bord_candidat_assistance')]
-    public function assistance(): Response
+    public function assistance(Request $request, EntityManagerInterface $entityManager, MailerService $mailerService): Response
     {
-        return $this->render('tableau_de_bord/candidat/assistance.html.twig', $this->getData());
+        $params = $this->getData();
+        $contactForm = new ContactForm;
+        $contactForm->setCreatedAt(new \DateTime());
+        $form = $this->createForm(AssistanceType::class, $contactForm);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contactForm = $form->getData();
+            $entityManager->persist($contactForm);
+            $entityManager->flush();
+            $mailerService->sendMultiple(
+                ["contact@olona-talents.com", "support@olona-talents.com", "olonaprod@gmail.com"],
+                "Nouvelle entrée sur le formulaire de contact",
+                "contact.html.twig",
+                [
+                    'user' => $contactForm,
+                ]
+            );
+            $this->addFlash('success', 'Votre message a été bien envoyé. Nous vous repondrons dans le plus bref delais');
+        }
+        $params['form'] = $form->createView();
+        
+        return $this->render('tableau_de_bord/candidat/assistance.html.twig', $params);
     }
 
     #[Route('/credit', name: 'app_tableau_de_bord_candidat_credit')]
