@@ -18,7 +18,76 @@
 <section class="detail_db d-md-flex bp_">
     <div class="biographie-profil mb-4 p-4">
         <div class="mission-list-title">
-            <h1>Liste de mes prestations</h1>
+            <h1>Mes prestations</h1>
+                {% set tableClass = 'table' %}
+                {% if prestations|length > 0 %}
+                    <p class="text-center">
+                        <a href="{{ path('app_v2_create_prestation')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+                            <i class="bi bi-plus-lg"></i>
+                            Créer une prestation (10 crédits)
+                        </a>
+                    </p>
+                    
+                    <div class="table-responsive">
+                        <table class="{{ tableClass }}">
+                            <thead>
+                                <tr>
+                                    <td scope="col" class="h5">{{ knp_pagination_sortable(prestations, 'Titre', 'p.titre') }}</td>
+                                    <td scope="col-2" class="h5 text-center">Boost</td>
+                                    <td scope="col-1" class="h5">{{ knp_pagination_sortable(prestations, 'Statut', 'p.status') }}</td>
+                                    <td scope="col-2" class=""></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in prestations %}
+                                    <tr id="row_prestation_recruiter_{{item.id}}">
+                                        <td class="">
+                                                <a href="{{ path('app_v2_edit_prestation', { 'prestation': item.id })}}">
+                                                    {{ item.titre }}
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                            <br>
+                                            <span class="fw-lighter small">Créé le
+                                                {{ item.createdAt|date('d/m/Y') }}</span>
+                                        </td>
+                                        <td class="col-2 text-center" id="col_prestation_recruiter_{{item.id}}">
+                                            {{ isPrestationBoosted(item)|raw }}
+                                        </td>
+                                        <td class="col-2">{{ satusPrestation(item)|raw }}</td>
+                                        <td class="col-2">
+                                            <a href="{{ path('app_v2_view_prestation', { 'prestation': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <form method="POST" action="{{ path('app_v2_delete_prestation')}}">
+                                                <input type="hidden" name="prestationId" value="{{item.id}}">
+                                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette prestation?');" class="btn btn-sm btn-danger rounded-pill">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="navigation mt-5">
+                            {{ knp_pagination_render(prestations, 'parts/_pagination.html.twig') }}
+                        </div>
+                    </div>
+                {% else %}
+                    <h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+                        <span class="">
+                            <img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+                        </span>
+                        1ère chose à faire
+                    </h3>
+    
+                    <p class="text-center">
+                        <a href="{{ path('app_v2_create_prestation')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+                            <i class="bi bi-plus-lg"></i>
+                            Créer une prestation (10 crédits)
+                        </a>
+                    </p>
+                {% endif %}
         </div>
     </div>
 </section>

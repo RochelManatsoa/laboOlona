@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Prestation;
 use App\Data\V2\PrestationData;
+use App\Entity\CandidateProfile;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -47,6 +48,21 @@ class PrestationRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('p')->select('p')
             ->andWhere('p.status = :status')
             ->setParameter('status', $status)
+            ->addOrderBy('p.createdAt', 'DESC');
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            10,
+            []
+        );
+    }
+
+    public function paginateCandidatePrestations(CandidateProfile $candidateProfile, int $page = 1): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('p')->select('p')
+            ->andWhere('p.candidateProfile = :candidateProfile')
+            ->setParameter('candidateProfile', $candidateProfile)
             ->addOrderBy('p.createdAt', 'DESC');
 
         return $this->paginator->paginate(

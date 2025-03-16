@@ -20,6 +20,63 @@
         <div class="mission-list-title">
             <h1>Retrouvez à tout moment vos candidatures</h1>
             <p>Le suivi de leur statut, ainsi que l’historique des offres auxquelles vous avez postulé. Les candidatures archivées regroupent vos candidatures sur des offres expirées.</p>
+                {% set tableClass = 'table' %}
+                {% if candidatures|length > 0 %}
+                    
+                    <div class="table-responsive">
+                        <table class="{{ tableClass }}">
+                            <thead>
+                                <tr>
+                                    <td scope="col" class="h5">{{ knp_pagination_sortable(candidatures, 'Annonce', 'j.titre') }}</td>
+                                    <td scope="col" class="h5">{{ knp_pagination_sortable(candidatures, 'Status', 'a.status') }}</td>
+                                    <td scope="col" class="h5">{{ knp_pagination_sortable(candidatures, 'Deposé le', 'a.dateCandidature') }}</td>
+                                    <td scope="col" class=""></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in candidatures %}
+                                    <tr id="row_candidature_{{item.id}}">
+                                        <td class="">
+                                            {{ item.annonce.titre }}
+                                        </td>
+                                        <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
+                                            {{ item.status|raw }}
+                                        </td>
+                                        <td class="col-2">{{ item.dateCandidature|date('d/m/Y') }}</td>
+                                        <td class="col-2">
+                                            <a href="#" class="btn btn-sm btn-secondary rounded-pill">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <form method="POST" action="{{ path('app_v2_delete_prestation')}}">
+                                                <input type="hidden" name="prestationId" value="{{item.id}}">
+                                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette prestation?');" class="btn btn-sm btn-danger rounded-pill">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="navigation mt-5">
+                            {{ knp_pagination_render(candidatures, 'parts/_pagination.html.twig') }}
+                        </div>
+                    </div>
+                {% else %}
+                    <h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+                        <span class="">
+                            <img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+                        </span>
+                        1ère chose à faire
+                    </h3>
+    
+                    <p class="text-center">
+                        <a href="{{ path('app_v2_create_prestation')}}" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+                            <i class="bi bi-plus-lg"></i>
+                            Créer une prestation (10 crédits)
+                        </a>
+                    </p>
+                {% endif %}
         </div>
     </div>
 </section>
