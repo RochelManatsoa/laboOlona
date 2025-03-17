@@ -1705,3 +1705,232 @@ span.vue_profil {
         }
     }
 }
+#edit_entreprise,
+#edit_candidate_profile,
+#change_password_form {
+    .form-control,
+    .form-select {
+        background: #f5f5f5;
+        border-radius: 0;
+        padding: 15px;
+    }
+    label,
+    .col-form-label {
+        text-align: left !important;
+        font-weight: bold;
+        color: $black;
+    }
+    #edit_candidate_profile_tarifCandidat,
+    #edit_candidate_profile_birthday {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+    }
+    #edit_candidate_profile_candidat {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+        > div {
+            flex: 1 1 45%;
+        }
+    }
+    #edit_candidate_profile_birthday {
+        .input-group {
+            gap: 25px;
+        }
+    }
+}
+
+.mjr_mdp {
+    h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-top: 2rem;
+        color: black;
+    }
+    > form {
+        max-width: 400px;
+        margin: auto;
+        border: 1px solid $purple-primary;
+        padding: 40px;
+        border-radius: 10px;
+    }
+}
+.besoin_assitacne {
+    h2 {
+        margin-bottom: 2rem;
+        padding-top: 2rem;
+        color: black;
+    }
+    .form-control {
+        background: #f5f5f5;
+        border-radius: 0;
+        padding: 15px;
+    }
+}
+#row_prestation_recruiter_2 {
+    .btn-secondary {
+        background-color: #e4e4e4 !important;
+        border-color: #e4e4e4 !important;
+    }
+}
+.canditature_list {
+    .pr-4 {
+        padding-right: 5rem;
+    }
+}
+.reseaux_pro {
+    text-align: center;
+}
+
+.pack_standard_list{
+    .pack_standard_item {
+        padding: 30px;
+        background-color: $white;
+        box-shadow: 0px 0px 25px rgba(56, 152, 226, 0.3);
+        border-radius: 10px;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+        text-align: center;
+        transition: all .3s ease;
+        border: 1px solid rgb(56 152 226 / 50%);
+        &:after{
+            width: 110px;
+            height: 110px;
+            position: absolute;
+            right: -60px;
+            bottom: -60px;
+            content: '';
+            background-color: $purple-light;
+            border-radius: 50%;
+            opacity: 0.04;
+            z-index: -1;
+            transition: all .3s ease;
+        }
+        &:before{
+            width: 110px;
+            height: 110px;
+            position: absolute;
+            left: -60px;
+            top: -60px;
+            content: '';
+            background-color: $purple-light;
+            border-radius: 50%;
+            opacity: 0.04;
+            z-index: -1;
+            transition: all .3s ease;
+        }
+        .ps_media{
+            width: 100px;
+            height: 100px;
+            line-height: 0;
+            display: flex;
+            position: relative;
+            z-index: 1;
+            align-items: center;
+            justify-content: center;
+            margin: 0px auto 30px;
+            
+            img{
+                width: auto; 
+                transition: all .3s ease;
+            }
+            [class*='flaticon-']{
+                color: $purple-light;
+                font-size: 70px;
+                line-height: 0px;
+                transition: all .3s ease;
+                &:before{
+                    transform: translateX(-50%);
+                    left: 50%;
+                    position: inherit;
+                }
+            }
+            &:after{
+                transition: all .3s ease;
+                width: 100px;
+                height: 100px;
+                background-color: $white;
+                border-radius: 50%;
+                transform: translateX(-50%) translateY(-50%) scale(0.1);
+                position: absolute;
+                left: 50%;
+                content: '';
+                z-index: -1;
+                top: 50%;
+                opacity: 0;
+
+            }
+        }
+        .ps_content{
+            .btn-primary{
+                background-color: $yelow-primary !important;
+                color: $black !important;
+                font-size: 20px !important;
+                border-radius: 10px !important;
+                padding: 4px 15px !important;
+                display: inline-block !important;
+                margin-bottom: 10px !important;
+                border: 0 !important;
+                &:hover {
+                    background-color: $yelow-primary !important;
+                    color: $black !important;
+                }
+            }
+            .credit__ {
+                font-size: 36px;
+                font-weight: bold;
+                color: black;
+                sup {
+                    font-weight: normal;
+                    font-size: 20px;
+                    text-transform: uppercase;
+                }
+            }
+            span {
+                margin-bottom: 0px;
+                display: block;
+                transition: all .3s ease;
+                color: $purple-primary;
+                font-weight: bold;
+                font-size: 20px;
+                margin-top: 1rem;
+            }
+        }
+        &:hover{
+            background-color: $purple-light;
+            border: 0;
+            .credit__ {
+                color: $yelow-primary;
+            }
+            &:after{
+                background-color: $white;
+                opacity: 0.1;
+                width: 500%;
+                height: 500%;
+            }
+            &:before{
+                display: none;
+            }
+            .ps_content{
+                span{
+                    color: $white;
+                }
+            }
+            .ps_media{
+                img{
+                    transform: scale(0.8); 
+                }
+                [class*='flaticon-']{
+                    transform: scale(0.8); 
+                }
+                &:after{
+                    transform: translateX(-50%) translateY(-50%) scale(1);
+                    opacity: 1;
+                    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2)
+                }
+            }
+        }
+    }
+}

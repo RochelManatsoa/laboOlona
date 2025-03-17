@@ -21,13 +21,11 @@
             </ol>
         </div>
     </section>
-    <section class="recruteur-container">
-        <div class="recruteur-block d-block p-5 mb-4">
-            {{ form_start(form)}}
-            {{ form_widget(form)}}
-            <button type="submit" class="btn btn-primary">Envoyer</button>
-            {{ form_end(form)}}
-        </div>
-    </section>
-
+<div class="biographie-profil mb-4 p-4 besoin_assitacne">
+    <h2> Besoin d'assistance ? <br/> Dites-nous en plus sur vos besoins ! </h2>
+        {{ form_start(form)}}
+        {{ form_widget(form)}}
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+        {{ form_end(form)}}
+</div>
 {% endblock %}

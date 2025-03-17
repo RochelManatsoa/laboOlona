@@ -121,6 +121,22 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/missions_obtenues.html.twig', $this->getData());
     }
 
+    #[Route('/view-job-offer', name: 'app_tableau_de_bord_candidat_view_job_offer')]
+    public function viewjoboffer(): Response
+    {
+        return $this->render('tableau_de_bord/candidat/view_job_offer.html.twig', $this->getData());
+    }
+    #[Route('/creer-une-prestation', name: 'app_tableau_de_bord_candidat_creation_prestation')]
+    public function createpresta(): Response
+    {
+        return $this->render('tableau_de_bord/candidat/creation_prestation.html.twig', $this->getData());
+    }
+    #[Route('/pack-standard', name: 'app_tableau_de_bord_entreprise_tarifs_standard')]
+    public function standard(): Response
+    {
+        return $this->render('tableau_de_bord/candidat/tarifs_standard.html.twig', $this->getData());
+    }
+
     #[Route('/reseaux-professionnelles', name: 'app_tableau_de_bord_candidat_reseaux_professionnelles')]
     public function socialpro(Request $request): Response
     {

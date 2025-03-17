@@ -21,13 +21,11 @@
             </ol>
         </div>
     </section>
-    <section class="recruteur-container">
-        <div class="recruteur-block d-block p-5 mb-4">
-            {{ form_start(form)}}
-            {{ form_widget(form)}}
-            <button type="submit" class="btn btn-primary">Modifier mon mot de passe</button>
-            {{ form_end(form)}}
-        </div>
-    </section>
-
+<div class="biographie-profil mb-4 p-4 mjr_mdp">
+    <h2> Mettez à jour votre mot de passe </h2>
+    {{ form_start(form)}}
+    {{ form_widget(form)}}
+    <button type="submit" class="btn btn-primary">Modifier mon mot de passe</button>
+    {{ form_end(form)}}
+</div>
 {% endblock %}

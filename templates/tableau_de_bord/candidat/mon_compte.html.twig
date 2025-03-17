@@ -16,8 +16,11 @@
         </ol>
     </div>
 </section>
-{{ form_start(form)}}
-{{ form_widget(form)}}
-<button type="submit" class="btn btn-primary">Sauvegarder</button>
-{{ form_end(form)}}
+<div class="biographie-profil mb-4 p-4 apparition_">
+    {{ form_start(form)}}
+    {{ form_widget(form)}}
+    <hr/>
+    <button type="submit" class="btn btn-primary">Sauvegarder</button>
+    {{ form_end(form)}}
+</div>
 {% endblock %}
