@@ -3,25 +3,32 @@
 namespace App\Controller\TableauDeBord;
 
 use App\Entity\User;
+use App\Entity\Prestation;
+use App\Twig\AppExtension;
 use App\Entity\Notification;
 use App\Manager\ProfileManager;
 use App\Service\ActivityLogger;
+use App\Entity\CandidateProfile;
+use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use App\Entity\Entreprise\Favoris;
+use App\Form\ChangePasswordFormType;
 use App\Entity\Entreprise\JobListing;
+use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
-use App\Entity\CandidateProfile;
-use App\Entity\Prestation;
+use App\Entity\Logs\ActivityLog;
+use App\Entity\Moderateur\ContactForm;
 use App\Form\Entreprise\JobListingType;
+use App\Form\Profile\EditEntrepriseType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\TableauDeBord\AssistanceType;
 use App\Manager\BusinessModel\CreditManager;
-use App\Manager\CandidatManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\BusinessModel\PackageRepository;
-use App\Twig\AppExtension;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/tableau-de-bord/entreprise')]
 
@@ -38,7 +45,26 @@ class EntrepriseController extends AbstractController
     #[Route('/', name: 'app_tableau_de_bord_entreprise')]
     public function index(): Response
     {
-        return $this->render('tableau_de_bord/entreprise/index.html.twig', $this->getData());
+        $params = $this->getData();
+        $entreprise = $params['entreprise'];
+        $currentUser = $params['currentUser'];
+        $profileViews = $this->em->getRepository(ActivityLog::class)->findProfileViewsByUser($currentUser);
+        $profiles = [];
+        foreach ($profileViews as $profileView) {
+            if($profileView->ot_number !== null){
+                $profileData = [
+                    'date' => $profileView->getTimestamp(), 
+                    'referrer' => $profileView->getReferrer(), 
+                    'candidat' => $this->em->getRepository(CandidateProfile::class)->find($profileView->ot_number), 
+                ];
+        
+                $profiles[] = $profileData;
+            }
+        }
+        // dd($profiles);
+        $params['profileViews'] = $profiles;
+
+        return $this->render('tableau_de_bord/entreprise/index.html.twig', $params);
     }
 
     #[Route('/cvtheque', name: 'app_tableau_de_bord_entreprise_cvtheque')]
@@ -111,6 +137,7 @@ class EntrepriseController extends AbstractController
     {
         return $this->render('tableau_de_bord/entreprise/tarifs.html.twig', $this->getData());
     }
+    
     #[Route('/choix', name: 'app_tableau_de_bord_entreprise_tarif_choice')]
     public function tchoice(): Response
     {
@@ -158,28 +185,78 @@ class EntrepriseController extends AbstractController
         $page = $request->query->get('page', 1);
         $params = $this->getData();
         $currentUser = $params['currentUser'];
-        $notifications = $this->em->getRepository(Notification::class)->findByDestinataire($currentUser, null, [], $page);
-        $params['notifications'] = $notifications;
+        $params['notifications'] = $this->em->getRepository(Notification::class)->findByDestinataire($currentUser,null, [], null, $page);
 
         return $this->render('tableau_de_bord/entreprise/notification.html.twig', $params);
     }
 
     #[Route('/mon-compte', name: 'app_tableau_de_bord_entreprise_mon_compte')]
-    public function mycompte(): Response
+    public function mycompte(Request $request): Response
     {
-        return $this->render('tableau_de_bord/entreprise/mon_compte.html.twig', $this->getData());
+        $params = $this->getData();
+        $entreprise = $params['entreprise'];
+        $form = $this->createForm(EditEntrepriseType::class, $entreprise);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $this->em->persist($entreprise);
+            $this->em->flush();
+            $this->addFlash('success', 'Informations enregistrées');
+        }
+        $params['form'] = $form->createView();
+
+        return $this->render('tableau_de_bord/entreprise/mon_compte.html.twig', $params);
     }
 
     #[Route('/mise-a-jour-mot-de-passe', name: 'app_tableau_de_bord_entreprise_mise_a_jour_mot_de_passe')]
-    public function updatepassword(): Response
+    public function updatepassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
-        return $this->render('tableau_de_bord/entreprise/mise_a_jour_mot_de_passe.html.twig', $this->getData());
+        $params = $this->getData();
+        $currentUser = $params['currentUser'];
+        $form = $this->createForm(ChangePasswordFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $encodedPassword = $passwordHasher->hashPassword(
+                $currentUser,
+                $form->get('plainPassword')->getData()
+            );
+
+            $currentUser->setPassword($encodedPassword);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        $params['form'] = $form->createView();
+
+        return $this->render('tableau_de_bord/entreprise/mise_a_jour_mot_de_passe.html.twig', $params);
     }
 
     #[Route('/assistance', name: 'app_tableau_de_bord_entreprise_assistance')]
-    public function assistance(): Response
+    public function assistance(Request $request, EntityManagerInterface $entityManager, MailerService $mailerService): Response
     {
-        return $this->render('tableau_de_bord/entreprise/assistance.html.twig', $this->getData());
+        $params = $this->getData();
+        $contactForm = new ContactForm;
+        $contactForm->setCreatedAt(new \DateTime());
+        $form = $this->createForm(AssistanceType::class, $contactForm);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contactForm = $form->getData();
+            $entityManager->persist($contactForm);
+            $entityManager->flush();
+            $mailerService->sendMultiple(
+                ["contact@olona-talents.com", "support@olona-talents.com", "olonaprod@gmail.com"],
+                "Nouvelle entrée sur le formulaire de contact",
+                "contact.html.twig",
+                [
+                    'user' => $contactForm,
+                ]
+            );
+            $this->addFlash('success', 'Votre message a été bien envoyé. Nous vous repondrons dans le plus bref delais');
+        }
+        $params['form'] = $form->createView();
+        
+        return $this->render('tableau_de_bord/entreprise/assistance.html.twig', $params);
     }
 
     #[Route('/credit', name: 'app_tableau_de_bord_entreprise_credit')]

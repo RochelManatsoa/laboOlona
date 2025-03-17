@@ -1,7 +1,33 @@
 {% extends 'tableau_de_bord/base_entreprise.html.twig' %}
 
-{% block title %}Mot de passe{% endblock %}
+{% block title %}Modifier mon mot de passe{% endblock %}
 
 {% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <h5 class="mb-0"> Entreprise </h5>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a> 
+                </li>
+                <li class="breadcrumb-item position-relative"> Paramètres </li>
+                <li class="breadcrumb-item position-relative"> Modifier mot de passe </li>
+            </ol>
+        </div>
+    </section>
+    <section class="recruteur-container">
+        <div class="recruteur-block d-block p-5 mb-4">
+            {{ form_start(form)}}
+            {{ form_widget(form)}}
+            <button type="submit" class="btn btn-primary">Modifier mon mot de passe</button>
+            {{ form_end(form)}}
+        </div>
+    </section>
 
 {% endblock %}

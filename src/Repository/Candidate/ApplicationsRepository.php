@@ -46,6 +46,7 @@ class ApplicationsRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('a')
             ->join('a.annonce', 'j')
+            ->join('a.candidat', 'c')
             ->join('j.entreprise', 'e')
             ->where('e.id = :entrepriseId')
             ->setParameter('entrepriseId', $entrepriseId)

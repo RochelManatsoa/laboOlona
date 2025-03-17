@@ -24,8 +24,74 @@
         <div class="recruteur-block d-block p-5 mb-4">
             <div class="notification-top-item">
                 <h1>Mes notifications</h1>
-                {{ dump(notifications) }}
+                    {% if notifications|length > 0 %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">{{ knp_pagination_sortable(notifications, 'Titre', 'n.titre') }}</th>
+                            <th scope="col" class="text-center">{{ knp_pagination_sortable(notifications, 'Reçu le', 'n.dateMessage') }}</th>
+                            <th scope="col" class="text-center">{{ knp_pagination_sortable(notifications, 'Lu', 'n.isRead') }}</th>
+                            <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for notification in notifications %}
+                        {% set class = "fw-semibold" %}
+                        {% set icone = "bi-bell-fill" %}
+                        {% set status = '<span class="badge bg-primary"> Nouveau </span>' %}
+                        {% if notification.isRead %}
+                            {% set class = "fw-lighter" %}
+                            {% set icone = "bi-bell" %}
+                            {% set status = '<span class="badge bg-success px-3"><i class="bi bi-check2-square"></i> Lu </span>' %}
+                        {% endif %}
+                            <tr>
+                                <td>{{ notification.titre }}</td>
+                                <td class="text-center">{{ notification.dateMessage|date('d/m/Y') }}</td>
+                                <td class="text-center">{{ notification.isRead ? '<i class="h3 bi bi-toggle-on"></i>' : '<i class="h3 bi bi-toggle-off"></i>' }}</td>
+                                <td>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-sm btn-secondary rounded-pill" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#notification"
+                                        data-bs-id="{{ notification.id }}"
+                                        data-bs-title='<i class="bi {{ icone }}"></i> {{ notification.titre }}'
+                                        data-bs-content="{{ notification.contenu }}"
+                                        data-bs-expediteur="{{ notification.expediteur.nom | slice(0, 1) | upper }}. {{ notification.expediteur.prenom }}"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <form action="{{ path('app_v2_dashboard_notification_delete', {'id': notification.id})}}" method="post" id="delete-contact">
+                                        <button type="submit" class="btn btn-sm btn-danger rounded-pill">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {{ knp_pagination_render(notifications) }}
+                    {% else %}
+                    <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                        <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                        <p class="text-center">Aucune notification trouvée</p>
+                    </div>
+                    {% endif %}
             </div>
         </div>
     </section>
+    <!-- Modal -->
+    <div class="modal fade" id="notification" tabindex="-1" aria-labelledby="notificationLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title fs-5" id="notificationLabel">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
