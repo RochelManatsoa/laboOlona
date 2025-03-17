@@ -18,15 +18,6 @@
       <img src="{{ asset('v2/images/dashboard/dashboard.svg')}}" alt=""><span class="sidebar-text">Tableau de bord </span> 
       </a>
     </li>
-<<<<<<< HEAD
-    {#nouveau menu statique#}
-    <li class="nav-item">
-      <a href="{{ path('app_tableau_de_bord_candidat_messages')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_candidat_messages' ? 'underline' : '' }}" aria-current="page">
-      <img src="{{ asset('v2/images/dashboard/discussions.svg')}}" alt=""><span class="sidebar-text">Message</span> <span class="link-bulle">2</span> 
-      </a>
-    </li>
-=======
->>>>>>> 764d4709ab0b189d326e2238df7f1c0b7ca2f6d2
     <li class="nav-item">
       <a href="{{ path('app_tableau_de_bord_candidat_trouver_des_missions')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_candidat_trouver_des_missions' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
       <img src="{{ asset('v2/images/dashboard/missions.svg')}}" alt=""><span class="sidebar-text">Trouver des missions</span>
