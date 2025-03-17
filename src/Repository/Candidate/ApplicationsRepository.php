@@ -3,6 +3,7 @@
 namespace App\Repository\Candidate;
 
 use App\Entity\Candidate\Applications;
+use App\Entity\CandidateProfile;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -48,6 +49,23 @@ class ApplicationsRepository extends ServiceEntityRepository
             ->join('j.entreprise', 'e')
             ->where('e.id = :entrepriseId')
             ->setParameter('entrepriseId', $entrepriseId)
+            ->orderBy('a.dateCandidature', 'DESC');
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            10,
+            []
+        );
+    }
+
+    public function findByCandidateProfile(CandidateProfile $candidat, int $page): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('a')
+            ->select('a', 'j')
+            ->join('a.annonce', 'j')
+            ->where('a.candidat = :candidat')
+            ->setParameter('candidat', $candidat)
             ->orderBy('a.dateCandidature', 'DESC');
 
         return $this->paginator->paginate(

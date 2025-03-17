@@ -5,6 +5,7 @@ namespace App\Controller;
 use DateTime;
 use App\Entity\User;
 use App\Entity\Prestation;
+use App\Entity\Notification;
 use App\Security\EmailVerifier;
 use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
@@ -15,6 +16,7 @@ use Symfony\Component\Mime\Address;
 use App\Manager\OlonaTalentsManager;
 use App\Entity\Entreprise\JobListing;
 use App\Service\ElasticsearchService;
+use App\Service\Mailer\MailerService;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,7 +30,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
-use App\Service\Mailer\MailerService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -59,10 +60,10 @@ class OlonaTalentsController extends AbstractController
             return $this->redirectToRoute('app_v2_dashboard');
         }
         return $this->render('v2/home.html.twig', [
-            'candidats' => $this->candidatRepository->findBy(
-                ['status' => CandidateProfile::STATUS_VALID],
+            'job_offers' => $this->annonceRepository->findBy(
+                ['status' => JobListing::STATUS_PUBLISHED],
                 ['id' => 'DESC'],
-                18
+                5
             ),
         ]);
     }
@@ -147,6 +148,9 @@ class OlonaTalentsController extends AbstractController
         $size = $request->query->getInt('size', 6);
         $from = $request->query->getInt('from', 0);
         $params = [];
+        if($this->getUser()){
+            $params = $this->getData();
+        }
         $currentUser = $this->userService->getCurrentUser();
         if($currentUser){
             $profile = $this->userService->checkUserProfile($currentUser);
@@ -223,5 +227,24 @@ class OlonaTalentsController extends AbstractController
         return $this->render('v2/contact.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    private function getData()
+    {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
+        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement.');
+        $candidat = $this->userService->checkProfile();
+        $data = [];
+        $data['currentUser'] = $currentUser;
+        $data['candidat'] = $candidat;
+        $data['credit'] = $currentUser->getCredit()->getTotal();
+        $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser,false);
+
+        return $data;
     }
 }
