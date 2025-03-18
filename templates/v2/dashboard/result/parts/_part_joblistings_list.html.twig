@@ -23,7 +23,7 @@
 					<div class="detail_annonce_">
 						<h2>
 							{% if app.user %}
-								<a href="{{ path('app_v2_candidate_view_job_offer', {'id': job.id })}}" class="btn-primary">
+								<a href="{{ path('app_tableau_de_bord_candidat_view_job_offer', {'id': job.id })}}" class="btn-primary">
 									{{ job.titre }}
 								</a>
 							{% else %}
@@ -50,7 +50,7 @@
 						</div>
 						{#<div class="d-flex ms-auto small">
 							{% if app.user %}
-								<a class="btn btn-sm btn-primary rounded-pill px-3 me-2" href="{{ path('app_v2_candidate_view_job_offer', {'id': job.id })}}">Plus de details</a>
+								<a class="btn btn-sm btn-primary rounded-pill px-3 me-2" href="{{ path('app_tableau_de_bord_candidat_view_job_offer', {'id': job.id })}}">Plus de details</a>
 							{% else %}
 								<div class="d-none d-md-block">
 									<button class="btn btn-sm btn-primary rounded-pill px-3 me-2 annonce-link" type="button" data-id="{{ job.id }}">Plus de details</button>

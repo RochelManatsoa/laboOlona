@@ -4,12 +4,15 @@ namespace App\Controller\TableauDeBord;
 
 use App\Entity\User;
 use App\Entity\Prestation;
+use App\Twig\AppExtension;
 use App\Entity\Notification;
 use App\Form\PrestationType;
 use App\Manager\ProfileManager;
+use App\Service\ActivityLogger;
 use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
+use App\Manager\JobListingManager;
 use App\Manager\PrestationManager;
 use App\Entity\BusinessModel\Credit;
 use App\Form\ChangePasswordFormType;
@@ -17,6 +20,7 @@ use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
 use App\Entity\Moderateur\ContactForm;
+use App\Form\Candidat\ApplicationsType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\TableauDeBord\AssistanceType;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +29,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\BusinessModel\PackageRepository;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
+use App\Twig\PrestationExtension;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -36,6 +42,8 @@ class CandidatController extends AbstractController
         private EntityManagerInterface $em,
         private UserService $userService,
         private CandidatManager $candidatManager,
+        private UrlGeneratorInterface $urlGenerator,
+        private ActivityLogger $activityLogger,
     ){}
 
 
@@ -125,11 +133,53 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/missions_obtenues.html.twig', $this->getData());
     }
 
-    #[Route('/view-job-offer', name: 'app_tableau_de_bord_candidat_view_job_offer')]
-    public function viewjoboffer(): Response
+    #[Route('/view-job-offer/{id}', name: 'app_tableau_de_bord_candidat_view_job_offer')]
+    public function viewjoboffer(Request $request, int $id, JobListingManager $jobListingManager, AppExtension $appExtension, ProfileManager $profileManager): Response
     {
-        return $this->render('tableau_de_bord/candidat/view_job_offer.html.twig', $this->getData());
+        $annonce = $this->em->getRepository(JobListing::class)->find($id);
+        if ($annonce === null || $annonce->getStatus() === JobListing::STATUS_DELETED || $annonce->getStatus() === JobListing::STATUS_PENDING) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais le annonce demandé n\'existe pas.');
+        }
+        $data = $this->getData();
+        $jobListingManager->incrementView($annonce, $request->getClientIp());
+        $candidat = $data['candidat'];
+        $this->activityLogger->logJobLisitinViewActivity($data['currentUser'], $appExtension->generateJobReference($annonce->getId()));
+        [$applied, $application] = $jobListingManager->isAppliedByCandidate($annonce, $candidat)[0];
+        $form = $this->createForm(ApplicationsType::class, $application);
+        $form->handleRequest($request);
+        $data['annonce'] = $annonce;
+        $data['applied'] = $applied;
+        $data['show_recruiter_price'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER);
+        $data['apply_job_price'] = $profileManager->getCreditAmount(Credit::ACTION_APPLY_JOB);
+        $data['form'] = $form->createView();
+
+        return $this->render('tableau_de_bord/candidat/view_job_offer.html.twig', $data);
     }
+
+    #[Route('/view-prestation/{id}', name: 'app_tableau_de_bord_candidat_view_prestation')]
+    public function viewPrestation(Request $request, int $id, PrestationManager $prestationManager, AppExtension $appExtension, PrestationExtension $prestationExtension, ProfileManager $profileManager): Response
+    {
+        $prestation = $this->em->getRepository(Prestation::class)->find($id);
+        if ($prestation === null || $prestation->getStatus() === Prestation::STATUS_DELETED || $prestation->getStatus() === Prestation::STATUS_PENDING) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais le prestation demandé n\'existe pas.');
+        }
+        $data = $this->getData();
+        $prestationManager->incrementView($prestation, $request->getClientIp());
+        $currentUser = $data['currentUser'];
+        $owner = false;
+        $creater = $prestationExtension->getUserPrestation($prestation);
+        if($creater == $currentUser){
+            $owner = true;
+        }
+        $this->activityLogger->logPrestationViewActivity($data['currentUser'], $appExtension->generateprestationReference($prestation->getId()));
+        $data['prestation'] = $prestation;
+        $data['owner'] = $owner;
+        $data['creater'] = $creater;
+        $data['showContactPrice'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
+
+        return $this->render('tableau_de_bord/candidat/view_prestation.html.twig', $data);
+    }
+
     #[Route('/creer-une-prestation', name: 'app_tableau_de_bord_candidat_creation_prestation')]
     public function createpresta(
         Request $request, 
@@ -151,6 +201,7 @@ class CandidatController extends AbstractController
 
         return $this->render('tableau_de_bord/candidat/creation_prestations.html.twig', $params);
     }
+
     #[Route('/pack-standard', name: 'app_tableau_de_bord_entreprise_tarifs_standard')]
     public function standard(): Response
     {
@@ -278,6 +329,7 @@ class CandidatController extends AbstractController
     {
         return $this->render('tableau_de_bord/candidat/boost.html.twig', $this->getData());
     }
+
     #[Route('/tarifs', name: 'app_tableau_de_bord_candidat_tarifs')]
     public function tarifs(): Response
     {
@@ -297,6 +349,7 @@ class CandidatController extends AbstractController
         $data = [];
         $data['currentUser'] = $currentUser;
         $data['candidat'] = $candidat;
+        $data['action'] = $this->urlGenerator->generate('app_olona_talents_joblistings', []);
         $data['credit'] = $currentUser->getCredit()->getTotal();
         $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser,false);
 

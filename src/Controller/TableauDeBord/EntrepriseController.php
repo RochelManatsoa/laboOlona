@@ -9,14 +9,17 @@ use App\Entity\Notification;
 use App\Manager\ProfileManager;
 use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
+use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
+use App\Twig\PrestationExtension;
 use App\Entity\Entreprise\Favoris;
+use App\Manager\PrestationManager;
+use App\Entity\BusinessModel\Credit;
 use App\Form\ChangePasswordFormType;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
-use App\Entity\Logs\ActivityLog;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Entreprise\JobListingType;
 use App\Form\Profile\EditEntrepriseType;
@@ -160,6 +163,30 @@ class EntrepriseController extends AbstractController
         $data['langages'] = $candidatManager->getLangagesSortedByNiveau($candidat);
 
         return $this->render('tableau_de_bord/entreprise/profil_candidat.html.twig', $data);
+    }
+
+    #[Route('/view-prestation/{id}', name: 'app_tableau_de_bord_entreprise_view_prestation')]
+    public function viewPrestation(Request $request, int $id, PrestationManager $prestationManager, AppExtension $appExtension, PrestationExtension $prestationExtension, ProfileManager $profileManager): Response
+    {
+        $prestation = $this->em->getRepository(Prestation::class)->find($id);
+        if ($prestation === null || $prestation->getStatus() === Prestation::STATUS_DELETED || $prestation->getStatus() === Prestation::STATUS_PENDING) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais le prestation demandé n\'existe pas.');
+        }
+        $data = $this->getData();
+        $prestationManager->incrementView($prestation, $request->getClientIp());
+        $currentUser = $data['currentUser'];
+        $owner = false;
+        $creater = $prestationExtension->getUserPrestation($prestation);
+        if($creater == $currentUser){
+            $owner = true;
+        }
+        $this->activityLogger->logPrestationViewActivity($data['currentUser'], $appExtension->generateprestationReference($prestation->getId()));
+        $data['prestation'] = $prestation;
+        $data['owner'] = $owner;
+        $data['creater'] = $creater;
+        $data['showContactPrice'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
+
+        return $this->render('tableau_de_bord/entreprise/view_prestation.html.twig', $data);
     }
 
     #[Route('/annuaire-de-services', name: 'app_tableau_de_bord_entreprise_annuaire_de_services')]
