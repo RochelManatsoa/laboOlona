@@ -20,11 +20,15 @@
             </ol>
         </div>
     </section>
+    {% set filter_title = app.request.query.get('filter-title', filterTitle) %}
+    {% set filter_gender = app.request.query.get('filter-gender', '') %}
+    {% set filter_degree = app.request.query.get('filter-degree', '') %}
+    {% set filter_year = app.request.query.get('filter-year', '') %}
     <section class="recruteur-container">
         <div class="recruteur-block d-block p-5 mb-4">
             <div class="recruteur-top-item recruteur-filter">
                 <h1>Votre succès commence avec les bons candicats!</h1>
-                <form action="" class="form-search filter-listing-form-wrapper" method="GET">
+                <form action="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}" class="form-search filter-listing-form-wrapper" method="GET">
                     <div class="filter-listing-form">
                         <div class="main-inner clearfix">
                             <div class="content-main-inner">
@@ -32,7 +36,7 @@
                                     <div class="col-xs-12 col-md-10  col-sm-8 has-border">
                                         <div class="form-group-inner has-icon">
                                             <i class="bi bi-search"></i>
-                                            <input type="text" name="filter-title" class="form-control " value="" placeholder="profil recherche, mot cle">
+                                            <input type="text" name="filter-title" class="form-control " value="{{filter_title}}" placeholder="profil recherche, mot cle">
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-md-2  col-sm-4 wrapper-submit flex-middle">
@@ -49,10 +53,10 @@
                                     <div class="col-xs-12 col-md-4 has-border">
                                         <div class="form-group-inner form-group-genre">
                                             <select name="filter-gender" class="form-control select2-hidden-accessible" data-placeholder="Genres" tabindex="-1" aria-hidden="true">
-                                                <option value="">Genres</option>
-                                                <option value="">Tous genres</option>
-                                                <option value="">feminins</option>
-                                                <option value="">Masculins</option>
+                                                <option value="0">Genres</option>
+                                                <option value="1">Tous genres</option>
+                                                <option value="2">feminins</option>
+                                                <option value="3">Masculins</option>
                                             </select>
                                             <span class="select2 select2-container" dir="ltr" style="width: 100%;">
                                                 <span class="selection">
@@ -117,37 +121,95 @@
         <div class="recruteur-block list-profil d-block p-5 mb-4">
             <div class="layout-profil-container">
                 <div class="d-flex ordering-wrapper mb-4">
-                    <div class="results-count">Affichage de 1 - 9 sur 18 résultats</div>
+                    <div class="results-count">Affichage de 1 - {{ searchResults|length }} sur {{ totalResults }} résultats</div>
                 </div>
                 <div class="item_profil-container">
                     <div class="row">
+                        {% for item in searchResults %}
                         <div class="col-xl-6">
                             <div class="candidate-card">
                                 <div class="candidate-card-item">
                                     <div class="d-flex align-items-center mb-2">
                                         <div class="candidate-photo">
-                                            <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                                            <a href=""><img src="{{ item.fileName ? asset('uploads/experts/' ~ item.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></a>
                                         </div>
                                         <div class="candidate-info-content">
-                                            <h2>Nom & prénoms</h2>
-                                            <div class="featured d-md-flex align-items-center">Marketing <span class="certificated">Certifié</span></div>
+                                            <h2>{{ generatePseudo(item)}}</h2>
+                                            <div class="featured d-md-flex align-items-center">{{ item.titre }} <span class="certificated">Certifié</span></div>
                                             <button class="favoris-add"><i class="bi bi-star"></i></span>
                                         </div>
                                     </div>
                                     <div class="infos-middle d-flex align-items-center">
-                                        <div class="ville-info"><i class="bi bi-pin"></i> Antananarivo</div>
-                                        <div class="pretention-info"><i class="bi bi-cash-coin"></i> 230K / jour</div>
+                                        <div class="ville-info"><i class="bi bi-pin"></i> {{ show_country(item.localisation) }}</div>
+                                        <div class="pretention-info"><i class="bi bi-cash-coin"></i> {{ item.tarifCandidat }}</div>
                                     </div>
                                     <div class="infos-desc">
-                                        Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
+                                        {% if item.metaDescription is defined and item.metaDescription is not null %}
+                                            {{ item.metaDescription }}
+                                        {% else %}
+                                            Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
+                                        {% endif %}
                                     </div>
                                     <div class="infos-footer d-flex align-items-center">
-                                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': 3634 })}}">Voir son profil</a>
+                                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.id })}}">Voir son profil</a>
                                         <a class="btn" href="">Consulter son CV directement</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pagination -->
+        {% if totalPages > 1 %}
+        <nav aria-label="Pagination">
+            <ul class="pagination justify-content-center">
+                <!-- Lien "Précédent" -->
+                <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
+                    <a class="page-link" href="{{
+                        path('app_tableau_de_bord_entreprise_cvtheque', {
+                            'page': currentPage - 1,
+                            'filter-title': filter_title
+                        }|merge(app.request.query.all))
+                    }}">Précédent</a>
+                </li>
+
+                <!-- Liens des pages -->
+                {% for i in 1..totalPages %}
+                    {% if totalPages <= 6 or i == 1 or i == totalPages or (i >= currentPage - 2 and i <= currentPage + 2) %}
+                        <li class="page-item {% if i == currentPage %}active{% endif %}">
+                            <a class="page-link" href="{{
+                                path('app_tableau_de_bord_entreprise_cvtheque', {
+                                    'page': i,
+                                    'filter-title': filter_title
+                                }|merge(app.request.query.all))
+                            }}">{{ i }}</a>
+                        </li>
+                    {% elseif i == currentPage - 3 or i == currentPage + 3 %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Lien "Suivant" -->
+                <li class="page-item {% if currentPage == totalPages %}disabled{% endif %}">
+                    <a class="page-link" href="{{
+                        path('app_tableau_de_bord_entreprise_cvtheque', {
+                            'page': currentPage + 1,
+                            'filter-title': filter_title
+                        }|merge(app.request.query.all))
+                    }}">Suivant</a>
+                </li>
+            </ul>
+        </nav>
+        {% endif %}
+
+    </section>
+
+{# 
                         <!-- si favoris active ajout class active a côte de favoris-add  -->
                         <div class="col-xl-6">
                             <div class="candidate-card">
@@ -211,10 +273,5 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
+                 #}
 {% endblock %}

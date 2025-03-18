@@ -9,20 +9,24 @@ use App\Entity\Notification;
 use App\Manager\ProfileManager;
 use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
+use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
+use App\Twig\PrestationExtension;
 use App\Entity\Entreprise\Favoris;
+use App\Manager\PrestationManager;
+use App\Entity\BusinessModel\Credit;
 use App\Form\ChangePasswordFormType;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
-use App\Entity\Logs\ActivityLog;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Entreprise\JobListingType;
 use App\Form\Profile\EditEntrepriseType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\TableauDeBord\AssistanceType;
 use App\Manager\BusinessModel\CreditManager;
+use App\Manager\OlonaTalentsManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -68,9 +72,27 @@ class EntrepriseController extends AbstractController
     }
 
     #[Route('/cvtheque', name: 'app_tableau_de_bord_entreprise_cvtheque')]
-    public function cvtheque(): Response
+    public function cvtheque(Request $request, OlonaTalentsManager $olonaTalentsManager): Response
     {
-        return $this->render('tableau_de_bord/entreprise/cvtheque.html.twig', $this->getData());
+        $params = $this->getData();
+        $entreprise = $params['entreprise'];
+        $filterTitle = $entreprise->getSecteurs()[0]->getSlug();
+        $size = 10; 
+        $page = $request->query->get('page', 1);
+        $from = ($page - 1) * $size;
+        $title = $request->query->get('filter-title', $filterTitle);
+        $gender = $request->query->get('filter-gender', null);
+        $year = $request->query->get('filter-year', null);
+        $searchResults = $olonaTalentsManager->searchEntities('candidates', $from, 10, $title);
+        $totalPages = ceil($searchResults['totalResults'] / $size);
+        $params['searchResults'] = $searchResults['entities'];
+        $params['totalResults'] = $searchResults['totalResults'];
+        $params['totalPages'] = $totalPages;
+        $params['currentPage'] = $page;
+        $params['filterTitle'] = $filterTitle;
+
+
+        return $this->render('tableau_de_bord/entreprise/cvtheque.html.twig', $params);
     }
     
     #[Route('/offre-d-emploi', name: 'app_tableau_de_bord_entreprise_offre_emploi')]
@@ -160,6 +182,30 @@ class EntrepriseController extends AbstractController
         $data['langages'] = $candidatManager->getLangagesSortedByNiveau($candidat);
 
         return $this->render('tableau_de_bord/entreprise/profil_candidat.html.twig', $data);
+    }
+
+    #[Route('/view-prestation/{id}', name: 'app_tableau_de_bord_entreprise_view_prestation')]
+    public function viewPrestation(Request $request, int $id, PrestationManager $prestationManager, AppExtension $appExtension, PrestationExtension $prestationExtension, ProfileManager $profileManager): Response
+    {
+        $prestation = $this->em->getRepository(Prestation::class)->find($id);
+        if ($prestation === null || $prestation->getStatus() === Prestation::STATUS_DELETED || $prestation->getStatus() === Prestation::STATUS_PENDING) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais le prestation demandé n\'existe pas.');
+        }
+        $data = $this->getData();
+        $prestationManager->incrementView($prestation, $request->getClientIp());
+        $currentUser = $data['currentUser'];
+        $owner = false;
+        $creater = $prestationExtension->getUserPrestation($prestation);
+        if($creater == $currentUser){
+            $owner = true;
+        }
+        $this->activityLogger->logPrestationViewActivity($data['currentUser'], $appExtension->generateprestationReference($prestation->getId()));
+        $data['prestation'] = $prestation;
+        $data['owner'] = $owner;
+        $data['creater'] = $creater;
+        $data['showContactPrice'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
+
+        return $this->render('tableau_de_bord/entreprise/view_prestation.html.twig', $data);
     }
 
     #[Route('/annuaire-de-services', name: 'app_tableau_de_bord_entreprise_annuaire_de_services')]

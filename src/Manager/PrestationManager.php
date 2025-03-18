@@ -7,6 +7,7 @@ use App\Entity\Prestation;
 use App\Entity\CandidateProfile;
 use Symfony\Component\Form\Form;
 use App\Entity\EntrepriseProfile;
+use App\Entity\Vues\PrestationVues;
 use App\Service\User\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -50,5 +51,24 @@ class PrestationManager
         $this->save($prestation);
 
         return $prestation;
+    }
+    
+    public function incrementView(Prestation $prestation, string $ipAddress) 
+    {        
+        $viewRepository = $this->em->getRepository(PrestationVues::class);
+        $existingView = $viewRepository->findOneBy([
+            'prestation' => $prestation,
+            'ipAddress' => $ipAddress,
+        ]);
+
+        if (!$existingView) {
+            $view = new PrestationVues();
+            $view->setPrestation($prestation);
+            $view->setIpAddress($ipAddress);
+
+            $this->em->persist($view);
+            $prestation->addPrestationVue($view);
+            $this->em->flush();
+        }
     }
 }

@@ -90,14 +90,14 @@
                                 <div class="col-md-10 aside-right-item_">
                                     <div class="detail_annonce_">
                                         <h2>
-                                            <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}" class="btn-primary">
+                                            <a href="{{ path('app_tableau_de_bord_candidat_view_prestation', {'id': prestation.id })}}" class="btn-primary">
                                                 {{ prestation.titre }}
                                             </a>
                                         </h2>
                                         <h3><a href="" class="btn-primary">{{ getAuthor(prestation)}}</a> <span class="secteur_job"><i class="bi bi-tags"></i> {{ prestation.secteurs.nom}}</span></h3>
                                         <div class="description_courte_">{{ prestation.openai|raw }}</div>
                                         <div class="info_publication_">
-                                            <a class="btn btn-sm btn-primary rounded-pill px-3 me-2 mt-2" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
+                                            <a class="btn btn-sm btn-primary rounded-pill px-3 me-2 mt-2" href="{{ path('app_tableau_de_bord_candidat_view_prestation', {'id': prestation.id })}}">Plus de details</a>
                                         </div>
                                     </div>
                                 </div>

@@ -40,7 +40,7 @@ class ActivityLogRepository extends ServiceEntityRepository
             ->setParameter('user', $user)
             ->setParameter('level', ActivityLog::LEVEL_WARNING)
             ->orderBy('a.timestamp', 'DESC')
-            ->setMaxResults(20)
+            ->setMaxResults(10)
             ->getQuery()
             ->getResult();
         ;
