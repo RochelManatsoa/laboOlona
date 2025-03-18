@@ -76,10 +76,11 @@ class EntrepriseController extends AbstractController
     {
         $params = $this->getData();
         $entreprise = $params['entreprise'];
+        $filterTitle = $entreprise->getSecteurs()[0]->getSlug();
         $size = 10; 
         $page = $request->query->get('page', 1);
         $from = ($page - 1) * $size;
-        $title = $request->query->get('filter-title', $entreprise->getSecteurs()[0]->getSlug());
+        $title = $request->query->get('filter-title', $filterTitle);
         $gender = $request->query->get('filter-gender', null);
         $year = $request->query->get('filter-year', null);
         $searchResults = $olonaTalentsManager->searchEntities('candidates', $from, 10, $title);
@@ -88,6 +89,7 @@ class EntrepriseController extends AbstractController
         $params['totalResults'] = $searchResults['totalResults'];
         $params['totalPages'] = $totalPages;
         $params['currentPage'] = $page;
+        $params['filterTitle'] = $filterTitle;
 
 
         return $this->render('tableau_de_bord/entreprise/cvtheque.html.twig', $params);

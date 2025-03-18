@@ -20,7 +20,7 @@
             </ol>
         </div>
     </section>
-    {% set filter_title = app.request.query.get('filter-title', '') %}
+    {% set filter_title = app.request.query.get('filter-title', filterTitle) %}
     {% set filter_gender = app.request.query.get('filter-gender', '') %}
     {% set filter_degree = app.request.query.get('filter-degree', '') %}
     {% set filter_year = app.request.query.get('filter-year', '') %}
@@ -170,7 +170,8 @@
                 <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
                     <a class="page-link" href="{{
                         path('app_tableau_de_bord_entreprise_cvtheque', {
-                            'page': currentPage - 1
+                            'page': currentPage - 1,
+                            'filter-title': filter_title
                         }|merge(app.request.query.all))
                     }}">Précédent</a>
                 </li>
@@ -181,7 +182,8 @@
                         <li class="page-item {% if i == currentPage %}active{% endif %}">
                             <a class="page-link" href="{{
                                 path('app_tableau_de_bord_entreprise_cvtheque', {
-                                    'page': i
+                                    'page': i,
+                                    'filter-title': filter_title
                                 }|merge(app.request.query.all))
                             }}">{{ i }}</a>
                         </li>
@@ -196,7 +198,8 @@
                 <li class="page-item {% if currentPage == totalPages %}disabled{% endif %}">
                     <a class="page-link" href="{{
                         path('app_tableau_de_bord_entreprise_cvtheque', {
-                            'page': currentPage + 1
+                            'page': currentPage + 1,
+                            'filter-title': filter_title
                         }|merge(app.request.query.all))
                     }}">Suivant</a>
                 </li>
