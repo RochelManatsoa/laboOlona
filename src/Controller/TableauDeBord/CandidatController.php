@@ -5,9 +5,13 @@ namespace App\Controller\TableauDeBord;
 use App\Entity\User;
 use App\Entity\Prestation;
 use App\Entity\Notification;
+use App\Form\PrestationType;
+use App\Manager\ProfileManager;
 use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
+use App\Manager\PrestationManager;
+use App\Entity\BusinessModel\Credit;
 use App\Form\ChangePasswordFormType;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
@@ -127,9 +131,25 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/view_job_offer.html.twig', $this->getData());
     }
     #[Route('/creer-une-prestation', name: 'app_tableau_de_bord_candidat_creation_prestation')]
-    public function createpresta(): Response
+    public function createpresta(
+        Request $request, 
+        PrestationManager $prestationManager, 
+        ProfileManager $profileManager,
+    ): Response
     {
-        return $this->render('tableau_de_bord/candidat/creation_prestation.html.twig', $this->getData());
+        $params = $this->getData();
+        $candidat = $params['candidat'];
+        $currentUser = $params['currentUser'];
+        /** @var Prestation $prestation */
+        $prestation = $prestationManager->init($currentUser);
+        $creditAmount = $profileManager->getCreditAmount(Credit::ACTION_APPLY_PRESTATION_RECRUITER);
+        $boostType = 'PRESTATION_CANDIDATE';
+        $form = $this->createForm(PrestationType::class, $prestation, ['boostType' => $boostType]);
+        $form->handleRequest($request);
+        $params['form'] = $form->createView();
+        $params['creditAmount'] = $creditAmount;
+
+        return $this->render('tableau_de_bord/candidat/creation_prestations.html.twig', $params);
     }
     #[Route('/pack-standard', name: 'app_tableau_de_bord_entreprise_tarifs_standard')]
     public function standard(): Response
@@ -152,6 +172,17 @@ class CandidatController extends AbstractController
     public function recommandation(): Response
     {
         return $this->render('tableau_de_bord/candidat/se_faire_recommander.html.twig', $this->getData());
+    }
+
+    #[Route('/annuaire-de-services', name: 'app_tableau_de_bord_candidat_annuaire_de_services')]
+    public function annuaire(Request $request): Response
+    {
+        $page = $request->query->get('page', 1);
+        $params = $this->getData();
+        $prestations = $this->em->getRepository(Prestation::class)->paginatePrestations(Prestation::STATUS_VALID, $page);
+        $params['prestations'] = $prestations;
+
+        return $this->render('tableau_de_bord/candidat/annuaire_de_services.html.twig', $params);
     }
 
     #[Route('/notification', name: 'app_tableau_de_bord_candidat_notification')]
