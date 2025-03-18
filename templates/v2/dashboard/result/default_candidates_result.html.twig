@@ -25,10 +25,10 @@
 			<div>
 				<ul class="nav nav-underline">
 					<li class="nav-item">
-						<a class="nav-link" aria-current="page" id="candidats-tab" href="{{ path('app_olona_talents_candidates', {'q': getSearchQuery('q')})}}">Candidats</a>
+						<a class="nav-link active" aria-current="page" id="candidats-tab" href="{{ path('app_olona_talents_candidates', {'q': getSearchQuery('q')})}}">Candidats</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link active" id="annonces-tab" href="{{ path('app_olona_talents_joblistings', {'q': getSearchQuery('q')})}}">Offre d'emploi</a>
+						<a class="nav-link" id="annonces-tab" href="{{ path('app_olona_talents_joblistings', {'q': getSearchQuery('q')})}}">Offre d'emploi</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" id="services-tab" href="{{ path('app_olona_talents_prestations', {'q': getSearchQuery('q')})}}">Services</a>
@@ -70,7 +70,7 @@
 										</select>
 									</div>
 								</div>
-								<div class="sidebar-ele-filter">
+								{# <div class="sidebar-ele-filter">
 									<h4 class="section-head-small mb-4">Type de contrat</h4>
 									<ul>
 										<li>
@@ -109,8 +109,8 @@
 											<span class="job-type-count">22</span>
 										</li>
 									</ul>
-								</div>
-								<div class="sidebar-ele-filter">
+								</div> #}
+								{# <div class="sidebar-ele-filter">
 									<h4 class="section-head-small mb-4">Date des publications</h4>
 									<ul>
 										<li>
@@ -150,7 +150,7 @@
 											</div>
 										</li>
 									</ul>
-								</div>
+								</div> #}
 							</form>
 						</div>
 					</div>
@@ -195,8 +195,8 @@
 						</form>
 					</div>
 					{% include "v2/dashboard/result/parts/_part_candidates_list.html.twig" %}
-					{% else %}
-                    	{% include "v2/dashboard/result/none/_none_candidates.html.twig" %}
+				{% else %}
+					{% include "v2/dashboard/result/none/_none_candidates.html.twig" %}
 				{% endif %}
 			</div>
 		</div>

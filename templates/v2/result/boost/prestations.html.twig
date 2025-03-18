@@ -34,16 +34,16 @@
                             </div>
                             <div>
                                 <span class="">
-                                    <small><i class="bi bi-eye"></i> {{ candidat.experiences|length}} vues</small>
+                                    <small><i class="bi bi-eye"></i> # vues</small>
                                 </span>
                             </div>
                         </div>
                         <div class="right-content">
-                            <div class="jobs-amount">{{ candidat.tarifCandidat }}</span></div>
+                            <div class="jobs-amount">#</span></div>
                             {% if app.user %}
                                 <a href="{{ path('app_v2_recruiter_view_profile', {'id': candidat.id}) }}" class="btn btn-primary">Contacter</a>
                             {% else %}
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_view_profile', {'id': candidat.id}) }}">Contacter</button>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="">Contacter</button>
                             {% endif %}
                         </div>
                     </div>

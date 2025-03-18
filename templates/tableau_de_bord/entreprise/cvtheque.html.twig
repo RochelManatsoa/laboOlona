@@ -170,8 +170,7 @@
                 <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
                     <a class="page-link" href="{{
                         path('app_tableau_de_bord_entreprise_cvtheque', {
-                            'page': currentPage - 1,
-                            'filter-title': filter_title
+                            'page': currentPage - 1
                         }|merge(app.request.query.all))
                     }}">Précédent</a>
                 </li>
@@ -198,8 +197,7 @@
                 <li class="page-item {% if currentPage == totalPages %}disabled{% endif %}">
                     <a class="page-link" href="{{
                         path('app_tableau_de_bord_entreprise_cvtheque', {
-                            'page': currentPage + 1,
-                            'filter-title': filter_title
+                            'page': currentPage + 1
                         }|merge(app.request.query.all))
                     }}">Suivant</a>
                 </li>
