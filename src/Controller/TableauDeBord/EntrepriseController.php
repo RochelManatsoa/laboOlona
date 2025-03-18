@@ -26,6 +26,7 @@ use App\Form\Profile\EditEntrepriseType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\TableauDeBord\AssistanceType;
 use App\Manager\BusinessModel\CreditManager;
+use App\Manager\OlonaTalentsManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -71,9 +72,25 @@ class EntrepriseController extends AbstractController
     }
 
     #[Route('/cvtheque', name: 'app_tableau_de_bord_entreprise_cvtheque')]
-    public function cvtheque(): Response
+    public function cvtheque(Request $request, OlonaTalentsManager $olonaTalentsManager): Response
     {
-        return $this->render('tableau_de_bord/entreprise/cvtheque.html.twig', $this->getData());
+        $params = $this->getData();
+        $entreprise = $params['entreprise'];
+        $size = 10; 
+        $page = $request->query->get('page', 1);
+        $from = ($page - 1) * $size;
+        $title = $request->query->get('filter-title', $entreprise->getSecteurs()[0]->getSlug());
+        $gender = $request->query->get('filter-gender', null);
+        $year = $request->query->get('filter-year', null);
+        $searchResults = $olonaTalentsManager->searchEntities('candidates', $from, 10, $title);
+        $totalPages = ceil($searchResults['totalResults'] / $size);
+        $params['searchResults'] = $searchResults['entities'];
+        $params['totalResults'] = $searchResults['totalResults'];
+        $params['totalPages'] = $totalPages;
+        $params['currentPage'] = $page;
+
+
+        return $this->render('tableau_de_bord/entreprise/cvtheque.html.twig', $params);
     }
     
     #[Route('/offre-d-emploi', name: 'app_tableau_de_bord_entreprise_offre_emploi')]
