@@ -205,7 +205,7 @@ class CandidatController extends AbstractController
             $this->em->persist($prestation);
             $this->em->flush();
 
-            return $this->redirectToRoute('app_tableau_de_bord_candidat_view_prestation', ['prestation' => $prestation]);
+            return $this->redirectToRoute('app_tableau_de_bord_candidat_view_prestation', ['prestation' => $prestation->getId()]);
         }
         $params['form'] = $form->createView();
         $params['creditAmount'] = $creditAmount;
