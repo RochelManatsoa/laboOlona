@@ -16,55 +16,71 @@
         </ol>
     </div>
 </section>
-<div class="biographie-profil mb-4 p-4 apparition_">
+<div class="form_compte_">
     {{ form_start(form, {'attr': {'data-turbo': 'false'}})}}
-    <div class="row align-items-center justify-content-center">
-        <div class="col-lg-3 col-sm-12 text-center">
-            <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/experts/' ~ form.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}');cursor:pointer;" alt="Avatar">
-                <div class="overlay-text">Changer la photo</div>
-            </div>
-            {{ form_widget(form.file) }}
-            {{ form_errors(form.file) }}
-        </div>
-        <div class="col-lg-9 col-sm-12">
-            <div class="row">
-                <div class="col-lg-6 col-sm-12">
-                {{ form_row(form.candidat.nom)}}
+    <div class="biographie-profil mb-4 p-4 apparition_">
+        <span class="fs-5 mb-1 fw-bold lh-base st-title">Informations personnelles</span>
+        <hr/>
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-2 col-sm-12 text-center">
+                <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/experts/' ~ form.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}');cursor:pointer;" alt="Avatar">
+                    <div class="overlay-text">Changer la photo</div>
                 </div>
-                <div class="col-lg-6 col-sm-12">
-                {{ form_row(form.candidat.prenom)}}
-                </div>
+                {{ form_widget(form.file) }}
+                {{ form_errors(form.file) }}
             </div>
-            {{ form_row(form.birthday)}}
+            <div class="col-lg-10 col-sm-12">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                    {{ form_row(form.candidat.nom)}}
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                    {{ form_row(form.candidat.prenom)}}
+                    </div>
+                </div>
+                {{ form_row(form.birthday)}}
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6 col-sm-12">
-        {{ form_row(form.candidat.telephone)}}
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+            {{ form_row(form.candidat.telephone)}}
+            </div>
+            <div class="col-lg-6 col-sm-12">
+            {{ form_row(form.candidat.adress)}}
+            </div>
         </div>
-        <div class="col-lg-6 col-sm-12">
-        {{ form_row(form.candidat.adress)}}
+        {{ form_row(form.candidat.email)}}
+    </div>
+    <div class="biographie-profil mb-4 p-4 apparition_">
+        <span class="fs-5 mb-1 fw-bold lh-base st-title">Informations professionnelles</span>
+        <hr/>
+        {{ form_row(form.titre)}}
+        {{ form_row(form.secteurs)}}
+        {{ form_row(form.resume)}}
+        <div class="row">
+            <div class="col-sm-12 col-md-4">{{ form_row(form.tarifCandidat.montant) }}</div>
+            <div class="col-sm-12 col-md-4">{{ form_row(form.tarifCandidat.typeTarif) }}</div>
+            <div class="col-sm-12 col-md-4">{{ form_row(form.tarifCandidat.currency) }}</div>
         </div>
+        {{ form_row(form.competences)}}
+        {{ form_row(form.experiences)}}
+        {{ form_row(form.langages)}}
     </div>
-    {{ form_row(form.candidat.email)}}
-    {{ form_row(form.titre)}}
-    {{ form_row(form.secteurs)}}
-    {{ form_row(form.resume)}}
-    <div class="row">
-        <div class="col-sm-12 col-md-4">{{ form_row(form.tarifCandidat.montant) }}</div>
-        <div class="col-sm-12 col-md-4">{{ form_row(form.tarifCandidat.typeTarif) }}</div>
-        <div class="col-sm-12 col-md-4">{{ form_row(form.tarifCandidat.currency) }}</div>
+    <div class="biographie-profil mb-4 p-4 apparition_">
+        <span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
+        <hr/>
+        {{ form_row(form.social)}}
     </div>
-    {{ form_row(form.competences)}}
-    {{ form_row(form.experiences)}}
-    {{ form_row(form.langages)}}
-    {{ form_row(form.social)}}
-    {{ form_row(form.cv)}}
-    <div style="display:none;">
-        {{ form_widget(form)}}
+    <div class="biographie-profil mb-4 p-4 apparition_">
+        <span class="fs-5 mb-1 fw-bold lh-base st-title">Piece jointe</span>
+        <hr/>
+        {{ form_row(form.cv)}}
+        <div style="display:none;">
+            {{ form_widget(form)}}
+        </div>
+        <hr/>
+        <button type="submit" class="btn btn-primary px-5 rounded-pill btn-lg">Sauvegarder</button>
     </div>
-    <hr/>
-    <button type="submit" class="btn btn-primary px-5 rounded-pill btn-lg">Sauvegarder</button>
     {{ form_end(form)}}
 </div>
 <script>
