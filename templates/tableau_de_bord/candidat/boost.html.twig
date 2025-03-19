@@ -22,12 +22,28 @@
             <p>Augmentez vos chances d'être vu par les recruteurs en boostant votre profil !<br/> Cela vous garantit une meilleure visibilité et une place prioritaire dans les résultats de recherche.</p>
         </div>
         <div class="item-boost">
+            <div class="boost_en_images">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="boost_en_images_item">
+                            <span>Aperçu resultat de recherche</span>
+                            <img src="{{ asset('images/dashboard/illustration_boost_.webp')}}" class="img-fluid" alt="">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="boost_en_images_item">
+                            <span>Aperçu tableau de bord</span>
+                            <img src="{{ asset('images/dashboard/illustration_profil_.webp')}}" class="img-fluid" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-lg-4 col-sm-6">
                     <div class="boost-box boost-description">
                         <h2>Profil gratuit = visibilité limitée!</h2>
                         <h3>Les limites du profil gratuit</h3>
-                        <ul>
+                        <ul class="boost-free">
                             <li>Votre profil est noyé parmi des milliers d'autres.</li>
                             <li>Pas de statistiques pour suivre votre performance.</li>
                             <li>Moins de chances d'être contacté par les recruteurs</li>
@@ -36,9 +52,9 @@
                 </div>
                 <div class="col-lg-4 col-sm-6">
                     <div class="boost-box boost-description">
-                        <h2>Passez premium pour être en haut des résultats</h2>
+                        <h2>Passez en premium pour être en haut des résultats</h2>
                         <h3>Une visibilité maximale</h3>
-                        <ul>
+                        <ul class="boost-premium">
                             <li>Votre profil est mis en avant dans les résultats de recherche.</li>
                             <li>Jusqu'à 3x plus de vues de la part des recruteurs.</li>
                             <li>Priorité dans les suggestions de candidats.</li>
@@ -49,7 +65,7 @@
                     <div class="boost-box boost-description">
                         <h2>Accédez à des statistiques détaillées</h2>
                         <h3>Des données pour progresser</h3>
-                        <ul>
+                        <ul class="boost-stat">
                             <li>Suivez le nombre de vues de votre profil.</li>
                             <li>Découvrez quels recruteurs vous ont consulté.</li>
                             <li>Analysez votre classement par rapport aux autres candidats.</li>
@@ -60,7 +76,7 @@
                     <div class="boost-box boost-description">
                         <h2>Bénéficiez d'un badge premium</h2>
                         <h3>Un profil qui inspire confiance</h3>
-                        <ul>
+                        <ul class="boost-stat">
                             <li>Un badge premium visible sur votre profil.</li>
                             <li>Montrez votre sérieux et votre engagement.</li>
                             <li>Attirez l'attention des recruteurs les plus exigeants.</li>
@@ -71,24 +87,24 @@
                     <div class="boost-box boost-description">
                         <h2>Ils nous fait confiances</h2>
                         <h3>Ils ont boosté leur profil avec nous !</h3>
-                        <ul>
-                            <li>"Grâce au pack premium, j'ai été contacté par 5 recruteurs en une semaine !" – Julie, Développeuse.</li>
-                            <li>"J'ai trouvé un emploi mieux rémunéré en moins d'un mois." – Ahmed, Chef de projet.</li>
-                        </ul>
+                        <div class="boost-avis">
+                            <p>"Grâce au pack premium, j'ai été contacté par 5 recruteurs en une semaine !" – Julie, Développeuse.</p>
+                            <p>"J'ai trouvé un emploi mieux rémunéré en moins d'un mois." – Ahmed, Chef de projet.</p>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-6">
                     <div class="boost-box boost-description">
                         <h2>Rejoignez l'univers PREMIUM !</h2>
                         <h3>Boostez votre profil dès maintenant !</h3>
-                        <ul>
+                        <ul class="boost-stat">
                             <li>Cliquez sur le bouton ci-dessous pour activer votre pack premium.</li>
                             <li>En moins de 2 minutes, multipliez vos chances de décrocher l'emploi de vos rêves.</li>
                         </ul>
                     </div>
                 </div>
-                <div class="btn-pimary btn_boost">
-                    <a href="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="sub-nav-link" aria-current="page">Je booste mon profil !</a>
+                <div class="btn_boost text-center">
+                    <a href="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn btn-primary" aria-current="page">Je booste mon profil !</a>
                 </div>
             </div>
         </div>

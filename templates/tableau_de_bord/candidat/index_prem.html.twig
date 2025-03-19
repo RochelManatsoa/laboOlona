@@ -1,0 +1,254 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <h5 class="mb-0"> Profile </h5>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> Profil </li>
+            </ol>
+        </div>
+    </section>
+    <section class="top-dashboard premium_interface"> {#rajout class "premium_interface" pour les profil premium #}
+        <div class="inner-block-dashboard d-md-flex justify-content-between align-items-center">
+            <div class="left-inner-block">
+                Bienvenue dans votre espace VIP PREMIUM
+                <h1 class="left-inner-block"><img src="{{ asset('images/dashboard/crown_honor_king.svg')}}" width="85" height="85" alt="">Olona Talents</h1>
+            </div>
+            <div class="rightt-inner-block">
+                Complétez votre profil,<br/>
+                vous y êtes presque !
+                <div class="profil-complete-radial">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="300" height="174">
+                        <g transform="translate(40, 0)">
+                            <g class="apexcharts-radialbar">
+                            <g>
+                                <g class="apexcharts-tracks">
+                                <path d="M 45.18 110 A 64.82 64.82 0 0 1 174.82 110" fill="none" stroke="#958DF4" stroke-width="22.33" stroke-linecap="butt"/>
+                                </g>
+                                <g>
+                                <path d="M 45.18 110 A 64.82 64.82 0 0 1 155.84 64.16" fill="none" stroke="#F0B621" stroke-width="22.33" stroke-linecap="butt"/>
+                                <circle r="48.66" cx="110" cy="110" fill="transparent"/>
+                                </g>
+                            </g>
+                            <text x="110" y="108" text-anchor="middle" font-size="25px" font-family="Helvetica, Arial, sans-serif" font-weight="500" fill="#ffffff">75%</text>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="visibility_p d-md-flex bp_ premium_interface2_"> {#rajout class "premium_interface2_"#}
+        <div class="biographie-profil mb-4 p-4 apparition_">
+            <strong>Total apparitions dans les recherches</strong>
+            <div class="d-flex align-items-center">
+            <span><img src="{{ asset('v2/images/dashboard/search-icon.svg')}}" alt=""></span>10
+            </div>
+        </div>
+        <div class="biographie-profil mb-4 p-4 vu_">
+            <a class="btn btn-primary" href="">Nombre de personnes qui ont vu mon profil</a> {#lien qui redireige vers les liste de personne qui a visiter le profil#}
+            <div class="d-flex align-items-center">
+            <span><img src="{{ asset('v2/images/dashboard/vu-eye.svg')}}" alt=""></span>5
+            </div>
+        </div>
+        <div class="biographie-profil mb-4 p-4 mission_">
+            <strong>Total  de mission obtenu</strong>
+            <div class="d-flex align-items-center">
+            <span><img src="{{ asset('v2/images/dashboard/mission-obtenu.svg')}}" alt=""></span>3
+            </div>
+        </div>
+    </section>
+
+    <section class="detail_db d-md-flex bp_">
+        <div class="detail_left">
+            <div class="biographie-profil mb-4 p-4 ">
+                <div class="resume_profil text-center">
+                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
+                    <div class="name_ fw-bold">
+                        <span class="fs-5 mb-1 fw-bold lh-base st-title">{{ app.user.nom }} {{ app.user.prenom }}</span> 
+                    </div>
+                    <div class="title_resume">{{ app.user.candidateProfile.titre }}</div>
+                    <div class="block-rating"></div>
+                    <p>Molestie tincidunt ut consequat a urna tortor. Vitae velit ac nisl velit mauris placerat nisi placerat. Pellentesque viverra lorem malesuada nunc tristique sapien. Imperdiet sit hendrerit tincidunt bibendum donec adipiscing.</p>
+                    <br/>
+                    <span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
+                    <div class="link-social">
+                        <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a>
+                        <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/linkedin.svg')}}" alt=""></a>
+                        <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/mail_icon.svg')}}" alt=""></a>
+                    </div>
+                </div>
+            </div>
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 mb-3 fw-bold lh-base st-title">Informations personnelles</span>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Nom complet</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ candidat.candidat.nom }}
+                        {{ candidat.candidat.prenom }}
+                    </div>
+                </div>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Adresse email</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ candidat.candidat.email }}
+                    </div>
+                </div>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Numéro de téléphone</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ candidat.candidat.telephone }}			
+                    </div>
+                </div>	
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Référence</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ generatePseudo(candidat) }}
+                    </div>
+                </div>	
+            </div>
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 fw-bold mb-3 lh-base st-title">Informations professionnelles</span>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Titre</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ candidat.titre }}
+                    </div>
+                </div>	
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Secteur(s) d'activité</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {% for secteur in candidat.secteurs %}
+                        <span class="badge bg-secteur">{{ secteur.nom }}</span>
+                        {% endfor %}
+                    </div>
+                </div>	
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Prétention salariale</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+                            <span class="fw-lighter">Base mensuel :</span>
+                            <span class="mx-4 text-strong">{{ candidat.tarifCandidat.simulation.salaireNet|number_format(2, '.', '') }}
+                                {{ candidat.tarifCandidat.simulation.devise.symbole }}
+                            </span>
+                            <span class="small">
+                                <a href="{{ path('app_dashboard_employes_simulation_view', {'id' : candidat.tarifCandidat.simulation.id })}}" class="">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                    Détails
+                                </a>
+                            </span>
+                            {% else %}
+                        {% endif %}
+                    </div>
+                </div>				
+            </div>
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 mb-3 fw-bold lh-base st-title">Experiences</span>
+                <div class="exp-block">
+                    {% if experiences|length > 0 %}
+                        {% for experience in experiences %}
+                            <div class="experience" data-experience-id="{{ experience.id }}">
+                                <span class="justify-content-between align-items-center">
+                                    {% if experience.enPoste %}
+                                        Depuis
+                                        {{ experience.dateDebut|date('M Y')}}
+                                    {% else %}
+                                        {{ experience.dateDebut|date('M Y')}}
+                                        -
+                                        {{ experience.dateFin|date('M Y')}}
+                                    {% endif %}
+                                </span>
+                                <p class="small d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <strong>{{ experience.nom }}</strong>
+                                        chez
+                                        <strong>{{ experience.entreprise }}</strong>
+                                        {% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
+                                            ({{ date_difference(experience.dateFin, experience.dateDebut) }})
+                                        {% endif %}
+
+                                    </span>
+                                </p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert fw-lighter" role="alert">
+                            <i class="bi bi-info-circle"></i>
+                            Aucune expérience renseignée.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 fw-bold mb-3 lh-base st-title">Compétences</span>
+                <div class="compt-block">
+                    {% if competences|length > 0 %}
+                        {% for competence in competences %}
+                            <div class="competence" data-competence-id="{{ competence.id }}">
+                                <p class="small">
+                                    {{ competence.nom }}
+                                    <span class="">
+                                        {% for i in 1..5 %}
+                                            {% if i <= competence.note %}
+                                                <i class="small bi bi-star-fill text-warning"></i>
+                                            {% else %}
+                                                <i class="small bi bi-star "></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert fw-lighter" role="alert">
+                            <i class="bi bi-info-circle"></i>
+                            Aucune expérience renseignée.
+                        </div>
+                    {% endif %}
+                </div>				
+            </div>
+        </div>
+        <div class="detail_right">
+            <div class="biographie-profil mb-4 p-4 text-center">
+                <span class="fs-5 mb-3 fw-bold lh-base st-title">Loading ...</span>
+            </div>
+            <div class="biographie-profil mb-4 p-4">
+                <div class="d-md-flex justify-content-between">
+                    <span class="fs-5 mb-3 fw-bold lh-base st-title">Mes tâches</span>
+                    {% set last_query = app.request.query.get('q', '') %}
+                    <div class="db-search">
+                        {% if action is defined %}
+                            <form action="{{ action }}" class="input-group rounded-pill w-100">
+                                <button class="btn" type="submit"><i class="bi bi-search"></i></button>
+                                <input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+                            </form>
+                        {% else %}
+                            <form action="{{ path('app_olona_talents_candidates') }}" class="input-group rounded-pill w-100">
+                                <button class="btn" type="submit"><i class="bi bi-search"></i></button>
+                                <input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 mb-3 fw-bold lh-base st-title">Activités récentes</span>
+                {% include "v2/activity_log/_list_activities.html.twig" with {activities: activities} %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
