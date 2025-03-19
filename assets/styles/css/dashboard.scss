@@ -236,6 +236,36 @@ body {
         padding-bottom: 0;
     }
 }
+.premiumNav {
+    .info_db {
+        .link-body-emphasis {
+            .visually-prem {
+                top: -27px;
+                position: absolute;
+                transform: rotate(16deg);
+                right: 26px;
+            }
+        }
+    }
+}
+.premium_interface2_ {
+    .vu_ {
+        background-color: #796DF6;
+        color: $white;
+        a {
+            color: $white !important;
+            background-color: transparent !important;
+            border-color: transparent !important;
+            padding: 0 !important;
+            &:hover {
+                text-decoration: underline !important;
+            }
+        }
+         > div {
+            color: $white !important;
+        }
+    }
+}
 
 #switch-theme {
     border: 0;
@@ -604,7 +634,10 @@ svg {
     margin-bottom: 25px;
     border-radius: 10px;
     color: white;
-
+    &.premium_interface {
+        background: linear-gradient(45deg, rgb(255 152 30) 0%, rgb(233 184 70) 100%);
+        color: $black;
+    }
     .left-inner-block {
         font-size: 24px;
 
@@ -626,6 +659,15 @@ svg {
 
         .profil-complete-radial {
             height: 100px;
+        }
+    }
+    &.premium_interface {
+        .profil-complete-radial {
+            .apexcharts-radialbar {
+                > g > g:last-child path {
+                    stroke: $black !important;
+                }
+            }
         }
     }
 }
@@ -2221,5 +2263,99 @@ span.vue_profil {
         font-weight: 500;
         padding-left: 10px;
         border-left: 3px solid $purple-primary;
+    }
+}
+
+.item-boost {
+    .col-lg-4 {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+    .boost_en_images_item {
+        border: 1px dashed #dcdcdc;
+        padding: 40px;
+        margin-bottom: 2rem;
+        span {
+            display: block;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 20px;
+            color: $purple-primary;
+            font-weight: bold;
+        }
+    }
+    .boost-box {
+        background-color: #f2ecff;
+        padding: 20px;
+        border-radius: 10px;
+        height: 100%;
+        h2 {
+            font-weight: bold;
+            font-size: 24px;
+            color: $purple-light;
+            text-align: center;
+        }
+        h3 {
+            color: black;
+            font-size: 18px;
+            text-align: center;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+            li {
+                position: relative;
+                padding-left: 35px;
+                line-height: 130%;
+                margin: 20px 0;
+                color: black;
+                font-size: 18px;
+                &::before {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    width: 30px;
+                    height: 30px;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+            }
+            &.boost-free {
+                li::before {
+                    background-image: url('/public/images/dashboard/remove_red.svg');
+                }
+            }
+            &.boost-premium {
+                li::before {
+                    background-image: url('/public/images/dashboard/user_check_icon.svg');
+                }
+            }
+            &.boost-stat {
+                li::before {
+                    background-image: url('/public/images/dashboard/check_circle_icon.svg');
+                }
+            }
+        }
+        .boost-avis {
+            p {
+                background: $white;
+                padding: 20px;
+                line-height: 130%;
+                color: black;
+                border-radius: 10px;
+                border: 1px solid #704fb6;
+                &:first-child {
+                    margin-top: 1.2rem;
+                }
+            }
+        }
+    }
+    .btn_boost {
+        .btn-primary {
+            padding: 10px 35px;
+            font-size: 24px;
+            margin-top: 2rem;
+        }
     }
 }
