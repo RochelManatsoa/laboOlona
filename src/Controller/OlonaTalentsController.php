@@ -145,7 +145,7 @@ class OlonaTalentsController extends AbstractController
     private function fetchAndRender(Request $request, string $type): Response
     {
         $query = $request->query->get('q');
-        $size = $request->query->getInt('size', 6);
+        $size = $request->query->getInt('size', 10);
         $from = $request->query->getInt('from', 0);
         $params = [];
         if($this->getUser()){
