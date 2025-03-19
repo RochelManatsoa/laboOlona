@@ -190,7 +190,7 @@
                 <div class="biographie-profil-list">
                     {% for item in profileViews %}
                     <div class="profil-list-item d-sm-flex align-items-center justify-content-between">
-                        <div class="profil-list-name d-flex align-items-center">
+                        <div class="profil-list-name d-md-flex align-items-center">
                             <span class="profil-photo_"><img src="{{ item.candidat.fileName ? asset('uploads/experts/' ~ item.candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}" alt=""></span>
                             <div class="profil-info_">
                                 {{ generatePseudo(item.candidat) }}

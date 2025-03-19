@@ -469,6 +469,7 @@ body {
 
         .info-bx {
             color: black;
+            flex-wrap: wrap;
         }
     }
 
@@ -674,9 +675,12 @@ svg {
         flex-direction: column-reverse;
     }
     .detail_left {
-        flex: 1;
+        flex: 0 0 40%;
         line-height: 130%;
-
+        max-width: 40%;
+        @include breakpoint_1199{
+            max-width: inherit;
+        }
         .bg-image-candidat-account {
             margin: 0 auto 2rem;
             background-color: #f7f7f7;
@@ -1215,8 +1219,15 @@ span.certificated {
             margin-bottom: 0;
         }
         .profil-list-name {
+            max-width: 70%;
+            flex: 0 0 70%;
+            padding-right: 2rem;
             @include breakpoint_767{
+                text-align: center;
                 justify-content: center;
+                max-width: 100%;
+                padding-right: 0;
+                margin-bottom: 1rem;
             }
             .profil-photo_ {
                 background-color: #f9f9f9;
@@ -1228,6 +1239,10 @@ span.certificated {
                 margin-right: 15px;
                 img {
                     max-width: 100%;
+                }
+                @include breakpoint_767{
+                    display: block;
+                    margin: 15px auto;
                 }
             }
             .profil-info_ {
@@ -1705,6 +1720,7 @@ span.vue_profil {
         }
     }
 }
+#prestation,
 #edit_entreprise,
 #edit_candidate_profile,
 #change_password_form {
@@ -1734,6 +1750,16 @@ span.vue_profil {
             flex: 1 1 45%;
         }
     }
+    #prestation_availability_dateFin,
+    #prestation_tarifPrestation {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+        > div {
+            flex: 1 1 30%;
+        }
+    }
+    #prestation_availability_dateFin,
     #edit_candidate_profile_birthday {
         .input-group {
             gap: 25px;
@@ -1932,5 +1958,268 @@ span.vue_profil {
                 }
             }
         }
+    }
+}
+
+.detail_annonce_ {
+    .btn-primary {
+        &:hover {
+            background-color: transparent !important;
+            border-color: transparent !important;
+        }
+    }
+}
+.cabdidate-de-info {
+    color: $black;
+    .view-job-wrap{
+        border-radius: 10px;
+        margin-bottom: 40px;
+        .view-job-info{
+            position: relative;
+            z-index: 1;
+            .view-job-top{
+                position: relative;
+                .view_media-bg{
+                    img{
+                        border-radius: 10px;
+                    }
+                }
+                .view_jobs-category{
+                    position: absolute;
+                    left: 20px;
+                    top: 20px;
+                    span{
+                        color: $white; border-radius: 5px; padding: 5px 12px;
+                        background-color: $green-light;
+                        @include breakpoint-767{
+                            margin-top: 0px;
+                            display: inline-block;
+                        }
+                    }
+                }
+                .view_media{
+                    width: 90px;
+                    height: 90px;
+                    line-height: 90px;
+                    display: inline-block;
+                    text-align: center;
+                    background-color: $white;
+                    border-radius: 10px;
+                    box-shadow: 0px 0px 40px rgba(56, 152, 226, 0.3);
+                    position: absolute;
+                    top: -40px;
+                    left: 20px;
+                    overflow: hidden;
+                    margin-bottom: -20px;
+                    @include breakpoint-420{
+                        left: auto;
+                        top: auto;
+                        margin-bottom: 20px;
+                        margin-top: 20px;
+                        position: inherit;
+                    }
+                    img{width: 100%; display: block;}
+                }
+                .view_job-title{
+                    margin-bottom: 15px;
+                    font-size: 28px;
+                    max-width: 70%;
+                    .view_job-post-duration{
+                        color: #2db346;
+                        font-size: 14px;
+                    }
+                }
+                .view-job-mid{
+                    display: flex;
+                    justify-content: space-between;
+                    @include breakpoint-767{
+                        display: block;
+                    }
+                    .view_job-apllication-area{
+                        font-weight: 500;
+                        .view_job-apllication-date{
+                            color: #ff0000;
+                        }
+                    }
+                }
+                .view-job-amount{
+                    font-weight: 500;
+                    color: $black;
+                    font-size: 14px;
+                    display: inline-block;
+                    span{
+                        color: #046c38;
+                    }
+                }
+                .view_job-websites{margin-bottom: 10px; margin-right: 5px;}
+                .view_mid-content{
+                    position: relative;
+                    padding-top: 80px;
+                    @include breakpoint-420{
+                        padding-top: 0px;
+                    }
+                }
+            }
+        
+            .view_job-bottom{
+                position: absolute;
+                top: 20px;
+                right: 0px;
+                @include breakpoint-767{
+                    position: inherit;
+                    top: inherit;
+                    right: inherit;
+                    margin-top: 10px;
+                }
+                a{
+                    margin-right: 10px;
+                    &:last-child{
+                        margin-right: 0px;
+                    }
+                }
+                
+            }
+        }
+    }
+}
+.view_job-hilites{
+    padding-bottom: 30px;
+    padding-left: 0;
+    margin-bottom: 0;
+    li{
+        display: block;
+        background-color: $white;
+        border-radius: 10px;
+        padding: 15px 15px 15px 50px;
+        position: relative;
+        color: $black;
+        font-size: 16px;
+        margin-bottom: 10px;
+        &:last-child{margin-bottom: 0px;}
+        i{  position: absolute;
+            left: 15px;
+            top: 15px;
+            font-size: 18px;
+            color: $purple-primary;
+        }
+    }
+}
+.view_s-info3{
+    background-color: $white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 25px rgba(56, 152, 226, 0.3);
+    padding: 30px;
+    margin-top: 90px;
+    .view_s-info-logo-section{
+        position: relative;
+        .view_media{
+            width: 90px;
+            height: 90px;
+            line-height: 90px;
+            display: inline-block;
+            text-align: center;
+            background-color: $white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 40px rgba(56, 152, 226, 0.3);
+            position: relative;
+            top: -80px;
+            left: 0px;
+            overflow: hidden;
+            margin-bottom: -50px;
+        }
+    }
+    ul{
+        list-style: none;
+        margin-bottom:30px;
+        padding-left: 0;
+        li{
+            margin-bottom: 10px;
+            &:last-child{
+                margin-bottom: 0px;
+            }
+            .view_s-info-inner{
+                position: relative;
+                padding-left: 40px;
+                i{
+                    position: absolute;
+                    left: 0px;
+                    top: 15px;
+                    font-size: 18px;
+                    color: $purple-primary;
+                }
+                .view_title{
+                    font-size: 14px;
+                    color: #666666;
+                }
+                .view_s-info-discription{
+                    font-size: 16px;
+                     color: $black;
+                     word-break: break-word;
+                }
+            }
+        }
+    }
+    .ot-button{display: block; text-align: center;}
+}
+.view_description-list-2 {
+    ul {
+        margin: 30px 0px;
+        padding-left: 0;
+        li{
+            padding-left: 45px;
+            list-style: none;
+            position: relative;
+            margin-bottom: 10px;
+            font-weight: 500;
+            line-height: 130%;
+            &:last-child{
+                margin-bottom: 0px;
+            }
+            &:before {  
+                content: "\f26e";
+                display: inline-block;
+                font-family: bootstrap-icons !important;
+                font-style: normal;
+                font-weight: normal !important;
+                font-variant: normal;
+                text-transform: none;
+                line-height: 1;
+                vertical-align: -.125em;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                color:  $green-light;
+                line-height: 26px;
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                text-align: center;
+                font-size:22px;
+                width: 28px;
+                height: 28px;
+                line-height: 28px;
+                border-radius: 50%;
+            }
+        }
+    }
+	
+}
+.theiaStickySidebar {
+    .side-bar {
+        background-color: #f3f3f3;
+        padding: 30px;
+        border-radius: 10px;
+        @include breakpoint-991{
+            margin-bottom: 30px;
+        }
+        @include breakpoint-575{
+            padding: 15px;
+        }
+    }
+	.section-head-small {
+        color: $black;
+        font-size: 22px;
+        font-weight: 500;
+        padding-left: 10px;
+        border-left: 3px solid $purple-primary;
     }
 }
