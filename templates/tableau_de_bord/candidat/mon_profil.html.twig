@@ -73,8 +73,10 @@
                     </div>
                 </div>
                 <div class="btn-profils">
+                {% if candidat.cv is defined and candidat.cv is not null %}
                     <a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="">Partager mon profil</a>
-                    <a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="">Voir mon CV</a>
+                    <a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target="_blank">Voir mon CV</a>
+                {% endif %}
                 </div>
             </div>	
         </div>	
@@ -112,9 +114,24 @@
             <br/>
             <span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
             <div class="link-social">
-                <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a>
-                <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/linkedin.svg')}}" alt=""></a>
-                <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/mail_icon.svg')}}" alt=""></a>
+                {% if candidat.social.linkedin is defined and candidat.social.linkedin is not null %}
+                    <a routerlink="" href="{{ candidat.social.linkedin }}" target=_blank ><img src="{{ asset('v2/images/dashboard/linkedin.svg')}}" alt=""></a>
+                {% endif %}
+                {% if candidat.social.skype is defined and candidat.social.skype is not null %}
+                    <a routerlink="" href="{{ candidat.social.skype }}" target=_blank ><img src="{{ asset('v2/images/dashboard/skype.svg')}}" alt=""></a>
+                {% endif %}
+                {% if candidat.social.slack is defined and candidat.social.slack is not null %}
+                    <a routerlink="" href="{{ candidat.social.slack }}" target=_blank ><img src="{{ asset('v2/images/dashboard/slack.svg')}}" alt=""></a>
+                {% endif %}
+                {% if candidat.social.facebook is defined and candidat.social.facebook is not null %}
+                    <a routerlink="" href="{{ candidat.social.facebook }}" target=_blank ><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a>
+                {% endif %}
+                {% if candidat.social.instagram is defined and candidat.social.instagram is not null %}
+                    <a routerlink="" href="{{ candidat.social.instagram }}" target=_blank ><img src="{{ asset('v2/images/dashboard/instagram.svg')}}" alt=""></a>
+                {% endif %}
+                {% if candidat.social.github is defined and candidat.social.github is not null %}
+                    <a routerlink="" href="{{ candidat.social.github }}" target=_blank ><img src="{{ asset('v2/images/dashboard/github.svg')}}" alt=""></a>
+                {% endif %}
             </div>
         </div>
         <div class="d-md-flex mb-4 bp_">

@@ -51,7 +51,6 @@ class EditCandidateProfile extends AbstractType
             ])
             ->add('birthday', DateType::class, [
                 'label' => 'Votre anniversaire',
-                'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
                 'years' => range(1970, 2010),
                 'attr' => ['class' => 'rounded-pill'] 
             ])
@@ -115,6 +114,23 @@ class EditCandidateProfile extends AbstractType
                     'data-form-collection-add-label-value' => 'Ajouter une langue',
                     'data-form-collection-delete-label-value' => 'Supprimer',
                 ]
+            ])
+            ->add('cv', FileType::class, [
+                'label' => 'Ajouter un CV',
+                'label_attr' => ['class' => 'col-form-label'],
+                'mapped' => false,
+                'required' => false,
+                'attr' => ['class' => 'custom-file-input'],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '4096k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger un document PDF valide.',
+                    ])
+                ],
             ])
         ;
     }
