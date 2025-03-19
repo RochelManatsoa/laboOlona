@@ -12,6 +12,7 @@ use App\Service\ActivityLogger;
 use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
+use App\Twig\PrestationExtension;
 use App\Manager\JobListingManager;
 use App\Manager\PrestationManager;
 use App\Entity\BusinessModel\Credit;
@@ -21,15 +22,17 @@ use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Candidat\ApplicationsType;
+use App\Security\Voter\PrestationVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\TableauDeBord\AssistanceType;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\BusinessModel\PackageRepository;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
-use App\Twig\PrestationExtension;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -156,12 +159,14 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/view_job_offer.html.twig', $data);
     }
 
-    #[Route('/view-prestation/{id}', name: 'app_tableau_de_bord_candidat_view_prestation')]
-    public function viewPrestation(Request $request, int $id, PrestationManager $prestationManager, AppExtension $appExtension, PrestationExtension $prestationExtension, ProfileManager $profileManager): Response
+    #[Route('/view-prestation/{prestation}', name: 'app_tableau_de_bord_candidat_view_prestation')]
+    #[IsGranted(PrestationVoter::VIEW, subject: 'prestation')]
+    public function viewPrestation(Request $request, Prestation $prestation, PrestationManager $prestationManager, AppExtension $appExtension, PrestationExtension $prestationExtension, ProfileManager $profileManager, Security $security): Response
     {
-        $prestation = $this->em->getRepository(Prestation::class)->find($id);
-        if ($prestation === null || $prestation->getStatus() === Prestation::STATUS_DELETED || $prestation->getStatus() === Prestation::STATUS_PENDING) {
-            throw $this->createNotFoundException('Nous sommes désolés, mais le prestation demandé n\'existe pas.');
+        if($security->isGranted(PrestationVoter::EDIT, null, $prestation)){
+            if ($prestation === null || $prestation->getStatus() === Prestation::STATUS_DELETED || $prestation->getStatus() === Prestation::STATUS_PENDING) {
+                throw $this->createNotFoundException('Nous sommes désolés, mais le prestation demandé n\'existe pas.');
+            }
         }
         $data = $this->getData();
         $prestationManager->incrementView($prestation, $request->getClientIp());
@@ -192,6 +197,30 @@ class CandidatController extends AbstractController
         $currentUser = $params['currentUser'];
         /** @var Prestation $prestation */
         $prestation = $prestationManager->init($currentUser);
+        $creditAmount = $profileManager->getCreditAmount(Credit::ACTION_APPLY_PRESTATION_RECRUITER);
+        $boostType = 'PRESTATION_CANDIDATE';
+        $form = $this->createForm(PrestationType::class, $prestation, ['boostType' => $boostType]);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $this->em->persist($prestation);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_tableau_de_bord_candidat_view_prestation', ['prestation' => $prestation]);
+        }
+        $params['form'] = $form->createView();
+        $params['creditAmount'] = $creditAmount;
+
+        return $this->render('tableau_de_bord/candidat/creation_prestations.html.twig', $params);
+    }
+
+    #[Route('/modifier-une-prestation/{prestation}', name: 'app_tableau_de_bord_candidat_edition_prestation')]
+    public function editpresta(
+        Request $request, 
+        Prestation $prestation, 
+        ProfileManager $profileManager,
+    ): Response
+    {
+        $params = $this->getData();
         $creditAmount = $profileManager->getCreditAmount(Credit::ACTION_APPLY_PRESTATION_RECRUITER);
         $boostType = 'PRESTATION_CANDIDATE';
         $form = $this->createForm(PrestationType::class, $prestation, ['boostType' => $boostType]);

@@ -139,9 +139,5 @@ document.addEventListener('turbo:load', function() {
     calendar.render()
   })
 
-  document.addEventListener('DOMContentLoaded', function() {
-		document.querySelector('.nav-item').addEventListener('click', function() {
-			document.querySelector('.sub-nav-pills').classList.toggle('visible');
-		});
-	});
+  
 

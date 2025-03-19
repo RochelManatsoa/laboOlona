@@ -35,7 +35,7 @@
                                         </div>
                                         <div class="view_mid-content">
                                             <div class="view_media">
-                                                <img src="/uploads/experts/company-default.jpg" alt="#">
+                                                <img src="{{ annonce.entreprise.fileName ? asset('uploads/compagnies/' ~ annonce.entreprise.fileName) : asset('uploads/experts/company-default.jpg') }}" alt="#">
                                             </div>
                                             <h4 class="view_job-title">{{ annonce.titre }} <span class="view_job-post-duration">/ {{ annonce.dateCreation|time_ago }}</span></h4>
                                             <div class="view-job-mid">
@@ -134,7 +134,7 @@
                                             <div class="view_s-info3">
                                                 <div class="view_s-info-logo-section">
                                                     <div class="view_media">
-                                                        <img src="/uploads/experts/company-default.jpg" alt="Avatar">
+                                                        <img src="{{ purchasedContact.contact.entrepriseProfile.fileName ? asset('uploads/compagnies/' ~ purchasedContact.contact.entrepriseProfile.fileName) : asset('uploads/experts/company-default.jpg') }}" alt="Avatar">
                                                     </div>
                                                     <h4 class="view_title">Information client</h4>
                                                 </div>

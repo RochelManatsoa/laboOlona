@@ -22,7 +22,43 @@
     </section>
     <section class="detail_db d-md-flex bp_">
         <div class="biographie-profil mb-4 p-4">
-            {{ form(form) }}
+            {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+            {{ form_row(form.titre)}}
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                {{ form_row(form.secteurs)}}
+                </div>
+                <div class="col-lg-6 col-sm-12">
+                {{ form_row(form.modalitesPrestation)}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-4">{{ form_row(form.tarifPrestation.montant) }}</div>
+                <div class="col-sm-12 col-md-4">{{ form_row(form.tarifPrestation.typeTarif) }}</div>
+                <div class="col-sm-12 col-md-4">{{ form_row(form.tarifPrestation.currency) }}</div>
+            </div>
+            {{ form_row(form.description)}}
+            {{ form_row(form.competences)}}
+            {{ form_row(form.availability)}}
+            {{ form_row(form.conditionsParticulieres)}}
+            {{ form_row(form.preferencesCommunication)}}
+            {{ form_row(form.engagementQualite)}}
+            {{ form_row(form.motsCles)}}
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                {{ form_row(form.contactTelephone)}}
+                </div>
+                <div class="col-lg-6 col-sm-12">
+                {{ form_row(form.contactEmail)}}
+                </div>
+            </div>
+            {{ form_row(form.file)}}
+            <div style="display:none;">
+            {{ form_widget(form) }}
+            </div>
+            <hr/>
+            <button type="submit" class="btn btn-primary px-5 rounded-pill btn-lg">Sauvegarder</button>
+            {{ form_end(form) }}
         </div>
     </section>
 {% endblock %}
