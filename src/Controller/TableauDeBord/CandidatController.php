@@ -214,6 +214,7 @@ class CandidatController extends AbstractController
     }
 
     #[Route('/modifier-une-prestation/{prestation}', name: 'app_tableau_de_bord_candidat_edition_prestation')]
+    #[IsGranted(PrestationVoter::EDIT, subject: 'prestation')]
     public function editpresta(
         Request $request, 
         Prestation $prestation, 

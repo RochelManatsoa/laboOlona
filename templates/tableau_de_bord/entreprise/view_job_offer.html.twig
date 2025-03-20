@@ -104,6 +104,7 @@
                                     </div>
                                 </div>
                                 <div class="view_s-info3-wrap mb-5">
+                                <a href="{{ path('app_tableau_de_bord_entreprise_modifier_une_annonce', {'jobListing': annonce.id })}}" class="btn btn-primary">Modifier l'annonce</a>
                                 </div>
                             </div>
                         </div>
@@ -113,43 +114,4 @@
         </div>
     </section>
     {% include "/tableau_de_bord/layout/_credit_modal_entreprise.html.twig" %}
-    {% if candidat is defined %}
-        <!-- Modal -->
-        <div class="modal fade" id="submitBtn" tabindex="-1" aria-labelledby="submitBtnLabel" aria-hidden="true">
-            <div class="modal-dialog  modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                {{ form_start(form, {'attr': {'id':'applyJob', 'action': path('app_v2_candidate_view_job_offer',  {'id': annonce.id })}}) }}
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5 text-center fw-bold" id="submitBtnLabel">Rédigez votre lettre de motivation</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Prenez un moment pour nous parler de vous et de ce qui vous rend unique. Utilisez cet espace pour mettre en avant vos compétences, votre expérience et votre enthousiasme pour le poste auquel vous postulez. Une bonne lettre de motivation peut faire toute la différence ! Voici quelques conseils pour vous aider :</p>
-                    <ul>
-                        <li><span class="fw-semibold">Personnalisez votre lettre :</span>Adressez-vous spécifiquement à l'entreprise et au poste.</li>
-                        <li><span class="fw-semibold">Soyez précis :</span>Donnez des exemples concrets qui démontrent vos compétences et réalisations.</li>
-                        <li><span class="fw-semibold">Restez concis :</span>Une lettre claire et directe est souvent la plus efficace.</li>
-                    </ul>
-                    <p>Une fois votre lettre rédigée, relisez-la attentivement avant de soumettre votre candidature. Bonne chance !</p>
-                    <div class="col-11 mx-auto">
-        
-                    <div class="row">
-                    {{ form_widget(form)}}
-                    </div>
-        
-                    </div>
-                </div>
-                    {% set modalId = 'confirmationModal' %}
-                    {% if app.user.credit.total < 50 %}
-                    {% set modalId = 'lowCreditModal' %}
-                    {% endif %}
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary fw-semibold text-uppercase" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary fw-semibold text-uppercase" data-bs-toggle="modal" data-bs-target="#{{ modalId }}" data-bs-price="{{ apply_job_price }} crédits" data-bs-type="apply-job">Envoyer</button>
-                </div>
-                {{ form_end(form) }}
-                </div>
-            </div>
-        </div>
-    {% endif %}
 {% endblock %}

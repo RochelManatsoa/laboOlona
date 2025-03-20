@@ -178,7 +178,7 @@ class EntrepriseController extends AbstractController
     }
 
     #[Route('/detail-annonce/{jobListing}', name: 'app_tableau_de_bord_entreprise_view_job_offer')]
-    #[IsGranted(JobListingVoter::VIEW, subject: 'jobListing')]
+    #[IsGranted(JobListingVoter::EDIT, subject: 'jobListing')]
     public function viewjoboffer(Request $request, JobListing $jobListing, JobListingManager $jobListingManager, AppExtension $appExtension, Security $security): Response
     {
         $data = $this->getData();
@@ -219,24 +219,30 @@ class EntrepriseController extends AbstractController
         return $this->render('tableau_de_bord/entreprise/publier_une_annonce.html.twig', $params);
     }
 
-    #[Route('/modifier-une-annonce/{annonce}', name: 'app_tableau_de_bord_entreprise_modifier_une_annonce')]
+    #[Route('/modifier-une-annonce/{jobListing}', name: 'app_tableau_de_bord_entreprise_modifier_une_annonce')]
+    #[IsGranted(JobListingVoter::EDIT, subject: 'jobListing')]
     public function annonceEdit(
         Request $request,
-        JobListing $annonce,
+        JobListing $jobListing,
+        JobListingManager $jobListingManager,
         EntityManagerInterface $em,
     ): Response
     {
         $params = $this->getData();
-        $form = $this->createForm(JobListingType::class, $annonce);
+        $currentUser = $params['currentUser'];
+        $form = $this->createForm(JobListingType::class, $jobListing);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $jobListing = $form->getData();
-            $jobListing->setEntreprise($params['entreprise']);
-            $em->persist($jobListing);
-            $em->flush();
-            $this->addFlash('success', 'Annonce modifiée avec succès');
-
-            return $this->redirectToRoute('app_tableau_de_bord_entreprise_offre_emploi');
+            $response = $jobListingManager->handleJobListingSubmission($form->getData(), $currentUser);
+            if($response['success'] === true){
+                $jobListing = $form->getData();
+                $jobListing->setEntreprise($params['entreprise']);
+                $em->persist($jobListing);
+                $em->flush();
+                $this->addFlash('success', 'Annonce créée avec succès');
+                return $this->redirectToRoute('app_tableau_de_bord_entreprise_view_job_offer', ['jobListing' => $jobListing->getId()]);
+            }
+            $this->addFlash('dark', 'Votre credit est insufisant');
         }
         $params['form'] = $form->createView();
         
@@ -297,7 +303,7 @@ class EntrepriseController extends AbstractController
         return $this->render('tableau_de_bord/entreprise/profil_candidat.html.twig', $data);
     }
 
-    #[Route('/view-prestation/{id}', name: 'app_tableau_de_bord_entreprise_view_prestation')]
+    #[Route('/detail-prestation/{id}', name: 'app_tableau_de_bord_entreprise_view_prestation')]
     public function viewPrestation(Request $request, int $id, PrestationManager $prestationManager, AppExtension $appExtension, PrestationExtension $prestationExtension, ProfileManager $profileManager): Response
     {
         $prestation = $this->em->getRepository(Prestation::class)->find($id);
