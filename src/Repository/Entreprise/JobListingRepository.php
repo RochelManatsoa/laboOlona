@@ -70,7 +70,7 @@ class JobListingRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function paginateJobListingsEntrepriseProfiles($page, EntrepriseProfile $entrepriseProfile, string $status = null): PaginationInterface
+    public function paginateJobListingsEntrepriseProfiles(EntrepriseProfile $entrepriseProfile, $page, string $status = null): PaginationInterface
     {
         $queryBuilder = $this->createQueryBuilder('j')->select('j');
         $queryBuilder

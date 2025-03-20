@@ -136,7 +136,7 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/missions_obtenues.html.twig', $this->getData());
     }
 
-    #[Route('/view-job-offer/{id}', name: 'app_tableau_de_bord_candidat_view_job_offer')]
+    #[Route('/detail-annonce/{id}', name: 'app_tableau_de_bord_candidat_view_job_offer')]
     public function viewjoboffer(Request $request, int $id, JobListingManager $jobListingManager, AppExtension $appExtension, ProfileManager $profileManager): Response
     {
         $annonce = $this->em->getRepository(JobListing::class)->find($id);
@@ -159,7 +159,7 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/view_job_offer.html.twig', $data);
     }
 
-    #[Route('/view-prestation/{prestation}', name: 'app_tableau_de_bord_candidat_view_prestation')]
+    #[Route('/detail-prestation/{prestation}', name: 'app_tableau_de_bord_candidat_view_prestation')]
     #[IsGranted(PrestationVoter::VIEW, subject: 'prestation')]
     public function viewPrestation(Request $request, Prestation $prestation, PrestationManager $prestationManager, AppExtension $appExtension, PrestationExtension $prestationExtension, ProfileManager $profileManager, Security $security): Response
     {
@@ -231,7 +231,7 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/creation_prestations.html.twig', $params);
     }
 
-    #[Route('/pack-standard', name: 'app_tableau_de_bord_entreprise_tarifs_standard')]
+    #[Route('/pack-standard', name: 'app_tableau_de_bord_candidat_tarifs_standard')]
     public function standard(): Response
     {
         return $this->render('tableau_de_bord/candidat/tarifs_standard.html.twig', $this->getData());

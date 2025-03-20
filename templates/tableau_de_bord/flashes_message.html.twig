@@ -1,0 +1,13 @@
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ type }} alert-dismissible fade show my-5" role="alert">
+            {{ message }}
+            {% if type == 'dark' %}
+                <a href="{{ path('app_tableau_de_bord_entreprise_tarif_choice') }}" class="btn btn-primary btn-sm ms-3">
+                    Acheter du crédit
+                </a>
+            {% endif %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endfor %}

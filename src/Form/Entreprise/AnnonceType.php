@@ -111,9 +111,6 @@ class AnnonceType extends AbstractType
                 'expanded' => true,  
                 'required' => false, 
                 'placeholder' => 'Pas de boost',
-                'label_attr' => [
-                    'class' => 'fw-bold fs-6' 
-                ],
                 'label' => false
             ])
             ->add('boostFacebook', EntityType::class, [

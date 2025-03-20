@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Prestation;
 use App\Twig\AppExtension;
 use App\Entity\Notification;
+use Google\Service\Batch\Job;
 use App\Manager\ProfileManager;
 use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
@@ -13,10 +14,16 @@ use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use App\Twig\PrestationExtension;
+use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Entreprise\Favoris;
+use App\Manager\JobListingManager;
 use App\Manager\PrestationManager;
+use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\Credit;
 use App\Form\ChangePasswordFormType;
+use App\Form\Entreprise\AnnonceType;
+use App\Manager\OlonaTalentsManager;
+use Google\Service\Bigquery\JobList;
 use App\Entity\Entreprise\JobListing;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
@@ -26,12 +33,16 @@ use App\Form\Profile\EditEntrepriseType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\TableauDeBord\AssistanceType;
 use App\Manager\BusinessModel\CreditManager;
-use App\Manager\OlonaTalentsManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\BusinessModel\PackageRepository;
+use App\Repository\Entreprise\JobListingRepository;
+use App\Manager\BusinessModel\BoostVisibilityManager;
+use App\Security\Voter\JobListingVoter;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/tableau-de-bord/entreprise')]
@@ -96,13 +107,19 @@ class EntrepriseController extends AbstractController
     }
     
     #[Route('/offre-d-emploi', name: 'app_tableau_de_bord_entreprise_offre_emploi')]
-    public function offre(Request $request): Response
+    public function offre(Request $request, JobListingRepository $jobListingRepository, JobListingManager $jobListingManager): Response
     {
         $page = $request->query->get('page', 1);
+        $status = $request->query->get('status', JobListing::STATUS_PUBLISHED);
         $params = $this->getData();
         $entreprise = $params['entreprise'];
-        $offres = $this->em->getRepository(JobListing::class)->paginateJobListingsEntrepriseProfiles($page, $entreprise);
+        $offres = $jobListingRepository->paginateJobListingsEntrepriseProfiles($entreprise, $page, $status);
         $params['offres'] = $offres;
+        $params['count'] = $jobListingRepository->countAllByEntreprise($entreprise);
+        $params['countStatus'] = $jobListingRepository->countStatusByEntreprise($entreprise, $status);
+        $params['statuses'] = $jobListingManager->getStatuses();
+        $params['labels'] = JobListing::getLabels();
+        $params['selectedStatus'] = $status;
 
         return $this->render('tableau_de_bord/entreprise/offre_emploi.html.twig', $params);
     }
@@ -110,20 +127,116 @@ class EntrepriseController extends AbstractController
     #[Route('/publier-une-annonce', name: 'app_tableau_de_bord_entreprise_publier_une_annonce')]
     public function annonce(
         Request $request,
+        JobListingManager $jobListingManager,
+        BoostVisibilityManager $boostVisibilityManager,
+    ): Response
+    {
+        $params = $this->getData();
+        $entreprise = $params['entreprise'];
+        $currentUser = $params['currentUser'];
+        $form = $this->createForm(AnnonceType::class, $jobListingManager->init($entreprise));
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $response = $jobListingManager->handleJobListingSubmission($form->getData(), $currentUser);
+            if ($response['success']) {
+                $boostOption = $form->get('boost')->getData(); 
+                $jobListing = $form->getData();
+                if($boostOption instanceof Boost){
+                    $visibilityBoost = $boostVisibilityManager->init($boostOption);
+                    $visibilityBoost = $boostVisibilityManager->update($visibilityBoost, $boostOption);
+                    $jobListing->setStatus(JobListing::STATUS_FEATURED);
+                    $jobListing->setBoost($boostOption);
+                    $jobListing->addBoostVisibility($visibilityBoost);
+                    $currentUser->addBoostVisibility($visibilityBoost);
+                    $this->em->persist($visibilityBoost);
+                    $this->em->flush();
+                    $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_CREATE, 'Boost Offre d\'emploi sur Olona Talents', ActivityLog::LEVEL_INFO);
+                }
+                $jobListingManager->saveForm($form);
+                $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_CREATE, 'Creation Offre d\'emploi "'. $jobListing->getTitre().'"', ActivityLog::LEVEL_INFO);
+                return $this->redirectToRoute('app_tableau_de_bord_entreprise_view_job_offer', ['jobListing' => $jobListing->getId()]);
+            } else {
+                if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                    $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                    return $this->render('tableau_de_bord/layout/entreprise_turbo_live.html.twig', $response);
+                }
+            }
+            return $this->redirectToRoute('app_tableau_de_bord_entreprise_listes_candidatures');
+        }else{
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+                return $this->render('v2/dashboard/recruiter/update.html.twig', [
+                    'form' => $form->createView(),
+                    'success' => false,
+                ]);
+            }
+        }
+        $params['form'] = $form->createView();
+        
+        return $this->render('tableau_de_bord/entreprise/publier_une_annonce.html.twig', $params);
+    }
+
+    #[Route('/detail-annonce/{jobListing}', name: 'app_tableau_de_bord_entreprise_view_job_offer')]
+    #[IsGranted(JobListingVoter::VIEW, subject: 'jobListing')]
+    public function viewjoboffer(Request $request, JobListing $jobListing, JobListingManager $jobListingManager, AppExtension $appExtension, Security $security): Response
+    {
+        $data = $this->getData();
+        $jobListingManager->incrementView($jobListing, $request->getClientIp());
+        $this->activityLogger->logJobLisitinViewActivity($data['currentUser'], $appExtension->generateJobReference($jobListing->getId()));
+        $data['annonce'] = $jobListing;
+
+        return $this->render('tableau_de_bord/entreprise/view_job_offer.html.twig', $data);
+    }
+
+    #[Route('/creer-une-annonce/', name: 'app_tableau_de_bord_entreprise_creer_une_annonce')]
+    public function annonceCreate(
+        Request $request,
+        JobListingManager $jobListingManager,
         EntityManagerInterface $em,
     ): Response
     {
         $params = $this->getData();
-        $form = $this->createForm(JobListingType::class, new JobListing());
+        $entreprise = $params['entreprise'];
+        $currentUser = $params['currentUser'];
+        $form = $this->createForm(AnnonceType::class, $jobListingManager->init($entreprise));
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $response = $jobListingManager->handleJobListingSubmission($form->getData(), $currentUser);
+            if($response['success'] === true){
+                $jobListing = $form->getData();
+                $jobListing->setEntreprise($params['entreprise']);
+                $em->persist($jobListing);
+                $em->flush();
+                $this->addFlash('success', 'Annonce créée avec succès');
+                return $this->redirectToRoute('app_tableau_de_bord_entreprise_view_job_offer', ['jobListing' => $jobListing->getId()]);
+            }
+            $this->addFlash('dark', 'Votre credit est insufisant');
+
+        }
+        $params['form'] = $form->createView();
+        
+        return $this->render('tableau_de_bord/entreprise/publier_une_annonce.html.twig', $params);
+    }
+
+    #[Route('/modifier-une-annonce/{annonce}', name: 'app_tableau_de_bord_entreprise_modifier_une_annonce')]
+    public function annonceEdit(
+        Request $request,
+        JobListing $annonce,
+        EntityManagerInterface $em,
+    ): Response
+    {
+        $params = $this->getData();
+        $form = $this->createForm(JobListingType::class, $annonce);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $jobListing = $form->getData();
             $jobListing->setEntreprise($params['entreprise']);
             $em->persist($jobListing);
             $em->flush();
-            $this->addFlash('success', 'Annonce créée avec succès');
+            $this->addFlash('success', 'Annonce modifiée avec succès');
 
-            return $this->redirectToRoute('app_tableau_de_bord_entreprise_listes_candidatures');
+            return $this->redirectToRoute('app_tableau_de_bord_entreprise_offre_emploi');
         }
         $params['form'] = $form->createView();
         

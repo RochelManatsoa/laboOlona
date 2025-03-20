@@ -1,4 +1,4 @@
-{% extends 'tableau_de_bord/base.html.twig' %}
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
 
 {% block title %}Tableau de bord{% endblock %}
 
@@ -10,13 +10,13 @@
 
     <section class="">
         <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
-            <h5 class="mb-0"> Profile </h5>
+            <h5 class="mb-0"> Entreprise </h5>
             <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
                 <li class="breadcrumb-item position-relative">
                     <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
                     <i class="ri-home-8-line"></i> Tableau de bord </a> 
                 </li>
-                <li class="breadcrumb-item position-relative"> Trouver des missions </li>
+                <li class="breadcrumb-item position-relative"> Mes annonces </li>
             </ol>
         </div>
     </section>
@@ -75,31 +75,6 @@
                                     <p>Aucune compétence spécifique requise.</p>
                                 {% endif %}
                             </div>
-                            {% if candidat is defined %}
-                                {% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) or candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_FEATURED')) %}
-                                    {% if applied %}
-                                    <div id="alert-application" class="my-4">
-                                        <button type="button" data-bs-toggle="modal" data-bs-target="#submitBtn" class="btn btn-md btn-primary fw-semibold text-uppercase my-2 mx-3">Postuler ({{ apply_job_price }} crédits)</button>
-                                    </div>
-                                    {% else %}
-                                    <div class="alert alert-light-primary d-flex align-items-center" role="alert">
-                                        <i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
-                                        <div>
-                                            Vous avez déjà postuler à cette offre 
-                                            <a href="{{ path('app_tableau_de_bord_candidat_mes_candidatures')}}" class="mx-4 btn btn-primary text-uppercase fw-semibold" class="">Mes candidatures</a>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                {% else %}
-                                    <div class="alert alert-info d-flex align-items-center" role="alert">
-                                        <i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
-                                        <div>
-                                            Vous profil doit être validé par un moderateur avant de pouvoir postuler à cette annonce.<br>
-                                            Veuillez vérifier régulièrement votre mail
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            {% endif %}
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12 rightSidebar">
@@ -129,75 +104,6 @@
                                     </div>
                                 </div>
                                 <div class="view_s-info3-wrap mb-5">
-                                    {% if purchasedContact is defined and purchasedContact is not null %}
-                                        {% if purchasedContact.isAccepted %}
-                                            <div class="view_s-info3">
-                                                <div class="view_s-info-logo-section">
-                                                    <div class="view_media">
-                                                        <img src="{{ purchasedContact.contact.entrepriseProfile.fileName ? asset('uploads/compagnies/' ~ purchasedContact.contact.entrepriseProfile.fileName) : asset('uploads/experts/company-default.jpg') }}" alt="Avatar">
-                                                    </div>
-                                                    <h4 class="view_title">Information client</h4>
-                                                </div>
-                                                <ul>
-                                                    <li>
-                                                        <div class="view_s-info-inner">
-                                                            <i class="fas fa-building"></i>
-                                                            <span class="view_title">Entreprise</span>
-                                                            <div class="view_s-info-discription">{{ purchasedContact.contact.entrepriseProfile.nom }}</div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="view_s-info-inner">
-                                                            <i class="fas fa-mobile-alt"></i>
-                                                            <span class="view_title">Téléphone</span>
-                                                            <div class="view_s-info-discription">{{ purchasedContact.contact.telephone }}</div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="view_s-info-inner">
-                                                            <i class="fas fa-at"></i>
-                                                            <span class="view_title">Email</span>
-                                                            <div class="view_s-info-discription">{{ purchasedContact.contact.email }}</div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="view_s-info-inner">
-                                                            <i class="fas fa-desktop"></i>
-                                                            <span class="view_title">Site web</span>
-                                                            <div class="view_s-info-discription">--</div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="view_s-info-inner">
-                                                            <i class="fas fa-map-marker-alt"></i>
-                                                            <span class="view_title">Addresse</span>
-                                                            <div class="view_s-info-discription">adresse</div>
-                                                        </div>
-                                                    </li>
-
-                                                </ul>
-                                                <a href="" class="btn btn-primary ot-button">Voir son profil</a>
-                                            </div>
-                                        {% else %}
-                                            Votre demande de contact a été envoyée au candidat et est en attente de son approbation. Vos crédits ne seront débités qu'une fois la demande approuvée.
-                                        {% endif %}
-                                    {% else %}
-                                        {% set modalId = 'confirmationModal' %}
-                                        {% if app.user.credit.total < show_recruiter_price %}
-                                        {% set modalId = 'lowCreditModal' %}
-                                        {% endif %}
-                                        <div id="contactDetails">
-                                            <h4 class="section-head-small mb-4">Contacter le client</h4>
-                                            <p>Vous pouvez contacter directement l'entreprise et l'ajouter à votre réseau professionnel pour explorer les opportunités et collaborations possibles.</p>
-                                            <form action="{{ path('app_v2_contact_show')}}" method="post" id="show-recruiter-contact">
-                                                <input type="hidden" name="contactId" value="{{ annonce.entreprise.entreprise.id }}">
-                                                <input type="hidden" name="showContactPrice" value="{{ show_recruiter_price }}">
-                                                <input type="hidden" name="actionView" value="VIEW_RECRUITER">
-                                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
-                                                <button type="button" data-bs-toggle="modal" data-bs-target="#{{ modalId }}" data-bs-price="{{ show_recruiter_price }} crédits" data-bs-type="show-recruiter-contact" class="w-100 align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact </br>({{ show_recruiter_price }} crédits)</button>
-                                            </form>
-                                        </div>
-                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -206,7 +112,7 @@
             </div>
         </div>
     </section>
-    {% include "/tableau_de_bord/layout/_credit_modal_candidat.html.twig" %}
+    {% include "/tableau_de_bord/layout/_credit_modal_entreprise.html.twig" %}
     {% if candidat is defined %}
         <!-- Modal -->
         <div class="modal fade" id="submitBtn" tabindex="-1" aria-labelledby="submitBtnLabel" aria-hidden="true">

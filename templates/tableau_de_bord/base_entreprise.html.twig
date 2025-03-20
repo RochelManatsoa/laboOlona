@@ -117,6 +117,20 @@
           </div>
         </footer>
 		{% include "cookies_management.html.twig" %}
+		<script>
+
+			function loadCKEditor() {
+				if (typeof ClassicEditor === 'undefined') {
+					var scriptTag = document.createElement('script');
+					scriptTag.src = "{{ asset('assets/ckeditor5/ckeditor.js') }}";
+					document.body.appendChild(scriptTag);
+				}
+			}
+
+			loadCKEditor();
+			document.addEventListener('turbo:load', loadCKEditor);
+
+		</script>
 
 	{{ encore_entry_script_tags('main') }}
 	{{ encore_entry_script_tags('iary') }}
