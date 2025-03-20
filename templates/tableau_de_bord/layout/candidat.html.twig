@@ -28,7 +28,7 @@
       <img src="{{ asset('v2/images/dashboard/annuaire_icon.svg')}}" alt="" width="27" height="27"><span class="sidebar-text">Annuaire de service</span></a>
     </li>
     <li class="nav-item click-sub">
-      <span class="nav-link sous-menu_"><img src="{{ asset('v2/images/dashboard/profil.svg')}}" alt=""><span class="sidebar-text">Profil</span> </span>
+      <span class="nav-link sous-menu_ {{ (current_route == 'app_tableau_de_bord_candidat_profil' or current_route == 'app_tableau_de_bord_candidat_mes_prestations' or current_route == 'app_tableau_de_bord_candidat_mes_candidatures' or current_route == 'app_tableau_de_bord_candidat_reseaux_professionnelles') ? 'underline' : '' }}" aria-current="page"><img src="{{ asset('v2/images/dashboard/profil.svg')}}" alt=""><span class="sidebar-text">Profil</span> </span>
       <ul class="sub-nav-pills">
         <li class="sub-nav-item">
           <a href="{{ path('app_tableau_de_bord_candidat_profil')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_profil' ? 'underline' : '' }}" aria-current="page">
@@ -58,12 +58,16 @@
       </ul>
     </li>
     <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise_tarifs_standard')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_entreprise_tarifs_standard' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/payment_icon.svg')}}" alt="" width="24" height="24"><span class="sidebar-text">Recharger mon credit</span></a>
+    </li>
+    <li class="nav-item">
       <a href="{{ path('app_tableau_de_bord_candidat_notification')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_candidat_notification' ? 'underline' : '' }}" aria-current="page">
       <img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt=""><span class="sidebar-text">Notifications</span><span class="link-bulle">{{ notificationsCount }}</span>
       </a>
     </li>
     <li class="nav-item click-sub">
-      <span class="nav-link sous-menu_"><img src="{{ asset('v2/images/dashboard/taches.svg')}}" alt=""><span class="sidebar-text">Mes abonnements </span></span>
+      <span class="nav-link sous-menu_ {{ (current_route == 'app_tableau_de_bord_candidat_boost' or current_route == 'app_tableau_de_bord_candidat_tarifs') ? 'underline' : '' }}"><img src="{{ asset('v2/images/dashboard/taches.svg')}}" alt=""><span class="sidebar-text">Mes abonnements </span></span>
       <ul class="sub-nav-pills">
         <li class="sub-nav-item">
           <a href="{{ path('app_tableau_de_bord_candidat_boost')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_boost' ? 'underline' : '' }}" aria-current="page">
@@ -79,7 +83,7 @@
     </li>
     <li class="nav-item click-sub">
       <span class="sep-menu"></span> 
-      <span class="nav-link sous-menu_"><img src="{{ asset('v2/images/dashboard/setting.svg')}}" alt=""><span class="sidebar-text">Paramètres </span></span>
+      <span class="nav-link sous-menu_ {{ (current_route == 'app_tableau_de_bord_candidat_mon_compte' or current_route == 'app_tableau_de_bord_candidat_mise_a_jour_mot_de_passe' or current_route == 'app_tableau_de_bord_candidat_assistance') ? 'underline' : '' }}"><img src="{{ asset('v2/images/dashboard/setting.svg')}}" alt=""><span class="sidebar-text">Paramètres </span></span>
       <ul class="sub-nav-pills">
         <li class="sub-nav-item">
           <a href="{{ path('app_tableau_de_bord_candidat_mon_compte')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_mon_compte' ? 'underline' : '' }}" aria-current="page">

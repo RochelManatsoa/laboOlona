@@ -2356,7 +2356,6 @@ span.vue_profil {
         .btn-primary {
             padding: 10px 35px;
             font-size: 24px;
-            margin-top: 2rem;
         }
     }
 }
@@ -2369,5 +2368,26 @@ span.vue_profil {
             width: 100px;
             height: 100px;
         }
+    }
+}
+
+.legend_icon_ {
+    margin-top: 2rem;
+    border-top: 1px solid;
+    padding-top: 2rem;
+    span {
+        display: flex;
+        color: black;
+        line-height: 130%;
+        font-size: 16px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        align-items: center;
+    }
+    img {
+        width: 32px;
+        height: auto;
+        object-fit: contain;
+        margin-right: 10px;
     }
 }

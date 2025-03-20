@@ -61,7 +61,7 @@ class CandidatController extends AbstractController
         $params['langages'] = $this->candidatManager->getLangagesSortedByNiveau($candidat);
         $params['activities'] = $this->em->getRepository(ActivityLog::class)->findUserLogs($currentUser);
 
-        return $this->render('tableau_de_bord/candidat/index_prem.html.twig', $params);
+        return $this->render('tableau_de_bord/candidat/index.html.twig', $params);
     }
 
 
