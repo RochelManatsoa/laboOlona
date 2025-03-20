@@ -20,7 +20,7 @@
 		<div class="transition-fade">
 			{% block header %}
 			{% set last_query = app.request.query.get('q', '') %}
-				<nav class="header-area bg-white premiumNav"> {#rajout class "premiumNav" pour les profil premium #}
+				<nav class="header-area bg-white"> {#rajout class "premiumNav" pour les profil premium #}
 					<div class="d-flex justify-content-between align-items-center">
 						<a class="navbar-brand d-block d-lg-none" href="{{ path('app_home') }}">
 							<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="150" height="56" class="" alt="Logo">
@@ -55,7 +55,7 @@
 								</div>
 								<div class="dropdown">
 									<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
-										{#Icon pour le profil premium #}
+										{#Icon pour le profil premium
 										<span class="visually-prem"><img src="{{ asset('images/dashboard/prem_icon.svg') }}" width="36" height="36" class="" alt="premium"></span>
 										{#Icon pour le profil premium #}
 										{% if app.user.gravatar is not null %}

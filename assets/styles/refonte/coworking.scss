@@ -656,6 +656,8 @@
 #base-coworking .footer-light {
     color: $white;
     background-color: #212529 !important;
+    position: relative;
+    z-index: 99;
     .title {
         color: $yelow-primary;
         &:before {

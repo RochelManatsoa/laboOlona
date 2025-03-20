@@ -14,6 +14,14 @@
 
 {% block body %}
 <input type="hidden" id="hidden-query" value="{{ getSearchQuery('q') }}">
+<div class="home-header-top">
+	<div class="container d-flex justify-content-between p-2">
+		<div class="logo_to_home">
+			<a href="/" class="login_home"><img src="{{ asset('images/logo-olona-talents-white600x200.png')}}" alt="Olona Talents" width="150" height="56"></a>
+		</div>
+		<a href="{{ path('app_login')}}" class="login_home btn-primary me-3 mt-2">Se connecter</a>
+	</div>
+</div>
 <div class="bnr-inr overlay-wraper bg-center" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
 	<div class="container">
 		<div class="bnr-inr-entry">
