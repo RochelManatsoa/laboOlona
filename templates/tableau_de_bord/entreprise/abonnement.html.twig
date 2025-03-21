@@ -9,7 +9,11 @@
 
 <section class="">
     <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
-        <h5 class="mb-0"> Entreprise</h5>
+        <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Abonnement </h5>
+            </div>
         <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
             <li class="breadcrumb-item position-relative">
                 <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
@@ -28,11 +32,14 @@
     </div>
 </section>
 {% endif %}
-<section class="tarfis-container d-block p-5 mb-4">
+<section class="tarfis-container tarif_pro_ d-block p-5 mb-4">
     <div class="wrapper-abonnement-c">
         <div class="title-abonnement-c">
             <h1>{{ package.name }}</h1>
             <p>{{ package.description|raw }}</p>
+            <p>Notre formule d’abonnement mensuel vous propose des Crédits Pro pour publier autant d’annonces que vous le souhaitez et explorer notre base de données de profils qualifiés.
+            </br>
+            Cette offre est sans engagement.</p>
         </div>
         <div class="pack_standard_list m-b30">
             <div class="row">
@@ -43,9 +50,8 @@
                         </div>                                   
                         <div class="ps_content">
                             <a href="" class="btn btn-primary">{{ package.name }}</a>
-                            <div class="credit__">{{ package.credit }} <sup>crédits</sup></div>
-                            <span>{{ package.price|number_format(0, ',', '.') }} Ariary</span>
-                            <span class="euro_">{{ convertToEuro(package.price, devise)|number_format(2, '.', '') }} €</span>
+                            <div class="credit__">{{ package.price|number_format(0, ',', '.') }} Ariary</div>
+                            <span>{{ convertToEuro(package.price, devise)|number_format(2, '.', '') }} €</span>
                         </div>                               
                     </div>
                 </div>    

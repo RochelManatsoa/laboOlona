@@ -2654,3 +2654,44 @@ span.vue_profil {
         margin-bottom: 2rem;
     }
 }
+
+
+.tarif_pro_ {
+    $mvola-image: '/public/images/pubs/entreprise_mvola.webp';
+    $orange-money-image: '/public/images/pubs/entreprise_orange_money.webp';
+    $airtel-money-image: '/public/images/pubs/icon_airtel_money.webp';
+    #order_paymentMethod {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+    .form-check-input {
+        display: none;
+    }
+
+    .form-check-label {
+        display: inline-block;
+        width: 100px; 
+        height: 100px; 
+        background-size: cover;
+        background-position: center;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        cursor: pointer;
+        margin: 5px;
+        text-indent: -9999px; 
+        .form-check-input:checked + & {
+            border-color: #007bff; 
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); 
+        }
+    }
+    #order_paymentMethod_1 + label {
+        background-image: url($mvola-image);
+    }
+    #order_paymentMethod_2 + label {
+        background-image: url($orange-money-image);
+    }
+    #order_paymentMethod_3 + label {
+        background-image: url($airtel-money-image);
+    }
+}
