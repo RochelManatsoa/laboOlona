@@ -39,7 +39,7 @@
                     <li>Découvrez un large réseau de profils compétents.</li>
                 </ul>
                 <div class="recruteur-btn">
-                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}" class="d-inline-block position-relative btn btn-pdp" href="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}">Commencer maintenant</a>
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="d-inline-block position-relative btn btn-pdp" href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}">Commencer maintenant</a>
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
                     <p>Sélectionnez l'offre qui correspond à vos besoins.</p>
                 </div>
                 <div class="recruteur-btn">
-                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="d-inline-block position-relative btn btn-pdp" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">Commencer maintenant</a>
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}" class="d-inline-block position-relative btn btn-pdp" href="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}">Commencer maintenant</a>
                 </div>
             </div>
         </div>
@@ -59,7 +59,11 @@
         <div class="detail_left">
             <div class="biographie-profil mb-4 p-4 ">
                 <div class="resume_profil text-center">
-                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ entreprise.fileName ? asset('uploads/compagnies/' ~ entreprise.fileName) : asset('uploads/experts/company-default.jpg') }}');" alt="Avatar"></div>
+                    <a href="{{ path('app_tableau_de_bord_entreprise_mon_compte')}}">
+                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ entreprise.fileName ? asset('uploads/compagnies/' ~ entreprise.fileName) : asset('uploads/experts/company-default.jpg') }}');" alt="Avatar">
+                        <div class="overlay-text">Changer de logo</div>
+                    </div>
+                    </a>
                     <div class="name_ fw-bold">
                         <span class="fs-5 mb-1 fw-bold lh-base st-title">{{ app.user.nom }} {{ app.user.prenom }}</span> 
                     </div>
@@ -161,7 +165,7 @@
                     <div class="item-espace-pub">
                         <h2>Démarquez-vous des autres recruteurs !</h2>
                         <p>Votre visibilité est importante pour trouver la perle rare.</p>
-                        <a routerlink="" class="d-inline-block position-relative btn  btn-primary btn-outline" href="">Commencer maintenant</a>
+                        <a routerlink="" class="d-inline-block position-relative btn  btn-primary btn-outline" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">Commencer maintenant</a>
                     </div>
                     <div class="item-espace-pub img-espace-pub"><img src="{{ asset('images/dashboard/espace_pubs.webp')}}" alt="" width="360" height="184"></div>
                 </div>
@@ -200,7 +204,11 @@
                             </div>
                         </div>
                         <div class="profil-list-link d-flex align-items-center">
-                            <button class="favoris-add"><i class="bi bi-star"></i></button>
+                            {% if isLikedByRecruiter(entreprise, item.candidat.id) %}
+                            <span class="favoris-add" id="row_star_favorite_{{ item.candidat.id }}"><i class="bi bi-star-fill"></i></span>
+                            {% else %}
+                            <span class="favoris-add" id="row_star_favorite_{{ item.candidat.id }}"><i class="bi bi-star"></i></span>
+                            {% endif %}
                             <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.candidat.id })}}">Voir son profil</a>
                         </div>
                     </div>
