@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Prestation;
 use App\Twig\AppExtension;
 use App\Entity\Notification;
+use App\Data\QuerySearchData;
 use Google\Service\Batch\Job;
 use App\Entity\Finance\Devise;
 use App\Twig\FinanceExtension;
@@ -43,6 +44,7 @@ use App\Form\BusinessModel\TransactionType;
 use App\Manager\BusinessModel\OrderManager;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Manager\BusinessModel\CreditManager;
+use App\Repository\Finance\DeviseRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,6 +53,7 @@ use App\Repository\BusinessModel\PackageRepository;
 use App\Repository\Entreprise\JobListingRepository;
 use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Repository\BusinessModel\PurchasedContactRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -237,16 +240,17 @@ class EntrepriseController extends AbstractController
     }
     
     #[Route('/choix', name: 'app_tableau_de_bord_entreprise_tarif_choice')]
-    public function tchoice(PackageRepository $packageRepository): Response
+    public function tchoice(PackageRepository $packageRepository, DeviseRepository $deviseRepository): Response
     {
         $params = $this->getData();
         $params['packages'] = $packageRepository->findBy(['type' => 'CREDIT'], ['id' => 'DESC']);
+        $params['devise'] = $deviseRepository->findOneBy(['slug' => 'euro']);
 
         return $this->render('tableau_de_bord/entreprise/tarif_choice.html.twig', $params);
     }
 
     #[Route('/profil-candidat/{id}', name: 'app_tableau_de_bord_entreprise_profil_candidat')]
-    public function profilcandidat(Request $request, int $id, CandidatManager $candidatManager, AppExtension $appExtension): Response
+    public function profilcandidat(Request $request, int $id, CandidatManager $candidatManager, AppExtension $appExtension, PurchasedContactRepository $contactRepository, ProfileManager $profileManager): Response
     {
         $candidat = $this->em->getRepository(CandidateProfile::class)->find($id);
         if ($candidat === null || $candidat->getStatus() === CandidateProfile::STATUS_BANNISHED || $candidat->getStatus() === CandidateProfile::STATUS_PENDING) {
@@ -256,9 +260,12 @@ class EntrepriseController extends AbstractController
         $data = $this->getData();
         $this->activityLogger->logProfileViewActivity($data['currentUser'], $appExtension->generatePseudo($candidat));
         $data['candidat'] = $candidat;
+        $currentUser = $data['currentUser'];
+        $data['show_candidate_price'] = $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
         $data['experiences'] = $candidatManager->getExperiencesSortedByDate($candidat);
         $data['competences'] = $candidatManager->getCompetencesSortedByNote($candidat);
         $data['langages'] = $candidatManager->getLangagesSortedByNiveau($candidat);
+        $data['purchasedContact'] = $contactRepository->findOneBy(['buyer' => $currentUser,'contact' => $candidat->getCandidat()]);
 
         return $this->render('tableau_de_bord/entreprise/profil_candidat.html.twig', $data);
     }
@@ -412,10 +419,20 @@ class EntrepriseController extends AbstractController
         
         return $this->render('tableau_de_bord/entreprise/credit.html.twig', $params);
     }
+
     #[Route('/pack-standard', name: 'app_tableau_de_bord_entreprise_tarifs_standard')]
     public function standard(): Response
     {
         return $this->render('tableau_de_bord/entreprise/tarifs_standard.html.twig', $this->getData());
+    }
+    
+    #[Route('/mes-commandes', name: 'app_tableau_de_bord_entreprise_mes_commandes')]
+    public function orders(): Response
+    {
+        $params = $this->getData();
+        $params['orders'] = $this->em->getRepository(Order::class)->filterByUser(new QuerySearchData);
+
+        return $this->render('tableau_de_bord/entreprise/mes_commandes.html.twig', $params);
     }
 
     #[Route('/boost', name: 'app_tableau_de_bord_entreprise_boost')]

@@ -40,9 +40,9 @@
 						</div>
 						<div class="d-none d-lg-flex justify-content-end align-items-center info_db">
 							{% if app.user %}
-								<button id="switch-theme">
+								{# <button id="switch-theme">
 									<i class="bi bi-moon-stars-fill"></i>
-								</button>
+								</button> #}
 								<a href="{{ path('app_tableau_de_bord_candidat_notification', {'isRead':'0'}) }}" class="position-relative">
 									<img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt="">
 									<span class="position-absolute top-0 start-100 translate-middle rounded-pill ">

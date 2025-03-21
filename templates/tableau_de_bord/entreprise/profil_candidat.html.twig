@@ -70,7 +70,21 @@
                 </div>
                 <div class="btn-profils">
                     {% if not entreprise.isIsPremium %}
-                    <a routerlink="" class="d-inline-block position-relative btn btn-contact" href="">Contacter</a>
+                        {% if purchasedContact is defined and purchasedContact is not null %}
+                            {% set modalId = 'confirmationModal' %}
+                            {% if app.user.credit.total < show_candidate_price %}
+                            {% set modalId = 'lowCreditModal' %}
+                            {% endif %}
+                            <div id="contactDetails">
+                                <form action="{{ path('app_v2_contact_show')}}" method="post" id="show-candidate-contact">
+                                    <input type="hidden" name="contactId" value="{{ candidat.candidat.id }}">
+                                    <input type="hidden" name="showContactPrice" value="{{ show_candidate_price }}">
+                                    <input type="hidden" name="actionView" value="VIEW_CANDIDATE">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#{{ modalId }}" data-bs-price="{{ show_candidate_price }} crédits" data-bs-type="show-candidate-contact" class="mb-3 d-inline-block position-relative btn btn-success">Contacter ({{ show_candidate_price }} crédits)</button>
+                                </form>
+                            </div>
+                        {% endif %}
                     {% endif %}
                     <div id="row_favorite_{{ candidat.id }}">
                         {% if isLikedByRecruiter(entreprise, candidat.id) %}
@@ -269,4 +283,5 @@
         </div>
     </section>
 
+    {% include "/tableau_de_bord/layout/_credit_modal_entreprise.html.twig" %}
 {% endblock %}
