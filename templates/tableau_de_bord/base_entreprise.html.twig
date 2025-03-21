@@ -40,10 +40,10 @@
 						</div>
 						<div class="d-none d-lg-flex justify-content-end align-items-center info_db">
 							{% if app.user %}
-								<button id="switch-theme">
+								{# <button id="switch-theme">
 									<i class="bi bi-moon-stars-fill"></i>
-								</button>
-								<a href="{{ path('app_v2_dashboard_notification', {'isRead':'0'}) }}" class="position-relative">
+								</button> #}
+								<a href="{{ path('app_tableau_de_bord_entreprise_notification', {'isRead':'0'}) }}" class="position-relative">
 									<img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt="">
 									<span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
 									<span class="badge bagde-circle text-bg-danger">{{ notificationsCount }}</span>
@@ -80,6 +80,7 @@
 										<li><a class="dropdown-item" href="{{ path('app_tableau_de_bord_entreprise_profil_public')}}">Mon profil</a></li>
 										<li><a class="dropdown-item" href="{{ path('app_tableau_de_bord_entreprise_offre_emploi')}}">Mes annonces</a></li>
 										<li><a class="dropdown-item" href="{{ path('app_tableau_de_bord_entreprise_annuaire_de_services')}}">Annuaire de services</a></li>
+										<li><a class="dropdown-item" href="{{ path('app_tableau_de_bord_entreprise_mes_commandes')}}">Mes commandes</a></li>
 										<li><hr class="dropdown-divider"></li>
 										<li><a class="dropdown-item" href="{{ path('app_coworking_main')}}">Coworking</a></li>
 										<li><hr class="dropdown-divider"></li>

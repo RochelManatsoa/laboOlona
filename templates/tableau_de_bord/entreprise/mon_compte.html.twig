@@ -35,7 +35,7 @@
     {% endif %}
     <section class="recruteur-container">
         <div class="recruteur-block d-block p-5 mb-4">
-            {{ form_start(form)}}
+            {{ form_start(form, {'attr': {'data-turbo': 'false'}})}}
             <div class="col-lg-2 col-sm-12 text-center mb-3">
                 <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/compagnies/' ~ form.vars.data.fileName) : asset('uploads/experts/company-default.jpg') }}');cursor:pointer;" alt="Avatar">
                     <div class="overlay-text">Changer le logo</div>
@@ -48,4 +48,20 @@
             {{ form_end(form)}}
         </div>
     </section>
+
+<script>
+    document.querySelector('.profile-img').addEventListener('click', function() {
+        document.getElementById('{{ form.file.vars.id }}').click();
+    });
+
+    document.getElementById('{{ form.file.vars.id }}').addEventListener('change', function(event) {
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.profile-img').style.backgroundImage = 'url(' + e.target.result + ')';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    });
+</script>
 {% endblock %}
