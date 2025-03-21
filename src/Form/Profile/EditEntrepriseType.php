@@ -22,18 +22,14 @@ class EditEntrepriseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('devise', EntityType::class, [
-                'class' => Devise::class,
-                'label' => 'Séléctionner votre devise',
-                'label_attr' => [
-                    'class' => 'fw-bold fs-5' 
-                ],
-                'help' => 'Choisissez la devise que vous utilisez pour les transactions.',
-            ])
             ->add('file', FileType::class, [
                 'required' => false,
                 'label' => 'Votre logo',
                 'attr' => ['class' => 'd-none'],
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Uploader votre logo de l\'entreprise.',
                 'constraints' => [
                     new File([
                         'maxSize' => '2048k',
@@ -45,6 +41,14 @@ class EditEntrepriseType extends AbstractType
                         ],
                     ])
                 ],
+            ])
+            ->add('devise', EntityType::class, [
+                'class' => Devise::class,
+                'label' => 'Séléctionner votre devise',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'help' => 'Choisissez la devise que vous utilisez pour les transactions.',
             ])
             ->add('nom', TextType::class, [
                 'label' => 'Raison sociale (*)',

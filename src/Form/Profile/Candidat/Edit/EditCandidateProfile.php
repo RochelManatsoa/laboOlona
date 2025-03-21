@@ -27,7 +27,6 @@ class EditCandidateProfile extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('candidat', InfoUserType::class, ['label' => false])
             ->add('file', FileType::class, [
                 'required' => false,
                 'label' => 'app_identity_expert_step_one.avatar',
@@ -44,6 +43,7 @@ class EditCandidateProfile extends AbstractType
                     ])
                 ],
             ])
+            ->add('candidat', InfoUserType::class, ['label' => false])
             ->add('localisation', CountryType::class, [
                 'required' => true,
                 'label' => 'Pays',
