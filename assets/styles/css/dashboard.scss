@@ -949,6 +949,24 @@ footer {
             }
             
         }
+        &.isPrem_ {
+            h2 {
+                position: relative;
+                span {
+                    position: static;
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin-left: 10px;
+                }
+            }
+            .advance-search-wrapper-fields {
+                filter: blur(5px);
+                .select2-hidden-accessible {
+                    pointer-events: none;
+                    user-select: none;
+                }
+            }
+        }
     }
     .has-border {
         border-right: 1px solid #ECEDF2;
@@ -1243,10 +1261,11 @@ span.certificated {
     border: 0;
     padding: 0;
     line-height: 100%;
-    position: absolute;
+    margin-left: 10px;
+    /*position: absolute;
     right: 0;
     top: 12px;
-    transform: translateY(-50%);
+    transform: translateY(-50%);*/
     font-size: 24px;
     color: #f6872c;
     &:focus {

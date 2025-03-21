@@ -58,8 +58,8 @@
                             </div>
                         </div>
                         {#Sous filtre - il s'affiche après la première recherche pour une recherche plus poussée#}
-                        <div class="advance-search-wrapper">
-                            <h2>Une recherche plus précise ?</h2>
+                        <div class="advance-search-wrapper isPrem_">
+                            <h2>Une recherche plus précise ?<span class="badge_pro">PRO</span></h2>
                             <div class="advance-search-wrapper-fields">
                                 <div class="row">
                                     <div class="col-xs-12 col-md-4 has-border">
@@ -134,13 +134,16 @@
                                             <a href=""><img src="{{ item.fileName ? asset('uploads/experts/' ~ item.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></a>
                                         </div>
                                         <div class="candidate-info-content">
-                                            <h2>{{ generatePseudo(item)}}</h2>
+                                            <h2>
+                                                {{ generatePseudo(item)}}
+                                                {% if isLikedByRecruiter(entreprise, item.id) %}
+                                                <span class="favoris-add" id="row_star_favorite_{{ item.id }}"><i class="bi bi-star-fill"></i></span>
+                                                {% else %}
+                                                <span class="favoris-add" id="row_star_favorite_{{ item.id }}"><i class="bi bi-star"></i></span>
+                                                {% endif %}
+                                            </h2>
                                             <div class="featured d-md-flex align-items-center">{{ item.titre }} <span class="certificated">Certifié</span></div>
-                                            {% if isLikedByRecruiter(entreprise, item.id) %}
-                                            <span class="favoris-add" id="row_star_favorite_{{ item.id }}"><i class="bi bi-star-fill"></i></span>
-                                            {% else %}
-                                            <span class="favoris-add" id="row_star_favorite_{{ item.id }}"><i class="bi bi-star"></i></span>
-                                            {% endif %}
+                                            
                                         </div>
                                     </div>
                                     <div class="infos-middle d-flex align-items-center">
