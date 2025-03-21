@@ -16,11 +16,19 @@
 		{% endblock %}
 		{% include "gtag_cookie_script.html.twig" %}
 	</head>
-	<body class="bootstrap-light">{#rajout class "container_prem" pour les profil premium #}
+	{% set premiumInterface = '' %}
+	{% set containerPrem = '' %}
+	{% set premiumNav = '' %}
+	{% if candidat.isIspremium %}
+		{% set premiumInterface = 'premium_interface' %}
+		{% set containerPrem = 'container_prem' %}
+		{% set premiumNav = 'premiumNav' %}
+	{% endif %}
+	<body class="bootstrap-light {{containerPrem}}">
 		<div class="transition-fade">
 			{% block header %}
 			{% set last_query = app.request.query.get('q', '') %}
-				<nav class="header-area bg-white"> {#rajout class "premiumNav" pour les profil premium #}
+				<nav class="header-area bg-white {{ premiumNav }}"> 
 					<div class="d-flex justify-content-between align-items-center">
 						<a class="navbar-brand d-block d-lg-none" href="{{ path('app_home') }}">
 							<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="150" height="56" class="" alt="Logo">
