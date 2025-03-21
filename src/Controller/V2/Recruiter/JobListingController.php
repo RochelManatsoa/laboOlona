@@ -75,10 +75,9 @@ class JobListingController extends AbstractController
         $recruiter = $this->userService->checkProfile();
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
-        $jobListing = $this->jobListingManager->init();
+        $jobListing = $this->jobListingManager->init($recruiter);
         $devise = $this->entrepriseManager->getEntrepriseDevise($recruiter);
-        $budget = $this->jobListingManager->initBudgetAnnonce();
-        $budget->setCurrency($devise);
+        $budget = $this->jobListingManager->initBudgetAnnonce($devise);
         $jobListing->setEntreprise($recruiter);
         $jobListing->setBudgetAnnonce($budget);
     

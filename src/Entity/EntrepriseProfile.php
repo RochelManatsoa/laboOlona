@@ -139,6 +139,9 @@ class EntrepriseProfile
     #[ORM\ManyToOne(inversedBy: 'entrepriseProfiles')]
     private ?BoostFacebook $boostFacebook = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isPremium = null;
+
     public function __construct()
     {
         $this->jobListings = new ArrayCollection();
@@ -523,6 +526,18 @@ class EntrepriseProfile
     public function setBoostFacebook(?BoostFacebook $boostFacebook): static
     {
         $this->boostFacebook = $boostFacebook;
+
+        return $this;
+    }
+
+    public function isIsPremium(): ?bool
+    {
+        return $this->isPremium;
+    }
+
+    public function setIsPremium(?bool $isPremium): static
+    {
+        $this->isPremium = $isPremium;
 
         return $this;
     }

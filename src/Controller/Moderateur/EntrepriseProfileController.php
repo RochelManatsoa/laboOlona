@@ -103,7 +103,7 @@ class EntrepriseProfileController extends AbstractController
 
         return $this->render('moderateur/entreprise_profile/job_offers.html.twig', [
             'entreprise_profile' => $entrepriseProfile,
-            'job_listings' => $jobListingRepository->paginateJobListingsEntrepriseProfiles($page, $entrepriseProfile, $status),
+            'job_listings' => $jobListingRepository->paginateJobListingsEntrepriseProfiles($entrepriseProfile, $page, $status),
             'count' => $jobListingRepository->countAllByEntreprise($entrepriseProfile),
             'countStatus' => $jobListingRepository->countStatusByEntreprise($entrepriseProfile,$status),
             'statuses' => array_merge(['Tous' => 'ALL' ],JobListing::getStatuses()),
