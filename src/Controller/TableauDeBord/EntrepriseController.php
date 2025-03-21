@@ -7,7 +7,6 @@ use App\Entity\Prestation;
 use App\Twig\AppExtension;
 use App\Entity\Notification;
 use App\Data\QuerySearchData;
-use Google\Service\Batch\Job;
 use App\Entity\Finance\Devise;
 use App\Twig\FinanceExtension;
 use App\Manager\ProfileManager;
@@ -17,17 +16,14 @@ use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use App\Twig\PrestationExtension;
-use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Entreprise\Favoris;
 use App\Manager\JobListingManager;
 use App\Manager\PrestationManager;
-use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\Credit;
 use App\Form\ChangePasswordFormType;
 use App\Form\Entreprise\AnnonceType;
 use App\Manager\OlonaTalentsManager;
-use Google\Service\Bigquery\JobList;
 use App\Entity\BusinessModel\Package;
 use App\Entity\Entreprise\JobListing;
 use App\Form\BusinessModel\OrderType;
@@ -51,10 +47,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\TransactionManager;
 use App\Repository\BusinessModel\PackageRepository;
 use App\Repository\Entreprise\JobListingRepository;
-use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\BusinessModel\PurchasedContactRepository;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -433,6 +427,37 @@ class EntrepriseController extends AbstractController
         $params['orders'] = $this->em->getRepository(Order::class)->filterByUser(new QuerySearchData);
 
         return $this->render('tableau_de_bord/entreprise/mes_commandes.html.twig', $params);
+    }
+    
+    #[Route('/abonnement', name: 'app_tableau_de_bord_entreprise_abonnement')]
+    public function subcription(OrderManager $orderManager, Request $request, FinanceExtension $financeExtension, DeviseRepository $deviseRepository): Response
+    {
+        $params = $this->getData();
+        $package = $this->em->getRepository(Package::class)->findOneBy(['slug' => 'abonnement']);
+        /** @var Devise $currency */
+        $currency = $this->em->getRepository(Devise::class)->findOneBy([
+            'slug' => 'euro'
+        ]);
+        $order = $orderManager->init();
+        $order->setPackage($package);
+        $order->setCurrency($currency);
+        $order->setTotalAmount($financeExtension->convertToEuro($package->getPrice(), $currency));
+        $form = $this->createForm(OrderType::class, $order);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $order = $orderManager->saveForm($form);
+            
+            return $this->redirectToRoute('app_tableau_de_bord_entreprise_mobile_money_checkout', [
+                'orderNumber' => $order->getOrderNumber()
+            ]);
+        } 
+        $params['devise'] = $deviseRepository->findOneBy(['slug' => 'euro']);
+        $params['package'] = $package;
+        $params['form'] = $form->createView();
+        $params['price'] = $financeExtension->convertToEuro($package->getPrice(), $currency);
+
+        return $this->render('tableau_de_bord/entreprise/abonnement.html.twig', $params);
     }
 
     #[Route('/boost', name: 'app_tableau_de_bord_entreprise_boost')]

@@ -151,15 +151,6 @@
                     </div>
                     <div class="biographie-profil mb-4 p-4">
                         <span class="fs-5 fw-bold mb-3 lh-base st-title">Informations professionnelles</span>
-                        {% if not entreprise.isIsPremium %}
-                        <div class="isNotPrem_">
-                            <div class="text-center">
-                                <img src="{{ asset('images/dashboard/locked_icon.svg')}}" alt="" width="30" height="30">
-                                <span class="d-block">Infos verouillés</span>
-                                <a href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn btn-primary mt-2">Déverouiller les infos</a>
-                            </div>
-                        </div>
-                        {% else %}
                         <div class="d-md-flex flex-box_">
                             <span class="fs-6 lh-base">Titre</span>
                             <div class="d-md-flex fw-bold info-bx flex-box_">
@@ -192,7 +183,6 @@
                                 {% endif %}
                             </div>
                         </div>	
-                        {% endif %}			
                     </div>
                 </div>
                 <div class="biographie-profil mb-4 p-4">
