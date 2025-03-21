@@ -50,7 +50,7 @@ class ErrorLogger
         if($user){
             $userId = $user->getId();
             $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_ERROR, $exception->getMessage(), ActivityLog::LEVEL_CRITICAL);
-            //$this->mailManager->errorAlertUser($this->userService->getCurrentUser(), $url, $exception);
+            $this->mailManager->errorAlertUser($this->userService->getCurrentUser(), $url, $exception);
         }
         $errorLog->setMessage($messageTronque)
             ->setType('php') 

@@ -4,6 +4,10 @@
 
 {% block body %}
 
+{% set isPrem = '' %}
+    {% if not entreprise.isIsPremium %}
+        {% set isPrem = 'isPrem_' %}
+    {% endif %}
     <div class="loader-container" id="loader-container" style="display:none;">
         <span class="loader"></span>
     </div>
@@ -58,7 +62,7 @@
                             </div>
                         </div>
                         {#Sous filtre - il s'affiche après la première recherche pour une recherche plus poussée#}
-                        <div class="advance-search-wrapper isPrem_">
+                        <div class="advance-search-wrapper {{isPrem}}">
                             <h2>Une recherche plus précise ?<span class="badge_pro">PRO</span></h2>
                             <div class="advance-search-wrapper-fields">
                                 <div class="row">

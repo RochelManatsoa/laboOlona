@@ -55,9 +55,9 @@
 								</div>
 								<div class="dropdown">
 									<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
-										{#Icon pour le profil premium
-										<span class="visually-prem"><img src="{{ asset('images/dashboard/prem_icon.svg') }}" width="36" height="36" class="" alt="premium"></span>
-										{#Icon pour le profil premium #}
+										{% if entreprise.isIspremium %}
+											<span class="visually-prem"><img src="{{ asset('images/dashboard/prem_icon.svg') }}" width="36" height="36" class="" alt="premium"></span>
+										{% endif %}
 										{% if app.user.gravatar is not null %}
 											{% if (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) and app.user.candidateProfile is not null and app.user.candidateProfile.fileName is not empty) %}
 												<img src="{{ asset('uploads/experts/' ~ app.user.candidateProfile.fileName) }}" alt="Avatar" width="45px" height="45px" class="rounded-circle">

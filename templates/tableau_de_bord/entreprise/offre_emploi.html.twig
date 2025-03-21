@@ -91,7 +91,13 @@
                     </article>
                 {% endfor %}
                 {{ knp_pagination_render(offres) }}
-            {% endif %}
+            
+                {% else %}
+                    <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                        <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                        <p class="text-center">Vous n'avez pas encore d'annonce {{ labels[selectedStatus]|raw }}.</p>
+                    </div>
+                {% endif %}  
         </div>
     </section>
 {% endblock %}

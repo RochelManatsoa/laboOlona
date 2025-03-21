@@ -70,14 +70,12 @@
                         {% endfor %}
                         </div>
                         {{ knp_pagination_render(candidatures) }}
-                    {% else %}
-                        <div class="profil-list-item d-md-flex align-items-center justify-content-between">
-                            <div class="profil-list-name d-flex align-items-center">
-                                <span class="profil-photo_"><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></span>
-                                <span class="profil-name">Aucun Candidature</span>
+                        {% else %}
+                            <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                                <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                                <p class="text-center">Vous n'avez pas encore de candidatures.</p>
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}  
             </div>
         </div>
         <div class="recruteur-block box-recrutement_ p-5 pb-3 mb-4">

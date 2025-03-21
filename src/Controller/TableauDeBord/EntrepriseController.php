@@ -390,14 +390,14 @@ class EntrepriseController extends AbstractController
     {
         $params = $this->getData();
         $params['package'] = $package;
-        /** @var Devise $currency */
-        $currency = $this->em->getRepository(Devise::class)->findOneBy([
+        /** @var Devise $devise */
+        $devise = $this->em->getRepository(Devise::class)->findOneBy([
             'slug' => 'euro'
         ]);
         $order = $orderManager->init();
         $order->setPackage($package);
-        $order->setCurrency($currency);
-        $order->setTotalAmount($financeExtension->convertToEuro($package->getPrice(), $currency));
+        $order->setCurrency($devise);
+        $order->setTotalAmount($financeExtension->convertToEuro($package->getPrice(), $devise));
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
         
@@ -408,8 +408,9 @@ class EntrepriseController extends AbstractController
                 'orderNumber' => $order->getOrderNumber()
             ]);
         } 
+        $params['devise'] = $devise;
         $params['form'] = $form->createView();
-        $params['price'] = $financeExtension->convertToEuro($package->getPrice(), $currency);
+        $params['price'] = $financeExtension->convertToEuro($package->getPrice(), $devise);
         
         return $this->render('tableau_de_bord/entreprise/credit.html.twig', $params);
     }

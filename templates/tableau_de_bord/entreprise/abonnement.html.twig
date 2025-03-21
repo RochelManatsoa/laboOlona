@@ -49,7 +49,7 @@
                             <div class="flaticon-dashboard"><img src="{{ asset('images/dashboard/icon_premium_plus.svg')}}" alt="icon_premium_plus" width="70" height="70"></div>
                         </div>                                   
                         <div class="ps_content">
-                            <a href="" class="btn btn-primary">{{ package.name }}</a>
+                            <a class="btn btn-primary">{{ package.name }}</a>
                             <div class="credit__">{{ package.price|number_format(0, ',', '.') }} Ariary</div>
                             <span>{{ convertToEuro(package.price, devise)|number_format(2, '.', '') }} €</span>
                         </div>                               
