@@ -50,7 +50,7 @@
     </li>
     <li class="nav-item">
       <a href="{{ path('app_tableau_de_bord_entreprise_tarifs_standard')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_entreprise_tarifs_standard' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
-      <img src="{{ asset('v2/images/dashboard/payment_icon.svg')}}" alt="" width="24" height="24"><span class="sidebar-text">Recharger mon credit</span></a>
+      <img src="{{ asset('v2/images/dashboard/payment_icon.svg')}}" alt="" width="24" height="24"><span class="sidebar-text">Recharger mes credits</span></a>
     </li>
     <li class="nav-item">
       <a href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_tarifs' ? 'underline' : '' }}" aria-current="page">
@@ -68,7 +68,7 @@
     </li>
     <li class="nav-item click-sub">
       <span class="sep-menu"></span> 
-      <span class="nav-link sous-menu_"><img src="{{ asset('v2/images/dashboard/setting.svg')}}" alt=""><span class="sidebar-text">Paramètres</span> </span>
+      <span class="nav-link sous-menu_ {{ (current_route == 'app_tableau_de_bord_entreprise_mon_compte' or current_route == 'app_tableau_de_bord_entreprise_mise_a_jour_mot_de_passe' or current_route == 'app_tableau_de_bord_entreprise_assistance') ? 'underline' : '' }}"><img src="{{ asset('v2/images/dashboard/setting.svg')}}" alt=""><span class="sidebar-text">Paramètres</span> </span>
       <ul class="sub-nav-pills">
         <li class="sub-nav-item">
           <a href="{{ path('app_tableau_de_bord_entreprise_mon_compte')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_entreprise_mon_compte' ? 'underline' : '' }}" aria-current="page">

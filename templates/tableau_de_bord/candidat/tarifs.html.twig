@@ -10,7 +10,11 @@
 
     <section class="">
         <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
-            <h5 class="mb-0"> Tarifs d'abonnement</h5>
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Abonnement </h5>
+            </div>
             <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
                 <li class="breadcrumb-item position-relative">
                     <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
@@ -131,13 +135,15 @@
                             <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
                         </ul>
                     </div>
-                    <div class="btn-other-include_ d-md-flex">
-                        <div class="item-other-include_"></div>
+                    <div class="btn-other-include_ d-md-flex align-items-enter">
                         <div class="item-other-include_">
-                            <a class="btn btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs_standard')}}">Choisir</a>
+                            <h3>Passez au Premium et augmentez vos opportunités dès maintenant !</h3>
                         </div>
                         <div class="item-other-include_">
-                            <a class="btn btn-primary" href="">Choisir</a>
+                            <a class="btn btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs_standard')}}">Je booste ma visibilité</a>
+                        </div>
+                        <div class="item-other-include_">
+                            <a class="btn btn-primary" href="">Je booste ma visibilité</a>
                         </div>
                     </div>
                 </div>

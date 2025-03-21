@@ -313,6 +313,11 @@ class EntrepriseController extends AbstractController
         
         return $this->render('tableau_de_bord/entreprise/credit.html.twig', $params);
     }
+    #[Route('/pack-standard', name: 'app_tableau_de_bord_entreprise_tarifs_standard')]
+    public function standard(): Response
+    {
+        return $this->render('tableau_de_bord/entreprise/tarifs_standard.html.twig', $this->getData());
+    }
 
     #[Route('/boost', name: 'app_tableau_de_bord_entreprise_boost')]
     public function boost(): Response

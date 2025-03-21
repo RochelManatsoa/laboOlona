@@ -11,7 +11,11 @@
 
     <section class="">
         <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
-            <h5 class="mb-0"> Tarifs d'abonnement</h5>
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Abonnement standard </h5>
+            </div>
             <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
                 <li class="breadcrumb-item position-relative">
                     <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
@@ -89,6 +93,32 @@
                             </div>                          
                         </div>
                     </div>                                      
+                </div>
+            </div>
+            <div class="info_supp_boost">
+                <h2>Offre Gratuite </br>Fonctionnement à Crédits</h2>
+                <div class="info_supp_boost_item">200 crédits offerts à l'inscription</div>
+                <div class="grid_row">
+                    <div class="box-grid">
+                        <strong>20 crédits </strong>
+                        <br/>/ <br/> candidature
+                    </div>
+                    <div class="box-grid">
+                        <strong>150 crédits</strong>
+                        <br/>/ <br/> accès aux coordonnées
+                    </div>
+                    <div class="box-grid">
+                        <strong>75 crédits</strong>
+                        <br/>/ <br/> acces contacts candidats
+                    </div>
+                    <div class="box-grid">
+                        <strong>30 crédits</strong>
+                        <br/>/ <br/> Boost de visibilité
+                    </div>
+                    <div class="box-grid">
+                        <strong>10 crédits</strong>
+                        <br/>/ <br/> simulation de salaire
+                    </div>
                 </div>
             </div>
         </div>

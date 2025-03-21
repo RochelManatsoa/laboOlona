@@ -10,7 +10,11 @@
 
     <section class="">
         <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
-            <h5 class="mb-0"> CVthèque </h5>
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> CVthèque </h5>
+            </div>
             <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
                 <li class="breadcrumb-item position-relative"> 
                     <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
@@ -58,15 +62,6 @@
                                                 <option value="2">feminins</option>
                                                 <option value="3">Masculins</option>
                                             </select>
-                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
-                                                <span class="selection">
-                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_genre-container" role="combobox">
-                                                        <span class="select2-selection__rendered" id="select2_genre-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Genres</span></span>
-                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
-                                                    </span>
-                                                </span>
-                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
-                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-md-4 has-border">
@@ -79,18 +74,9 @@
                                                 <option value="">Une maîtrise</option>
                                                 <option value="">Doctorat</option>
                                             </select>
-                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
-                                                <span class="selection">
-                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_degree-container" role="combobox">
-                                                        <span class="select2-selection__rendered" id="select2_degree-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Qualifications</span></span>
-                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
-                                                    </span>
-                                                </span>
-                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
-                                            </span>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-md-4 has-border">
+                                    <div class="col-xs-12 col-md-4">
                                         <div class="form-group-inner form-group-year">
                                             <select name="filter-year" class="form-control select2-hidden-accessible" data-placeholder="Experiences" tabindex="-1" aria-hidden="true">
                                                 <option value="">Experiences</option>
@@ -100,15 +86,6 @@
                                                 <option value="">4 ans</option>
                                                 <option value="">5 ans et +</option>
                                             </select>
-                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
-                                                <span class="selection">
-                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_year-container" role="combobox">
-                                                        <span class="select2-selection__rendered" id="select2_year-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Experiences</span></span>
-                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
-                                                    </span>
-                                                </span>
-                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
-                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -120,8 +97,23 @@
         </div>
         <div class="recruteur-block list-profil d-block p-5 mb-4">
             <div class="layout-profil-container">
-                <div class="d-flex ordering-wrapper mb-4">
-                    <div class="results-count">Affichage de 1 - {{ searchResults|length }} sur {{ totalResults }} résultats</div>
+                <div class="d-flex ordering-wrapper mb-4 justify-content-between">
+                    <div class="results-count">Affichage de 1 - {{ searchResults|length }} sur {{ totalResults }} résultats</div>								
+                    <form>
+                        <div class="form-group d-flex align-items-center">
+                            <h4 class="section-head-small">Afficher par</h4>
+                            <div class="dropdown bootstrap-select">
+                                <select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
+                                    <option>10</option>
+                                    <option>20</option>
+                                    <option>30</option>
+                                    <option>40</option>
+                                    <option>50</option>
+                                    <option>60</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="item_profil-container">
                     <div class="row">

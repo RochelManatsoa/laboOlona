@@ -195,9 +195,25 @@ body {
         background-color: white;
     }
 }
+.db-content {
+    overflow: hidden;
+    min-height: 100vh;
+    padding-top: 118px;
+    padding-left: 322px;
+    padding-right: 25px;
+    background-color: #D9E6FF;
+    @include breakpoint_991{
+        padding-left: 25px;
+    }
+    .content-db_ {
+        background-color: white;
+    }
+}
 
-.border-radius {
-    border-radius: 10px !important;
+.container_prem {
+    .db-content {
+        background-color: #fff6dd;
+    }
 }
 
 .menu-icon {
@@ -326,7 +342,27 @@ body {
     .breadcrumb li:nth-child(1) {
         color: #A7AFBF;
     }
+    .btn_retour {
+        background-color: #c7d5f1 !important;
+        border-color: #bfcde9 !important;
+        &:hover {
+            border-color: transparent !important;
+            background-color: $white !important;
+        }
+    }
 }
+.container_prem .breadcrumb-card .btn_retour {
+    background-color: #f9edcc !important;
+    border-color: #e2d4ac !important;
+}
+.container_prem {
+    .breadcrumb-card {
+        .breadcrumb li:nth-child(1) {
+            color:#757575
+        }
+    }
+}
+
 
 .profil-banner {
     border-radius: 10px;
@@ -864,6 +900,19 @@ footer {
         }
     }
 }
+.container_prem {
+    .recruteur-container {
+        .recruteur-block {
+            border: 1px solid #f0b621;
+        }
+    }
+}
+.container_prem {
+    .biographie-profil {
+        border: 1px solid #f0b621;
+    }
+}
+
 .form-search {
     .main-inner {
         border: 1px solid #f9f9f9;
@@ -1491,6 +1540,13 @@ span.certificated {
                 background-color: transparent;
                 color: #54319b
             };
+        }
+        h3 {
+            text-align: right;
+            font-size: 21px;
+            color: #502e94;
+            font-weight: bold;
+            margin: 0;
         }
     }
 }
@@ -2389,5 +2445,176 @@ span.vue_profil {
         height: auto;
         object-fit: contain;
         margin-right: 10px;
+    }
+}
+
+.recruteur-block {
+    .ordering-wrapper {
+        .section-head-small {
+            font-size: 16px;
+            color: $black;
+            margin-bottom: 0;
+        }
+        .select-bar-large {
+            width: inherit !important;
+            padding: 7px 15px;
+            border-radius: 7px;
+            background: #eeeeee;
+            margin-left: 10px;
+        }
+    }
+}
+.recruteur-top-item {
+    .form-search {
+        .form-group-inner {
+            .select2-hidden-accessible {
+                position: static !important;
+                padding: 10px 25px;
+                height: 60px;
+                background: #f9f9f9;
+                width: 100%;
+                &:focus {
+                    outline: none !important;
+                    box-shadow: none !important;
+                }
+            }
+            
+        }
+    }
+}
+.contact_fixed_bottom {
+    position: fixed;
+    z-index: 70;
+    bottom: 5rem;
+    left: 5rem;
+    .contact_fixed_bottom_item {
+        background: white;
+        padding: 20px;
+        border-radius: 25px;
+        box-shadow: 0px 0px 25px rgba(56, 152, 226, 0.3);
+        h4 {
+            color: #185d36;
+            font-size: 20px;
+        }
+        .whatsapp_item {
+            color: black;
+            .pulse-image {
+                display: block;
+                animation: pulse 1.5s infinite;
+                margin-left: 1rem;
+            }
+            i {
+                margin-right: 7px;
+                margin-top: 5px;
+                color: $white;
+            }
+            .mail_Block {
+                padding: 1px 7px !important;
+                line-height: 129%;
+                background-color: $blue-primary !important;
+                border: 0 !important;
+                &:hover {
+                    background-color: $blue-light !important;
+                }
+            }
+        }
+    }
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+#fixedEntreprise.contact_fixed_bottom {
+    font-size: 12px;
+    z-index: 370;
+    bottom: 1rem;
+    left: inherit;
+    right: 1rem;
+    .contact_fixed_bottom_item {
+        padding: 10px;
+        h4 {
+            font-size: 16px;
+        }
+        .whatsapp_item {
+            .mail_Block {
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+.db-content {
+    .pagination {
+        .page-link {
+            border-color: transparent !important;
+        }
+    }
+}
+.footer_dashboard {
+    padding-left: 322px !important;
+    color: $white;
+    background-color: #212529 !important;
+    position: relative;
+    z-index: 99;
+    @include breakpoint_991{
+        padding-left: 25px !important;
+    }
+    .title {
+        color: $yelow-primary;
+        &:before {
+            background-color: $white;
+        }
+    }
+    .footer-top {
+        border-bottom-color: rgb(233 231 231 / 30%);
+    }
+    .footer-bottom .footer-copy-right .copyrights-text {
+        color: $white;
+    }
+}
+
+.info_supp_boost {
+    text-align: center;
+    h2 {
+        color: $purple-primary;
+    }
+    .info_supp_boost_item {
+        background: $yelow-primary;
+        border-radius: 10px;
+        color: $black;
+        display: inline-block;
+        padding: 7px 15px;
+        font-size: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .grid_row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 30px;
+        .box-grid {
+            background-color: $purple-light;
+            margin: 5px;
+            width: 180px;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            line-height: 130%;
+            color: $white;
+            strong {
+                display: block;
+                background-color: $yelow-primary;
+                color: $black;
+                border-radius: 25px;
+            }
+        }
     }
 }

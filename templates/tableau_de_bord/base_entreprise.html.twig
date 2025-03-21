@@ -16,11 +16,11 @@
 		{% endblock %}
 		{% include "gtag_cookie_script.html.twig" %}
 	</head>
-	<body class="bootstrap-light">
+	<body class="bootstrap-light">{#rajout class "container_prem" pour les profil premium #}
 		<div class="transition-fade">
 			{% block header %}
 			{% set last_query = app.request.query.get('q', '') %}
-				<nav class="header-area bg-white">
+				<nav class="header-area bg-white">{#rajout class "premiumNav" pour les profil premium #}
 					<div class="d-flex justify-content-between align-items-center">
 						<a class="navbar-brand d-block d-lg-none" href="{{ path('app_home') }}">
 							<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="150" height="56" class="" alt="Logo">
@@ -55,6 +55,9 @@
 								</div>
 								<div class="dropdown">
 									<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
+										{#Icon pour le profil premium
+										<span class="visually-prem"><img src="{{ asset('images/dashboard/prem_icon.svg') }}" width="36" height="36" class="" alt="premium"></span>
+										{#Icon pour le profil premium #}
 										{% if app.user.gravatar is not null %}
 											{% if (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) and app.user.candidateProfile is not null and app.user.candidateProfile.fileName is not empty) %}
 												<img src="{{ asset('uploads/experts/' ~ app.user.candidateProfile.fileName) }}" alt="Avatar" width="45px" height="45px" class="rounded-circle">
@@ -101,20 +104,95 @@
         	<a href="javascript:history.back()" class="d-none d-sm-block d-md-none btn btn-info fw-semibold text-uppercase px-4 my-5 me-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 			{% endblock %}
 		</div>
-        <footer class="py-3 my-4">
-          <div class="container">
-            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-              <li class="nav-item"><a href="{{ path('app_v2_dashboard')}}" class="px-2 text-body-secondary">Olona Talents</a></li>
-              <li class="nav-item"><a href="{{ path('app_coworking_main')}}" class="px-2 text-body-secondary">Coworking</a></li>
-              <li class="nav-item"><a href="{{ path('app_home_simulateur_portage')}}" class="px-2 text-body-secondary">Portage salarial</a></li>
-              <li class="nav-item"><a href="{{ path('app_blog_index')}}" class="px-2 text-body-secondary">Le blog</a></li>
-              <li class="nav-item"><a href="{{ path('app_home_legal')}}" class="px-2 text-body-secondary">Mentions Légales</a></li>
-              <li class="nav-item"><a href="{{ path('app_home_privacy')}}" class="px-2 text-body-secondary">Politique de Confidentialité</a></li>
-              <li class="nav-item"><a href="{{ path('app_home_terms')}}" class="px-2 text-body-secondary">Conditions d'Utilisation</a></li>
-              <li class="nav-item"><a href="{{ path('app_contact_us')}}" class="px-2 text-body-secondary">Nous contacter</a></li>
-            </ul>
-            <p class="text-center text-body-secondary">© 2024 Olona Talents, Tous droits réservés.</p>
-          </div>
+		<div id="fixedEntreprise" class="contact_fixed_bottom">
+            <div class="contact_fixed_bottom_item">
+                <h4>Besoin d'assistance ?</h4>
+                <div class="whatsapp_item">
+                    Ecrivez-nous un mail ou sur Whatsapp!
+                    <div class="d-flex align-items-center justify-content-center">
+                        <a href="mailto:partenaires@olona-talents.com" target="_blank"  class="btn btn-primary mail_Block d-flex align-items-center"><i class="bi bi-envelope-fill"></i>partenaires@olona-talents.com</a>
+                        <a href="https://wa.me/0320373431" target="_blank" class="pulse-image"><img src="{{ asset('images/whatsapp_icon.svg')}}" alt="Whatsapp" width="36" height="36"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer-light bg-cove footer_dashboard">
+            <div class="container">
+                <div class="footer-top">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-12">
+                            <div class="ot_about">
+                                <div class="logo-footer clearfix">
+                                    <a href="/"><img src="{{ asset('images/logo-olona-talents-white600x200.png')}}" alt="Olona Talents" class="img-fluid" width="250" height="93"></a>
+                                </div>
+                                <p>Olona Talents, le <span>#1</span> moteur de recherche</p>
+                                <ul class="ftr-list">
+                                    <li><p><span>Address :</span>Ambatonakanga, Antananarivo, Madagascar </p></li>
+                                    <li><p><span>Horaire :</span>Lundi au Vendredi de 8h à 18h</p></li>
+                                    <li><p><span>Tel. :</span>+261 32 03 734 32</p></li>
+									<li><p><span>Suivez-nous sur :</span><a href="https://www.facebook.com/olonatalents" target="_blank"><i class="bi bi-facebook"></i></a></p></li>
+                                </ul>
+                            </div>                            
+                            
+                        </div> 
+
+                        <div class="col-lg-9 col-md-12">
+                            <div class="row">
+                            
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="ot_services ftr-list-center">
+                                        <h3 class="title">Pour les entreprises</h3>
+                                        <ul>
+                                            <li><a href="{{ path('app_tableau_de_bord_entreprise')}}">Tableau de bord utilisateur</a></li>
+                                            <li><a href="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}">Consultation CVthèque</a></li>
+                                            <li><a href="{{ path('app_tableau_de_bord_entreprise_offre_emploi')}}">Mes annonces</a></li>
+                                            <li><a href="{{ path('app_tableau_de_bord_entreprise_assistance')}}">Contact</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-6">  
+                                    <div class="ot_services ftr-list-center">
+                                        <h3 class="title">Infos</h3>
+                                        <ul>
+                                            <li><a href="/legal-mentions">Mentions Légales</a></li>
+                                            <li><a href="/privacy-policy">Politique de Confidentialité</a></li>
+                                            <li><a href="/terms-and-conditions">Conditions d'Utilisation</a></li>
+                                            <li><a href="/contact">Nous contacter</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-6">  
+                                    <div class="ot_services ftr-list-center">
+                                        <h3 class="title">Liens divers</h3>
+                                        <ul>
+                                            <li><a href="#">Accueil</a></li>
+                                            <li><a href="/portage-salarial">Portage salariale</a></li>
+                                            <li><a href="/coworking/">coworking</a></li>
+                                            <li><a href="#">Prestations</a></li>
+                                            <li><a href="/blog/">Le Blog</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>  
+
+                        </div> 
+
+                    </div>
+                </div>
+                <!-- FOOTER COPYRIGHT -->
+                <div class="footer-bottom">
+                
+                    <div class="footer-bottom-info">
+                        <div class="footer-copy-right">
+                            <span class="copyrights-text">Copyright © 2025 OlonaTalents.</span>
+                        </div>
+                        <ul class="social-icons">
+                            <li><a href="" class="profil-social"><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </footer>
 		{% include "cookies_management.html.twig" %}
 

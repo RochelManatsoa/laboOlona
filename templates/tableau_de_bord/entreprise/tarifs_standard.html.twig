@@ -1,4 +1,4 @@
-{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+{% extends 'tableau_de_bord/base.html.twig' %}
 
 {% block title %}Tableau de bord{% endblock %}
 
@@ -14,7 +14,7 @@
             <div class="d-flex align-items-center">
                 <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
                 <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-                <h5 class="mb-0"> Abonnement </h5>
+                <h5 class="mb-0"> Abonnement standard </h5>
             </div>
             <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
                 <li class="breadcrumb-item position-relative">
@@ -93,6 +93,24 @@
                             </div>                          
                         </div>
                     </div>                                      
+                </div>
+            </div>
+            <div class="info_supp_boost info_supp_boost_entr">
+                <h2>Offre Gratuite </br>Fonctionnement à Crédits</h2>
+                <div class="info_supp_boost_item">200 crédits offerts à l'inscription</div>
+                <div class="grid_row">
+                    <div class="box-grid">
+                        <strong>20 crédits </strong>
+                        <br/>/ <br/>annonce publiée
+                    </div>
+                    <div class="box-grid">
+                        <strong>75 crédits</strong>
+                        <br/>/ <br/> accès aux coordonnées d'un candidat
+                    </div>
+                    <div class="box-grid">
+                        <strong>100 crédits</strong>
+                        <br/>/ <br/> boost annonce avec badge "Urgent"
+                    </div>
                 </div>
             </div>
         </div>
