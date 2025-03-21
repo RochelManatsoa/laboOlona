@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Controller\TableauDeBord\CandidatController;
+use App\Controller\TableauDeBord\EntrepriseController;
 use DateTime;
 use App\Entity\User;
 use App\Entity\Prestation;
@@ -15,6 +17,7 @@ use App\Security\AppAuthenticator;
 use Symfony\Component\Mime\Address;
 use App\Manager\OlonaTalentsManager;
 use App\Entity\Entreprise\JobListing;
+use App\Entity\EntrepriseProfile;
 use App\Service\ElasticsearchService;
 use App\Service\Mailer\MailerService;
 use App\Entity\Moderateur\ContactForm;
@@ -51,6 +54,8 @@ class OlonaTalentsController extends AbstractController
         private ActivityLogger $activityLogger,
         private RequestStack $requestStack,
         private MailerService $mailerService,
+        private CandidatController $candidatController,
+        private EntrepriseController $entrepriseController,
     ) {}
 
     #[Route('/', name: 'app_home', options: ['sitemap' => true])]
@@ -178,7 +183,16 @@ class OlonaTalentsController extends AbstractController
             ]);
         }
         if ($currentUser && $profile) {
-            return $this->render("v2/dashboard/result/{$type}_result.html.twig", $params);
+            if($profile instanceof CandidateProfile){
+                $data = $this->candidatController->getData();
+                $params = array_merge($params, $data);
+                return $this->render("tableau_de_bord/result/{$type}_result_for_candidate.html.twig", $params);
+            }
+            if($profile instanceof EntrepriseProfile){
+                $data = $this->entrepriseController->getData();
+                $params = array_merge($params, $data);
+                return $this->render("tableau_de_bord/result/{$type}_result_for_entreprise.html.twig", $params);
+            }
         }
 
         return $this->render("v2/dashboard/result/default_{$type}_result.html.twig", $params);

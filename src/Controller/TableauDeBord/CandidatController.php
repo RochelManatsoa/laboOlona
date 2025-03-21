@@ -366,7 +366,7 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/tarifs.html.twig', $this->getData());
     }
 
-    private function getData()
+    public function getData()
     {
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
