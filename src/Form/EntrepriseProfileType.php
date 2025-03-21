@@ -6,13 +6,11 @@ use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\Finance\Devise;
 use App\Entity\EntrepriseProfile;
-use App\Entity\BusinessModel\Boost;
 use Symfony\Component\Form\AbstractType;
-use App\Entity\BusinessModel\BoostFacebook;
-use App\Entity\BusinessModel\BoostVisibility;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -29,6 +27,13 @@ class EntrepriseProfileType extends AbstractType
                     'class' => 'fw-bold fs-6' 
                 ],
                 'help' => 'Raison sociale de l\'entreprise.',
+            ])
+            ->add('isPremium', CheckboxType::class, [
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'label' => 'Abonnement Premium ?',
+                'help' => 'Abonnement Premium',
             ])
             ->add('taille', ChoiceType::class, [
                 'choices' => EntrepriseProfile::CHOICE_SIZE,
@@ -89,10 +94,6 @@ class EntrepriseProfileType extends AbstractType
                 'download_uri' => true, 
                 'image_uri' => true,    
             ])
-            // ->add('entreprise', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'id',
-            // ])
             ->add('secteurs', EntityType::class, [
                 'class' => Secteur::class,
                 'choice_label' => 'nom',
@@ -103,14 +104,6 @@ class EntrepriseProfileType extends AbstractType
                 ],
                 'help' => 'Secteurs d\'activités de l\'entreprise.',
             ])
-            // ->add('boost', EntityType::class, [
-            //     'class' => Boost::class,
-            //     'choice_label' => 'name',
-            // ])
-            // ->add('boostFacebook', EntityType::class, [
-            //     'class' => BoostFacebook::class,
-            //     'choice_label' => 'name',
-            // ])
         ;
     }
 

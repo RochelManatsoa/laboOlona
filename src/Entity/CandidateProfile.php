@@ -214,6 +214,9 @@ class CandidateProfile
     #[ORM\OneToMany(mappedBy: 'candidateProfile', targetEntity: ContestEntry::class)]
     private Collection $contestEntries;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isPremium = null;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -1096,6 +1099,18 @@ class CandidateProfile
                 $contestEntry->setCandidateProfile(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isIsPremium(): ?bool
+    {
+        return $this->isPremium;
+    }
+
+    public function setIsPremium(?bool $isPremium): static
+    {
+        $this->isPremium = $isPremium;
 
         return $this;
     }

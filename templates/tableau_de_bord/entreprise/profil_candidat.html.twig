@@ -23,6 +23,15 @@
                 <li class="breadcrumb-item position-relative"> Profil {{ generatePseudo(candidat) }} </li>
             </ol>
         </div>
+
+        {% if not entreprise.isIsPremium %}
+        <section class="warning_freemium mb-4 d-flex align-items-center">
+            <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+            <div class="warning-block">
+                Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
+            </div>
+        </section>
+        {% endif %}
         <div class="profil-banner mb-4">
             <div class="couverture-banner-bg" style="background-image: url({{ asset('images/dashboard/banner_couverture.webp')}})"></div>
             <div class="left-infos-profils d-md-flex justify-content-between">
@@ -37,19 +46,7 @@
                             </div>
                             <div class="Tarif-indicatif">
                                 <span>Tarif indicatif : </span>
-                                {#% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
-                                    <span class="fw-lighter">Base mensuel :</span>
-                                    <span class="mx-4 text-strong">{{ candidat.tarifCandidat.simulation.salaireNet|number_format(2, '.', '') }}
-                                        {{ candidat.tarifCandidat.simulation.devise.symbole }}
-                                    </span>
-                                    <span class="small">
-                                        <a href="{{ path('app_dashboard_employes_simulation_view', {'id' : candidat.tarifCandidat.simulation.id })}}" class="">
-                                            <i class="bi bi-box-arrow-up-right"></i>
-                                            Détails
-                                        </a>
-                                    </span>
-                                    {% else %}
-                                {% endif %#}
+                                    {{ candidat.tarifCandidat }}
                             </div>
                         </div>
                         <div class="TitreBlock">
@@ -65,14 +62,23 @@
                                 <span data-value="5">&#9733;</span>
                             </div>
                             <div class="rating_avis">
-                                <a href="{{ path('app_tableau_de_bord_candidat_se_faire_recommander')}}">5 avis</a>
+                                {# <a href="{{ path('app_tableau_de_bord_candidat_se_faire_recommander')}}">5 avis</a> #}
+                                5 avis
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="btn-profils">
-                    <a routerlink="" class="d-inline-block position-relative btn btn-contact" href="">Contacter {#noms de la personne#}</a>
-                    <a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="" target="_blank">Ouvir le CV ultérieurement</a>
+                    {% if not entreprise.isIsPremium %}
+                    <a routerlink="" class="d-inline-block position-relative btn btn-contact" href="">Contacter</a>
+                    {% endif %}
+                    <div id="row_favorite_{{ candidat.id }}">
+                        {% if isLikedByRecruiter(entreprise, candidat.id) %}
+                            <button type="button" class="btn btn-info remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':candidat.id}) }}"><i class="bi bi-star-fill me-2"></i>Effacer de mes favoris</button>
+                        {% else %}
+                            <button type="button" class="btn btn-primary add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':candidat.id}) }}"><i class="bi bi-star me-2"></i>Ajouter à mes favoris</button>
+                        {% endif %}
+                    </div>
                 </div>
             </div>	
         </div>	

@@ -5,7 +5,6 @@ namespace App\Form\Entreprise;
 use App\Entity\Secteur;
 use App\Entity\EntrepriseProfile;
 use App\Entity\BusinessModel\Boost;
-use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\Candidate\Competences;
 use App\Entity\Entreprise\JobListing;
 use Symfony\Component\Form\FormEvent;
@@ -13,6 +12,7 @@ use App\Entity\Moderateur\TypeContrat;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
+use App\Entity\BusinessModel\BoostFacebook;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -23,6 +23,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Sequentially;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
@@ -50,21 +51,21 @@ class AnnonceType extends AbstractType
                 ]),
             ])
             ->add('secteur', EntityType::class, [
-                'label' => 'Quel secteur d\'activité de votre entreprise sera sollicité pour cette mission ? ',
+                'label' => 'Sélectionnez le secteur d\'activité',
                 'class' => Secteur::class,
                 'attr' => [],
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
                 'required' => false,
-                'help' => 'Sélectionnez le secteur d\'activité lié à l\'annonce pour mieux cibler les candidats.',
+                'help' => 'Quel secteur d\'activité de votre entreprise sera sollicité pour cette mission ? ',
                 'constraints' => new Sequentially([
                     new NotBlank(message:'Le secteur est obligatoires.'),
                 ]),
             ])
             ->add('dateExpiration', DateType::class, [
                 'required' => false,
-                'label' => 'Date de début',
+                'label' => 'Date fin de candidature',
                 'widget' => 'single_text',  
                 'format' => 'yyyy-MM-dd',   
                 'label_attr' => [
@@ -80,7 +81,7 @@ class AnnonceType extends AbstractType
             ])
             ->add('typeContrat', EntityType::class, [
                 'class' => TypeContrat::class,
-                'label' => 'Budget prévu pour la mission',
+                'label' => 'Type de contrat',
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
@@ -126,7 +127,7 @@ class AnnonceType extends AbstractType
                 'label' => false
             ])
             ->add('budgetAnnonce', BudgetAnnonceType::class, [
-                'label' => 'Budget',
+                'label' => 'Budget prévu pour la mission',
                 'required' => false,
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
@@ -136,7 +137,13 @@ class AnnonceType extends AbstractType
                 ]),
                 'help' => 'Définissez le budget alloué pour cette annonce ou mission.'
             ])
-            ->add('lieu', TextType::class, [
+            ->add('lieu', ChoiceType::class, [
+                'choices' => [
+                    'Remote' => 'Remote',
+                    'Local' => 'Local',
+                    'Télétravail' => 'Télétravail',
+                    'Coworking Olona Talents' => 'Coworking Olona Talents',
+                ],
                 'required' => false,
                 'label' => 'Lieu',
                 'label_attr' => [

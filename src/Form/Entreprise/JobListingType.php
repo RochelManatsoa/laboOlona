@@ -19,7 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Validator\Constraints\Sequentially;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -108,8 +107,6 @@ class JobListingType extends AbstractType
                     'class' => 'ckeditor-textarea'
                 ]
             ])
-            // ->add('salaire', MoneyType::class, ['label' => false])
-            // ->add('prime', MoneyType::class, ['label' => false])
             ->add('primeAnnonce', PrimeAnnonceType::class, [
                 'label' => false,
                 'default_devise' => $options['default_devise'] ?? null
@@ -168,7 +165,6 @@ class JobListingType extends AbstractType
                 ],
                 'help' => 'Indiquez vos compétences et spécialisations pour cette prestation.',
             ])
-            // ->add('langues')
         ;
 
         $builder->get('competences')

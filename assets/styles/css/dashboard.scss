@@ -1244,12 +1244,12 @@ span.certificated {
     top: 12px;
     transform: translateY(-50%);
     font-size: 24px;
-    color: #d6d6d6;
+    color: #f6872c;
     &:focus {
         outline: none !important;
     }
     &:hover {
-        color: #f6872c;
+        color: #d6d6d6;
     }
     &.active {
         color: #f6872c;
