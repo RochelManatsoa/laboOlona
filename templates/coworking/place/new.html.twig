@@ -11,10 +11,21 @@
 {% endblock %}
 
 {% block body %}
+<header class="header-home">
+    <div class="page-content">
+        <div class="home-banner-section header-home-user bg-cover" style="background-image:url({{ asset('v2/images/coworking-olona-talents.webp')}})">
+            <div class="home-inner-section">
+                <div class="mid-section">
+                    <div id="liveDateTime" data-initial-date="{{ 'now'|date('Y-m-d H:i:s') }}"></div>
+                    <h1 class="title-large">Nouvelle place</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
 <section class="p-0 m-0">
     <div class="container my-5">
         <div class="row p-5 align-items-center rounded-3 border shadow-lg">
-            <h1 class="h3">Nouvelle place</h1>
 
             {{ include('coworking/place/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
 

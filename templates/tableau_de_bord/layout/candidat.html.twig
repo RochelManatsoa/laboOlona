@@ -19,12 +19,12 @@
       </a>
     </li>
     <li class="nav-item">
-      <a href="{{ path('app_tableau_de_bord_candidat_trouver_des_missions')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_candidat_trouver_des_missions' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+      <a href="{{ path('app_tableau_de_bord_candidat_trouver_des_missions')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_candidat_trouver_des_missions' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
       <img src="{{ asset('v2/images/dashboard/missions.svg')}}" alt=""><span class="sidebar-text">Trouver des missions</span>
       </a>
     </li>
     <li class="nav-item">
-      <a href="{{ path('app_tableau_de_bord_candidat_annuaire_de_services')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_candidat_annuaire_de_services' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+      <a href="{{ path('app_tableau_de_bord_candidat_annuaire_de_services')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_candidat_annuaire_de_services' or current_route == 'app_tableau_de_bord_candidat_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
       <img src="{{ asset('v2/images/dashboard/annuaire_icon.svg')}}" alt="" width="27" height="27"><span class="sidebar-text">Annuaire de service</span></a>
     </li>
     <li class="nav-item click-sub">
@@ -58,8 +58,8 @@
       </ul>
     </li>
     <li class="nav-item">
-      <a href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_candidat_tarifs_standard' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
-      <img src="{{ asset('v2/images/dashboard/payment_icon.svg')}}" alt="" width="24" height="24"><span class="sidebar-text">Recharger mon credit</span></a>
+      <a href="{{ path('app_tableau_de_bord_entreprise_tarifs_standard')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_entreprise_tarifs_standard' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/payment_icon.svg')}}" alt="" width="24" height="24"><span class="sidebar-text">Recharger mes credits</span></a>
     </li>
     <li class="nav-item">
       <a href="{{ path('app_tableau_de_bord_candidat_notification')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_candidat_notification' ? 'underline' : '' }}" aria-current="page">
