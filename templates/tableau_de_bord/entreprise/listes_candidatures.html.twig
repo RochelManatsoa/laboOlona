@@ -35,7 +35,12 @@
     <section class="recruteur-container">
         <div class="recruteur-block d-block p-5 mb-4">
             <div class="favoris-list-item mb-4">
-                <h1>Liste des candidatures</h1>
+                    <div class="offre-emploi-item d-flex align-items-center justify-content-between">
+                        <div>
+                            <h1>Liste des candidatures</h1>
+                        </div>
+                        <a href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="btn btn-primary">Créer une annonce</a>
+                    </div>
                     {% if candidatures|length > 0 %}
                     Trier par :
                         {{ knp_pagination_sortable(candidatures, 'Date candidature', 'a.dateCandidature') }} | 
@@ -75,7 +80,7 @@
                     {% endif %}
             </div>
         </div>
-        <div class="recruteur-block box-recrutement_ p-5 pb-3">
+        <div class="recruteur-block box-recrutement_ p-5 pb-3 mb-4">
             <div class="recruteur-item d-md-flex justify-content-between align-items-center">
                 <div>
                     <h2>Prêt à recruter ?</h2>

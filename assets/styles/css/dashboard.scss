@@ -1731,6 +1731,7 @@ span.certificated {
                 flex: 0 0 90px;
                 overflow: hidden;
                 border: 1px solid #ebebeb;
+                align-items: center;
                 img {
                     width: 100%;
                     height: auto;
@@ -2022,6 +2023,12 @@ span.vue_profil {
                 font-size: 20px;
                 margin-top: 1rem;
             }
+            span.euro_ {
+                margin-top: 0;
+                font-weight: normal;
+                color: #f0b722;
+                font-size: 18px;
+            }
         }
         &:hover{
             background-color: $purple-light;
@@ -2122,7 +2129,6 @@ span.vue_profil {
                 .view_job-title{
                     margin-bottom: 15px;
                     font-size: 28px;
-                    max-width: 70%;
                     .view_job-post-duration{
                         color: #2db346;
                         font-size: 14px;
@@ -2616,5 +2622,12 @@ span.vue_profil {
                 border-radius: 25px;
             }
         }
+    }
+}
+
+#row_favorite_ {
+    &.favoris_profil {
+        text-align: center;
+        margin-bottom: 2rem;
     }
 }
