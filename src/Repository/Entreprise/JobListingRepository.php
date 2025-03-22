@@ -72,11 +72,14 @@ class JobListingRepository extends ServiceEntityRepository
 
     public function paginateJobListingsEntrepriseProfiles(EntrepriseProfile $entrepriseProfile, $page, string $status = null): PaginationInterface
     {
-        $queryBuilder = $this->createQueryBuilder('j')->select('j');
-        $queryBuilder
+        $queryBuilder = $this->createQueryBuilder('j')
+            ->select('j, COUNT(a.id) AS applicationCount')
+            ->leftJoin('j.applications', 'a') 
+            ->groupBy('j.id') 
             ->addOrderBy('j.id', 'DESC')
             ->andWhere('j.entreprise = :entreprise')
             ->setParameter('entreprise', $entrepriseProfile);
+
         if ($status && $status != 'ALL') {
             $queryBuilder
                 ->andWhere('j.status = :status')
@@ -194,6 +197,37 @@ class JobListingRepository extends ServiceEntityRepository
             
         return $query->getResult();
     }    
+
+    public function findJoblistingsForNotification()
+    {
+        $queryBuilder = $this->createQueryBuilder('j');
+
+        $orConditions = $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->eq('j.status', ':statusValid'),
+            $queryBuilder->expr()->eq('j.status', ':statusFeatured')
+        );
+
+        $updatedAtCondition = $queryBuilder->expr()->gte(
+            'j.updatedAt',
+            ':yesterday'
+        );
+
+        $isNotifiedCondition = $queryBuilder->expr()->eq('j.isNotified', ':isNotifiedFalse');
+
+        $query = $queryBuilder
+            ->andWhere($orConditions)
+            ->andWhere($updatedAtCondition)
+            ->andWhere($isNotifiedCondition)
+            ->setParameter('statusValid', JobListing::STATUS_PUBLISHED)
+            ->setParameter('statusFeatured', JobListing::STATUS_FEATURED)
+            ->setParameter('yesterday', new \DateTime('-1 day'))
+            ->setParameter('isNotifiedFalse', false)
+            ->orderBy('j.id', 'DESC')
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
 
     /**
      * @param EntrepriseProfile $entreprise

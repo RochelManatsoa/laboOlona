@@ -73,7 +73,7 @@ class ContestEntryRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findEntryByStatus(string $status, int $maxResults = 50): array
+    public function findEntryByStatus(string $status, int $maxResults = 200): array
     {
         $dateLimit = new \DateTimeImmutable('-6 hours'); 
     

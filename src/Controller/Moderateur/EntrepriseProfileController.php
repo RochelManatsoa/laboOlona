@@ -2,16 +2,18 @@
 
 namespace App\Controller\Moderateur;
 
-use App\Entity\Entreprise\JobListing;
 use App\Entity\EntrepriseProfile;
 use App\Form\EntrepriseProfileType;
-use App\Repository\Entreprise\JobListingRepository;
-use App\Repository\EntrepriseProfileRepository;
+use App\Entity\Entreprise\JobListing;
+use App\Manager\Marketing\LeadManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Repository\EntrepriseProfileRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Entreprise\JobListingRepository;
+use App\Repository\Marketing\SourceRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/moderateur/recruiter/profile')]
 class EntrepriseProfileController extends AbstractController
@@ -35,13 +37,29 @@ class EntrepriseProfileController extends AbstractController
     }
 
     #[Route('/new', name: 'app_moderateur_entreprise_profile_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(
+        Request $request, 
+        EntityManagerInterface $entityManager,
+        LeadManager $leadManager,
+        SourceRepository $sourceRepository,
+    ): Response
     {
+        $sourceEntreprise = $sourceRepository->findOneBy(['slug' => 'entreprise']);
         $entrepriseProfile = new EntrepriseProfile();
         $form = $this->createForm(EntrepriseProfileType::class, $entrepriseProfile);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if($entrepriseProfile->getStatus() !== EntrepriseProfile::STATUS_BANNED && $entrepriseProfile->getStatus() !== EntrepriseProfile::STATUS_PENDING ){
+                $lead = $leadManager->init();
+                $lead->setSource($sourceEntreprise);
+                $lead->setComment('Création entreprise - '.$entrepriseProfile->getDescription());
+                $lead->setFullName($entrepriseProfile->getEntreprise());
+                $lead->setEmail($entrepriseProfile->getEntreprise()->getEmail());
+                $lead->setPhone($entrepriseProfile->getEntreprise()->getTelephone());
+                $lead->setUser($entrepriseProfile->getEntreprise());
+                $leadManager->save($lead);
+            }
             $entityManager->persist($entrepriseProfile);
             $entityManager->flush();
 
@@ -63,12 +81,29 @@ class EntrepriseProfileController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_moderateur_entreprise_profile_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntrepriseProfile $entrepriseProfile, EntityManagerInterface $entityManager): Response
+    public function edit(
+        Request $request, 
+        EntrepriseProfile $entrepriseProfile, 
+        EntityManagerInterface $entityManager,
+        LeadManager $leadManager,
+        SourceRepository $sourceRepository,
+    ): Response
     {
+        $sourceEntreprise = $sourceRepository->findOneBy(['slug' => 'entreprise']);
         $form = $this->createForm(EntrepriseProfileType::class, $entrepriseProfile);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if($entrepriseProfile->getStatus() !== EntrepriseProfile::STATUS_BANNED && $entrepriseProfile->getStatus() !== EntrepriseProfile::STATUS_PENDING ){
+                $lead = $leadManager->init();
+                $lead->setSource($sourceEntreprise);
+                $lead->setComment('Validation entreprise - '.$entrepriseProfile->getDescription());
+                $lead->setFullName($entrepriseProfile->getEntreprise());
+                $lead->setEmail($entrepriseProfile->getEntreprise()->getEmail());
+                $lead->setPhone($entrepriseProfile->getEntreprise()->getTelephone());
+                $lead->setUser($entrepriseProfile->getEntreprise());
+                $leadManager->save($lead);
+            }
             $entityManager->flush();
 
             return $this->redirectToRoute('app_moderateur_entreprise_profile_show', ['id' => $entrepriseProfile->getId()], Response::HTTP_SEE_OTHER);

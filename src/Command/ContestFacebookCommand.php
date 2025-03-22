@@ -42,9 +42,17 @@ class ContestFacebookCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $contestEntries = $this->contestEntryRepository->findEntryByStatus(ContestEntry::STATUS_SEND);
+        $pendingContestEntries = $this->contestEntryRepository->findEntryByStatus(ContestEntry::STATUS_PENDING);
         
-        foreach ($contestEntries as $contestEntry) {
-            $this->processContestEntry($contestEntry, $io);
+        // foreach ($contestEntries as $contestEntry) {
+        //     $this->processContestEntry($contestEntry, $io);
+        // }
+
+        foreach ($pendingContestEntries as $contestEntry) {
+            $candidateProfile = $contestEntry->getCandidateProfile();
+            if($candidateProfile instanceof CandidateProfile && $candidateProfile->getStatus() === CandidateProfile::STATUS_VALID){
+                $this->updateStatus($contestEntry, ContestEntry::STATUS_VALIDATED, $io);
+            }
         }
 
         $this->entityManager->flush();

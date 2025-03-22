@@ -358,6 +358,30 @@ $(function() {
             updateThemePreference(newTheme);
             updateLogo();
         });
+
+        // Initialisation de CKEditor
+        let emailContentEditor;
+        ClassicEditor
+            .create(document.querySelector('#notification_profile_contenu'))
+            .then(editor => {
+                emailContentEditor = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+			
+        $('#templateEmail').on('change', function() {
+            console.log('change')
+            var selectedOption = $(this).find('option:selected');
+            var titre = selectedOption.data('titre');
+            var contenu = selectedOption.data('contenu');
+
+            $('#notification_profile_titre').val(titre);
+
+            if (emailContentEditor) {
+                emailContentEditor.setData(contenu);
+            }
+        });
     }
     
     function updateThemePreference(theme) {

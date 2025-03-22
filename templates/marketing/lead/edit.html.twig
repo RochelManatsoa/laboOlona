@@ -1,0 +1,13 @@
+{% extends 'moderateur/base.html.twig' %}
+
+{% block title %}Modifier un Lead{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Modifier un Lead</h1>
+
+    {{ include('marketing/lead/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <div class="d-flex justify-content-end w-100">
+        {{ include('marketing/lead/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

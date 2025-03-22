@@ -1,0 +1,13 @@
+{% extends 'moderateur/base.html.twig' %}
+
+{% block title %}Modifier une Source{% endblock %}
+
+{% block body %}
+    <h1>Modifier une Source</h1>
+
+    {{ include('marketing/source/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <div class="d-flex justify-content-end w-100">
+        {{ include('marketing/source/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

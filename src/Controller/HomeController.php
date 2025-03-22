@@ -20,6 +20,8 @@ use App\Service\Annonce\AnnonceService;
 use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Facebook\ContestEntryFormType;
+use App\Manager\Marketing\LeadManager;
+use App\Repository\Marketing\SourceRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,14 +43,28 @@ class HomeController extends AbstractController
     }
 
     #[Route('/contact', name: 'app_contact_us')]
-    public function contact(Request $request, EntityManagerInterface $entityManager, MailerService $mailerService): Response
+    public function contact(
+        Request $request, 
+        EntityManagerInterface $entityManager, 
+        MailerService $mailerService,
+        LeadManager $leadManager,
+        SourceRepository $sourceRepository
+    ): Response
     {
+        $sourceEntreprise = $sourceRepository->findOneBy(['slug' => 'formulaire-de-contact-site-olona-talents']);
         $contactForm = new ContactForm;
         $contactForm->setCreatedAt(new \DateTime());
         $form = $this->createForm(ContactFormType::class, $contactForm);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $contactForm = $form->getData();
+            $lead = $leadManager->init();
+            $lead->setSource($sourceEntreprise);
+            $lead->setComment('Formulaire de contact - '.$contactForm->getMessage());
+            $lead->setFullName($contactForm->getTitre());
+            $lead->setEmail($contactForm->getEmail());
+            $lead->setPhone($contactForm->getNumero());
+            $leadManager->save($lead);
             $entityManager->persist($contactForm);
             $entityManager->flush();
             $mailerService->sendMultiple(
