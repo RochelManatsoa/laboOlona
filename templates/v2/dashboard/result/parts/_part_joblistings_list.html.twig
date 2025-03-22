@@ -17,7 +17,7 @@
 		<article class="article-item_">
 			<div class="row">
 				<div class="col-md-2 aside-left-item_">
-					<a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
+					<a href=""><img class="img-fluid profile-img" style="border-radius: 10px; object-fit: cover;" src="{{ job.entreprise.fileName ? asset('uploads/compagnies/' ~ job.entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise2.webp') }}" alt=""></a>
 				</div>
 				<div class="col-md-10 aside-right-item_">
 					<div class="detail_annonce_">

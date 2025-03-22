@@ -135,7 +135,7 @@
                                 <div class="candidate-card-item">
                                     <div class="d-flex align-items-center mb-2">
                                         <div class="candidate-photo">
-                                            <a href=""><img src="{{ item.fileName ? asset('uploads/experts/' ~ item.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                                            <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.id })}}"><img src="{{ item.fileName ? asset('uploads/experts/' ~ item.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></a>
                                         </div>
                                         <div class="candidate-info-content">
                                             <h2>

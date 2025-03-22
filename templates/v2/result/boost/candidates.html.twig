@@ -6,7 +6,7 @@
                 <div class="col-lg-6 col-md-6">
                     <div class="jobs-grid m-b30">
                         <div class="media">
-                            <img src="{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="{{ generatePseudoById(candidat.id) }}" >
+                        <img class="img-fluid profile-img" style="border-radius: 10px; object-fit: cover;" src="{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}" alt="">
                         </div>
                         <div class="jobs-category"><span class="bg-pro">PRO</span></div>
                         <div class="mid-content">
@@ -22,7 +22,7 @@
                             </a>
                             <p class="job-address">
                                 Ref: {{ generatePseudoById(candidat.id) }}
-                                <small class="badge bg-info rounded-pill">{{ 'app_catalog_expert.certificated' }}</small>
+                                <small class="badge bg-info rounded-pill">Certifié</small>
                                 <small class="card-text"><i class="mx-1 bi bi-trophy"></i> {{ 'app_catalog_expert.realised'|trans }}</small>
                             </p>
                             <div>
