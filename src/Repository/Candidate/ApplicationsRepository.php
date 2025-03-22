@@ -42,6 +42,19 @@ class ApplicationsRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function countByEntrepriseProfile(int $entrepriseId): int
+    {
+        return (int) $this->createQueryBuilder('a')
+            ->join('a.annonce', 'j')
+            ->join('a.candidat', 'c')
+            ->join('j.entreprise', 'e')
+            ->where('e.id = :entrepriseId')
+            ->setParameter('entrepriseId', $entrepriseId)
+            ->select('COUNT(a.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function findByEntrepriseProfile(int $page, int $entrepriseId): PaginationInterface
     {
         $queryBuilder = $this->createQueryBuilder('a')
