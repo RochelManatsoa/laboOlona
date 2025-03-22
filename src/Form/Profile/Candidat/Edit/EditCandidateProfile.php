@@ -27,7 +27,6 @@ class EditCandidateProfile extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('candidat', InfoUserType::class, ['label' => false])
             ->add('file', FileType::class, [
                 'required' => false,
                 'label' => 'app_identity_expert_step_one.avatar',
@@ -44,6 +43,7 @@ class EditCandidateProfile extends AbstractType
                     ])
                 ],
             ])
+            ->add('candidat', InfoUserType::class, ['label' => false])
             ->add('localisation', CountryType::class, [
                 'required' => true,
                 'label' => 'Pays',
@@ -51,7 +51,6 @@ class EditCandidateProfile extends AbstractType
             ])
             ->add('birthday', DateType::class, [
                 'label' => 'Votre anniversaire',
-                'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
                 'years' => range(1970, 2010),
                 'attr' => ['class' => 'rounded-pill'] 
             ])
@@ -115,6 +114,23 @@ class EditCandidateProfile extends AbstractType
                     'data-form-collection-add-label-value' => 'Ajouter une langue',
                     'data-form-collection-delete-label-value' => 'Supprimer',
                 ]
+            ])
+            ->add('cv', FileType::class, [
+                'label' => 'Ajouter un CV',
+                'label_attr' => ['class' => 'col-form-label'],
+                'mapped' => false,
+                'required' => false,
+                'attr' => ['class' => 'custom-file-input'],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '4096k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger un document PDF valide.',
+                    ])
+                ],
             ])
         ;
     }

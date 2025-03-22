@@ -25,10 +25,12 @@ class TarifCandidatType extends AbstractType
                 'constraints' => new Sequentially([
                     new NotBlank(message:'Champ obligatoire.'),
                 ]),
+                'row_attr' => ['class' => 'col-md-6'],
             ])
             ->add('typeTarif', ChoiceType::class, [
                 'choices' => TarifCandidat::arrayTarifType(),
                 'label' => 'Type',
+                'row_attr' => ['class' => 'col-md-6'],
             ])
             ->add('currency', EntityType::class, [
                 'label' => 'Devise',
@@ -38,6 +40,7 @@ class TarifCandidatType extends AbstractType
                     'data-controller' => 'tarif-devise',
                     'data-action' => 'change->tarif-devise#onDeviseChange'
                 ],
+                'row_attr' => ['class' => 'col-md-6'],
             ])   
             ->add('devise', HiddenType::class, [
                 'attr' =>  [

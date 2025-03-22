@@ -26,10 +26,8 @@ class TarifPrestationType extends AbstractType
                     new NotBlank(message:'Le montant est obligatoire.'),
                     new PositiveOrZero(message:'Format invalide.'),
                 ]),
-                'label' => false,
             ])
             ->add('currency', EntityType::class, [
-                'label' => false,
                 'mapped' => true,
                 'class' => Devise::class, 
                 'attr' => [
@@ -39,7 +37,6 @@ class TarifPrestationType extends AbstractType
             ])
             ->add('typeTarif', ChoiceType::class, [
                 'choices' => TarifPrestation::arrayTarifType(),
-                'label' => false,
             ])
         ;
     }

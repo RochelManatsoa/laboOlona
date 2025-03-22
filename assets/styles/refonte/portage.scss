@@ -1,0 +1,238 @@
+@import 'styles.scss';
+@import 'home.scss';
+
+.liberte_securite {
+    padding: 80px 0;
+    .videoBlock {
+        box-shadow: 0px 0px 30px rgb(216 199 237);
+        background: #f5edff;
+        padding: 25px;
+        border-radius: 25px;
+        iframe {
+            border-radius: 25px;
+            width: 100%;
+            height: 455px;
+            overflow: hidden;
+            @include breakpoint_767{
+                height: auto;
+            }
+        }
+    }
+    .item-liberte_ {
+        padding-right: 3rem;
+        margin-top: 3rem;
+        line-height: 33px;
+        font-size: 18px;
+        h2 {
+            color: $purple-primary;
+        }
+    }
+}
+.nous-faire-confiance {
+    background: #f5edff;
+    padding: 80px 0;
+    h2 {
+        margin-bottom: 4rem;
+        color: $purple-primary;
+    }
+    .card {
+        border-radius: 25px;
+        .text-warning {
+            color: #eac87c !important;
+        }
+    }
+}
+.etape_simulation {
+    background-color: $purple-light;
+    max-width: 1560px;
+    margin: 120px auto;
+    border-radius: 80px;
+    padding: 120px 125px 120px 125px;
+    overflow: hidden;
+    @include breakpoint-991{
+        padding: 40px 30px;
+        margin: 40px;
+    }
+    @include breakpoint-991{
+        margin: 40px 15px;
+    }
+    .how-it-left{
+        margin-right: 100px;
+        @include breakpoint-1360{
+            margin-right: 20px;
+        }
+        @include breakpoint-991{
+            margin-right: 0;
+        }
+        .how-it-section {
+            margin-bottom: 40px;
+            .section-head{
+                h2{
+                    color: $white;
+                }
+            }
+        }
+    }
+    .how-it-right-section{
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        .media{
+            text-align: center;
+            position: relative;
+            width: 100%;
+            .bg-circle{position: relative; z-index: 1; left: 50%; transform: translateX(-50%);width: 90.1%;}
+            .main-bg{z-index: 1; position: absolute; left:0%; top: 0%; width: 91.7%;}
+        }
+    } 
+    .step-section_{
+        ul{
+            list-style: none;
+            margin-bottom: 30px;
+            position: relative;
+            @include breakpoint-991{
+                padding-left: 0;
+            }
+            li{
+                margin-bottom: 50px;
+                position: relative;
+                z-index: 1;
+                &:before{
+                    content: '';
+                    position: absolute;
+                    left: 33px;
+                    top: 70px;
+                    height: 125%;
+                    width: 5px;
+                    background-color: $white;
+                    z-index: -1;
+                    @include breakpoint-480{
+                        display: none;
+                    }
+                }
+                @include breakpoint-480{
+                    text-align: center;
+                }
+                &:last-child{
+                    &:before{
+                        display: none;
+                    }
+                }
+                .step-count{
+                    width: 70px;
+                    height: 70px;
+                    line-height: 70px;
+                    border-radius: 10px;
+                    color: $purple-primary;
+                    font-size: 30px;
+                    font-weight: 600;
+                    text-align: center;
+                    position: absolute;
+                    left: 0px;
+                    top: 0px;
+                    @include breakpoint-480{
+                        position: inherit;
+                        margin: 0px auto 30px;
+                    }
+                }
+                .step-content{
+                    padding-left: 110px;
+                    @include breakpoint-480{
+                        padding-left:0px;
+                    }
+                    .title{
+                        color: $white;
+                    }
+                    p{
+                        margin-bottom: 0px;
+                        color: #e7e7e7;
+                    }
+                }
+            }
+        }
+        .bg-clr-sky-light {
+            background-color: #7cb5ea;
+        }
+        .bg-clr-yellow-light {
+            background-color: #eac87c;
+        }
+        .bg-clr-pink-light {
+            background-color: #cea7d9;
+        }
+    }
+}
+
+.vister_notre_espace.portage_adresse {
+    background: #f5edff !important;
+    padding: 80px 0;
+    h2 {
+        color: $purple-primary;
+        margin-bottom: 35px;
+    }
+    .block_contactForm {
+        background-color: $white;
+        .block_contact_ {
+            padding: 40px;
+            #contactForm {
+                border-top: 1px solid #ddd;
+                padding-top: 25px;
+                margin-top: 27px;
+                h3 {
+                    color: $purple-primary;
+                }
+                .form-control {
+                    background-color: #f3f3f3;
+                    border-color: transparent;
+                    border-radius: 0;
+                    padding: 10px 15px;
+                    transition: all .3s ease;
+                    &:focus {
+                        border-color: $purple-primary;
+                        outline: 0;
+                        box-shadow: none !important;
+                    }
+                }
+            }
+        }
+    }
+}
+.avis_ {
+    padding-bottom: 80px;
+    h2 {
+        text-align: center;
+        color: $purple-primary;
+        margin-bottom: 4rem;
+    }
+    .p-20 {
+        padding: 20px;
+    }
+    @include breakpoint_767{
+        .card  {
+            margin: 15px 0;
+            height: auto !important;
+            text-align: center;
+            .img-fluid {
+                width: 150px;
+                height: 150px;
+                object-fit: cover;
+                margin: auto;
+            }
+        }
+    }
+}
+#base-portage .footer-light {
+    color: $white;
+    background-color: #212529 !important;
+    .title {
+        color: $yelow-primary;
+        &:before {
+            background-color: $white;
+        }
+    }
+    .footer-top {
+        border-bottom-color: rgb(233 231 231 / 30%);
+    }
+    .footer-bottom .footer-copy-right .copyrights-text {
+        color: $white;
+    }
+}

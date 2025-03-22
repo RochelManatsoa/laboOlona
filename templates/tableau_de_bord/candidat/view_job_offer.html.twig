@@ -1,0 +1,253 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Annonces </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a> 
+                </li>
+                <li class="breadcrumb-item position-relative"> Trouver des missions </li>
+            </ol>
+        </div>
+    </section>
+    <section class="detail_db d-md-flex bp_">
+        <div class="biographie-profil mb-4 p-4">
+            <div class="section-content_view" style="transform: none;">
+                <div class="row d-flex justify-content-center" style="transform: none;">
+                    <div class="col-lg-8 col-md-12">
+                        <div class="cabdidate-de-info">
+                            <div class="view-job-wrap">
+                                <div class="view-job-info">
+                                    <div class="view-job-top">
+                                        <div class="view_media-bg">
+                                            <img src="{{ asset('v2/images/dashboard/fond_annonce_entreprise.webp')}}" class="img-fluid" alt="Societe">
+                                            <div class="view_jobs-category green"><span class="view_bg-green">Annonce | Réf:{{ generateJobReference(annonce.id) }}</span></div>
+                                        </div>
+                                        <div class="view_mid-content">
+                                            <div class="view_media">
+                                                <img src="{{ annonce.entreprise.fileName ? asset('uploads/compagnies/' ~ annonce.entreprise.fileName) : asset('uploads/experts/company-default.jpg') }}" alt="#">
+                                            </div>
+                                            <h4 class="view_job-title">{{ annonce.titre }} <span class="view_job-post-duration">/ {{ annonce.dateCreation|time_ago }}</span></h4>
+                                            <div class="view-job-mid">
+                                                <div class="view_job-self-mid-left d-flex">
+                                                    <span>Budget indicatif :</span>
+                                                    <div class="view_jobs-amount">
+                                                        {% if annonce.budgetAnnonce is defined and annonce.budgetAnnonce is not null %}
+                                                            {{ annonce.budgetAnnonce.montant }}
+                                                            {{annonce.budgetAnnonce.devise}}
+                                                        {% else %}
+                                                            {{ annonce.salaire }}
+                                                            €
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="view_job-apllication-area">Expire le :
+                                                    <span class="view_job-apllication-date">{{ annonce.dateExpiration|date('d/m/Y') }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="view_s-title">Description :</h4>
+                            <div class="view_description-list-2">
+                                <p>{{ annonce.description|raw }}</p>
+                                <h4 class="view_s-title">Compétences requises :</h4>
+                                {% if annonce.competences|length > 0 %}
+                                <ul>
+                                    {% for skill in annonce.competences %}
+                                        <li>
+                                            {{ skill.nom }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                {% else %}
+                                    <p>Aucune compétence spécifique requise.</p>
+                                {% endif %}
+                            </div>
+                            {% if candidat is defined %}
+                                {% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) or candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_FEATURED')) %}
+                                    {% if applied %}
+                                    <div id="alert-application" class="my-4">
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#submitBtn" class="btn btn-md btn-primary fw-semibold text-uppercase my-2 mx-3">Postuler ({{ apply_job_price }} crédits)</button>
+                                    </div>
+                                    {% else %}
+                                    <div class="alert alert-light-primary d-flex align-items-center" role="alert">
+                                        <i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
+                                        <div>
+                                            Vous avez déjà postuler à cette offre 
+                                            <a href="{{ path('app_tableau_de_bord_candidat_mes_candidatures')}}" class="mx-4 btn btn-primary text-uppercase fw-semibold" class="">Mes candidatures</a>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="alert alert-info d-flex align-items-center" role="alert">
+                                        <i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
+                                        <div>
+                                            Vous profil doit être validé par un moderateur avant de pouvoir postuler à cette annonce.<br>
+                                            Veuillez vérifier régulièrement votre mail
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 rightSidebar">
+                        <div class="theiaStickySidebar">
+                            <div class="side-bar">
+                                <div class="view_s-info2-wrap mb-5">
+                                    <div class="view_s-info2">
+                                        <h4 class="section-head-small mb-4">Informations de l'annonce</h4>
+                                        <ul class="view_job-hilites">
+                                            <li>
+                                                <i class="bi bi-circle-fill small mx-2 text-success"></i>
+                                                <span class="view_title">{{ getStatuses(annonce.status) }}</span>
+                                            </li>
+                                            <li>
+                                                <i class="bi bi-user"></i>
+                                                <span class="view_title">{{ annonce.typeContrat }}</span>
+                                            </li>
+                                            <li>
+                                                <i class="bi bi-eye"></i>
+                                                <span class="view_title">{{ annonce.annonceVues|length }} Vues</span>
+                                            </li>
+                                            <li>
+                                                <i class="bi bi-bookmark-check"></i>
+                                                <span class="view_title">{{ annonce.applications|length }} offres</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="view_s-info3-wrap mb-5">
+                                    {% if purchasedContact is defined and purchasedContact is not null %}
+                                        {% if purchasedContact.isAccepted %}
+                                            <div class="view_s-info3">
+                                                <div class="view_s-info-logo-section">
+                                                    <div class="view_media">
+                                                        <img src="{{ purchasedContact.contact.entrepriseProfile.fileName ? asset('uploads/compagnies/' ~ purchasedContact.contact.entrepriseProfile.fileName) : asset('uploads/experts/company-default.jpg') }}" alt="Avatar">
+                                                    </div>
+                                                    <h4 class="view_title">Information client</h4>
+                                                </div>
+                                                <ul>
+                                                    <li>
+                                                        <div class="view_s-info-inner">
+                                                            <i class="fas fa-building"></i>
+                                                            <span class="view_title">Entreprise</span>
+                                                            <div class="view_s-info-discription">{{ purchasedContact.contact.entrepriseProfile.nom }}</div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="view_s-info-inner">
+                                                            <i class="fas fa-mobile-alt"></i>
+                                                            <span class="view_title">Téléphone</span>
+                                                            <div class="view_s-info-discription">{{ purchasedContact.contact.telephone }}</div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="view_s-info-inner">
+                                                            <i class="fas fa-at"></i>
+                                                            <span class="view_title">Email</span>
+                                                            <div class="view_s-info-discription">{{ purchasedContact.contact.email }}</div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="view_s-info-inner">
+                                                            <i class="fas fa-desktop"></i>
+                                                            <span class="view_title">Site web</span>
+                                                            <div class="view_s-info-discription">--</div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="view_s-info-inner">
+                                                            <i class="fas fa-map-marker-alt"></i>
+                                                            <span class="view_title">Addresse</span>
+                                                            <div class="view_s-info-discription">adresse</div>
+                                                        </div>
+                                                    </li>
+
+                                                </ul>
+                                                <a href="" class="btn btn-primary ot-button">Voir son profil</a>
+                                            </div>
+                                        {% else %}
+                                            Votre demande de contact a été envoyée au candidat et est en attente de son approbation. Vos crédits ne seront débités qu'une fois la demande approuvée.
+                                        {% endif %}
+                                    {% else %}
+                                        {% set modalId = 'confirmationModal' %}
+                                        {% if app.user.credit.total < show_recruiter_price %}
+                                        {% set modalId = 'lowCreditModal' %}
+                                        {% endif %}
+                                        <div id="contactDetails">
+                                            <h4 class="section-head-small mb-4">Contacter le client</h4>
+                                            <p>Vous pouvez contacter directement l'entreprise et l'ajouter à votre réseau professionnel pour explorer les opportunités et collaborations possibles.</p>
+                                            <form action="{{ path('app_v2_contact_show')}}" method="post" id="show-recruiter-contact">
+                                                <input type="hidden" name="contactId" value="{{ annonce.entreprise.entreprise.id }}">
+                                                <input type="hidden" name="showContactPrice" value="{{ show_recruiter_price }}">
+                                                <input type="hidden" name="actionView" value="VIEW_RECRUITER">
+                                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
+                                                <button type="button" data-bs-toggle="modal" data-bs-target="#{{ modalId }}" data-bs-price="{{ show_recruiter_price }} crédits" data-bs-type="show-recruiter-contact" class="w-100 align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact </br>({{ show_recruiter_price }} crédits)</button>
+                                            </form>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                  
+            </div>
+        </div>
+    </section>
+    {% include "/tableau_de_bord/layout/_credit_modal_candidat.html.twig" %}
+    {% if candidat is defined %}
+        <!-- Modal -->
+        <div class="modal fade" id="submitBtn" tabindex="-1" aria-labelledby="submitBtnLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                {{ form_start(form, {'attr': {'id':'applyJob', 'action': path('app_v2_candidate_view_job_offer',  {'id': annonce.id })}}) }}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 text-center fw-bold" id="submitBtnLabel">Rédigez votre lettre de motivation</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Prenez un moment pour nous parler de vous et de ce qui vous rend unique. Utilisez cet espace pour mettre en avant vos compétences, votre expérience et votre enthousiasme pour le poste auquel vous postulez. Une bonne lettre de motivation peut faire toute la différence ! Voici quelques conseils pour vous aider :</p>
+                    <ul>
+                        <li><span class="fw-semibold">Personnalisez votre lettre :</span>Adressez-vous spécifiquement à l'entreprise et au poste.</li>
+                        <li><span class="fw-semibold">Soyez précis :</span>Donnez des exemples concrets qui démontrent vos compétences et réalisations.</li>
+                        <li><span class="fw-semibold">Restez concis :</span>Une lettre claire et directe est souvent la plus efficace.</li>
+                    </ul>
+                    <p>Une fois votre lettre rédigée, relisez-la attentivement avant de soumettre votre candidature. Bonne chance !</p>
+                    <div class="col-11 mx-auto">
+        
+                    <div class="row">
+                    {{ form_widget(form)}}
+                    </div>
+        
+                    </div>
+                </div>
+                    {% set modalId = 'confirmationModal' %}
+                    {% if app.user.credit.total < 50 %}
+                    {% set modalId = 'lowCreditModal' %}
+                    {% endif %}
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary fw-semibold text-uppercase" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary fw-semibold text-uppercase" data-bs-toggle="modal" data-bs-target="#{{ modalId }}" data-bs-price="{{ apply_job_price }} crédits" data-bs-type="apply-job">Envoyer</button>
+                </div>
+                {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

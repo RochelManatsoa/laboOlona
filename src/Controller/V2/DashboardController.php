@@ -75,10 +75,10 @@ class DashboardController extends AbstractController
         }
         $profile = $this->userService->checkProfile();
         if($profile instanceof EntrepriseProfile){
-            return $this->redirectToRoute('app_v2_recruiter_dashboard');
+            return $this->redirectToRoute('app_tableau_de_bord_entreprise');
         }
         if($profile instanceof CandidateProfile){
-            return $this->redirectToRoute('app_v2_candidate_dashboard');
+            return $this->redirectToRoute('app_tableau_de_bord_candidat');
         }
         if($profile instanceof ModerateurProfile){
             return $this->redirectToRoute('app_dashboard_moderateur');

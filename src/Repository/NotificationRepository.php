@@ -62,18 +62,34 @@ class NotificationRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+    
+    public function countIsRead(User $user, bool $isRead): int
+    {
+        return (int) $this->createQueryBuilder('n')
+            ->select('COUNT(n.id)')
+            ->where('n.destinataire = :destinataire')
+            ->andWhere('n.isRead = :isRead')
+            ->setParameter('destinataire', $user)
+            ->setParameter('isRead', $isRead)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
     public function findByDestinataire(
         User $user, 
-        array $orderBy, 
-        string $statusNot, 
         ?int $isRead,
-        $page
+        array $orderBy = [], 
+        string $statusNot = null, 
+        $page = 1
     ): PaginationInterface
     {
         $queryBuilder = $this->createQueryBuilder('n')
                 ->where('n.destinataire = :destinataire')
                 ->setParameter('destinataire', $user);
+
+        foreach ($orderBy as $field => $direction) {
+            $queryBuilder->addOrderBy('n.' . $field, $direction);
+        }
 
         if ($statusNot !== null) {
             $queryBuilder->andWhere('n.status != :statusNot')
@@ -83,10 +99,6 @@ class NotificationRepository extends ServiceEntityRepository
         if ($isRead !== null) {
             $queryBuilder->andWhere('n.isRead = :isRead')
             ->setParameter('isRead', $isRead);
-        }
-
-        foreach ($orderBy as $field => $direction) {
-            $queryBuilder->addOrderBy('n.' . $field, $direction);
         }
 
         return $this->paginator->paginate(

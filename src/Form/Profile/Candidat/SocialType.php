@@ -15,28 +15,22 @@ class SocialType extends AbstractType
         $builder
             ->add('linkedin', TextType::class, [
                 'required' => false,
-                'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
             ])
             ->add('skype', TextType::class, [
                 'required' => false,
-                'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
             ])
             ->add('slack', TextType::class, [
                 'required' => false,
-                'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
             ])
             ->add('facebook', TextType::class, [
                 'required' => false,
-                'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
             ])
             ->add('instagram', TextType::class, [
                 'required' => false,
-                'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
             ])
             ->add('github', TextType::class, [
                 'required' => false,
-                'label' => 'app_identity_expert_step_three.other',
-                'label_attr' => ['class' => 'col-sm-4 text-center col-form-label'],
+                'label' => 'Autre',
             ])
         ;
     }

@@ -1,0 +1,152 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block admin %}{% endblock %}
+
+{% block body %}
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Mes commandes </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> Mes commandes </li>
+            </ol>
+        </div>
+    </section>
+    {% if not candidat.isIsPremium %}
+    <section class="warning_freemium mb-4 d-flex align-items-center">
+        <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+        <div class="warning-block">
+            Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
+        </div>
+    </section>
+    {% endif %}
+    <section class="tarfis-container d-block p-5 mb-4">
+        <div class="wrapper-abonnement-c">
+            <div class="title-abonnement-c">
+                <h1>Historique de mes commandes</h1>
+                <p>Consultez en un clin d'œil tous les détails de vos commandes passées sur Olona-Talents.com.</p>
+            </div>
+            <div class="pack_standard_list m-b30">
+                <div class="row"> 
+                {% if orders|length > 0 %}
+                <div class="table-responsive mt-4">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td scope="col" class="fw-bolder">{{ knp_pagination_sortable(orders, 'Produit', 'p.name') }}</td>
+                                <td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Montant', 'o.totalAmount') }}</td>
+                                <td scope="col-2" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Paiement', 'type.name') }}</td>
+                                <td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Date', 'o.createdAt') }}</td>
+                                <td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Statut', 'o.status') }}</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in orders %}
+                            <tr id="row_prestation_recruiter_{{item.id}}">
+                                {% if item.orderItems|length > 0 %}
+                                    <td class="">
+                                        Coworking 
+                                        <br>
+                                        <span class="fw-lighter small">
+                                            {{ item.orderNumber }}
+                                        </span>
+                                    </td>
+                                    <td class="col-1 small text-center">
+                                        {{ item.totalAmount }} Ar
+                                    </td>
+                                    <td class="col-1 text-center">
+                                        {# <img src="{{ asset('/images/' ~ item.paymentMethod.slug ~ '.png') }}" class="img-fluid border" alt="{{ item.paymentMethod.name }}"> #}
+                                    </td>
+                                    <td class="col-1 text-center small">
+                                        {{ item.createdAt|date('d/m/Y') }}<br>
+                                        {{ item.createdAt|date('à h:i') }}
+                                    </td>
+                                    <td class="col-1 text-center">
+                                        {{ statusOrder(item)|raw }}<br>
+                                        {% if item.status is same as(constant('App\\Entity\\BusinessModel\\Order::STATUS_COMPLETED'))%}
+                                        <a target=_blank href="{{ path('payment_facture', {'order': item.id})}}" class="small"><i class="bi bi-receipt"></i> Facture</a>
+                                        {% endif %}
+                                    </td>
+                                    
+                                {% else %}
+                                    {% if item.paymentMethod.slug == 'paypal' %}
+                                        {% set amount = item.totalAmount ~ ' ' ~ item.currency.symbole %} 
+                                    {% else %}
+                                        {% set amount = item.package.price ~ ' Ar' %}
+                                    {% endif %}
+                                    <td class="">
+                                        {{ item.package.name }} | 
+                                        <span class="fw-bolder">{{ item.package.credit }}</span>
+                                        <span class="fw-light">crédits</span>
+                                        <br>
+                                        <span class="fw-lighter small">
+                                            {{ item.orderNumber }}
+                                        </span>
+                                    </td>
+                                    <td class="col-1 small text-center">
+                                        {{ amount }}
+                                    </td>
+                                    <td class="col-2 text-center">
+                                        <img src="{{ asset('/images/' ~ item.paymentMethod.slug ~ '.png') }}" class="img-fluid border w-50" alt="{{ item.paymentMethod.name }}">
+                                    </td>
+                                    <td class="col-1 text-center small">
+                                        {{ item.createdAt|date('d/m/Y') }}<br>
+                                        {{ item.createdAt|date('à h:i') }}
+                                    </td>
+                                    <td class="col-1 text-center">
+                                        {{ statusOrder(item)|raw }}<br>
+                                        {% if item.status is same as(constant('App\\Entity\\BusinessModel\\Order::STATUS_COMPLETED'))%}
+                                        <a target=_blank href="{{ path('payment_facture', {'order': item.id})}}" class="small"><i class="bi bi-receipt"></i> Facture</a>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation mt-5">
+                        {{ knp_pagination_render(orders, 'parts/_pagination.html.twig') }}
+                    </div>
+                </div>
+                {% else %}
+                    <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                        <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                        <p class="text-center">Vous n'avez pas encore effectué de commande.</p>
+                    </div>
+                {% endif %}                                  
+                </div>
+            </div>
+            <div class="info_supp_boost info_supp_boost_entr">
+                <h2>Offre Gratuite </br>Fonctionnement à Crédits</h2>
+                <div class="info_supp_boost_item">200 crédits offerts à l'inscription</div>
+                <div class="grid_row">
+                    <div class="box-grid">
+                        <strong>20 crédits </strong>
+                        <br/>/ <br/>annonce publiée
+                    </div>
+                    <div class="box-grid">
+                        <strong>75 crédits</strong>
+                        <br/>/ <br/> accès aux coordonnées d'un candidat
+                    </div>
+                    <div class="box-grid">
+                        <strong>100 crédits</strong>
+                        <br/>/ <br/> boost annonce avec badge "Urgent"
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,210 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Trouver une mission </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a> 
+                </li>
+                <li class="breadcrumb-item position-relative"> Trouver des missions </li>
+            </ol>
+        </div>
+    </section>
+    <section class="detail_db d-md-flex bp_">
+        <div class="biographie-profil mb-4 p-4">
+            <div class="mission-list-title">
+                <h1>Saisissez de nouvelles opportunités pour votre carrière</h1>
+                <p> Accédez aux offres d'emploi publiées par des entreprises dans votre secteur. Positionnez-vous sur des projets pertinents pour élargir vos compétences et collaborer avec de nouveaux partenaires. Explorez des possibilités qui peuvent dynamiser votre trajectoire professionnelle et ouvrir la porte à de nouvelles expériences enrichissantes.
+                </p>
+            </div>
+            <div class="ils_recrutentBlock mb-4">
+                <h2><span>Ils recrutent</span></h2>
+                <div class="inner-recruter d-flex align-items-center">
+                    <div class="item-recruter-box">
+                        <div class="recruter_box d-flex">
+                            <a href="#">
+                                <img class="img-fluid" src="{{ asset('images/pubs/logo_leaderprice.png')}}">
+                            </a>
+                            <a href="#">
+                                <img class="img-fluid" src="{{ asset('images/pubs/logo_intelcia.png')}}">
+                            </a>
+                            <a href="#">
+                                <img class="img-fluid" src="{{ asset('images/pubs/logo_kentiaRH.png')}}">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="item-recruter-box">
+                        <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                            <img class="img-fluid" src="{{ asset('images/pubs/espace-pub-horizontal-regard-beauty-_1_.webp')}}">
+                        </a>
+                    </div>
+                    <div class="item-recruter-box">
+                        <div class="recruter_box d-flex">
+                            <a href="#">
+                                <img class="img-fluid" src="{{ asset('images/pubs/logo_orange.png')}}">
+                            </a>
+                            <a href="#">
+                                <img class="img-fluid" src="{{ asset('images/pubs/logo_accesB.png')}}">
+                            </a>
+                            <a href="#">
+                                <img class="img-fluid" src="{{ asset('images/pubs/logo_madalarm.png')}}">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="offre-emploi-list">
+                <div class="row">
+                    <div class="col-lg-8">
+                        {% for job in offres  %}
+                        <article class="article-item_">
+                            <div class="row">
+                                <div class="col-md-2 aside-left-item_">
+                                    <span class="date_p">Publié {{ job.dateCreation|date('d/m/Y') }}</span>
+                                </div>
+                                <div class="col-md-10 aside-right-item_">
+                                    <div class="detail_annonce_">
+                                        <h2>
+                                            {% if app.user %}
+                                                <a href="{{ path('app_tableau_de_bord_candidat_view_job_offer', {'id': job.id })}}" class="btn-primary">
+                                                    {{ job.titre }}
+                                                </a>
+                                            {% else %}
+                                                <span style="cursor:pointer;" class="annonce-link" data-id="{{ job.id }}">{{ job.titre }}</span>
+                                            {% endif %}
+                                        </h2>
+                                        <h3><a href="" class="btn-primary">SOCIETE</a> <span class="secteur_job"><i class="bi bi-tags"></i> {{ job.secteur.nom}}</span></h3>
+                                        <div class="type_contact_">{{ job.typeContrat }}</div>
+                                        <div class="description_courte_">{{ job.shortDescription|raw }}</div>
+                                        <div class="info_publication_">
+                                            <span class="small fw-light">
+                                                <span class="badge bg-info rounded-pill px-2"></span>
+                                                <span class="badge rounded-pill px-2 text-bg-success">Ouvert</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <span class="">Date limite {{ job.dateCreation|date('d/m/Y') }}</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-eye"></i> {{ job.annonceVues|length }}
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-bookmark-check"></i> {{ job.applications|length }} offres
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        <span data-annonce="{{ job.id }}" style="display:none">
+                            {% include "v2/preview/_prev_joblistings.html.twig" %}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="position-sticky" style="top: 2rem;">
+                            <div class="theiaStickySidebar">
+                                <div class="side-bar">
+                                    <div class="sidebar-elements search-bx">								
+                                        <form>
+                                            <div class="form-group mb-4">
+                                                <h4 class="section-head-small mb-4">Afficher par</h4>
+                                                <div class="dropdown bootstrap-select">
+                                                    <select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
+                                                        <option>10</option>
+                                                        <option>20</option>
+                                                        <option>30</option>
+                                                        <option>40</option>
+                                                        <option>50</option>
+                                                        <option>60</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-4">
+                                                <h4 class="section-head-small mb-4">Categories</h4>
+                                                <div class="dropdown bootstrap-select">
+                                                    <select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
+                                                        <option>Toutes les Categories</option>
+                                                        <option>Web Designer</option>
+                                                        <option>Developpeur</option>
+                                                        <option>Marketing</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="m-4 card position-relative text-center d-block d-md-none">
+                                    <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                                        <img class="img-fluid" src="{{ asset('images/pubs/espace-pub-carre-regard-beauty.webp')}}">
+                                    </a>
+                                </div>
+                                <div class="pub_veticales mt-4 pt-1">
+                                    <a href="">
+                                        <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                                    </a>
+                                </div>
+                                <div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
+                                    <h4 class="title">Recrutement</h4>
+                                    <p>Obtenez les emplois les mieux adaptés à vos besoins <br>
+                                    Ajoutez votre CV MAINTENANT !</p>
+                                    <div class="btn-signUp">
+                                        <a href="" class="btn btn-primary white">En savoir plus</a> 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script> 
+    
+    var currentPage = 1;
+    var allDataLoaded = false;
+
+    $(window).scroll(function() {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !allDataLoaded) {
+            loadMoreJobs();
+        }
+    });
+
+    function loadMoreJobs() {
+        if (!allDataLoaded) {
+            currentPage++;
+            var url = `{{ path('api_job_offers') }}?page=${currentPage}`;
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json', 
+                success: function(data) {
+                    $('#jobs-container').append(data.html);
+                    if (!data.hasMore) {
+                        allDataLoaded = true;
+                    }
+                },
+                error: function() {
+                    allDataLoaded = true; 
+                }
+            });
+        }
+    }
+    </script>
+{% endblock %}

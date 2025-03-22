@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			{% block title %}Olona Talents
+			{% endblock %}
+		</title>
+		<link rel="icon" href="{{ asset('images/favicon.ico')}}">
+		{% block meta %}
+			<meta name="description" content="Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent.">
+			<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement">
+			<meta property="og:title" content="Olona Talents">
+			<meta property="og:description" content="Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent.">
+		{% endblock %}
+		<meta property="og:url" content="{% block og_url %}{{ app.request.uri }}{% endblock %}">
+		<meta property="og:image" content="{% block og_image %}{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}{% endblock %}">
+		<meta property="og:image:width" content="1200"/>
+		<meta property="og:image:height" content="630"/>
+		<script class="u-script" type="text/javascript" src="{{asset('v2/js/jquery.js')}}" defer=""></script>
+		<script class="u-script" type="text/javascript" src="{{asset('v2/js/nicepage.js')}}" defer=""></script>
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+			<script src="{{asset('assets/errorLogger.js')}}"></script>
+		{% endblock %}
+	</head>
+	<body class="home-ot" data-lang="fr">
+		{% block header %}{% endblock %}
+		{% block body %}{% endblock %}
+	</body>
+</html>

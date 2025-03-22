@@ -1,0 +1,302 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Profile </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> Profil candidat </li>
+            </ol>
+        </div>
+        <section class="warning_freemium mb-4 d-flex align-items-center">
+            <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+            <div class="warning-block">
+                Vous êtes actuellement sur un plan gratuit. <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">Achetez du credit</a> pour booster la visibilité de votre profil ou encore, passez à un <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs')}}">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+            </div>
+        </section>
+        <div class="profil-banner mb-4">
+            <div class="couverture-banner-bg" style="background-image: url({{ asset('images/dashboard/banner_couverture.webp')}})"></div>
+            <div class="left-infos-profils d-md-flex justify-content-between">
+                <div class="infos-profils d-md-flex justify-content-between">
+                    <div class="img-profils">
+                        <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
+                    </div>
+                    <div class="detail-profils">
+                        <div class="nomBlock d-md-flex align-items-center">
+                            <div class="Noms__">
+                            {{ candidat.candidat.nom }}
+                            {{ candidat.candidat.prenom }}
+                            </div>
+                            <div class="Tarif-indicatif">
+                                <span>Tarif indicatif : </span>
+                                {% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+                                    <span class="fw-lighter">Base mensuel :</span>
+                                    <span class="mx-4 text-strong">{{ candidat.tarifCandidat.simulation.salaireNet|number_format(2, '.', '') }}
+                                        {{ candidat.tarifCandidat.simulation.devise.symbole }}
+                                    </span>
+                                    <span class="small">
+                                        <a href="{{ path('app_dashboard_employes_simulation_view', {'id' : candidat.tarifCandidat.simulation.id })}}" class="">
+                                            <i class="bi bi-box-arrow-up-right"></i>
+                                            Détails
+                                        </a>
+                                    </span>
+                                    {% else %}
+                                {% endif %} 
+                            </div>
+                        </div>
+                        <div class="TitreBlock">
+                            {{ candidat.titre }} <span class="vue_profil"><i class="bi bi-eye mr-1"></i>Votre profil a été vue 5 fois</span>
+                        </div>
+                        <div class="rating_block d-flex align-items-center">
+                            <div class="rating">
+                                <span data-value="1" class="selected">&#9733;</span>
+                                <span data-value="2" class="selected">&#9733;</span>
+                                <span data-value="3" class="selected">&#9733;</span>
+                                <span data-value="4">&#9733;</span>
+                                <span data-value="5">&#9733;</span>
+                            </div>
+                            <div class="rating_avis">
+                                <a href="{{ path('app_tableau_de_bord_candidat_se_faire_recommander')}}">5 avis</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-profils">
+                {% if candidat.cv is defined and candidat.cv is not null %}
+                    <a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="">Partager mon profil</a>
+                    <a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target="_blank">Voir mon CV</a>
+                {% endif %}
+                </div>
+            </div>	
+        </div>	
+        <div class="btn_divers mb-4 d-flex">
+            <div class="cv-pdf">
+                {% if candidat.cv is defined and candidat.cv is not null %}
+                    <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" title="Ouvrir" target="_blank">
+                        <i class="bi bi-filetype-pdf" style="font-size: 2rem;"></i>
+                        <span class="small fw-light">{{ candidat.cv }}</span>
+                    </a>
+                {% else %}
+                    <i class="bi bi-info-circle" style="font-size: 1.2rem; color: red;"></i>
+                    <span class="small fw-light">Vous n'avez pas encore envoyé de CV. <br>Veuillez télécharger votre CV pour améliorer vos chances de sélection.</span>
+                {% endif %}
+            </div>
+            <div class="boost-profil btn-custom_">
+                <a href="{{ path('app_tableau_de_bord_candidat_boost')}}">
+                    <img src="{{ asset('v2/images/dashboard/boost.svg')}}" alt="">
+                    Booter <span>mon profil</span>
+                </a>
+            </div>
+            <div class="recharge-credit btn-custom_">
+                <a href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">
+                    <img src="{{ asset('v2/images/dashboard/money.svg')}}" alt="">
+                    Recharger <span>mon credit</span>
+                </a>
+            </div>
+        </div>
+        <div class="biographie-profil mb-4 p-4">
+            <span class="fs-5 mb-3 fw-bold lh-base st-title">A propos de moi</span>
+            {{ candidat.resume|raw}}
+            <div class="btn-profils">
+                <a routerlink="{{ path('app_tableau_de_bord_candidat_mon_compte')}}" class="d-inline-block position-relative btn btn-primary btn-pdp" href="{{ path('app_tableau_de_bord_candidat_mon_compte')}}">Modifier mes informations</a>
+            </div>
+            <br/>
+            <span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
+            <div class="link-social">
+                {% if candidat.social.linkedin is defined and candidat.social.linkedin is not null %}
+                    <a routerlink="" href="{{ candidat.social.linkedin }}" target=_blank ><img src="{{ asset('v2/images/dashboard/linkedin.svg')}}" alt=""></a>
+                {% endif %}
+                {% if candidat.social.skype is defined and candidat.social.skype is not null %}
+                    <a routerlink="" href="{{ candidat.social.skype }}" target=_blank ><img src="{{ asset('v2/images/dashboard/skype.svg')}}" alt=""></a>
+                {% endif %}
+                {% if candidat.social.slack is defined and candidat.social.slack is not null %}
+                    <a routerlink="" href="{{ candidat.social.slack }}" target=_blank ><img src="{{ asset('v2/images/dashboard/slack.svg')}}" alt=""></a>
+                {% endif %}
+                {% if candidat.social.facebook is defined and candidat.social.facebook is not null %}
+                    <a routerlink="" href="{{ candidat.social.facebook }}" target=_blank ><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a>
+                {% endif %}
+                {% if candidat.social.instagram is defined and candidat.social.instagram is not null %}
+                    <a routerlink="" href="{{ candidat.social.instagram }}" target=_blank ><img src="{{ asset('v2/images/dashboard/instagram.svg')}}" alt=""></a>
+                {% endif %}
+                {% if candidat.social.github is defined and candidat.social.github is not null %}
+                    <a routerlink="" href="{{ candidat.social.github }}" target=_blank ><img src="{{ asset('v2/images/dashboard/github.svg')}}" alt=""></a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="d-md-flex mb-4 bp_">
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 mb-3 fw-bold lh-base st-title">Informations personnelles</span>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Nom complet</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ candidat.candidat.nom }}
+                        {{ candidat.candidat.prenom }}
+                    </div>
+                </div>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Adresse email</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ candidat.candidat.email }}
+                    </div>
+                </div>	
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Numéro de téléphone</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ candidat.candidat.telephone }}			
+                    </div>
+                </div>	
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Référence</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ generatePseudo(candidat) }}
+                    </div>
+                </div>	
+            </div>
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 fw-bold mb-3 lh-base st-title">Informations professionnelles</span>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Titre</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ candidat.titre }}
+                    </div>
+                </div>	
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Secteur(s) d'activité</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {% for secteur in candidat.secteurs %}
+                        <span class="badge bg-secteur">{{ secteur.nom }}</span>
+                        {% endfor %}
+                    </div>
+                </div>	
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Prétention salariale</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+                            <span class="fw-lighter">Base mensuel :</span>
+                            <span class="mx-4 text-strong">{{ candidat.tarifCandidat.simulation.salaireNet|number_format(2, '.', '') }}
+                                {{ candidat.tarifCandidat.simulation.devise.symbole }}
+                            </span>
+                            <span class="small">
+                                <a href="{{ path('app_dashboard_employes_simulation_view', {'id' : candidat.tarifCandidat.simulation.id })}}" class="">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                    Détails
+                                </a>
+                            </span>
+                            {% else %}
+                        {% endif %}
+                    </div>
+                </div>				
+            </div>
+        </div>
+        <div class="d-md-flex mb-4 bp_">
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 mb-3 fw-bold lh-base st-title">Experiences</span>
+                <div class="exp-block">
+                    {% if experiences|length > 0 %}
+                        {% for experience in experiences %}
+                            <div class="experience" data-experience-id="{{ experience.id }}">
+                                <span class="justify-content-between align-items-center">
+                                    {% if experience.enPoste %}
+                                        Depuis
+                                        {{ experience.dateDebut|date('M Y')}}
+                                    {% else %}
+                                        {{ experience.dateDebut|date('M Y')}}
+                                        -
+                                        {{ experience.dateFin|date('M Y')}}
+                                    {% endif %}
+                                </span>
+                                <p class="small d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <strong>{{ experience.nom }}</strong>
+                                        chez
+                                        <strong>{{ experience.entreprise }}</strong>
+                                        {% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
+                                            ({{ date_difference(experience.dateFin, experience.dateDebut) }})
+                                        {% endif %}
+
+                                    </span>
+                                </p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert fw-lighter" role="alert">
+                            <i class="bi bi-info-circle"></i>
+                            Aucune expérience renseignée.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 fw-bold mb-3 lh-base st-title">Compétences</span>
+                <div class="compt-block">
+                    {% if competences|length > 0 %}
+                        {% for competence in competences %}
+                            <div class="competence" data-competence-id="{{ competence.id }}">
+                                <p class="small">
+                                    {{ competence.nom }}
+                                    <span class="">
+                                        {% for i in 1..5 %}
+                                            {% if i <= competence.note %}
+                                                <i class="small bi bi-star-fill text-warning"></i>
+                                            {% else %}
+                                                <i class="small bi bi-star "></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert fw-lighter" role="alert">
+                            <i class="bi bi-info-circle"></i>
+                            Aucune expérience renseignée.
+                        </div>
+                    {% endif %}
+                </div>				
+            </div>
+        </div>
+        <div class="biographie-profil mb-4 p-4">
+            <span class="fs-5 mb-3 fw-bold lh-base st-title">Langue</span>
+            {% if langages|length > 0 %}
+                <div class="row">
+                    {% for langue in langages %}
+                        <div class="langue" data-langue-id="{{ langue.id }}">
+                            <p class="">
+                                {{ isoToEmoji(langue.langue.code) }}
+                                {{ langue.langue.nom }}
+                                {% for i in 1..5 %}
+                                    {% if i <= langue.niveau %}
+                                        <i class="small bi bi-star-fill text-warning"></i>
+                                    {% else %}
+                                        <i class="small bi bi-star "></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert fw-lighter" role="alert">
+                    <i class="bi bi-info-circle"></i>
+                    Aucune expérience renseignée.
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+{% endblock %}

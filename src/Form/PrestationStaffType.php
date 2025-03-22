@@ -120,6 +120,7 @@ class PrestationStaffType extends AbstractType
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
+                'required' => false,
                 'attr' => [
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'

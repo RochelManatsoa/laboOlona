@@ -1,0 +1,154 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Abonnement </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> tarifs </li>
+            </ol>
+        </div>
+    </section>
+    <section class="tarfis-container d-block p-5 mb-4">
+        <div class="wrapper-abonnement-c">
+            <div class="title-abonnement-c">
+                <h1>Boostez vos chances d’être recruté avec l’offre Premium Olona Talents !</h1>
+                <p>Sélectionnez la solution qui correspond le mieux à vos objectifs pour renforcer votre visibilité.</p>
+            </div>
+            <div class="item-abonnement-c">
+                <div class="heading-abonnement d-md-flex">
+                    <div class="heading-abonnement-item heading-abonnement-item-c">
+                        <div class="item-block-c">
+                            <h3>Pourquoi passer au Premium ?</h3>
+                            <p>Maximisez vos opportunités avec une visibilité prioritaire et l’accès illimité aux recruteurs.</p>
+                            <ul>
+                                <li>Postulez sans limite</li>
+                                <li>Soyez visible en priorité auprès des recruteurs</li>
+                                <li>Accédez aux recruteurs et aux entreprises sans restriction</li>
+                                <li>Recevez des offres ciblées dans votre secteur</li>
+                            </ul>
+                            <div class="legend_icon_">
+                                <span><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""> Inclus et illimité</span>
+                                <span><img src="{{ asset('images/dashboard/locked_icon.svg')}}" alt="" width="" height=""> Accessible avec Crédits (200 crédits offerts à l'inscription)</span>
+                                <span><img src="{{ asset('images/dashboard/remove.svg')}}" alt="" width="" height=""> Non accessible</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="heading-abonnement-item">
+                        <div class="heading-abonnement--item">
+                            <h2>Standard</h2>
+                            <p>Choisissez la solution si votre budget est limité</p>
+                            <div class="price_block">
+                                <span>A partir de</span>
+                                <div class="price_">0,00Ar <span>/jour</span></div>
+                            </div>
+                        </div>
+                        <div class="description-abonnement box-abonnement-standard">
+                            <ul>
+                                <li>Contrôle total de votre budget</li>
+                                <li>Gestion simplifiée des candidatures</li>
+                                <li>Solution optimisée pour les recruteurs individuels</li>
+                                <li>Gestion simplifiée des candidatures </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="heading-abonnement-item">
+                        <div class="heading-abonnement--item">
+                            <h2>Pro</h2>
+                            <p>Inclut l'accès à la CVthèque</p>
+                            <div class="price_block">
+                                <span>A partir de</span>
+                                <div class="price_">0,00Ar <span>/mois</span></div>
+                            </div>
+                        </div>
+                        <div class="description-abonnement box-abonnement-pro">
+                            <p>Notre formule d’abonnement mensuel vous propose des Crédits Pro pour publier autant d’annonces que vous le souhaitez et explorer notre base de données de profils qualifiés.</p>
+                            <p>Cette offre est sans engagement.</p>
+                        </div> 
+                    </div> 
+                </div>
+                <div class="box-abonnement-footer">
+                    <div class="item-other-include_ other-include_">
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Création de profil</li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                        <ul class=" d-md-flex align-items-center">
+                            <li>200 crédits offerts</li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Accès à la CVthèque</li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Accès aux offres d’emploi</li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Postuler aux offres</li>
+                            <li><img src="{{ asset('images/dashboard/locked_icon.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Boost Visibilité (Badge Premium sur le profil)</li>
+                            <li><img src="{{ asset('images/dashboard/locked_icon.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Accès aux coordonnées des recruteurs/entreprises</li>
+                            <li><img src="{{ asset('images/dashboard/locked_icon.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Accès au simulateur de salaire</li>
+                            <li><img src="{{ asset('images/dashboard/locked_icon.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Mise en avant sur Facebook (60K audience)</li>
+                            <li><img src="{{ asset('images/dashboard/remove.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                        <ul class=" d-md-flex align-items-center">
+                            <li>Support prioritaire</li>
+                            <li><img src="{{ asset('images/dashboard/remove.svg')}}" alt="" width="" height=""></li>
+                            <li><img src="{{ asset('images/dashboard/check.svg')}}" alt="" width="" height=""></li>
+                        </ul>
+                    </div>
+                    <div class="btn-other-include_ d-md-flex align-items-enter">
+                        <div class="item-other-include_">
+                            <h3>Passez au Premium et augmentez vos opportunités dès maintenant !</h3>
+                        </div>
+                        <div class="item-other-include_">
+                            <a class="btn btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs_standard')}}">Je booste ma visibilité</a>
+                        </div>
+                        <div class="item-other-include_">
+                            <a class="btn btn-primary" href="">Je booste ma visibilité</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -4,9 +4,11 @@ namespace App\Repository\BusinessModel;
 
 use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\BusinessModel\PurchasedContact;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use phpDocumentor\Reflection\Types\Boolean;
+use App\Entity\BusinessModel\PurchasedContact;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<PurchasedContact>
@@ -18,7 +20,7 @@ use phpDocumentor\Reflection\Types\Boolean;
  */
 class PurchasedContactRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, PurchasedContact::class);
     }
@@ -42,5 +44,20 @@ class PurchasedContactRepository extends ServiceEntityRepository
         }
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function paginateContactsByBuyer(User $currentUser, int $page = 1): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('pc')
+            ->where('pc.buyer = :buyer')
+            ->setParameter('buyer', $currentUser)
+            ->orderBy('pc.id', 'DESC');
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            10,
+            []
+        );
     }
 }

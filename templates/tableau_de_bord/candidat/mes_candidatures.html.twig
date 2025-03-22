@@ -1,0 +1,82 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Mes candidatures </h5>
+            </div>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Mes candidatures </li>
+        </ol>
+    </div>
+</section>
+<section class="detail_db d-md-flex bp_">
+    <div class="biographie-profil mb-4 p-4">
+        <div class="mission-list-title canditature_list d-lg-flex align-items-center justify-content-between">
+            <div class="pr-4">
+                <h1>Retrouvez à tout moment vos candidatures</h1>
+                <p>Le suivi de leur statut, ainsi que l’historique des offres auxquelles vous avez postulé. Les candidatures archivées regroupent vos candidatures sur des offres expirées.</p>
+            </div>
+            <a href="{{ path('app_tableau_de_bord_candidat_trouver_des_missions')}}" class="btn btn-primary btn-lg fw-semibold text-uppercase">
+                Trouvez des missions
+            </a>
+        </div>
+        {% set tableClass = 'table' %}
+        {% if candidatures|length > 0 %}
+        <div class="table-responsive">
+            <table class="{{ tableClass }}">
+                <thead>
+                    <tr>
+                        <td scope="col" class="h5">{{ knp_pagination_sortable(candidatures, 'Annonce', 'j.titre') }}</td>
+                        <td scope="col" class="h5">{{ knp_pagination_sortable(candidatures, 'Status', 'a.status') }}</td>
+                        <td scope="col" class="h5">{{ knp_pagination_sortable(candidatures, 'Deposé le', 'a.dateCandidature') }}</td>
+                        {# <td scope="col" class=""></td> #}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in candidatures %}
+                        <tr id="row_candidature_{{item.id}}">
+                            <td class="">
+                                {{ item.annonce.titre }}
+                            </td>
+                            <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
+                                {{ item.labels[item.status]|raw }}
+                            </td>
+                            <td class="col-2">{{ item.dateCandidature|date('d/m/Y') }}</td>
+                            {# <td class="col-2">
+                                <a href="#" class="btn btn-sm btn-secondary rounded-pill">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <form method="POST" action="{{ path('app_v2_delete_prestation')}}">
+                                    <input type="hidden" name="prestationId" value="{{item.id}}">
+                                    <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette prestation?');" class="btn btn-sm btn-danger rounded-pill">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td> #}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation mt-5">
+                {{ knp_pagination_render(candidatures, 'parts/_pagination.html.twig') }}
+            </div>
+        </div>
+        {% else %}
+            <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                <p class="text-center">Vous n'avez pas encore de candidatures.</p>
+            </div>
+        {% endif %}  
+    </div>
+</section>
+{% endblock %}

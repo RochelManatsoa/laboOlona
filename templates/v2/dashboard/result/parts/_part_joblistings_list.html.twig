@@ -1,9 +1,9 @@
 {% if joblistings_boost is defined %}
 {% include "v2/result/boost/annonces.html.twig" %}
 {% endif %}
-<div class="card position-relative text-center d-none d-md-block">
-    <a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
-        <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-horizontal.webp')}}">
+{#<div class="card position-relative text-center d-none d-md-block">
+    <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+        <img class="img-fluid" src="{{ asset('images/pubs/espace-pub-horizontal-regard-beauty-_1_.webp')}}">
     </a>
 </div>
 
@@ -11,57 +11,63 @@
     <a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
         <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
     </a>
+</div>#}
+<div class="jobs-list-wrap">
+		{% for job in joblistings %}
+		<article class="article-item_">
+			<div class="row">
+				<div class="col-md-2 aside-left-item_">
+					<a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
+				</div>
+				<div class="col-md-10 aside-right-item_">
+					<div class="detail_annonce_">
+						<h2>
+							{% if app.user %}
+								<a href="{{ path('app_tableau_de_bord_candidat_view_job_offer', {'id': job.id })}}" class="btn-primary">
+									{{ job.titre }}
+								</a>
+							{% else %}
+								<span style="cursor:pointer;" class="annonce-link" data-id="{{ job.id }}">{{ job.titre }}</span>
+							{% endif %}
+							<span class="type_contact_">{{ job.typeContrat }}</span>
+						</h2>
+						<h3><a href="" class="btn-primary">SOCIETE</a></h3>
+						<div class="description_courte_">
+							{{ job.shortDescription|raw }}
+						</div>
+						<div class="info_publication_">
+							<span class="small fw-light">
+								<span class="badge rounded-pill px-2 text-bg-danger">Validée</span>
+								<span class="badge rounded-pill px-2 text-bg-success">Ouvert</span>
+								<span class="small text-center mx-2">|</span>
+								<span class="">Publié
+									{{ job.dateCreation|date('d/m/Y') }}</span>
+								<span class="small text-center mx-2">|</span>
+								<i class="bi bi-eye"></i> {{ job.annonceVues|length }} vues
+								<span class="small text-center mx-2">|</span>
+								<i class="mx-2 bi bi-person-workspace"></i> {{ job.applications|length }} offres
+							</span>
+						</div>
+						{#<div class="d-flex ms-auto small">
+							{% if app.user %}
+								<a class="btn btn-sm btn-primary rounded-pill px-3 me-2" href="{{ path('app_tableau_de_bord_candidat_view_job_offer', {'id': job.id })}}">Plus de details</a>
+							{% else %}
+								<div class="d-none d-md-block">
+									<button class="btn btn-sm btn-primary rounded-pill px-3 me-2 annonce-link" type="button" data-id="{{ job.id }}">Plus de details</button>
+								</div>
+								
+								<div class="d-block d-md-none">
+									<button type="button" class="btn btn-outline-primary btn-sm rounded fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_job_offer_view', {'id':job.id}) }}">Plus de détails</button>
+								</div>
+							{% endif %}
+						</div>#}
+					</div>
+				</div>
+			</div>
+		</article>
+		<span data-annonce="{{ job.id }}" style="display:none">
+			{% include "v2/preview/_prev_joblistings.html.twig" %}
+		</span>
+		{% endfor %}
 </div>
 
-{% for job in joblistings %}
-	<div class="card my-3 small px-3 px-sm-5 py-4">
-		<h2 class="fs-6">
-			{% if app.user %}
-				<a href="{{ path('app_v2_candidate_view_job_offer', {'id': job.id })}}">
-					{{ job.titre }}
-				</a>
-			{% else %}
-				<span style="cursor:pointer;" class="annonce-link" data-id="{{ job.id }}">{{ job.titre }}</span>
-			{% endif %}
-		</h2>
-		<div class="small">
-			{{ job.shortDescription|raw }}
-		</div>
-		<div class="small">
-			<p class="small fw-light">
-				<span class="badge bg-info rounded-pill px-2">{{ job.typeContrat }}</span>
-				<span class="small text-center mx-2">|</span>
-				<i class="bi bi-hourglass-split"></i>
-				Publiée le
-				{{ job.dateCreation|date('d/m/Y') }}
-				<span class="small text-center mx-2">|</span>
-				<i class="bi bi-eye"></i>
-				{{ job.annonceVues|length }}
-				vues
-				<span class="small text-center mx-2">|</span>
-				<i class="bi bi-bookmark-check"></i>
-				{{ job.applications|length }}
-				offres
-			</p>
-		</div>
-		<div class="d-flex ms-auto small">
-			{% if app.user %}
-				<a class="btn btn-sm btn-primary rounded-pill px-3 me-2" href="{{ path('app_v2_candidate_view_job_offer', {'id': job.id })}}">Plus de details</a>
-			{% else %}
-				<div class="d-none d-md-block">
-					<button class="btn btn-sm btn-primary rounded-pill px-3 me-2 annonce-link" type="button" data-id="{{ job.id }}">Plus de details</button>
-				</div>
-				
-				<div class="d-block d-md-none">
-					<button type="button" class="btn btn-outline-primary btn-sm rounded fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_job_offer_view', {'id':job.id}) }}">Plus de détails</button>
-				</div>
-			{% endif %}
-		</div>
-		<div class="">
-        	<span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill"><i class="bi bi-tags"></i> {{ job.secteur.nom}}</span>
-		</div>
-	</div>
-	<span data-annonce="{{ job.id }}" style="display:none">
-		{% include "v2/preview/_prev_joblistings.html.twig" %}
-	</span>
-{% endfor %}
