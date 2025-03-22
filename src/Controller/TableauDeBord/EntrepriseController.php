@@ -49,6 +49,7 @@ use App\Repository\BusinessModel\PackageRepository;
 use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\BusinessModel\PurchasedContactRepository;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -62,6 +63,7 @@ class EntrepriseController extends AbstractController
         private UserService $userService,
         private CreditManager $creditManager,
         private ActivityLogger $activityLogger,
+        private MailerService $mailerService,
     ){}
 
     #[Route('/', name: 'app_tableau_de_bord_entreprise')]
@@ -494,21 +496,21 @@ class EntrepriseController extends AbstractController
             $transactionManager->save($transaction);
 
             /** On envoi un mail */
-            // $this->mailerService->sendMultiple(
-            //     ["contact@olona-talents.com", "admin@olona-talents.com", "aolonaprodadmi@gmail.com"],
-            //     "Paiement sur Olona Talents",
-            //     "notification_paiement.html.twig",
-            //     [
-            //         'user' => $currentUser,
-            //         'transaction' => $transaction,
-            //         'order' => $order,
-            //         'dashboard_url' => $this->generateUrl('app_dashboard_moderateur_business_model_transaction_view', [
-            //             'transaction' => $transaction->getId(),
-            //         ], UrlGeneratorInterface::ABSOLUTE_URL),
-            //     ]
-            // );
+            $this->mailerService->sendMultiple(
+                ["contact@olona-talents.com", "admin@olona-talents.com", "aolonaprodadmi@gmail.com"],
+                "Paiement sur Olona Talents",
+                "notification_paiement.html.twig",
+                [
+                    'user' => $currentUser,
+                    'transaction' => $transaction,
+                    'order' => $order,
+                    'dashboard_url' => $this->generateUrl('app_dashboard_moderateur_business_model_transaction_view', [
+                        'transaction' => $transaction->getId(),
+                    ], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
             
-            return $this->redirectToRoute('app_v2_user_order');
+            return $this->redirectToRoute('app_tableau_de_bord_entreprise_mes_commandes');
         }
         $params['status'] = 'Succès';
         $params['order'] = $order;

@@ -284,14 +284,55 @@
             </div>
             <div class="col-lg-4">
                 <div class="biographie-profil mb-4 p-4">
-                    {#Aperçu du CV#}
                     <div class="cv_affichage">
-                        affiche d'appercu du CV
+                    {% if entreprise.isIsPremium %}
+                        <h4 class="fs-5 text-uppercase">CV</h4>
+                        <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target=_blank class="btn btn-outline-primary text-upercase fw-semibold">
+                            <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+                        </a>
+                    {% else %}
+                        {% if candidat.editedCvs|length > 0 %}
+                        <h4 class="fs-5 text-uppercase">CV</h4>
+                        <button type="button" class="btn btn-outline-primary text-upercase fw-semibold" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+                        </button>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                </div>
+                <div class="m-4 card position-relative text-center d-block d-md-none">
+                    <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                        <img class="img-fluid" src="{{ asset('images/pubs/espace-pub-carre-regard-beauty.webp')}}">
+                    </a>
+                </div>
+                <div class="pub_veticales mt-4 pt-1">
+                    <a href="">
+                        <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                    </a>
+                </div>
+                <div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
+                    <h4 class="title">Recrutement</h4>
+                    <p>Obtenez les emplois les mieux adaptés à vos besoins <br>
+                    Ajoutez votre CV MAINTENANT !</p>
+                    <div class="btn-signUp">
+                        <a href="" class="btn btn-primary white">En savoir plus</a> 
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    {% if candidat.editedCvs|length > 0 and candidat.editedCvs[candidat.editedCvs|length -1] is defined and candidat.editedCvs[candidat.editedCvs|length -1] is not null %}
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-body">
+            <iframe class="embed-responsive-item w-100" style="height: 600px;" src="{{ asset('uploads/cv/olona/' ~ candidat.editedCvs[candidat.editedCvs|length -1].cvLink) }}" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
     {% include "/tableau_de_bord/layout/_credit_modal_entreprise.html.twig" %}
 {% endblock %}

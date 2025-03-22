@@ -7,6 +7,9 @@ use App\Entity\Prestation;
 use App\Twig\AppExtension;
 use App\Entity\Notification;
 use App\Form\PrestationType;
+use App\Data\QuerySearchData;
+use App\Entity\Finance\Devise;
+use App\Twig\FinanceExtension;
 use App\Manager\ProfileManager;
 use App\Service\ActivityLogger;
 use App\Entity\Logs\ActivityLog;
@@ -15,21 +18,29 @@ use App\Service\User\UserService;
 use App\Twig\PrestationExtension;
 use App\Manager\JobListingManager;
 use App\Manager\PrestationManager;
+use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\Credit;
 use App\Form\ChangePasswordFormType;
+use App\Entity\BusinessModel\Package;
 use App\Entity\Entreprise\JobListing;
+use App\Form\BusinessModel\OrderType;
 use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Candidat\ApplicationsType;
 use App\Security\Voter\PrestationVoter;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\BusinessModel\Transaction;
 use App\Form\TableauDeBord\AssistanceType;
+use App\Form\BusinessModel\TransactionType;
+use App\Manager\BusinessModel\OrderManager;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Repository\Finance\DeviseRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Manager\BusinessModel\TransactionManager;
 use App\Repository\BusinessModel\PackageRepository;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -47,6 +58,7 @@ class CandidatController extends AbstractController
         private CandidatManager $candidatManager,
         private UrlGeneratorInterface $urlGenerator,
         private ActivityLogger $activityLogger,
+        private MailerService $mailerService,
     ){}
 
 
@@ -233,9 +245,104 @@ class CandidatController extends AbstractController
     }
 
     #[Route('/pack-standard', name: 'app_tableau_de_bord_candidat_tarifs_standard')]
-    public function standard(): Response
+    public function standard(PackageRepository $packageRepository, DeviseRepository $deviseRepository): Response
     {
-        return $this->render('tableau_de_bord/candidat/tarifs_standard.html.twig', $this->getData());
+        $params = $this->getData();
+        $params['packages'] = $packageRepository->findBy(['type' => 'CREDIT'], ['id' => 'DESC']);
+        $params['devise'] = $deviseRepository->findOneBy(['slug' => 'euro']);
+
+        return $this->render('tableau_de_bord/candidat/tarifs_standard.html.twig', $params);
+    }
+
+    #[Route('/credit/{slug}', name: 'app_tableau_de_bord_candidat_credit')]
+    public function credit(Package $package, OrderManager $orderManager, Request $request, FinanceExtension $financeExtension): Response
+    {
+        $params = $this->getData();
+        $params['package'] = $package;
+        /** @var Devise $devise */
+        $devise = $this->em->getRepository(Devise::class)->findOneBy([
+            'slug' => 'euro'
+        ]);
+        $order = $orderManager->init();
+        $order->setPackage($package);
+        $order->setCurrency($devise);
+        $order->setTotalAmount($financeExtension->convertToEuro($package->getPrice(), $devise));
+        $form = $this->createForm(OrderType::class, $order);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $order = $orderManager->saveForm($form);
+            
+            return $this->redirectToRoute('app_tableau_de_bord_candidat_mobile_money_checkout', [
+                'orderNumber' => $order->getOrderNumber()
+            ]);
+        } 
+        $params['devise'] = $devise;
+        $params['form'] = $form->createView();
+        $params['price'] = $financeExtension->convertToEuro($package->getPrice(), $devise);
+        
+        return $this->render('tableau_de_bord/candidat/credit.html.twig', $params);
+    }
+
+    #[Route('/mobile-money/{orderNumber}', name: 'app_tableau_de_bord_candidat_mobile_money_checkout')]
+    public function mobileMoney(Order $order, Request $request, TransactionManager $transactionManager): Response
+    {
+        $params = $this->getData();
+        $currentUser = $params['currentUser'];
+        $mobileMoney = $order->getPaymentMethod();
+        $transaction = $order->getTransaction();
+        if(!$transaction instanceof Transaction){
+            $transaction = $transactionManager->init();
+            $transaction->setCommand($order);
+        }
+        $transaction->setTypeTransaction($mobileMoney);
+        $transaction->setCommand($order);
+        $form = $this->createForm(TransactionType::class, $transaction);
+        $form->handleRequest($request);
+        $this->activityLogger->logPageViewActivity($currentUser, '/mobile-money/_order');
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $transaction = $form->getData();
+            $command = $form->getData()->getCommand();
+            $command->setStatus(Order::STATUS_PROCESSING);
+            $transaction->setPackage($command->getPackage());
+            $transaction->setUpdatedAt(new \DateTime());
+            $transaction->setStatus(Transaction::STATUS_PROCESSING);
+            $transactionManager->save($transaction);
+
+            /** On envoi un mail */
+            $this->mailerService->sendMultiple(
+                ["contact@olona-talents.com", "admin@olona-talents.com", "aolonaprodadmi@gmail.com"],
+                "Paiement sur Olona Talents",
+                "notification_paiement.html.twig",
+                [
+                    'user' => $currentUser,
+                    'transaction' => $transaction,
+                    'order' => $order,
+                    'dashboard_url' => $this->generateUrl('app_dashboard_moderateur_business_model_transaction_view', [
+                        'transaction' => $transaction->getId(),
+                    ], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
+            
+            return $this->redirectToRoute('app_v2_user_order');
+        }
+        $params['status'] = 'Succès';
+        $params['order'] = $order;
+        $params['payment'] = true;
+        $params['mobileMoney'] = $mobileMoney;
+        $params['form'] = $form->createView();
+
+        return $this->render('tableau_de_bord/candidat/paiement.html.twig', $params);
+    }
+    
+    #[Route('/mes-commandes', name: 'app_tableau_de_bord_candidat_mes_commandes')]
+    public function orders(): Response
+    {
+        $params = $this->getData();
+        $params['orders'] = $this->em->getRepository(Order::class)->filterByUser(new QuerySearchData);
+
+        return $this->render('tableau_de_bord/candidat/mes_commandes.html.twig', $params);
     }
 
     #[Route('/reseaux-professionnelles', name: 'app_tableau_de_bord_candidat_reseaux_professionnelles')]
@@ -343,15 +450,6 @@ class CandidatController extends AbstractController
         $params['form'] = $form->createView();
         
         return $this->render('tableau_de_bord/candidat/assistance.html.twig', $params);
-    }
-
-    #[Route('/credit', name: 'app_tableau_de_bord_candidat_credit')]
-    public function credit(PackageRepository $packageRepository): Response
-    {
-        $params = $this->getData();
-        $params['packages'] = $packageRepository->findBy(['type' => 'CREDIT'], ['id' => 'DESC']);
-        
-        return $this->render('tableau_de_bord/candidat/credit.html.twig', $params);
     }
 
     #[Route('/boost', name: 'app_tableau_de_bord_candidat_boost')]

@@ -4,7 +4,6 @@ namespace App\Entity\Candidate;
 
 use App\Entity\CandidateProfile;
 use App\Entity\Entreprise\JobListing;
-use App\Entity\Enum\StatusApplication;
 use App\Entity\Moderateur\Assignation;
 use App\Repository\Candidate\ApplicationsRepository;
 use Doctrine\DBAL\Types\Types;
@@ -27,6 +26,16 @@ class Applications
             'Archivée' => self::STATUS_ARCHIVED ,
             'Acceptée' => self::STATUS_ACCEPTED ,
             'Rendez-vous' => self::STATUS_METTING ,
+        ];
+    }
+
+    public static function getLabels() {
+        return [
+             self::STATUS_PENDING => '<span class="badge bg-primary">En attente</span>',
+             self::STATUS_REJECTED => '<span class="badge bg-danger">Non retenues</span>',
+             self::STATUS_ARCHIVED => '<span class="badge bg-secondary">Archivée</span>',
+             self::STATUS_ACCEPTED => '<span class="badge bg-success">Acceptée</span>',
+             self::STATUS_METTING => '<span class="badge bg-warning">Rendez-vous</span>',
         ];
     }
 

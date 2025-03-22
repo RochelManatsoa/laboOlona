@@ -39,7 +39,7 @@
                         <td scope="col" class="h5">{{ knp_pagination_sortable(candidatures, 'Annonce', 'j.titre') }}</td>
                         <td scope="col" class="h5">{{ knp_pagination_sortable(candidatures, 'Status', 'a.status') }}</td>
                         <td scope="col" class="h5">{{ knp_pagination_sortable(candidatures, 'Deposé le', 'a.dateCandidature') }}</td>
-                        <td scope="col" class=""></td>
+                        {# <td scope="col" class=""></td> #}
                     </tr>
                 </thead>
                 <tbody>
@@ -49,10 +49,10 @@
                                 {{ item.annonce.titre }}
                             </td>
                             <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
-                                {{ item.status|raw }}
+                                {{ item.labels[item.status]|raw }}
                             </td>
                             <td class="col-2">{{ item.dateCandidature|date('d/m/Y') }}</td>
-                            <td class="col-2">
+                            {# <td class="col-2">
                                 <a href="#" class="btn btn-sm btn-secondary rounded-pill">
                                     <i class="bi bi-eye"></i>
                                 </a>
@@ -62,7 +62,7 @@
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
-                            </td>
+                            </td> #}
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -71,7 +71,12 @@
                 {{ knp_pagination_render(candidatures, 'parts/_pagination.html.twig') }}
             </div>
         </div>
-        {% endif %}
+        {% else %}
+            <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                <p class="text-center">Vous n'avez pas encore de candidatures.</p>
+            </div>
+        {% endif %}  
     </div>
 </section>
 {% endblock %}
