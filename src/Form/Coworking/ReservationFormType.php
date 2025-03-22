@@ -6,9 +6,6 @@ use App\Entity\Coworking\Reservation;
 use Symfony\Component\Form\AbstractType;
 use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\IsTrue;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -65,7 +62,7 @@ class ReservationFormType extends AbstractType
             ->add('private', CheckboxType::class, [
                 'mapped' => false,
                 'label' => 'Je souhaite privatiser',
-                'required' => true,
+                'required' => false,
                 'row_attr' => ['class' => 'd-flex align-items-center'], // Flexbox pour aligner
                 'label_attr' => ['class' => 'ms-2 text-white'], 
             ])

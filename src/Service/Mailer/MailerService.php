@@ -35,7 +35,8 @@ class MailerService
         string $subject,
         string $template,
         array $context,
-        string $from = ''
+        string $from = '',
+        string $replyTo = '',
     ): void
     {
         $email = new TemplatedEmail();
@@ -46,17 +47,19 @@ class MailerService
         } else {
             $env = '[Preprod] Olona Talents';
             $email->to('support@olona-talents.com'); 
-            $email->addTo('jrandriamalala.olona@gmail.com');
             $email->addTo('miandrisoa.olona@gmail.com');
             $email->addTo('contact@olona-talents.com');
         }
-        $email 
-            ->from(new Address($sender, $env))
-            ->replyTo('contact@olona-talents.com')
-            ->subject($subject)
+        $email->from(new Address($sender, $env));
+        if ($replyTo !== '') {
+            $email->replyTo($replyTo);
+        }else{
+            $email->replyTo('contact@olona-talents.com');
+        }
+        $email->subject($subject)
             ->htmlTemplate("mails/$template")
             ->context($context)
-            ;
+        ;
 
         try{
 
@@ -84,7 +87,6 @@ class MailerService
         } else {
             $env = '[Preprod] Olona Talents';
             $email->to('support@olona-talents.com'); 
-            $email->addTo('jrandriamalala.olona@gmail.com');
             $email->addTo('contact@olona-talents.com');
             $email->addTo('miandrisoa.olona@gmail.com');
         }

@@ -39,28 +39,16 @@ class ReservationRepository extends ServiceEntityRepository
         );
     }
 
-//    /**
-//     * @return Reservation[] Returns an array of Reservation objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findLatestReservationByUniqueEmail()
+    {
+        $subQuery = $this->createQueryBuilder('sub')
+            ->select('MAX(sub.id)')
+            ->groupBy('sub.email');
 
-//    public function findOneBySomeField($value): ?Reservation
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $this->createQueryBuilder('r')
+            ->select('r') 
+            ->where('r.id IN (' . $subQuery->getDQL() . ')')
+            ->getQuery()
+            ->getResult();
+    }
 }

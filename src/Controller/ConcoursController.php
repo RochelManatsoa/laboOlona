@@ -41,6 +41,12 @@ class ConcoursController extends AbstractController
         private CreditManager $creditManager,
     ) {}
 
+    #[Route('/', name: 'app_concours_facebook')]
+    public function contest(Request $request): Response
+    {
+        return $this->render('concours/concours.html.twig', []);
+    }
+
     #[Route('/etape-1', name: 'app_concours_etape_1', options: ['sitemap' => true])]
     public function stepOne(
         Request $request,
@@ -49,6 +55,7 @@ class ConcoursController extends AbstractController
         UserPasswordHasherInterface $userPasswordHasher,
     ): Response
     {
+        return $this->redirectToRoute('app_concours_facebook');
         $this->requestStack->getSession()->set('fromPath', 'app_concours_etape_2');
         $user = new User();
         $user->setDateInscription(new \DateTime());
@@ -99,6 +106,7 @@ class ConcoursController extends AbstractController
     #[Route('/etape-2', name: 'app_concours_etape_2')]
     public function stepTwo(Request $request): Response
     {
+        return $this->redirectToRoute('app_concours_facebook');
         if (!$this->checkUser()) {
             return $this->redirectToRoute('app_concours_etape_1');
         }
@@ -132,6 +140,7 @@ class ConcoursController extends AbstractController
     #[Route('/etape-3', name: 'app_concours_etape_3')]
     public function stepThree(Request $request): Response
     {
+        return $this->redirectToRoute('app_concours_facebook');
         if (!$contestEntry = $this->getContestEntryOrRedirect()) {
             return $contestEntry;
         }
@@ -187,6 +196,7 @@ class ConcoursController extends AbstractController
         UrlGeneratorInterface $urlGenerator,
     ): Response
     {
+        return $this->redirectToRoute('app_concours_facebook');
         if (!$contestEntry = $this->getContestEntryOrRedirect()) {
             return $contestEntry;
         }
@@ -239,6 +249,7 @@ class ConcoursController extends AbstractController
     #[Route('/confirmation', name: 'app_concours_confirmation')]
     public function confirmation(): Response
     {
+        return $this->redirectToRoute('app_concours_facebook');
         return $this->render('concours/confirmation.html.twig');
     }
 

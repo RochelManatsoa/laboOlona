@@ -274,7 +274,7 @@ class JobOfferController extends AbstractController
                     'candidat' => $candidat,
                     'objet' => "mise à jour",
                     'details_annonce' => $annonce,
-                    'dashboard_url' => $this->urlGeneratorInterface->generate('app_dashboard_moderateur_candidature_annonce_view_default', ['id' => $annonce->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    'dashboard_url' => $this->urlGeneratorInterface->generate('app_v2_recruiter_view_profile', ['id' => $candidat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
                 ]
             );
 

@@ -37,12 +37,13 @@
                         <th>{{ knp_pagination_sortable(job_listings, '#', 'j.id') }}</th>
                         <th>{{ knp_pagination_sortable(job_listings, 'Titre', 'j.titre') }}</th>
                         <th>{{ knp_pagination_sortable(job_listings, 'Status', 'j.status') }}</th>
-                        <th>{{ knp_pagination_sortable(job_listings, 'Offres', 'j.applications|length') }}</th>
+                        <th>{{ knp_pagination_sortable(job_listings, 'Offres', 'applicationCount') }}</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for job_listing in job_listings %}
+                {% for item in job_listings %}
+                {% set job_listing = item[0] %}
                     <tr>
                         <td>{{ job_listing.id }}</td>
                         <td>{{ job_listing.titre }}<br><span class="small text-muted">Créé le {{ job_listing.dateCreation|date('d/m/Y') }}</span></td>

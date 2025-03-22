@@ -510,16 +510,22 @@ class CandidateProfileRepository extends ServiceEntityRepository
             $queryBuilder->expr()->eq('c.status', ':statusFeatured')
         );
 
+        $generatedCondition = $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->eq('c.isGeneretated', ':isGenerated'),
+            $queryBuilder->expr()->isNull('c.isGeneretated')
+        );
+
         $query = $queryBuilder
-            ->andWhere('c.isGeneretated = :isGenerated')
+            ->andWhere($generatedCondition)
             ->andWhere($orConditions)
+            ->andWhere('c.cv IS NOT NULL') 
             ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
             ->setParameter('statusFeatured', CandidateProfile::STATUS_FEATURED)
             ->setParameter('isGenerated', false)
             ->setMaxResults(6)
             ->orderBy('c.id', 'DESC')
             ->getQuery();
-            
+
         return $query->getResult();
     }
 

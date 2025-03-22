@@ -10,6 +10,7 @@ use App\Form\Coworking\ContractType;
 use App\Entity\BusinessModel\Package;
 use App\Entity\Coworking\Reservation;
 use App\Entity\Moderateur\ContactForm;
+use App\Manager\Marketing\LeadManager;
 use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Coworking\ReservationFormType;
@@ -17,6 +18,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\Coworking\EventRepository;
 use App\Repository\Coworking\PlaceRepository;
 use Symfony\Component\HttpFoundation\Request;
+use App\Repository\Marketing\SourceRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Coworking\CategoryRepository;
@@ -39,12 +41,16 @@ class MainController extends AbstractController
         EntityManagerInterface $entityManager,
         MailManager $mailManager,
         Security $security,
-        Request $request
+        Request $request,
+        LeadManager $leadManager,
+        SourceRepository $sourceRepository
     ): Response
     {
         if($this->isGranted('ROLE_ADMIN')){
             return $this->redirectToRoute('app_main_agenda');
         }
+        $sourceContact = $sourceRepository->findOneBy(['slug' => 'formulaire-de-contact-site-olona-talents']);
+        $sourceCoworking = $sourceRepository->findOneBy(['slug' => 'formulaire-de-contact-site-coworking']);
         $selectedDate = $request->query->get('date', 'today');
         $today = new \DateTime('today');
         $tomorrow = new \DateTime('tomorrow');
@@ -84,6 +90,13 @@ class MainController extends AbstractController
         $contactForm->handleRequest($request);
         if ($contactForm->isSubmitted() && $contactForm->isValid()) {
             $contact = $contactForm->getData();
+            $lead = $leadManager->init();
+            $lead->setSource($sourceContact);
+            $lead->setComment('Formulaire de contact - '.$contact->getMessage());
+            $lead->setFullName($contact->getTitre());
+            $lead->setEmail($contact->getEmail());
+            $lead->setPhone($contact->getNumero());
+            $leadManager->save($lead);
             $entityManager->persist($contact);
             $entityManager->flush();
             $mailManager->contactForm($contact);
@@ -101,6 +114,13 @@ class MainController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             $resa = $form->getData();
+            $lead = $leadManager->init();
+            $lead->setSource($sourceCoworking);
+            $lead->setComment('Formulaire de reservation - '.$resa->getDescription());
+            $lead->setFullName($resa->getFullName());
+            $lead->setEmail($resa->getEmail());
+            $lead->setPhone($resa->getPhone());
+            $leadManager->save($lead);
             $entityManager->persist($resa);
             $entityManager->flush();
             $mailManager->reservationEnLigne($resa);

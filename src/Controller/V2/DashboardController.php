@@ -6,13 +6,13 @@ use App\Entity\User;
 use App\Form\V2\AccountType;
 use App\Form\V2\ProfileType;
 use App\Entity\AffiliateTool;
-use App\Entity\AffiliateTool\Category;
-use App\Entity\AffiliateTool\Tag;
 use App\Form\V2\CandidateType;
 use App\Form\V2\RecruiterType;
 use App\Manager\ProfileManager;
+use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
 use App\Manager\CandidatManager;
+use App\Entity\AffiliateTool\Tag;
 use App\Entity\EntrepriseProfile;
 use App\Entity\ModerateurProfile;
 use App\Entity\Vues\CandidatVues;
@@ -22,7 +22,9 @@ use App\Entity\Formation\Playlist;
 use App\Manager\NotificationManager;
 use App\Manager\AffiliateToolManager;
 use App\Service\Mailer\MailerService;
+use App\Entity\AffiliateTool\Category;
 use App\Entity\Moderateur\ContactForm;
+use App\Manager\Marketing\LeadManager;
 use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AffiliateToolRepository;
@@ -34,13 +36,13 @@ use App\Entity\BusinessModel\BoostVisibility;
 use App\Repository\Formation\VideoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
+use App\Repository\Marketing\SourceRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Formation\PlaylistRepository;
 use App\Form\Search\AffiliateTool\ToolSearchType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Manager\BusinessModel\BoostVisibilityManager;
-use App\Service\ActivityLogger;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -319,10 +321,15 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/contact', name: 'app_v2_contact')]
-    public function support(Request $request): Response
+    public function support(
+        Request $request,
+        LeadManager $leadManager,
+        SourceRepository $sourceRepository
+    ): Response
     {
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
+        $sourceEntreprise = $sourceRepository->findOneBy(['slug' => 'formulaire-de-contact-site-olona-talents']);
         $hasProfile = $this->userService->checkUserProfile($currentUser);
         if($hasProfile === null){
             return $this->redirectToRoute('app_v2_dashboard');
@@ -333,6 +340,14 @@ class DashboardController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $contactForm = $form->getData();
+            $lead = $leadManager->init();
+            $lead->setSource($sourceEntreprise);
+            $lead->setComment('Formulaire de contact - '.$contactForm->getMessage());
+            $lead->setFullName($contactForm->getTitre());
+            $lead->setEmail($contactForm->getEmail());
+            $lead->setPhone($contactForm->getNumero());
+            $lead->setUser($currentUser);
+            $leadManager->save($lead);
             $this->em->persist($contactForm);
             $this->em->flush();
             $this->mailerService->sendMultiple(

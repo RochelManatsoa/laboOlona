@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Blog\Post;
 use App\Entity\Coworking\Contract;
 use App\Entity\Facebook\ContestEntry;
+use App\Entity\Marketing\Lead;
 use App\Entity\Vues\VideoVues;
 use Doctrine\DBAL\Types\Types;
 use App\Entity\Coworking\Event;
@@ -197,6 +198,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ContestEntry::class)]
     private Collection $contestEntries;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Lead::class)]
+    private Collection $leads;
+
     public function __construct()
     {
         $this->dateInscription = new \DateTime();
@@ -214,6 +218,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->posts = new ArrayCollection();
         $this->contracts = new ArrayCollection();
         $this->contestEntries = new ArrayCollection();
+        $this->leads = new ArrayCollection();
     }
 
     public function __toString()
@@ -1015,6 +1020,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($contestEntry->getUser() === $this) {
                 $contestEntry->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Lead>
+     */
+    public function getLeads(): Collection
+    {
+        return $this->leads;
+    }
+
+    public function addLead(Lead $lead): static
+    {
+        if (!$this->leads->contains($lead)) {
+            $this->leads->add($lead);
+            $lead->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLead(Lead $lead): static
+    {
+        if ($this->leads->removeElement($lead)) {
+            // set the owning side to null (unless already changed)
+            if ($lead->getUser() === $this) {
+                $lead->setUser(null);
             }
         }
 

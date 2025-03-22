@@ -162,6 +162,7 @@ class DashboardController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $boostOption = $form->get('boost')->getData(); 
+            dd($boostOption);
             $boostOptionFacebook = $form->get('boostFacebook')->getData(); 
             $candidat = $form->getData();
             if ($boostOptionFacebook === 0) {
@@ -177,7 +178,11 @@ class DashboardController extends AbstractController
             ];
 
             // Vérifier si les boosts peuvent être appliqués
-            $canApplyBoost = $this->profileManager->canApplyBoost($currentUser, $boostOption);
+            if($boostOption === null){
+                $canApplyBoost = false;
+            }else{
+                $canApplyBoost = $this->profileManager->canApplyBoost($currentUser, $boostOption);
+            }
             $canApplyBoostFacebook = $this->profileManager->canApplyBoostFacebook($currentUser, $boostOptionFacebook);
 
             // Vérification des crédits
