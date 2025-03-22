@@ -18,7 +18,7 @@
 		<article class="article-item_">
 			<div class="row">
 				<div class="col-md-2 aside-left-item_">
-					<a href=""><img src="{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}" alt=""></a>
+                    <a href=""><img class="img-fluid profile-img" style="border-radius: 10px; object-fit: cover;" src="{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/dashboard/logo_defaut_entreprise2.webp') }}" alt=""></a>
 				</div>
 				<div class="col-md-10 aside-right-item_">
 					<div class="detail_annonce_">
@@ -57,10 +57,10 @@
 						</div>
                         <div class="right-content d-flex ms-auto my-2 me-2">
                             {% if app.user %}
-                                <a class="btnbtn-primary" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
+                                <a class="btn btn-primary" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
                             {% else %}
                                 <div class="d-none d-md-block">
-                                    <button class="btnbtn-primary prestation-link" type="button" data-id="{{ prestation.id }}">Plus de details</button>
+                                    <button class="btn btn-primary prestation-link" type="button" data-id="{{ prestation.id }}">Plus de details</button>
                                 </div>
                                 
                                 <div class="d-block d-md-none">

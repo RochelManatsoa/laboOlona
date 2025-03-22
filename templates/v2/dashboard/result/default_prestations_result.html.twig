@@ -77,7 +77,7 @@
 									</select>
 								</div>
 							</div>
-							<div class="sidebar-ele-filter">
+							{# <div class="sidebar-ele-filter">
 								<h4 class="section-head-small mb-4">Type de contrat</h4>
 								<ul>
 									<li>
@@ -116,7 +116,7 @@
 										<span class="job-type-count">22</span>
 									</li>
 								</ul>
-							</div>
+							</div> #}
 							<div class="sidebar-ele-filter">
 								<h4 class="section-head-small mb-4">Date des publications</h4>
 								<ul>
@@ -201,7 +201,7 @@
 						</form>
 					</div>
 					{% include "v2/dashboard/result/parts/_part_prestations_list.html.twig" %}
-					{% else %}
+				{% else %}
 					{% include "v2/dashboard/result/none/_none_prestations.html.twig" %}
 				{% endif %}
 			</div>
