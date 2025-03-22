@@ -45,9 +45,9 @@ class NotificationController extends AbstractController
         return $this->render('moderateur/notification/index.html.twig', [
             'notifications' => $this->notificationRepository->findByDestinataire(
                 $user, 
+                $isRead,
                 ['id' => 'DESC'], 
                 Notification::STATUS_DELETED,
-                $isRead,
                 $page
             ),
         ]);

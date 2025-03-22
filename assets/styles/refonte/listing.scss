@@ -1,0 +1,374 @@
+@import 'styles.scss';
+
+.section-full {
+    padding: 60px 0;
+}
+.bnr-inr{
+	height:290px;
+	background-color: $purple-light;
+    background-size: cover;
+    background-position: center center;
+    display: table;
+    width:100%;
+    position: relative;
+	@include breakpoint-767{
+		height: 280px;
+	}
+	.container {
+		display: table;
+		height: 100%;
+	}
+}
+
+.bnr-inr-entry {
+	display: table-cell;
+	vertical-align: bottom;
+	text-align: center;
+	color: $white;
+	.banner-title-outer {
+		position: relative;
+		.title{
+			font-size: 52px;
+			margin-bottom: 0px;
+			position: relative;
+			text-transform: uppercase;
+			letter-spacing: 4px;
+		}
+		.banner-title-name {
+			display: inline-block;
+			margin-bottom:30px;
+			.title{
+			  color: $white;
+			}
+		}
+	}
+	.nav {
+		margin-bottom: 2rem;
+		&.nav-underline {
+			justify-content: center;
+			.nav-item {
+				.nav-link {
+					border: 2px solid;
+					padding: 8 15px !important;
+					min-width: 150px;
+					&.active,
+					&:focus,
+					&:hover {
+						background-color: $yelow-primary !important;
+						color: $black !important;
+						border-color: $yelow-primary !important;
+					}
+				}
+			}
+		}
+	}
+	
+}
+/*Blog Side Bar*/
+.side-bar {
+	background-color: #fbfbfb;
+	padding: 30px;
+	border-radius: 10px;
+	@include breakpoint-991{
+		margin-bottom: 30px;
+	}
+	@include breakpoint-575{
+		padding: 15px;
+	}
+}
+.select-bar-2{
+	width: 160px !important;
+	margin-right: 20px;
+	&:last-child{
+		margin-right: 0px;
+	}
+	&.selectpicker {
+		background: #f2f2ff;
+		padding: 10px 15px;
+		border: none;
+		border-radius: 7px;
+	}
+	@include breakpoint-400{
+		margin-top: 10px;
+		width: 100%;
+	}
+	.form-control{
+		height: 30px;
+	}
+	.btn-light{
+		font-size:14px;
+		color: #6c757d;
+		height: 50px;
+		line-height: 50px;
+		background-color: $purple-light !important;
+		border: none;
+		padding: 0px 15px;
+		border-radius: 10px;
+		&:focus{
+			box-shadow: none;
+			outline: 0px !important;
+		}
+	}
+	.dropdown-menu{
+		font-size: 12px;
+	}
+}
+.select-bar-large{
+	border: none;
+	width: 100% !important;
+	padding: 15px;
+    border-radius: 7px;
+	&:focus {
+		outline: none;
+		box-shadow: none;
+	}
+	.form-control{
+		height: 30px;
+	}
+	.btn-light{
+		font-size:16px;
+		color: #a0a0a0;
+		height: 60px;
+		line-height: 60px;
+		background-color: $white !important;
+		border: none;
+		padding: 0px 20px;
+		border-radius: 10px;
+		border: 1px solid #ededed;
+		&:focus{
+			box-shadow: none;
+			outline: 0px !important;
+		}
+	}
+	.dropdown-toggle:after{
+		color: #17171d;
+	}
+	
+}
+.sidebar-elements{
+	.input-group{
+		border: 1px solid #ededed;
+		border-radius: 10px;
+	}
+}
+.sidebar-ele-filter{
+	margin: 30px 0px;
+	ul{
+		list-style: none;
+		padding: 0;
+		li{
+			display: flex;
+			justify-content: space-between;
+			font-size: 16px;
+			margin-bottom: 20px;
+			color: #666666;
+			.job-type-count{
+				padding-left: 30px;
+				color: $blue-primary;
+				font-size: 14px;
+			}
+			h4 {
+				font-size: 19px;
+			}
+		}
+	}
+}
+.form-check-input{
+	width: 16px;
+	height: 16px;
+}
+
+.form-check-input:checked[type="radio"]{
+	background-image: none;
+	position: relative;
+	&:after{
+		background-color: $blue-primary;
+		width: 10px;
+		height: 10px;
+		content: '';
+		position: absolute;
+		left: 2px;
+		top: 2px;
+		border-radius: 50%;
+	}
+}
+
+.form-check-input[type="radio"]{
+	background-color: transparent;
+}
+
+.product-filter-wrap{
+	padding-bottom: 30px;
+	.result-count-left{font-size: 16px; font-weight: 600;}
+	@include breakpoint-767{
+		display: block !important;
+		.result-count-left{margin-bottom: 10px; display: block;}
+	}
+	.filter-select{
+		display: flex;
+		align-items: center;
+		@include breakpoint-400{
+			display: block;
+		}
+		.result-count{
+			margin-right: 15px; 
+			font-size: 16px; 
+			font-weight: 600;
+			@include breakpoint-767{
+				display: block;
+				width: 100%;
+				max-width: 120px;
+			}
+		}
+		.form-select-3:last-child{
+				margin-right: 0px;
+		}
+	}
+}
+/*Side bar Advertisement*/
+.advertisment{
+	border-radius: 10px;
+	overflow: hidden;
+	padding: 50px 30px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	position: relative;
+	z-index: 1;
+	color: $white;
+	margin: 30px 0px;
+	&.m-b0{
+		margin-bottom: 0px;
+		@include breakpoint-991{
+			margin-bottom: 30px;
+		}
+	}
+	.title{
+		color: $white;
+		margin-bottom: 20px;
+	}
+	p{margin-bottom: 30px;}
+}
+.btn-signUp {
+	text-align: left !important;
+	.btn-primary {
+		&:hover {
+			background-color: $purple-primary !important;
+		}
+	}
+}
+
+.jobs-grid {
+	background-color: $white;
+	border: 10px;
+	box-shadow: 0px 0px 15px rgba(56, 152, 226, 0.3);
+	position: relative;
+	padding: 20px;
+	border-radius: 10px;
+	width: 100%;
+	margin-top: 30px;
+	h4 {
+		font-size: 19px;
+		text-align: left;
+	}
+	@include breakpoint-420{
+		text-align: center;
+		margin-top: 0px;
+	}
+	.media{
+		width: 90px;
+		height: 90px;
+		line-height: 90px;
+		display: inline-block;
+		text-align: center;
+		background-color: $white;
+		border-radius: 10px;
+		box-shadow: 0px 0px 40px rgba(56, 152, 226, 0.3);
+		margin-right: 30px;
+		position: absolute;
+		top: -30px;
+		overflow: hidden;
+		@include breakpoint-420{
+			position:inherit;
+			top: inherit;
+			margin: 0px auto;
+		}
+		img{
+			display: block;
+		}
+	}
+	.mid-content{
+		padding-top: 60px;
+		@include breakpoint-420{
+			padding-top: 30px;
+		}
+	}
+	.job-post-duration{
+		color: #2db346;
+		font-size: 14px;
+		margin-left: 120px;
+		@include breakpoint-420{
+			display: block;
+			margin: 0px;
+		}
+	}
+	.jobs-category{
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		@include breakpoint-420{
+			position:inherit;
+			top: inherit;
+			right: inherit;
+			margin-top: 10px;
+		}
+	}
+	
+}
+.right-content{
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin-top: 1rem;
+	@include breakpoint-420{
+		display: block;
+	}
+	.job-address{margin-bottom: 0px;}
+	.jobs-amount{
+		font-weight: 500;
+		color: black;
+		margin: 20px 0px 10px 0px;
+		span{
+			color: #046c38;
+		}
+	}
+	.jobs-browse{font-weight: 600; font-size: 14px;}
+	.btn-primary {
+		background-color: $purple-primary !important;
+		border-color: $purple-primary !important;
+		&:hover {
+			background-color: $purple-light !important;
+			border-color: $purple-light !important;
+		}
+	}
+}
+.m-b30 {
+    margin-bottom: 30px;
+}
+span.bg-pro,
+span.bg-urgent,
+.badge-cetification {
+    background: #ef2121;
+    padding: 7px;
+    border-radius: 3px;
+    color: white;
+    text-transform: uppercase;
+    font-size: 10px;
+}
+.badge-cetification {
+    background: $green-light;
+    text-transform: none;
+    top: -6px;
+    display: inline-block;
+    position: relative;
+    margin-left: 1rem;
+}

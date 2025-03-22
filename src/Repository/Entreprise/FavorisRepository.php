@@ -3,8 +3,11 @@
 namespace App\Repository\Entreprise;
 
 use App\Entity\Entreprise\Favoris;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\EntrepriseProfile;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Favoris>
@@ -16,33 +19,25 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FavorisRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, Favoris::class);
     }
 
-//    /**
-//     * @return Favoris[] Returns an array of Favoris objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function paginateFavoris(EntrepriseProfile $entreprise, int $page = 1): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('f')->select('f, c.titre as titre, u.lastLogin as lastLogin')
+            ->leftJoin('f.candidat', 'c')
+            ->leftJoin('c.candidat', 'u')
+            ->andWhere('f.entreprise = :entreprise')
+            ->setParameter('entreprise', $entreprise)
+            ->addOrderBy('f.createdAt', 'DESC');
 
-//    public function findOneBySomeField($value): ?Favoris
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            10,
+            []
+        );
+    }
 }

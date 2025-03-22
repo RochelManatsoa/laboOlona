@@ -150,20 +150,14 @@ class SecurityController extends AbstractController
             if ($user->getEntrepriseProfile() instanceof EntrepriseProfile && $user->getEntrepriseProfile()->getStatus() === EntrepriseProfile::STATUS_BANNED) {
                 return $this->redirectToRoute('app_logout');
             }
-            if ($user->getEntrepriseProfile() instanceof EntrepriseProfile && $user->getEntrepriseProfile()->getStatus() === EntrepriseProfile::STATUS_VALID) {
-                return $this->redirectToRoute('app_v2_profiles');
-            }
-            return $this->redirectToRoute('app_v2_recruiter_dashboard');
+            return $this->redirectToRoute('app_tableau_de_bord_entreprise');
         }
     
         if ($user->getType() === User::ACCOUNT_CANDIDAT) {
             if ($user->getCandidateProfile() instanceof CandidateProfile && $user->getCandidateProfile()->getStatus() === CandidateProfile::STATUS_BANNISHED) {
                 return $this->redirectToRoute('app_logout');
             }
-            if ($user->getCandidateProfile() instanceof CandidateProfile && $user->getCandidateProfile()->getStatus() === CandidateProfile::STATUS_VALID ) {
-                return $this->redirectToRoute('app_v2_job_offer');
-            }
-            return $this->redirectToRoute('app_v2_candidate_dashboard');
+            return $this->redirectToRoute('app_tableau_de_bord_candidat');
         }
 
         if ($user->getType() === User::ACCOUNT_REFERRER) {

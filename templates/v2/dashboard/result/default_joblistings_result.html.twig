@@ -14,52 +14,200 @@
 
 {% block body %}
 <input type="hidden" id="hidden-query" value="{{ getSearchQuery('q') }}">
+<div class="home-header-top">
+	<div class="container d-flex justify-content-between p-2">
+		<div class="logo_to_home">
+			<a href="/" class="login_home"><img src="{{ asset('images/logo-olona-talents-white600x200.png')}}" alt="Olona Talents" width="150" height="56"></a>
+		</div>
+		<a href="{{ path('app_login')}}" class="login_home btn-primary me-3 mt-2">Se connecter</a>
+	</div>
+</div>
+<div class="bnr-inr overlay-wraper bg-center" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
 	<div class="container">
-		<div class="row mt-3 mt-sm-5">
-			<ul class="nav nav-underline">
-				<li class="nav-item">
-					<a class="nav-link" aria-current="page" id="candidats-tab" href="{{ path('app_olona_talents_candidates', {'q': getSearchQuery('q')})}}">Candidats</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" id="annonces-tab" href="{{ path('app_olona_talents_joblistings', {'q': getSearchQuery('q')})}}">Offre d'emploi</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" id="services-tab" href="{{ path('app_olona_talents_prestations', {'q': getSearchQuery('q')})}}">Services</a>
-				</li>
-			</ul>
-			<div class="row">
-				<div class="default-results col-12 col-sm-8">
-					<div id="joblistings-list">
-						{% if joblistings|length > 0 %}
-						<p class="small fw-light mt-3">
+		<div class="bnr-inr-entry">
+			<div class="banner-title-outer">
+				<div class="banner-title-name">
+					<h2 class="title">Liste des offres d'emploi</h2>
+				</div>
+			</div>
+			<div>
+				<ul class="nav nav-underline">
+					<li class="nav-item">
+						<a class="nav-link" id="candidats-tab" href="{{ path('app_olona_talents_candidates', {'q': getSearchQuery('q')})}}">Candidats</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" id="annonces-tab" href="{{ path('app_olona_talents_joblistings', {'q': getSearchQuery('q')})}}">Offre d'emploi</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="services-tab" href="{{ path('app_olona_talents_prestations', {'q': getSearchQuery('q')})}}">Services</a>
+					</li>
+				</ul>
+			</div>
+			
+			<!-- BREADCRUMB ROW END -->                        
+		</div>
+	</div>
+</div>
+<div class="section-full bg-white">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4 col-md-12 rightSidebar">
+				<div class="theiaStickySidebar"><div class="side-bar">
+					<div class="sidebar-elements search-bx">								
+						<form>
+							<div class="form-group mb-4">
+								<h4 class="section-head-small mb-4">Filter par</h4>
+								<div class="dropdown bootstrap-select">
+									<select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
+										<option>Toutes</option>
+										<option>Candidats</option>
+										<option>Offre d'emploi</option>
+										<option>Service</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group mb-4">
+								<h4 class="section-head-small mb-4">Categories</h4>
+								<div class="dropdown bootstrap-select">
+									<select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
+										<option>Toutes les Categories</option>
+										<option>Web Designer</option>
+										<option>Developpeur</option>
+										<option>Marketing</option>
+									</select>
+								</div>
+							</div>
+							<div class="sidebar-ele-filter">
+								<h4 class="section-head-small mb-4">Type de contrat</h4>
+								<ul>
+									<li>
+										<div class=" form-check">
+											<input type="checkbox" class="form-check-input" id="exampleCheck1">
+											<label class="form-check-label" for="exampleCheck1">Freelance</label>
+										</div>
+										<span class="job-type-count">09</span>
+									</li>
+									<li>
+										<div class=" form-check">
+											<input type="checkbox" class="form-check-input" id="exampleCheck2">
+											<label class="form-check-label" for="exampleCheck2">Temps plein</label>
+										</div>
+										<span class="job-type-count">07</span>
+									</li>
+									<li>
+										<div class=" form-check">
+											<input type="checkbox" class="form-check-input" id="exampleCheck3">
+											<label class="form-check-label" for="exampleCheck3">Stage</label>
+										</div>
+										<span class="job-type-count">15</span>
+									</li>
+									<li>
+										<div class=" form-check">
+											<input type="checkbox" class="form-check-input" id="exampleCheck4">
+											<label class="form-check-label" for="exampleCheck4">Temps partiel</label>
+										</div>
+										<span class="job-type-count">20</span>
+									</li>
+									<li>
+										<div class=" form-check">
+											<input type="checkbox" class="form-check-input" id="exampleCheck5">
+											<label class="form-check-label" for="exampleCheck5">Temporaire</label>
+										</div>
+										<span class="job-type-count">22</span>
+									</li>
+								</ul>
+							</div>
+							<div class="sidebar-ele-filter">
+								<h4 class="section-head-small mb-4">Date des publications</h4>
+								<ul>
+									<li>
+										<div class="form-check">
+											<input type="radio" class="form-check-input" id="exampleradio1">
+											<label class="form-check-label" for="exampleradio1">Dernière heure</label>
+										</div>
+									</li>
+									<li>
+										<div class="form-check">
+											<input type="radio" class="form-check-input" id="exampleradio2">
+											<label class="form-check-label" for="exampleradio2">Dernières 24 heures</label>
+										</div>
+									</li>
+									<li>
+										<div class="form-check">
+											<input type="radio" class="form-check-input" id="exampleradio3">
+											<label class="form-check-label" for="exampleradio3">Les 7 derniers jours</label>
+										</div>
+									</li>
+									<li>
+										<div class="form-check">
+											<input type="radio" class="form-check-input" id="exampleradio4">
+											<label class="form-check-label" for="exampleradio4">Les 14 derniers jours</label>
+										</div>
+									</li>
+									<li>
+										<div class="form-check">
+											<input type="radio" class="form-check-input" id="exampleradio5">
+											<label class="form-check-label" for="exampleradio5">Les 30 derniers jours</label>
+										</div>
+									</li>
+									<li>
+										<div class="form-check">
+											<input type="radio" class="form-check-input" id="exampleradio6">
+											<label class="form-check-label" for="exampleradio6">Afficher toutes</label>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="m-4 card position-relative text-center d-block d-md-none">
+					<a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+						<img class="img-fluid" src="{{ asset('images/pubs/espace-pub-carre-regard-beauty.webp')}}">
+					</a>
+				</div>
+				<div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
+					<h4 class="title">Recrutement</h4>
+					<p>Obtenez les emplois les mieux adaptés à vos besoins <br>
+					Ajoutez votre CV MAINTENANT !</p>
+					<div class="btn-signUp">
+						<a href="" class="btn btn-primary white">En savoir plus</a> 
+					</div>
+				</div>
+			</div></div>
+			<div class="col-lg-8 col-md-12">
+				{% if joblistings|length > 0 %}
+					<!--Filter Short By-->
+					<div class="product-filter-wrap d-flex justify-content-between align-items-center m-b30">
+						<span class="result-count-left">
 							{% if totalResults > 2 %}
 							{{ totalResults }} resultats trouvés
 							{% else %}
 							{{ totalResults }} resultat trouvé
 							{% endif %}
-						</p>
-							{% include "v2/dashboard/result/parts/_part_joblistings_list.html.twig" %}
-						{% else %}
-							{% include "v2/dashboard/result/none/_none_joblistings.html.twig" %}
-						{% endif %}
-					</div>
-				</div>
-				<div class="col-12 col-sm-4">
-					<div class="d-flex flex-column flex-shrink-0 py-3 position-sticky top-0">
-						<div class="card mb-3" id="candidate-card-container">
-							<div class="m-4 position-relative text-center">
-								<a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
-									<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
-								</a>
+						</span>
+						<form class="ordering filter-select" method="get">
+							<span class="result-count">Court par</span>
+							<div class="dropdown bootstrap-select select-bar-12">
+								<select class="select-bar-2 selectpicker" data-live-search="true" data-bv-field="size">
+									<option>Afficher 10</option>
+									<option>Afficher 20</option>
+									<option>Afficher 30</option>
+									<option>Afficher 40</option>
+									<option>Afficher 50</option>
+									<option>Afficher 60</option>
+								</select>
 							</div>
-						</div>
+						</form>
 					</div>
-				</div>
+					{% include "v2/dashboard/result/parts/_part_joblistings_list.html.twig" %}
+					{% else %}
+					{% include "v2/dashboard/result/none/_none_joblistings.html.twig" %}
+				{% endif %}
 			</div>
-
 		</div>
 	</div>
-
+</div>
 {% endblock %}
 
 {% block preview %}

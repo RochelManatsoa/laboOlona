@@ -51,7 +51,7 @@ security:
             logout:
                 path: app_logout
                 # where to redirect after logout
-                target: app_home
+                target: app_login
                 invalidate_session: true
 
             remember_me:
@@ -82,6 +82,7 @@ security:
         - { path: ^/finance, roles: ROLE_FINANCE }
         - { path: ^/employes-hub, roles: ROLE_EMPLOYE }
         - { path: ^/youtube/playlist, roles: ROLE_USER }
+        - { path: ^/tableau-de-bord/, roles: ROLE_USER }
 
     
     role_hierarchy:

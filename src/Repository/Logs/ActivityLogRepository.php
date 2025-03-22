@@ -32,19 +32,52 @@ class ActivityLogRepository extends ServiceEntityRepository
    /**
     * @return ActivityLog[] Returns an array of ActivityLog objects
     */
-   public function findUserLogs($user): array
-   {
+    public function findUserLogs($user): array
+    {
         return $this->createQueryBuilder('a')
             ->andWhere('a.user = :user')
             ->andWhere('a.level < :level')
             ->setParameter('user', $user)
             ->setParameter('level', ActivityLog::LEVEL_WARNING)
             ->orderBy('a.timestamp', 'DESC')
-            ->setMaxResults(20)
+            ->setMaxResults(10)
             ->getQuery()
             ->getResult();
         ;
-   }
+    }
+    
+    public function findProfileViewsByUser(User $user): array
+    {
+        $logs = $this->createQueryBuilder('a')
+            ->andWhere('a.user = :user')
+            ->andWhere('a.level < :level')
+            ->andWhere('a.activityType = :activityType')
+            ->andWhere('a.details LIKE :details')
+            ->setParameter('user', $user)
+            ->setParameter('level', ActivityLog::LEVEL_WARNING)
+            ->setParameter('activityType', ActivityLog::ACTIVITY_PAGE_VIEW)
+            ->setParameter('details', '%vue profil OT____')
+            ->orderBy('a.timestamp', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        $uniqueLogs = [];
+
+        foreach ($logs as $log) {
+            preg_match('/OT(\d{4})/', $log->getDetails(), $matches);
+            $otNumber = isset($matches[1]) ? intval($matches[1]) : null;
+
+            if ($otNumber !== null && !isset($uniqueLogs[$otNumber])) {
+                $log->ot_number = $otNumber; 
+                $uniqueLogs[$otNumber] = $log; 
+                if (count($uniqueLogs) >= 5) {
+                    break;
+                }
+            }
+        }
+
+        return array_values($uniqueLogs);
+    }
    
    public function paginateActivities(int $page, User $user): PaginationInterface
    {
@@ -69,7 +102,7 @@ class ActivityLogRepository extends ServiceEntityRepository
             ->andWhere('a.derationInSeconds IS NULL')
             ->setParameter('type', ActivityLog::ACTIVITY_PAGE_VIEW)
             ->orderBy('a.id', 'DESC')
-            ->setMaxResults(200)
+            //->setMaxResults(200)
             ->getQuery()
             ->getResult();
     }

@@ -5,11 +5,9 @@ namespace App\Form\Moderateur\Profile;
 use App\Entity\Secteur;
 use App\Entity\CandidateProfile;
 use App\Entity\Candidate\Competences;
-use App\Form\Candidat\AvailabilityType;
 use App\Form\Candidat\TarifCandidatType;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Candidat\AvailabilityEditType;
-use App\Form\Profile\Candidat\CompetencesType;
 use App\Form\Profile\Candidat\Edit\SocialType;
 use App\Form\Profile\Candidat\Edit\InfoUserType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class CandidatType extends AbstractType
@@ -91,6 +90,10 @@ class CandidatType extends AbstractType
                 'required' => true,
             ])
             ->add('social', SocialType::class, ['label' => false])
+            ->add('isPremium', CheckboxType::class, [
+                'label' => 'Abonnement premium',
+                'required' => false,
+            ])
             ->add('availability', ChoiceType::class, [
                 'choices' => [
                     'Immediatement' => 'immediate',

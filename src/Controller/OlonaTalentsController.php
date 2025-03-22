@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Controller\TableauDeBord\CandidatController;
+use App\Controller\TableauDeBord\EntrepriseController;
 use DateTime;
 use App\Entity\User;
 use App\Entity\Prestation;
+use App\Entity\Notification;
 use App\Security\EmailVerifier;
 use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
@@ -14,7 +17,9 @@ use App\Security\AppAuthenticator;
 use Symfony\Component\Mime\Address;
 use App\Manager\OlonaTalentsManager;
 use App\Entity\Entreprise\JobListing;
+use App\Entity\EntrepriseProfile;
 use App\Service\ElasticsearchService;
+use App\Service\Mailer\MailerService;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Moderateur\ContactFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,7 +33,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
-use App\Service\Mailer\MailerService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -50,6 +54,8 @@ class OlonaTalentsController extends AbstractController
         private ActivityLogger $activityLogger,
         private RequestStack $requestStack,
         private MailerService $mailerService,
+        private CandidatController $candidatController,
+        private EntrepriseController $entrepriseController,
     ) {}
 
     #[Route('/', name: 'app_home', options: ['sitemap' => true])]
@@ -59,10 +65,10 @@ class OlonaTalentsController extends AbstractController
             return $this->redirectToRoute('app_v2_dashboard');
         }
         return $this->render('v2/home.html.twig', [
-            'candidats' => $this->candidatRepository->findBy(
-                ['status' => CandidateProfile::STATUS_VALID],
+            'job_offers' => $this->annonceRepository->findBy(
+                ['status' => JobListing::STATUS_PUBLISHED],
                 ['id' => 'DESC'],
-                18
+                5
             ),
         ]);
     }
@@ -144,9 +150,12 @@ class OlonaTalentsController extends AbstractController
     private function fetchAndRender(Request $request, string $type): Response
     {
         $query = $request->query->get('q');
-        $size = $request->query->getInt('size', 6);
+        $size = $request->query->getInt('size', 10);
         $from = $request->query->getInt('from', 0);
         $params = [];
+        if($this->getUser()){
+            $params = $this->getData();
+        }
         $currentUser = $this->userService->getCurrentUser();
         if($currentUser){
             $profile = $this->userService->checkUserProfile($currentUser);
@@ -174,7 +183,16 @@ class OlonaTalentsController extends AbstractController
             ]);
         }
         if ($currentUser && $profile) {
-            return $this->render("v2/dashboard/result/{$type}_result.html.twig", $params);
+            if($profile instanceof CandidateProfile){
+                $data = $this->candidatController->getData();
+                $params = array_merge($params, $data);
+                return $this->render("tableau_de_bord/result/{$type}_result_for_candidate.html.twig", $params);
+            }
+            if($profile instanceof EntrepriseProfile){
+                $data = $this->entrepriseController->getData();
+                $params = array_merge($params, $data);
+                return $this->render("tableau_de_bord/result/{$type}_result_for_entreprise.html.twig", $params);
+            }
         }
 
         return $this->render("v2/dashboard/result/default_{$type}_result.html.twig", $params);
@@ -223,5 +241,24 @@ class OlonaTalentsController extends AbstractController
         return $this->render('v2/contact.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    private function getData()
+    {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
+        $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement.');
+        $candidat = $this->userService->checkProfile();
+        $data = [];
+        $data['currentUser'] = $currentUser;
+        $data['candidat'] = $candidat;
+        $data['credit'] = $currentUser->getCredit()->getTotal();
+        $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser,false);
+
+        return $data;
     }
 }

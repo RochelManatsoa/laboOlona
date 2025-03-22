@@ -1,0 +1,35 @@
+@import 'styles.scss';
+@import 'media_q.scss';
+
+.ot-error-wrap{
+	padding: 100px 0px;
+	@include breakpoint-991{
+		padding-bottom: 30px;
+		.ot-error-image{
+			margin-bottom: 30px;
+            text-align: center;
+		}
+	}
+	.row{
+		display: flex;
+		align-items: center;
+	}
+	.ot-error-content{
+		text-align: center;
+		.ot-error-title{
+			font-size: 150px;
+			line-height: 150px;
+			@include breakpoint-991{
+				font-size: 58px;
+				line-height: 58px;	
+			}
+		}
+		.ot-error-title2{
+			margin-bottom: 20px;
+		}
+		p{
+			margin-bottom: 20px;
+			font-size: 16px;
+		}
+	}
+}

@@ -11,7 +11,7 @@
         </h1>
 
         <p class="text-center my-4">Entrez votre nouveau mot de passe ci-dessous. Assurez-vous qu'il est sécurisé et unique pour ce site.</p>
-        {{ form_start(resetForm, {'attr': {'class': 'col-md-6 mx-auto'}}) }}
+        {{ form_start(resetForm, {'attr': {'class': 'col-md-6 mx-auto', 'data-turbo':'false'}}) }}
             <div class="form-floating mb-3">
                 {{ form_widget(resetForm.plainPassword.first) }}
                 {{ form_label(resetForm.plainPassword.first) }}

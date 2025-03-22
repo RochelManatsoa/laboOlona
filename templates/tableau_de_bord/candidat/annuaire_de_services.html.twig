@@ -1,0 +1,208 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Annuaire de services </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a> 
+                </li>
+                <li class="breadcrumb-item position-relative"> Annuaire de service </li>
+            </ol>
+        </div>
+    </section>
+    <section class="detail_db d-md-flex bp_">
+        <div class="biographie-profil mb-4 p-4">
+            <div class="mission-list-title">
+                <div class="d-lg-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <h1>Bienvenue dans votre Annuaire de services.</h1>           
+                    <p> Découvrez ou proposez des solutions professionnelles sur mesure. Boostez votre entreprise, avancez dans votre carrière et valorisez vos compétences. Trouvez le partenaire idéal pour votre réussite.
+                    </p>
+                </div>
+                <a href="{{ path('app_tableau_de_bord_candidat_creation_prestation')}}" class="btn btn-primary ">
+                        <i class="bi bi-plus-lg"></i>
+                        Créer une prestation (10 crédits)
+                    </a>
+                </div>
+            </div>
+            <div class="ils_recrutentBlock mb-4">
+                <h2><span>Ils recrutent</span></h2>
+                <div class="inner-recruter d-flex align-items-center">
+                    <div class="item-recruter-box">
+                        <div class="recruter_box d-flex">
+                            <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                                <img class="img-fluid" src="{{ asset('images/pubs/entreprise_mvola.webp')}}">
+                            </a>
+                            <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                                <img class="img-fluid" src="{{ asset('images/pubs/icon_airtel_money.webp')}}">
+                            </a>
+                            <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                                <img class="img-fluid" src="{{ asset('images/pubs/entreprise_orange_money.webp')}}">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="item-recruter-box">
+                        <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                            <img class="img-fluid" src="{{ asset('images/pubs/espace-pub-horizontal-regard-beauty-_1_.webp')}}">
+                        </a>
+                    </div>
+                    <div class="item-recruter-box">
+                        <div class="recruter_box d-flex">
+                            <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                                <img class="img-fluid" src="{{ asset('images/pubs/entreprise_mvola.webp')}}">
+                            </a>
+                            <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                                <img class="img-fluid" src="{{ asset('images/pubs/icon_airtel_money.webp')}}">
+                            </a>
+                            <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                                <img class="img-fluid" src="{{ asset('images/pubs/entreprise_orange_money.webp')}}">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="offre-emploi-list">
+                <div class="row">
+                    <div class="col-lg-8">
+                        {% for prestation in prestations %}
+                        <article class="article-item_">
+                            <div class="row">
+                                <div class="col-md-2 aside-left-item_">
+                                    <div class="rounded-circle" style="
+                                        width: 45px;
+                                        height: 45px;
+                                        background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}');
+                                        background-size: cover;
+                                        background-position: center;
+                                    ">
+                                    </div>
+                                </div>
+                                <div class="col-md-10 aside-right-item_">
+                                    <div class="detail_annonce_">
+                                        <h2>
+                                            <a href="{{ path('app_tableau_de_bord_candidat_view_prestation', {'prestation': prestation.id })}}" class="btn-primary">
+                                                {{ prestation.titre }}
+                                            </a>
+                                        </h2>
+                                        <h3><a href="" class="btn-primary">{{ getAuthor(prestation)}}</a> <span class="secteur_job"><i class="bi bi-tags"></i> {{ prestation.secteurs.nom}}</span></h3>
+                                        <div class="description_courte_">{{ prestation.openai|raw }}</div>
+                                        <div class="info_publication_">
+                                            <a class="btn btn-sm btn-primary rounded-pill px-3 me-2 mt-2" href="{{ path('app_tableau_de_bord_candidat_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="position-sticky" style="top: 2rem;">
+                            <div class="theiaStickySidebar">
+                                <div class="side-bar">
+                                    <div class="sidebar-elements search-bx">								
+                                        <form>
+                                            <div class="form-group mb-4">
+                                                <h4 class="section-head-small mb-4">Afficher par</h4>
+                                                <div class="dropdown bootstrap-select">
+                                                    <select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
+                                                        <option>10</option>
+                                                        <option>20</option>
+                                                        <option>30</option>
+                                                        <option>40</option>
+                                                        <option>50</option>
+                                                        <option>60</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-4">
+                                                <h4 class="section-head-small mb-4">Categories</h4>
+                                                <div class="dropdown bootstrap-select">
+                                                    <select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
+                                                        <option>Toutes les Categories</option>
+                                                        <option>Web Designer</option>
+                                                        <option>Developpeur</option>
+                                                        <option>Marketing</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="m-4 card position-relative text-center d-block d-md-none">
+                                    <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                                        <img class="img-fluid" src="{{ asset('images/pubs/espace-pub-carre-regard-beauty.webp')}}">
+                                    </a>
+                                </div>
+                                <div class="pub_veticales mt-4 pt-1">
+                                    <a href="">
+                                        <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                                    </a>
+                                </div>
+                                <div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
+                                    <h4 class="title">Recrutement</h4>
+                                    <p>Obtenez les emplois les mieux adaptés à vos besoins <br>
+                                    Ajoutez votre CV MAINTENANT !</p>
+                                    <div class="btn-signUp">
+                                        <a href="" class="btn btn-primary white">En savoir plus</a> 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script> 
+    
+    var currentPage = 1;
+    var allDataLoaded = false;
+
+    $(window).scroll(function() {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !allDataLoaded) {
+            loadMoreJobs();
+        }
+    });
+
+    function loadMoreJobs() {
+        if (!allDataLoaded) {
+            currentPage++;
+            var url = `{{ path('api_job_offers') }}?page=${currentPage}`;
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json', 
+                success: function(data) {
+                    $('#jobs-container').append(data.html);
+                    if (!data.hasMore) {
+                        allDataLoaded = true;
+                    }
+                },
+                error: function() {
+                    allDataLoaded = true; 
+                }
+            });
+        }
+    }
+    </script>
+{% endblock %}

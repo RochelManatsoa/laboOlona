@@ -1,0 +1,338 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Détail profil </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}">
+                    <i class="ri-home-8-line"></i> CVthèque </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> Profil {{ generatePseudo(candidat) }} </li>
+            </ol>
+        </div>
+
+        {% if not entreprise.isIsPremium %}
+        <section class="warning_freemium mb-4 d-flex align-items-center">
+            <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+            <div class="warning-block">
+                Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
+            </div>
+        </section>
+        {% endif %}
+        <div class="profil-banner mb-4">
+            <div class="couverture-banner-bg" style="background-image: url({{ asset('images/dashboard/banner_couverture.webp')}})"></div>
+            <div class="left-infos-profils d-md-flex justify-content-between">
+                <div class="infos-profils d-md-flex justify-content-between">
+                    <div class="img-profils">
+                        <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url({{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }});" alt="Avatar"></div>
+                    </div>
+                    <div class="detail-profils">
+                        <div class="nomBlock d-md-flex align-items-center">
+                            <div class="Noms__">
+                            {{ generatePseudo(candidat) }}
+                            </div>
+                            <div class="Tarif-indicatif">
+                                <span>Tarif indicatif : </span>
+                                    {{ candidat.tarifCandidat }}
+                            </div>
+                        </div>
+                        <div class="TitreBlock">
+                            {{ candidat.titre }}
+                             <span class="certificated">Certifié</span><span class="vue_profil"><i class="bi bi-eye mr-1"></i>Ce profil a été vue {{ candidat.vues|length }} fois</span>
+                        </div>
+                        <div class="rating_block d-flex align-items-center">
+                            <div class="rating">
+                                <span data-value="1" class="selected">&#9733;</span>
+                                <span data-value="2" class="selected">&#9733;</span>
+                                <span data-value="3" class="selected">&#9733;</span>
+                                <span data-value="4">&#9733;</span>
+                                <span data-value="5">&#9733;</span>
+                            </div>
+                            <div class="rating_avis">
+                                {# <a href="{{ path('app_tableau_de_bord_candidat_se_faire_recommander')}}">5 avis</a> #}
+                                5 avis
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-profils">
+                    {% if not entreprise.isIsPremium %}
+                        {% if purchasedContact is defined and purchasedContact is not null %}
+                            {% set modalId = 'confirmationModal' %}
+                            {% if app.user.credit.total < show_candidate_price %}
+                            {% set modalId = 'lowCreditModal' %}
+                            {% endif %}
+                            <div id="contactDetails">
+                                <form action="{{ path('app_v2_contact_show')}}" method="post" id="show-candidate-contact">
+                                    <input type="hidden" name="contactId" value="{{ candidat.candidat.id }}">
+                                    <input type="hidden" name="showContactPrice" value="{{ show_candidate_price }}">
+                                    <input type="hidden" name="actionView" value="VIEW_CANDIDATE">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#{{ modalId }}" data-bs-price="{{ show_candidate_price }} crédits" data-bs-type="show-candidate-contact" class="mb-3 d-inline-block position-relative btn btn-success">Contacter ({{ show_candidate_price }} crédits)</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    <div id="row_favorite_{{ candidat.id }}">
+                        {% if isLikedByRecruiter(entreprise, candidat.id) %}
+                            <button type="button" class="btn btn-info remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':candidat.id}) }}"><i class="bi bi-star-fill me-2"></i>Effacer de mes favoris</button>
+                        {% else %}
+                            <button type="button" class="btn btn-primary add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':candidat.id}) }}"><i class="bi bi-star me-2"></i>Ajouter à mes favoris</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>	
+        </div>	
+        <div class="row row-reverse">
+            <div class="col-lg-8">
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 mb-3 fw-bold lh-base st-title">A propos de moi</span>
+                    {{ candidat.resume|raw}}
+                    <br/>
+                    <br/>
+                    <span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
+                    <div class="link-social">
+                        <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a>
+                        <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/linkedin.svg')}}" alt=""></a>
+                        <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/mail_icon.svg')}}" alt=""></a>
+                    </div>
+                </div>
+                <div class="d-md-flex mb-4 bp_">
+                    <div class="biographie-profil mb-4 p-4">
+                        <span class="fs-5 mb-3 fw-bold lh-base st-title">Informations personnelles</span>
+                        {% if not entreprise.isIsPremium %}
+                        <div class="isNotPrem_">
+                            <div class="text-center">
+                                <img src="{{ asset('images/dashboard/locked_icon.svg')}}" alt="" width="30" height="30">
+                                <span class="d-block">Infos verouillés</span>
+                                <a href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn btn-primary mt-2">Déverouiller les infos</a>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="d-md-flex flex-box_">
+                            <span class="fs-6 lh-base">Nom complet</span>
+                            <div class="d-md-flex fw-bold info-bx flex-box_">
+                                {{ candidat.candidat.nom }}
+                                {{ candidat.candidat.prenom }}
+                            </div>
+                        </div>
+                        <div class="d-md-flex flex-box_">
+                            <span class="fs-6 lh-base">Adresse email</span>
+                            <div class="d-md-flex fw-bold info-bx flex-box_">
+                                {{ candidat.candidat.email }}
+                            </div>
+                        </div>	
+                        <div class="d-md-flex flex-box_">
+                            <span class="fs-6 lh-base">Numéro de téléphone</span>
+                            <div class="d-md-flex fw-bold info-bx flex-box_">
+                                {{ candidat.candidat.telephone }}			
+                            </div>
+                        </div>	
+                        <div class="d-md-flex flex-box_">
+                            <span class="fs-6 lh-base">Référence</span>
+                            <div class="d-md-flex fw-bold info-bx flex-box_">
+                                {{ generatePseudo(candidat) }}
+                            </div>
+                        </div>	
+                        {% endif %}
+                    </div>
+                    <div class="biographie-profil mb-4 p-4">
+                        <span class="fs-5 fw-bold mb-3 lh-base st-title">Informations professionnelles</span>
+                        <div class="d-md-flex flex-box_">
+                            <span class="fs-6 lh-base">Titre</span>
+                            <div class="d-md-flex fw-bold info-bx flex-box_">
+                                {{ candidat.titre }}
+                            </div>
+                        </div>	
+                        <div class="d-md-flex flex-box_">
+                            <span class="fs-6 lh-base">Secteur(s) d'activité</span>
+                            <div class="d-md-flex fw-bold info-bx flex-box_">
+                                {% for secteur in candidat.secteurs %}
+                                <span class="badge bg-secteur">{{ secteur.nom }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>	
+                        <div class="d-md-flex flex-box_">
+                            <span class="fs-6 lh-base">Prétention salariale</span>
+                            <div class="d-md-flex fw-bold info-bx flex-box_">
+                                {% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+                                    <span class="fw-lighter">Base mensuel :</span>
+                                    <span class="mx-4 text-strong">{{ candidat.tarifCandidat.simulation.salaireNet|number_format(2, '.', '') }}
+                                        {{ candidat.tarifCandidat.simulation.devise.symbole }}
+                                    </span>
+                                    <span class="small">
+                                        <a href="{{ path('app_dashboard_employes_simulation_view', {'id' : candidat.tarifCandidat.simulation.id })}}" class="">
+                                            <i class="bi bi-box-arrow-up-right"></i>
+                                            Détails
+                                        </a>
+                                    </span>
+                                    {% else %}
+                                {% endif %}
+                            </div>
+                        </div>	
+                    </div>
+                </div>
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 mb-3 fw-bold lh-base st-title">Experiences</span>
+                    <div class="exp-block">
+                        {% if experiences|length > 0 %}
+                            {% for experience in experiences %}
+                                <div class="experience" data-experience-id="{{ experience.id }}">
+                                    <span class="justify-content-between align-items-center">
+                                        {% if experience.enPoste %}
+                                            Depuis
+                                            {{ experience.dateDebut|date('M Y')}}
+                                        {% else %}
+                                            {{ experience.dateDebut|date('M Y')}}
+                                            -
+                                            {{ experience.dateFin|date('M Y')}}
+                                        {% endif %}
+                                    </span>
+                                    <p class="small d-flex justify-content-between align-items-center">
+                                        <span>
+                                            <strong>{{ experience.nom }}</strong>
+                                            chez
+                                            <strong>{{ experience.entreprise }}</strong>
+                                            {% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
+                                                ({{ date_difference(experience.dateFin, experience.dateDebut) }})
+                                            {% endif %}
+
+                                        </span>
+                                    </p>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert fw-lighter" role="alert">
+                                <i class="bi bi-info-circle"></i>
+                                Aucune expérience renseignée.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 fw-bold mb-3 lh-base st-title">Compétences</span>
+                    <div class="compt-block">
+                        {% if competences|length > 0 %}
+                            {% for competence in competences %}
+                                <div class="competence" data-competence-id="{{ competence.id }}">
+                                    <p class="small">
+                                        {{ competence.nom }}
+                                        <span class="">
+                                            {% for i in 1..5 %}
+                                                {% if i <= competence.note %}
+                                                    <i class="small bi bi-star-fill text-warning"></i>
+                                                {% else %}
+                                                    <i class="small bi bi-star "></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                    </p>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert fw-lighter" role="alert">
+                                <i class="bi bi-info-circle"></i>
+                                Aucune expérience renseignée.
+                            </div>
+                        {% endif %}
+                    </div>				
+                </div>
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 mb-3 fw-bold lh-base st-title">Langue</span>
+                    {% if langages|length > 0 %}
+                        <div class="row">
+                            {% for langue in langages %}
+                                <div class="langue" data-langue-id="{{ langue.id }}">
+                                    <p class="">
+                                        {{ isoToEmoji(langue.langue.code) }}
+                                        {{ langue.langue.nom }}
+                                        {% for i in 1..5 %}
+                                            {% if i <= langue.niveau %}
+                                                <i class="small bi bi-star-fill text-warning"></i>
+                                            {% else %}
+                                                <i class="small bi bi-star "></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert fw-lighter" role="alert">
+                            <i class="bi bi-info-circle"></i>
+                            Aucune expérience renseignée.
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 mb-3 fw-bold lh-base st-title">Résumé Olona Talents</span>
+                    <div>{{ candidat.resultFree|raw}}</div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="biographie-profil mb-4 p-4">
+                    <div class="cv_affichage">
+                    {% if entreprise.isIsPremium %}
+                        <h4 class="fs-5 text-uppercase">CV</h4>
+                        <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target=_blank class="btn btn-outline-primary text-upercase fw-semibold">
+                            <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+                        </a>
+                    {% else %}
+                        {% if candidat.editedCvs|length > 0 %}
+                        <h4 class="fs-5 text-uppercase">CV</h4>
+                        <button type="button" class="btn btn-outline-primary text-upercase fw-semibold" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+                        </button>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                </div>
+                <div class="m-4 card position-relative text-center d-block d-md-none">
+                    <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+                        <img class="img-fluid" src="{{ asset('images/pubs/espace-pub-carre-regard-beauty.webp')}}">
+                    </a>
+                </div>
+                <div class="pub_veticales mt-4 pt-1">
+                    <a href="">
+                        <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                    </a>
+                </div>
+                <div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
+                    <h4 class="title">Recrutement</h4>
+                    <p>Obtenez les emplois les mieux adaptés à vos besoins <br>
+                    Ajoutez votre CV MAINTENANT !</p>
+                    <div class="btn-signUp">
+                        <a href="" class="btn btn-primary white">En savoir plus</a> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if candidat.editedCvs|length > 0 and candidat.editedCvs[candidat.editedCvs|length -1] is defined and candidat.editedCvs[candidat.editedCvs|length -1] is not null %}
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-body">
+            <iframe class="embed-responsive-item w-100" style="height: 600px;" src="{{ asset('uploads/cv/olona/' ~ candidat.editedCvs[candidat.editedCvs|length -1].cvLink) }}" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% include "/tableau_de_bord/layout/_credit_modal_entreprise.html.twig" %}
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Paiement{% endblock %}
+
+{% block body %}
+<div class="loader-container" id="loader-container" style="display:none;">
+    <span class="loader"></span>
+</div>
+
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <h5 class="mb-0"> Entreprise</h5>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Recharger mes crédits </li>
+            <li class="breadcrumb-item position-relative"> Paiement </li>
+        </ol>
+    </div>
+</section>
+{% if not entreprise.isIsPremium %}
+<section class="warning_freemium mb-4 d-flex align-items-center">
+    <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+    <div class="warning-block">
+        Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
+    </div>
+</section>
+{% endif %}
+<section class="tarfis-container d-block p-5 mb-4">
+    <div class="wrapper-abonnement-c">
+        <div class="title-abonnement-c">
+            <h1>Paiement par {{ mobileMoney.name }}</h1>
+        </div>
+        <div class="pack_standard_list m-b30">
+            <div class="row">
+                <div class="col-md-6">
+                <div class="row align-items-center p-3" >
+                  <div class="col-3">
+                    <img src="{{ asset('/images/' ~ mobileMoney.slug ~ '.png') }}" class="img-fluid border" alt="{{ mobileMoney.name }}">
+                  </div>
+                  <div class="col text-center">
+                    <span class="fw-light h5">Numéro</span><br>
+                    <span class="fw-bolder h2">{{ mobileMoney.number }}</span>
+                  </div>
+                </div>
+                <p class="">Veuillez envoyer le montant exact sur le numéro de mobile money indiqué ci-dessous. Une fois le paiement effectué, entrez la référence de transaction dans le champ prévu à cet effet et cliquez sur le bouton <span class="fw-bold">"Soumettre"</span> pour finaliser votre achat.</p>
+                <p class=" fw-lighter"><strong><i class="bi bi-info-circle"></i></strong> Assurez-vous d'utiliser la même référence indiquée lors de votre paiement pour éviter tout retard dans le traitement de votre commande.</p>      
+                </div>    
+                <div class="col-md-6">
+                {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+                {{ form_row(form.amount) }}
+                {{ form_row(form.reference) }}
+                {{ form_row(form.telephone) }}
+                <div style="display:none;">
+                {{ form_widget(form)}}
+                </div>
+                <button type="submit" class="btn btn-lg text-uppercase fw-bold btn-primary px-5 my-4">Soumettre</button>
+                {{ form_end(form)}}
+                </div>                                      
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

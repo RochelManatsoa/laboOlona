@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html data-bs-theme="light">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{% block title %}Olona Talents{% endblock %}</title>
+		{#<link rel="icon" href="{{ asset('images/favicon.ico') }}">#}
+		{% block meta %}{% endblock %}
+		{% block stylesheets %}
+			<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
+		{% include "gtag_cookie_script.html.twig" %}
+	</head>
+	<body class="bootstrap-light">
+		<div class="transition-fade">
+			{% block body %}{% endblock %}
+			{% block preview %}
+        	<a href="javascript:history.back()" class="d-none d-sm-block d-md-none btn btn-info fw-semibold text-uppercase px-4 my-5 me-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+			{% endblock %}
+		</div>
+		{% include "cookies_management.html.twig" %}
+		<script>
+
+			function loadCKEditor() {
+				if (typeof ClassicEditor === 'undefined') {
+					var scriptTag = document.createElement('script');
+					scriptTag.src = "{{ asset('assets/ckeditor5/ckeditor.js') }}";
+					document.body.appendChild(scriptTag);
+				}
+			}
+
+			loadCKEditor();
+			document.addEventListener('turbo:load', loadCKEditor);
+
+		</script>
+
+	</body>
+	<script src="{{asset('assets/js/jquery.min.js')}}"></script>
+	<script src="{{asset('assets/js/jquery.steps.min.js')}}"></script>
+	<script src="{{asset('assets/js/jqueryValidate.js')}}"></script>
+	<script src="{{asset('assets/main.js')}}"></script>
+	{{ encore_entry_script_tags('main') }}
+</html>

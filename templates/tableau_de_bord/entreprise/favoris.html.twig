@@ -1,0 +1,73 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Profil favoris </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> Favoris </li>
+            </ol>
+        </div>
+    </section>
+    {% if not entreprise.isIsPremium %}
+    <section class="warning_freemium mb-4 d-flex align-items-center">
+        <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+        <div class="warning-block">
+            Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
+        </div>
+    </section>
+    {% endif %}
+    <section class="recruteur-container">
+        <div class="recruteur-block d-block p-5 mb-4">
+            <div class="favoris-list-item mb-4">
+                <h1>Liste des favoris</h1>
+            </div>
+            {% if favoris|length > 0 %}
+            Trier par :
+                {{ knp_pagination_sortable(favoris, 'Dernière connexion', 'lastLogin') }} | 
+                {{ knp_pagination_sortable(favoris, 'Titre', 'titre') }}
+                <div class="biographie-profil-list"> 
+                {% for item in favoris %}
+                    {% set favori = item[0] %}
+                    <div class="profil-list-item d-md-flex align-items-center justify-content-between">
+                        <div class="profil-list-name d-flex align-items-center">
+                            <span class="profil-photo_"><img src="{{ favori.candidat.fileName ? asset('uploads/experts/' ~ favori.candidat.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                            <div class="profil-info_">
+                                {{ generatePseudo(favori.candidat)}}
+                                <span class="profil-titire_">{{ favori.candidat.titre }}</span>
+                            </div>
+                        </div>
+                        <div class="profil-list-link d-flex align-items-center">
+                            <button class="favoris-add active"><i class="bi bi-star"></i></button>
+                            <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': favori.candidat.id})}}">Voir son profil</a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+                {{ knp_pagination_render(favoris) }}
+            {% else %}
+                <div class="profil-list-item d-md-flex align-items-center justify-content-between">
+                    <div class="profil-list-name d-flex align-items-center">
+                        <span class="profil-photo_"><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                        <span class="profil-name">Aucun favori</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

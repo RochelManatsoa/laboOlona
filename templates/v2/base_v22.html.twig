@@ -1,0 +1,262 @@
+							<span class="navbar-toggler-icon"></span>
+						</button>
+						<div class="col-12 col-sm-6 mx-auto d-block d-md-none">
+							{% if action is defined %}
+								<form action="{{ action }}" class="input-group rounded-pill w-100 mt-3">
+									<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+									<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
+								</form>
+							{% else %}
+								<form action="{{ path('app_olona_talents_candidates') }}" class="input-group rounded-pill w-100 mt-3">
+									<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+									<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
+								</form>
+							{% endif %}
+						</div>
+						<div class="collapse navbar-collapse" id="navbarNav">
+							<div class="col-12 col-sm-6 mx-auto">
+								{% if action is defined %}
+									<form action="{{ action }}" class="input-group rounded-pill w-100 mt-3">
+										<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+										<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
+									</form>
+								{% else %}
+									<form action="{{ path('app_olona_talents_candidates') }}" class="input-group rounded-pill w-100 mt-3">
+										<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+										<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
+									</form>
+								{% endif %}
+							</div>
+
+							<div class="d-flex justify-content-end p-2 mt-3">
+								{% if app.user %}
+									<a href="{{ path('app_v2_dashboard_notification', {'isRead':'0'}) }}" class="position-relative me-4">
+										<i class="bi bi-bell fs-4 "></i>
+										<span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
+										{{ component('count_notification_component')}}
+										<span class="visually-hidden">unread messages</span>
+										</span>
+									</a>
+									{{ component('credit_user_component') }}
+									<div class="dropdown me-3">
+										<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
+											{% if app.user.gravatar is not null %}
+												{% if (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) and app.user.candidateProfile is not null and app.user.candidateProfile.fileName is not empty) %}
+													<img src="{{ asset('uploads/experts/' ~ app.user.candidateProfile.fileName) }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+												{% elseif (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) and app.user.entrepriseProfile is not null and app.user.entrepriseProfile.fileName is not empty)  %}
+													<img src="{{ asset('uploads/compagnies/' ~ app.user.entrepriseProfile.fileName) }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+												{% else %}
+													<img src="{{ app.user.gravatar }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+												{% endif %}
+											{% elseif (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) and app.user.candidateProfile is not null and app.user.candidateProfile.fileName is not empty) %}
+												<img src="{{ asset('uploads/experts/' ~ app.user.candidateProfile.fileName) }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+											{% elseif (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) and app.user.entrepriseProfile is not null and app.user.entrepriseProfile.fileName is not empty) %}
+												<img src="{{ asset('uploads/compagnies/' ~ app.user.entrepriseProfile.fileName) }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+											{% else %}
+												<img src="{{ asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" style="height: 27px; width: auto;" class="rounded-circle">
+											{% endif %}
+										</button>
+										<ul class="dropdown-menu text-small shadow">
+											<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Tableau de bord</a></li>
+											<li><a class="dropdown-item" href="{{ path('app_v2_prestation')}}">Mes prestations</a></li>
+											<li><a class="dropdown-item" href="{{ path('app_v2_dashboard_notification')}}">Mes notifications</a></li>
+											<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Mon profil</a></li>
+											<li><a class="dropdown-item" href="{{ path('app_v2_contacts')}}">Mon réseau</a></li>
+											<li><hr class="dropdown-divider"></li>
+											<li><a class="dropdown-item" href="{{ path('app_coworking_main')}}">Coworking</a></li>
+											<li><hr class="dropdown-divider"></li>
+											<li><a class="dropdown-item" href="{{ path('app_logout')}}">Se déconnecter</a></li>
+										</ul>
+									</div>
+								{% else %}
+									<a href="{{ path('app_login')}}" class="me-3 mt-2">Se connecter</a>
+								{% endif %}
+								<button id="switch-theme" class="btn btn-secondary btn-sm">
+									<i class="bi bi-moon-stars-fill"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</nav>
+			{% endblock %}
+			{% block sidebar %}{% endblock %}
+			{% block body %}{% endblock %}
+			{% block preview %}
+        	<a href="javascript:history.back()" class="d-none d-sm-block d-md-none btn btn-info fw-semibold text-uppercase px-4 my-5 me-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+			{% endblock %}
+		</div>
+        <footer class="py-3 my-4">
+          <div class="container">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+              <li class="nav-item"><a href="{{ path('app_v2_dashboard')}}" class="px-2 text-body-secondary">Olona Talents</a></li>
+              <li class="nav-item"><a href="{{ path('app_coworking_main')}}" class="px-2 text-body-secondary">Coworking</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_simulateur_portage')}}" class="px-2 text-body-secondary">Portage salarial</a></li>
+              <li class="nav-item"><a href="{{ path('app_blog_index')}}" class="px-2 text-body-secondary">Le blog</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_legal')}}" class="px-2 text-body-secondary">Mentions Légales</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_privacy')}}" class="px-2 text-body-secondary">Politique de Confidentialité</a></li>
+              <li class="nav-item"><a href="{{ path('app_home_terms')}}" class="px-2 text-body-secondary">Conditions d'Utilisation</a></li>
+              <li class="nav-item"><a href="{{ path('app_contact_us')}}" class="px-2 text-body-secondary">Nous contacter</a></li>
+            </ul>
+            <p class="text-center text-body-secondary">© 2024 Olona Talents, Tous droits réservés.</p>
+          </div>
+        </footer>
+		{% include "cookies_management.html.twig" %}
+		<script>
+
+			function loadCKEditor() {
+				if (typeof ClassicEditor === 'undefined') {
+					var scriptTag = document.createElement('script');
+					scriptTag.src = "{{ asset('assets/ckeditor5/ckeditor.js') }}";
+					document.body.appendChild(scriptTag);
+				}
+			}
+
+			loadCKEditor();
+			document.addEventListener('turbo:load', loadCKEditor);
+
+		</script>
+
+		<div aria-live="polite" aria-atomic="true" class="position-relative">
+			<div class="toast-container position-fixed bottom-0 end-0 p-3">
+				<!-- Toast pour le succès -->
+				<div id="successToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="toast-header">
+						<strong class="me-auto"><i class="bi bi-check-lg me-2"></i> Succès</strong>
+						<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+					<div class="toast-body">
+						Votre profil a été boosté avec succès!
+					</div>
+				</div>
+
+				<!-- Toast pour les erreurs -->
+				<div id="errorToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="toast-header">
+						<strong class="me-auto"><i class="bi bi-exclamation-octagon me-2"></i> Echec</strong>
+						<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+					<div class="toast-body">
+						Une erreur est survenue.
+					</div>
+				</div>
+
+				<div id="loadingToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="toast-header">
+						<div class="spinner-grow spinner-grow-sm me-3" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+						<strong class="me-auto">  Analyse de votre CV</strong>
+						<small></small>
+						<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+					<div class="toast-body">
+						Cette opération peut prendre quelques minutes
+					</div>
+					</div>
+
+			</div>
+		</div>
+		<!-- Modal confirmation depense crédits -->
+		<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="confirmationModalLabel">Confirmation</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					...
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="button" class="btn btn-primary" id="confirmButton">Confirmer</button>
+				</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal crédits insufisant -->
+		<div class="modal fade" id="lowCreditModal" tabindex="-1" aria-labelledby="lowCreditModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header bg-danger">
+						<h1 class="modal-title fs-5" id="lowCreditModalLabel">Crédits Insuffisants</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body p-4">
+						Il semble que vous n'ayez pas assez de crédits pour réaliser cette action. Pour continuer à utiliser nos services sans interruption, veuillez recharger votre compte.
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<a href="{{ path('app_v2_credit')}}" class="btn btn-primary" id="confirmButton">Recharger Maintenant</a>
+					</div>
+				</div>
+			</div>
+		</div>
+        <!-- Bouton pour déclencher le modal, habituellement caché -->
+        <button id="lowCreditModalTrigger" type="button" class="d-none" data-bs-toggle="modal" data-bs-target="#lowCreditModal"></button>
+		<!-- Modal porte d'entrée -->
+		<div class="modal fade" id="connectingModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<div class="modal-content">
+					<div class="">
+						<div class="row">
+							<div class="col-12 col-sm-4" style="
+								background-image:url('{{ asset('images/home/annexe/etape-2.webp')}}');
+								background-repeat: no-repeat;
+								background-size: cover;
+								background-position-x: left;
+								border-top-left-radius: 10px;
+								border-bottom-left-radius: 10px;">
+							</div>
+							<div class="col-12 col-sm-8 p-4 p-sm-5">
+								<h3 class="">Pour accéder à cette page, inscrivez-vous gratuitement</h3>
+								<p class="">Choisissez votre profil :</p>
+								<a href="{{ path('app_olona_talents_register', {'typology': 'Entreprise'})}}">
+								<div class="row border rounded mb-3">
+									<div class="col-4" style="
+										background-image:url('{{ asset('images/Entreprise.png')}}');
+										background-repeat: no-repeat;
+										background-size: cover;
+										background-position-x: left;
+										border-top-left-radius: 5px;
+										border-bottom-left-radius: 5px;">
+									</div>
+									<div class="col-8 py-4">
+										<span class="fw-bold">Client</span><br>
+										<span class="">J'ai un projet</span>
+									</div>
+								</div>
+								</a>
+								<a href="{{ path('app_olona_talents_register', {'typology': 'Candidat'})}}">
+								<div class="row border rounded mb-3">
+									<div class="col-4" style="
+										background-image:url('{{ asset('images/Candidat.png')}}');
+										background-repeat: no-repeat;
+										background-size: cover;
+										background-position-x: left;
+										border-top-left-radius: 5px;
+										border-bottom-left-radius: 5px;">
+									</div>
+									<div class="col-8 py-4">
+										<span class="fw-bold">Prestataire</span><br>
+										<span class="">Je cherche des projets</span>
+									</div>
+								</div>
+								</a>
+								<p class="">Déjà inscrit sur olona-talents.com ? <a href="{{ path('app_login')}}">Se connecter</a></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+        <!-- Bouton de retour en haut -->
+        <button id="backToTop" class="back-to-top" style="display: none;"><i class="bi bi-chevron-up"></i></button>
+
+	</body>
+	<script src="{{asset('assets/js/jquery.min.js')}}"></script>
+	<script src="{{asset('assets/js/jquery.steps.min.js')}}"></script>
+	<script src="{{asset('assets/js/jqueryValidate.js')}}"></script>
+	<script src="{{asset('assets/main.js')}}"></script>
+	{{ encore_entry_script_tags('main') }}
+</html>

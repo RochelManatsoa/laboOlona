@@ -1,0 +1,67 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}
+	Résultat de recherche | Olona Talents
+{% endblock %}
+
+{% block body %}
+<input type="hidden" id="hidden-query" value="{{ getSearchQuery('q') }}">
+	<div class="container">
+		<div class="shadow-custom p-2 p-sm-4">
+			{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE'))  %}
+            <h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+                <i class="bi bi-search text-warning me-2"></i>
+                Saisissez de nouvelles opportunités pour votre entreprise
+            </h1>
+            <p class="text-center"> 
+				Accédez aux offres d'emploi publiées par d'autres entreprises dans votre secteur. Positionnez votre agence ou cabinet sur des projets pertinents pour élargir votre clientèle et collaborer avec de nouveaux partenaires.
+			</p>
+			{% else %}
+			<h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+                <i class="bi bi-search text-warning me-2"></i>
+                Saisissez de nouvelles opportunités pour votre carrière
+            </h1>
+            <p class="text-center"> 
+				Accédez aux offres d'emploi publiées par des entreprises dans votre secteur. Positionnez-vous sur des projets pertinents pour élargir vos compétences et collaborer avec de nouveaux partenaires. Explorez des possibilités qui peuvent dynamiser votre trajectoire professionnelle et ouvrir la porte à de nouvelles expériences enrichissantes.
+			</p>
+			{% endif %}
+			<div class="row">
+				<div class="user-results col-12 col-sm-8">
+					<div id="joblistings-list">
+						{% if joblistings|length > 0 %}
+							{% include "v2/dashboard/result/parts/_part_joblistings_list.html.twig" %}
+						{% else %}
+							{% include "v2/dashboard/result/none/_none_joblistings.html.twig" %}
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-12 col-sm-4 d-none d-md-block">
+					<div class="d-flex flex-column flex-shrink-0 py-3 position-sticky top-0">
+						<div class="card mb-3">
+							<div class="card-body small">
+								<h3 class="card-title h5 mb-3">Statistiques</h3>
+								<span class="fw-bolder me-2">{{ app.user.credit.total }}</span>
+								<span class="fw-light">crédits disponibles</span><br>
+								<span class="fw-bolder me-2">0</span>
+								<span class="fw-light">annonces publiées</span><br>
+								<span class="fw-bolder me-2">0</span>
+								<span class="fw-light">favoris</span><br>
+								<span class="fw-bolder me-2">0</span>
+								<span class="fw-light">prestations</span><br>
+							</div>
+						</div>
+						<div class="card mb-3" id="candidate-card-container">
+							<div class="m-4 position-relative text-center">
+								<a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+									<img class="img-fluid" src="{{ asset('images/pubs/espace-pub-carre-regard-beauty.webp')}}">
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+{% endblock %}

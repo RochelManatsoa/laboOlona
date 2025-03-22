@@ -1,23 +1,40 @@
 
-{% extends 'base_v21.html.twig' %}
+{% extends 'security/base_login.html.twig' %}
 
 {% block title %}Accès non autorisé{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-center align-items-center py-5 my-5">
-    <div class="text-center">
+<section class="login-wrap">
+    <div class="bg-mask"></div>
+    <div class="login-header">
+        <div class="container pt-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="{{ path('app_home') }}">
+                        <img src="{{ asset('images/login_olona_talents.webp') }}" class="img-fluid" alt="Image">
+                    </a>
+                </div>
+                <div class="col-md-8">
+                    <div class="sign-up_">
+                        Pas encore membre ? <a href="{{ path('app_olona_talents_register') }}" class="fw-bolder">Inscrivez-vous</a> et rejoignez la communauté Olona-talents.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="login-content">
         <div class="container">
-            <div class="p-5 text-center shadow-lg rounded-3">
-                <h1 class="display-6"><i class="bi bi-exclamation-octagon me-2"></i> Accès refusé. </h1>
+            <div class="card shadow-lg border-0 rounded">
+                <h1 class="display-6 text-center mt-5"><i class="bi bi-exclamation-octagon me-2"></i> Accès refusé. </h1>
                 <div class="text-center col-6 mx-auto">
-                  <img src="{{ asset('images/not-allowed.png')}}" class="w-50 img-fluid">
-                  <p class="my-3">
+                <img src="{{ asset('images/not-allowed.png')}}" class="w-50 img-fluid">
+                <p class="my-3">
                     {% if message is defined %}
                         {{ message }}
                     {% else %}
                         Désolé, la page que vous souhaitez consulter est réservée à certaines autorisations.
                     {% endif %}
-                  </p>
+                </p>
                 </div>
                 
                 <!-- Centrez les boutons en ajoutant un nouveau div ici -->
@@ -32,10 +49,9 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
 
 {% block preview %}{% endblock %}

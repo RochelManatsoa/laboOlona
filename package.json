@@ -20,7 +20,7 @@
         "core-js": "^3.23.0",
         "postcss-loader": "^7.3.4",
         "regenerator-runtime": "^0.13.9",
-        "sass": "^1.69.5",
+        "sass": "^1.85.0",
         "sass-loader": "^13.3.2",
         "swup": "^3.0",
         "tom-select": "^2.2.2",

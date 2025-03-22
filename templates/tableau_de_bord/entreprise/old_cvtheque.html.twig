@@ -1,0 +1,274 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <h5 class="mb-0"> CVthèque </h5>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative"> 
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> CVthèque </li>
+            </ol>
+        </div>
+    </section>
+    <section class="recruteur-container">
+        <div class="recruteur-block d-block p-5 mb-4">
+            <div class="recruteur-top-item recruteur-filter">
+                <h1>Votre succès commence avec les bons candicats!</h1>
+                <form action="" class="form-search filter-listing-form-wrapper" method="GET">
+                    <div class="filter-listing-form">
+                        <div class="main-inner clearfix">
+                            <div class="content-main-inner">
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-4 has-border">
+                                        <div class="form-group-inner has-icon">
+                                            <i class="bi bi-search"></i>
+                                            <input type="text" name="filter-title" class="form-control " value="" placeholder="profil recherche, mot cle">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3 has-border">
+                                        <div class="form-group-inner form-group-location has-icon">
+                                            <i class="bi bi-pin"></i>
+                                            <select name="filter-location" class="form-control select2-hidden-accessible" data-placeholder="ville" tabindex="-1" aria-hidden="true">
+                                                <option value="">Ville</option>
+                                                <option class="level-0" value="">Antananarivo</option>
+                                            </select>
+                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
+                                                <span class="selection">
+                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_location-container" role="combobox">
+                                                        <span class="select2-selection__rendered" id="select2_location-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Ville</span></span>
+                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+                                                    </span>
+                                                </span>
+                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3">
+                                        <div class="form-group-inner form-group-categories has-icon">
+                                            <i class="bi bi-briefcase"></i>
+                                            <select name="filter-category" class="form-control select2-hidden-accessible" data-placeholder="Toutes les Categories" tabindex="-1" aria-hidden="true">
+                                                <option value="">Toutes les Categories</option>
+                                                <option class="level-0" value="">Marketing</option>
+                                                <option class="level-0" value="">Dévelopeur</option>
+                                            </select>
+                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
+                                                <span class="selection">
+                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_category-container" role="combobox">
+                                                        <span class="select2-selection__rendered" id="select2_category-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Toutes les categories</span></span>
+                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+                                                    </span>
+                                                </span>
+                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-2 wrapper-submit flex-middle">
+                                        <button class="btn-submit btn btn-inverse" type="submit">Trouver des candidats</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="advance-search-wrapper">
+                            <div class="advance-search-wrapper-fields">
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-3 has-border">
+                                        <div class="form-group-inner form-group-genre">
+                                            <select name="filter-gender" class="form-control select2-hidden-accessible" data-placeholder="Genres" tabindex="-1" aria-hidden="true">
+                                                <option value="">Genres</option>
+                                                <option value="">Tous genres</option>
+                                                <option value="">feminins</option>
+                                                <option value="">Masculins</option>
+                                            </select>
+                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
+                                                <span class="selection">
+                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_genre-container" role="combobox">
+                                                        <span class="select2-selection__rendered" id="select2_genre-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Genres</span></span>
+                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+                                                    </span>
+                                                </span>
+                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3 has-border">
+                                        <div class="form-group-inner form-group-degree">
+                                            <select name="filter-degree" class="form-control select2-hidden-accessible" data-placeholder="Qualification" tabindex="-1" aria-hidden="true">
+                                                <option value="">Qualification</option>
+                                                <option value="">Certificat</option>
+                                                <option value="">Diplôme d'associé</option>
+                                                <option value="">Licence Je travaille</option>
+                                                <option value="">Une maîtrise</option>
+                                                <option value="">Doctorat</option>
+                                            </select>
+                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
+                                                <span class="selection">
+                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_degree-container" role="combobox">
+                                                        <span class="select2-selection__rendered" id="select2_degree-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Qualifications</span></span>
+                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+                                                    </span>
+                                                </span>
+                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3 has-border">
+                                        <div class="form-group-inner form-group-year">
+                                            <select name="filter-year" class="form-control select2-hidden-accessible" data-placeholder="Experiences" tabindex="-1" aria-hidden="true">
+                                                <option value="">Experiences</option>
+                                                <option value="">Moins d'un an</option>
+                                                <option value="">2 ans</option>
+                                                <option value="">3 ans</option>
+                                                <option value="">4 ans</option>
+                                                <option value="">5 ans et +</option>
+                                            </select>
+                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
+                                                <span class="selection">
+                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_year-container" role="combobox">
+                                                        <span class="select2-selection__rendered" id="select2_year-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Experiences</span></span>
+                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+                                                    </span>
+                                                </span>
+                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3">
+                                        <div class="form-group-inner form-group-languages">
+                                            <select name="filter-languages" class="form-control select2-hidden-accessible" data-placeholder="Langues" tabindex="-1" aria-hidden="true">
+                                                <option value="">Langues</option>
+                                                <option value="">Français</option>
+                                                <option value="">Anglais</option>
+                                                <option value="">Allemand</option>
+                                            </select>
+                                            <span class="select2 select2-container" dir="ltr" style="width: 100%;">
+                                                <span class="selection">
+                                                    <span class="select2-selection select2-selection--single" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2_langues-container" role="combobox">
+                                                        <span class="select2-selection__rendered" id="select2_langues-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">Langues</span></span>
+                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+                                                    </span>
+                                                </span>
+                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="recruteur-block list-profil d-block p-5 mb-4">
+            <div class="layout-profil-container">
+                <div class="d-flex ordering-wrapper mb-4">
+                    <div class="results-count">Affichage de 1 - 9 sur 18 résultats</div>
+                </div>
+                <div class="item_profil-container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="candidate-card">
+                                <div class="candidate-card-item">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="candidate-photo">
+                                            <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                                        </div>
+                                        <div class="candidate-info-content">
+                                            <h2>Nom & prénoms</h2>
+                                            <div class="featured d-md-flex align-items-center">Marketing <span class="certificated">Certifié</span></div>
+                                            <button class="favoris-add"><i class="bi bi-star"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="infos-middle d-flex align-items-center">
+                                        <div class="ville-info"><i class="bi bi-pin"></i> Antananarivo</div>
+                                        <div class="pretention-info"><i class="bi bi-cash-coin"></i> 230K / jour</div>
+                                    </div>
+                                    <div class="infos-desc">
+                                        Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
+                                    </div>
+                                    <div class="infos-footer d-flex align-items-center">
+                                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': 3634 })}}">Voir son profil</a>
+                                        <a class="btn" href="">Consulter son CV directement</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- si favoris active ajout class active a côte de favoris-add  -->
+                        <div class="col-md-6">
+                            <div class="candidate-card">
+                                <div class="candidate-card-item">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="candidate-photo">
+                                            <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                                        </div>
+                                        <div class="candidate-info-content">
+                                            <h2>Nom & prénoms</h2>
+                                            <div class="featured d-md-flex align-items-center">Marketing <span class="certificated">Certifié</span></div>
+                                            <button class="favoris-add active"><i class="bi bi-star"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="infos-middle d-flex align-items-center">
+                                        <div class="ville-info"><i class="bi bi-pin"></i> Antananarivo</div>
+                                        <div class="pretention-info"><i class="bi bi-cash-coin"></i> 230K / jour</div>
+                                    </div>
+                                    <div class="infos-desc">
+                                        Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
+                                    </div>
+                                    <div class="infos-footer d-flex align-items-center">
+                                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': 3634 })}}">Voir son profil</a>
+                                        <a class="btn" href="">Consulter son CV directement</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- si profil le plus visite ajout <span class="diamond_"> à côte du nom  -->
+                        <div class="col-md-6">
+                            <div class="candidate-card">
+                                <div class="candidate-card-item">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="candidate-photo">
+                                            <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                                        </div>
+                                        <div class="candidate-info-content">
+                                            <h2>Nom & prénoms 
+                                                <span class="diamond_">
+                                                    <img src="{{ asset('v2/images/dashboard/diamond_icon.svg')}}" alt="">
+                                                    <div class="popover">
+                                                        <div class="popover-content">Profil le plus visité</div>
+                                                    </div>
+                                                </span>
+                                            </h2>
+                                            <div class="featured d-md-flex align-items-center">Marketing <span class="certificated">Certifié</span></div>
+                                            <button class="favoris-add active"><i class="bi bi-star"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="infos-middle d-flex align-items-center">
+                                        <div class="ville-info"><i class="bi bi-pin"></i> Antananarivo</div>
+                                        <div class="pretention-info"><i class="bi bi-cash-coin"></i> 230K / jour</div>
+                                    </div>
+                                    <div class="infos-desc">
+                                        Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
+                                    </div>
+                                    <div class="infos-footer d-flex align-items-center">
+                                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': 3634 })}}">Voir son profil</a>
+                                        <a class="btn" href="">Consulter son CV directement</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -15,6 +15,7 @@ use App\Form\Prestation\AvailabilityType;
 use App\Entity\BusinessModel\BoostFacebook;
 use App\Form\Prestation\TarifPrestationType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
@@ -130,11 +131,10 @@ class PrestationType extends AbstractType
             ])
             ->add('availability', AvailabilityType::class, [
                 'required' => false,
-                'label' => 'Disponibilité',
+                'label' => false,
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
-                'help' => 'Choisissez les jours et heures où vous êtes disponible pour cette prestation.',
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => Prestation::CHOICE_STATUS
@@ -276,25 +276,15 @@ class PrestationType extends AbstractType
                 ],
                 'help' => 'Sélectionnez le secteur d\'activité pour cette prestation.',
             ])
-            ->add('file', FileType::class, [
-                'required' => false,
-                'label' => 'app_identity_expert_step_one.avatar_desc',
-                'attr' => ['class' => 'd-none'],
-                'constraints' => [
-                    new File([
-                        'maxSize' => '2048k',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                            'image/jpg',
-                            'image/bmp',
-                        ],
-                    ])
-                ],
+            ->add('file', VichImageType::class, [
+                'label' => 'Image de couverture',
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
-                'help' => 'Téléchargez une image ou un fichier (JPEG, PNG, BMP). Taille maximale : 2 Mo.',
+                'required' => false,
+                'allow_delete' => true, 
+                'download_uri' => true, 
+                'image_uri' => true,    
             ])
         ;
 

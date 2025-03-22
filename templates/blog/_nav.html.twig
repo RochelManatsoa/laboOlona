@@ -1,49 +1,61 @@
-<nav class="container navbar navbar-expand-lg px-5">
-    <a class="navbar-brand" href="{{ path('app_blog_index')}}">
-      <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" alt="logo" class="px-0 img-fluid" style="width: 100px;">
-    </a>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link px-1 mx-1 text-white" aria-current="page" href="{{ path('app_blog_index')}}">Le Blog</a>
-        <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_coworking_main')}}">Coworking</a>
-        <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_home_simulateur_portage')}}">Portage salarial</a>
-        <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_contact_us')}}">Nous contacter</a>
-        <a class="nav-link px-1 mx-1 text-white" href="{{ path('app_home')}}">Olona Talents <i class="bi me-1 bi-box-arrow-in-right"></i></a>
-      </div>
-      {% if not app.user %}
-          <div class="ms-auto d-flex align-items-center">
-              <a href="{{ path('app_coworking_login') }}" class="text-white me-2">Se connecter</a>
-              <button id="switch-theme" class="btn btn-secondary btn-sm">
-                  <i class="bi bi-moon-stars-fill"></i>
-              </button>
-          </div>
-      {% else %}
-          <div class="ms-auto d-flex align-items-center">
-              <div class="dropdown me-2">
-                  <button class="btn dropdown-toggle text-white d-inline-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class="bi bi-person-circle "></i>
-                  </button>
-                  <ul class="dropdown-menu">
-                      <li>
-                          <a class="dropdown-item position-relative" href="{{ path('app_cart_index') }}">
-                              Mon panier
-                              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                  {{ component('cart_user_component') }}
-                                  <span class="visually-hidden">unread messages</span>
-                              </span>
-                          </a>
-                      </li>
-                      <li><a class="dropdown-item" href="{{ path('app_order_index') }}">Mes commandes</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="{{ path('app_v2_dashboard') }}">Olona Talents</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="{{ path('app_logout') }}">Logout <i class="bi bi-box-arrow-right"></i></a></li>
-                  </ul>
-              </div>
-              <button id="switch-theme" class="btn btn-secondary btn-sm">
-                  <i class="bi bi-moon-stars-fill"></i>
-              </button>
-          </div>
-      {% endif %}
+<div class="home-header-top">
+    <div class="container d-flex align-items-center justify-content-between p-2">
+        <div class="logo_to_home">
+            <a href="{{ path('app_home') }}" class="login_home"><img src="{{ asset('images/logo-olona-talents-white600x200.png')}}" alt="Olona Talents" width="150" height="56"></a>
+        </div>
+        <div class="nav-top-right">
+            <ul class="nav-list-top">
+                <li class="nav-item-top nav_blog">
+                    <a class="nav--link" href="{{ path('app_blog_index') }}">Le Blog</a>
+                </li>
+                <li class="nav-item-top">
+                    <a class="nav--link" href="{{ path('app_coworking_main') }}">Coworking</a>
+                </li>
+                <li class="nav-item-top">
+                    <a class="nav--link" href="{{ path('app_home_simulateur_portage') }}">Portage salarial</a>
+                </li>
+                <li class="nav-item-top">
+                    <a class="nav--link" href="{{ path('app_contact_us') }}">Nous contacter</a>
+                </li>
+            </ul>
+        </div>
+        {% if not app.user %}
+        <div class="right-top-login">
+            <a href="{{ path('app_coworking_login') }}" class="login_home btn-primary me-3 mt-2">Se connecter</a>
+            {#<button id="switch-theme" class="btn btn-secondary btn-sm">
+                <i class="bi bi-moon-stars-fill"></i>
+            </button>#}
+        </div>
+        {% else %}
+        <div class="right-top-login">
+            <div class="dropdown me-2">
+                <button class="btn dropdown-toggle text-white d-inline-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item position-relative" href="{{ path('app_cart_index') }}">
+                            Mon panier
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ component('cart_user_component') }}
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li><a class="dropdown-item" href="{{ path('app_order_index') }}">Mes commandes</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ path('app_v2_dashboard') }}">Olona Talents</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Logout <i class="bi bi-box-arrow-right"></i></a></li>
+                </ul>
+            </div>
+            {#<button id="switch-theme" class="btn btn-secondary btn-sm">
+                <i class="bi bi-moon-stars-fill"></i>
+            </button>#}
+        </div>
+        {% endif %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-list h4"></i>
+        </button>
     </div>
-</nav>
+</div>
