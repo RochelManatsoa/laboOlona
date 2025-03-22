@@ -537,6 +537,7 @@ class EntrepriseController extends AbstractController
         $data['credit'] = $currentUser->getCredit()->getTotal();
         $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser,false);
         $data['favorisCount'] = count($entreprise->getFavoris());
+        $data['candidaturesCount'] = $this->em->getRepository(Applications::class)->countByEntrepriseProfile($entreprise->getId());
 
         return $data;
     }
