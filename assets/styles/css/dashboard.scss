@@ -2695,3 +2695,19 @@ span.vue_profil {
         background-image: url($airtel-money-image);
     }
 }
+
+.view_s-info3-wrap {
+    background: #f0b621;
+    padding: 20px;
+    color: black;
+    font-size: 16px;
+    #contactDetails { 
+        word-break: break-word;
+        strong {
+            display: block;
+            font-weight: bold;
+            font-size: 17px;
+        }
+        
+    }
+}
