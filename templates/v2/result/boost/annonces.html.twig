@@ -6,7 +6,7 @@
                 <div class="col-lg-6 col-md-6">
                     <div class="jobs-grid m-b30">
                         <div class="media">
-                            <img src="{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/annonce.png') }}');" alt="{{ generatePseudoById(joblisting.id) }}" alt="#">
+                            <img class="img-fluid profile-img" style="border-radius: 10px; object-fit: cover;" src="{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise2.webp') }}" alt="{{ generatePseudoById(joblisting.id) }}" >
                         </div>
                         <span class="job-post-duration"><span class="fw-lighter small">Date limite :</span> {{ joblisting.dateExpiration|date('d/m/Y') }}</span>
                         <div class="jobs-category"><span class="bg-urgent">Urgent</span></div>
