@@ -36,7 +36,7 @@
             <div class="left-infos-profils d-md-flex justify-content-between">
                 <div class="infos-profils d-md-flex justify-content-between">
                     <div class="img-profils">
-                        <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ entreprise.fileName ? asset('uploads/experts/' ~ entreprise.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
+                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ entreprise.fileName ? asset('uploads/compagnies/' ~ entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}');" alt="Avatar"></div>
                     </div>
                     <div class="detail-profils">
                         <div class="nomBlock d-md-flex align-items-center">
@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="btn-profils">
-                    <a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="">Partager mon entreprise</a>
+                    <a routerlink="" class="d-inline-block position-relative btn btn-pdp disabled" href="">Partager mon entreprise</a>
                     {#<a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="">Voir mon CV</a>#}
                 </div>
             </div>	
