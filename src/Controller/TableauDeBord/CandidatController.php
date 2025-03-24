@@ -325,7 +325,7 @@ class CandidatController extends AbstractController
                 ]
             );
             
-            return $this->redirectToRoute('app_v2_user_order');
+            return $this->redirectToRoute('app_tableau_de_bord_candidat_mes_commandes');
         }
         $params['status'] = 'Succès';
         $params['order'] = $order;
@@ -462,6 +462,37 @@ class CandidatController extends AbstractController
     public function tarifs(): Response
     {
         return $this->render('tableau_de_bord/candidat/tarifs.html.twig', $this->getData());
+    }
+    
+    #[Route('/abonnement', name: 'app_tableau_de_bord_candidat_abonnement')]
+    public function subcription(OrderManager $orderManager, Request $request, FinanceExtension $financeExtension, DeviseRepository $deviseRepository): Response
+    {
+        $params = $this->getData();
+        $package = $this->em->getRepository(Package::class)->findOneBy(['slug' => 'abonnement-candidat']);
+        /** @var Devise $currency */
+        $currency = $this->em->getRepository(Devise::class)->findOneBy([
+            'slug' => 'euro'
+        ]);
+        $order = $orderManager->init();
+        $order->setPackage($package);
+        $order->setCurrency($currency);
+        $order->setTotalAmount($financeExtension->convertToEuro($package->getPrice(), $currency));
+        $form = $this->createForm(OrderType::class, $order);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $order = $orderManager->saveForm($form);
+            
+            return $this->redirectToRoute('app_tableau_de_bord_candidat_mobile_money_checkout', [
+                'orderNumber' => $order->getOrderNumber()
+            ]);
+        } 
+        $params['devise'] = $deviseRepository->findOneBy(['slug' => 'euro']);
+        $params['package'] = $package;
+        $params['form'] = $form->createView();
+        $params['price'] = $financeExtension->convertToEuro($package->getPrice(), $currency);
+
+        return $this->render('tableau_de_bord/candidat/abonnement.html.twig', $params);
     }
 
     public function getData()

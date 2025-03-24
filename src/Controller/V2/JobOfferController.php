@@ -172,6 +172,10 @@ class JobOfferController extends AbstractController
     #[Route('/job-offer/candidate/view/{id}', name: 'app_v2_candidate_view_job_offer')]
     public function candidateViewJobOffer(Request $request, int $id): Response
     {
+        return $this->redirectToRoute('app_tableau_de_bord_candidat_view_job_offer', [
+            'id' => $id
+        ]);
+
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);
