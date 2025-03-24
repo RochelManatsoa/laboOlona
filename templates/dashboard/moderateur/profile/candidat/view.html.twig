@@ -60,12 +60,6 @@
 			{% include "dashboard/moderateur/profile/candidat/sections/cv.html.twig" %}
 			{% include "dashboard/moderateur/profile/candidat/sections/email.html.twig" %}
 		</div>
-		<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3 px-5">
-			<i class="mx-2 bi bi-arrow-left"></i>Retour
-		</a>
-        <button type="button" id="submitButton" class="btn btn-success rounded-pill my-3 px-5">
-            <i class="mx-2 bi bi-save"></i>Enregistrer
-        </button>
 	</div>
     <!-- Modal -->
         <div class="modal fade" id="assignationModalAdd" tabindex="-1" aria-labelledby="assignationModalAddLabel" aria-hidden="true">
@@ -109,10 +103,6 @@
 <script>
     document.querySelector('.profile-img').addEventListener('click', function() {
         document.getElementById('{{ formCandidate.file.vars.id }}').click();
-    });
-    document.getElementById('submitButton').addEventListener('click', function() {
-        document.getElementById('formCandidate').submit();
-        document.getElementById('formCvCandidate').submit();
     });
     function confirmChange(selectElement) {
         if (confirm('Êtes-vous sûr de vouloir changer le statut du candidat ?')) {

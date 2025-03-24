@@ -66,20 +66,10 @@
       <img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt=""><span class="sidebar-text">Notifications</span><span class="link-bulle">{{ notificationsCount }}</span>
       </a>
     </li>
-    <li class="nav-item click-sub">
-      <span class="nav-link sous-menu_ {{ (current_route == 'app_tableau_de_bord_candidat_boost' or current_route == 'app_tableau_de_bord_candidat_tarifs') ? 'underline' : '' }}"><img src="{{ asset('v2/images/dashboard/taches.svg')}}" alt=""><span class="sidebar-text">Mes abonnements </span></span>
-      <ul class="sub-nav-pills">
-        <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_boost')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_boost' ? 'underline' : '' }}" aria-current="page">
-          Mode freemium
-          </a>
-        </li>
-        <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_tarifs' ? 'underline' : '' }}" aria-current="page">
-          Mode premium
-          </a>
-        </li>
-      </ul>
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_candidat_tarifs' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/tarif.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">Tarifs</span>
+      </a>
     </li>
     <li class="nav-item click-sub">
       <span class="sep-menu"></span> 
