@@ -24,23 +24,27 @@
     <body id="base-coworking">
         {% block header %}
             <!-- Boutons en haut à droite -->
-            {% include "coworking/_nav.html.twig" %}
+            {% if not is_granted('ROLE_COWORKING') %}
+                {% include "coworking/_nav.html.twig" %}
+            {% endif %}
             {% block admin %}
                 {% include "coworking/_nav_admin.html.twig" %}
             {% endblock %}
         {% endblock %}
 
         {% block body %}{% endblock %}
-        <div class="contact_fixed_bottom">
-            <div class="contact_fixed_bottom_item">
-                <h4>Réservez par téléphone</h4>
-                <div class="whatsapp_item">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <a href="tel:+261320373432">+261 32 03 734 32</a>
+        {% if not is_granted('ROLE_COWORKING') %}
+            <div class="contact_fixed_bottom">
+                <div class="contact_fixed_bottom_item">
+                    <h4>Réservez par téléphone</h4>
+                    <div class="whatsapp_item">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <a href="tel:+261320373432">+261 32 03 734 32</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
         <footer class="footer-light bg-cover">
             <div class="container">
                 <div class="footer-top">

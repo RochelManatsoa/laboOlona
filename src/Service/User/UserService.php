@@ -8,6 +8,7 @@ use DateTime;
 use Symfony\Component\Form\Form;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -187,5 +188,18 @@ class UserService
     public function checkUserPassword(User $user, string $plainPassword):bool
     {
         return $this->encoder->isPasswordValid($user, $plainPassword);
+    }
+
+    public function getRedirectRoute(User $user): array
+    {
+        $profile = $this->checkProfile($user);
+        if ($profile instanceof CandidateProfile) {
+            return ['route' => 'app_tableau_de_bord_candidat', 'params' => []];
+        }
+        if ($profile instanceof EntrepriseProfile || $profile instanceof ModerateurProfile) {
+            return ['route' => 'app_tableau_de_bord_entreprise', 'params' => []];
+        }
+
+        return ['route' => 'app_v2_dashboard_create_profile', 'params' => []];
     }
 }

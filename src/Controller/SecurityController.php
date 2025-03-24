@@ -49,6 +49,7 @@ class SecurityController extends AbstractController
     #[Route(path: '/coworking/login', name: 'app_coworking_login', options: ['sitemap' => true])]
     public function loginCoworking(AuthenticationUtils $authenticationUtils): Response
     {
+        $this->requestStack->getSession()->set('fromPath', 'app_coworking_main');
         if ($this->getUser()) {
             return $this->redirectToRoute('app_coworking_main');
         }
@@ -138,37 +139,10 @@ class SecurityController extends AbstractController
         if( $this->requestStack->getSession()->get('fromPath') === 'app_coworking_main'){
             return $this->redirectToRoute('app_coworking_main');
         }
+
+        $routeInfo = $this->userService->getRedirectRoute($user);
         
-        if (!$user instanceof User) {
-            return $this->redirectToRoute('app_profile');
-        }
-        if ($user->getType() === User::ACCOUNT_MODERATEUR) {
-            return $this->redirectToRoute('app_dashboard_moderateur');
-        }
-    
-        if ($user->getType() === User::ACCOUNT_ENTREPRISE) {
-            if ($user->getEntrepriseProfile() instanceof EntrepriseProfile && $user->getEntrepriseProfile()->getStatus() === EntrepriseProfile::STATUS_BANNED) {
-                return $this->redirectToRoute('app_logout');
-            }
-            return $this->redirectToRoute('app_tableau_de_bord_entreprise');
-        }
-    
-        if ($user->getType() === User::ACCOUNT_CANDIDAT) {
-            if ($user->getCandidateProfile() instanceof CandidateProfile && $user->getCandidateProfile()->getStatus() === CandidateProfile::STATUS_BANNISHED) {
-                return $this->redirectToRoute('app_logout');
-            }
-            return $this->redirectToRoute('app_tableau_de_bord_candidat');
-        }
-
-        if ($user->getType() === User::ACCOUNT_REFERRER) {
-            return $this->redirectToRoute('app_v2_dashboard');
-        }
-
-        if ($user->getType() === User::ACCOUNT_EMPLOYE) {
-            return $this->redirectToRoute('app_v2_dashboard');
-        }
-    
-        return $this->redirectToRoute('app_profile');
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
     }
     
     #[Route(path: '/connect/google', name: 'connect_google_start')]

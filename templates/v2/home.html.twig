@@ -161,7 +161,7 @@
                                         <div class="mid-content">
                                             <span class="job-time">{{ job_offer.typeContrat.nom }}</span>
                                             <div class="company-logo">
-                                                <img src="{{ job_offer.entreprise.fileName ? asset('uploads/compagnies/' ~ job_offer.entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}" alt="logo company">
+                                                <img src="{{ job_offer.entreprise.fileName ? asset('uploads/compagnies/' ~ job_offer.entreprise.fileName) : asset('images/logo_defaut_entreprise.webp') }}" alt="logo company">
                                             </div>
                                             <div class="company-info">
                                                 <a href="{{ path('app_v2_view_recruiter_profile', {'id' : job_offer.entreprise.id}) }}" class="company-name">{{ job_offer.entreprise.nom }}</a>
@@ -193,7 +193,7 @@
                                 <div class="mid-content">
                                     <span class="job-time">{{ job_offer.typeContrat.nom }}</span>
                                     <div class="company-logo">
-                                    <img src="{{ job_offer.entreprise.fileName ? asset('uploads/compagnies/' ~ job_offer.entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise2.webp') }}" alt="logo company">
+                                    <img src="{{ job_offer.entreprise.fileName ? asset('uploads/compagnies/' ~ job_offer.entreprise.fileName) : asset('images/logo_defaut_entreprise.webp') }}" alt="logo company">
                                     </div>
                                     <div class="company-info">
                                         <a href="{{ path('app_v2_view_recruiter_profile', {'id' : job_offer.entreprise.id}) }}" class="company-name">{{ job_offer.entreprise.nom }}</a>
