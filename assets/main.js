@@ -353,22 +353,22 @@ $(function() {
     }
     
     function handleThemeChange() {
-        $('#switch-theme').off('click').on('click', function() {
-            const newTheme = $('body').hasClass('bootstrap-light') ? 'bootstrap-dark' : 'bootstrap-light';
-            updateThemePreference(newTheme);
-            updateLogo();
-        });
+        // $('#switch-theme').off('click').on('click', function() {
+        //     const newTheme = $('body').hasClass('bootstrap-light') ? 'bootstrap-dark' : 'bootstrap-light';
+        //     updateThemePreference(newTheme);
+        //     updateLogo();
+        // });
 
         // Initialisation de CKEditor
-        let emailContentEditor;
-        ClassicEditor
-            .create(document.querySelector('#notification_profile_contenu'))
-            .then(editor => {
-                emailContentEditor = editor;
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        // let emailContentEditor;
+        // ClassicEditor
+        //     .create(document.querySelector('#notification_profile_contenu'))
+        //     .then(editor => {
+        //         emailContentEditor = editor;
+        //     })
+        //     .catch(error => {
+        //         console.error(error);
+        //     });
 			
         $('#templateEmail').on('change', function() {
             console.log('change')
