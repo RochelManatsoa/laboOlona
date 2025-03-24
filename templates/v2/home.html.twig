@@ -302,10 +302,10 @@
                             <div class="ot_services ftr-list-center">
                                 <h3 class="title">Pour les candidats</h3>
                                 <ul>
-                                    <li><a href="#">Tableau de bord utilisateur</a></li>
-                                    <li><a href="#">Alerte d'emploi</a></li>
-                                    <li><a href="#">Candidature</a></li>
-                                    <li><a href="#">Annonces de services</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_candidat')}}">Tableau de bord utilisateur</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_candidat_trouver_des_missions')}}">Alerte d'emploi</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_candidat_mes_candidatures')}}">Candidature</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_candidat_annuaire_de_services')}}">Annonces de services</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -314,10 +314,10 @@
                             <div class="ot_services ftr-list-center">
                                 <h3 class="title">Pour les entreprises</h3>
                                 <ul>
-                                    <li><a href="#">Tableau de bord utilisateur</a></li>
-                                    <li><a href="#">Consultation CVthèque</a></li>
-                                    <li><a href="#">Offre d'emploi</a></li>
-                                    <li><a href="#">Contact</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_entreprise')}}">Tableau de bord utilisateur</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}">Consultation CVthèque</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_entreprise_offre_emploi')}}">Offre d'emploi</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_entreprise_assistance')}}">Contact</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -336,11 +336,11 @@
                             <div class="ot_services ftr-list-center">
                                 <h3 class="title">Liens divers</h3>
                                 <ul>
-                                    <li><a href="#">Accueil</a></li>
-                                    <li><a href="/portage-salarial">Portage salariale</a></li>
-                                    <li><a href="/coworking/">coworking</a></li>
+                                    <li><a href="{{ path('app_home')}}" target="_blank">Accueil</a></li>
+                                    <li><a href="{{ path('app_home_simulateur_portage')}}" target="_blank">Portage salariale</a></li>
+                                    <li><a href="{{ path('app_coworking_main')}}" target="_blank">Coworking</a></li>
                                     <li><a href="#">Prestations</a></li>
-                                    <li><a href="/blog/">Le Blog</a></li>
+                                    <li><a href="{{ path('app_blog_index')}}" target="_blank">Le Blog</a></li>
                                 </ul>
                             </div>
                         </div>
