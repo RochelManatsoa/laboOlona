@@ -79,7 +79,7 @@ class CandidatType extends AbstractType
                 'choice_label' => 'nom',
                 'autocomplete' => true,
                 'multiple' => true,
-                'required' => true,
+                'required' => false,
             ])
             ->add('secteurs', EntityType::class, [
                 'class' => Secteur::class,
@@ -94,19 +94,19 @@ class CandidatType extends AbstractType
                 'label' => 'Abonnement premium',
                 'required' => false,
             ])
-            ->add('availability', ChoiceType::class, [
-                'choices' => [
-                    'Immediatement' => 'immediate',
-                    'A partir du' => 'from-date',
-                    'Temps plein' => 'full-time',
-                    'Temps partiel' => 'part-time',
-                    'En poste' => 'not-available',
-                ],
-                'data' => 'immediate',
-                'required' => false,
-                'label' => false,
-                'placeholder' => 'Disponibilité ...',
-            ])
+            // ->add('availability', ChoiceType::class, [
+            //     'choices' => [
+            //         'Immediatement' => 'immediate',
+            //         'A partir du' => 'from-date',
+            //         'Temps plein' => 'full-time',
+            //         'Temps partiel' => 'part-time',
+            //         'En poste' => 'not-available',
+            //     ],
+            //     'data' => 'immediate',
+            //     'required' => false,
+            //     'label' => false,
+            //     'placeholder' => 'Disponibilité ...',
+            // ])
             ->add('tarifCandidat', TarifCandidatType::class, [
                 'required' => false,
                 'label' => 'Prétention salariale',
