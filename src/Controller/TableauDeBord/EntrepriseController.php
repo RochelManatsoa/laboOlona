@@ -70,7 +70,6 @@ class EntrepriseController extends AbstractController
     public function index(): Response
     {
         $params = $this->getData();
-        $entreprise = $params['entreprise'];
         $currentUser = $params['currentUser'];
         $profileViews = $this->em->getRepository(ActivityLog::class)->findProfileViewsByUser($currentUser);
         $profiles = [];
