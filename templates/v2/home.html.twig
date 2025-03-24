@@ -173,7 +173,7 @@
                                             <span class="job-post-time">{{ job_offer.dateCreation|time_ago }}</span>
                                         </div>
                                         <div class="aply-btn-area">
-                                            <a href="#" class="aplybtn btn-primary">
+                                            <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}"  class="aplybtn btn-primary">
                                                 <i class="bi bi-arrow-right"></i>
                                             </a>
                                         </div>
@@ -205,7 +205,7 @@
                                     <span class="job-post-time">{{ job_offer.dateCreation|time_ago }}</span>
                                 </div>
                                 <div class="aply-btn-area">
-                                    <a href="#" class="aplybtn btn-primary">
+                                    <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}"  class="aplybtn btn-primary">
                                         <i class="bi bi-arrow-right"></i>
                                     </a>
                                 </div>
@@ -215,7 +215,7 @@
                 {% endfor %}
                 </div>
                 <div class="btn-signUp">
-                    <a href="" class="btn btn-primary">Afficher tous les recruteurs</a>
+                    <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}" class="btn btn-primary">Afficher tous les recruteurs</a>
                 </div>
             </div>
         </div>

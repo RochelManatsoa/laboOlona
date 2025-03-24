@@ -9,7 +9,7 @@
 					<a href=""><img src="{{ candidate.fileName ? asset('uploads/experts/' ~ candidate.fileName) : asset('images/dashboard/avatar_masculun.webp') }}" alt=""></a>
 				</div>
 				<div class="col-md-10 aside-right-item_">
-					<div class="detail_annonce_">
+					<div class="">
 						<h2>
                             {% if app.user %}
                                 <a href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}" class="btn-primary">
@@ -57,12 +57,8 @@
                         <div class="right-content d-flex ms-auto my-2 me-2">
                             {% if app.user %}
                                 <a class="btn btn-primary" href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}">Plus de details</a>
-                            {% else %}
-                                <div class="d-none d-md-block">
-                                    <button class="btn btn-primary candidate-link" type="button" data-id="{{ candidate.id }}">Plus de details</button>
-                                </div>
-                                
-                                <div class="d-block d-md-none">
+                            {% else %}                                
+                                <div class="">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_view_profile', {'id':candidate.id}) }}">Plus de détails</button>
                                 </div>
                             {% endif %}
