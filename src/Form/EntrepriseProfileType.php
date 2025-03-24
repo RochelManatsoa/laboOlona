@@ -29,6 +29,7 @@ class EntrepriseProfileType extends AbstractType
                 'help' => 'Raison sociale de l\'entreprise.',
             ])
             ->add('isPremium', CheckboxType::class, [
+                'required' => false,
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
