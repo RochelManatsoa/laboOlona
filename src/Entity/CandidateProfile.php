@@ -1115,4 +1115,19 @@ class CandidateProfile
 
         return $this;
     }
+    
+    public function getProfileCompletion(): int
+    {
+        $score = 0;
+        $total = 6; 
+    
+        if ($this->resume) $score++;
+        if (!$this->competences->isEmpty()) $score++;
+        if (!$this->experiences->isEmpty()) $score++;
+        if (!$this->secteurs->isEmpty()) $score++;
+        if ($this->titre) $score++;
+        if ($this->cv) $score++;
+    
+        return intval(($score / $total) * 100);
+    }
 }

@@ -35,26 +35,44 @@
                 <h1 class="left-inner-block"><img src="{{ asset('v2/images/dashboard/stars-color-icon.svg')}}" alt="">Olona Talents</h1>
             </div>
             <div class="rightt-inner-block">
+                {% if completion == 100 %}
+                Bravo!<br/>
+                votre profil est complet !
+                {% else %}
                 Complétez votre profil,<br/>
                 vous y êtes presque !
+                {% endif %}
                 <div class="profil-complete-radial">
                     <svg xmlns="http://www.w3.org/2000/svg" width="300" height="174">
                         <g transform="translate(40, 0)">
                             <g class="apexcharts-radialbar">
-                            <g>
-                                <g class="apexcharts-tracks">
-                                <path d="M 45.18 110 A 64.82 64.82 0 0 1 174.82 110" fill="none" stroke="#958DF4" stroke-width="22.33" stroke-linecap="butt"/>
-                                </g>
                                 <g>
-                                <path d="M 45.18 110 A 64.82 64.82 0 0 1 155.84 64.16" fill="none" stroke="#F0B621" stroke-width="22.33" stroke-linecap="butt"/>
-                                <circle r="48.66" cx="110" cy="110" fill="transparent"/>
+                                    <g class="apexcharts-tracks">
+                                        <path d="M 45.18 110 A 64.82 64.82 0 0 1 174.82 110"
+                                            fill="none"
+                                            stroke="#958DF4"
+                                            stroke-width="22.33"
+                                            stroke-linecap="butt"/>
+                                    </g>
+                                    <g>
+                                        <path d="M 45.18 110 A 64.82 64.82 0 {{ largeArcFlag }} 1 {{ endX|number_format(2, '.', '') }} {{ endY|number_format(2, '.', '') }}"
+                                            fill="none"
+                                            stroke="#F0B621"
+                                            stroke-width="22.33"
+                                            stroke-linecap="butt"/>
+                                        <circle r="48.66" cx="110" cy="110" fill="transparent"/>
+                                    </g>
                                 </g>
-                            </g>
-                            <text x="110" y="108" text-anchor="middle" font-size="25px" font-family="Helvetica, Arial, sans-serif" font-weight="500" fill="#ffffff">75%</text>
+                                <text x="110" y="108" text-anchor="middle" font-size="25px"
+                                    font-family="Helvetica, Arial, sans-serif" font-weight="500"
+                                    fill="#ffffff">
+                                    {{ completion }}%
+                                </text>
                             </g>
                         </g>
                     </svg>
                 </div>
+
             </div>
         </div>
     </section>
@@ -69,13 +87,13 @@
         <div class="biographie-profil mb-4 p-4 vu_">
             <strong>Nombre de personnes qui ont vu mon profil</strong>
             <div class="d-flex align-items-center">
-            <span><img src="{{ asset('v2/images/dashboard/vu-eye.svg')}}" alt=""></span>5
+            <span><img src="{{ asset('v2/images/dashboard/vu-eye.svg')}}" alt=""></span>{{ candidat.vues|length}}
             </div>
         </div>
         <div class="biographie-profil mb-4 p-4 mission_">
-            <strong>Total  de mission obtenu</strong>
+            <strong>Total  de prestation</strong>
             <div class="d-flex align-items-center">
-            <span><img src="{{ asset('v2/images/dashboard/mission-obtenu.svg')}}" alt=""></span>3
+            <span><img src="{{ asset('v2/images/dashboard/mission-obtenu.svg')}}" alt=""></span>{{ candidat.prestations|length}}
             </div>
         </div>
     </section>
@@ -90,7 +108,7 @@
                     </div>
                     <div class="title_resume">{{ app.user.candidateProfile.titre }}</div>
                     <div class="block-rating"></div>
-                    <p>Molestie tincidunt ut consequat a urna tortor. Vitae velit ac nisl velit mauris placerat nisi placerat. Pellentesque viverra lorem malesuada nunc tristique sapien. Imperdiet sit hendrerit tincidunt bibendum donec adipiscing.</p>
+                    <p>{{ candidat.resume|raw}}</p>
                     <br/>
                     <span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
                     <div class="link-social">
@@ -230,20 +248,16 @@
             </div>
         </div>
         <div class="detail_right">
-            <div class="biographie-profil mb-4 p-4 text-center">
+            {# <div class="biographie-profil mb-4 p-4 text-center">
                 <span class="fs-5 mb-3 fw-bold lh-base st-title">Loading ...</span>
-            </div>
+            </div> #}
             <div class="biographie-profil mb-4 p-4">
                 <span class="fs-5 fw-bold lh-base st-title">Ils recrutent</span>
                 <hr/>
                 <div class="pubs_dashB">
-                    <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
-                        <img class="img-fluid" src="{{ asset('images/pubs/espace-pub-horizontal-regard-beauty-_1_.webp')}}">
-                    </a>
+                    <img class="img-fluid" src="{{ asset('images/pubs/espace-pub-horizontal-regard-beauty-_1_.webp')}}">
                     <br/><br/>
-                    <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
-                        <img class="img-fluid" src="{{ asset('images/dashboard/banner_couverture.webp')}}">
-                    </a>
+                    <img class="img-fluid" src="{{ asset('images/dashboard/banner_couverture.webp')}}">
                 </div>
             </div>
             {#<div class="biographie-profil mb-4 p-4">
