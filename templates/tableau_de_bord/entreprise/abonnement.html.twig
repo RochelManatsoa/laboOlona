@@ -1,6 +1,7 @@
 {% extends 'tableau_de_bord/base_entreprise.html.twig' %}
 
 {% block title %}{{ package.name }}{% endblock %}
+{% block turbo %}  data-turbo="false" {% endblock %}
 
 {% block body %}
 <div class="loader-container" id="loader-container" style="display:none;">
@@ -10,7 +11,7 @@
 <section class="">
     <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
-                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <a href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
                 <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
                 <h5 class="mb-0"> Abonnement </h5>
             </div>

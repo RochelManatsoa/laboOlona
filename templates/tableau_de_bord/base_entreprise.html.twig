@@ -24,7 +24,7 @@
 		{% set containerPrem = 'container_prem' %}
 		{% set premiumNav = 'premiumNav' %}
 	{% endif %}
-	<body class="bootstrap-light {{containerPrem}}">
+	<body class="bootstrap-light {{containerPrem}}" {% block turbo %}{% endblock %}>
 		<div class="transition-fade">
 			{% block header %}
 			{% set last_query = app.request.query.get('q', '') %}
