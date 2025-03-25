@@ -66,12 +66,25 @@ class CandidatController extends AbstractController
     public function index(): Response
     {
         $params = $this->getData();
-        $currentUser = $params['currentUser'];
         $candidat = $params['candidat'];
+        $completion = $candidat->getProfileCompletion();
+        $radius = 64.82;
+        $angle = (180 * $completion / 100); 
+        $radian = deg2rad($angle - 180);         
+        $endX = 110 + $radius * cos($radian);
+        $endY = 110 + $radius * sin($radian);
+        $largeArcFlag = $completion > 50 ? 1 : 0;
+        $currentUser = $params['currentUser'];
+        
         $params['experiences']  = $this->candidatManager->getExperiencesSortedByDate($candidat);
         $params['competences'] = $this->candidatManager->getCompetencesSortedByNote($candidat);
         $params['langages'] = $this->candidatManager->getLangagesSortedByNiveau($candidat);
         $params['activities'] = $this->em->getRepository(ActivityLog::class)->findUserLogs($currentUser);
+
+        $params['completion'] = $completion;
+        $params['endX'] = $endX;
+        $params['endY'] = $endY;
+        $params['largeArcFlag'] = $largeArcFlag;
 
         return $this->render('tableau_de_bord/candidat/index.html.twig', $params);
     }

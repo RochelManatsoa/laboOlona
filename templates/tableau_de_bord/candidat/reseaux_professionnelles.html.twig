@@ -40,33 +40,46 @@
                     <thead>
                         <tr>
                             <td scope="col" class="h5">{{ knp_pagination_sortable(allContacts, 'Nom et Prénom', 'pc.contact') }}</td>
-                            <td scope="col" class="h5">{{ knp_pagination_sortable(allContacts, 'Status', 'pc.isAcceped') }}</td>
+                            <td scope="col" class="h5">{{ knp_pagination_sortable(allContacts, 'Type', 'pc.isAcceped') }}</td>
                             <td scope="col" class="h5">{{ knp_pagination_sortable(allContacts, 'Ajouté le', 'pc.accepedAt') }}</td>
                             <td scope="col" class=""></td>
                         </tr>
                     </thead>
                     <tbody>
                         {% for item in allContacts %}
+                            {% if item.contact.type == 'CANDIDAT' %}
                             <tr id="row_contact_{{item.id}}">
                                 <td class="">
-                                    {{ item.contact }}
+                                    {{ item.contact }}<br>
+                                    <span class="fw-bold">{{ item.contact.candidateProfile.titre }}</span>
                                 </td>
                                 <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
-                                    {{ item.isAccepted ? 'Acceptée' : 'En attente' }}
+                                    {{ item.contact.type }}
                                 </td>
                                 <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
                                 <td class="col-2">
                                     <a href="#" class="btn btn-sm btn-secondary rounded-pill">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <form method="POST" action="">
-                                        <input type="hidden" name="prestationId" value="{{item.id}}">
-                                        <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette prestation?');" class="btn btn-sm btn-danger rounded-pill">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
                                 </td>
                             </tr>
+                            {% else %}
+                            <tr id="row_contact_{{item.id}}">
+                                <td class="">
+                                    {{ item.contact }}<br>
+                                    <span class="fw-bold">{{ item.contact.entrepriseProfile.nom }}</span>
+                                </td>
+                                <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
+                                    {{ item.contact.type }}
+                                </td>
+                                <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
+                                <td class="col-2">
+                                    <a href="#" class="btn btn-sm btn-secondary rounded-pill">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endif %}                                
                         {% endfor %}
                     </tbody>
                 </table>
