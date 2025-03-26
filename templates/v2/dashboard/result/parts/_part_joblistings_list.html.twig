@@ -27,11 +27,11 @@
 									{{ job.titre }}
 								</a>
 							{% else %}
-								<span style="cursor:pointer;" class="annonce-link" data-id="{{ job.id }}">{{ job.titre }}</span>
+								<span style="cursor:pointer;" class="annonce-link" data-bs-toggle="modal"  data-bs-target="#connectingModal"  data-id="{{ job.id }}">{{ job.titre }}</span>
 							{% endif %}
 							<span class="type_contact_">{{ job.typeContrat }}</span>
 						</h2>
-						<h3><a href="" class="btn-primary">SOCIETE</a></h3>
+						<h3><a  data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="#">{{ job.entreprise.nom }}</a></h3>
 						<div class="description_courte_">
 							{{ job.shortDescription|raw }}
 						</div>

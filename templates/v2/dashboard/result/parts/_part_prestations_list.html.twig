@@ -60,7 +60,7 @@
                                 <a class="btn btn-primary" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
                             {% else %}
                                 <div class="d-none d-md-block">
-                                    <button class="btn btn-primary prestation-link" type="button" data-id="{{ prestation.id }}">Plus de details</button>
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#connectingModal"  data-id="{{ prestation.id }}">Plus de details</button>
                                 </div>
                                 
                                 <div class="d-block d-md-none">
