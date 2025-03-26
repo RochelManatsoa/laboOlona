@@ -121,8 +121,8 @@ class CandidatController extends AbstractController
         $qb = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
         $qb->where('j.status = :status')
             ->setParameter('status', JobListing::STATUS_PUBLISHED)
-            ->andWhere('j.secteur IN (:secteurs)')
-            ->setParameter('secteurs', $secteurs)
+            // ->andWhere('j.secteur IN (:secteurs)')
+            // ->setParameter('secteurs', $secteurs)
             ->orderBy('j.id', 'DESC')
             ->setMaxResults($limit)
             ->setFirstResult(($page - 1) * $limit);
