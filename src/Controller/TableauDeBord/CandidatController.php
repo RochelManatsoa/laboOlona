@@ -16,9 +16,11 @@ use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use App\Twig\PrestationExtension;
+use Symfony\UX\Turbo\TurboBundle;
 use App\Manager\JobListingManager;
 use App\Manager\PrestationManager;
 use App\Entity\BusinessModel\Order;
+use App\Manager\ApplicationManager;
 use App\Entity\BusinessModel\Credit;
 use App\Form\ChangePasswordFormType;
 use App\Entity\BusinessModel\Package;
@@ -35,6 +37,7 @@ use App\Form\TableauDeBord\AssistanceType;
 use App\Form\BusinessModel\TransactionType;
 use App\Manager\BusinessModel\OrderManager;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Manager\BusinessModel\CreditManager;
 use App\Repository\Finance\DeviseRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
@@ -162,7 +165,15 @@ class CandidatController extends AbstractController
     }
 
     #[Route('/detail-annonce/{id}', name: 'app_tableau_de_bord_candidat_view_job_offer')]
-    public function viewjoboffer(Request $request, int $id, JobListingManager $jobListingManager, AppExtension $appExtension, ProfileManager $profileManager): Response
+    public function viewjoboffer(
+        Request $request, 
+        int $id, 
+        JobListingManager $jobListingManager, 
+        AppExtension $appExtension, 
+        ProfileManager $profileManager,
+        CreditManager $creditManager,
+        ApplicationManager $applicationManager,
+    ): Response
     {
         $annonce = $this->em->getRepository(JobListing::class)->find($id);
         if ($annonce === null || $annonce->getStatus() === JobListing::STATUS_DELETED || $annonce->getStatus() === JobListing::STATUS_PENDING) {
@@ -171,15 +182,49 @@ class CandidatController extends AbstractController
         $data = $this->getData();
         $jobListingManager->incrementView($annonce, $request->getClientIp());
         $candidat = $data['candidat'];
+        $currentUser = $data['currentUser'];
         $this->activityLogger->logJobLisitinViewActivity($data['currentUser'], $appExtension->generateJobReference($annonce->getId()));
-        [$applied, $application] = $jobListingManager->isAppliedByCandidate($annonce, $candidat)[0];
+        $applyJobPrice = $profileManager->getCreditAmount(Credit::ACTION_APPLY_JOB);
+        [$applied, $application] = $jobListingManager->isAppliedByCandidate($annonce, $candidat);
         $form = $this->createForm(ApplicationsType::class, $application);
         $form->handleRequest($request);
         $data['annonce'] = $annonce;
         $data['applied'] = $applied;
         $data['show_recruiter_price'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER);
-        $data['apply_job_price'] = $profileManager->getCreditAmount(Credit::ACTION_APPLY_JOB);
+        $data['apply_job_price'] = $applyJobPrice;
         $data['form'] = $form->createView();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $application = $form->getData();
+            $message = 'Candidature envoyée';
+            $success = true;
+            $status = 'Succès';
+        
+            $response = $creditManager->adjustCredits($currentUser, $applyJobPrice, "Candidature annonce");
+            
+            if (isset($response['error'])) {
+                $message = $response['error'];
+                $success = false;
+                $status = 'Echec';
+            }
+
+            if (isset($response['success'])) {
+                $applicationManager->saveForm($form);
+                $applicationManager->sendEmails($application);
+            }
+
+            if($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT){
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+    
+                return $this->render('v2/dashboard/candidate/live.html.twig', [
+                    'message' => $message,
+                    'success' => $success,
+                    'status' => $status,
+                    'credit' => $currentUser->getCredit()->getTotal(),
+                ]);
+            }
+
+            return $this->redirectToRoute('app_tableau_de_bord_candidat_mes_candidatures');
+        }
 
         return $this->render('tableau_de_bord/candidat/view_job_offer.html.twig', $data);
     }

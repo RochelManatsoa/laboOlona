@@ -96,10 +96,10 @@ class JobListingManager
             'candidat' => $candidat,
             'annonce' => $annonce
         ]);
-        $applied = false;
+        $applied = true;
 
         if(!$application instanceof Applications){
-            $applied = true;
+            $applied = false;
             $application = new Applications();
             $application->setDateCandidature(new \DateTime());
             $application->setStatus(Applications::STATUS_PENDING);

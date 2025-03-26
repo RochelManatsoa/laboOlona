@@ -466,10 +466,10 @@ $(function() {
 
                 $('.invalid-feedback').remove();
                 $('.is-invalid').removeClass('is-invalid');
-                var successToast = new Toast($('#errorToast')[0]);
-                setTimeout(function() {
-                    successToast.show(); 
-                }, 1500);
+                // var successToast = new Toast($('#errorToast')[0]);
+                // setTimeout(function() {
+                //     successToast.show(); 
+                // }, 1500);
 
                 var modalElement = $(this).closest('.modal').get(0); 
                 if (modalElement) {
@@ -1007,15 +1007,15 @@ $(function() {
                 success: function(data) {
                     Turbo.renderStreamMessage(data);
                     if (data.success) {
-                        $('#successToast').find('.toast-body').text(data.message);
-                        var successToast = new Toast($('#successToast')[0]);
-                        successToast.show();
+                        // $('#successToast').find('.toast-body').text(data.message);
+                        // var successToast = new Toast($('#successToast')[0]);
+                        // successToast.show();
                         var boostProfileModal = Modal.getInstance($('#boostProfile')[0]) || new Modal($('#boostProfile')[0]);
                         boostProfileModal.hide();
                     } else {
-                        $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
-                        var errorToast = new Toast($('#errorToast')[0]);
-                        errorToast.show();
+                        // $('#errorToast').find('.toast-body').text('Erreur: ' + data.message);
+                        // var errorToast = new Toast($('#errorToast')[0]);
+                        // errorToast.show();
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {

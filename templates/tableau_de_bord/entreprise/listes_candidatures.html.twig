@@ -58,8 +58,10 @@
                                 <div class="profil-list-name d-flex align-items-center">
                                     <span class="profil-photo_"><img src="{{ item.candidat.fileName ? asset('uploads/experts/' ~ item.candidat.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></span>
                                     <div class="profil-info_">
-                                        {{ generatePseudo(item.candidat)}}
-                                        <span class="profil-titire_">{{ item.candidat.titre }}</span>
+                                        <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.candidat.id})}}">
+                                            {{ generatePseudo(item.candidat)}}
+                                            <span class="profil-titire_">{{ item.candidat.titre }}</span>
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="profil-list-link d-flex align-items-center">
