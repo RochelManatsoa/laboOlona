@@ -83,7 +83,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-4 mt-4">
-                                    <p><a class="btn btn-light" href="{{ path('app_tableau_de_bord_entreprise_favoris')}}">{{ offre.applications|length }} candidat{{ offre.applications|length > 1 ? 's' : '' }} ont posté leur candidature</a></p>
+                                    <p><a class="btn btn-light" href="{{ path('app_tableau_de_bord_entreprise_listes_candidatures')}}">{{ offre.applications|length }} candidat{{ offre.applications|length > 1 ? 's' : '' }} ont posté leur candidature</a></p>
                                     <p><a class="btn btn-light" href="{{ path('app_tableau_de_bord_entreprise_favoris')}}">Vous avez {{ entreprise.favoris|length }} favori{{ entreprise.favoris|length > 1 ? 's' : '' }} </a></p>
                                     <p><a class="btn btn-warning disabled" href="{{ path('app_tableau_de_bord_entreprise_favoris')}}" disabled>{{ offre.applications|length + entreprise.favoris|length}} candidat{{ offre.applications|length > 1 ? 's' : '' }} proposés par Olona Talents</a></p>
                                 </div>
