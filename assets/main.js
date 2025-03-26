@@ -360,15 +360,19 @@ $(function() {
         // });
 
         // Initialisation de CKEditor
-        // let emailContentEditor;
-        // ClassicEditor
-        //     .create(document.querySelector('#notification_profile_contenu'))
-        //     .then(editor => {
-        //         emailContentEditor = editor;
-        //     })
-        //     .catch(error => {
-        //         console.error(error);
-        //     });
+        let emailContentEditor;
+        const editorElement = document.querySelector('#notification_profile_contenu');
+
+        if (editorElement) {
+            ClassicEditor
+                .create(editorElement)
+                .then(editor => {
+                    emailContentEditor = editor;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
 			
         $('#templateEmail').on('change', function() {
             console.log('change')
