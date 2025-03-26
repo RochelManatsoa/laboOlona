@@ -76,13 +76,13 @@ class OlonaTalentsController extends AbstractController
     #[Route('/upgrade', name: 'app_olona_talents_upgrade')]
     public function upgrade(): Response
     {
-        return $this->render('v2/upgrade.html.twig', []);
+        return $this->redirectToRoute('app_connect');
     }
 
     #[Route('/premium', name: 'app_olona_talents_premium')]
     public function premium(): Response
     {
-        return $this->render('v2/premium.html.twig', []);
+        return $this->redirectToRoute('app_connect');
     }
 
     #[Route('/register', name: 'app_olona_talents_register', options: ['sitemap' => true])]
