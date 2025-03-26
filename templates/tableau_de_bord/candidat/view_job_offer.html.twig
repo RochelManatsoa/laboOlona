@@ -221,10 +221,10 @@
     {% include "/tableau_de_bord/layout/_credit_modal_candidat.html.twig" %}
     {% if candidat is defined %}
         <!-- Modal -->
-        <div class="modal fade" id="submitBtn" tabindex="-1" aria-labelledby="submitBtnLabel" aria-hidden="true">
+        <div class="modal fade" id="submitBtn" tabindex="-1" aria-labelledby="submitBtnLabel" >
             <div class="modal-dialog  modal-dialog-centered modal-lg">
                 <div class="modal-content">
-                {{ form_start(form, {'attr': {'id':'applyJob', 'action': path('app_v2_candidate_view_job_offer',  {'id': annonce.id })}}) }}
+                {{ form_start(form, {'attr': {'id':'applyJob', 'action': path('app_tableau_de_bord_candidat_view_job_offer',  {'id': annonce.id })}}) }}
                 <div class="modal-header">
                     <h1 class="modal-title fs-5 text-center fw-bold" id="submitBtnLabel">Rédigez votre lettre de motivation</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
