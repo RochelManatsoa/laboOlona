@@ -13,16 +13,16 @@
 						<thead>
 							<tr>
 								<td scope="col" class="h5">
-					    		{{ knp_pagination_sortable(transactions, 'Référence', 't.reference') }}
+					    		Utilisateur
 								</td>
 								<td scope="col-2" class="h5">
 								{{ knp_pagination_sortable(transactions, 'Pack', 'p.name') }}
 								</td>
 								<td scope="col-2" class="h5">
-								{{ knp_pagination_sortable(transactions, 'Statut', 't.status') }}
+								{{ knp_pagination_sortable(transactions, 'Référence', 't.reference') }}
 								</td>
 								<td scope="col-2" class="h5">
-								{{ knp_pagination_sortable(transactions, 'Date', 't.dateTransaction') }}
+								{{ knp_pagination_sortable(transactions, 'Date', 't.transactionDate') }}
 								</td>
 							</tr>
 						</thead>
@@ -30,27 +30,60 @@
 							{% for item in transactions %}
 								<tr id="row_transaction_{{item.id}}">
 									<td class="">
-										<a href="{{ path('app_dashboard_moderateur_business_model_transaction_view', { 'transaction': item.id })}}">
-											{{ item.reference}}
-										</a>
+									{% if item.user is defined and item.user is not null %}
+										{{ item.user}}
 										<br>
 										<span class="fw-lighter small">
-											{{ item.amount }} Ar sur {{ item.typeTransaction.name }}
+											{{ item.user.type }}
 										</span>
+										{% if item.user.type == 'ENTREPRISE' %}
+										|
+										<span class="fw-bold small">
+											{{ item.user.entrepriseProfile.nom }}
+										</span>
+										{% endif %}
+										{% if item.user.type == 'CANDIDAT' %}
+										|
+										<span class="fw-bold small">
+											{{ item.user.candidateProfile.titre }}
+										</span>
+										{% endif %}
+										<span class="fw-bold small">
+											{{ item.user.email}}
+										</span>
+									{% endif %}
 									</td>
 									<td class="col-2">
 										<span class="fw-light small">{{ item.package.name }} </span>
+										<br>{{ statusTransaction(item)|raw }}
+										<br>
+										<span class="fw-lighter small">
+											{{ item.amount }} Ar 
+										</span>
 										{% if item.transactionReferences|length > 0 %}
 											<br><span class="badge badge-sm bg-info small"><i class="bi bi-info-circle"></i> Multiple </span>
 										{% endif %}
 									</td>
 									<td class="col-2">
-										{{ statusTransaction(item)|raw }}
+										<a href="{{ path('app_dashboard_moderateur_business_model_transaction_view', { 'transaction': item.id })}}" class="small">
+											{{ item.reference}}
+										</a>
+										<br> <span class="fw-lighter small">{{ item.typeTransaction.name }}</span>
 									</td>
 									<td class="col-2">
 										<span class="fw-light small">
 											{{ item.transactionDate|date('d/m/Y h:m:i') }}
 										</span>
+										<br>
+										<span class="fw-bold small">
+											{{ item.transactionDate|time_ago }}
+										</span>
+										{% if item.status == 'COMPLETED' %}
+											<br>
+											{% if item.command.status is same as(constant('App\\Entity\\BusinessModel\\Order::STATUS_COMPLETED'))%}
+											<a target=_blank href="{{ path('payment_facture', {'order': item.command.id})}}" class="small"><i class="bi bi-receipt"></i> Facture</a>
+											{% endif %}
+										{% endif %}
 									</td>
 									<td class="col-2">
 										<a href="{{ path('app_dashboard_moderateur_business_model_transaction_view', { 'transaction': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
@@ -77,7 +110,7 @@
 					<span class="">
 						<img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
 					</span>
-					1ère chose à faire
+					Aucun résultat
 				</h3>
 			{% endif %}
 

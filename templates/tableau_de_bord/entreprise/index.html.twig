@@ -39,7 +39,7 @@
                     <li>Découvrez un large réseau de profils compétents.</li>
                 </ul>
                 <div class="recruteur-btn">
-                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="d-inline-block position-relative btn btn-pdp" href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}">Commencer maintenant</a>
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="d-inline-block position-relative btn btn-pdp text-primary" href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}">Commencer maintenant</a>
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
                     <p>Sélectionnez l'offre qui correspond à vos besoins.</p>
                 </div>
                 <div class="recruteur-btn">
-                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}" class="d-inline-block position-relative btn btn-pdp" href="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}">Commencer maintenant</a>
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}" class="d-inline-block position-relative btn btn-pdp text-primary" href="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}">Commencer maintenant</a>
                 </div>
             </div>
         </div>
@@ -165,7 +165,7 @@
                     <div class="item-espace-pub">
                         <h2>Démarquez-vous des autres recruteurs !</h2>
                         <p>Votre visibilité est importante pour trouver la perle rare.</p>
-                        <a routerlink="" class="d-inline-block position-relative btn  btn-primary btn-outline" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">Commencer maintenant</a>
+                        <a routerlink="" class="d-inline-block position-relative btn  btn-primary btn-outline  text-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">Commencer maintenant</a>
                     </div>
                     <div class="item-espace-pub img-espace-pub"><img src="{{ asset('images/dashboard/espace_pubs.webp')}}" alt="" width="360" height="184"></div>
                 </div>
@@ -209,7 +209,7 @@
                             {% else %}
                             <span class="favoris-add" id="row_star_favorite_{{ item.candidat.id }}"><i class="bi bi-star"></i></span>
                             {% endif %}
-                            <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.candidat.id })}}">Voir son profil</a>
+                            <a class="btn btn-outline  text-primary" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.candidat.id })}}">Voir son profil</a>
                         </div>
                     </div>
                     {% endfor %}
