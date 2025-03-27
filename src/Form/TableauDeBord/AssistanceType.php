@@ -34,22 +34,23 @@ class AssistanceType extends AbstractType
                     'class' => 'fw-bold fs-6' 
                 ],
                 'attr' => [
-                    'placeholder' => 'app_home.contact.placeholder.title'
-                ]
+                    'placeholder' => 'Objet de votre demande'
+                ],
+                'help' => 'Veuillez préciser l\'objet de votre demande en quelques mots.',
             ])
             ->add('email', EmailType::class, [
-                'label' => 'app_home.contact.email',
+                'label' => 'Votre adresse email *',
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
                 'attr' => [
-                    'placeholder' => 'app_home.contact.placeholder.email',
                     'value' => $this->userService->getCurrentUser() ? $this->userService->getCurrentUser()->getEmail() : "",
-                ]
+                ],
+                'help' => 'Nous utiliserons cette adresse pour vous recontacter.',
             ])
             ->add('message', TextareaType::class, [
                 'required' => false,
-                'label' => 'app_home.contact.message',
+                'label' => 'Message *',
                 'label_attr' => [
                     'class' => 'fw-bold fs-6' 
                 ],
@@ -63,7 +64,8 @@ class AssistanceType extends AbstractType
                 'attr' => [
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'
-                ]
+                ],
+                'help' => 'Décrivez votre problème ou posez votre question ici...',
             ])
         ;
     }

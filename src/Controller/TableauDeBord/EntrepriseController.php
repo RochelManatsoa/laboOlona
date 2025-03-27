@@ -387,7 +387,12 @@ class EntrepriseController extends AbstractController
     }
 
     #[Route('/credit/{slug}', name: 'app_tableau_de_bord_entreprise_credit')]
-    public function credit(Package $package, OrderManager $orderManager, Request $request, FinanceExtension $financeExtension): Response
+    public function credit(Package $package, 
+        OrderManager $orderManager, 
+        Request $request, 
+        TransactionManager $transactionManager, 
+        FinanceExtension $financeExtension
+    ): Response
     {
         $params = $this->getData();
         $params['package'] = $package;
@@ -398,13 +403,22 @@ class EntrepriseController extends AbstractController
         $order = $orderManager->init();
         $order->setPackage($package);
         $order->setCurrency($devise);
-        $order->setTotalAmount($financeExtension->convertToEuro($package->getPrice(), $devise));
+        $order->setTotalAmount($package->getPrice());
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $order = $orderManager->saveForm($form);
-            
+            $order = $form->getData();
+            $transaction = $order->getTransaction();
+            if(!$transaction instanceof Transaction){
+                $transaction = $transactionManager->init();
+                $transaction->setCommand($order);
+            }
+            $transaction->setPackage($package);
+            $transaction->setAmount($package->getPrice());
+            $transactionManager->save($transaction);
+            $orderManager->save($order);
+
             return $this->redirectToRoute('app_tableau_de_bord_entreprise_mobile_money_checkout', [
                 'orderNumber' => $order->getOrderNumber()
             ]);
@@ -432,7 +446,13 @@ class EntrepriseController extends AbstractController
     }
     
     #[Route('/abonnement', name: 'app_tableau_de_bord_entreprise_abonnement')]
-    public function subcription(OrderManager $orderManager, Request $request, FinanceExtension $financeExtension, DeviseRepository $deviseRepository): Response
+    public function subcription(
+        OrderManager $orderManager, 
+        Request $request, 
+        FinanceExtension $financeExtension, 
+        TransactionManager $transactionManager,
+        DeviseRepository $deviseRepository
+    ): Response
     {
         $params = $this->getData();
         $package = $this->em->getRepository(Package::class)->findOneBy(['slug' => 'abonnement']);
@@ -443,12 +463,21 @@ class EntrepriseController extends AbstractController
         $order = $orderManager->init();
         $order->setPackage($package);
         $order->setCurrency($currency);
-        $order->setTotalAmount($financeExtension->convertToEuro($package->getPrice(), $currency));
+        $order->setTotalAmount($package->getPrice());
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $order = $orderManager->saveForm($form);
+            $order = $form->getData();
+            $transaction = $order->getTransaction();
+            if(!$transaction instanceof Transaction){
+                $transaction = $transactionManager->init();
+                $transaction->setCommand($order);
+            }
+            $transaction->setPackage($package);
+            $transaction->setAmount($package->getPrice());
+            $transactionManager->save($transaction);
+            $orderManager->save($order);
             
             return $this->redirectToRoute('app_tableau_de_bord_entreprise_mobile_money_checkout', [
                 'orderNumber' => $order->getOrderNumber()
@@ -478,6 +507,7 @@ class EntrepriseController extends AbstractController
         if(!$transaction instanceof Transaction){
             $transaction = $transactionManager->init();
             $transaction->setCommand($order);
+            $transactionManager->save($transaction);
         }
         $transaction->setTypeTransaction($mobileMoney);
         $transaction->setCommand($order);

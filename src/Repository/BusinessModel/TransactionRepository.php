@@ -54,6 +54,8 @@ class TransactionRepository extends ServiceEntityRepository
             ->leftJoin('t.package', 'p')
             ->leftJoin('t.user', 'u')
             ->leftJoin('t.command', 'o')
+            ->leftJoin('u.entrepriseProfile', 'e')
+            ->leftJoin('u.candidateProfile', 'c')
             ->orderBy('t.id', 'DESC')
         ;
 
@@ -63,10 +65,18 @@ class TransactionRepository extends ServiceEntityRepository
                 ->setParameter('status', "%{$searchData->status}%");
         }
 
-        if (!empty($searchData->reference)) {
-            $qb = $qb
-                ->andWhere('o.orderNumber = :reference')
-                ->setParameter('reference', "{$searchData->reference}");
+        if (!empty($searchData->q)) {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->like('u.nom', ':q'),
+                $qb->expr()->like('u.prenom', ':q'),
+                $qb->expr()->like('u.email', ':q'),
+                $qb->expr()->like('e.nom', ':q'),
+                $qb->expr()->like('c.titre', ':q'),
+                $qb->expr()->like('p.name', ':q'),
+                $qb->expr()->like('o.orderNumber', ':q'),
+                $qb->expr()->like('t.reference', ':q')
+            ))
+            ->setParameter('q', '%' . $searchData->q . '%');
         }
        
         $query =  $qb->getQuery();

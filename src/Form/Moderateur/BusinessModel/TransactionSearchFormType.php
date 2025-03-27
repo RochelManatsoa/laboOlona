@@ -15,11 +15,11 @@ class TransactionSearchFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('reference', TextType::class, [
+            ->add('q', TextType::class, [
                 'label' => false,
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'N° commande'
+                    'placeholder' => 'Nom du candidat ou du recruteur'
                 ]
             ])
             ->add('status', ChoiceType::class, [
