@@ -42,7 +42,6 @@
                             <td scope="col" class="h5">{{ knp_pagination_sortable(allContacts, 'Nom et Prénom', 'pc.contact') }}</td>
                             <td scope="col" class="h5">{{ knp_pagination_sortable(allContacts, 'Type', 'pc.isAcceped') }}</td>
                             <td scope="col" class="h5">{{ knp_pagination_sortable(allContacts, 'Ajouté le', 'pc.accepedAt') }}</td>
-                            <td scope="col" class=""></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,33 +50,27 @@
                             <tr id="row_contact_{{item.id}}">
                                 <td class="">
                                     {{ item.contact }}<br>
-                                    <span class="fw-bold">{{ item.contact.candidateProfile.titre }}</span>
+                                    <span class="fw-bold text-primary">{{ item.contact.candidateProfile.titre }}</span><br>
+                                    <span class="fw-bold">{{ item.contact.email }}</span> | Tél: {{ item.contact.telephone }}
                                 </td>
                                 <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
-                                    {{ item.contact.type }}
+                                    {{ item.contact.type }}<br>
+                                    <span class="fw-bold text-primary">{{ generatePseudo(item.contact.candidateProfile) }}</span>
                                 </td>
                                 <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
-                                <td class="col-2">
-                                    <a href="#" class="btn btn-sm btn-secondary rounded-pill">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                </td>
                             </tr>
                             {% else %}
                             <tr id="row_contact_{{item.id}}">
                                 <td class="">
                                     {{ item.contact }}<br>
-                                    <span class="fw-bold">{{ item.contact.entrepriseProfile.nom }}</span>
+                                    <span class="fw-bold text-warning">{{ item.contact.entrepriseProfile.nom }}</span><br>
+                                    <span class="fw-bold">{{ item.contact.email }}</span> | Tél: {{ item.contact.telephone }}
                                 </td>
                                 <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
-                                    {{ item.contact.type }}
+                                    {{ item.contact.type }}<br>
+                                    <span class="fw-bold text-primary">{{ generateReference(item.contact.entrepriseProfile) }}</span>
                                 </td>
                                 <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
-                                <td class="col-2">
-                                    <a href="#" class="btn btn-sm btn-secondary rounded-pill">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                </td>
                             </tr>
                             {% endif %}                                
                         {% endfor %}
