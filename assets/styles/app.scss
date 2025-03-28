@@ -18,7 +18,7 @@ h1, h2, h3, h4, h5, h6 {
 a:not(.btn-primary):not(.btn-success):not(.btn-info):not(.text-primary){
     text-decoration: none !important;
     font-family: "Outfit", serif;
-    color: inherit !important;
+    color: inherit;
 }
 
 a:hover {
