@@ -173,6 +173,8 @@ class ProfileController extends AbstractController
     #[Route('/recruiter/view/{id}', name: 'app_v2_view_recruiter_profile')]
     public function viewRecruiterProfile(int $id): Response
     {
+        return $this->redirectToRoute('app_connect');
+        
         $recruiter = $this->em->getRepository(EntrepriseProfile::class)->find($id);
         if ($recruiter === null || $recruiter->getStatus() === EntrepriseProfile::STATUS_BANNED || $recruiter->getStatus() === EntrepriseProfile::STATUS_PENDING) {
             throw $this->createNotFoundException('Nous sommes désolés, mais l\'entreprise demandée n\'existe pas.');
