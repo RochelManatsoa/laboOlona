@@ -52,6 +52,11 @@ class JobOfferController extends AbstractController
     #[Route('/job-offers', name: 'app_v2_job_offer')]
     public function index(Request $request): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = [];
+        
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);
@@ -120,6 +125,11 @@ class JobOfferController extends AbstractController
     public function viewJobOffer(Request $request, int $id): Response
     {
         $annonce = $this->em->getRepository(JobListing::class)->find($id);
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = ['id' => $annonce->getId()];
+        
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);

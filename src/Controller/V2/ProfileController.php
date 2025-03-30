@@ -43,6 +43,8 @@ class ProfileController extends AbstractController
     #[Route('/profiles', name: 'app_v2_profiles')]
     public function index(Request $request): Response
     {
+        return $this->redirectToRoute('app_connect');
+
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);
@@ -173,7 +175,7 @@ class ProfileController extends AbstractController
     #[Route('/recruiter/view/{id}', name: 'app_v2_view_recruiter_profile')]
     public function viewRecruiterProfile(int $id): Response
     {
-        return $this->redirectToRoute('app_connect');
+        // return $this->redirectToRoute('app_connect');
         
         $recruiter = $this->em->getRepository(EntrepriseProfile::class)->find($id);
         if ($recruiter === null || $recruiter->getStatus() === EntrepriseProfile::STATUS_BANNED || $recruiter->getStatus() === EntrepriseProfile::STATUS_PENDING) {

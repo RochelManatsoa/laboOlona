@@ -32,6 +32,11 @@ class CreditController extends AbstractController
     #[Route('/', name: 'app_v2_credit')]
     public function index(Request $request): Response
     {
+        // $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        // $routeInfo['params'] = [];
+        
+        // return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);
@@ -80,6 +85,11 @@ class CreditController extends AbstractController
     #[Route('/{slug}', name: 'app_v2_credit_view')]
     public function pack(Request $request, Package $package): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = ['slug' => $package->getSlug()];
+        
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);
