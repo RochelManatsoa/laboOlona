@@ -43,6 +43,8 @@ class SimulatorController extends AbstractController
         $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
         $routeInfo['params'] = [];
 
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+
         $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
@@ -62,6 +64,8 @@ class SimulatorController extends AbstractController
     {
         $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
         $routeInfo['params'] = [];
+
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
 
         $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $candidat = $this->userService->checkProfile();
@@ -126,7 +130,9 @@ class SimulatorController extends AbstractController
     {
         $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
         $routeInfo['params'] = [];
-        
+
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+
         $this->denyAccessUnlessGranted('CANDIDAT_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux candidats uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $candidat = $this->userService->checkProfile();
         $results = $this->employeManager->simulate($simulateur);
