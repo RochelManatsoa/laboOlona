@@ -154,9 +154,9 @@ class OlonaTalentsController extends AbstractController
         $from = $request->query->getInt('from', 0);
         $params = [];
         if($this->getUser()){
-            $params = $this->getData();
+            $params = $this->getUserData();
         }
-        $currentUser = $this->userService->getCurrentUser();
+        $currentUser = $params['currentUser'];
         if($currentUser){
             $profile = $this->userService->checkUserProfile($currentUser);
         }
@@ -256,6 +256,22 @@ class OlonaTalentsController extends AbstractController
         $data = [];
         $data['currentUser'] = $currentUser;
         $data['candidat'] = $candidat;
+        $data['credit'] = $currentUser->getCredit()->getTotal();
+        $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser,false);
+
+        return $data;
+    }
+
+    private function getUserData()
+    {
+        /** @var User $currentUser */
+        $currentUser = $this->userService->getCurrentUser();
+        $hasProfile = $this->userService->checkUserProfile($currentUser);
+        if($hasProfile === null){
+            return $this->redirectToRoute('app_v2_dashboard');
+        }
+        $data = [];
+        $data['currentUser'] = $currentUser;
         $data['credit'] = $currentUser->getCredit()->getTotal();
         $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser,false);
 
