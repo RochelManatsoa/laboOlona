@@ -230,18 +230,19 @@ class EntrepriseController extends AbstractController
         $params = $this->getData();
         $entreprise = $params['entreprise'];
         $filterTitle = $entreprise->getSecteurs()[0]->getSlug();
-        $size = 10; 
+        $size = $request->query->get('size', 10);
         $page = $request->query->get('page', 1);
         $from = ($page - 1) * $size;
         $title = $request->query->get('filter-title', $filterTitle);
         $gender = $request->query->get('filter-gender', null);
         $year = $request->query->get('filter-year', null);
-        $searchResults = $olonaTalentsManager->searchEntities('candidates', $from, 10, $title);
+        $searchResults = $olonaTalentsManager->searchEntities('candidates', $from, $size, $title);
         $totalPages = ceil($searchResults['totalResults'] / $size);
         $params['searchResults'] = $searchResults['entities'];
         $params['totalResults'] = $searchResults['totalResults'];
         $params['totalPages'] = $totalPages;
         $params['currentPage'] = $page;
+        $params['size'] = $size;
         $params['filterTitle'] = $filterTitle;
 
 

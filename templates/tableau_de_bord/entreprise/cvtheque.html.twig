@@ -111,18 +111,19 @@
             <div class="layout-profil-container">
                 <div class="d-flex ordering-wrapper mb-4 justify-content-between">
                     <div class="results-count">Affichage de 1 - {{ searchResults|length }} sur {{ totalResults }} résultats</div>								
-                    <form>
+                    <form id="sizeForm" method="get">
                         <div class="form-group d-flex align-items-center">
                             <h4 class="section-head-small">Afficher par</h4>
                             <div class="dropdown bootstrap-select">
-                                <select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
-                                    <option>10</option>
-                                    <option>20</option>
-                                    <option>30</option>
-                                    <option>40</option>
-                                    <option>50</option>
-                                    <option>60</option>
+                                <select id="selectSize" name="size" class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                    <option value="50">50</option>
+                                    <option value="60">60</option>
                                 </select>
+                                <input type="hidden" name="filter-title" value="{{filter_title}}">
                             </div>
                         </div>
                     </form>
@@ -187,35 +188,49 @@
                 <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
                     <a class="page-link" href="{{
                         path('app_tableau_de_bord_entreprise_cvtheque', {
-                            'page': currentPage - 1
-                        }|merge(app.request.query.all))
+                            'page': currentPage - 1,
+                            'size': size,
+                            'filter-title': filter_title,
+                            'filter-gender': filter_gender,
+                            'filter-degree': filter_degree,
+                            'filter-year': filter_year,
+                        })
                     }}">Précédent</a>
                 </li>
 
                 <!-- Liens des pages -->
                 {% for i in 1..totalPages %}
-                    {% if totalPages <= 6 or i == 1 or i == totalPages or (i >= currentPage - 2 and i <= currentPage + 2) %}
-                        <li class="page-item {% if i == currentPage %}active{% endif %}">
-                            <a class="page-link" href="{{
-                                path('app_tableau_de_bord_entreprise_cvtheque', {
-                                    'page': i,
-                                    'filter-title': filter_title
-                                }|merge(app.request.query.all))
-                            }}">{{ i }}</a>
-                        </li>
-                    {% elseif i == currentPage - 3 or i == currentPage + 3 %}
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>
-                    {% endif %}
-                {% endfor %}
+                {% if totalPages <= 6 or i == 1 or i == totalPages or (i >= currentPage - 2 and i <= currentPage + 2) %}
+                    <li class="page-item {% if i == currentPage %}active{% endif %}">
+                        <a class="page-link" href="{{
+                            path('app_tableau_de_bord_entreprise_cvtheque', {
+                                'page': i,
+                                'size': size,
+                                'filter-title': filter_title,
+                                'filter-gender': filter_gender,
+                                'filter-degree': filter_degree,
+                                'filter-year': filter_year,
+                            })
+                        }}">{{ i }}</a>
+                    </li>
+                {% elseif i == currentPage - 3 or i == currentPage + 3 %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
 
                 <!-- Lien "Suivant" -->
                 <li class="page-item {% if currentPage == totalPages %}disabled{% endif %}">
                     <a class="page-link" href="{{
                         path('app_tableau_de_bord_entreprise_cvtheque', {
-                            'page': currentPage + 1
-                        }|merge(app.request.query.all))
+                            'page': currentPage + 1,
+                            'size': size,
+                            'filter-title': filter_title,
+                            'filter-gender': filter_gender,
+                            'filter-degree': filter_degree,
+                            'filter-year': filter_year,
+                        })
                     }}">Suivant</a>
                 </li>
             </ul>
@@ -225,68 +240,74 @@
     </section>
 
 {# 
-                        <!-- si favoris active ajout class active a côte de favoris-add  -->
-                        <div class="col-xl-6">
-                            <div class="candidate-card">
-                                <div class="candidate-card-item">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="candidate-photo">
-                                            <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
-                                        </div>
-                                        <div class="candidate-info-content">
-                                            <h2>Nom & prénoms</h2>
-                                            <div class="featured d-md-flex align-items-center">Marketing <span class="certificated">Certifié</span></div>
-                                            <button class="favoris-add active"><i class="bi bi-star"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="infos-middle d-flex align-items-center">
-                                        <div class="ville-info"><i class="bi bi-pin"></i> Antananarivo</div>
-                                        <div class="pretention-info"><i class="bi bi-cash-coin"></i> 230K / jour</div>
-                                    </div>
-                                    <div class="infos-desc">
-                                        Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
-                                    </div>
-                                    <div class="infos-footer d-flex align-items-center">
-                                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': 3634 })}}">Voir son profil</a>
-                                        <a class="btn" href="">Consulter son CV directement</a>
-                                    </div>
+    <!-- si favoris active ajout class active a côte de favoris-add  -->
+    <div class="col-xl-6">
+        <div class="candidate-card">
+            <div class="candidate-card-item">
+                <div class="d-flex align-items-center mb-2">
+                    <div class="candidate-photo">
+                        <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                    </div>
+                    <div class="candidate-info-content">
+                        <h2>Nom & prénoms</h2>
+                        <div class="featured d-md-flex align-items-center">Marketing <span class="certificated">Certifié</span></div>
+                        <button class="favoris-add active"><i class="bi bi-star"></i></button>
+                    </div>
+                </div>
+                <div class="infos-middle d-flex align-items-center">
+                    <div class="ville-info"><i class="bi bi-pin"></i> Antananarivo</div>
+                    <div class="pretention-info"><i class="bi bi-cash-coin"></i> 230K / jour</div>
+                </div>
+                <div class="infos-desc">
+                    Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
+                </div>
+                <div class="infos-footer d-flex align-items-center">
+                    <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': 3634 })}}">Voir son profil</a>
+                    <a class="btn" href="">Consulter son CV directement</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- si profil le plus visite ajout <span class="diamond_"> à côte du nom  -->
+    <div class="col-xl-6">
+        <div class="candidate-card">
+            <div class="candidate-card-item">
+                <div class="d-flex align-items-center mb-2">
+                    <div class="candidate-photo">
+                        <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                    </div>
+                    <div class="candidate-info-content">
+                        <h2>Nom & prénoms 
+                            <span class="diamond_">
+                                <img src="{{ asset('v2/images/dashboard/diamond_icon.svg')}}" alt="">
+                                <div class="popover">
+                                    <div class="popover-content">Profil le plus visité</div>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- si profil le plus visite ajout <span class="diamond_"> à côte du nom  -->
-                        <div class="col-xl-6">
-                            <div class="candidate-card">
-                                <div class="candidate-card-item">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="candidate-photo">
-                                            <a href=""><img src="{{ asset('v2/images/dashboard/.svg')}}" alt=""></a>
-                                        </div>
-                                        <div class="candidate-info-content">
-                                            <h2>Nom & prénoms 
-                                                <span class="diamond_">
-                                                    <img src="{{ asset('v2/images/dashboard/diamond_icon.svg')}}" alt="">
-                                                    <div class="popover">
-                                                        <div class="popover-content">Profil le plus visité</div>
-                                                    </div>
-                                                </span>
-                                            </h2>
-                                            <div class="featured d-md-flex align-items-center">Marketing <span class="certificated">Certifié</span></div>
-                                            <button class="favoris-add active"><i class="bi bi-star"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="infos-middle d-flex align-items-center">
-                                        <div class="ville-info"><i class="bi bi-pin"></i> Antananarivo</div>
-                                        <div class="pretention-info"><i class="bi bi-cash-coin"></i> 230K / jour</div>
-                                    </div>
-                                    <div class="infos-desc">
-                                        Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
-                                    </div>
-                                    <div class="infos-footer d-flex align-items-center">
-                                        <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': 3634 })}}">Voir son profil</a>
-                                        <a class="btn" href="">Consulter son CV directement</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                 #}
+                            </span>
+                        </h2>
+                        <div class="featured d-md-flex align-items-center">Marketing <span class="certificated">Certifié</span></div>
+                        <button class="favoris-add active"><i class="bi bi-star"></i></button>
+                    </div>
+                </div>
+                <div class="infos-middle d-flex align-items-center">
+                    <div class="ville-info"><i class="bi bi-pin"></i> Antananarivo</div>
+                    <div class="pretention-info"><i class="bi bi-cash-coin"></i> 230K / jour</div>
+                </div>
+                <div class="infos-desc">
+                    Ideo urbs venerabilis post superbas efferatarum gentium cervices oppressas latasque leges fundamenta libertatis et retinacula sempiterna velut frugi parens et prudens et dives Caesaribus tamquam liberis suis regenda patrimonii iura permisit.
+                </div>
+                <div class="infos-footer d-flex align-items-center">
+                    <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': 3634 })}}">Voir son profil</a>
+                    <a class="btn" href="">Consulter son CV directement</a>
+                </div>
+            </div>
+        </div>
+    </div>
+#}
+<script>
+    document.getElementById('selectSize').addEventListener('change', function() {
+        document.getElementById('sizeForm').submit();
+    });
+</script>
+
 {% endblock %}
