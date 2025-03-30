@@ -34,8 +34,13 @@ class UserOrderController extends AbstractController
     ){}
 
     #[Route('/', name: 'app_v2_user_order')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = [];
+        
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);

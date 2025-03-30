@@ -35,6 +35,8 @@ class FavoriteController extends AbstractController
     #[Route('/favorites', name: 'app_v2_recruiter_favorite')]
     public function index(Request $request): Response
     {
+        return $this->redirectToRoute('app_tableau_de_bord_entreprise_favoris');
+
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $recruiter = $this->userService->checkProfile();
         $favorites = $this->favorisRepository->findBy([
@@ -54,6 +56,8 @@ class FavoriteController extends AbstractController
     #[Route('/favorite/view/{uid}', name: 'app_v2_recruiter_favorite_view')]
     public function view(Request $request, CandidateProfile $candidat): Response
     {
+        return $this->redirectToRoute('app_tableau_de_bord_entreprise_profil_candidat', ['id' => $candidat->getId()]);
+
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $recruiter = $this->userService->checkProfile();
 

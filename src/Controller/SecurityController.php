@@ -140,7 +140,7 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_coworking_main');
         }
 
-        $routeInfo = $this->userService->getRedirectRoute($user);
+        $routeInfo = $this->userService->getRedirectRoute($user, $request);
         
         return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
     }

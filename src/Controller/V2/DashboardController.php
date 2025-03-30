@@ -327,6 +327,11 @@ class DashboardController extends AbstractController
         SourceRepository $sourceRepository
     ): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = [];
+        
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $sourceEntreprise = $sourceRepository->findOneBy(['slug' => 'formulaire-de-contact-site-olona-talents']);
@@ -367,8 +372,13 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/centre-de-formation', name: 'app_v2_dashboard_formation')]
-    public function formation(PlaylistRepository $playlistRepository, VideoRepository $videoRepository): Response
+    public function formation(PlaylistRepository $playlistRepository, VideoRepository $videoRepository, Request $request): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = [];
+        
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         return $this->render('v2/dashboard/formation.html.twig', [
             'playlists' => $playlistRepository->findAll(),
             'videos' => $videoRepository->findAll(),

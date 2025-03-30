@@ -58,6 +58,11 @@ class PrestationController extends AbstractController
     #[Route('/prestations', name: 'app_v2_prestation')]
     public function index(Request $request): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        // return $this->redirectToRoute('app_connect');
+
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);
@@ -278,6 +283,13 @@ class PrestationController extends AbstractController
                 throw $this->createNotFoundException('Cette prestation n\'existe pas ou n\'est pas disponible.');
             }
         }
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = ['id' => $prestation->getId()];
+        
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+
+        
+        // return $this->redirectToRoute('app_connect');
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $showContactPrice = $this->profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);

@@ -53,6 +53,9 @@ class JobListingController extends AbstractController
     #[Route('/job-listings', name: 'app_v2_recruiter_job_listing')]
     public function index(Request $request): Response
     {
+        return $this->redirectToRoute('app_tableau_de_bord_entreprise_offre_emploi');
+
+        
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         $recruiter = $this->userService->checkProfile();
         $jobListings = $this->em->getRepository(JobListing::class)->findJobListingsByEntreprise($recruiter);
@@ -70,6 +73,9 @@ class JobListingController extends AbstractController
     #[Route('/job-listing/create', name: 'app_v2_recruiter_create_job_listing')]
     public function create(Request $request): Response
     {
+        return $this->redirectToRoute('app_tableau_de_bord_entreprise_creer_une_annonce');
+
+
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Accès refusé. Cette section est réservée aux recruteurs.');
         /** @var EntrepriseProfile $recruiter */
         $recruiter = $this->userService->checkProfile();
