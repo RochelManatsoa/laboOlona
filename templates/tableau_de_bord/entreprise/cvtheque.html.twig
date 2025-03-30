@@ -117,11 +117,11 @@
                             <div class="dropdown bootstrap-select">
                                 <select id="selectSize" name="size" class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
                                     <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="30">30</option>
-                                    <option value="40">40</option>
-                                    <option value="50">50</option>
-                                    <option value="60">60</option>
+                                    <option value="20" {% if size == 20 %}selected{% endif %}>20</option>
+                                    <option value="30" {% if size == 30 %}selected{% endif %}>30</option>
+                                    <option value="40" {% if size == 40 %}selected{% endif %}>40</option>
+                                    <option value="50" {% if size == 50 %}selected{% endif %}>50</option>
+                                    <option value="60" {% if size == 60 %}selected{% endif %}>60</option>
                                 </select>
                                 <input type="hidden" name="filter-title" value="{{filter_title}}">
                             </div>

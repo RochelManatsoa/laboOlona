@@ -2,8 +2,13 @@
 
 namespace App\Controller\V2;
 
+use App\Controller\TableauDeBord\CandidatController;
+use App\Controller\TableauDeBord\EntrepriseController;
 use App\Entity\User;
+use App\Service\ActivityLogger;
 use App\Service\PaymentService;
+use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
 use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\BusinessModel\Order;
@@ -16,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\TransactionManager;
-use App\Service\ActivityLogger;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -29,6 +33,8 @@ class PaymentController extends AbstractController
         private CreditManager $creditManager,
         private MailerService $mailerService,
         private UserService $userService,
+        private CandidatController $candidatController,
+        private EntrepriseController $entrepriseController,
         private ActivityLogger $activityLogger
     ){}
 
@@ -69,6 +75,7 @@ class PaymentController extends AbstractController
 
         $payerId = $request->query->get('PayerID');
         $token = $request->query->get('token');
+        $profile = $this->userService->checkUserProfile($order->getCustomer());
     
         if ($payerId && $token) {
             
@@ -82,13 +89,20 @@ class PaymentController extends AbstractController
                         $transaction = $this->transactionManager->init();
                     }
                     $transaction->setCommand($order);
-                    $transaction->setStatus(Transaction::STATUS_AUTHORIZED);
+                    $transaction->setStatus(Transaction::STATUS_COMPLETED);
                     $transaction->setTypeTransaction($order->getPaymentMethod());
                     $transaction->setReference($result->payer->payer_id);
                     $transaction->setPackage($order->getPackage());
                     $transaction->setAmount($order->getPackage()->getPrice());
                     $transaction->setCreditsAdded($order->getPackage()->getCredit());
                     $this->transactionManager->save($transaction);
+                    if($order->getPackage()->getType() === 'ABONNEMENT'){
+                        if($profile instanceof CandidateProfile || $profile instanceof EntrepriseProfile){
+                            $profile->setIsPremium(true);
+                            $entityManager->persist($profile);
+                            $entityManager->flush();
+                        }
+                    }
                     $this->creditManager->notifyTransaction($transaction);
                     $this->creditManager->validateTransaction($transaction, $transaction->getTypeTransaction()->getName());
                     $order->setStatus(Order::STATUS_COMPLETED);
@@ -113,6 +127,22 @@ class PaymentController extends AbstractController
             }
         }
 
+        if($profile instanceof CandidateProfile){
+            $params = $this->candidatController->getData();
+            $params['status'] = 'Succès';
+            $params['payment'] = true;
+            $params['order'] = $order;
+            return $this->render('tableau_de_bord/candidat/paypal.html.twig', $params);
+        }
+
+        if($profile instanceof EntrepriseProfile){
+            $params = $this->entrepriseController->getData();
+            $params['status'] = 'Succès';
+            $params['payment'] = true;
+            $params['order'] = $order;
+            return $this->render('tableau_de_bord/entreprise/paypal.html.twig', $params);
+        }
+
         return $this->render('v2/dashboard/payment/paypal.html.twig', [
             'status' => 'Succès',
             'payment' => true,
@@ -125,9 +155,26 @@ class PaymentController extends AbstractController
     {
         $order = $entityManager->getRepository(Order::class)->findOneBy(['orderNumber' => $orderNumber]);
         $order->setStatus(Order::STATUS_CANCELLED);  
+        $profile = $this->userService->checkUserProfile($order->getCustomer());
 
         $entityManager->persist($order);
         $entityManager->flush();
+
+        if($profile instanceof CandidateProfile){
+            $params = $this->candidatController->getData();
+            $params['status'] = 'Succès';
+            $params['payment'] = false;
+            $params['order'] = $order;
+            return $this->render('tableau_de_bord/candidat/paypal.html.twig', $params);
+        }
+
+        if($profile instanceof EntrepriseProfile){
+            $params = $this->entrepriseController->getData();
+            $params['status'] = 'Succès';
+            $params['payment'] = false;
+            $params['order'] = $order;
+            return $this->render('tableau_de_bord/entreprise/paypal.html.twig', $params);
+        }
 
         return $this->render('v2/dashboard/payment/paypal.html.twig', [
             'status' => 'Echec',
