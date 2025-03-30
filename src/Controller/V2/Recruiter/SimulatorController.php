@@ -43,6 +43,8 @@ class SimulatorController extends AbstractController
         $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
         $routeInfo['params'] = [];
 
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+
         $this->denyAccessUnlessGranted('ENTREPRISE_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux recruteurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
@@ -63,7 +65,8 @@ class SimulatorController extends AbstractController
         $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
         $routeInfo['params'] = [];
         
-        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);     
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);  
+
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $simulateur = $this->simulatorManager->init();
@@ -125,6 +128,8 @@ class SimulatorController extends AbstractController
     {
         $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
         $routeInfo['params'] = [];
+
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
         
         $results = $this->employeManager->simulate($simulateur);
         /** @var User $user */

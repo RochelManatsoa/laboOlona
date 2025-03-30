@@ -242,6 +242,10 @@ class UserService
             'app_v2_contact' => [
                 CandidateProfile::class => ['route' => 'app_tableau_de_bord_candidat_assistance', 'params' => $routeParams],
                 EntrepriseProfile::class => ['route' => 'app_tableau_de_bord_entreprise_assistance', 'params' => $routeParams],
+            ],
+            'app_v2_view_recruiter_profile' => [
+                CandidateProfile::class => ['route' => 'app_tableau_de_bord_candidat', 'params' => $routeParams],
+                EntrepriseProfile::class => ['route' => 'app_tableau_de_bord_entreprise', 'params' => $routeParams],
             ]
         ];
     
