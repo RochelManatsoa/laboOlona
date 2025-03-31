@@ -400,7 +400,8 @@ $(function() {
         if (currentTheme) {
             const themeName = currentTheme.split('=')[1];
             $('body').removeClass('bootstrap-dark bootstrap-light').addClass(themeName);
-            const mode = themeName.replace('bootstrap-', '');
+            // const mode = themeName.replace('bootstrap-', '');
+            const mode = 'light';
             $('html').attr('data-bs-theme', mode);
             updateLogo();
         }
