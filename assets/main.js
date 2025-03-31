@@ -353,11 +353,11 @@ $(function() {
     }
     
     function handleThemeChange() {
-        // $('#switch-theme').off('click').on('click', function() {
-        //     const newTheme = $('body').hasClass('bootstrap-light') ? 'bootstrap-dark' : 'bootstrap-light';
-        //     updateThemePreference(newTheme);
-        //     updateLogo();
-        // });
+        $('#switch-theme').off('click').on('click', function() {
+            const newTheme = $('body').hasClass('bootstrap-light') ? 'bootstrap-light' : 'bootstrap-light';
+            updateThemePreference(newTheme);
+            updateLogo();
+        });
 
         // Initialisation de CKEditor
         let emailContentEditor;
