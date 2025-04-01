@@ -473,8 +473,20 @@ class CandidatController extends AbstractController
             ->setMaxResults($limit)
             ->setFirstResult(($page - 1) * $limit);
 
+        $qbboost = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
+        $qbboost->where('j.status = :status')
+            ->setParameter('status', JobListing::STATUS_FEATURED)
+            // ->andWhere('j.secteur IN (:secteurs)')
+            // ->setParameter('secteurs', $secteurs)
+            ->orderBy('j.id', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult(($page - 1) * $limit);
+
         $offres = $qb->getQuery()->getResult();
+        $boosts = $qbboost->getQuery()->getResult();
         $params['offres'] = $offres;
+        $params['joblistings'] = $offres;
+        $params['joblistings_boost'] = $boosts;
 
         return $this->render('tableau_de_bord/candidat/trouver_des_missions.html.twig', $params);
     }
