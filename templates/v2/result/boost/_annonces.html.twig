@@ -1,41 +1,29 @@
-<style>
-    .card.boost-card {
-        height: 100%; /* s'étire au max de la colonne */
-        min-height: 150px; /* ou plus selon ton besoin */
-        display: flex;
-        flex-direction: column;
-    }
-
-    .card.boost-card .card-body {
-        flex-grow: 1;
-    }
-</style>
 <div class="boosts-container" data-slider>
     <div class="boosts" data-slider-wrapper>
         {% if joblistings_boost|length > 0 %}
             {% for joblisting in joblistings_boost %}
                 <div class="boost"> 
-                    <div class="card mb-3 boost-card" style="max-width: 500px;">
-                    <a href="{{ path('app_tableau_de_bord_candidat_view_job_offer', {'id': joblisting.id })}}">
-                        <div class="">
-                            <span class="position-absolute top-0 start-0 ms-5 px-3 translate-middle badge bg-danger rounded-pill" style="z-index:999">URGENT</span>
-                        </div>
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise2.webp') }}" alt="{{ generatePseudoById(joblisting.id) }}" class="img-fluid rounded-start">
+                    <div class="card mb-3 boost-card" style="max-width: 400px;">
+                        <a href="{{ path('app_tableau_de_bord_candidat_view_job_offer', {'id': joblisting.id })}}">
+                            <div class="">
+                                <span class="position-absolute top-0 start-0 ms-5 px-3 translate-middle badge bg-danger rounded-pill" style="z-index:999">URGENT</span>
                             </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{joblisting.titre}}</h5>
-                                    <p class="card-text">
-                                    <strong class="text-body-secondary">{{ joblisting.entreprise.nom }}</strong><br>
-                                    <small class="text-body-secondary"><span class="secteur_job"><i class="bi bi-tags"></i> {{ joblisting.secteur.nom}}</span></small><br>
-                                    <small class="text-body-secondary">Publié {{ joblisting.dateCreation|time_ago }}</small></p>
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise2.webp') }}" alt="{{ generatePseudoById(joblisting.id) }}" class="img-fluid rounded-start">
                                 </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{joblisting.titre}}</h5>
+                                        <p class="card-text">
+                                        <strong class="text-body-secondary">{{ joblisting.entreprise.nom }}</strong><br>
+                                        <small class="text-body-secondary"><span class="secteur_job"><i class="bi bi-tags"></i> {{ joblisting.secteur.nom}}</span></small><br>
+                                        <small class="text-body-secondary">Publié {{ joblisting.dateCreation|time_ago }}</small></p>
+                                    </div>
+                                </div>
+                                <p class="card-text p-3">{{ joblisting.shortDescription|striptags|slice(0, 170) ~ '...' }}</p>
                             </div>
-                            <p class="card-text p-3">{{ joblisting.shortDescription|striptags|slice(0, 170) ~ '...' }}</p>
-                        </div>
-                    </a>
+                        </a>
                     </div>
                 </div>
             {% endfor %}
@@ -43,26 +31,9 @@
             {% if joblistings_boost|length == 1 %}
                 <div class="card mt-3 text-center">
                     <a href="{{ path('app_contact') }}">
-                        <img class="img-fluid rounded" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
+                        <img class="img-fluid rounded" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
                     </a>
                 </div>
-                {% if not app.user %}
-                    <div class="card mt-3 text-center">
-                        <a href="{{ path('app_contact') }}">
-                            <img class="img-fluid rounded" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
-                        </a>
-                    </div>
-                {% endif %}
-            {% endif %}
-
-            {% if joblistings_boost|length == 2 %}
-                {% if not app.user %}
-                    <div class="card mt-3 text-center">
-                        <a href="{{ path('app_contact') }}">
-                            <img class="img-fluid rounded" src="{{ asset('images/Ot-votrepubici-verticalbis.webp')}}">
-                        </a>
-                    </div>
-                {% endif %}
             {% endif %}
         {% endif %}
     </div>
