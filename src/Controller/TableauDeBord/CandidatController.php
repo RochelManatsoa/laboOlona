@@ -3,11 +3,13 @@
 namespace App\Controller\TableauDeBord;
 
 use App\Entity\User;
+use Faker\Core\File;
 use App\Entity\Prestation;
 use App\Twig\AppExtension;
 use App\Entity\Notification;
 use App\Form\PrestationType;
 use App\Data\QuerySearchData;
+use App\Service\FileUploader;
 use App\Entity\Finance\Devise;
 use App\Twig\FinanceExtension;
 use App\Manager\ProfileManager;
@@ -46,6 +48,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\TransactionManager;
 use App\Repository\BusinessModel\PackageRepository;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
+use Google\Service\Analytics\Profile;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -338,13 +341,19 @@ class CandidatController extends AbstractController
     }
 
     #[Route('/mon-compte', name: 'app_tableau_de_bord_candidat_mon_compte')]
-    public function mycompte(Request $request): Response
+    public function mycompte(Request $request, FileUploader $fileUploader, ProfileManager $profileManager): Response
     {
         $params = $this->getData();
         $candidat = $params['candidat'];
         $form = $this->createForm(EditCandidateProfile::class, $candidat);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            $cvFile = $form->get('cv')->getData();
+            if ($cvFile) {
+                $fileName = $fileUploader->upload($cvFile, $candidat);
+                $candidat->setCv($fileName[0]);
+                $profileManager->saveCV($fileName, $candidat);
+            }
             $this->em->persist($candidat);
             $this->em->flush();
             $this->addFlash('success', 'Informations enregistrées');

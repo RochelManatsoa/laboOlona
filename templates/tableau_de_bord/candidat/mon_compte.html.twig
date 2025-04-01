@@ -86,7 +86,24 @@
     <div class="biographie-profil mb-4 p-4 apparition_">
         <span class="fs-5 mb-1 fw-bold lh-base st-title">Piece jointe</span>
         <hr/>
-        {{ form_row(form.cv)}}
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+                {{ form_row(form.cv) }}
+            </div>
+            <div class="col-lg-6 col-sm-12 d-flex justify-content-center align-items-center">
+                <div class="cv-pdf text-center">
+                    {% if candidat.cv is defined and candidat.cv is not null %}
+                        <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" title="Ouvrir" target="_blank">
+                            <i class="bi bi-filetype-pdf" style="font-size: 2rem;"></i>
+                            <span class="small fw-light">{{ candidat.cv }}</span>
+                        </a>
+                    {% else %}
+                        <i class="bi bi-info-circle" style="font-size: 1.2rem; color: red;"></i>
+                        <span class="small fw-light">Vous n'avez pas encore envoyé de CV. <br>Veuillez télécharger votre CV pour améliorer vos chances de sélection.</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
         <div style="display:none;">
             {{ form_widget(form)}}
         </div>
