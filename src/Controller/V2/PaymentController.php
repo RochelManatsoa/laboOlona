@@ -211,7 +211,7 @@ class PaymentController extends AbstractController
 
             /** On envoi un mail */
             $this->mailerService->sendMultiple(
-                ["contact@olona-talents.com", "admin@olona-talents.com", "aolonaprodadmi@gmail.com"],
+                ["contact@olona-talents.com", "admin@olona-talents.com", "aolonaprodadmi@gmail.com", "partenaires@olona-talents.com"],
                 "Paiement sur Olona Talents",
                 "notification_paiement.html.twig",
                 [
