@@ -3,7 +3,6 @@
 namespace App\Controller\TableauDeBord;
 
 use App\Entity\User;
-use Faker\Core\File;
 use App\Entity\Prestation;
 use App\Twig\AppExtension;
 use App\Entity\Notification;
@@ -48,7 +47,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\TransactionManager;
 use App\Repository\BusinessModel\PackageRepository;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
-use Google\Service\Analytics\Profile;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -401,7 +399,7 @@ class CandidatController extends AbstractController
 
             /** On envoi un mail */
             $this->mailerService->sendMultiple(
-                ["contact@olona-talents.com", "admin@olona-talents.com", "aolonaprodadmi@gmail.com"],
+                ["contact@olona-talents.com", "admin@olona-talents.com", "aolonaprodadmi@gmail.com", "partenaires@olona-talents.com"],
                 "Paiement sur Olona Talents",
                 "notification_paiement.html.twig",
                 [

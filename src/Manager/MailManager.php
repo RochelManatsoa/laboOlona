@@ -160,7 +160,7 @@ class MailManager
         ], UrlGeneratorInterface::ABSOLUTE_URL);
         
         return $this->mailerService->sendMultiple(
-            ['ambassadrices@olona-talents.com', 'admin@olona-talents.com','aolonaprodadmi@gmail.com', 'support@olona-talents.com', 'contact@olona-talents.com'],
+            ['ambassadrices@olona-talents.com', 'admin@olona-talents.com','partenaires@olona-talents.com', 'support@olona-talents.com', 'contact@olona-talents.com'],
             'Réservation au nom de '.$reservation->getFullName(),
             'reservation/coworking.mail.twig',
             [
@@ -187,7 +187,7 @@ class MailManager
         );
         
         return $this->mailerService->sendMultiple(
-            ['ambassadrices@olona-talents.com', 'admin@olona-talents.com','aolonaprodadmi@gmail.com', 'support@olona-talents.com', 'contact@olona-talents.com'],
+            ['ambassadrices@olona-talents.com', 'admin@olona-talents.com','partenaires@olona-talents.com', 'support@olona-talents.com', 'contact@olona-talents.com'],
             'Réservation au nom de '.$contract->getFirstName().' '.$contract->getLastName(),
             'reservation/contrat_vip.mail.twig',
             [
@@ -214,7 +214,7 @@ class MailManager
         );
         
         return $this->mailerService->sendMultiple(
-            ['ambassadrices@olona-talents.com', 'admin@olona-talents.com','aolonaprodadmi@gmail.com', 'support@olona-talents.com', 'contact@olona-talents.com'],
+            ['ambassadrices@olona-talents.com', 'admin@olona-talents.com','partenaires@olona-talents.com', 'support@olona-talents.com', 'contact@olona-talents.com'],
             'Réservation au nom de '.$contract->getFirstName().' '.$contract->getLastName(),
             'reservation/contrat_vip.mail.twig',
             [
