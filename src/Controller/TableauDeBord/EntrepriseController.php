@@ -42,6 +42,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use App\Manager\BusinessModel\CreditManager;
 use App\Repository\Finance\DeviseRepository;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\TransactionManager;
@@ -462,6 +463,17 @@ class EntrepriseController extends AbstractController
         
         return $this->render('tableau_de_bord/entreprise/publier_une_annonce.html.twig', $params);
     }
+
+    #[Route('/reseaux-professionnelles', name: 'app_tableau_de_bord_entreprise_reseaux_professionnelles')]
+    public function socialpro(Request $request): Response
+    {
+        $page = $request->query->get('page', 1);
+        $params = $this->getData();
+        $currentUser = $params['currentUser'];
+        $params['allContacts'] = $this->em->getRepository(PurchasedContact::class)->paginateContactsByBuyer($currentUser, $page);
+
+        return $this->render('tableau_de_bord/entreprise/reseaux_professionnelles.html.twig', $params);
+    }
     
     #[Route('/tarif-choix', name: 'app_tableau_de_bord_entreprise_tarif_choice')]
     public function tchoice(PackageRepository $packageRepository, DeviseRepository $deviseRepository): Response
@@ -567,6 +579,7 @@ class EntrepriseController extends AbstractController
         $data['credit'] = $currentUser->getCredit()->getTotal();
         $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser,false);
         $data['favorisCount'] = count($entreprise->getFavoris());
+        $data['contactsCount'] = $this->em->getRepository(PurchasedContact::class)->countContacts($currentUser);
         $data['candidaturesCount'] = $this->em->getRepository(Applications::class)->countByEntrepriseProfile($entreprise->getId());
 
         return $data;

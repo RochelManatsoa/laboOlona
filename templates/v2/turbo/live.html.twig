@@ -6,11 +6,31 @@
 {% if (candidat is defined and candidat is not null) and (purchasedContact is defined and purchasedContact is not null)%}
     <turbo-stream action="update" target="contactDetails">
         <template>
-            <fieldset>
-                <strong>Email:</strong> {{ purchasedContact.contact.email }}<br>
-                <strong>Téléphone:</strong> {{ purchasedContact.contact.telephone }}<br>
-                <strong>Nom complet:</strong> {{ purchasedContact.contact.nom }} {{ purchasedContact.contact.prenom }}
-            </fieldset>
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Nom complet</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ purchasedContact.contact.nom }}
+                    {{ purchasedContact.contact.prenom }}
+                </div>
+            </div>
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Adresse email</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ purchasedContact.contact.email }}
+                </div>
+            </div>	
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Numéro de téléphone</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ purchasedContact.contact.telephone }}			
+                </div>
+            </div>	
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Référence</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ generatePseudo(purchasedContact.contact.candidateProfile) }}
+                </div>
+            </div>	
         </template>
     </turbo-stream>
 {% endif %}

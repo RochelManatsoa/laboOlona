@@ -1,4 +1,4 @@
-{% extends 'tableau_de_bord/base.html.twig' %}
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
 
 {% block title %}Mon réseau professionnel{% endblock %}
 
@@ -12,18 +12,19 @@
             </div>
         <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
             <li class="breadcrumb-item position-relative">
-                <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
                 <i class="ri-home-8-line"></i> Tableau de bord </a>
             </li>
             <li class="breadcrumb-item position-relative"> Réseaux professionnels </li>
         </ol>
     </div>
 </section>
-{% if not candidat.isIsPremium %}
+
+{% if not entreprise.isIsPremium %}
 <section class="warning_freemium mb-4 d-flex align-items-center">
     <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
     <div class="warning-block">
-        Vous êtes actuellement sur un plan gratuit. <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">Achetez du credit</a> pour <a routerlink="{{ path('app_tableau_de_bord_candidat_boost')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_boost')}}">booster la visibilité</a> de votre profil ou encore, passez à un <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs')}}">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+        Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
     </div>
 </section>
 {% endif %}
@@ -49,13 +50,13 @@
                             {% if item.contact.type == 'CANDIDAT' %}
                             <tr id="row_contact_{{item.id}}">
                                 <td class="">
-                                    {{ item.contact }}<br>
+                                    <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id' : item.contact.candidateProfile.id}) }}">{{ item.contact }}</a><br>
                                     <span class="fw-bold text-primary">{{ item.contact.candidateProfile.titre }}</span><br>
                                     <span class="fw-bold">{{ item.contact.email }}</span> | Tél: {{ item.contact.telephone }}
                                 </td>
                                 <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
                                     {{ item.contact.type }}<br>
-                                    <span class="fw-bold text-primary">{{ generatePseudo(item.contact.candidateProfile) }}</span>
+                                    <span class="fw-bold text-primary"><a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id' : item.contact.candidateProfile.id}) }}">{{ generatePseudo(item.contact.candidateProfile) }}</a></span>
                                 </td>
                                 <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
                             </tr>
