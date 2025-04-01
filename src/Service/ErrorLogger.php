@@ -2,9 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\User;
+use App\Manager\MailManager;
 use App\Entity\Errors\ErrorLog;
 use App\Entity\Logs\ActivityLog;
-use App\Manager\MailManager;
 use App\Service\User\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -32,36 +33,42 @@ class ErrorLogger
         $this->em->persist($errorLog);
         $this->em->flush();
     }
-
+    
     public function onKernelException(ExceptionEvent $event): void
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->userService->getCurrentUser();
-        $userId = null;
         $exception = $event->getThrowable();
         $request = $this->requestStack->getCurrentRequest();
 
-        $url = $request ? $request->getUri() : 'N/A';
-        $userAgent = $request ? $request->headers->get('User-Agent') : 'N/A';
-        $errorLog = new ErrorLog();
-        $longueurMax = 255; // ou toute autre limite appropriée pour votre colonne
-        $messageTronque = mb_substr($exception->getMessage(), 0, $longueurMax);
-        $urlTronque = mb_substr($url, 0, $longueurMax);
-        if($user){
-            $userId = $user->getId();
-            $this->activityLogger->logActivity($this->userService->getCurrentUser(), ActivityLog::ACTIVITY_ERROR, $exception->getMessage(), ActivityLog::LEVEL_CRITICAL);
-            $this->mailManager->errorAlertUser($this->userService->getCurrentUser(), $url, $exception);
+        $url = $request?->getUri() ?? 'N/A';
+        $userAgent = $request?->headers->get('User-Agent') ?? 'N/A';
+        $longueurMax = 255;
+
+        $truncate = fn($value) => mb_substr((string) $value, 0, $longueurMax);
+
+        if ($user) {
+            $this->activityLogger->logActivity(
+                $user,
+                ActivityLog::ACTIVITY_ERROR,
+                $exception->getMessage(),
+                ActivityLog::LEVEL_CRITICAL
+            );
+
+            $this->mailManager->errorAlertUser($user, $url, $exception);
         }
-        $errorLog->setMessage($messageTronque)
-            ->setType('php') 
-            ->setUrl($urlTronque) 
-            ->setFileName($exception->getFile()) 
-            ->setLineNumber($exception->getLine()) 
-            ->setErrorObject($exception->getTraceAsString())
+
+        $errorLog = (new ErrorLog())
+            ->setType('php')
+            ->setMessage($truncate($exception->getMessage()))
             ->setErrorMessage($exception->getMessage())
-            ->setUserAgent($userAgent) 
-            ->setUserId($userId) 
-            ->setCreatedAt(new \DateTime()); 
+            ->setUrl($truncate($url))
+            ->setFileName($truncate($exception->getFile()))
+            ->setLineNumber($truncate($exception->getLine()))
+            ->setErrorObject($exception->getTraceAsString())
+            ->setUserAgent($truncate($userAgent))
+            ->setUserId($user?->getId())
+            ->setCreatedAt(new \DateTime());
 
         $this->logError($errorLog);
     }
