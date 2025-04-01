@@ -43,6 +43,13 @@
       <img src="{{ asset('v2/images/dashboard/favoris.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">Favoris</span><span class="link-bulle">{{ favorisCount }}</span>
       </a>
     </li>
+    {% if contactsCount > 0 %}
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise_reseaux_professionnelles')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_reseaux_professionnelles' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('images/dashboard/locked_icon.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">Contacts</span><span class="link-bulle">{{ contactsCount }}</span>
+      </a>
+    </li>
+    {% endif %}
     <li class="nav-item">
       <a href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_creer_une_annonce' ? 'underline' : '' }}" aria-current="page">
       <img src="{{ asset('v2/images/dashboard/announcement.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">Publier une annonce</span>

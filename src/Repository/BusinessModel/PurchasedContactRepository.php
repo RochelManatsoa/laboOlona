@@ -60,4 +60,14 @@ class PurchasedContactRepository extends ServiceEntityRepository
             []
         );
     }
+    
+    public function countContacts(User $user): int
+    {
+        return (int) $this->createQueryBuilder('pc')
+            ->select('COUNT(pc.id)')
+            ->where('pc.buyer = :buyer')
+            ->setParameter('buyer', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
