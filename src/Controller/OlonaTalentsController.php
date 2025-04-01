@@ -156,7 +156,7 @@ class OlonaTalentsController extends AbstractController
         if($this->getUser()){
             $params = $this->getUserData();
         }
-        $currentUser = $params['currentUser'];
+        $currentUser = $this->userService->getCurrentUser();
         if($currentUser){
             $profile = $this->userService->checkUserProfile($currentUser);
         }
