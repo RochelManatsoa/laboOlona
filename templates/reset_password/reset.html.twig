@@ -1,31 +1,83 @@
-{% extends 'base_v21.html.twig' %}
+{% extends 'security/base_login.html.twig' %}
 
-{% block title %}Réinitialisez votre mot de passe{% endblock %}
+{% block title %}Réinitialiser votre mot de passe{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Réinitialisez votre mot de passe sur https://olona-talents.com/ en toute sécurité. Suivez les étapes pour récupérer l'accès à votre compte rapidement et facilement.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement, travail, emploi, talents, candidat, recruteur, offres, agence, olona, olona talents, olona talents agence, talents agence, agence talents, candidature, candidature agence, candidature olona, candidature olona talents">
+<meta property="og:title" content="Réinitialiser mot de passe | Olona Talents">
+<meta property="og:description" content="Réinitialisez votre mot de passe sur https://olona-talents.com/ en toute sécurité. Suivez les étapes pour récupérer l'accès à votre compte rapidement et facilement.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ path('app_forgot_password_request') }}">
+{% endblock %}
 
 {% block body %}
-<section id="contact">
-    <div class="shadow-custom col-12 col-sm-10 col-md-8 col-lg-8 p-2 p-sm-4 mx-auto">
-        <h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
-            <i class="bi bi-envelope-at text-warning me-2"></i>
-            Réinitialiser mot de passe
-        </h1>
-
-        <p class="text-center my-4">Entrez votre nouveau mot de passe ci-dessous. Assurez-vous qu'il est sécurisé et unique pour ce site.</p>
-        {{ form_start(resetForm, {'attr': {'class': 'col-md-6 mx-auto', 'data-turbo':'false'}}) }}
-            <div class="form-floating mb-3">
-                {{ form_widget(resetForm.plainPassword.first) }}
-                {{ form_label(resetForm.plainPassword.first) }}
-                <div class="small fw-lighter mb-2">Votre mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial.</div>
+<section class="login-wrap">
+    <div class="bg-mask"></div>
+    <div class="login-header">
+        <div class="container pt-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="{{ path('app_home') }}">
+                        <img src="{{ asset('images/login_olona_talents.webp') }}" class="img-fluid" alt="Image">
+                    </a>
+                </div>
+                <div class="col-md-8">
+                    <div class="sign-up_">
+                        Pas encore membre ? <a class="text-white" href="{{ path('app_olona_talents_register') }}" class="fw-bolder">Inscrivez-vous</a> et rejoignez la communauté Olona-talents.
+                    </div>
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                {{ form_widget(resetForm.plainPassword.second) }}
-                {{ form_label(resetForm.plainPassword.second) }}
-                <div class="small fw-lighter mb-2">Réentrez votre mot de passe pour confirmer.</div>
+        </div>
+    </div>
+    <div class="login-content">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 col-xl-8">
+                    <div class="login-left-block">
+                        
+                        <h1>Le <span>1<sup>er</sup></span>moteur de recherche dédié à l'emploi à Madagascar</h1>
+                        <ul class="features_list_">
+                            <li><a class="text-white" href="{{ path('app_coworking_main')}}">Espace coworking</a></li>
+                            <li><a class="text-white" href="" class="link-disabled">Recrutement</a></li>
+                            <li><a class="text-white" href="{{ path('app_home_simulateur_portage')}}">Portage salarial</a></li>
+                            <li><a class="text-white" href="" class="link-disabled">Domiciliation</a></li>
+                            <li><a class="text-white" href="" class="link-disabled">AutoPromotion</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-4">
+                    <div class="card shadow-lg border-0 rounded">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h2 class="fs-4 fw-bolder">Réinitialisation de votre mot de passe</h2>
+                                <p>
+                                    Entrez votre nouveau mot de passe ci-dessous. Assurez-vous qu'il est sécurisé et unique pour ce site.
+                                </p>
+                            </div>
+                            </br>
+                            {{ form_start(resetForm, {'attr': {'class': 'col-md-6 mx-auto', 'data-turbo':'false'}}) }}
+                                <div class="form-floating mb-3">
+                                    {{ form_widget(resetForm.plainPassword.first) }}
+                                    {{ form_label(resetForm.plainPassword.first) }}
+                                </div>
+                                <div class="form-floating mb-3">
+                                    {{ form_widget(resetForm.plainPassword.second) }}
+                                    {{ form_label(resetForm.plainPassword.second) }}
+                                </div>
+                                <button class="btn btn-primary px-5 btn-lg text-uppercase fw-bold my-4">Réinitialiser</button>
+                            {{ form_end(resetForm) }}
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button class="btn btn-primary px-5 btn-lg text-uppercase fw-bold my-4">Réinitialiser le mot de passe</button>
-        {{ form_end(resetForm) }}
-        <p class="text-center mt-3">Si vous avez des questions ou besoin d'aide, n'hésitez pas à contacter notre support technique.</p>
+        </div>
     </div>
 </section>
 {% endblock %}
+
 {% block preview %}{% endblock %}
+

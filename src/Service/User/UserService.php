@@ -8,10 +8,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\{CandidateProfile, EntrepriseProfile, ModerateurProfile, User};
-use App\Repository\{CandidateProfileRepository, EntrepriseProfileRepository, UserRepository};
+use App\Repository\UserRepository;
 
 class UserService
 {
@@ -194,10 +193,9 @@ class UserService
     public function getRedirectRoute(User $user, Request $request): array
     {
         $profile = $this->checkProfile($user);
-        $route = $request->attributes->get('_route');// récupère le paramètre 'route' de la requête, si présent
+        $route = $request->attributes->get('_route');
     
-        $routeParams = $request->query->all(); // récupère tous les paramètres de la query string
-        // dd($route,  $profile, $routeParams);
+        $routeParams = $request->query->all(); 
         $routes = [
             'app_v2_prestation' => [
                 CandidateProfile::class => 'app_tableau_de_bord_candidat_annuaire_de_services',
@@ -259,7 +257,6 @@ class UserService
             }
         }
     
-        // Fallback si aucune route spécifique n'est fournie ou si la classe de profil n'est pas gérée
         if ($profile instanceof CandidateProfile) {
             return ['route' => 'app_tableau_de_bord_candidat', 'params' => []];
         }
@@ -267,6 +264,6 @@ class UserService
             return ['route' => 'app_tableau_de_bord_entreprise', 'params' => []];
         }
     
-        return ['route' => 'app_v2_dashboard_create_profile', 'params' => []];
+        return ['route' => 'app_v2_dashboard_create_profile', 'params' => ['id' => $user->getId()]];
     }
 }

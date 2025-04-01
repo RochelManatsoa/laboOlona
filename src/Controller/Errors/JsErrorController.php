@@ -21,27 +21,28 @@ class JsErrorController extends AbstractController
     #[Route('/errors/js/error', name: 'app_errors_js_error')]
     public function index(Request $request)
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->userService->getCurrentUser();
-        $userId = null;
-        if($user){
-            $userId = $user->getId();
-        }
+
         $data = json_decode($request->getContent(), true);
-        $errorLog = new ErrorLog();
-        $errorLog->setType('javascript');
-        $errorLog->setMessage($data['message'] ?? 'No message provided');
-        $errorLog->setErrorMessage($data['message'] ?? 'No message provided');
-        $errorLog->setUrl($data['url'] ?? null);
-        $errorLog->setFileName($data['fileName'] ?? null);
-        $errorLog->setLineNumber($data['lineNumber'] ?? null);
-        $errorLog->setErrorObject($data['errorObj'] ?? null);
-        $errorLog->setUserAgent($data['userAgent'] ?? null);
-        $errorLog->setCreatedAt(new \DateTime());
-        $errorLog->setUserId($userId);
+        $longueurMax = 255;
+
+        $truncate = fn($value) => mb_substr($value ?? '', 0, $longueurMax);
+
+        $errorLog = (new ErrorLog())
+            ->setType('javascript')
+            ->setMessage($truncate($data['message']) ?: 'No message provided')
+            ->setErrorMessage($data['message'] ?? 'No message provided')
+            ->setUrl($truncate($data['url']))
+            ->setFileName($truncate($data['fileName']))
+            ->setLineNumber($truncate($data['lineNumber']))
+            ->setErrorObject($data['errorObj'] ?? null)
+            ->setUserAgent($truncate($data['userAgent']))
+            ->setCreatedAt(new \DateTime())
+            ->setUserId($user?->getId());
 
         $this->errorLogger->logError($errorLog);
-        
-        return $this->json(['Error logged'], 200, []);
+
+        return $this->json(['Error logged']);
     }
 }
