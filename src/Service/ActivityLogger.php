@@ -100,6 +100,15 @@ class ActivityLogger
     }
 
     /**
+     * Log a joblisting view activity
+     */
+    public function logEntrepriseViewActivity(User $user, string $reference): void
+    {
+        $details = sprintf('Vue entreprise %s', $reference);
+        $this->logActivity($user, ActivityLog::ACTIVITY_PAGE_VIEW, $details, ActivityLog::LEVEL_INFO);
+    }
+
+    /**
      * Log a ai tools view activity
      */
     public function logAiToolsViewActivity(User $user, string $reference): void
