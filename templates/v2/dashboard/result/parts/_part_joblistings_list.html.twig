@@ -19,7 +19,7 @@
 								<span style="cursor:pointer;" class="annonce-link" data-id="{{ job.id }}">{{ job.titre }}</span>
 							{% endif %}
 						</h2>
-						<h3><a href="" class="btn-primary">{{ job.entreprise.nom }}</a> <span class="secteur_job"><i class="bi bi-tags"></i> {{ job.secteur.nom}}</span></h3>
+						<h3><a href="{{ path('app_tableau_de_bord_candidat_view_recruiter', {'id': job.entreprise.id })}}" class="btn-primary">{{ job.entreprise.nom }}</a> <span class="secteur_job"><i class="bi bi-tags"></i> {{ job.secteur.nom}}</span></h3>
 						<div class="type_contact_">{{ job.typeContrat }}</div>
 						<div class="description_courte_">{{ job.shortDescription|raw }}</div>
 						<div class="info_publication_">

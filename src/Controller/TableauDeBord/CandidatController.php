@@ -42,11 +42,14 @@ use App\Manager\BusinessModel\CreditManager;
 use App\Repository\Finance\DeviseRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
+use App\Entity\EntrepriseProfile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\TransactionManager;
 use App\Repository\BusinessModel\PackageRepository;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
+use App\Repository\BusinessModel\PurchasedContactRepository;
+use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -489,6 +492,32 @@ class CandidatController extends AbstractController
         $params['joblistings_boost'] = $boosts;
 
         return $this->render('tableau_de_bord/candidat/trouver_des_missions.html.twig', $params);
+    }
+
+    #[Route('/detail-entreprise/{id}', name: 'app_tableau_de_bord_candidat_view_recruiter')]
+    public function viewRecruiter(
+        Request $request, 
+        int $id, 
+        AppExtension $appExtension, 
+        ProfileManager $profileManager,
+        PurchasedContactRepository $contactRepository,
+        JobListingRepository $jobListingRepository,
+    ): Response
+    {
+        $entreprise = $this->em->getRepository(EntrepriseProfile::class)->find($id);
+        if ($entreprise === null || $entreprise->getStatus() === EntrepriseProfile::STATUS_BANNED || $entreprise->getStatus() === EntrepriseProfile::STATUS_PENDING) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais l\'entreprise demandée n\'existe pas.');
+        }
+        $page = $request->query->get('page', 1);
+        $data = $this->getData();
+        $currentUser = $data['currentUser'];
+        $this->activityLogger->logEntrepriseViewActivity($data['currentUser'], $appExtension->generateReference($entreprise));
+        $data['entreprise'] = $entreprise;
+        $data['joblistings'] = $jobListingRepository->paginateJobListingsEntrepriseProfiles($entreprise, $page, JobListing::STATUS_PUBLISHED);
+        $data['show_recruiter_price'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER);
+        $data['purchasedContact'] = $contactRepository->findOneBy(['buyer' => $currentUser,'contact' => $entreprise->getEntreprise()]);
+
+        return $this->render('tableau_de_bord/candidat/view_entreprise.html.twig', $data);
     }
 
     #[Route('/detail-annonce/{id}', name: 'app_tableau_de_bord_candidat_view_job_offer')]

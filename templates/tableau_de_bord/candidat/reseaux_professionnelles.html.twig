@@ -62,13 +62,13 @@
                             {% else %}
                             <tr id="row_contact_{{item.id}}">
                                 <td class="">
-                                    {{ item.contact }}<br>
+                                    <a href="{{ path('app_tableau_de_bord_candidat_view_recruiter', {'id' : item.contact.entrepriseProfile.id}) }}">{{ item.contact }}</a><br>
                                     <span class="fw-bold text-warning">{{ item.contact.entrepriseProfile.nom }}</span><br>
                                     <span class="fw-bold">{{ item.contact.email }}</span> | Tél: {{ item.contact.telephone }}
                                 </td>
                                 <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
                                     {{ item.contact.type }}<br>
-                                    <span class="fw-bold text-primary">{{ generateReference(item.contact.entrepriseProfile) }}</span>
+                                    <span class="fw-bold text-primary"><a href="{{ path('app_tableau_de_bord_candidat_view_recruiter', {'id' : item.contact.entrepriseProfile.id}) }}">{{ generateReference(item.contact.entrepriseProfile) }}</a></span>
                                 </td>
                                 <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
                             </tr>

@@ -1,0 +1,260 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Entreprise {{ generateReference(entreprise) }}{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Entreprise {{ entreprise.nom }}</h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a> 
+                </li>
+                <li class="breadcrumb-item position-relative"> Détails entreprise </li>
+            </ol>
+        </div>
+    </section>
+    {% if not candidat.isIsPremium %}
+    <section class="warning_freemium mb-4 d-flex align-items-center">
+        <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+        <div class="warning-block">
+            Vous êtes actuellement sur un plan gratuit. <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">Achetez du credit</a> pour <a routerlink="{{ path('app_tableau_de_bord_candidat_boost')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_boost')}}">booster la visibilité</a> de votre profil ou encore, passez à un <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs')}}">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+        </div>
+    </section>
+    {% endif %}
+    <div class="profil-banner mb-4">
+        <div class="couverture-banner-bg" style="background-image: url({{ asset('images/dashboard/banner_couverture.webp')}})"></div>
+        <div class="left-infos-profils d-md-flex justify-content-between">
+            <div class="infos-profils d-md-flex justify-content-between">
+                <div class="img-profils">
+                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url({{ entreprise.fileName ? asset('uploads/compagnies/' ~ entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }});" alt="Logo"></div>
+                </div>
+                <div class="detail-profils">
+                    <div class="nomBlock d-md-flex align-items-center">
+                        <div class="Noms__">{{ entreprise.nom }}</div>
+                    </div>
+                    <div class="TitreBlock">
+                        {{ entreprise.siteweb }}
+                    </div>
+                </div>
+            </div>
+            <div class="btn-profils">
+                {% if not candidat.isIsPremium %}
+                    {% if purchasedContact is defined and purchasedContact is null %}
+                        {% set modalId = 'confirmationModal' %}
+                        {% if app.user.credit.total < show_recruiter_price %}
+                        {% set modalId = 'lowCreditModal' %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {# <div id="row_favorite_{{ candidat.id }}">
+                    {% if isLikedByRecruiter(entreprise, candidat.id) %}
+                        <button type="button" class="btn btn-info remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':candidat.id}) }}"><i class="bi bi-star-fill me-2"></i>Effacer de mes favoris</button>
+                    {% else %}
+                        <button type="button" class="btn btn-primary add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':candidat.id}) }}"><i class="bi bi-star me-2"></i>Ajouter à mes favoris</button>
+                    {% endif %}
+                </div> #}
+            </div>
+        </div>	
+    </div>	
+    <div class="row row-reverse">
+        <div class="col-lg-8">
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 mb-3 fw-bold lh-base st-title">A propos de {{ entreprise.nom }}</span>
+                {{ entreprise.description|raw}}
+                <br/>
+                <br/>
+                <span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
+                <div class="link-social">
+                    <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a>
+                    <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/linkedin.svg')}}" alt=""></a>
+                    <a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/mail_icon.svg')}}" alt=""></a>
+                </div>
+            </div>
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 mb-3 fw-bold lh-base st-title">Informations générales</span>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Nom de l'entreprise</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ entreprise.nom }}
+                    </div>
+                </div>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Site web</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ entreprise.siteweb }}
+                    </div>
+                </div>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Taille de l'entreprise</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ tailleEntreprise(entreprise.taille) }}		
+                    </div>
+                </div>	
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Référence</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ generateReference(entreprise) }}
+                    </div>
+                </div>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Localisation</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ entreprise.localisation|countryName }}
+                    </div>
+                </div>
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Secteur(s) d'activité</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {% for item in entreprise.secteurs %}
+                        <span class="badge rounded-pill bg-primary">
+                            {{ item.nom }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="biographie-profil mb-4 p-4">
+                <span class="fs-5 mb-3 fw-bold lh-base st-title">Annonces</span>
+                <div class="jobs-list-wrap">
+                        {% for item in joblistings %}
+                        {% set job = item[0] %}
+                        <article class="article-item_">
+                            <div class="row">
+                                <div class="col-md-2 aside-left-item_">
+                                    <span class="date_p">Publié {{ job.dateCreation|date('d/m/Y') }}</span>
+                                </div>
+                                <div class="col-md-10 aside-right-item_">
+                                    <div class="detail_annonce_">
+                                        <h2>
+                                            {% if app.user %}
+                                                <a href="{{ path('app_tableau_de_bord_candidat_view_job_offer', {'id': job.id })}}" class="btn-primary">
+                                                    {{ job.titre }}
+                                                </a>
+                                            {% else %}
+                                                <span style="cursor:pointer;" class="annonce-link" data-id="{{ job.id }}">{{ job.titre }}</span>
+                                            {% endif %}
+                                        </h2>
+                                        <h3><a href="" class="btn-primary">{{ job.entreprise.nom }}</a> <span class="secteur_job"><i class="bi bi-tags"></i> {{ job.secteur.nom}}</span></h3>
+                                        <div class="type_contact_">{{ job.typeContrat }}</div>
+                                        <div class="description_courte_">{{ job.shortDescription|raw }}</div>
+                                        <div class="info_publication_">
+                                            <span class="small fw-light">
+                                                <span class="badge bg-info rounded-pill px-2"></span>
+                                                <span class="badge rounded-pill px-2 text-bg-success">Ouvert</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <span class="">Date limite {{ job.dateExpiration|date('d/m/Y') }}</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-eye"></i> {{ job.annonceVues|length }}
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-bookmark-check"></i> {{ job.applications|length }} offres
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        {% endfor %}
+                </div>
+                {{ knp_pagination_render(joblistings) }}
+            </div>
+        </div>	
+        <div class="col-lg-4">
+            <div class="biographie-profil mb-4 p-4">
+                <div class="fw-bold">
+                <h4 class="fs-5 text-black text-uppercase text-center">Contact</h4>
+                {% if candidat.isIsPremium %}                
+                    <div class="d-md-flex flex-box_">
+                        <span class="fs-6 lh-base">Nom complet</span>
+                        <div class="d-md-flex fw-bold info-bx flex-box_">
+                            {{ entreprise.entreprise.nom }}
+                            {{ entreprise.entreprise.prenom }}
+                        </div>
+                    </div>
+                    <div class="d-md-flex flex-box_">
+                        <span class="fs-6 lh-base">Adresse email</span>
+                        <div class="d-md-flex fw-bold info-bx flex-box_">
+                            {{ entreprise.entreprise.email }}
+                        </div>
+                    </div>	
+                    <div class="d-md-flex flex-box_">
+                        <span class="fs-6 lh-base">Téléphone</span>
+                        <div class="d-md-flex fw-bold info-bx flex-box_">
+                            {{ entreprise.entreprise.telephone }}			
+                        </div>
+                    </div>	
+                {% else %}
+                    {% if purchasedContact is defined and purchasedContact is not null %}                
+                        <div class="d-md-flex flex-box_">
+                            <span class="fs-6 lh-base">Nom complet</span>
+                            <div class="d-md-flex fw-bold info-bx flex-box_">
+                                {{ entreprise.entreprise.nom }}
+                                {{ entreprise.entreprise.prenom }}
+                            </div>
+                        </div>
+                        <div class="d-md-flex flex-box_">
+                            <span class="fs-6 lh-base">Adresse email</span>
+                            <div class="d-md-flex fw-bold info-bx flex-box_">
+                                {{ entreprise.entreprise.email }}
+                            </div>
+                        </div>	
+                        <div class="d-md-flex flex-box_">
+                            <span class="fs-6 lh-base">Téléphone</span>
+                            <div class="d-md-flex fw-bold info-bx flex-box_">
+                                {{ entreprise.entreprise.telephone }}			
+                            </div>
+                        </div>	                
+                    {% else %}
+                    <div class="isNotPrem_">
+                        <div class="">
+                            <div id="contactDetails">
+                                <div class="text-center">
+                                    <img src="{{ asset('images/dashboard/locked_icon.svg')}}" alt="" width="30" height="30">
+                                    <span class="d-block">Infos verouillés</span>
+                                    <form action="{{ path('app_v2_contact_show')}}" method="post" id="show-recruiter-contact">
+                                        <input type="hidden" name="contactId" value="{{ entreprise.entreprise.id }}">
+                                        <input type="hidden" name="showContactPrice" value="{{ show_recruiter_price }}">
+                                        <input type="hidden" name="actionView" value="VIEW_RECRUITER">
+                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#{{ modalId }}" data-bs-price="{{ show_recruiter_price }} crédits" data-bs-type="show-recruiter-contact" class="mb-3 d-inline-block position-relative btn btn-success">Déverouiller ({{ show_recruiter_price }} crédits)</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endif %}
+                </div>
+            </div>
+            <div class="m-4 card position-relative text-center d-block d-md-none">
+                <a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
+                    <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                </a>
+            </div>
+            <div class="pub_veticales mt-4 pt-1">
+                <a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
+                    <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                </a>
+            </div>
+            <div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
+                <h4 class="title">Recrutement</h4>
+                <p>Obtenez les emplois les mieux adaptés à vos besoins <br>
+                Ajoutez votre CV MAINTENANT !</p>
+                <div class="btn-signUp">
+                    <a href="" class="btn btn-primary white">En savoir plus</a> 
+                </div>
+            </div>
+        </div>
+    </div>	
+    {% include "/tableau_de_bord/layout/_credit_modal_candidat.html.twig" %}
+{% endblock %}
