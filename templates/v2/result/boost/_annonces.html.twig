@@ -4,7 +4,7 @@
             {% for joblisting in joblistings_boost %}
                 <div class="boost"> 
                     <div class="card mb-3 boost-card" style="max-width: 400px;">
-                        <a href="{{ path('app_tableau_de_bord_candidat_view_job_offer', {'id': joblisting.id })}}">
+                        <a href="{{ path('app_olona_talents_view_job_offer', {'id': joblisting.id })}}">
                             <div class="">
                                 <span class="position-absolute top-0 start-0 ms-5 px-3 translate-middle badge bg-danger rounded-pill" style="z-index:999">URGENT</span>
                             </div>
@@ -21,7 +21,7 @@
                                         <small class="text-body-secondary">Publié {{ joblisting.dateCreation|time_ago }}</small></p>
                                     </div>
                                 </div>
-                                <p class="card-text p-3">{{ joblisting.shortDescription|striptags|slice(0, 200) ~ '...' }}</p>
+                                <p class="card-text p-3">{{ joblisting.shortDescription|striptags|slice(0, 350) ~ '...' }}</p>
                             </div>
                         </a>
                     </div>
@@ -29,10 +29,12 @@
             {% endfor %}
 
             {% if joblistings_boost|length == 1 %}
-                <div class="card mt-3 text-center">
-                    <a href="{{ path('app_contact') }}">
-                        <img class="img-fluid rounded" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
-                    </a>
+                <div class="boost"> 
+                    <div class="card mb-3 boost-card" style="max-width: 400px;">
+                        <a href="{{ path('app_contact') }}">
+                            <img class="img-fluid rounded" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                        </a>
+                    </div>
                 </div>
             {% endif %}
         {% endif %}

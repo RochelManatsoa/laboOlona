@@ -60,7 +60,7 @@
             <div class="biographie-profil mb-4 p-4 ">
                 <div class="resume_profil text-center">
                     <a href="{{ path('app_tableau_de_bord_entreprise_mon_compte')}}">
-                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ entreprise.fileName ? asset('uploads/compagnies/' ~ entreprise.fileName) : asset('uploads/experts/company-default.jpg') }}');" alt="Avatar">
+                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ entreprise.fileName ? asset('uploads/compagnies/' ~ entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}');" alt="Avatar">
                         <div class="overlay-text">Changer de logo</div>
                     </div>
                     </a>

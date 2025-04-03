@@ -12,7 +12,7 @@
 					<div class="detail_annonce_">
 						<h2>
 							{% if app.user %}
-								<a href="{{ path('app_tableau_de_bord_candidat_view_job_offer', {'id': job.id })}}" class="btn-primary">
+								<a href="{{ path('app_olona_talents_view_job_offer', {'id': job.id })}}" class="btn-primary">
 									{{ job.titre }}
 								</a>
 							{% else %}

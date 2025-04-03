@@ -173,7 +173,7 @@
                                             <span class="job-post-time">{{ job_offer.dateCreation|time_ago }}</span>
                                         </div>
                                         <div class="aply-btn-area">
-                                            <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}"  class="aplybtn btn-primary">
+                                            <a href="{{ path('app_olona_talents_view_job_offer', {'id': job_offer.id })}}" class="aplybtn btn-primary">
                                                 <i class="bi bi-arrow-right"></i>
                                             </a>
                                         </div>
@@ -205,7 +205,7 @@
                                     <span class="job-post-time">{{ job_offer.dateCreation|time_ago }}</span>
                                 </div>
                                 <div class="aply-btn-area">
-                                    <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}"  class="aplybtn btn-primary">
+                                    <a href="{{ path('app_olona_talents_view_job_offer', {'id': job_offer.id })}}" class="aplybtn btn-primary">
                                         <i class="bi bi-arrow-right"></i>
                                     </a>
                                 </div>
@@ -328,7 +328,7 @@
                                     <li><a href="/legal-mentions">Mentions Légales</a></li>
                                     <li><a href="/privacy-policy">Politique de Confidentialité</a></li>
                                     <li><a href="/terms-and-conditions">Conditions d'Utilisation</a></li>
-                                    <li><a href="/contact">Nous contacter</a></li>
+                                    <li><a href="{{ path('app_contact_us')}}">Nous contacter</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -359,26 +359,12 @@
                     <span class="copyrights-text">Copyright © 2025 OlonaTalents.</span>
                 </div>
                 <ul class="social-icons">
-                    <li><a href="" class="profil-social"><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a></li>
+                    <li><a href="https://www.facebook.com/olonatalents/"  target=_blank class="profil-social"><img src="{{ asset('v2/images/dashboard/facebook.svg')}}"  alt=""></a></li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
-	{#<section class="">
-		<div class="row">
-			<div class="col-12 col-sm-7 mx-auto border rounded-4 shadow-custom">
-				<div class="text-center p-2 p-sm-5">
-					<h1 class="fs-4">
-						Offres d'emploi - Profils de talents - Prestations
-					</h1>
-					<p class="fs-6">
-						Domiciliation d'entreprise - Espace coworking - Espace publicitaire professionnel<br />Portage salarial
-					</p>
-				</div>
-			</div>
-		</div>
-	</section>#}
 
 {% endblock %}
 
