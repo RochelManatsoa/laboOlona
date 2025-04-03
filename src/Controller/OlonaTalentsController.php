@@ -26,6 +26,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Manager\BusinessModel\CreditManager;
+use App\Manager\JobListingManager;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
@@ -199,7 +200,7 @@ class OlonaTalentsController extends AbstractController
     }
 
     #[Route('/detail-annonce/{id}', name: 'app_olona_talents_view_job_offer')]
-    public function viewJobOffer(int $id, JobListingRepository $jobListingRepository): Response
+    public function viewJobOffer(Request $request, int $id, JobListingRepository $jobListingRepository, JobListingManager $jobListingManager): Response
     {
         $annonce = $this->em->getRepository(JobListing::class)->find($id);
         if ($annonce === null || $annonce->getStatus() === JobListing::STATUS_DELETED || $annonce->getStatus() === JobListing::STATUS_PENDING) {
@@ -217,6 +218,7 @@ class OlonaTalentsController extends AbstractController
                 return $this->redirectToRoute('app_tableau_de_bord_entreprise_view_job_offer', ['id' => $id]);
             }
         }
+        $jobListingManager->incrementView($annonce, $request->getClientIp());
 
         return $this->render("tableau_de_bord/anonymous/annonce.html.twig", [
             'jobOffer' => $annonce,
