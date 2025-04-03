@@ -31,8 +31,8 @@
           <div class="profile-cards row">
             <div class="col">
                 <div class="card shadow">
-                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
-                  <div class="card-img-top bg-image-candidat" style="background-image: url('{{ app.user.entrepriseProfile.fileName ? asset('uploads/compagnies/' ~ app.user.entrepriseProfile.fileName) : asset('uploads/experts/company-default.jpg') }}');');" alt="{{ app.user.prenom }}"></div>
+                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PREMIUM</span>
+                  <div class="card-img-top bg-image-candidat" style="background-image: url('{{ app.user.entrepriseProfile.fileName ? asset('uploads/compagnies/' ~ app.user.entrepriseProfile.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}');');" alt="{{ app.user.prenom }}"></div>
                   <p class="card-title h6 bg-dark text-white text-center py-2">{{ generateReference(app.user.entrepriseProfile) }}</p>
                   <div class="card-body-candidat text-center mb-3">
                       <small class="mt-auto">
@@ -45,7 +45,7 @@
             </div>
             <div class="col">
                 <div class="card shadow card position-relative text-center">
-                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
+                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PREMIUM</span>
                   <div class="card-img-top bg-image-candidat" style="background-image: url('/uploads/experts/company-default.jpg');" alt="{{ app.user.prenom }}"></div>
                   <p class="card-title h6 bg-dark text-white text-center py-2">OT-REC0030</p>
                   <div class="card-body-candidat text-center mb-3">
@@ -59,7 +59,7 @@
             </div>
             <div class="col">
                 <div class="card shadow">
-                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
+                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PREMIUM</span>
                   <div class="card-img-top bg-image-candidat" style="background-image: url('/uploads/experts/company-default.jpg');" alt="Avatar"></div>
                   <p class="card-title h6 bg-dark text-white text-center py-2">OT-REC0168</p>
                   <div class="card-body-candidat text-center mb-3">
@@ -73,7 +73,7 @@
             </div>
             <div class="col">
                 <div class="card shadow">
-                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PRO</span>
+                  <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3" style="z-index: 1000;">PREMIUM</span>
                   <div class="card-img-top bg-image-candidat" style="background-image: url('/uploads/experts/company-default.jpg');" alt="{{ app.user.prenom }}"></div>
                   <p class="card-title h6 bg-dark text-white text-center py-2">OT-REC0092</p>
                   <div class="card-body-candidat text-center mb-3">
@@ -162,7 +162,7 @@
           <div class="rounded-circle" style="
               width: 85px;
               height: 85px;
-              background-image: url('{{ app.user.entrepriseProfile.fileName ? asset('uploads/companies/' ~ app.user.entrepriseProfile.fileName) : asset('uploads/experts/company-default.jpg') }}');
+              background-image: url('{{ app.user.entrepriseProfile.fileName ? asset('uploads/companies/' ~ app.user.entrepriseProfile.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}');
               background-size: cover;
               background-position: center;
           ">
@@ -294,7 +294,7 @@
           <div class="rounded-circle" style="
               width: 85px;
               height: 85px;
-              background-image: url('{{ app.user.entrepriseProfile.fileName ? asset('uploads/compagnies/' ~ app.user.entrepriseProfile.fileName) : asset('uploads/experts/company-default.jpg') }}');
+              background-image: url('{{ app.user.entrepriseProfile.fileName ? asset('uploads/compagnies/' ~ app.user.entrepriseProfile.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}');
               background-size: cover;
               background-position: center;
           ">

@@ -198,6 +198,33 @@ class OlonaTalentsController extends AbstractController
         return $this->render("v2/dashboard/result/default_{$type}_result.html.twig", $params);
     }
 
+    #[Route('/detail-annonce/{id}', name: 'app_olona_talents_view_job_offer')]
+    public function viewJobOffer(int $id, JobListingRepository $jobListingRepository): Response
+    {
+        $annonce = $this->em->getRepository(JobListing::class)->find($id);
+        if ($annonce === null || $annonce->getStatus() === JobListing::STATUS_DELETED || $annonce->getStatus() === JobListing::STATUS_PENDING) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais le annonce demandé n\'existe pas.');
+        }
+        $currentUser = $this->userService->getCurrentUser();
+        if($currentUser){
+            $profile = $this->userService->checkUserProfile($currentUser);
+        }
+        if ($currentUser && $profile) {
+            if($profile instanceof CandidateProfile){
+                return $this->redirectToRoute('app_tableau_de_bord_candidat_view_job_offer', ['id' => $id]);
+            }
+            if($profile instanceof EntrepriseProfile){
+                return $this->redirectToRoute('app_tableau_de_bord_entreprise_view_job_offer', ['id' => $id]);
+            }
+        }
+
+        return $this->render("tableau_de_bord/anonymous/annonce.html.twig", [
+            'jobOffer' => $annonce,
+            'lastestJobOffer' => $jobListingRepository->findPublishedJobListing(),
+            'joblistings_boost' => $jobListingRepository->findPremiumJobListing(),
+        ]);
+    }
+
     #[Route('/view/prestation/{id}', name: 'app_olona_talents_view_prestation')]
     public function viewprestation(int $id): Response
     {
@@ -219,6 +246,8 @@ class OlonaTalentsController extends AbstractController
     #[Route('/v2/contact', name: 'app_contact', options: ['sitemap' => true])]
     public function support(Request $request): Response
     {
+        return $this->redirectToRoute('app_contact_us');
+
         $contactForm = new ContactForm;
         $contactForm->setCreatedAt(new \DateTime());
         $form = $this->createForm(ContactFormType::class, $contactForm);

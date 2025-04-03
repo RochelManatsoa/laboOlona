@@ -37,7 +37,7 @@
         <div class="recruteur-block d-block p-5 mb-4">
             {{ form_start(form, {'attr': {'data-turbo': 'false'}})}}
             <div class="col-lg-2 col-sm-12 text-center mb-3">
-                <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/compagnies/' ~ form.vars.data.fileName) : asset('uploads/experts/company-default.jpg') }}');cursor:pointer;" alt="Avatar">
+                <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/compagnies/' ~ form.vars.data.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}');cursor:pointer;" alt="Avatar">
                     <div class="overlay-text">Changer le logo</div>
                 </div>
                 {{ form_widget(form.file) }}

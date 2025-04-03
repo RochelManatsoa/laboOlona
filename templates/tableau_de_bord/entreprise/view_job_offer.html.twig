@@ -35,7 +35,7 @@
                                         </div>
                                         <div class="view_mid-content">
                                             <div class="view_media">
-                                                <img src="{{ annonce.entreprise.fileName ? asset('uploads/compagnies/' ~ annonce.entreprise.fileName) : asset('uploads/experts/company-default.jpg') }}" alt="#">
+                                                <img src="{{ annonce.entreprise.fileName ? asset('uploads/compagnies/' ~ annonce.entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}" alt="#">
                                             </div>
                                             <h4 class="view_job-title">{{ annonce.titre }} <span class="view_job-post-duration">/ {{ annonce.dateCreation|time_ago }}</span></h4>
                                             <div class="view-job-mid">
@@ -103,9 +103,16 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="view_s-info3-wrap mb-5">
-                                <a href="{{ path('app_tableau_de_bord_entreprise_modifier_une_annonce', {'jobListing': annonce.id })}}" class="btn btn-primary">Modifier l'annonce</a>
-                                </div>
+                                {% if owner %}
+                                    <a href="{{ path('app_tableau_de_bord_entreprise_modifier_une_annonce', {'jobListing': annonce.id })}}" class="btn btn-primary my-5 text-center">Modifier l'annonce</a>
+                                {% else %}
+                                    <div class="view_s-info3-wrap mb-5">
+                                        {% if annonce.shortDescription is not null %}
+                                            <h4 class="section-head-small my-4">Résumé Olona Talents</h4>
+                                            {{ annonce.shortDescription|raw }}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

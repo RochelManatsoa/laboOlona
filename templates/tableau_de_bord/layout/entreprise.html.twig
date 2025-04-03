@@ -21,7 +21,7 @@
     {#nouveau menu statique#}
     <li class="nav-item">
       <a href="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_entreprise_cvtheque' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
-      <img src="{{ asset('v2/images/dashboard/cvtheque.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">Acceder à la CVthèque</span> <span class="badge_pro">PRO</span>
+      <img src="{{ asset('v2/images/dashboard/cvtheque.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">Acceder à la CVthèque</span> <span class="badge_pro">PREMIUM</span>
       </a>
     </li> 
     <li class="nav-item">
@@ -53,6 +53,11 @@
     <li class="nav-item">
       <a href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_creer_une_annonce' ? 'underline' : '' }}" aria-current="page">
       <img src="{{ asset('v2/images/dashboard/announcement.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">Publier une annonce</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_entreprise_trouver_des_missions')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_trouver_des_missions' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/discussions.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">Opportunités</span>
       </a>
     </li>
     <li class="nav-item">

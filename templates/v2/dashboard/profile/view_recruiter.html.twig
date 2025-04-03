@@ -31,7 +31,7 @@
       Entreprise {{ generateReference(recruiter)}}
     </h2>
       <div class="col-12 col-sm-6 mx-auto text-center mb-4">
-        <img src="{{ recruiter.fileName ? asset('uploads/compagnies/' ~ recruiter.fileName) : asset('uploads/experts/company-default.jpg') }}" alt="Logo" class="rounded-circle img-fluid mx-auto object-fit-cover" style="width:150px;height:150px;">
+        <img src="{{ recruiter.fileName ? asset('uploads/compagnies/' ~ recruiter.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}" alt="Logo" class="rounded-circle img-fluid mx-auto object-fit-cover" style="width:150px;height:150px;">
         <p>{{ recruiter.description|raw}}</p>
       </div>
     <div class="row mt-4">

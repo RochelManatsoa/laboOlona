@@ -454,7 +454,7 @@ class EntrepriseController extends AbstractController
                 $em->persist($jobListing);
                 $em->flush();
                 $this->addFlash('success', 'Annonce créée avec succès');
-                return $this->redirectToRoute('app_tableau_de_bord_entreprise_view_job_offer', ['jobListing' => $jobListing->getId()]);
+                return $this->redirectToRoute('app_tableau_de_bord_entreprise_view_job_offer', ['id' => $jobListing->getId()]);
             }
             $this->addFlash('dark', 'Votre credit est insufisant');
 
@@ -497,14 +497,55 @@ class EntrepriseController extends AbstractController
         return $this->render('tableau_de_bord/entreprise/tarifs.html.twig', $this->getData());
     }
 
-    #[Route('/detail-annonce/{jobListing}', name: 'app_tableau_de_bord_entreprise_view_job_offer')]
-    #[IsGranted(JobListingVoter::EDIT, subject: 'jobListing')]
-    public function viewjoboffer(Request $request, JobListing $jobListing, JobListingManager $jobListingManager, AppExtension $appExtension, Security $security): Response
+    #[Route('/trouver-des-missions', name: 'app_tableau_de_bord_entreprise_trouver_des_missions')]
+    public function searchmission(Request $request): Response
     {
+        $page = $request->query->get('page', 1);
+        $limit = 10;
+        $params = $this->getData();
+        $qb = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
+        $qb->where('j.status = :status')
+            ->setParameter('status', JobListing::STATUS_PUBLISHED)
+            // ->andWhere('j.secteur IN (:secteurs)')
+            // ->setParameter('secteurs', $secteurs)
+            ->orderBy('j.id', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult(($page - 1) * $limit);
+
+        $qbboost = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
+        $qbboost->where('j.status = :status')
+            ->setParameter('status', JobListing::STATUS_FEATURED)
+            // ->andWhere('j.secteur IN (:secteurs)')
+            // ->setParameter('secteurs', $secteurs)
+            ->orderBy('j.id', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult(($page - 1) * $limit);
+
+        $offres = $qb->getQuery()->getResult();
+        $boosts = $qbboost->getQuery()->getResult();
+        $params['offres'] = $offres;
+        $params['joblistings'] = $offres;
+        $params['joblistings_boost'] = $boosts;
+
+        return $this->render('tableau_de_bord/entreprise/trouver_des_missions.html.twig', $params);
+    }
+
+    #[Route('/detail-annonce/{id}', name: 'app_tableau_de_bord_entreprise_view_job_offer')]
+    public function viewjoboffer(Request $request, int $id, JobListingManager $jobListingManager, AppExtension $appExtension, Security $security): Response
+    {
+        $annonce = $this->em->getRepository(JobListing::class)->find($id);
+        if ($annonce === null || $annonce->getStatus() === JobListing::STATUS_DELETED || $annonce->getStatus() === JobListing::STATUS_PENDING) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais le annonce demandé n\'existe pas.');
+        }
         $data = $this->getData();
-        $jobListingManager->incrementView($jobListing, $request->getClientIp());
-        $this->activityLogger->logJobLisitinViewActivity($data['currentUser'], $appExtension->generateJobReference($jobListing->getId()));
-        $data['annonce'] = $jobListing;
+        $owner = false;
+        if($annonce->getEntreprise()->getId() == $data['entreprise']->getId()){
+            $owner = true;
+        }
+        $jobListingManager->incrementView($annonce, $request->getClientIp());
+        $this->activityLogger->logJobLisitinViewActivity($data['currentUser'], $appExtension->generateJobReference($annonce->getId()));
+        $data['annonce'] = $annonce;
+        $data['owner'] = $owner;
 
         return $this->render('tableau_de_bord/entreprise/view_job_offer.html.twig', $data);
     }
@@ -530,7 +571,7 @@ class EntrepriseController extends AbstractController
                 $em->persist($jobListing);
                 $em->flush();
                 $this->addFlash('success', 'Annonce créée avec succès');
-                return $this->redirectToRoute('app_tableau_de_bord_entreprise_view_job_offer', ['jobListing' => $jobListing->getId()]);
+                return $this->redirectToRoute('app_tableau_de_bord_entreprise_view_job_offer', ['id' => $jobListing->getId()]);
             }
             $this->addFlash('dark', 'Votre credit est insufisant');
         }

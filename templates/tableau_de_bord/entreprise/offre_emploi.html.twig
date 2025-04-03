@@ -62,7 +62,7 @@
                             <div class="row">
                                 <div class="col-xl-8">
                                     <div class="detail_annonce_">
-                                        <h2><a href="{{ path('app_tableau_de_bord_entreprise_view_job_offer', {'jobListing':offre.id})}}" class="btn-primary">{{ offre.titre }}</a></h2>
+                                        <h2><a href="{{ path('app_tableau_de_bord_entreprise_view_job_offer', {'id':offre.id})}}" class="btn-primary">{{ offre.titre }}</a></h2>
                                         <h3><a href="" class="btn-primary">{{ entreprise.nom }}</a></h3>
                                         <div class="type_contact_">{{ offre.typeContrat }}</div>
                                         <div class="description_courte_">
