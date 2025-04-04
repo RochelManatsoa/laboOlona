@@ -143,6 +143,9 @@
                         {% else %}
                             <p>Aucune compétence spécifique requise.</p>
                         {% endif %}
+                        <div class="btn-signUp">
+                            <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}" class="btn btn-primary">Postuler</a>
+                        </div>
                     </div>
                     <hr>
                     <div class="user-results">

@@ -60,7 +60,7 @@
                                 </td>
                                 <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
                             </tr>
-                            {% else %}
+                            {% else item.contact.type == 'ENTREPRISE' %}
                             <tr id="row_contact_{{item.id}}">
                                 <td class="">
                                     {{ item.contact }}<br>
@@ -70,6 +70,18 @@
                                 <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
                                     {{ item.contact.type }}<br>
                                     <span class="fw-bold text-primary">{{ generateReference(item.contact.entrepriseProfile) }}</span>
+                                </td>
+                                <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
+                            </tr>
+                            {% else %}                                
+                            <tr id="row_contact_{{item.id}}">
+                                <td class="">
+                                    {{ item.contact }}<br>
+                                    <span class="fw-bold">{{ item.contact.email }}</span> | Tél: {{ item.contact.telephone }}
+                                </td>
+                                <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
+                                    {{ item.contact.type }}<br>
+                                    <span class="fw-bold text-primary">{{ item.contact.type }}</span>
                                 </td>
                                 <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
                             </tr>
