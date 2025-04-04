@@ -534,14 +534,24 @@ class EntrepriseController extends AbstractController
     public function viewjoboffer(Request $request, int $id, JobListingManager $jobListingManager, AppExtension $appExtension, Security $security): Response
     {
         $annonce = $this->em->getRepository(JobListing::class)->find($id);
-        if ($annonce === null || $annonce->getStatus() === JobListing::STATUS_DELETED || $annonce->getStatus() === JobListing::STATUS_PENDING) {
-            throw $this->createNotFoundException('Nous sommes désolés, mais le annonce demandé n\'existe pas.');
-        }
         $data = $this->getData();
         $owner = false;
+        
+        if($annonce === null) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais l\'annonce demandée n\'existe pas.');
+        }
+
+        // Vérifie si l'utilisateur actuel est propriétaire de l'annonce
         if($annonce->getEntreprise()->getId() == $data['entreprise']->getId()){
             $owner = true;
         }
+
+        // Si ce n'est pas le propriétaire, on vérifie le statut
+        if (!$owner && ($annonce->getStatus() === JobListing::STATUS_DELETED || $annonce->getStatus() === JobListing::STATUS_PENDING)) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais l\'annonce demandée n\'existe pas.');
+        }
+
+        // Le reste du code reste inchangé
         $jobListingManager->incrementView($annonce, $request->getClientIp());
         $this->activityLogger->logJobLisitinViewActivity($data['currentUser'], $appExtension->generateJobReference($annonce->getId()));
         $data['annonce'] = $annonce;

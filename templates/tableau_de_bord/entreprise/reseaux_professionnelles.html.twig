@@ -60,7 +60,7 @@
                                 </td>
                                 <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
                             </tr>
-                            {% else item.contact.type == 'ENTREPRISE' %}
+                            {% elseif item.contact.type == 'ENTREPRISE' %}
                             <tr id="row_contact_{{item.id}}">
                                 <td class="">
                                     {{ item.contact }}<br>
