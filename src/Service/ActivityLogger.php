@@ -66,7 +66,7 @@ class ActivityLogger
     /**
      * Log a search activity
      */
-    public function logSearchActivity(User $user, string $query, string $type = "Olona Talents"): void
+    public function logSearchActivity(User $user, string $query = "", string $type = "Olona Talents"): void
     {
         $details = sprintf('Requête de recherche: "%s" dans "%s" ', $query, $this->getType($type));
         $this->logActivity($user, ActivityLog::ACTIVITY_SEARCH, $details, ActivityLog::LEVEL_INFO);
