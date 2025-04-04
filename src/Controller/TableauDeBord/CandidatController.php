@@ -15,6 +15,7 @@ use App\Manager\ProfileManager;
 use App\Service\ActivityLogger;
 use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
+use App\Entity\EntrepriseProfile;
 use App\Service\User\UserService;
 use App\Twig\PrestationExtension;
 use Symfony\UX\Turbo\TurboBundle;
@@ -42,15 +43,15 @@ use App\Manager\BusinessModel\CreditManager;
 use App\Repository\Finance\DeviseRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
-use App\Entity\EntrepriseProfile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\TransactionManager;
 use App\Repository\BusinessModel\PackageRepository;
-use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
-use App\Repository\BusinessModel\PurchasedContactRepository;
 use App\Repository\Entreprise\JobListingRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Repository\BusinessModel\PurchasedContactRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -73,6 +74,9 @@ class CandidatController extends AbstractController
     public function index(): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $candidat = $params['candidat'];
         $completion = $candidat->getProfileCompletion();
         $radius = 64.82;
@@ -106,6 +110,9 @@ class CandidatController extends AbstractController
     ): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $package = $this->em->getRepository(Package::class)->findOneBy(['slug' => 'abonnement-candidat']);
         /** @var Devise $currency */
         $currency = $this->em->getRepository(Devise::class)->findOneBy([
@@ -147,6 +154,9 @@ class CandidatController extends AbstractController
     {
         $page = $request->query->get('page', 1);
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $prestations = $this->em->getRepository(Prestation::class)->paginatePrestations(Prestation::STATUS_VALID, $page);
         $params['prestations'] = $prestations;
 
@@ -157,6 +167,9 @@ class CandidatController extends AbstractController
     public function assistance(Request $request, EntityManagerInterface $entityManager, MailerService $mailerService): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $contactForm = new ContactForm;
         $contactForm->setCreatedAt(new \DateTime());
         $form = $this->createForm(AssistanceType::class, $contactForm);
@@ -183,7 +196,11 @@ class CandidatController extends AbstractController
     #[Route('/boost', name: 'app_tableau_de_bord_candidat_boost')]
     public function boost(): Response
     {
-        return $this->render('tableau_de_bord/candidat/boost.html.twig', $this->getData());
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
+        return $this->render('tableau_de_bord/candidat/boost.html.twig', $params);
     }
 
     #[Route('/creer-une-prestation', name: 'app_tableau_de_bord_candidat_creation_prestation')]
@@ -194,6 +211,9 @@ class CandidatController extends AbstractController
     ): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $candidat = $params['candidat'];
         $currentUser = $params['currentUser'];
         /** @var Prestation $prestation */
@@ -224,6 +244,9 @@ class CandidatController extends AbstractController
     ): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $params['package'] = $package;
         /** @var Devise $devise */
         $devise = $this->em->getRepository(Devise::class)->findOneBy([
@@ -264,6 +287,9 @@ class CandidatController extends AbstractController
     {
         $page = $request->query->get('page', 1);
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $candidat = $params['candidat'];
         $params['candidatures'] = $this->em->getRepository(Applications::class)->findByCandidateProfile($candidat, $page);
 
@@ -274,6 +300,9 @@ class CandidatController extends AbstractController
     public function orders(): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $params['orders'] = $this->em->getRepository(Order::class)->filterByUser(new QuerySearchData);
 
         return $this->render('tableau_de_bord/candidat/mes_commandes.html.twig', $params);
@@ -284,6 +313,9 @@ class CandidatController extends AbstractController
     {
         $page = $request->query->get('page', 1);
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $candidat = $params['candidat'];
         $params['prestations']  = $this->em->getRepository(Prestation::class)->paginateCandidatePrestations($candidat, $page);
 
@@ -294,6 +326,9 @@ class CandidatController extends AbstractController
     public function updatepassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $currentUser = $params['currentUser'];
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
@@ -318,19 +353,30 @@ class CandidatController extends AbstractController
     #[Route('/missions-obtenues', name: 'app_tableau_de_bord_candidat_missions_obtenues')]
     public function missions(): Response
     {
-        return $this->render('tableau_de_bord/candidat/missions_obtenues.html.twig', $this->getData());
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
+        return $this->render('tableau_de_bord/candidat/missions_obtenues.html.twig', $params);
     }
 
     #[Route('/modification-profil', name: 'app_tableau_de_bord_candidat_modification_profil')]
     public function modifprofil(): Response
     {
-        return $this->render('tableau_de_bord/candidat/modification_profil.html.twig', $this->getData());
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
+        return $this->render('tableau_de_bord/candidat/modification_profil.html.twig', $params);
     }
 
     #[Route('/mon-profil', name: 'app_tableau_de_bord_candidat_profil')]
     public function profile(): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $candidat = $params['candidat'];
         $currentUser = $params['currentUser'];
         $params['experiences']  = $this->candidatManager->getExperiencesSortedByDate($candidat);
@@ -345,6 +391,9 @@ class CandidatController extends AbstractController
     public function mycompte(Request $request, FileUploader $fileUploader, ProfileManager $profileManager): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $candidat = $params['candidat'];
         $form = $this->createForm(EditCandidateProfile::class, $candidat);
         $form->handleRequest($request);
@@ -369,6 +418,9 @@ class CandidatController extends AbstractController
     {
         $page = $request->query->get('page', 1);
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $currentUser = $params['currentUser'];
         $params['notifications'] = $this->em->getRepository(Notification::class)->findByDestinataire($currentUser,null, [], null, $page);
         return $this->render('tableau_de_bord/candidat/notification.html.twig', $params);
@@ -378,6 +430,9 @@ class CandidatController extends AbstractController
     public function mobileMoney(Order $order, Request $request, TransactionManager $transactionManager): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $currentUser = $params['currentUser'];
         $mobileMoney = $order->getPaymentMethod();
         $transaction = $order->getTransaction();
@@ -431,6 +486,9 @@ class CandidatController extends AbstractController
     {
         $page = $request->query->get('page', 1);
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $currentUser = $params['currentUser'];
         $params['allContacts'] = $this->em->getRepository(PurchasedContact::class)->paginateContactsByBuyer($currentUser, $page);
 
@@ -440,13 +498,20 @@ class CandidatController extends AbstractController
     #[Route('/se-faire-recommander', name: 'app_tableau_de_bord_candidat_se_faire_recommander')]
     public function recommandation(): Response
     {
-        return $this->render('tableau_de_bord/candidat/se_faire_recommander.html.twig', $this->getData());
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
+        return $this->render('tableau_de_bord/candidat/se_faire_recommander.html.twig', $params);
     }
 
     #[Route('/tarif-standard', name: 'app_tableau_de_bord_candidat_tarifs_standard')]
     public function standard(PackageRepository $packageRepository, DeviseRepository $deviseRepository): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $params['packages'] = $packageRepository->findBy(['type' => 'CREDIT'], ['id' => 'DESC']);
         $params['devise'] = $deviseRepository->findOneBy(['slug' => 'euro']);
 
@@ -456,7 +521,11 @@ class CandidatController extends AbstractController
     #[Route('/tarifs', name: 'app_tableau_de_bord_candidat_tarifs')]
     public function tarifs(): Response
     {
-        return $this->render('tableau_de_bord/candidat/tarifs.html.twig', $this->getData());
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
+        return $this->render('tableau_de_bord/candidat/tarifs.html.twig', $params);
     }
 
     #[Route('/trouver-des-missions', name: 'app_tableau_de_bord_candidat_trouver_des_missions')]
@@ -465,6 +534,9 @@ class CandidatController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = 10;
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $candidat = $params['candidat'];
         $secteurs = $candidat->getSecteurs();
         $qb = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
@@ -509,15 +581,18 @@ class CandidatController extends AbstractController
             throw $this->createNotFoundException('Nous sommes désolés, mais l\'entreprise demandée n\'existe pas.');
         }
         $page = $request->query->get('page', 1);
-        $data = $this->getData();
-        $currentUser = $data['currentUser'];
-        $this->activityLogger->logEntrepriseViewActivity($data['currentUser'], $appExtension->generateReference($entreprise));
-        $data['entreprise'] = $entreprise;
-        $data['joblistings'] = $jobListingRepository->paginateJobListingsEntrepriseProfiles($entreprise, $page, JobListing::STATUS_PUBLISHED);
-        $data['show_recruiter_price'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER);
-        $data['purchasedContact'] = $contactRepository->findOneBy(['buyer' => $currentUser,'contact' => $entreprise->getEntreprise()]);
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
+        $currentUser = $params['currentUser'];
+        $this->activityLogger->logEntrepriseViewActivity($params['currentUser'], $appExtension->generateReference($entreprise));
+        $params['entreprise'] = $entreprise;
+        $params['joblistings'] = $jobListingRepository->paginateJobListingsEntrepriseProfiles($entreprise, $page, JobListing::STATUS_PUBLISHED);
+        $params['show_recruiter_price'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER);
+        $params['purchasedContact'] = $contactRepository->findOneBy(['buyer' => $currentUser,'contact' => $entreprise->getEntreprise()]);
 
-        return $this->render('tableau_de_bord/candidat/view_entreprise.html.twig', $data);
+        return $this->render('tableau_de_bord/candidat/view_entreprise.html.twig', $params);
     }
 
     #[Route('/detail-annonce/{id}', name: 'app_tableau_de_bord_candidat_view_job_offer')]
@@ -535,20 +610,23 @@ class CandidatController extends AbstractController
         if ($annonce === null || $annonce->getStatus() === JobListing::STATUS_DELETED || $annonce->getStatus() === JobListing::STATUS_PENDING) {
             throw $this->createNotFoundException('Nous sommes désolés, mais le annonce demandé n\'existe pas.');
         }
-        $data = $this->getData();
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $jobListingManager->incrementView($annonce, $request->getClientIp());
-        $candidat = $data['candidat'];
-        $currentUser = $data['currentUser'];
-        $this->activityLogger->logJobLisitinViewActivity($data['currentUser'], $appExtension->generateJobReference($annonce->getId()));
+        $candidat = $params['candidat'];
+        $currentUser = $params['currentUser'];
+        $this->activityLogger->logJobLisitinViewActivity($params['currentUser'], $appExtension->generateJobReference($annonce->getId()));
         $applyJobPrice = $profileManager->getCreditAmount(Credit::ACTION_APPLY_JOB);
         [$applied, $application] = $jobListingManager->isAppliedByCandidate($annonce, $candidat);
         $form = $this->createForm(ApplicationsType::class, $application);
         $form->handleRequest($request);
-        $data['annonce'] = $annonce;
-        $data['applied'] = $applied;
-        $data['show_recruiter_price'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER);
-        $data['apply_job_price'] = $applyJobPrice;
-        $data['form'] = $form->createView();
+        $params['annonce'] = $annonce;
+        $params['applied'] = $applied;
+        $params['show_recruiter_price'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_RECRUITER);
+        $params['apply_job_price'] = $applyJobPrice;
+        $params['form'] = $form->createView();
         if ($form->isSubmitted() && $form->isValid()) {
             $application = $form->getData();
             $message = 'Candidature envoyée';
@@ -582,7 +660,7 @@ class CandidatController extends AbstractController
             return $this->redirectToRoute('app_tableau_de_bord_candidat_mes_candidatures');
         }
 
-        return $this->render('tableau_de_bord/candidat/view_job_offer.html.twig', $data);
+        return $this->render('tableau_de_bord/candidat/view_job_offer.html.twig', $params);
     }
 
     #[Route('/detail-prestation/{prestation}', name: 'app_tableau_de_bord_candidat_view_prestation')]
@@ -594,21 +672,24 @@ class CandidatController extends AbstractController
                 throw $this->createNotFoundException('Nous sommes désolés, mais le prestation demandé n\'existe pas.');
             }
         }
-        $data = $this->getData();
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $prestationManager->incrementView($prestation, $request->getClientIp());
-        $currentUser = $data['currentUser'];
+        $currentUser = $params['currentUser'];
         $owner = false;
         $creater = $prestationExtension->getUserPrestation($prestation);
         if($creater == $currentUser){
             $owner = true;
         }
-        $this->activityLogger->logPrestationViewActivity($data['currentUser'], $appExtension->generateprestationReference($prestation->getId()));
-        $data['prestation'] = $prestation;
-        $data['owner'] = $owner;
-        $data['creater'] = $creater;
-        $data['showContactPrice'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
+        $this->activityLogger->logPrestationViewActivity($params['currentUser'], $appExtension->generateprestationReference($prestation->getId()));
+        $params['prestation'] = $prestation;
+        $params['owner'] = $owner;
+        $params['creater'] = $creater;
+        $params['showContactPrice'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
 
-        return $this->render('tableau_de_bord/candidat/view_prestation.html.twig', $data);
+        return $this->render('tableau_de_bord/candidat/view_prestation.html.twig', $params);
     }
 
     #[Route('/modifier-une-prestation/{prestation}', name: 'app_tableau_de_bord_candidat_edition_prestation')]
@@ -620,6 +701,9 @@ class CandidatController extends AbstractController
     ): Response
     {
         $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
         $creditAmount = $profileManager->getCreditAmount(Credit::ACTION_APPLY_PRESTATION_RECRUITER);
         $boostType = 'PRESTATION_CANDIDATE';
         $form = $this->createForm(PrestationType::class, $prestation, ['boostType' => $boostType]);
