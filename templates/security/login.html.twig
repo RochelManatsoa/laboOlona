@@ -72,9 +72,16 @@
                                     <input type="email" class="form-control" id="email" name="email" required autofocus placeholder="Email">
                                     <label for="email">Adresse email</label>
                                 </div> 
-                                <div class="form-floating mb-3">
-                                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                                <div class="form-floating mb-3 position-relative" data-controller="toggle-password">
+                                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" data-toggle-password-target="input">
                                     <label for="password">Mot de passe</label>
+        
+                                    <button type="button"
+                                            class="btn btn-link position-absolute end-0 top-50 translate-middle-y p-0 me-2"
+                                            data-action="click->toggle-password#toggle"
+                                            data-toggle-password-target="icon">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="_remember_me" id="remember_me">

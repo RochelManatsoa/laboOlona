@@ -86,15 +86,47 @@
                                 {{ form_label(registrationForm.email) }}
                                 {{ form_errors(registrationForm.email) }}
                             </div>
-                            <div class="form-floating mb-2">
-                                {{ form_widget(registrationForm.plainPassword.first) }}
+                            <div class="form-floating mb-3 position-relative" data-controller="toggle-password">
+                                {{ form_widget(registrationForm.plainPassword.first, {
+                                    'attr': {
+                                        'class': 'form-control password-field pe-5',
+                                        'data-toggle-password-target': 'input',
+                                        'type': 'password',
+                                        'autocomplete': 'new-password',
+                                        'placeholder': 'Entrez votre mot de passe',
+                                    }
+                                }) }}
                                 {{ form_label(registrationForm.plainPassword.first) }}
                                 {{ form_errors(registrationForm.plainPassword.first) }}
-                            </div>  
-                            <div class="form-floating mb-3">
-                                {{ form_widget(registrationForm.plainPassword.second) }}
-                                {{ form_label(registrationForm.plainPassword.second) }}
+                                
+                                <button type="button"
+                                        class="btn btn-link position-absolute end-0 top-50 translate-middle-y p-0 me-3"
+                                        data-action="click->toggle-password#toggle"
+                                        data-toggle-password-target="icon">
+                                    <i class="bi bi-eye"></i>
+                                </button>
                             </div>
+
+                            <div class="form-floating mb-3 position-relative" data-controller="toggle-password">
+                                {{ form_widget(registrationForm.plainPassword.second, {
+                                    'attr': {
+                                        'class': 'form-control password-field pe-5',
+                                        'data-toggle-password-target': 'input',
+                                        'type': 'password',
+                                        'placeholder': 'Repétez votre mot de passe',
+                                    }
+                                }) }}
+                                {{ form_label(registrationForm.plainPassword.second) }}
+                                {{ form_errors(registrationForm.plainPassword.second) }}
+                                
+                                <button type="button"
+                                        class="btn btn-link position-absolute end-0 top-50 translate-middle-y p-0 me-3"
+                                        data-action="click->toggle-password#toggle"
+                                        data-toggle-password-target="icon">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+
                             <div class="form-check form-check-inline d-flex">
                                     <div class="form-check form-check-inline">
                                         {{ form_widget(registrationForm.agreeTerms) }}

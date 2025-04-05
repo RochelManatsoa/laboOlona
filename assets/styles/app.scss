@@ -91,6 +91,10 @@ a:hover {
     border-radius: 10px; /* Bordures arrondies */
     padding: 1rem; /* Espacement intérieur */
 }
+[data-controller="toggle-password"] .form-control.is-invalid {
+    background-image: none !important;
+    padding-right: 4.5rem !important; 
+}
 @import 'css/sections.scss';
 @import 'css/loader.scss';
 @import 'css/radio.scss';

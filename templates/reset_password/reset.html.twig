@@ -59,17 +59,56 @@
                                 </p>
                             </div>
                             </br>
-                            {{ form_start(resetForm, {'attr': {'class': 'col-md-6 mx-auto', 'data-turbo':'false'}}) }}
-                                <div class="form-floating mb-3">
-                                    {{ form_widget(resetForm.plainPassword.first) }}
+                            {{ form_start(resetForm, {'attr': {'class': 'col-md-10 mx-auto', 'data-turbo':'false'}}) }}
+                                <!-- Premier champ password -->
+                                <div class="form-floating mb-3 position-relative" data-controller="toggle-password">
+                                    {{ form_widget(resetForm.plainPassword.first, {
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'data-toggle-password-target': 'input',
+                                            'autocomplete': 'new-password',
+                                            'style': 'padding-right: 4.5rem;' 
+                                        }
+                                    }) }}
                                     {{ form_label(resetForm.plainPassword.first) }}
+                                    
+                                    <!-- Conteneur des icônes -->
+                                    <div class="position-absolute end-0 top-0 h-100 d-flex align-items-center pe-3">
+                                        <!-- Toggle password -->
+                                        <button type="button"
+                                                class="btn btn-link p-0 me-2"
+                                                data-action="click->toggle-password#toggle"
+                                                data-toggle-password-target="icon">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    {{ form_errors(resetForm.plainPassword.first) }}
                                 </div>
-                                <div class="form-floating mb-3">
-                                    {{ form_widget(resetForm.plainPassword.second) }}
+
+                                <!-- Second champ password -->
+                                <div class="form-floating mb-3 position-relative" data-controller="toggle-password">
+                                    {{ form_widget(resetForm.plainPassword.second, {
+                                        'attr': {
+                                            'class': 'form-control pe-5',
+                                            'data-toggle-password-target': 'input',
+                                            'autocomplete': 'new-password'
+                                        }
+                                    }) }}
                                     {{ form_label(resetForm.plainPassword.second) }}
+                                    <button type="button"
+                                            class="btn btn-link position-absolute end-0 top-50 translate-middle-y p-0 me-3"
+                                            data-action="click->toggle-password#toggle"
+                                            data-toggle-password-target="icon">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
                                 </div>
-                                <button class="btn btn-primary px-5 btn-lg text-uppercase fw-bold my-4">Réinitialiser</button>
+
+                                <button class="btn btn-primary px-5 btn-lg text-uppercase fw-bold my-4">
+                                    Réinitialiser
+                                </button>
                             {{ form_end(resetForm) }}
+
                         </div>
                     </div>
                 </div>
