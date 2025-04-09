@@ -148,12 +148,14 @@ class EntrepriseController extends AbstractController
     public function annuaire(Request $request): Response
     {
         $page = $request->query->get('page', 1);
+        $size = $request->query->get('size', 10);
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
-        $prestations = $this->em->getRepository(Prestation::class)->paginatePrestations(Prestation::STATUS_VALID, $page);
+        $prestations = $this->em->getRepository(Prestation::class)->paginatePrestations(Prestation::STATUS_VALID, $page, $size);
         $params['prestations'] = $prestations;
+        $params['size'] = $size;
 
         return $this->render('tableau_de_bord/entreprise/annuaire_de_services.html.twig', $params);
     }

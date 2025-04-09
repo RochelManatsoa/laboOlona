@@ -33,6 +33,14 @@
             <div class="left-inner-block">
                 Bienvenue dans votre espace VIP
                 <h1 class="left-inner-block"><img src="{{ asset('v2/images/dashboard/stars-color-icon.svg')}}" alt="">Olona Talents</h1>
+                {% if boostVisibility is defined and boostVisibility is not null and not isExpiredBoost(boostVisibility) %}
+                    <div class="boost-block">
+                        <div class="boost-block-title">
+                            <span class="boost-block-title-text">BOOST PROFIL jusqu'au {{ boostVisibility.endDate|date('d/m/Y') }}<br>
+                            </div>
+                        </div>
+                    <small class="fw-lighter">Expire {{ boostVisibility.endDate|timeUntil }}</small>
+                {% endif %}
             </div>
             <div class="rightt-inner-block">
                 {% if completion == 100 %}

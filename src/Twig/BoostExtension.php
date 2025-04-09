@@ -37,6 +37,7 @@ class BoostExtension extends AbstractExtension
         return [
             new TwigFunction('checkBoost', [$this, 'checkBoost']),
             new TwigFunction('getBoostInfo', [$this, 'getBoostInfo']),
+            new TwigFunction('isExpiredBoost', [$this, 'isExpiredBoost']),
             new TwigFunction('getPrestationBoostVisibilityOT', [$this, 'getPrestationBoostVisibilityOT']),
             new TwigFunction('getPrestationBoostVisibilityFB', [$this, 'getPrestationBoostVisibilityFB']),
             new TwigFunction('getJobListingBoostVisibilityOT', [$this, 'getJobListingBoostVisibilityOT']),
@@ -89,6 +90,10 @@ class BoostExtension extends AbstractExtension
         }
 
         return $userBoost;
+    }
+    public function isExpiredBoost(?BoostVisibility $boostVisibility): bool
+    {
+        return $this->boostVisibilityManager->isExpired($boostVisibility);
     }
 
     public function getBoostInfo(string $boostStrId): ?Boost

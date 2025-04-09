@@ -112,21 +112,22 @@ $(function() {
 
     function initiateLoadMore() {
         const query = $('#hidden-query').val();
+        if (query) { 
+            if ($('#candidates-list').length) {
+                loadMore('/result/candidates', '#candidates-list', query);
+            }
+            
+            if ($('#joblistings-list').length) {
+                loadMore('/result/joblistings', '#joblistings-list', query);
+            }
+            
+            if ($('#prestations-list').length) {
+                loadMore('/result/prestations', '#prestations-list', query);
+            }
 
-        if ($('#candidates-list').length) {
-            loadMore('/result/candidates', '#candidates-list', query);
-        }
-        
-        if ($('#joblistings-list').length) {
-            loadMore('/result/joblistings', '#joblistings-list', query);
-        }
-        
-        if ($('#prestations-list').length) {
-            loadMore('/result/prestations', '#prestations-list', query);
-        }
-
-        if ($('#outils-ia-list').length ) {
-            loadMore('/v2/dashboard/outils-ai', '#outils-ia-list', query)
+            if ($('#outils-ia-list').length ) {
+                loadMore('/v2/dashboard/outils-ai', '#outils-ia-list', query)
+            }
         }
     }
     
