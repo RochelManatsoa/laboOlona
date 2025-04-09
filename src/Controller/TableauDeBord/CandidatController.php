@@ -96,7 +96,6 @@ class CandidatController extends AbstractController
         $params['langages'] = $this->candidatManager->getLangagesSortedByNiveau($candidat);
         $params['activities'] = $this->em->getRepository(ActivityLog::class)->findUserLogs($currentUser);
 
-        $params['completion'] = $completion;
         $params['endX'] = $endX;
         $params['endY'] = $endY;
         $params['largeArcFlag'] = $largeArcFlag;
@@ -740,11 +739,12 @@ class CandidatController extends AbstractController
         $data = [];
         $data['currentUser'] = $currentUser;
         $data['candidat'] = $candidat;
+        $data['completion'] = $candidat->getProfileCompletion();
         $data['boost'] = $candidat->getBoost();
         $data['boostVisibility'] = $candidat->getBoostVisibility();
         $data['action'] = $this->urlGenerator->generate('app_olona_talents_joblistings', []);
         $data['credit'] = $currentUser->getCredit()->getTotal();
-        $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser,true);
+        $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser, true);
 
         return $data;
     }

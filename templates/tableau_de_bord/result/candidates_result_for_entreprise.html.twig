@@ -5,126 +5,78 @@
 {% endblock %}
 
 {% block body %}
+
+<div class="loader-container" id="loader-container" style="display:none;">
+	<span class="loader"></span>
+</div>
+
+<section class="">
+	<div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+		<div class="d-flex align-items-center">
+			<a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+			<i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+			<h5 class="mb-0"> Trouver un profil </h5>
+		</div>
+		<ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+			<li class="breadcrumb-item position-relative">
+				<a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+				<i class="ri-home-8-line"></i> Tableau de bord </a> 
+			</li>
+			<li class="breadcrumb-item position-relative"> Trouver des talents </li>
+		</ol>
+	</div>
+</section>
+{% if not entreprise.isIsPremium %}
+<section class="warning_freemium mb-4 d-flex align-items-center">
+	<span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+	<div class="warning-block">
+		Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
+	</div>
+</section>
+{% endif %}
 <input type="hidden" id="hidden-query" value="{{ getSearchQuery('q') }}">
-	<div class="container">
-	<div class="row">
-		<div class="col-lg-4 col-md-12 rightSidebar">
-			<div class="theiaStickySidebar">
-				<div class="side-bar">
-					<div class="sidebar-elements search-bx">								
-						<form>
-							<div class="form-group mb-4">
-								<h4 class="section-head-small mb-4">Filter par</h4>
-								<div class="dropdown bootstrap-select">
-									<select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
-										<option>Toutes</option>
-										<option>Candidats</option>
-										<option>Offre d'emploi</option>
-										<option>Service</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group mb-4">
-								<h4 class="section-head-small mb-4">Categories</h4>
-								<div class="dropdown bootstrap-select">
-									<select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
-										<option>Toutes les Categories</option>
-										<option>Web Designer</option>
-										<option>Developpeur</option>
-										<option>Marketing</option>
-									</select>
-								</div>
-							</div>
-							<div class="sidebar-ele-filter">
-								<h4 class="section-head-small mb-4">Type de contrat</h4>
-								<ul>
-									<li>
-										<div class=" form-check">
-											<input type="checkbox" class="form-check-input" id="exampleCheck1">
-											<label class="form-check-label" for="exampleCheck1">Freelance</label>
-										</div>
-										<span class="job-type-count">09</span>
-									</li>
-									<li>
-										<div class=" form-check">
-											<input type="checkbox" class="form-check-input" id="exampleCheck2">
-											<label class="form-check-label" for="exampleCheck2">Temps plein</label>
-										</div>
-										<span class="job-type-count">07</span>
-									</li>
-									<li>
-										<div class=" form-check">
-											<input type="checkbox" class="form-check-input" id="exampleCheck3">
-											<label class="form-check-label" for="exampleCheck3">Stage</label>
-										</div>
-										<span class="job-type-count">15</span>
-									</li>
-									<li>
-										<div class=" form-check">
-											<input type="checkbox" class="form-check-input" id="exampleCheck4">
-											<label class="form-check-label" for="exampleCheck4">Temps partiel</label>
-										</div>
-										<span class="job-type-count">20</span>
-									</li>
-									<li>
-										<div class=" form-check">
-											<input type="checkbox" class="form-check-input" id="exampleCheck5">
-											<label class="form-check-label" for="exampleCheck5">Temporaire</label>
-										</div>
-										<span class="job-type-count">22</span>
-									</li>
-								</ul>
-							</div>
-						</form>
+<section class="detail_db d-md-flex bp_">
+	<div class="biographie-profil mb-4 p-4">
+		<div class="mission-list-title">
+            <h1>Saisissez de nouvelles opportunités pour votre entreprise</h1>
+            <p> 
+				Accédez aux offres d'emploi publiées par des entreprises dans votre secteur. Positionnez votre agence ou cabinet sur des projets pertinents pour élargir votre clientèle et collaborer avec de nouveaux partenaires.
+            </p>
+        </div>
+		<div class="offre-emploi-list">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 user-results ">
+						<div id="candidates-list">
+							{% if candidates|length > 0 %}
+								{% include "v2/dashboard/result/parts/_part_candidates_list.html.twig" %}
+							{% else %}
+									{% include "v2/dashboard/result/none/_none_candidates.html.twig" %}
+							{% endif %}
+						</div>
 					</div>
-				</div>
-				<div class="m-4 card position-relative text-center d-block d-md-none">
-					<a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
-						<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
-					</a>
-				</div>
-				<div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
-					<h4 class="title">Recrutement</h4>
-					<p>Obtenez les emplois les mieux adaptés à vos besoins <br>
-					Ajoutez votre CV MAINTENANT !</p>
-					<div class="btn-signUp">
-						<a href="" class="btn btn-primary white">En savoir plus</a> 
+					<div class="col-lg-4 col-md-12 rightSidebar">
+						<div class="theiaStickySidebar">
+							<div class="m-4 card position-relative text-center d-block d-md-none">
+								<a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+									<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+								</a>
+							</div>
+							<div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
+								<h4 class="title">Recrutement</h4>
+								<p>Trouvez les meilleurs talents pour renforcer votre équipe <br>
+								Publiez votre offre DÈS MAINTENANT !</p>
+								<div class="btn-signUp">
+									<a href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="btn btn-primary white">En savoir plus</a> 
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-lg-8 col-md-12">
-			{% if candidates|length > 0 %}
-				<!--Filter Short By-->
-				<div class="product-filter-wrap d-flex justify-content-between align-items-center m-b30">
-					<span class="result-count-left">
-						{% if totalResults > 2 %}
-						{{ totalResults }} resultats trouvés
-						{% else %}
-						{{ totalResults }} resultat trouvé
-						{% endif %}
-					</span>
-					<form class="ordering filter-select" method="get">
-						<span class="result-count">Court par</span>
-						<div class="dropdown bootstrap-select select-bar-12">
-							<select class="select-bar-2 selectpicker" data-live-search="true" data-bv-field="size">
-								<option>Afficher 10</option>
-								<option>Afficher 20</option>
-								<option>Afficher 30</option>
-								<option>Afficher 40</option>
-								<option>Afficher 50</option>
-								<option>Afficher 60</option>
-							</select>
-						</div>
-					</form>
-				</div>
-				{% include "v2/dashboard/result/parts/_part_candidates_list.html.twig" %}
-				{% else %}
-					{% include "v2/dashboard/result/none/_none_candidates.html.twig" %}
-			{% endif %}
-		</div>
 	</div>
-	</div>
+</section>
 
 {% endblock %}
 

@@ -369,7 +369,7 @@ class EntrepriseController extends AbstractController
     public function notification(Request $request): Response
     {
         $page = $request->query->get('page', 1);
-        $isRead = $request->query->get('isRead', 0);
+        $isRead = $request->query->get('isRead', 1);
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
@@ -697,7 +697,7 @@ class EntrepriseController extends AbstractController
         $data['currentUser'] = $currentUser;
         $data['entreprise'] = $entreprise;
         $data['credit'] = $currentUser->getCredit()->getTotal();
-        $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser,false);
+        $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser, true);
         $data['favorisCount'] = count($entreprise->getFavoris());
         $data['contactsCount'] = $this->em->getRepository(PurchasedContact::class)->countContacts($currentUser);
         $data['candidaturesCount'] = $this->em->getRepository(Applications::class)->countByEntrepriseProfile($entreprise->getId());
