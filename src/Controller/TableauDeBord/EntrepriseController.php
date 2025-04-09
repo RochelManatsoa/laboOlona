@@ -369,12 +369,20 @@ class EntrepriseController extends AbstractController
     public function notification(Request $request): Response
     {
         $page = $request->query->get('page', 1);
+        $isRead = $request->query->get('isRead', 0);
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
         $currentUser = $params['currentUser'];
-        $params['notifications'] = $this->em->getRepository(Notification::class)->findByDestinataire($currentUser,null, [], null, $page);
+        
+        $params['notifications'] = $this->em->getRepository(Notification::class)->findByDestinataire(
+            $currentUser, 
+            $isRead,
+            ['id' => 'DESC'], 
+            Notification::STATUS_DELETED,
+            $page
+        );
 
         return $this->render('tableau_de_bord/entreprise/notification.html.twig', $params);
     }
