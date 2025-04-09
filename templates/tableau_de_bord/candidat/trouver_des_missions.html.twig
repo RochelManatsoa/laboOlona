@@ -80,6 +80,7 @@
                         <div id="joblistings-list">
                             {% if joblistings|length > 0 %}
                                 {% include "v2/dashboard/result/parts/_part_joblistings_list.html.twig" %}
+                                {{ knp_pagination_render(joblistings) }}
                             {% else %}
                                 {% include "v2/dashboard/result/none/_none_joblistings.html.twig" %}
                             {% endif %}

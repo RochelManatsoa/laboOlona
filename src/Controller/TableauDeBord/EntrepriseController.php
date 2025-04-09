@@ -572,36 +572,15 @@ class EntrepriseController extends AbstractController
 
     #[Route('/trouver-des-missions', name: 'app_tableau_de_bord_entreprise_trouver_des_missions')]
     public function searchmission(Request $request): Response
-    {
-        $page = $request->query->get('page', 1);
-        $limit = 10;
+    {        
+        $page = $request->query->getInt('page', 1);
+        $size = $request->query->getInt('size', 10);
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
-        $qb = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
-        $qb->where('j.status = :status')
-            ->setParameter('status', JobListing::STATUS_PUBLISHED)
-            // ->andWhere('j.secteur IN (:secteurs)')
-            // ->setParameter('secteurs', $secteurs)
-            ->orderBy('j.id', 'DESC')
-            ->setMaxResults($limit)
-            ->setFirstResult(($page - 1) * $limit);
-
-        $qbboost = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
-        $qbboost->where('j.status = :status')
-            ->setParameter('status', JobListing::STATUS_FEATURED)
-            // ->andWhere('j.secteur IN (:secteurs)')
-            // ->setParameter('secteurs', $secteurs)
-            ->orderBy('j.id', 'DESC')
-            ->setMaxResults($limit)
-            ->setFirstResult(($page - 1) * $limit);
-
-        $offres = $qb->getQuery()->getResult();
-        $boosts = $qbboost->getQuery()->getResult();
-        $params['offres'] = $offres;
-        $params['joblistings'] = $offres;
-        $params['joblistings_boost'] = $boosts;
+        $params['joblistings'] = $this->em->getRepository(JobListing::class)->paginateJobListings(JobListing::STATUS_PUBLISHED, $page, $size);
+        $params['joblistings_boost'] = $this->em->getRepository(JobListing::class)->paginateJobListings(JobListing::STATUS_FEATURED, $page, 6);
 
         return $this->render('tableau_de_bord/entreprise/trouver_des_missions.html.twig', $params);
     }
