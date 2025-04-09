@@ -36,24 +36,26 @@
     
     <section class="recruteur-container">
         <div class="recruteur-block d-block p-5 mb-4">
-            <div class="offre-emploi-item d-flex align-items-center justify-content-between">
-                <div>
-                    <h1>Liste des offres d'emploi</h1>
-                    <p>Vous avez {{ offres|length }} offres d'emploi {{ labels[selectedStatus]|raw }}</p>
-                </div>
-                <div class="row w-50">
-                    <div class="col">
-                        <form action="{{ path('app_tableau_de_bord_entreprise_offre_emploi')}}" method="get">
-                            <select class="form-select" name="status" onchange="this.form.submit()" aria-label="Default select example">
-                                {% for label, status in statuses %}
-                                    <option value="{{ status }}" {% if selectedStatus == status %}selected{% endif %}>{{ label }}</option>
-                                {% endfor %}
-                            </select>
-                        </form>
+            <div class="offre-emploi-item">
+                <h1>Liste des offres d'emploi ({{ entreprise.joblistings|length }} offre{{ entreprise.joblistings|length > 1 ? 's' : '' }})</h1>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p>Vous avez {{ offres|length }} offre{{ offres|length > 1 ? 's' : '' }} d'emploi {{ labels[selectedStatus]|raw }}</p>
+                    </div>
+                    <div class="row w-50">
+                        <div class="col">
+                            <form action="{{ path('app_tableau_de_bord_entreprise_offre_emploi')}}" method="get">
+                                <select class="form-select" name="status" onchange="this.form.submit()" aria-label="Default select example">
+                                    {% for label, status in statuses %}
+                                        <option value="{{ status }}" {% if selectedStatus == status %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <a href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="btn btn-primary">Créer une annonce</a>
             </div>
+            <a href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="btn btn-primary mb-3">Créer une annonce</a>
             {% if offres|length > 0 %}
                 {% for item in offres %}
                     {% set offre = item[0] %}

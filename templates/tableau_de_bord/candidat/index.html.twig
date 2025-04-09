@@ -33,6 +33,14 @@
             <div class="left-inner-block">
                 Bienvenue dans votre espace VIP
                 <h1 class="left-inner-block"><img src="{{ asset('v2/images/dashboard/stars-color-icon.svg')}}" alt="">Olona Talents</h1>
+                {% if boostVisibility is defined and boostVisibility is not null and not isExpiredBoost(boostVisibility) %}
+                    <div class="boost-block">
+                        <div class="boost-block-title">
+                            <span class="boost-block-title-text">BOOST PROFIL jusqu'au {{ boostVisibility.endDate|date('d/m/Y') }}<br>
+                            </div>
+                        </div>
+                    <small class="fw-lighter">Expire {{ boostVisibility.endDate|timeUntil }}</small>
+                {% endif %}
             </div>
             <div class="rightt-inner-block">
                 {% if completion == 100 %}
@@ -42,37 +50,38 @@
                 Complétez votre profil,<br/>
                 vous y êtes presque !
                 {% endif %}
-                <div class="profil-complete-radial">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="300" height="174">
-                        <g transform="translate(40, 0)">
-                            <g class="apexcharts-radialbar">
-                                <g>
-                                    <g class="apexcharts-tracks">
-                                        <path d="M 45.18 110 A 64.82 64.82 0 0 1 174.82 110"
-                                            fill="none"
-                                            stroke="#958DF4"
-                                            stroke-width="22.33"
-                                            stroke-linecap="butt"/>
-                                    </g>
+                <a routerlink="{{ path('app_tableau_de_bord_candidat_mon_compte')}}" href="{{ path('app_tableau_de_bord_candidat_mon_compte')}}">
+                    <div class="profil-complete-radial">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="300" height="174">
+                            <g transform="translate(40, 0)">
+                                <g class="apexcharts-radialbar">
                                     <g>
-                                        <path d="M 45.18 110 A 64.82 64.82 0 {{ largeArcFlag }} 1 {{ endX|number_format(2, '.', '') }} {{ endY|number_format(2, '.', '') }}"
-                                            fill="none"
-                                            stroke="#F0B621"
-                                            stroke-width="22.33"
-                                            stroke-linecap="butt"/>
-                                        <circle r="48.66" cx="110" cy="110" fill="transparent"/>
+                                        <g class="apexcharts-tracks">
+                                            <path d="M 45.18 110 A 64.82 64.82 0 0 1 174.82 110"
+                                                fill="none"
+                                                stroke="#958DF4"
+                                                stroke-width="22.33"
+                                                stroke-linecap="butt"/>
+                                        </g>
+                                        <g>
+                                            <path d="M 45.18 110 A 64.82 64.82 0 {{ largeArcFlag }} 1 {{ endX|number_format(2, '.', '') }} {{ endY|number_format(2, '.', '') }}"
+                                                fill="none"
+                                                stroke="#F0B621"
+                                                stroke-width="22.33"
+                                                stroke-linecap="butt"/>
+                                            <circle r="48.66" cx="110" cy="110" fill="transparent"/>
+                                        </g>
                                     </g>
+                                    <text x="110" y="108" text-anchor="middle" font-size="25px"
+                                        font-family="Helvetica, Arial, sans-serif" font-weight="500"
+                                        fill="#ffffff">
+                                        {{ completion }}%
+                                    </text>
                                 </g>
-                                <text x="110" y="108" text-anchor="middle" font-size="25px"
-                                    font-family="Helvetica, Arial, sans-serif" font-weight="500"
-                                    fill="#ffffff">
-                                    {{ completion }}%
-                                </text>
                             </g>
-                        </g>
-                    </svg>
-                </div>
-
+                        </svg>
+                    </div>
+                </a>
             </div>
         </div>
     </section>
@@ -81,7 +90,7 @@
         <div class="biographie-profil mb-4 p-4 apparition_">
             <strong>Total apparitions dans les recherches</strong>
             <div class="d-flex align-items-center">
-            <span><img src="{{ asset('v2/images/dashboard/search-icon.svg')}}" alt=""></span>10
+            <span><img src="{{ asset('v2/images/dashboard/search-icon.svg')}}" alt=""></span>{% if completion == 100 %}{{ candidat.vues|length * 2 }}{% else %}0{% endif %}
             </div>
         </div>
         <div class="biographie-profil mb-4 p-4 vu_">

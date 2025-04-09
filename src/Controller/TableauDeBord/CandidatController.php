@@ -13,6 +13,7 @@ use App\Entity\Finance\Devise;
 use App\Twig\FinanceExtension;
 use App\Manager\ProfileManager;
 use App\Service\ActivityLogger;
+use App\Entity\CandidateProfile;
 use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
@@ -39,8 +40,10 @@ use App\Form\TableauDeBord\AssistanceType;
 use App\Form\BusinessModel\TransactionType;
 use App\Manager\BusinessModel\OrderManager;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Form\Boost\CreateCandidateBoostType;
 use App\Manager\BusinessModel\CreditManager;
 use App\Repository\Finance\DeviseRepository;
+use App\Entity\BusinessModel\BoostVisibility;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,6 +51,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\TransactionManager;
 use App\Repository\BusinessModel\PackageRepository;
 use App\Repository\Entreprise\JobListingRepository;
+use App\Manager\BusinessModel\BoostVisibilityManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -92,7 +96,6 @@ class CandidatController extends AbstractController
         $params['langages'] = $this->candidatManager->getLangagesSortedByNiveau($candidat);
         $params['activities'] = $this->em->getRepository(ActivityLog::class)->findUserLogs($currentUser);
 
-        $params['completion'] = $completion;
         $params['endX'] = $endX;
         $params['endY'] = $endY;
         $params['largeArcFlag'] = $largeArcFlag;
@@ -153,12 +156,14 @@ class CandidatController extends AbstractController
     public function annuaire(Request $request): Response
     {
         $page = $request->query->get('page', 1);
+        $size = $request->query->get('size', 10);
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
-        $prestations = $this->em->getRepository(Prestation::class)->paginatePrestations(Prestation::STATUS_VALID, $page);
+        $prestations = $this->em->getRepository(Prestation::class)->paginatePrestations(Prestation::STATUS_VALID, $page, $size);
         $params['prestations'] = $prestations;
+        $params['size'] = $size;
 
         return $this->render('tableau_de_bord/candidat/annuaire_de_services.html.twig', $params);
     }
@@ -194,12 +199,34 @@ class CandidatController extends AbstractController
     }
 
     #[Route('/boost', name: 'app_tableau_de_bord_candidat_boost')]
-    public function boost(): Response
+    public function boost(Request $request, BoostVisibilityManager $boostVisibilityManager, CreditManager $creditManager): Response
     {
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
+        $candidat = $params['candidat'];
+        $currentUser = $params['currentUser'];
+        $form = $this->createForm(CreateCandidateBoostType::class, $candidat);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $boostOption = $form->get('boost')->getData(); 
+            $candidat = $form->getData();
+            $visibilityBoost = $candidat->getBoostVisibility();
+            if(!$visibilityBoost instanceof BoostVisibility){
+                $visibilityBoost = $boostVisibilityManager->init($boostOption);
+            }
+            $visibilityBoost = $boostVisibilityManager->update($visibilityBoost, $boostOption);
+            $creditManager->adjustCredits($currentUser, $boostOption->getCredit(), "Boost Profil Olona Talents");
+            $candidat->setBoostVisibility($visibilityBoost);
+            $candidat->setStatus(CandidateProfile::STATUS_FEATURED);
+            $this->em->persist($candidat);
+            $this->em->flush();
+            $this->addFlash('success', 'Boost enregistré');
+            return $this->redirectToRoute('app_tableau_de_bord_candidat');
+        }
+        $params['form'] = $form->createView();
+
         return $this->render('tableau_de_bord/candidat/boost.html.twig', $params);
     }
 
@@ -417,12 +444,20 @@ class CandidatController extends AbstractController
     public function notification(Request $request): Response
     {
         $page = $request->query->get('page', 1);
+        $isRead = $request->query->get('isRead', 0);
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
         $currentUser = $params['currentUser'];
-        $params['notifications'] = $this->em->getRepository(Notification::class)->findByDestinataire($currentUser,null, [], null, $page);
+        $params['notifications'] = $this->em->getRepository(Notification::class)->findByDestinataire(
+            $currentUser, 
+            $isRead,
+            ['id' => 'DESC'], 
+            Notification::STATUS_DELETED,
+            $page
+        );
+
         return $this->render('tableau_de_bord/candidat/notification.html.twig', $params);
     }
 
@@ -531,37 +566,14 @@ class CandidatController extends AbstractController
     #[Route('/trouver-des-missions', name: 'app_tableau_de_bord_candidat_trouver_des_missions')]
     public function searchmission(Request $request): Response
     {
-        $page = $request->query->get('page', 1);
-        $limit = 10;
+        $page = $request->query->getInt('page', 1);
+        $size = $request->query->getInt('size', 10);
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
-        $candidat = $params['candidat'];
-        $secteurs = $candidat->getSecteurs();
-        $qb = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
-        $qb->where('j.status = :status')
-            ->setParameter('status', JobListing::STATUS_PUBLISHED)
-            // ->andWhere('j.secteur IN (:secteurs)')
-            // ->setParameter('secteurs', $secteurs)
-            ->orderBy('j.id', 'DESC')
-            ->setMaxResults($limit)
-            ->setFirstResult(($page - 1) * $limit);
-
-        $qbboost = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
-        $qbboost->where('j.status = :status')
-            ->setParameter('status', JobListing::STATUS_FEATURED)
-            // ->andWhere('j.secteur IN (:secteurs)')
-            // ->setParameter('secteurs', $secteurs)
-            ->orderBy('j.id', 'DESC')
-            ->setMaxResults($limit)
-            ->setFirstResult(($page - 1) * $limit);
-
-        $offres = $qb->getQuery()->getResult();
-        $boosts = $qbboost->getQuery()->getResult();
-        $params['offres'] = $offres;
-        $params['joblistings'] = $offres;
-        $params['joblistings_boost'] = $boosts;
+        $params['joblistings'] = $this->em->getRepository(JobListing::class)->paginateJobListings(JobListing::STATUS_PUBLISHED, $page, $size);
+        $params['joblistings_boost'] = $this->em->getRepository(JobListing::class)->paginateJobListings(JobListing::STATUS_FEATURED, $page, 6);
 
         return $this->render('tableau_de_bord/candidat/trouver_des_missions.html.twig', $params);
     }
@@ -727,9 +739,12 @@ class CandidatController extends AbstractController
         $data = [];
         $data['currentUser'] = $currentUser;
         $data['candidat'] = $candidat;
+        $data['completion'] = $candidat->getProfileCompletion();
+        $data['boost'] = $candidat->getBoost();
+        $data['boostVisibility'] = $candidat->getBoostVisibility();
         $data['action'] = $this->urlGenerator->generate('app_olona_talents_joblistings', []);
         $data['credit'] = $currentUser->getCredit()->getTotal();
-        $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser,false);
+        $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser, true);
 
         return $data;
     }

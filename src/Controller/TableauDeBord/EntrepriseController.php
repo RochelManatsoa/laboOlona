@@ -148,12 +148,14 @@ class EntrepriseController extends AbstractController
     public function annuaire(Request $request): Response
     {
         $page = $request->query->get('page', 1);
+        $size = $request->query->get('size', 10);
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
-        $prestations = $this->em->getRepository(Prestation::class)->paginatePrestations(Prestation::STATUS_VALID, $page);
+        $prestations = $this->em->getRepository(Prestation::class)->paginatePrestations(Prestation::STATUS_VALID, $page, $size);
         $params['prestations'] = $prestations;
+        $params['size'] = $size;
 
         return $this->render('tableau_de_bord/entreprise/annuaire_de_services.html.twig', $params);
     }
@@ -367,12 +369,20 @@ class EntrepriseController extends AbstractController
     public function notification(Request $request): Response
     {
         $page = $request->query->get('page', 1);
+        $isRead = $request->query->get('isRead', 1);
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
         $currentUser = $params['currentUser'];
-        $params['notifications'] = $this->em->getRepository(Notification::class)->findByDestinataire($currentUser,null, [], null, $page);
+        
+        $params['notifications'] = $this->em->getRepository(Notification::class)->findByDestinataire(
+            $currentUser, 
+            $isRead,
+            ['id' => 'DESC'], 
+            Notification::STATUS_DELETED,
+            $page
+        );
 
         return $this->render('tableau_de_bord/entreprise/notification.html.twig', $params);
     }
@@ -570,36 +580,15 @@ class EntrepriseController extends AbstractController
 
     #[Route('/trouver-des-missions', name: 'app_tableau_de_bord_entreprise_trouver_des_missions')]
     public function searchmission(Request $request): Response
-    {
-        $page = $request->query->get('page', 1);
-        $limit = 10;
+    {        
+        $page = $request->query->getInt('page', 1);
+        $size = $request->query->getInt('size', 10);
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
-        $qb = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
-        $qb->where('j.status = :status')
-            ->setParameter('status', JobListing::STATUS_PUBLISHED)
-            // ->andWhere('j.secteur IN (:secteurs)')
-            // ->setParameter('secteurs', $secteurs)
-            ->orderBy('j.id', 'DESC')
-            ->setMaxResults($limit)
-            ->setFirstResult(($page - 1) * $limit);
-
-        $qbboost = $this->em->getRepository(JobListing::class)->createQueryBuilder('j');
-        $qbboost->where('j.status = :status')
-            ->setParameter('status', JobListing::STATUS_FEATURED)
-            // ->andWhere('j.secteur IN (:secteurs)')
-            // ->setParameter('secteurs', $secteurs)
-            ->orderBy('j.id', 'DESC')
-            ->setMaxResults($limit)
-            ->setFirstResult(($page - 1) * $limit);
-
-        $offres = $qb->getQuery()->getResult();
-        $boosts = $qbboost->getQuery()->getResult();
-        $params['offres'] = $offres;
-        $params['joblistings'] = $offres;
-        $params['joblistings_boost'] = $boosts;
+        $params['joblistings'] = $this->em->getRepository(JobListing::class)->paginateJobListings(JobListing::STATUS_PUBLISHED, $page, $size);
+        $params['joblistings_boost'] = $this->em->getRepository(JobListing::class)->paginateJobListings(JobListing::STATUS_FEATURED, $page, 6);
 
         return $this->render('tableau_de_bord/entreprise/trouver_des_missions.html.twig', $params);
     }
@@ -708,7 +697,7 @@ class EntrepriseController extends AbstractController
         $data['currentUser'] = $currentUser;
         $data['entreprise'] = $entreprise;
         $data['credit'] = $currentUser->getCredit()->getTotal();
-        $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser,false);
+        $data['notificationsCount'] = $this->em->getRepository(Notification::class)->countIsRead($currentUser, true);
         $data['favorisCount'] = count($entreprise->getFavoris());
         $data['contactsCount'] = $this->em->getRepository(PurchasedContact::class)->countContacts($currentUser);
         $data['candidaturesCount'] = $this->em->getRepository(Applications::class)->countByEntrepriseProfile($entreprise->getId());

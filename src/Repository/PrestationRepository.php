@@ -43,7 +43,7 @@ class PrestationRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function paginatePrestations(string $status, int $page = 1): PaginationInterface
+    public function paginatePrestations(string $status, int $page = 1, int $size = 10): PaginationInterface
     {
         $queryBuilder = $this->createQueryBuilder('p')->select('p')
             ->andWhere('p.status = :status')
@@ -53,7 +53,7 @@ class PrestationRepository extends ServiceEntityRepository
         return $this->paginator->paginate(
             $queryBuilder,
             $page,
-            10,
+            $size,
             []
         );
     }

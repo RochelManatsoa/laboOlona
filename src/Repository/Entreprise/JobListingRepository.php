@@ -93,6 +93,24 @@ class JobListingRepository extends ServiceEntityRepository
             []
         );
     }
+
+    public function paginateJobListings(string $status = JobListing::STATUS_PUBLISHED, $page = 1, $size = 10): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('j')
+            ->select('j')
+            ->leftJoin('j.applications', 'a') 
+            ->groupBy('j.id') 
+            ->addOrderBy('j.id', 'DESC')
+            ->andWhere('j.status = :status')
+            ->setParameter('status', $status);
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            $size,
+            []
+        );
+    }
     
     public function findAllOrderedByIdDesc()
     {

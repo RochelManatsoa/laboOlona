@@ -70,10 +70,7 @@ class DashboardController extends AbstractController
     {
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
-        if(!$currentUser instanceof User){
-            return $this->redirectToRoute('app_login');
-        }
-        $profile = $this->userService->checkProfile();
+        $profile = $this->userService->checkUserProfile($currentUser);
         if($profile instanceof EntrepriseProfile){
             return $this->redirectToRoute('app_tableau_de_bord_entreprise');
         }
@@ -195,7 +192,7 @@ class DashboardController extends AbstractController
             $this->em->persist($user);
             $this->em->flush();
 
-            return $this->redirectToRoute('app_v2_dashboard_boost_profile', ['id' => $user->getId()]);
+            return $this->redirectToRoute('app_v2_dashboard', ['id' => $user->getId()]);
         }
         
         return $this->render('v2/dashboard/provider/contact.html.twig', [
@@ -277,6 +274,11 @@ class DashboardController extends AbstractController
     #[Route('/profile/view/{id}', name: 'app_v2_profile_view')]
     public function viewProfile(Request $request, int $id): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = ['id' => $id];
+        
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+
         $candidat = $this->em->getRepository(CandidateProfile::class)->find($id);
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();

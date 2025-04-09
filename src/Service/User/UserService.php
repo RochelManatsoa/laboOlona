@@ -244,6 +244,14 @@ class UserService
             'app_v2_view_recruiter_profile' => [
                 CandidateProfile::class => ['route' => 'app_tableau_de_bord_candidat_view_recruiter', 'params' => $routeParams],
                 EntrepriseProfile::class => ['route' => 'app_tableau_de_bord_entreprise', 'params' => $routeParams],
+            ],
+            'app_v2_profile_view' => [
+                CandidateProfile::class => ['route' => 'app_tableau_de_bord_candidat_view_recruiter', 'params' => $routeParams],
+                EntrepriseProfile::class => ['route' => 'app_tableau_de_bord_entreprise_profil_candidat', 'params' => $routeParams],
+            ],
+            'app_v2_recruiter_view_profile' => [
+                CandidateProfile::class => ['route' => 'app_tableau_de_bord_candidat_view_recruiter', 'params' => $routeParams],
+                EntrepriseProfile::class => ['route' => 'app_tableau_de_bord_entreprise_profil_candidat', 'params' => $routeParams],
             ]
         ];
     

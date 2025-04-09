@@ -69,8 +69,10 @@ class NotificationRepository extends ServiceEntityRepository
             ->select('COUNT(n.id)')
             ->where('n.destinataire = :destinataire')
             ->andWhere('n.isRead = :isRead')
+            ->andWhere('n.status != :statusNot')
             ->setParameter('destinataire', $user)
             ->setParameter('isRead', $isRead)
+            ->setParameter('statusNot', Notification::STATUS_DELETED)
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -84,6 +86,7 @@ class NotificationRepository extends ServiceEntityRepository
     ): PaginationInterface
     {
         $queryBuilder = $this->createQueryBuilder('n')
+                ->addOrderBy('n.id', 'DESC')
                 ->where('n.destinataire = :destinataire')
                 ->setParameter('destinataire', $user);
 

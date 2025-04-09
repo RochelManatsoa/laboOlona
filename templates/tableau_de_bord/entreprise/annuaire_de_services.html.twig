@@ -110,10 +110,29 @@
                             </div>
                         </article>
                         {% endfor %}
+                        {{ knp_pagination_render(prestations) }}
                     </div>
                     <div class="col-lg-4">
                         <div class="position-sticky" style="top: 2rem;">
                             <div class="theiaStickySidebar">
+                                <div class="side-bar">
+                                    <div class="sidebar-elements search-bx">								
+                                        <form id="sizeForm" method="get">
+                                            <div class="form-group mb-4">
+                                                <h4 class="section-head-small mb-4">Afficher par</h4>
+                                                <div class="dropdown bootstrap-select">
+                                                    <select id="selectSize" name="size" class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
+                                                        <option>10</option>
+                                                        <option value="20" {% if size == 20 %}selected{% endif %}>20</option>
+                                                        <option value="30" {% if size == 30 %}selected{% endif %}>30</option>
+                                                        <option value="40" {% if size == 40 %}selected{% endif %}>40</option>
+                                                        <option value="50" {% if size == 50 %}selected{% endif %}>50</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                                 <div class="m-4 card position-relative text-center d-block d-md-none">
                                     <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
                                         <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
@@ -143,37 +162,14 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script> 
-    
-    var currentPage = 1;
-    var allDataLoaded = false;
-
-    $(window).scroll(function() {
-        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !allDataLoaded) {
-            loadMoreJobs();
-        }
-    });
-
-    function loadMoreJobs() {
-        if (!allDataLoaded) {
-            currentPage++;
-            var url = `{{ path('api_job_offers') }}?page=${currentPage}`;
-            $.ajax({
-                url: url,
-                type: 'GET',
-                dataType: 'json', 
-                success: function(data) {
-                    $('#jobs-container').append(data.html);
-                    if (!data.hasMore) {
-                        allDataLoaded = true;
-                    }
-                },
-                error: function() {
-                    allDataLoaded = true; 
-                }
-            });
-        }
-    }
+    <script>
+        document.addEventListener('turbo:load', function () {
+            const selectSize = document.getElementById('selectSize');
+            if (selectSize) {
+                selectSize.addEventListener('change', function () {
+                    document.getElementById('sizeForm').submit();
+                });
+            }
+        });
     </script>
 {% endblock %}

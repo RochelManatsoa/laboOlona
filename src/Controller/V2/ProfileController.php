@@ -116,6 +116,11 @@ class ProfileController extends AbstractController
     #[Route('/profile/view/{id}', name: 'app_v2_recruiter_view_profile')]
     public function viewProfile(Request $request, int $id): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = ['id' => $id];
+        
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         $candidat = $this->em->getRepository(CandidateProfile::class)->find($id);
         if ($candidat === null || $candidat->getStatus() === CandidateProfile::STATUS_BANNISHED || $candidat->getStatus() === CandidateProfile::STATUS_PENDING) {
             throw $this->createNotFoundException('Nous sommes désolés, mais le candidat demandé n\'existe pas.');

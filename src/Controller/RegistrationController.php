@@ -9,6 +9,7 @@ use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\AppAuthenticator;
+use App\Service\User\UserService;
 use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -29,6 +30,7 @@ class RegistrationController extends AbstractController
     public function __construct(
         private EmailVerifier $emailVerifier,
         private EntityManagerInterface $em,
+        private UserService $userService,
     ) {}
 
     #[Route('/v2/olona-register', name: 'app_register')]
@@ -174,6 +176,9 @@ class RegistrationController extends AbstractController
     #[Route('/email/sending', name: 'app_email_sending')]
     public function emailSending(): Response
     {        
+        if($this->userService->getCurrentUser() instanceof User){
+            return $this->redirectToRoute('app_connect');
+        }
         return $this->render('registration/email-sending.html.twig', []);
     }
 }

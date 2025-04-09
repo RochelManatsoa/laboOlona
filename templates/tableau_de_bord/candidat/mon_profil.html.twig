@@ -80,7 +80,7 @@
                 </div>
                 <div class="btn-profils">
                 {% if candidat.cv is defined and candidat.cv is not null %}
-                    <a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="">Partager mon profil</a>
+                    <a routerlink="" class="d-inline-block position-relative btn btn-pdp disabled" href="">Partager mon profil</a>
                     <a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target="_blank">Voir mon CV</a>
                 {% endif %}
                 </div>
@@ -99,10 +99,18 @@
                 {% endif %}
             </div>
             <div class="boost-profil btn-custom_">
+                {% if boostVisibility is defined and boostVisibility is not null and not isExpiredBoost(boostVisibility) %}
+                <img src="{{ asset('v2/images/dashboard/boost.svg')}}" alt="">
+                    <div class="boost-block-title">
+                        <span class="boost-block-title-text">Profil Boosté<br>
+                    </div>
+                    <small class="fw-lighter">Expire {{ boostVisibility.endDate|timeUntil }}</small>
+                {% else %}
                 <a href="{{ path('app_tableau_de_bord_candidat_boost')}}">
                     <img src="{{ asset('v2/images/dashboard/boost.svg')}}" alt="">
-                    Booter <span>mon profil</span>
+                    Booster <span>mon profil</span>
                 </a>
+                {% endif %}
             </div>
             <div class="recharge-credit btn-custom_">
                 <a href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">
