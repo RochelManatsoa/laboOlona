@@ -3,7 +3,9 @@
 
 <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() {
+        dataLayer.push(arguments);
+    }
     gtag('js', new Date());
 
     // Consentement par défaut
@@ -21,10 +23,12 @@
         const consent = document.cookie
             .split('; ')
             .find((row) => row.startsWith('cookieOlonaTalents='));
-            if (!consent) {
-                document.querySelector('.cookie-consent').style.display = 'block';
-            }
-        });
+
+        const banner = document.querySelector('.cookie-consent');
+        if (!consent && banner) {
+            banner.style.display = 'block';
+        }
+    });
 
     // Accepter tous les cookies
     function acceptAllCookies() {
@@ -34,15 +38,18 @@
             advertisingCookies: true,
         };
         updateConsent(preferences);
-        document.querySelector('.cookie-consent').style.display = 'none';
     }
 
     // Enregistrer les préférences sélectionnées
     function saveCookiePreferences() {
+        const functional = document.getElementById('functionalCookies');
+        const analytics = document.getElementById('analyticsCookies');
+        const advertising = document.getElementById('advertisingCookies');
+
         const preferences = {
-            functionalCookies: document.getElementById('functionalCookies').checked,
-            analyticsCookies: document.getElementById('analyticsCookies').checked,
-            advertisingCookies: document.getElementById('advertisingCookies').checked,
+            functionalCookies: functional ? functional.checked : false,
+            analyticsCookies: analytics ? analytics.checked : false,
+            advertisingCookies: advertising ? advertising.checked : false,
         };
         updateConsent(preferences);
     }
@@ -57,6 +64,10 @@
         });
 
         document.cookie = `cookieOlonaTalents=${JSON.stringify(preferences)}; path=/; max-age=31536000`;
-        document.querySelector('.cookie-consent').style.display = 'none';
+
+        const banner = document.querySelector('.cookie-consent');
+        if (banner) {
+            banner.style.display = 'none';
+        }
     }
 </script>

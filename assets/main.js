@@ -57,13 +57,16 @@ $(function() {
 
     function checkAndShowTutorial() {
         const tutorialViewed = document.cookie
-            .split('; ')
-            .find((row) => row.startsWith('tutorialViewed='));
-    
+          .split('; ')
+          .find((row) => row.startsWith('tutorialViewed='));
+      
         if (!tutorialViewed) {
-            var tutorialModal1Toggle = new Modal($('#tutorialModal1Toggle')[0]);
+          const modalEl = document.getElementById('tutorialModal1Toggle');
+          if (modalEl) {
+            const tutorialModal1Toggle = new bootstrap.Modal(modalEl);
             tutorialModal1Toggle.show();
-            document.cookie = "tutorialViewed=true; path=/; max-age=31536000"; 
+            document.cookie = "tutorialViewed=true; path=/; max-age=31536000";
+          }
         }
     }
 
@@ -428,15 +431,19 @@ $(function() {
         const imageInput = document.getElementById('prestation_file'); 
         const profileImgDiv = document.querySelector('.profile-img');
         const companyImgDiv = document.querySelector('.company-img');
-
-        if(logoInput && companyImgDiv){
+    
+        // Sécurisation du chargement du logo entreprise
+        if (logoInput && companyImgDiv) {
             logoInput.addEventListener('change', function(event) {
-                if (event.target.files && event.target.files[0]) {
+                const file = event.target.files?.[0];
+                if (file) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        companyImgDiv.style.backgroundImage = 'url(' + e.target.result + ')';
+                        if (companyImgDiv) {
+                            companyImgDiv.style.backgroundImage = `url(${e.target.result})`;
+                        }
                     };
-                    reader.readAsDataURL(event.target.files[0]);
+                    reader.readAsDataURL(file);
                 }
             });
     
@@ -445,14 +452,18 @@ $(function() {
             });
         }
     
+        // Sécurisation du chargement de l'image prestation
         if (imageInput && profileImgDiv) {
             imageInput.addEventListener('change', function(event) {
-                if (event.target.files && event.target.files[0]) {
+                const file = event.target.files?.[0];
+                if (file) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        profileImgDiv.style.backgroundImage = 'url(' + e.target.result + ')';
+                        if (profileImgDiv) {
+                            profileImgDiv.style.backgroundImage = `url(${e.target.result})`;
+                        }
                     };
-                    reader.readAsDataURL(event.target.files[0]);
+                    reader.readAsDataURL(file);
                 }
             });
     
@@ -460,34 +471,40 @@ $(function() {
                 imageInput.click();
             });
         }
-
-        
+    
+        // Masquer les erreurs de validation à la soumission
         const ids = ['#applyJob', '#createJob']; 
         ids.forEach(function(id) {
-            $(id).on('submit', function(e) {
-
-                $('.invalid-feedback').remove();
-                $('.is-invalid').removeClass('is-invalid');
-                // var successToast = new Toast($('#errorToast')[0]);
-                // setTimeout(function() {
-                //     successToast.show(); 
-                // }, 1500);
-
-                var modalElement = $(this).closest('.modal').get(0); 
-                if (modalElement) {
-                    var modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-                    modal.hide(); 
+            const $form = $(id);
+            if ($form.length) {
+                $form.on('submit', function(e) {
+                    $('.invalid-feedback').remove();
+                    $('.is-invalid').removeClass('is-invalid');
+    
+                    const modalElement = $(this).closest('.modal').get(0); 
+                    if (modalElement) {
+                        const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+                        modal.hide(); 
+                    }
+                });
+            }
+        });        
+    
+        // Affichage du toast d'erreur à l'étape finale
+        const finishMenuItem = $('a[role="menuitem"][href="#finish"]');
+        if (finishMenuItem.length) {
+            finishMenuItem.on('click', function() {
+                const errorToastEl = $('#errorToast')[0];
+                if (errorToastEl) {
+                    const successToast = new Toast(errorToastEl);
+                    setTimeout(() => {
+                        successToast.show(); 
+                    }, 1000);
                 }
             });
-        });        
-
-        $('a[role="menuitem"][href="#finish"]').on('click', function(){
-            var successToast = new Toast($('#errorToast')[0]);
-            setTimeout(function() {
-                successToast.show(); 
-            }, 1000);
-        })
+        }
     }
+    
     
     function setupAvailabilityDropdown() {
         const availabilityDropdown = document.getElementById('prestation_availability_nom');
@@ -495,10 +512,11 @@ $(function() {
     
         if (availabilityDropdown && dateField) {
             function toggleDateInput() {
+                if (!dateField) return;
                 if (availabilityDropdown.value === 'from-date') {
-                    dateField.style.display = 'block';  // Show the date field
+                    dateField.style.display = 'block';
                 } else {
-                    dateField.style.display = 'none';  // Hide the date field
+                    dateField.style.display = 'none';
                 }
             }
     

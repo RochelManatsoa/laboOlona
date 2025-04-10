@@ -133,8 +133,10 @@ document.addEventListener('turbo:load', function() {
   
   
       const bsmodal = document.getElementById('exampleModal')
-      var viewevent = new Modal(bsmodal);
-      viewevent.show();
+      if (bsmodal) {
+        const viewevent = new bootstrap.Modal(bsmodal);
+        viewevent.show();
+      }
     })
     calendar.render()
   })

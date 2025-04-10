@@ -28,6 +28,13 @@ class PackageRepository extends ServiceEntityRepository
             ->setParameter('type', 'CONTRAT');
     }
 
+    public function findAbonnementPackages()
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.type = :type')
+            ->setParameter('type', 'ABONNEMENT');
+    }
+
 //    public function findOneBySomeField($value): ?Package
 //    {
 //        return $this->createQueryBuilder('p')

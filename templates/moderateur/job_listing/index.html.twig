@@ -1,0 +1,56 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}JobListing index{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <div class="row mb-3">
+                <h1 class="h3">Gestion des annonces</h1>
+                <div>
+                    <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_moderateur_job_listing_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-1">{{ knp_pagination_sortable(job_listings, '#', 'j.id') }}</th>
+                            <th class="col">{{ knp_pagination_sortable(job_listings, 'Titre', 'j.titre') }}</th>
+                            <th class="col-2">{{ knp_pagination_sortable(job_listings, 'Status', 'j.status') }}</th>
+                            <th class="col-1 text-center">Vues</th>
+                            <th class="col-1 text-center">Offres</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for job_listing in job_listings %}
+                        <tr>
+                            <td>{{ job_listing.id }}</td>
+                            <td>
+                                {{ job_listing.titre }}<br>
+                                <span class="small text-muted">{{ job_listing.entreprise.nom|upper }} | {{ job_listing.dateCreation|time_ago }}</span>
+                            </td>
+                            <td>{{ job_listing.labels[job_listing.status]|raw }}</td>
+                            <td class="text-center">{{ job_listing.annonceVues|length }}</td>
+                            <td class="text-center">{{ job_listing.applications|length }}</td>
+                            <td>
+                            <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_moderateur_job_listing_edit', {'id': job_listing.id}) }}"><i class="bi bi-pencil"></i></a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="17">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="navigation mt-5">
+                {{ knp_pagination_render(job_listings) }}
+                </div>
+                
+        </div>
+    </div>
+</section>
+{% endblock %}

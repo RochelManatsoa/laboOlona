@@ -1,0 +1,20 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Modifier un contrat{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <div class="row mb-3">
+              <h1 class="h3">Modifier un contrat</h1>
+
+              {{ include('moderateur/contract/_form.html.twig', {'button_label': 'Update'}) }}
+
+              {{ include('moderateur/contract/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock %}
