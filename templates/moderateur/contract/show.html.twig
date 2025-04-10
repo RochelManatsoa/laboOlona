@@ -1,0 +1,104 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Contrat #{{ contract.id }}{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <div class="row mb-3">
+                <h1 class="h3">Contrat #{{ contract.id }}</h1>
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>#</th>
+                            <td>{{ contract.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Formule</th>
+                            <td>
+                                {% if contract.package is not null %}
+                                {{ contract.package.name }} | <span class="fw-bold">{{ contract.package.price }} Ar</span>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Société</th>
+                            <td>{{ contract.typePerson ? 'Oui' : 'Non' }}</td>
+                        </tr>
+                        {% if contract.typePerson %}
+                        <tr>
+                            <th>Raison sociale</th>
+                            <td>{{ contract.socialReason ? contract.socialReason : '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Numéro de SIRET</th>
+                            <td>{{ contract.siret ? contract.siret : '-' }}</td>
+                        </tr>                
+                        {% else %}
+                        <tr>
+                            <th>Nom</th>
+                            <td>{{ contract.firstName }}</td>
+                        </tr>
+                        <tr>
+                            <th>Prénom</th>
+                            <td>{{ contract.lastName }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ contract.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Adresse</th>
+                            <td>{{ contract.adress }}</td>
+                        </tr>
+                        <tr>
+                            <th>Localisation</th>
+                            <td>{{ contract.localisation }}</td>
+                        </tr>
+                        <tr>
+                            <th>Téléphone</th>
+                            <td>{{ contract.telephone }}</td>
+                        </tr>
+                        <tr>
+                            <th>Création</th>
+                            <td>{{ contract.createdAt ? contract.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Mise à jour</th>
+                            <td>{{ contract.updatedAt ? contract.updatedAt|date('Y-m-d H:i:s') : '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Statut</th>
+                            <td>{{ getContractStatus(contract)|raw }}</td>
+                        </tr>
+                        <tr>
+                            <th>Numéro contract</th>
+                            <td>{{ contract.contractNumber }}</td>
+                        </tr>
+                        {% if contract.status is same as(constant('App\\Entity\\Coworking\\Contract::STATUS_VALIDATED'))  %}
+                        <tr>
+                            <th>Contrat</th>
+                            <td><a href="{{ path('app_coworking_contract_pdf', {'contractNumber': contract.contractNumber })}}" target="_blank"><i class="bi bi-filetype-pdf me-2 h5"></i>Voir le contrat</a></td>
+                        </tr>
+                        <tr>
+                            <th>Facture</th>
+                            <td><a href="{{ path('app_coworking_contract_invoice', {'contractNumber': contract.contractNumber })}}" target="_blank"><i class="bi bi-filetype-pdf me-2 h5"></i>Voir la facture</a></td>
+                        </tr>                
+                        {% endif %}
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-end w-100">
+                    <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_contract_edit', {'id': contract.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                    {{ include('moderateur/contract/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -19,17 +19,10 @@
 
       </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_profile_candidat')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_profile_candidat' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-people"></i>
-            Profils  
-        </a>
-      </li>
-      <li>
-        <a href="{{ path('app_moderateur_facebook_contest_entry_index')}}" 
-            class="nav-link {{ current_route == 'app_moderateur_facebook_contest_entry_index' ? 'active' : 'text-white' }}">
-            <i class="h5 mx-2 bi bi-controller"></i>
-            Concours   
+        <a href="{{ path('app_contract_index')}}" 
+            class="nav-link {{ current_route == 'app_contract_index' ? 'active' : 'text-white' }}">
+            <i class="h5 mx-2 bi bi-fire"></i>
+            Abonnements    
         </a>
       </li>
       <li>
@@ -40,6 +33,13 @@
         </a>
       </li>
       <li>
+        <a href="{{ path('app_dashboard_moderateur_profile_candidat')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_profile_candidat' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-people"></i>
+            Profils  
+        </a>
+      </li>
+      <li>
         <a href="{{ path('app_moderateur_entreprise_profile_index')}}" 
             class="nav-link {{ current_route == 'app_moderateur_entreprise_profile_index' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-building"></i>
@@ -47,8 +47,8 @@
         </a>
       </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_annonces')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_annonces' ? 'active' : 'text-white' }}">
+        <a href="{{ path('app_moderateur_job_listing_index')}}" 
+            class="nav-link {{ current_route == 'app_moderateur_job_listing_index' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-megaphone"></i>
             Annonces   
         </a>

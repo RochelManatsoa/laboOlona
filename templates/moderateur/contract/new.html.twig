@@ -1,0 +1,17 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Nouveau contrat{% endblock %}
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <div class="row mb-3">
+              <h1 class="h3">Nouveau contrat</h1>
+
+              {{ include('moderateur/contract/_form.html.twig') }}
+            </div>
+        </div>
+      </div>
+</section>
+
+{% endblock %}

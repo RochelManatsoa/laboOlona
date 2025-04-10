@@ -39,6 +39,24 @@ class ContractRepository extends ServiceEntityRepository
         );
     }
 
+    public function paginatePremiumContracts($page): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('c')
+            ->select('c')
+            ->leftJoin('c.package', 'p')
+            ->addOrderBy('c.createdAt', 'DESC')
+            ->andWhere('p.type = :type')
+            ->setParameter('type', 'ABONNEMENT')
+        ;
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            10,
+            []
+        );
+    }
+
 //    /**
 //     * @return Contract[] Returns an array of Contract objects
 //     */
