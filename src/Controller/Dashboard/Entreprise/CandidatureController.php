@@ -44,6 +44,9 @@ class CandidatureController extends AbstractController
     #[Route('/candidatures', name: 'app_dashboard_entreprise_candidatures')]
     public function index(Request $request): Response
     {
+
+        return $this->redirectToRoute('app_tableau_de_bord_entreprise_listes_candidatures');
+
         $this->checkEntreprise();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
@@ -90,6 +93,9 @@ class CandidatureController extends AbstractController
     #[Route('/candidature/{id}/view', name: 'app_dashboard_entreprise_view_candidature')]
     public function candidatureView(Request $request, Applications $applications): Response
     {
+
+        return $this->redirectToRoute('app_tableau_de_bord_entreprise_listes_candidatures');
+
         $this->checkEntreprise();
 
         /** @var User $user */

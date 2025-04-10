@@ -45,6 +45,9 @@ class DashboardController extends AbstractController
     #[Route('/', name: 'app_v2_candidate_dashboard')]
     public function index(Request $request): Response
     {
+
+        return $this->redirectToRoute('app_tableau_de_bord_candidat');
+
         /** @var User $currentUser */
         $currentUser = $this->userService->getCurrentUser();
         $hasProfile = $this->userService->checkUserProfile($currentUser);
