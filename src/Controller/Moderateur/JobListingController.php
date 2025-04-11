@@ -20,7 +20,7 @@ class JobListingController extends AbstractController
         $page = $request->query->getInt('page', 1);
         $status = $request->query->get('status', null);
         return $this->render('moderateur/job_listing/index.html.twig', [
-            'job_listings' => $jobListingRepository->paginateJobListings(),
+            'job_listings' => $jobListingRepository->paginateJobListings($status, $page),
             'count' => $jobListingRepository->countAll(),
             // 'countStatus' => $entrepriseProfileRepository->countStatus($status),
             // 'statuses' => array_merge(['Tous' => 'ALL' ],EntrepriseProfile::getStatuses()),
