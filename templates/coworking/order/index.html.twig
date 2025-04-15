@@ -17,6 +17,7 @@
 
 
 {% block body %}
+{% if not is_granted('ROLE_ADMIN') %}
 <header class="header-home">
     <div class="page-content">
         <div class="home-banner-section header-home-user bg-cover" style="background-image:url({{ asset('v2/images/coworking-olona-talents.webp')}})">
@@ -29,10 +30,12 @@
         </div>
     </div>
 </header>
+{% endif %}
 <section class="p-0 m-0">
     <div class="container my-5">
         <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 rounded-3 border shadow-lg">
             {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+                <h1 class="h3">Toutes les commandes</h1>
 
                 <div class="col-9">
                     <div>

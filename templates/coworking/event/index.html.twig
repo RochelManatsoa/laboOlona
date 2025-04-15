@@ -3,18 +3,19 @@
 {% block title %}Réservations{% endblock %}
 
 {% block paralax %}
-{% if not is_granted('ROLE_ADMIN') %}
-    {% include "coworking/event/_paralax.html.twig" with {'title': 'Réservation'}  %}
-  {% endif %}
+    {% if not is_granted('ROLE_ADMIN') %}
+        {% include "coworking/event/_paralax.html.twig" with {'title': 'Réservation'}  %}
+    {% endif %}
 {% endblock %}
 
 {% block admin %}
-  {% if is_granted('ROLE_ADMIN') %}
-    {{ parent() }}
-  {% endif %}
+    {% if is_granted('ROLE_ADMIN') %}
+        {{ parent() }}
+    {% endif %}
 {% endblock %}
 
 {% block body %}
+{% if not is_granted('ROLE_ADMIN') %}
 <header class="header-home">
     <div class="page-content">
         <div class="home-banner-section header-home-user bg-cover" style="background-image:url({{ asset('v2/images/coworking-olona-talents.webp')}})">
@@ -27,10 +28,12 @@
         </div>
     </div>
 </header>
+{% endif %}
 <section class="p-0 m-0">
     <div class="container my-5">
         <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 rounded-3 border shadow-lg">
             {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+            <h1 class="h3">Toutes les réservations</h1>
             <div class="col-9">
                 <div>
                     <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_event_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
