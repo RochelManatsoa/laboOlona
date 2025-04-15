@@ -39,8 +39,13 @@ class EmployesController extends AbstractController
     ){}
 
     #[Route('/', name: 'app_dashboard_employes')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = [];
+
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         $session = $this->requestStack->getSession();
         
         return $this->render('dashboard/employes/index.html.twig', [
@@ -51,6 +56,11 @@ class EmployesController extends AbstractController
     #[Route('/simulations', name: 'app_dashboard_employes_simulations')]
     public function simulations(Request $request): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = [];
+
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $candidat = $user->getCandidateProfile();
@@ -87,6 +97,11 @@ class EmployesController extends AbstractController
     #[Route('/simulation/view/{id}', name: 'app_dashboard_employes_simulation_view')]
     public function view(Request $request, Simulateur $simulateur): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = [];
+
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+
         $results = $this->employeManager->simulate($simulateur);
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
@@ -127,8 +142,13 @@ class EmployesController extends AbstractController
     }
 
     #[Route('/contrats', name: 'app_dashboard_employes_contrats')]
-    public function contrats(): Response
+    public function contrats(Request $request): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = [];
+
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         $session = $this->requestStack->getSession();
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
@@ -141,6 +161,11 @@ class EmployesController extends AbstractController
     #[Route('/annonces', name: 'app_dashboard_employes_annonces')]
     public function annonces(Request $request): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = [];
+
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         $data = $this->jobListingRepository->findAllJobListingPublished();
 
         return $this->render('dashboard/employes/annonces.html.twig', [
@@ -155,6 +180,11 @@ class EmployesController extends AbstractController
     #[Route('/annonce/{jobId}', name: 'app_dashboard_employes_annonce_view')]
     public function annonce(Request $request, JobListing $annonce): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = [];
+
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         return $this->render('dashboard/employes/annonce/view.html.twig', [
             'annonce' => $annonce,
         ]);
@@ -163,6 +193,11 @@ class EmployesController extends AbstractController
     #[Route('/infos', name: 'app_dashboard_employes_infos')]
     public function infos(Request $request): Response
     {
+        $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
+        $routeInfo['params'] = [];
+
+        return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
+        
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
         $form = $this->createForm(EmployeType::class, $user->getEmploye());
