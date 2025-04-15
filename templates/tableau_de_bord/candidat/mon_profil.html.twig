@@ -13,14 +13,15 @@
             <div class="d-flex align-items-center">
                 <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
                 <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-                <h5 class="mb-0"> Profile </h5>
+                <h5 class="mb-0"> Mon profil </h5>
             </div>
             <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
                 <li class="breadcrumb-item position-relative">
                     <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
                     <i class="ri-home-8-line"></i> Tableau de bord </a>
                 </li>
-                <li class="breadcrumb-item position-relative"> Profil candidat </li>
+                <li class="breadcrumb-item position-relative"> Profil </li>
+                <li class="breadcrumb-item position-relative"> Mon profil </li>
             </ol>
         </div>
         {% if not candidat.isIsPremium %}
@@ -73,7 +74,7 @@
                                 <span data-value="5">&#9733;</span>
                             </div>
                             <div class="rating_avis">
-                                <a href="{{ path('app_tableau_de_bord_candidat_se_faire_recommander')}}">5 avis</a>
+                                5 avis
                             </div>
                         </div>
                     </div>

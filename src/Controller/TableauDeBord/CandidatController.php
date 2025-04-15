@@ -11,21 +11,26 @@ use App\Data\QuerySearchData;
 use App\Service\FileUploader;
 use App\Entity\Finance\Devise;
 use App\Twig\FinanceExtension;
+use App\Entity\Finance\Employe;
 use App\Manager\ProfileManager;
 use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
 use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
 use App\Entity\EntrepriseProfile;
+use App\Manager\SimulatorManager;
 use App\Service\User\UserService;
 use App\Twig\PrestationExtension;
 use Symfony\UX\Turbo\TurboBundle;
+use App\Entity\Finance\Simulateur;
 use App\Manager\JobListingManager;
 use App\Manager\PrestationManager;
 use App\Entity\BusinessModel\Order;
 use App\Manager\ApplicationManager;
+use Symfony\UX\Chartjs\Model\Chart;
 use App\Entity\BusinessModel\Credit;
 use App\Form\ChangePasswordFormType;
+use App\Form\Finance\SimulateurType;
 use App\Entity\BusinessModel\Package;
 use App\Entity\Entreprise\JobListing;
 use App\Form\BusinessModel\OrderType;
@@ -33,7 +38,9 @@ use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Candidat\ApplicationsType;
+use App\Manager\Finance\EmployeManager;
 use App\Security\Voter\PrestationVoter;
+use App\Security\Voter\SimulationVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
 use App\Form\TableauDeBord\AssistanceType;
@@ -43,6 +50,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use App\Form\Boost\CreateCandidateBoostType;
 use App\Manager\BusinessModel\CreditManager;
 use App\Repository\Finance\DeviseRepository;
+use Symfony\UX\Chartjs\Builder\ChartBuilder;
 use App\Entity\BusinessModel\BoostVisibility;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
@@ -52,6 +60,7 @@ use App\Manager\BusinessModel\TransactionManager;
 use App\Repository\BusinessModel\PackageRepository;
 use App\Repository\Entreprise\JobListingRepository;
 use App\Manager\BusinessModel\BoostVisibilityManager;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -59,6 +68,7 @@ use App\Repository\BusinessModel\PurchasedContactRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route('/tableau-de-bord/candidat')]
 
@@ -75,30 +85,43 @@ class CandidatController extends AbstractController
 
 
     #[Route('/', name: 'app_tableau_de_bord_candidat')]
-    public function index(): Response
+    public function index(ChartBuilderInterface $chartBuilder): Response
     {
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
         $candidat = $params['candidat'];
-        $completion = $candidat->getProfileCompletion();
-        $radius = 64.82;
-        $angle = (180 * $completion / 100); 
-        $radian = deg2rad($angle - 180);         
-        $endX = 110 + $radius * cos($radian);
-        $endY = 110 + $radius * sin($radian);
-        $largeArcFlag = $completion > 50 ? 1 : 0;
         $currentUser = $params['currentUser'];
+        $completion = $candidat->getProfileCompletion();
+        // Crée la jauge avec Chart.js
+        $chart = $chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
+        $chart->setData([
+            'labels' => ['Complété', 'Restant'],
+            'datasets' => [[
+                'data' => [$completion, 100 - $completion],
+                'backgroundColor' => ['#F0B621', '#EDEDED'],
+                'borderWidth' => 0,
+            ]],
+        ]);
+        $chart->setOptions([
+            'cutout' => '70%',
+            'rotation' => -90,
+            'circumference' => 180,
+            'plugins' => [
+                'legend' => ['display' => false],
+                'tooltip' => ['enabled' => false],
+            ],
+        ]);
+    
+        // Ajoute à ton tableau de paramètres
+        $params['completion'] = $completion;
+        $params['chart'] = $chart;
         
         $params['experiences']  = $this->candidatManager->getExperiencesSortedByDate($candidat);
         $params['competences'] = $this->candidatManager->getCompetencesSortedByNote($candidat);
         $params['langages'] = $this->candidatManager->getLangagesSortedByNiveau($candidat);
         $params['activities'] = $this->em->getRepository(ActivityLog::class)->findUserLogs($currentUser);
-
-        $params['endX'] = $endX;
-        $params['endY'] = $endY;
-        $params['largeArcFlag'] = $largeArcFlag;
 
         return $this->render('tableau_de_bord/candidat/index.html.twig', $params);
     }
@@ -349,6 +372,21 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/mes_prestations.html.twig', $params);
     }
 
+
+    #[Route('/mes-simulateurs', name: 'app_tableau_de_bord_candidat_simulations')]
+    public function simulations(Request $request): Response
+    {
+        $page = $request->query->get('page', 1);
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
+        $currentUser = $params['currentUser'];
+        $params['simulations'] = $this->em->getRepository(Simulateur::class)->paginatesimulations($currentUser, $page);
+
+        return $this->render('tableau_de_bord/candidat/mes_simulations.html.twig', $params);
+    }
+
     #[Route('/mise-a-jour-mot-de-passe', name: 'app_tableau_de_bord_candidat_mise_a_jour_mot_de_passe')]
     public function updatepassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
@@ -530,14 +568,69 @@ class CandidatController extends AbstractController
         return $this->render('tableau_de_bord/candidat/reseaux_professionnelles.html.twig', $params);
     }
 
-    #[Route('/se-faire-recommander', name: 'app_tableau_de_bord_candidat_se_faire_recommander')]
-    public function recommandation(): Response
+    #[Route('/simulateur', name: 'app_tableau_de_bord_candidat_simulateur')]
+    public function simulateur(
+        Request $request, 
+        SimulatorManager $simulatorManager, 
+        EmployeManager $employeManager,
+        CreditManager $creditManager,
+        ProfileManager $profileManager
+    ): Response
     {
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
-        return $this->render('tableau_de_bord/candidat/se_faire_recommander.html.twig', $params);
+        $currentUser = $params['currentUser'];
+        $price = $profileManager->getCreditAmount(Credit::ACTION_SIMULATE);
+        $simulateur = $simulatorManager->init();
+        $employe = $currentUser->getEmploye();
+        if(!$employe instanceof Employe){
+            $employe = new Employe();
+            $employe->setUser($currentUser);
+        }
+        $simulateur->setEmploye($employe);
+        $defaultDevise = $this->em->getRepository(Devise::class)->findOneBy(['slug' => 'euro']);
+        $form = $this->createForm(SimulateurType::class, $simulateur, ['default_devise' => $defaultDevise]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $simulateur = $form->getData();
+            $employe = $simulateur->getEmploye();
+            $user = $simulateur->getEmploye()->getUser();
+            $results = $employeManager->simulate($simulateur);
+            $employe->setNombreEnfants($form->get('nombreEnfant')->getData());
+            $employe->setSalaireBase($results['salaire_de_base_ariary']);
+
+            $this->em->persist($employe);
+            $this->em->persist($simulateur);
+            $this->em->flush();
+            $creditManager->adjustCredits($user, $price, "Simulation salaire");
+    
+            return $this->redirectToRoute('app_tableau_de_bord_candidat_simulateur_view', [
+                'simulateur' => $simulateur->getId(),
+            ]);
+        }
+        $params['form'] = $form->createView();
+        $params['simulate_price'] = $price;
+
+        return $this->render('tableau_de_bord/candidat/simulateur.html.twig', $params);
+    }
+
+    #[Route('/simulateur/{simulateur}', name: 'app_tableau_de_bord_candidat_simulateur_view')]
+    public function simulateurView(Simulateur $simulateur, AuthorizationCheckerInterface $authChecker, EmployeManager $employeManager): Response
+    {
+        if (!$authChecker->isGranted(SimulationVoter::EDIT, $simulateur)) {
+            $this->addFlash('danger', '🚫 Vous n’avez pas accès à ce simulateur.');
+            return $this->redirectToRoute('app_tableau_de_bord_candidat');
+        }
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
+        $params['results'] = $employeManager->simulate($simulateur);
+        $params['simulateur'] = $simulateur;
+
+        return $this->render('tableau_de_bord/candidat/simulateur_view.html.twig', $params);
     }
 
     #[Route('/tarif-standard', name: 'app_tableau_de_bord_candidat_tarifs_standard')]
@@ -705,13 +798,17 @@ class CandidatController extends AbstractController
     }
 
     #[Route('/modifier-une-prestation/{prestation}', name: 'app_tableau_de_bord_candidat_edition_prestation')]
-    #[IsGranted(PrestationVoter::EDIT, subject: 'prestation')]
     public function editpresta(
         Request $request, 
         Prestation $prestation, 
         ProfileManager $profileManager,
+        AuthorizationCheckerInterface $authChecker
     ): Response
     {
+        if (!$authChecker->isGranted(PrestationVoter::EDIT, $prestation)) {
+            $this->addFlash('danger', '🚫 Vous n’avez pas accès à ce prestation.');
+            return $this->redirectToRoute('app_tableau_de_bord_candidat');
+        }
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 

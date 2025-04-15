@@ -8,6 +8,12 @@
         <span class="loader"></span>
     </div>
 
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
     <section class="">
         <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
             <h5 class="mb-0"> Profil </h5>
@@ -36,7 +42,7 @@
                 {% if boostVisibility is defined and boostVisibility is not null and not isExpiredBoost(boostVisibility) %}
                     <div class="boost-block">
                         <div class="boost-block-title">
-                            <span class="boost-block-title-text">BOOST PROFIL jusqu'au {{ boostVisibility.endDate|date('d/m/Y') }}<br>
+                            <span class="boost-block-title-text">BOOST PROFIL actif jusqu'au {{ boostVisibility.endDate|date('d/m/Y') }}<br>
                             </div>
                         </div>
                     <small class="fw-lighter">Expire {{ boostVisibility.endDate|timeUntil }}</small>
@@ -51,40 +57,59 @@
                 vous y êtes presque !
                 {% endif %}
                 <a routerlink="{{ path('app_tableau_de_bord_candidat_mon_compte')}}" href="{{ path('app_tableau_de_bord_candidat_mon_compte')}}">
-                    <div class="profil-complete-radial">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="300" height="174">
-                            <g transform="translate(40, 0)">
-                                <g class="apexcharts-radialbar">
-                                    <g>
-                                        <g class="apexcharts-tracks">
-                                            <path d="M 45.18 110 A 64.82 64.82 0 0 1 174.82 110"
-                                                fill="none"
-                                                stroke="#958DF4"
-                                                stroke-width="22.33"
-                                                stroke-linecap="butt"/>
-                                        </g>
-                                        <g>
-                                            <path d="M 45.18 110 A 64.82 64.82 0 {{ largeArcFlag }} 1 {{ endX|number_format(2, '.', '') }} {{ endY|number_format(2, '.', '') }}"
-                                                fill="none"
-                                                stroke="#F0B621"
-                                                stroke-width="22.33"
-                                                stroke-linecap="butt"/>
-                                            <circle r="48.66" cx="110" cy="110" fill="transparent"/>
-                                        </g>
-                                    </g>
-                                    <text x="110" y="108" text-anchor="middle" font-size="25px"
-                                        font-family="Helvetica, Arial, sans-serif" font-weight="500"
-                                        fill="#ffffff">
-                                        {{ completion }}%
-                                    </text>
-                                </g>
-                            </g>
-                        </svg>
+                    <div class="chart-container profil-complete-radial">
+                        {{ render_chart(chart) }}
+                        <div class="chart-label">
+                            {{ completion }}%
+                        </div>
                     </div>
                 </a>
             </div>
         </div>
     </section>
+
+    {% if completion == 100 and candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_PENDING')) %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>🕒 Ton profil est en cours de validation !</strong> Merci d’avoir complété ton inscription 🙌 
+        Notre équipe modère chaque profil avec attention avant publication. 
+        Tu recevras un email dès que ton profil sera visible par les recruteurs. 🚀
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+    </div>
+    {% endif %}
+    {% if completion != 100 %}
+        {% set missing = [] %}
+        {% if not candidat.resume %}
+            {% set missing = missing|merge(['ton résumé']) %}
+        {% endif %}
+        {% if candidat.competences is empty %}
+            {% set missing = missing|merge(['tes compétences']) %}
+        {% endif %}
+        {% if candidat.langages is empty %}
+            {% set missing = missing|merge(['tes langues parlées']) %}
+        {% endif %}
+        {% if candidat.secteurs is empty %}
+            {% set missing = missing|merge(['tes secteurs d\'activité']) %}
+        {% endif %}
+        {% if not candidat.titre %}
+            {% set missing = missing|merge(['ton titre professionnel']) %}
+        {% endif %}
+        {% if not candidat.cv %}
+            {% set missing = missing|merge(['ton CV']) %}
+        {% endif %}
+
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>🚧 Ton profil n’est pas encore complet.</strong><br>
+            Pour maximiser tes chances d’être repéré par les recruteurs, il te manque encore :
+            <ul>
+                {% for item in missing %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+            Une fois complété, ton profil passera en priorité dans notre modération ! 🚀
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+        </div>
+    {% endif %}
+
 
     <section class="visibility_p d-md-flex bp_">
         <div class="biographie-profil mb-4 p-4 apparition_">

@@ -8,6 +8,8 @@
 import $ from 'jquery';
 import 'bootstrap';
 import { Tooltip, Toast, Carousel, Modal } from 'bootstrap';
+import * as bootstrap from 'bootstrap';
+window.bootstrap = bootstrap;
 
 $(function() {
     setupDynamicLinks();
@@ -40,9 +42,9 @@ $(function() {
     function handlePageLoad() {
         handleThemeChange();
         setupDynamicLinks();
-        handleThemeInitialization();
+        // handleThemeInitialization();
         setupCKEditors();
-        updateLogo();
+        // updateLogo();
         setupDeletionConfirmation();
         setupImageUpload(); 
         setupAvailabilityDropdown();  
@@ -57,16 +59,22 @@ $(function() {
 
     function checkAndShowTutorial() {
         const tutorialViewed = document.cookie
-          .split('; ')
-          .find((row) => row.startsWith('tutorialViewed='));
-      
+            .split('; ')
+            .find((row) => row.startsWith('tutorialViewed='));
+    
         if (!tutorialViewed) {
-          const modalEl = document.getElementById('tutorialModal1Toggle');
-          if (modalEl) {
-            const tutorialModal1Toggle = new bootstrap.Modal(modalEl);
-            tutorialModal1Toggle.show();
-            document.cookie = "tutorialViewed=true; path=/; max-age=31536000";
-          }
+            const modalEl = document.getElementById('tutorialModal1Toggle');
+            if (modalEl) {
+                const tutorialModal1Toggle = new bootstrap.Modal(modalEl);
+                tutorialModal1Toggle.show();
+                document.cookie = "tutorialViewed=true; path=/; max-age=2592000";
+            }
+        }
+    
+        const modalElement = document.getElementById('uploadCVModalToggle');
+        if (modalElement) {
+            const modalCV = new bootstrap.Modal(modalElement);
+            modalCV.show();
         }
     }
 
@@ -358,9 +366,9 @@ $(function() {
     
     function handleThemeChange() {
         $('#switch-theme').off('click').on('click', function() {
-            const newTheme = $('body').hasClass('bootstrap-light') ? 'bootstrap-light' : 'bootstrap-light';
-            updateThemePreference(newTheme);
-            updateLogo();
+            // const newTheme = $('body').hasClass('bootstrap-light') ? 'bootstrap-light' : 'bootstrap-light';
+            // updateThemePreference(newTheme);
+            // updateLogo();
         });
 
         // Initialisation de CKEditor

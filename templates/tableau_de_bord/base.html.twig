@@ -207,6 +207,12 @@
 
 		</script>
 
+
+	{% if candidat and not candidat.getCV and app.request.attributes.get('_route') != 'app_tableau_de_bord_candidat_mon_compte' %}
+	{% include "upload_cv.html.twig" %}
+	{% else %}
+	{% include "tuto_credits_candidate.html.twig" %}
+	{% endif %}	
 	{{ encore_entry_script_tags('main') }}
 	{{ encore_entry_script_tags('iary') }}
 	</body>

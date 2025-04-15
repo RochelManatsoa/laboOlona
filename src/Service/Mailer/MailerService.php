@@ -45,7 +45,7 @@ class MailerService
         if ($this->env === 'prod') {
             $email->to($to);
         } else {
-            $env = '[Preprod] Olona Talents';
+            $env = '[Email Preprod] Olona Talents';
             $email->to('support@olona-talents.com'); 
             $email->addTo('miandrisoa.olona@gmail.com');
             $email->addTo('contact@olona-talents.com');
@@ -85,7 +85,7 @@ class MailerService
                 $email->addTo($recipient);
             }
         } else {
-            $env = '[Preprod] Olona Talents';
+            $env = '[Email Preprod] Olona Talents';
             $email->to('support@olona-talents.com'); 
             $email->addTo('contact@olona-talents.com');
             $email->addTo('miandrisoa.olona@gmail.com');

@@ -1,0 +1,208 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Simulateur de salaire{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link href="{{asset('assets/css/jquery.steps.css')}}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Simulation de salaire </h5>
+            </div>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Profil </li>
+            <li class="breadcrumb-item position-relative"> Simulation de salaire </li>
+        </ol>
+    </div>
+</section>
+{% if not candidat.isIsPremium %}
+<section class="warning_freemium mb-4 d-flex align-items-center">
+    <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+    <div class="warning-block">
+        Vous êtes actuellement sur un plan gratuit. <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">Achetez du credit</a> pour <a routerlink="{{ path('app_tableau_de_bord_candidat_boost')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_boost')}}">booster la visibilité</a> de votre profil ou encore, passez à un <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs')}}">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+    </div>
+</section>
+{% endif %}
+{% set salaire_plafond = convertToAriary(results.salaire_brut_estime_euro, simulateur) %}
+{% if salaire_plafond > 2101440 %}
+	{% set salaire_plafond = convertToDevise(2101440, simulateur) %}
+{% else %}
+	{% set salaire_plafond = results.salaire_brut_estime_euro %}
+{% endif %}
+<section class="detail_db d-md-flex bp_">
+    <div class="biographie-profil mb-4 p-4">
+        <div class="mission-list-title">
+            <h1>Simulation</h1>
+        </div>
+
+        <a href="{{ path('app_tableau_de_bord_candidat_simulateur')}}" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold rounded-pill">
+            <i class="bi bi-hand-index"></i>
+            Simuler un salaire
+        </a>
+				<div class="container">
+                <div class="row " style="line-height: 2;">
+                    <div class="col-sm-6">
+                        <div class="row py-4 bg-danger text-white">
+                            <div class="col-6 text-strong">Devise:</div>
+                            <div class="col-6 text-center text-strong">{{ simulateur.devise }}</div>
+                        </div>
+                        <div class="row py-2 bg-dark text-white">
+                            <div class="col-12 col-sm-8 text-strong">Salaire net souhaité:</div>
+                            <div class="col-12 col-sm-4 text-right text-strong">{{ results.salaire_net_euro|number_format(2, '.', '') }}
+                                {{ simulateur.devise.symbole }}</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-sm-8 text-strong">Salaire de base:</div>
+                            <div class="col-12 col-sm-4 text-right">{{ results.salaire_de_base_euro|number_format(2, '.', '') }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-8 text-strong">Nombre d'enfants :</div>
+                            <div class="col-12 col-sm-4">
+                                <div class="row">
+                                    <div class="col-6 text-right">{{ results.nbrEnfant }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-8 text-strong">Frais professionnels :</div>
+                            <div class="col-12 col-sm-4 text-right">{{ convertToDevise(results.fraisProfessionnels, simulateur)|number_format(2, '.', '')}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-8 text-strong">Connexion :</div>
+                            <div class="col-12 col-sm-4 text-right">{{ convertToDevise(results.fraisConnexion, simulateur)|number_format(2, '.', '')}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 text-strong">Repas :</div>
+                            <div class="col-12 col-sm-6">
+                                <div class="row">
+                                    <div class="col-4 text-center">{{ simulateur.jourRepas}}</div>
+                                    <div class="col-8 text-right">{{ (convertToDevise(results.fraisRepas, simulateur))|number_format(2, '.', '') }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 text-strong">Déplacement :</div>
+                            <div class="col-12 col-sm-6">
+                                <div class="row">
+                                    <div class="col-4 text-center">{{ simulateur.jourDeplacement}}</div>
+                                    <div class="col-8 text-right">{{ (convertToDevise(results.fraisDeplacement, simulateur) )|number_format(2, '.', '') }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if simulateur.status is defined and simulateur.status is same as('FREELANCE') %}
+                        <hr>
+                        <div class="row">
+                            <div class="col text-danger h5">Impôt Synthétique Intermittent (ISI)</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 text-strong">ISI 5% :</div>
+                            <div class="col-6 text-right">{{results.irsa_euro|number_format(2, '.', '')}}</div>
+                        </div>
+                        <hr>
+                        <div class="row bg-info">
+                            <div class="col-12 col-sm-6 text-strong">Prestation totale :</div>
+                            <div class="col-12 col-sm-6 text-right text-strong">{{ results.salaire_brut_estime_euro|number_format(2, '.', '') }}
+                                {{ simulateur.devise.symbole }}</div>
+                        </div>
+                        {% else %}
+                        <hr>
+                        <div class="row">
+                            <div class="col text-danger h5">Charge salariale</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 text-strong">CNAPS 1% :</div>
+                            <div class="col-12 col-sm-6 text-right">{{results.cnaps_euro|number_format(2, '.', '')}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 text-strong">OSTIE 1% :</div>
+                            <div class="col-12 col-sm-6 text-right">{{results.ostie_euro|number_format(2, '.', '')}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 text-strong">IRSA :</div>
+                            <div class="col-12 col-sm-6 text-right  border-bottom">{{ results.irsa_euro|number_format(2, '.', '')}}</div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-12 col-sm-6 "></div>
+                            <div class="col-12 col-sm-6 text-right text-strong">{{ results.charge_salariale_euro|number_format(2, '.', '')}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row text-dark bg-info">
+                            <div class="col-12 col-sm-6 text-strong">Salaire brut :</div>
+                            <div class="col-12 col-sm-6 text-right text-strong">{{ results.salaire_brut_estime_euro|number_format(2, '.', '') }}
+                                {{ simulateur.devise.symbole }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-6">
+                        <hr class="d-block d-sm-none">
+                        {% if simulateur.status is defined and simulateur.status is not same as('FREELANCE') %}
+                        <div class="row">
+                            <div class="col text-danger h5">Charge patronnale</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 text-strong">CNAPS 13% :</div>
+                            <div class="col-12 col-sm-6 text-right">{{(salaire_plafond * 0.13)|number_format(2, '.', '')}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 text-strong">OSTIE 5% :</div>
+                            <div class="col-12 col-sm-6 text-right">{{(salaire_plafond * 0.05)|number_format(2, '.', '')}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 text-strong">FMPF 1% :</div>
+                            <div class="col-12 col-sm-6 text-right border-bottom">{{ (salaire_plafond * 0.01)|number_format(2, '.', '')}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 "></div>
+                            <div class="col-12 col-sm-6 text-right text-strong">{{ results.charges_patronales_euro|number_format(2, '.', '')}}</div>
+                        </div>
+                        <hr>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col text-danger h5">Frais de portage</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 text-strong">Frais de portage :</div>
+                            <div class="col-12 col-sm-6 text-right text-strong">{{ results.frais_de_portage_euro|number_format(2, '.', '')}}</div>
+                        </div>
+                        <hr>
+                        {% if simulateur.type is same as('OLONA')  %}
+                            <div class="row">
+                                <div class="col text-danger h5">Espace Co Working Olona</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-8 text-strong">Espace Co Working :</div>
+                                <div class="col-4 text-right text-strong">{{ results.coworking|number_format(2, '.', '')}}</div>
+                            </div>
+                            <hr>
+                        {% endif %}
+                        
+                        <br>
+                        <br>
+                        <div class="row bg-warning text-dark shadow p-2 px-sm-3 mx-1 mx-sm-2">
+                            <div class="row text-strong mx-2">Coût total à envoyer au client :</div>
+                            <div class="row text-right h3 mx-2">{{ results.facture_total_a_envoyer_euro|number_format(2, '.', '') }}
+                                {{ simulateur.devise.symbole }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col"></div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+    </div>
+</section>
+
+{% endblock %}

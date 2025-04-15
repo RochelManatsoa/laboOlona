@@ -77,39 +77,3 @@
     </section>
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script> 
-    
-    var currentPage = 1;
-    var allDataLoaded = false;
-
-    $(window).scroll(function() {
-        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !allDataLoaded) {
-            loadMoreJobs();
-        }
-    });
-
-    function loadMoreJobs() {
-        if (!allDataLoaded) {
-            currentPage++;
-            var url = `{{ path('api_job_offers') }}?page=${currentPage}`;
-            $.ajax({
-                url: url,
-                type: 'GET',
-                dataType: 'json', 
-                success: function(data) {
-                    $('#jobs-container').append(data.html);
-                    if (!data.hasMore) {
-                        allDataLoaded = true;
-                    }
-                },
-                error: function() {
-                    allDataLoaded = true; 
-                }
-            });
-        }
-    }
-    </script>
-{% endblock %}

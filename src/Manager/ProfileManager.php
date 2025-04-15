@@ -241,6 +241,10 @@ class ProfileManager
             case Credit::ACTION_APPLY_PRESTATION_RECRUITER :
                 $amount = 20;
                 break;
+                
+            case Credit::ACTION_SIMULATE :
+                $amount = 10;
+                break;
             
             default:
                 $amount = 0;
