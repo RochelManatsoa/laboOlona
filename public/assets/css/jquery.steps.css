@@ -115,7 +115,7 @@
 .wizard > .steps .current a:active
 {
     background: #2184be;
-    color: #fff;
+    color: #fff!important;
     cursor: default;
 }
 
@@ -251,7 +251,7 @@
 .wizard > .actions a:active
 {
     background: #2184be;
-    color: #fff;
+    color: #fff!important;
     display: block;
     padding: 0.5em 1em;
     text-decoration: none;

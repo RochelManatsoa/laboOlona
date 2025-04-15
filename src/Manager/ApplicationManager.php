@@ -73,20 +73,6 @@ class ApplicationManager
             ]
         );
 
-        /** Envoi email candidat */
-        $this->mailerService->send(
-            $application->getCandidat()->getCandidat(),
-            "Votre candidature a été prise en compte sur Olona Talents",
-            "candidat/notification_candidature.html.twig",
-            [
-                'user' => $application->getCandidat()->getCandidat(),
-                'candidature' => $application,
-                'objet' => "mise à jour",
-                'details_annonce' => $application->getAnnonce(),
-                'dashboard_url' => $this->urlGeneratorInterface->generate('app_tableau_de_bord_candidat_mes_candidatures', ['id' => $application->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]
-        );
-
         /** Envoi email entreprise */
         $this->mailerService->send(
             $application->getAnnonce()->getEntreprise()->getEntreprise()->getEmail(),
@@ -99,6 +85,20 @@ class ApplicationManager
                 'objet' => "mise à jour",
                 'details_annonce' => $application->getAnnonce(),
                 'dashboard_url' => $this->urlGeneratorInterface->generate('app_tableau_de_bord_entreprise_listes_candidatures', ['id' => $application->getCandidat()->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]
+        );
+
+        /** Envoi email candidat */
+        $this->mailerService->send(
+            $application->getCandidat()->getCandidat()->getEmail(),
+            "Votre candidature a été prise en compte sur Olona Talents",
+            "candidat/notification_candidature.html.twig",
+            [
+                'user' => $application->getCandidat()->getCandidat(),
+                'candidature' => $application,
+                'objet' => "mise à jour",
+                'details_annonce' => $application->getAnnonce(),
+                'dashboard_url' => $this->urlGeneratorInterface->generate('app_tableau_de_bord_candidat_mes_candidatures', ['id' => $application->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
             ]
         );
     }

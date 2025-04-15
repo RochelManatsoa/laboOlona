@@ -1123,7 +1123,7 @@ class CandidateProfile
     
         if ($this->resume) $score++;
         if (!$this->competences->isEmpty()) $score++;
-        if (!$this->experiences->isEmpty()) $score++;
+        if (!$this->langages->isEmpty()) $score++;
         if (!$this->secteurs->isEmpty()) $score++;
         if ($this->titre) $score++;
         if ($this->cv) $score++;

@@ -692,15 +692,33 @@ svg {
             }
         }
     }
-
     .rightt-inner-block {
         text-align: center;
         font-size: 20px;
-
+    
         .profil-complete-radial {
-            height: 100px;
+            height: 150px;
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+    
+            canvas {
+                width: 100% !important;
+                height: auto !important;
+            }
+    
+            .chart-label {
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translate(-50%, -60%);
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+            }
         }
     }
+    
     &.premium_interface {
         .profil-complete-radial {
             .apexcharts-radialbar {

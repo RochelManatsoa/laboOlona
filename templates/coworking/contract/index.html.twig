@@ -1,4 +1,4 @@
-{% extends 'base_admin_blog.html.twig' %}
+{% extends 'base_coworking.html.twig' %}
 
 {% block title %}Tous les contrats{% endblock %}
 {% block paralax %}{% endblock %}
@@ -10,56 +10,62 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3">Tous les contrats</h1>
-    
-    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
-    <div>
-        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_coworking_contract_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
-    </div>
-    {% endif %}
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 rounded-3 border shadow-lg">
+            <h1 class="h3">Tous les contrats</h1>
+            
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+            <div>
+                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_coworking_contract_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+            </div>
+            {% endif %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Société</th>
-                <th>Nom complet</th>
-                <th>Créé le</th>
-                <th>Numéro</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for contract in contracts %}
-            <tr>
-                <td>{{ contract.id }}</td>
-                <td>{{ contract.typePerson ? 'Oui' : 'Non' }}</td>
-                <td>
-                    {% if contract.typePerson %}
-                    Société {{ contract.socialReason }} 
-                    {% else %}
-                    {{ contract.firstName }} {{ contract.lastName }}
-                    {% endif %} <br> <span class="fw-lighter">{{ contract.email }}</span> <br> {{ contract.telephone }}</td>
-                <td>{{ contract.createdAt ? contract.createdAt|date('d/m/Y H:i:s') : '' }} <br>{{ getContractStatus(contract)|raw }}</td>
-                <td>
-                    {{ contract.contractNumber }}<br>
-                    {% if contract.package is not null %}
-                    <span class="text-secondary fw-bolder">{{ contract.package.name }}</span> | <span class="fw-bold">{{ contract.package.price }} Ar</span>
-                    {% else %}
-                    -
-                    {% endif %}
-                </td>
-                <td>
-                    <a class="btn btn-sm rounded-circle btn-info" href="{{ path('app_coworking_contract_show', {'id': contract.id}) }}"><i class="bi bi-eye"></i></a>
-                    <a class="btn btn-sm rounded-circle btn-danger" href="{{ path('app_coworking_contract_edit', {'id': contract.id}) }}"><i class="bi bi-pencil"></i></a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="14">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {{ knp_pagination_render(contracts) }}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Société</th>
+                        <th>Nom complet</th>
+                        <th>Créé le</th>
+                        <th>Numéro</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for contract in contracts %}
+                    <tr>
+                        <td>{{ contract.id }}</td>
+                        <td>{{ contract.typePerson ? 'Oui' : 'Non' }}</td>
+                        <td>
+                            {% if contract.typePerson %}
+                            Société {{ contract.socialReason }} 
+                            {% else %}
+                            {{ contract.firstName }} {{ contract.lastName }}
+                            {% endif %} <br> <span class="fw-lighter">{{ contract.email }}</span> <br> {{ contract.telephone }}</td>
+                        <td>{{ contract.createdAt ? contract.createdAt|date('d/m/Y H:i:s') : '' }} <br>{{ getContractStatus(contract)|raw }}</td>
+                        <td>
+                            {{ contract.contractNumber }}<br>
+                            {% if contract.package is not null %}
+                            <span class="text-secondary fw-bolder">{{ contract.package.name }}</span> | <span class="fw-bold">{{ contract.package.price }} Ar</span>
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-sm rounded-circle btn-info" href="{{ path('app_coworking_contract_show', {'id': contract.id}) }}"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm rounded-circle btn-danger" href="{{ path('app_coworking_contract_edit', {'id': contract.id}) }}"><i class="bi bi-pencil"></i></a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="14">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {{ knp_pagination_render(contracts) }}
+        </div>
+    </div>
+</section>
 {% endblock %}

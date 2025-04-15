@@ -172,13 +172,23 @@ class SimulateurRepository extends ServiceEntityRepository
        ;
    }
 
-//    public function findOneBySomeField($value): ?Simulateur
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function paginatesimulations(User $user, int $page): PaginationInterface
+    {
+        if(!$user->getEmploye() instanceof Employe){
+            return [];
+        }
+
+        $query = $this->createQueryBuilder('s')
+            ->andWhere('s.employe = :val')
+            ->setParameter('val', $user->getEmploye())
+            ->orderBy('s.id', 'DESC')
+            ->getQuery()
+        ;
+
+        return $this->paginatorInterface->paginate(
+            $query,
+            $page,
+            10
+        );
+    }
 }

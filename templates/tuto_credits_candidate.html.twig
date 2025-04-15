@@ -10,11 +10,10 @@
                 <p>Chaque utilisateur reçoit un crédit de bienvenue de 200 crédits à l'inscription. Ces crédits vous permettent d'effectuer diverses actions sur le site.</p>
                 <p>Voici comment les crédits sont utilisés :</p>
                 <ul class="list-unstyled">
-                    <li>👉 Consulter un profil de candidat : 75 crédits</li>
-                    <li>👉 Consulter un profil de recruteur : 150 crédits</li>
-                    <li>👉 Uploader une deuxième fois votre CV : 120 crédits</li>
+                    <li>👉 Simuler un salaire : 10 crédits par simulation</li>
                     <li>👉 Postuler à une offre : 20 crédits par candidature</li>
-                    <li>👉 Créer une prestation pour candidat ou recruteur : 20 crédits par demande</li>
+                    <li>👉 Créer une prestation : 20 crédits par demande</li>
+                    <li>👉 Consulter un contact de recruteur : 150 crédits</li>
                 </ul>
             </div>
             <div class="modal-footer">
@@ -33,10 +32,8 @@
             </div>
             <div class="modal-body lead">
                 <p>Si vous épuisez vos crédits initiaux, ne vous inquiétez pas! Vous avez la possibilité de recharger vos crédits à tout moment.</p>
-                <p class="text-center">
-                    <img src="{{ asset('images/credits.png')}}" alt="Recharger" class="thumbnail img-fluid">
-                </p>
                 <p>N'hésitez pas à toujours vous assurer d'avoir suffisamment de crédits pour ne manquer aucune opportunité sur notre plateforme.</p>
+                <a href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn btn-primary rounded-pill px-4">👉 Recharger mon crédit</a>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-info px-4 rounded-pill" data-bs-target="#tutorialModal1Toggle" data-bs-toggle="modal"><i class="bi bi-arrow-left"></i> Précédent</button>

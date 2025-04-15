@@ -50,11 +50,16 @@
           Réseaux professionnels
           </a>
         </li>
-        {# <li class="sub-nav-item">
-          <a href="{{ path('app_tableau_de_bord_candidat_se_faire_recommander')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_se_faire_recommander' ? 'underline' : '' }}" aria-current="page">
-          Se faire recommander
+        <li class="sub-nav-item">
+          <a href="{{ path('app_tableau_de_bord_candidat_simulateur')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_simulateur' ? 'underline' : '' }}" aria-current="page">
+          Simulateur
           </a>
-        </li> #}
+        </li>
+        <li class="sub-nav-item">
+          <a href="{{ path('app_tableau_de_bord_candidat_simulations')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_simulations' ? 'underline' : '' }}" aria-current="page">
+          Mes simulations
+          </a>
+        </li>
       </ul>
     </li>
     <li class="nav-item">
