@@ -32,6 +32,9 @@ class EventController extends AbstractController
         $page = $request->query->getInt('page', 1);
         /** @var User $user */
         $user = $security->getUser();
+        if(!$user instanceof User){
+            return $this->redirectToRoute('app_coworking_login');
+        }
         $userId = $user->getId();
         $canListAll = $security->isGranted(EventVoter::LIST_ALL);
         $events = $eventRepository->paginateRecipes($page, $canListAll ? null : $userId);
@@ -143,8 +146,13 @@ class EventController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
-    public function show(Event $event): Response
+    public function show(Event $event, Security $security): Response
     {
+        /** @var User $user */
+        $user = $security->getUser();
+        if(!$user instanceof User){
+            return $this->redirectToRoute('app_coworking_login');
+        }
         return $this->render('coworking/event/show.html.twig', [
             'event' => $event,
         ]);
@@ -152,8 +160,13 @@ class EventController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
     #[IsGranted('EVENT_EDIT', subject: 'event')]
-    public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Event $event, EntityManagerInterface $entityManager, Security $security): Response
     {
+        /** @var User $user */
+        $user = $security->getUser();
+        if(!$user instanceof User){
+            return $this->redirectToRoute('app_coworking_login');
+        }
         $form = $this->createForm(EventType::class, $event, [
             'is_admin' => $this->isGranted('ROLE_ADMIN'),
         ]);
