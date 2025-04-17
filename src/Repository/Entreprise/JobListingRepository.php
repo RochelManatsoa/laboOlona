@@ -247,7 +247,30 @@ class JobListingRepository extends ServiceEntityRepository
             ->getQuery();
 
         return $query->getResult();
+    } 
+
+    public function findJoblistingsForPostFacebook()
+    {
+        $queryBuilder = $this->createQueryBuilder('j');
+
+        $now = new \DateTimeImmutable(); // maintenant
+        $oneDayAgo = $now->sub(new \DateInterval('P1D')); // il y a 1 jour
+
+        $query = $queryBuilder
+            ->andWhere('j.dateCreation BETWEEN :oneDayAgo AND :now')
+            ->andWhere('j.status = :statusFeatured')
+            ->andWhere('j.isPublishedOnFacebook = :isPublishedOnFacebookFalse')
+            ->andWhere('j.shortDescription IS NOT NULL')
+            ->setParameter('oneDayAgo', $oneDayAgo)
+            ->setParameter('now', $now)
+            ->setParameter('statusFeatured', JobListing::STATUS_FEATURED)
+            ->setParameter('isPublishedOnFacebookFalse', false)
+            ->orderBy('j.id', 'DESC')
+            ->getQuery();
+
+        return $query->getResult();
     }
+
 
 
     /**

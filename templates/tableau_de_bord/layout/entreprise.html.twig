@@ -76,7 +76,24 @@
     </li>
     <li class="nav-item click-sub">
       <span class="sep-menu"></span> 
-      <a href="{{ path('app_tableau_de_bord_entreprise_profil_public')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_entreprise_profil_public' ? 'underline' : '' }}"><img src="{{ asset('v2/images/dashboard/profil.svg')}}" alt=""><span class="sidebar-text">Profil Entreprise</span></a>
+      <span class="nav-link sous-menu_ {{ (current_route == 'app_tableau_de_bord_entreprise_profil_public' or current_route == 'app_tableau_de_bord_entreprise_mise_a_jour_mot_de_passe' or current_route == 'app_tableau_de_bord_entreprise_assistance') ? 'underline' : '' }}"><img src="{{ asset('v2/images/dashboard/profil.svg')}}" alt=""><span class="sidebar-text">Profil Entreprise</span> </span>
+      <ul class="sub-nav-pills">
+        <li class="sub-nav-item">
+          <a href="{{ path('app_tableau_de_bord_entreprise_profil_public')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_entreprise_profil_public' ? 'underline' : '' }}" aria-current="page">
+          Mon profil
+          </a>
+        </li>
+        <li class="sub-nav-item">
+          <a href="{{ path('app_tableau_de_bord_entreprise_simulateur')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_entreprise_simulateur' ? 'underline' : '' }}" aria-current="page">
+          Simulateur
+          </a>
+        </li>
+        <li class="sub-nav-item">
+          <a href="{{ path('app_tableau_de_bord_entreprise_simulations')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_entreprise_simulations' ? 'underline' : '' }}" aria-current="page">
+          Mes simulations
+          </a>
+        </li>
+      </ul>
     </li>
     <li class="nav-item click-sub">
       <span class="sep-menu"></span> 

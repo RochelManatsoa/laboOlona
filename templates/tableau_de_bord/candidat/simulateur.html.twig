@@ -5,6 +5,9 @@
 {% block stylesheets %}
 	{{ parent() }}
 	<link href="{{asset('assets/css/jquery.steps.css')}}" rel="stylesheet">
+    <script src="{{asset('assets/js/jquery.min.js')}}"></script>
+    <script src="{{asset('assets/js/jquery.steps.min.js')}}"></script>
+    <script src="{{asset('assets/js/jqueryValidate.js')}}"></script>
 {% endblock %}
 {% block body %}
 <section class="">
@@ -41,7 +44,14 @@
         <section class="" id="result-simulator">
             <div class="p-3 p-sm-5 m-1 m-sm-4 border">
                 <div class="">
-                    {{form_start(form, {'attr': {'data-turbo': 'false', 'id': 'example-basic', 'data-action': path('app_v2_candidate_simulator_create')}}) }}
+                    {{ form_start(form, {
+                        'attr': {
+                            'data-turbo': 'false', 
+                            'id': 'example-basic', 
+                            'data-action': path('app_v2_candidate_simulator_create'), 
+                            'data-can-apply': app.user.credit.total < simulate_price ? 'true' : 'false'
+                        }
+                    } ) }}
                     {{ form_widget(form.deviseSymbole, {'attr': {'data-id': 'simulateur_deviseSymbole'}})}}
                     <!-- Début du formulaire avec l'ID "example-basic" -->
                     <h3 class="mb-3">Devise</h3>
@@ -190,99 +200,8 @@
     </div>
 </section>
 
-{% include "/tableau_de_bord/layout/_credit_modal_candidat.html.twig" %}
-<script src="{{asset('assets/js/jquery.min.js')}}"></script>
-<script src="{{asset('assets/js/jquery.steps.min.js')}}"></script>
-<script src="{{asset('assets/js/jqueryValidate.js')}}"></script>
+<script src="{{asset('assets/simulateur-candidat.js')}}"></script>
 <script src="{{asset('assets/main.js')}}"></script>
-<script>
-    $(function () {
-        initFormStep($("#example-basic"), "h3", "section", "fade", {{ app.user.credit.total < simulate_price ? 'true' : 'false' }});
-
-        // Sélectionner le champ select
-        var selectType = $('#simulateur_type');
-
-        // Sélectionner les divs à afficher ou cacher
-        var divEmploye = $('#employe');
-        var divFreelance = $('#freelance');
-
-        // Ajouter un gestionnaire d'événement pour le changement de valeur dans le champ select
-        selectType.on('change', function() {
-            console.log($(this).val())
-            // Vérifier la valeur sélectionnée
-            if ($(this).val() === 'OLONA') {
-                // Afficher la div pour Employé et cacher la div pour Freelance
-                console.log("hide frelance")
-                divEmploye.show();
-                divFreelance.hide();
-            } else if ($(this).val() === 'TELETRAVAIL') {
-                // Afficher la div pour Freelance et cacher la div pour Employé
-                console.log("hide employe")
-                divEmploye.hide();
-                divFreelance.show();
-            }
-        });
-
-
-        // Écoute des changements sur les boutons radio et mise à jour de l'explication
-        $('input[name="simulateur[status]"]').change(function() {
-            updateExplanation(this.value);
-        });
-
-        // Mise à jour initiale pour la sélection par défaut
-        updateExplanation($('input[name="simulateur[status]"]:checked').val());
-    })
-
-    function updateExplanation(value) {
-        var explanation = '';
-        if(value === 'PORTAGE') {
-            explanation = '<i class="mx-2 h5 bi bi-info-circle text-primary"></i> En choisissant le Portage salarial, vous bénéficiez de la couverture sociale d\'un salarié avec les charges salariales et patronales correspondantes, tout en conservant une certaine flexibilité dans la gestion de vos missions.';
-        } else if(value === 'FREELANCE') {
-            explanation = '<i class="mx-2 h5 bi bi-info-circle text-primary"></i> Opter pour le statut Freelance implique une charge de 5% sur vos revenus, offrant une plus grande autonomie dans la gestion de vos activités sans les charges salariales et patronales typiques d\'un salarié.';
-        }
-        $('#status-explanation').html(explanation);
-    }
-
-    function checkEmailAvailability(email) {
-        $.ajax({
-            type: 'POST',
-            url: '{{path('ajax_home_check_email')}}', // Remplacez cela par le chemin de votre script PHP de vérification
-            data: {
-                email: email
-            },
-            success: function(response) {
-                // Afficher le message de réponse
-                console.log(response)
-                if(response.user !== null){
-                    $('#email-error-message').html('Il existe déjà un compte avec cette adresse e-mail.').show();
-                    $('#simulateur_employe_user_email').addClass(' is-invalid')
-                    $('#register-submit').prop('type', 'button');
-                }else{
-                    $('#email-error-message').html('').hide();
-                    $('#simulateur_employe_user_email').removeClass('is-invalid');
-                    $('#register-submit').prop('type', 'submit');
-                }
-            }
-        });
-    }
-
-    function utilisateurEstConnecte() {
-        const session = {{ app.session.all|json_encode()|raw }};;
-        return session.utilisateurEstConnecte
-    }
-
-    // Fonction pour vérifier si l'un des champs est vide
-    function checkFields() {
-        var isEmpty = false;
-        $('input[id^="simulateur_employe_user_"]').each(function() {
-            if ($(this).val() === '') {
-                isEmpty = true;
-                return false; // Sortir de la boucle si un champ est vide
-            }
-        });
-        return isEmpty;
-    }
-
-</script>
+{% include "/tableau_de_bord/layout/_credit_modal_candidat.html.twig" %}
 
 {% endblock %}

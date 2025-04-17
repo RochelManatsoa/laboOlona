@@ -14,15 +14,18 @@ use App\Service\ActivityLogger;
 use App\Entity\CandidateProfile;
 use App\Entity\Logs\ActivityLog;
 use App\Manager\CandidatManager;
+use App\Manager\SimulatorManager;
 use App\Service\User\UserService;
 use App\Twig\PrestationExtension;
 use App\Entity\Entreprise\Favoris;
+use App\Entity\Finance\Simulateur;
 use App\Manager\JobListingManager;
 use App\Manager\PrestationManager;
 use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\Credit;
 use App\Form\ChangePasswordFormType;
 use App\Form\Entreprise\AnnonceType;
+use App\Form\Finance\SimulateurType;
 use App\Manager\OlonaTalentsManager;
 use App\Entity\BusinessModel\Package;
 use App\Entity\Entreprise\JobListing;
@@ -31,7 +34,9 @@ use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
 use App\Entity\Moderateur\ContactForm;
 use App\Form\Entreprise\JobListingType;
+use App\Manager\Finance\EmployeManager;
 use App\Security\Voter\JobListingVoter;
+use App\Security\Voter\SimulationVoter;
 use App\Form\Profile\EditEntrepriseType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
@@ -43,6 +48,7 @@ use App\Manager\BusinessModel\CreditManager;
 use App\Repository\Finance\DeviseRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BusinessModel\PurchasedContact;
+use App\Form\Finance\SimulateurEntrepriseType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Manager\BusinessModel\TransactionManager;
@@ -54,6 +60,7 @@ use App\Repository\BusinessModel\PurchasedContactRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 #[Route('/tableau-de-bord/entreprise')]
 
@@ -317,6 +324,21 @@ class EntrepriseController extends AbstractController
         return $this->render('tableau_de_bord/entreprise/mes_commandes.html.twig', $params);
     }
 
+
+    #[Route('/mes-simulations', name: 'app_tableau_de_bord_entreprise_simulations')]
+    public function simulations(Request $request): Response
+    {
+        $page = $request->query->get('page', 1);
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
+        $currentUser = $params['currentUser'];
+        $params['simulations'] = $this->em->getRepository(Simulateur::class)->paginatesimulations($currentUser, $page);
+
+        return $this->render('tableau_de_bord/entreprise/mes_simulations.html.twig', $params);
+    }
+
     #[Route('/mise-a-jour-mot-de-passe', name: 'app_tableau_de_bord_entreprise_mise_a_jour_mot_de_passe')]
     public function updatepassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
@@ -543,6 +565,67 @@ class EntrepriseController extends AbstractController
         $params['allContacts'] = $this->em->getRepository(PurchasedContact::class)->paginateContactsByBuyer($currentUser, $page);
 
         return $this->render('tableau_de_bord/entreprise/reseaux_professionnelles.html.twig', $params);
+    }
+
+    #[Route('/simulateur', name: 'app_tableau_de_bord_entreprise_simulateur')]
+    public function simulateur(
+        Request $request, 
+        SimulatorManager $simulatorManager, 
+        EmployeManager $employeManager,
+        CreditManager $creditManager,
+        ProfileManager $profileManager
+    ): Response
+    {
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
+        $currentUser = $params['currentUser'];
+        $entreprise = $params['entreprise'];
+        $price = $profileManager->getCreditAmount(Credit::ACTION_SIMULATE);
+        $simulateur = $simulatorManager->initSimulateur($currentUser);
+        $defaultDevise = $this->em->getRepository(Devise::class)->findOneBy(['slug' => 'euro']);
+        $devise = $entreprise->getDevise() instanceof Devise ? $entreprise->getDevise() : $defaultDevise;
+        $form = $this->createForm(SimulateurEntrepriseType::class, $simulateur, ['default_devise' => $devise]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $simulateur = $form->getData();
+            $employe = $simulateur->getEmploye();
+            $user = $simulateur->getEmploye()->getUser();
+            $results = $employeManager->simulate($simulateur);
+            $employe->setNombreEnfants($form->get('nombreEnfant')->getData());
+            $employe->setSalaireBase($results['salaire_de_base_ariary']);
+
+            $this->em->persist($employe);
+            $this->em->persist($simulateur);
+            $this->em->flush();
+            $creditManager->adjustCredits($user, $price, "Simulation salaire");
+    
+            return $this->redirectToRoute('app_tableau_de_bord_entreprise_simulateur_view', [
+                'simulateur' => $simulateur->getId(),
+            ]);
+        }
+        $params['form'] = $form->createView();
+        $params['simulate_price'] = $price;
+
+        return $this->render('tableau_de_bord/entreprise/simulateur.html.twig', $params);
+    }
+
+    #[Route('/simulateur/{simulateur}', name: 'app_tableau_de_bord_entreprise_simulateur_view')]
+    public function simulateurView(Simulateur $simulateur, AuthorizationCheckerInterface $authChecker, EmployeManager $employeManager): Response
+    {
+        if (!$authChecker->isGranted(SimulationVoter::EDIT, $simulateur)) {
+            $this->addFlash('danger', '🚫 Vous n’avez pas accès à ce simulateur.');
+            return $this->redirectToRoute('app_tableau_de_bord_entreprise');
+        }
+        $params = $this->getData();
+        if ($params instanceof RedirectResponse) {
+            return $params; 
+        }
+        $params['results'] = $employeManager->simulate($simulateur);
+        $params['simulateur'] = $simulateur;
+
+        return $this->render('tableau_de_bord/entreprise/simulateur_view.html.twig', $params);
     }
     
     #[Route('/tarif-choix', name: 'app_tableau_de_bord_entreprise_tarif_choice')]

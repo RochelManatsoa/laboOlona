@@ -2,9 +2,11 @@
 
 namespace App\Manager;
 
-use App\Entity\Finance\Simulateur;
+use App\Entity\User;
 use App\Entity\Prestation;
+use App\Entity\Finance\Employe;
 use Symfony\Component\Form\Form;
+use App\Entity\Finance\Simulateur;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SimulatorManager
@@ -18,6 +20,19 @@ class SimulatorManager
         $simulateur = new Simulateur();
         $simulateur->setCreatedAt(new \DateTime());
         $simulateur->setStatus(Simulateur::STATUS_LIBRE);
+
+        return $simulateur;
+    }
+
+    public function initSimulateur(User $user): Simulateur
+    {
+        $simulateur = $this->init();
+        $employe = $user->getEmploye();
+        if(!$employe instanceof Employe){
+            $employe = new Employe();
+            $employe->setUser($user);
+        }
+        $simulateur->setEmploye($employe);
 
         return $simulateur;
     }

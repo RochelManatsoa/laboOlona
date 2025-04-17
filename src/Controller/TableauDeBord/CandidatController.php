@@ -373,7 +373,7 @@ class CandidatController extends AbstractController
     }
 
 
-    #[Route('/mes-simulateurs', name: 'app_tableau_de_bord_candidat_simulations')]
+    #[Route('/mes-simulations', name: 'app_tableau_de_bord_candidat_simulations')]
     public function simulations(Request $request): Response
     {
         $page = $request->query->get('page', 1);
@@ -583,13 +583,7 @@ class CandidatController extends AbstractController
         }
         $currentUser = $params['currentUser'];
         $price = $profileManager->getCreditAmount(Credit::ACTION_SIMULATE);
-        $simulateur = $simulatorManager->init();
-        $employe = $currentUser->getEmploye();
-        if(!$employe instanceof Employe){
-            $employe = new Employe();
-            $employe->setUser($currentUser);
-        }
-        $simulateur->setEmploye($employe);
+        $simulateur = $simulatorManager->initSimulateur($currentUser);
         $defaultDevise = $this->em->getRepository(Devise::class)->findOneBy(['slug' => 'euro']);
         $form = $this->createForm(SimulateurType::class, $simulateur, ['default_devise' => $defaultDevise]);
         $form->handleRequest($request);
