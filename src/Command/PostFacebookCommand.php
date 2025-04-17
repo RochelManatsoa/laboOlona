@@ -56,8 +56,7 @@ class PostFacebookCommand extends Command
                 $this->urlGenerator->generate('app_olona_talents_view_job_offer', ['id' => $annonce->getId()], UrlGeneratorInterface::ABSOLUTE_URL)
             );
     
-            $success = false;
-            // $success = $this->facebookPublisher->publish($postText);
+            $success = $this->facebookPublisher->publish($postText);
     
             if ($success) {
                 $annonce->setIsPublishedOnFacebook(true);
