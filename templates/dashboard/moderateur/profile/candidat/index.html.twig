@@ -13,126 +13,79 @@
 				{{ knp_pagination_render(candidats, 'parts/_pagination.html.twig') }}
 			</div>
 			<div class="container mt-5">
-				<div class="row text-strong">
-					<div class="col-sm-1">
+				<table class="table align-middle">
+					<thead class="table-light">
+					<tr>
+						<th scope="col" style="width: 40px;">
 						<input type="checkbox" class="select-all">
-					</div>
-					<div class="col-sm-4">Nom et prénom(s)</div>
-					<div class="col-sm-6">
-						<div class="row">
-							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Matr', 'matricule') }}
+						</th>
+						<th scope="col">Nom et prénom(s)</th>
+						<th scope="col" class="text-center small">{{ knp_pagination_sortable(candidats, 'Pro', 'premium') }}</th>
+						<th scope="col" class="text-center small">{{ knp_pagination_sortable(candidats, 'Matr', 'matricule') }}</th>
+						<th scope="col" class="text-center small">{{ knp_pagination_sortable(candidats, 'Insc', 'u.dateInscription') }}</th>
+						<th scope="col" class="text-center small">{{ knp_pagination_sortable(candidats, 'Màj', 'c.updatedAt') }}</th>
+						<th scope="col" class="text-center small">{{ knp_pagination_sortable(candidats, 'Rel', 'nombreDeRelance') }}</th>
+						<th scope="col" class="text-center small">{{ knp_pagination_sortable(candidats, 'Crédit', 'credit') }}</th>
+						<th scope="col" class="text-center small">Info</th>
+						<th scope="col" style="width: 60px;"></th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for item in candidats %}
+						<tr>
+						<td>
+							<input type="checkbox" name="selectedProfiles[]" value="{{ item[0].id }}">
+						</td>
+						<td>
+							<div class="d-flex align-items-start">
+							<div class="me-2">
+								<div class="img-fluid rounded-start bg-image-candidat" style="width: 40px; height: 40px; background-image: url('{{ item[0].fileName ? asset('uploads/experts/' ~ item[0].fileName) : asset('uploads/experts/avatar-default.jpg') }}'); background-size: cover; background-position: center;"></div>
 							</div>
-							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Insc', 'u.dateInscription') }}
-							</div>
-							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Exp', 'nombreDeExperiences') }}
-							</div>
-							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Comp', 'nombreDeCompetences') }}
-							</div>
-							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Rel', 'nombreDeRelance') }}
-							</div>
-							<div class="col-sm-6 col-md-2 text-center text-danger small">
-								{{ knp_pagination_sortable(candidats, 'Crédit', 'credit') }}
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-1"></div>
-				</div>
-				<hr>
-				{% for item in candidats %}
-				<div class="row text-muted d-flex align-items-center">
-					<div class="col-sm-1">
-						<input type="checkbox" name="selectedProfiles[]" value="{{ item[0].id }}">
-					</div>
-					<div class="col-sm-4 small">
-						<div class="row">
-							<div class="col-3">
-								<div class="img-fluid rounded-start bg-image-candidat" style="background-image: url('{{ item[0].fileName ? asset('uploads/experts/' ~ item[0].fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="{{ generatePseudo(item[0]) }}"></div>
-							</div>
-							<div class="col-9 text-dark">
-								<a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id' : item[0].id })}}" class="">
-									{{ item[0].candidat.fullName}}<br>
-								</a>
+							<div>
+								<a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id' : item[0].id })}}">
+								{{ item[0].candidat.fullName }}
+								</a><br>
 								{{ item[0].candidat.email }}<br>
-								{{ item[0].secteurs|length}} secteurs |
-								CV :
+								{{ item[0].secteurs|length }} secteurs | CV :
 								{% if item[0].cv is not null %}
 								<i class="bi bi-check-lg bg-light"></i>
 								{% else %}
 								<i class="bi bi-ban bg-light"></i>
 								{% endif %}
 							</div>
-						</div>
-						<div class="row">
-							<div class="col">
 							</div>
-						</div>
-					</div>
-					<div class="col-sm-6">
-						<div class="row">
-							<div class="col-sm-6 text-center col-md-2 small">
-								{{ generatePseudo(item[0]) }}<br>
-								{{ satusCandidate(item[0])|raw }}
-							</div>
-							<div class="col-sm-6 text-center col-md-2 small">
-								{{ item[0].candidat.dateInscription|date('d/m/Y') }}
-							</div>
-							<div class="col-sm-6 text-center col-md-2 text-center">
-								<span class="badge text-bg-warning">{{ item[0].experiences|length }}</span><br>
-							</div>
-							<div class="col-sm-6 text-center col-md-2 ">
-								<span class="badge text-bg-success">{{ item[0].competences|length }}</span>
-							</div>
-							<div class="col-sm-6 text-center col-md-2 ">
-								<span class="badge text-bg-dark">{{ item['nombreDeRelance'] }}</span>
-							</div>
-							<div class="col-sm-6 text-center col-md-2 ">
-								<span class="badge text-bg-danger">{{ item['credit'] }}</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-1 small">
-						<a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id' : item[0].id })}}" class="btn btn-sm btn-info">
+						</td>
+						<td class="text-center small">
+							{{ item[0].isIsPremium ? '<i class="bi bi-check2-square"></i>' : '-' }}
+						</td>
+						<td class="text-center small">
+							{{ generatePseudo(item[0]) }}<br>
+							{{ satusCandidate(item[0])|raw }}
+						</td>
+						<td class="text-center small">
+							{{ item[0].candidat.dateInscription|date('d/m/Y') }}
+						</td>
+						<td class="text-center small">
+							{{ item[0].updatedAt|date('d/m/Y') }}
+						</td>
+						<td class="text-center small">
+							<span class="badge text-bg-dark">{{ item['nombreDeRelance'] }}</span>
+						</td>
+						<td class="text-center small">
+							<span class="badge text-bg-danger">{{ item['credit'] }}</span>
+						</td>
+						<td class="text-center small">
+							{{ item[0].profileCompletion }}%
+						</td>
+						<td class="text-center">
+							<a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id' : item[0].id })}}" class="btn btn-sm btn-info">
 							<i class="bi bi-eye"></i>
-						</a>
-					</div>
-				</div>
-				<hr>
-				{% endfor %}
-				<div class="row text-strong">
-					<div class="col-sm-1">
-						<input type="checkbox" class="select-all">
-					</div>
-					<div class="col-sm-4">Nom et prénom(s)</div>
-					<div class="col-sm-6">
-						<div class="row">
-							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Matr', 'matricule') }}
-							</div>
-							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Insc', 'u.dateInscription') }}
-							</div>
-							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Exp', 'nombreDeExperiences') }}
-							</div>
-							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Comp', 'nombreDeCompetences') }}
-							</div>
-							<div class="col-sm-6 col-md-2 text-center text-dark small">
-								{{ knp_pagination_sortable(candidats, 'Rel', 'nombreDeRelance') }}
-							</div>
-							<div class="col-sm-6 col-md-2 text-center text-danger small">
-								{{ knp_pagination_sortable(candidats, 'Level', 'level') }}
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-1"></div>
-				</div>
-				<hr>
+							</a>
+						</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
 			</div>
 			
 			<div class="col-12 col-sm-4 mb-4">

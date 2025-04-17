@@ -36,16 +36,20 @@ class SimulateurEntrepriseType extends AbstractType
                     'placeholder' => 'Taux de change ',
                     'data-id' => 'simulateur_taux',
                     'value' => $options['default_devise'] ? $options['default_devise']->getTaux() : null, 
-                ]
+                ],
+                'required' => false,
             ])
             ->add('deviseSymbole', HiddenType::class, [
                 'data' => "€", 
+                'required' => false,
             ])
             ->add('salaireNet', TextType::class, [
-                'label' => 'Salaire Net proposé'
+                'label' => 'Salaire Net proposé',
+                'required' => false,
             ])
             ->add('primeNet', TextType::class, [
-                'label' => 'Commission nette'
+                'label' => 'Commission nette',
+                'required' => false,
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => [
@@ -72,10 +76,12 @@ class SimulateurEntrepriseType extends AbstractType
                 'data' => 0, // Valeur par défaut
             ])
             ->add('prixRepas', TextType::class, [
-                'label' => 'Prix'
+                'label' => 'Prix',
+                'required' => false,
             ])
             ->add('prixDeplacement', TextType::class, [
-                'label' => 'Prix'
+                'label' => 'Prix',
+                'required' => false,
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [
@@ -86,7 +92,8 @@ class SimulateurEntrepriseType extends AbstractType
                 'label' => 'Lieu de travail'
             ])
             ->add('avantage', SimulateurAvantageType::class, [
-                'label' => false
+                'label' => false,
+                'required' => false,
             ])
         ;
         if ($options['connected']) {

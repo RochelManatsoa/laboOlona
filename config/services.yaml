@@ -60,6 +60,11 @@ services:
            - { name: kernel.event_listener, event: kernel.exception, priority: 10 }
        arguments:
            - '@twig'
+
+    App\Manager\Facebook\FacebookTokenManager:
+        arguments:
+            $userToken: '%env(FACEBOOK_USER_LONG_TOKEN)%'
+            $pageName: '%env(FACEBOOK_PAGE_NAME)%'
     
     App\Service\JitsiMeetService:
         arguments:

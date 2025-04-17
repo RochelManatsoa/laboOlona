@@ -36,6 +36,7 @@
                     <tr>
                         <th>{{ knp_pagination_sortable(entreprise_profiles, '#', 'e.id') }}</th>
                         <th>{{ knp_pagination_sortable(entreprise_profiles, 'Nom', 'e.nom') }}</th>
+                        <th>{{ knp_pagination_sortable(entreprise_profiles, 'pro', 'e.isIsPremium') }}</th>
                         <th>{{ knp_pagination_sortable(entreprise_profiles, 'Taille', 'e.taille') }}</th>
                         <th>{{ knp_pagination_sortable(entreprise_profiles, 'Localisation', 'e.localisation') }}</th>
                         <th>{{ knp_pagination_sortable(entreprise_profiles, 'Status', 'e.status') }}</th>
@@ -49,6 +50,7 @@
                     <tr>
                         <td>{{ entreprise_profile.id }}</td>
                         <td>{{ entreprise_profile.nom }}</td>
+                        <td>{{ entreprise_profile.isIsPremium ? '<i class="bi bi-check2-square"></i>' : '-' }}</td>
                         <td>{{ entreprise_profile.tailles[entreprise_profile.taille]|raw }}</td>
                         <td><i class="bi bi-geo-alt-fill"></i> {{ show_country(entreprise_profile.localisation) }} </td>
                         <td>{{ entreprise_profile.labels[entreprise_profile.status]|raw }}</td>

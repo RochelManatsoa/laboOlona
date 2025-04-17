@@ -34,8 +34,8 @@ class EmployeManager
         $montantEuro = $this->convertEuroToAriary($simulateur->getSalaireNet(), $simulateur->getTaux());
         $repasEuro = $this->convertEuroToAriary($simulateur->getPrixRepas(), $simulateur->getTaux());
         $deplacementEuro = $this->convertEuroToAriary($simulateur->getPrixDeplacement(), $simulateur->getTaux());
-        $connexionEuro = $this->convertEuroToAriary($simulateur->getAvantage()->getPrimeConnexion(), $simulateur->getTaux());
-        $fraisProEuro = $this->convertEuroToAriary($simulateur->getAvantage()->getPrimeFonction(), $simulateur->getTaux());
+        $connexionEuro = $simulateur->getAvantage() ? $this->convertEuroToAriary($simulateur->getAvantage()->getPrimeConnexion(), $simulateur->getTaux()) : 0;
+        $fraisProEuro = $simulateur->getAvantage() ? $this->convertEuroToAriary($simulateur->getAvantage()->getPrimeFonction(), $simulateur->getTaux()) : 0;
         if($simulateur->getStatus() !== "FREELANCE"){
 
             return $this->estimationSalaireBrute(

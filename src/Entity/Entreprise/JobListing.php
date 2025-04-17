@@ -193,6 +193,9 @@ class JobListing
     #[ORM\Column(nullable: true)]
     private ?bool $isNotified = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isPublishedOnFacebook = null;
+
     public function __toString()
     {
         return $this->titre;        
@@ -750,6 +753,18 @@ class JobListing
     public function setIsNotified(?bool $isNotified): static
     {
         $this->isNotified = $isNotified;
+
+        return $this;
+    }
+
+    public function isIsPublishedOnFacebook(): ?bool
+    {
+        return $this->isPublishedOnFacebook;
+    }
+
+    public function setIsPublishedOnFacebook(?bool $isPublishedOnFacebook): static
+    {
+        $this->isPublishedOnFacebook = $isPublishedOnFacebook;
 
         return $this;
     }

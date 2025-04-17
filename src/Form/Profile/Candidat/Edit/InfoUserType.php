@@ -28,6 +28,10 @@ class InfoUserType extends AbstractType
                 'label' => 'Adresse',
                 'required' => true,
             ])
+            ->add('city', TextType::class, [
+                'label' => 'Ville / Province',
+                'required' => true,
+            ])
             ->add('email', EmailType::class, [
                 'label' => 'app_identity_company.email',
                 'required' => true,

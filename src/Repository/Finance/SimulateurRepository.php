@@ -175,7 +175,7 @@ class SimulateurRepository extends ServiceEntityRepository
     public function paginatesimulations(User $user, int $page): PaginationInterface
     {
         if(!$user->getEmploye() instanceof Employe){
-            return [];
+            return $this->paginatorInterface->paginate([], $page, 10);
         }
 
         $query = $this->createQueryBuilder('s')

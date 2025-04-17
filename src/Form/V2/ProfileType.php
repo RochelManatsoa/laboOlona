@@ -74,7 +74,7 @@ class ProfileType extends AbstractType
                 ]),
             ])
             ->add('postalCode', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => 'Code postal *',
                 'label_attr' => [
                     'class' => 'fw-bold fs-5' 
@@ -86,7 +86,7 @@ class ProfileType extends AbstractType
                 ]),
             ])
             ->add('city', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => 'Ville *',
                 'label_attr' => [
                     'class' => 'fw-bold fs-5' 

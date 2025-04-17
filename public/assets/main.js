@@ -1,6 +1,5 @@
-
 function initFormStep(form, title, bodyTag, transitionEffect, connected) {
-  console.log(connected)
+    console.log(connected)
     var form = form.show()
     form
       .steps({
@@ -263,6 +262,7 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
 }
 
 function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connected) {
+  console.log(connected)
   var form = form.show()
   form
     .steps({
@@ -401,31 +401,12 @@ function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connecte
         return form.valid()
       },
       onFinished: function (event, currentIndex) {
-        console.log(connected)
-        if (!connected) {
+        if (connected) {
           // Si connected est faux, affichez un popup
-          $('#popupCompany').trigger('click');
+          $('#popup').trigger("click");
           return false; // Empêche la soumission du formulaire
         }
-        var formData = new FormData(form[0]);
-        var actionUrl = form.data('action');
-        $.ajax({
-            url: actionUrl,
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            headers: {
-                'Accept': 'text/vnd.turbo-stream.html'
-            },
-            success: function(data) {
-                console.log(data)
-                Turbo.renderStreamMessage(data);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.error('Erreur:', textStatus, errorThrown);
-            }
-        });
+        form.submit()
       },
     })
     .validate({
