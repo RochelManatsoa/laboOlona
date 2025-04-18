@@ -77,13 +77,20 @@
         </div>
         <div class="row">
             <div class="col-lg-6 col-sm-12">
+            {{ form_row(form.candidat.email)}}
+            </div>
+            <div class="col-lg-6 col-sm-12">
             {{ form_row(form.candidat.telephone)}}
             </div>
+        </div>
+        <div class="row">
             <div class="col-lg-6 col-sm-12">
             {{ form_row(form.candidat.adress)}}
             </div>
+            <div class="col-lg-6 col-sm-12">
+            {{ form_row(form.candidat.city)}}
+            </div>
         </div>
-        {{ form_row(form.candidat.email)}}
     </div>
     <div class="biographie-profil mb-4 p-4 apparition_">
         <span class="fs-5 mb-1 fw-bold lh-base st-title">Informations professionnelles</span>

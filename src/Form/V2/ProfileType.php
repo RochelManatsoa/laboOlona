@@ -86,7 +86,6 @@ class ProfileType extends AbstractType
                 ]),
             ])
             ->add('city', TextType::class, [
-                'required' => true,
                 'label' => 'Ville *',
                 'label_attr' => [
                     'class' => 'fw-bold fs-5' 
