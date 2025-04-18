@@ -525,6 +525,7 @@ class EntrepriseController extends AbstractController
         Request $request,
         JobListingManager $jobListingManager,
         EntityManagerInterface $em,
+        UrlGeneratorInterface $urlGenerator,
     ): Response
     {
         $params = $this->getData();
@@ -543,6 +544,18 @@ class EntrepriseController extends AbstractController
                 $em->persist($jobListing);
                 $em->flush();
                 $this->addFlash('success', 'Annonce créée avec succès');
+                /** send email to stephane */
+                $this->mailerService->sendMultiple(
+                    ["contact@olona-talents.com", "support@olona-talents.com", "miandrisoa.olona@gmail.com"],
+                    "Annonce publiée sur Olona Talents",
+                    "moderateur/notification_annonce_publie.html.twig",
+                    [
+                        'entreprise' => $jobListing->getEntreprise(),
+                        'objet' => "Annonce publiée",
+                        'details_annonce' => $jobListing,
+                        'dashboard_url' => $urlGenerator->generate('app_moderateur_job_listing_edit', ['id' => $jobListing->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    ]
+                );
                 return $this->redirectToRoute('app_tableau_de_bord_entreprise_view_job_offer', ['id' => $jobListing->getId()]);
             }
             $this->addFlash('dark', 'Votre credit est insufisant');
