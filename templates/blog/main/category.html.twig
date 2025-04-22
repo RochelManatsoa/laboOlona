@@ -12,23 +12,18 @@
 <meta property="og:image:height" content="630"/>
 {% endblock %}
 
-{% block paralax %}
-<div class="paralax" style="background-image: url('{{ asset('images/blogs/' ~ category.imageName) }}');">
-  {% include "blog/_nav.html.twig" %}
-  <div class="main-content-min">
-    <div class="container">
-      <!-- Content Section -->
-      <div class="row">
-        <div class="col-12 col-sm-8 mx-auto text-center">
-          <h1 class="display-4 fw-bolder my-5">{{ category.title }}</h1>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
-
 {% block body %}
+<header class="header-home">
+    <div class="page-content">
+        <div class="home-banner-section bg-cover" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
+            <div class="home-inner-section">
+                <div class="mid-section">
+                    <h1 class="title-large">{{ category.title }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
     
 <main id="blog-post">
     <div class="container mt-5">
