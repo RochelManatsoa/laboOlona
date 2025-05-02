@@ -38,8 +38,7 @@
         <div class="biographie-profil mb-4 p-4">
             <div class="mission-list-title">
                 <h1>Bienvenue dans votre Annuaire de services.</h1>
-                <p> Découvrez ou proposez des solutions professionnelles sur mesure. Boostez votre entreprise, avancez dans votre carrière et valorisez vos compétences. Trouvez le partenaire idéal pour votre réussite.
-                </p>
+                <p>Accédez à un vivier de compétences disponibles pour vos projets. Externalisez, collaborez ou trouvez des prestataires fiables en un clic. Cet espace vous permet de consulter les offres de services des talents inscrits et de booster l'efficacité de votre entreprise.</p>
             </div>
             <div class="ils_recrutentBlock mb-4">
                 <h2><span>Ils recrutent</span></h2>
@@ -96,14 +95,14 @@
                                 <div class="col-md-10 aside-right-item_">
                                     <div class="detail_annonce_">
                                         <h2>
-                                            <a href="{{ path('app_tableau_de_bord_entreprise_view_prestation', {'id': prestation.id })}}" class="btn-primary">
+                                            <a href="{{ path('app_tableau_de_bord_entreprise_view_prestation', {'prestation': prestation.id })}}" class="btn-primary">
                                                 {{ prestation.titre }}
                                             </a>
                                         </h2>
                                         <h3><a href="" class="btn-primary">{{ getAuthor(prestation)}}</a> <span class="secteur_job"><i class="bi bi-tags"></i> {{ prestation.secteurs.nom}}</span></h3>
                                         <div class="description_courte_">{{ prestation.openai|raw }}</div>
                                         <div class="info_publication_">
-                                            <a class="btn btn-sm btn-primary rounded-pill px-3 me-2 mt-2" href="{{ path('app_tableau_de_bord_entreprise_view_prestation', {'id': prestation.id })}}">Plus de details</a>
+                                            <a class="btn btn-sm btn-primary rounded-pill px-3 me-2 mt-2" href="{{ path('app_tableau_de_bord_entreprise_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
                                         </div>
                                     </div>
                                 </div>

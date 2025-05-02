@@ -1,0 +1,111 @@
+<div class="boosts-container" data-slider>
+    <div class="boosts" data-slider-wrapper>
+        {% if prestations_boost|length > 0 %}
+            {% for prestation in prestations_boost %}
+                <div class="boost"> 
+                    <div class="card mb-3 boost-card" style="max-width: 400px;">
+                        <a href="{{ path('app_olona_talents_view_prestation', {'id': prestation.id })}}">
+                            <div class="">
+                                <span class="position-absolute top-0 start-0 ms-5 px-3 translate-middle badge bg-danger rounded-pill" style="z-index:999">PRO</span>
+                            </div>
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}" class="img-fluid rounded-start" alt="prestation">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{prestation.titre}}</h5>
+                                        <p class="card-text">
+                                        <small class="text-body-secondary">Publié {{ prestation.createdAt|time_ago }}</small></p>
+                                    </div>
+                                </div>
+                                <p class="card-text p-3">{{ prestation.openai|striptags|slice(0, 350) ~ '...' }}</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if prestations_boost|length == 1 %}
+                <div class="boost"> 
+                    <div class="card mb-3 boost-card" style="max-width: 400px;">
+                        <a href="{{ path('app_contact') }}">
+                            <img class="img-fluid rounded" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% if prestations_boost|length > 0 %}
+        <span class="boosts_navigation prev-boost shadow" data-slider-prev hidden>
+            <i class="bi bi-chevron-left"></i>
+        </span>
+        <span class="boosts_navigation next-boost shadow" data-slider-next>
+            <i class="bi bi-chevron-right"></i>
+        </span>
+    {% endif %}
+</div>
+
+{# <div class="section-content">
+	<div class="jobs-grid-wrap">
+		<div class="row">
+            {% if prestations_boost|length > 0 %}
+                {% for prestation in prestations_boost %}
+                <div class="col-lg-6 col-md-6">
+                    <div class="jobs-grid m-b30">
+                        <div class="media">
+                        <a href=""><img class="img-fluid profile-img" style="border-radius: 10px; object-fit: cover;" src="{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/dashboard/logo_defaut_entreprise2.webp') }}" alt=""></a>
+                        </div>
+                        <div class="jobs-category"><span class="bg-pro">PREMIUM</span></div>
+                        <div class="mid-content">
+                            <a href="" class="job-title">
+                                <h4>
+                                {{ prestation.titre }}
+                                </h4>
+                            </a>
+                            <p class="job-address">
+                                Réf: {{ generateprestationReference(prestation.id) }}
+                                <small class="badge bg-info rounded-pill">Certifié</small>
+                                <small class="card-text"><i class="mx-1 bi bi-trophy"></i> {{ 'app_catalog_expert.realised'|trans }}</small>
+                            </p>
+                            <div>
+                                {% if prestation.openai is not null %}
+                                {% set description_words = prestation.openai|striptags|split(' ') %}
+                                {% else %}
+                                {% set description_words = prestation.description|striptags|split(' ') %}
+                                {% endif %}
+                                {% if description_words|length > 12 %}
+                                    {{ description_words|slice(0, 12)|join(' ') }}...
+                                {% else %}
+                                    {{ description_words|join(' ') }}
+                                {% endif %}
+                            </div>
+                            <div>
+                                <span class="">
+                                    <small><i class="bi bi-eye"></i> # vues</small>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="right-content">
+                            <div class="jobs-amount">#</span></div>
+                            {% if app.user %}
+                                <a href="{{ path('app_v2_recruiter_view_profile', {'id': candidat.id}) }}" class="btn btn-primary">Contacter</a>
+                            {% else %}
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="">Contacter</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% if prestations_boost|length == 1 %}
+                {% if not app.user %}
+                {% endif %}
+                {% endif %}
+
+                {% if prestations_boost|length == 2 %}
+                {% endif %}
+            {% endif %}
+		</div>
+	</div>
+</div> #}

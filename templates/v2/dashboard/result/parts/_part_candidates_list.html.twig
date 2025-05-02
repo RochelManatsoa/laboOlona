@@ -6,7 +6,7 @@
 		<article class="article-item_">
 			<div class="row">
 				<div class="col-md-2 aside-left-item_">
-					<a href=""><img src="{{ candidate.fileName ? asset('uploads/experts/' ~ candidate.fileName) : asset('images/dashboard/avatar_masculun.webp') }}" alt=""></a>
+					<a href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}"><img src="{{ candidate.fileName ? asset('uploads/experts/' ~ candidate.fileName) : asset('images/dashboard/avatar_masculun.webp') }}" alt=""></a>
 				</div>
 				<div class="col-md-10 aside-right-item_">
 					<div class="">

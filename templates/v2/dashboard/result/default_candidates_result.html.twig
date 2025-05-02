@@ -52,130 +52,41 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-4 col-md-12 rightSidebar">
-				<div class="theiaStickySidebar">
+			<div class="theiaStickySidebar sticky-top" style="top: 20px;">
 					<div class="side-bar">
-						<div class="sidebar-elements search-bx">								
-							<form>
+						<div class="sidebar-elements search-bx">	
+							<form id="searchForm" action="{{ path('app_olona_talents_candidates') }}">
 								<div class="form-group mb-4">
-									<h4 class="section-head-small mb-4">Filter par</h4>
+									<h4 class="section-head-small mb-4">Recherche par mots clés</h4>
+									<input type="search" name="q" value="{{ getSearchQuery('q') }}" class="form-control" placeholder="Tapez ce que vous cherchez...">
+								</div>
+								<div class="form-group mb-4">
+									<h4 class="section-head-small mb-4">Catégorie</h4>
 									<div class="dropdown bootstrap-select">
-										<select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
-											<option>Toutes</option>
-											<option>Candidats</option>
-											<option>Offre d'emploi</option>
-											<option>Service</option>
+										<select id="searchType" class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size">
+											<option value="candidates">Candidats</option>
+											<option value="jobs">Offre d'emploi</option>
+											<option value="services">Services</option>
 										</select>
 									</div>
 								</div>
-								<div class="form-group mb-4">
-									<h4 class="section-head-small mb-4">Categories</h4>
-									<div class="dropdown bootstrap-select">
-										<select class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
-											<option>Toutes les Categories</option>
-											<option>Web Designer</option>
-											<option>Developpeur</option>
-											<option>Marketing</option>
-										</select>
-									</div>
-								</div>
-								{# <div class="sidebar-ele-filter">
-									<h4 class="section-head-small mb-4">Type de contrat</h4>
-									<ul>
-										<li>
-											<div class=" form-check">
-												<input type="checkbox" class="form-check-input" id="exampleCheck1">
-												<label class="form-check-label" for="exampleCheck1">Freelance</label>
-											</div>
-											<span class="job-type-count">09</span>
-										</li>
-										<li>
-											<div class=" form-check">
-												<input type="checkbox" class="form-check-input" id="exampleCheck2">
-												<label class="form-check-label" for="exampleCheck2">Temps plein</label>
-											</div>
-											<span class="job-type-count">07</span>
-										</li>
-										<li>
-											<div class=" form-check">
-												<input type="checkbox" class="form-check-input" id="exampleCheck3">
-												<label class="form-check-label" for="exampleCheck3">Stage</label>
-											</div>
-											<span class="job-type-count">15</span>
-										</li>
-										<li>
-											<div class=" form-check">
-												<input type="checkbox" class="form-check-input" id="exampleCheck4">
-												<label class="form-check-label" for="exampleCheck4">Temps partiel</label>
-											</div>
-											<span class="job-type-count">20</span>
-										</li>
-										<li>
-											<div class=" form-check">
-												<input type="checkbox" class="form-check-input" id="exampleCheck5">
-												<label class="form-check-label" for="exampleCheck5">Temporaire</label>
-											</div>
-											<span class="job-type-count">22</span>
-										</li>
-									</ul>
-								</div> #}
-								{# <div class="sidebar-ele-filter">
-									<h4 class="section-head-small mb-4">Date des publications</h4>
-									<ul>
-										<li>
-											<div class="form-check">
-												<input type="radio" class="form-check-input" id="exampleradio1">
-												<label class="form-check-label" for="exampleradio1">Dernière heure</label>
-											</div>
-										</li>
-										<li>
-											<div class="form-check">
-												<input type="radio" class="form-check-input" id="exampleradio2">
-												<label class="form-check-label" for="exampleradio2">Dernières 24 heures</label>
-											</div>
-										</li>
-										<li>
-											<div class="form-check">
-												<input type="radio" class="form-check-input" id="exampleradio3">
-												<label class="form-check-label" for="exampleradio3">Les 7 derniers jours</label>
-											</div>
-										</li>
-										<li>
-											<div class="form-check">
-												<input type="radio" class="form-check-input" id="exampleradio4">
-												<label class="form-check-label" for="exampleradio4">Les 14 derniers jours</label>
-											</div>
-										</li>
-										<li>
-											<div class="form-check">
-												<input type="radio" class="form-check-input" id="exampleradio5">
-												<label class="form-check-label" for="exampleradio5">Les 30 derniers jours</label>
-											</div>
-										</li>
-										<li>
-											<div class="form-check">
-												<input type="radio" class="form-check-input" id="exampleradio6">
-												<label class="form-check-label" for="exampleradio6">Afficher toutes</label>
-											</div>
-										</li>
-									</ul>
-								</div> #}
 							</form>
 						</div>
 					</div>
-					<div class="m-4 card position-relative text-center d-block d-md-none">
+					<div class="m-4 card position-relative text-center">
 						<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
 					</div>
 					<div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
 						<h4 class="title">Recrutement</h4>
-						<p>Obtenez les emplois les mieux adaptés à vos besoins <br>
-						Ajoutez votre CV MAINTENANT !</p>
+						<p>Trouvez les meilleurs talents pour renforcer votre équipe <br>
+						Publiez votre offre DÈS MAINTENANT !</p>
 						<div class="btn-signUp">
-							<a href="" class="btn btn-primary white">En savoir plus</a> 
+							<a href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="btn btn-primary white">En savoir plus</a> 
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-8 col-md-12">
+			<div class="user-results col-lg-8 col-md-12">
 				{% if candidates|length > 0 %}
 					<!--Filter Short By-->
 					<div class="product-filter-wrap d-flex justify-content-between align-items-center m-b30">
@@ -186,21 +97,10 @@
 							{{ totalResults }} resultat trouvé
 							{% endif %}
 						</span>
-						<form class="ordering filter-select" method="get">
-							<span class="result-count">Court par</span>
-							<div class="dropdown bootstrap-select select-bar-12">
-								<select class="select-bar-2 selectpicker" data-live-search="true" data-bv-field="size">
-									<option>Afficher 10</option>
-									<option>Afficher 20</option>
-									<option>Afficher 30</option>
-									<option>Afficher 40</option>
-									<option>Afficher 50</option>
-									<option>Afficher 60</option>
-								</select>
-							</div>
-						</form>
 					</div>
-					{% include "v2/dashboard/result/parts/_part_candidates_list.html.twig" %}
+					<div id="candidates-list">
+						{% include "v2/dashboard/result/parts/_part_candidates_list.html.twig" %}
+					</div>
 				{% else %}
 					{% include "v2/dashboard/result/none/_none_candidates.html.twig" %}
 				{% endif %}
@@ -208,6 +108,35 @@
 		</div>
 	</div>
 </div>
+<script>
+document.addEventListener('turbo:load', function() {
+    const form = document.getElementById('searchForm');
+    const select = document.getElementById('searchType');
+    
+    select.addEventListener('change', function() {
+        const value = this.value;
+        let actionUrl = '';
+        
+        switch(value) {
+            case 'candidates':
+                actionUrl = "{{ path('app_olona_talents_candidates') }}";
+                break;
+            case 'jobs':
+                actionUrl = "{{ path('app_olona_talents_joblistings') }}";
+                break;
+            case 'services':
+                actionUrl = "{{ path('app_olona_talents_prestations') }}";
+                break;
+        }
+        
+        form.action = actionUrl;
+    });
+    
+    // Initialize form action based on current selection
+    const initialValue = select.value;
+    select.dispatchEvent(new Event('change'));
+});
+</script>
 {% endblock %}
 
 {% block preview %}{% endblock %}

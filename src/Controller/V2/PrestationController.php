@@ -284,7 +284,7 @@ class PrestationController extends AbstractController
             }
         }
         $routeInfo = $this->userService->getRedirectRoute($this->getUser(), $request);
-        $routeInfo['params'] = ['id' => $prestation->getId()];
+        $routeInfo['params'] = ['prestation' => $prestation->getId()];
         
         return $this->redirectToRoute($routeInfo['route'], $routeInfo['params']);
 
