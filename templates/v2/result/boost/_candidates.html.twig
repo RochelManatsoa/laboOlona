@@ -3,7 +3,7 @@
         {% if candidates_boost|length > 0 %}
             {% for candidat in candidates_boost %}
                 <div class="boost"> 
-                    <div class="card mb-3 boost-card" style="max-width: 350px;">
+                    <div class="card mb-3 boost-card" style="max-width: 400px;">
                         <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': candidat.id })}}">
                             <div class="">
                                 <span class="position-absolute top-0 start-50 ms-5 px-3 translate-middle" style="z-index:999"><span class="bg-pro">PRO</span></span>
@@ -27,7 +27,7 @@
                                         {% endif %}</h5>
                                         <p class="card-text">
                                         <strong class="text-body-secondary">Ref: {{ generatePseudoById(candidat.id) }}</strong><br>
-                                            {% if isLikedByRecruiter(entreprise, candidat.id) %}
+                                            {% if entreprise is defined and isLikedByRecruiter(entreprise, candidat.id) %}
                                             <span class="favoris-add" id="row_star_favorite_{{ candidat.id }}"><i class="bi bi-star-fill"></i></span>
                                             {% else %}
                                             <span class="favoris-add" id="row_star_favorite_{{ candidat.id }}"><i class="bi bi-star"></i></span>

@@ -57,6 +57,7 @@ use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\BusinessModel\PurchasedContactRepository;
+use Google\Service\PeopleService\Url;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -152,7 +153,7 @@ class EntrepriseController extends AbstractController
     }
 
     #[Route('/annuaire-de-services', name: 'app_tableau_de_bord_entreprise_annuaire_de_services')]
-    public function annuaire(Request $request): Response
+    public function annuaire(Request $request, UrlGeneratorInterface $urlGeneratorInterface): Response
     {
         $page = $request->query->get('page', 1);
         $size = $request->query->get('size', 10);
@@ -163,6 +164,7 @@ class EntrepriseController extends AbstractController
         $prestations = $this->em->getRepository(Prestation::class)->paginatePrestations(Prestation::STATUS_VALID, $page, $size);
         $params['prestations'] = $prestations;
         $params['size'] = $size;
+        $params['action'] = $urlGeneratorInterface->generate('app_olona_talents_prestations');
 
         return $this->render('tableau_de_bord/entreprise/annuaire_de_services.html.twig', $params);
     }
@@ -675,7 +677,7 @@ class EntrepriseController extends AbstractController
     }
 
     #[Route('/trouver-des-missions', name: 'app_tableau_de_bord_entreprise_trouver_des_missions')]
-    public function searchmission(Request $request): Response
+    public function searchmission(Request $request, UrlGeneratorInterface $urlGeneratorInterface): Response
     {        
         $page = $request->query->getInt('page', 1);
         $size = $request->query->getInt('size', 10);
@@ -685,6 +687,7 @@ class EntrepriseController extends AbstractController
         }
         $params['joblistings'] = $this->em->getRepository(JobListing::class)->paginateJobListings(JobListing::STATUS_PUBLISHED, $page, $size);
         $params['joblistings_boost'] = $this->em->getRepository(JobListing::class)->paginateJobListings(JobListing::STATUS_FEATURED, $page, 6);
+        $params['action'] = $urlGeneratorInterface->generate('app_olona_talents_joblistings');
 
         return $this->render('tableau_de_bord/entreprise/trouver_des_missions.html.twig', $params);
     }
@@ -752,10 +755,9 @@ class EntrepriseController extends AbstractController
         return $this->render('tableau_de_bord/entreprise/publier_une_annonce.html.twig', $params);
     }
 
-    #[Route('/detail-prestation/{id}', name: 'app_tableau_de_bord_entreprise_view_prestation')]
-    public function viewPrestation(Request $request, int $id, PrestationManager $prestationManager, AppExtension $appExtension, PrestationExtension $prestationExtension, ProfileManager $profileManager): Response
+    #[Route('/detail-prestation/{prestation}', name: 'app_tableau_de_bord_entreprise_view_prestation')]
+    public function viewPrestation(Request $request, Prestation $prestation, UrlGeneratorInterface $urlGeneratorInterface, PrestationManager $prestationManager, AppExtension $appExtension, PrestationExtension $prestationExtension, ProfileManager $profileManager): Response
     {
-        $prestation = $this->em->getRepository(Prestation::class)->find($id);
         if ($prestation === null || $prestation->getStatus() === Prestation::STATUS_DELETED || $prestation->getStatus() === Prestation::STATUS_PENDING) {
             throw $this->createNotFoundException('Nous sommes désolés, mais le prestation demandé n\'existe pas.');
         }
@@ -775,6 +777,7 @@ class EntrepriseController extends AbstractController
         $params['owner'] = $owner;
         $params['creater'] = $creater;
         $params['showContactPrice'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
+        $params['action'] = $urlGeneratorInterface->generate('app_olona_talents_prestations');
 
         return $this->render('tableau_de_bord/entreprise/view_prestation.html.twig', $params);
     }

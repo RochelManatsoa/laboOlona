@@ -1,35 +1,19 @@
 {% if prestations_boost is defined %}
-{% include "v2/result/boost/prestations.html.twig" %}
+{% include "v2/result/boost/_prestations.html.twig" %}
 {% endif %}
-
-{#<div class="card position-relative text-center d-none d-md-block">
-    <a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
-        <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-horizontal.webp')}}">
-    </a>
-</div>
-
-<div class="m-4 card position-relative text-center d-block d-md-none">
-    <a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
-        <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
-    </a>
-</div>#}
 <div class="jobs-list-wrap">
         {% for prestation in prestations %}
 		<article class="article-item_">
 			<div class="row">
 				<div class="col-md-2 aside-left-item_">
-                    <a href=""><img class="img-fluid profile-img" style="border-radius: 10px; object-fit: cover;" src="{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/dashboard/logo_defaut_entreprise2.webp') }}" alt=""></a>
+                    <a href="{{ path('app_olona_talents_view_prestation', {'id': prestation.id })}}"><img class="img-fluid profile-img" style="border-radius: 10px; object-fit: cover;" src="{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}" alt="prestation"></a>
 				</div>
 				<div class="col-md-10 aside-right-item_">
 					<div class="detail_annonce_">
 						<h2>
-                            {% if app.user %}
-                                <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}" class="btn-primary">
-                                    {{ prestation.titre }}
-                                </a>
-                            {% else %}
-                                <span style="cursor:pointer;" class="prestation-link" data-id="{{ prestation.id }}">{{ prestation.titre }}</span>
-                            {% endif %}
+                            <a href="{{ path('app_olona_talents_view_prestation', {'id': prestation.id })}}">
+                                {{ prestation.titre }}
+                            </a>
 
 							<span class="badge-cetification">
                                 {{ prestation.secteurs.nom}}
@@ -56,17 +40,7 @@
                             </p>
 						</div>
                         <div class="right-content d-flex ms-auto my-2 me-2">
-                            {% if app.user %}
-                                <a class="btn btn-primary" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
-                            {% else %}
-                                <div class="d-none d-md-block">
-                                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#connectingModal"  data-id="{{ prestation.id }}">Plus de details</button>
-                                </div>
-                                
-                                <div class="d-block d-md-none">
-                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_view_prestation', {'prestation':prestation.id}) }}">Plus de détails</button>
-                                </div>
-                            {% endif %}
+                            <a class="btn btn-primary" href="{{ path('app_olona_talents_view_prestation', {'id': prestation.id })}}">Plus de details</a>
                         </div>
 					</div>
 				</div>

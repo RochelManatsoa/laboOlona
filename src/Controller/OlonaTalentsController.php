@@ -27,6 +27,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Manager\BusinessModel\CreditManager;
 use App\Manager\JobListingManager;
+use App\Manager\PrestationManager;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CandidateProfileRepository;
@@ -34,6 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\Entreprise\JobListingRepository;
+use App\Repository\PrestationRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -228,15 +230,23 @@ class OlonaTalentsController extends AbstractController
     }
 
     #[Route('/view/prestation/{id}', name: 'app_olona_talents_view_prestation')]
-    public function viewprestation(int $id): Response
+    public function viewprestation(Request $request, int $id, PrestationRepository $prestationRepository, PrestationManager $prestationManager, JobListingRepository $jobListingRepository): Response
     {
         $currentUser = $this->security->getUser();
         $prestation = $this->em->getRepository(Prestation::class)->find($id);
+        if ($prestation === null || $prestation->getStatus() === Prestation::STATUS_DELETED || $prestation->getStatus() === Prestation::STATUS_PENDING) {
+            throw $this->createNotFoundException('Nous sommes désolés, mais le prestation demandé n\'existe pas.');
+        }
         if ($currentUser instanceof User) {
             return $this->redirectToRoute('app_v2_view_prestation', ['prestation' => $prestation->getId()]);
         }
+        $prestationManager->incrementView($prestation, $request->getClientIp());
 
-        return $this->redirectToRoute('app_connect', []);
+        return $this->render("tableau_de_bord/anonymous/prestation.html.twig", [
+            'prestation' => $prestation,
+            // 'lastestJobOffer' => $prestationRepository->findPublishedJobListing(),
+            'joblistings_boost' => $jobListingRepository->findPremiumJobListing(),
+        ]);
     }
 
     #[Route('/view/recruiter/{id}', name: 'app_olona_talents_view_recruiter')]

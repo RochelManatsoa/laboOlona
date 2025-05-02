@@ -65,6 +65,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Form\Profile\Candidat\Edit\EditCandidateProfile;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\BusinessModel\PurchasedContactRepository;
+use Google\Service\PeopleService\Url;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -176,7 +177,7 @@ class CandidatController extends AbstractController
     }
 
     #[Route('/annuaire-de-services', name: 'app_tableau_de_bord_candidat_annuaire_de_services')]
-    public function annuaire(Request $request): Response
+    public function annuaire(Request $request, UrlGeneratorInterface $urlGeneratorInterface): Response
     {
         $page = $request->query->get('page', 1);
         $size = $request->query->get('size', 10);
@@ -187,6 +188,7 @@ class CandidatController extends AbstractController
         $prestations = $this->em->getRepository(Prestation::class)->paginatePrestations(Prestation::STATUS_VALID, $page, $size);
         $params['prestations'] = $prestations;
         $params['size'] = $size;
+        $params['action'] = $urlGeneratorInterface->generate('app_olona_talents_prestations');
 
         return $this->render('tableau_de_bord/candidat/annuaire_de_services.html.twig', $params);
     }
@@ -764,7 +766,7 @@ class CandidatController extends AbstractController
 
     #[Route('/detail-prestation/{prestation}', name: 'app_tableau_de_bord_candidat_view_prestation')]
     #[IsGranted(PrestationVoter::VIEW, subject: 'prestation')]
-    public function viewPrestation(Request $request, Prestation $prestation, PrestationManager $prestationManager, AppExtension $appExtension, PrestationExtension $prestationExtension, ProfileManager $profileManager, Security $security): Response
+    public function viewPrestation(Request $request, Prestation $prestation, UrlGeneratorInterface $urlGeneratorInterface, PrestationManager $prestationManager, AppExtension $appExtension, PrestationExtension $prestationExtension, ProfileManager $profileManager, Security $security): Response
     {
         if($security->isGranted(PrestationVoter::EDIT, null, $prestation)){
             if ($prestation === null || $prestation->getStatus() === Prestation::STATUS_DELETED || $prestation->getStatus() === Prestation::STATUS_PENDING) {
@@ -787,6 +789,7 @@ class CandidatController extends AbstractController
         $params['owner'] = $owner;
         $params['creater'] = $creater;
         $params['showContactPrice'] = $profileManager->getCreditAmount(Credit::ACTION_VIEW_CANDIDATE);
+        $params['action'] = $urlGeneratorInterface->generate('app_olona_talents_prestations');
 
         return $this->render('tableau_de_bord/candidat/view_prestation.html.twig', $params);
     }
