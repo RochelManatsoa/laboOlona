@@ -18,6 +18,9 @@
 	<template>
 		{{ form_start(formProfileUser) }}
 		{{ form_row(formProfileUser.secteurs) }}
+		{% if formProfileUser.gender is defined %}
+			{{ form_row(formProfileUser.gender) }}
+		{% endif %}
 		{% if formProfileUser.titre is defined %}
 			{{ form_row(formProfileUser.titre) }}
 		{% endif %}
@@ -39,6 +42,16 @@
 		{% if formProfileUser.localisation is defined %}
 			{{ form_row(formProfileUser.localisation) }}
 		{% endif %}
+		{% if formProfileUser.region is defined %}
+		<div class="row mb-3" id="madagascar-info">
+			<div class="col">
+				{{ form_row(formProfileUser.province) }}
+			</div>
+			<div class="col">
+				{{ form_row(formProfileUser.region) }}
+			</div>
+		</div>
+		{% endif %}
 		{% if formProfileUser.resume is defined %}
 			{{ form_row(formProfileUser.resume) }}
 		{% endif %}
@@ -58,9 +71,9 @@
 			{{ form_row(formProfileUser.description) }}
 		{% endif %}
 		<div style="display:none;">
-			{{ form_widget(formProfileUser) }}
+		{{ form_widget(formProfileUser) }}
 		</div>
-		<button type="submit" class="btn btn-primary my-3 my-sm-5 px-4 float-end fw-bold">Suivant
+		<button type="submit" class="btn btn-primary">Suivant
 			<i class="bi bi-arrow-right ms-2"></i>
 		</button>
 		{{ form_end(formProfileUser) }}

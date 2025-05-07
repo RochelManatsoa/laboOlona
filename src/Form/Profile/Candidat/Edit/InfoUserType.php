@@ -29,7 +29,7 @@ class InfoUserType extends AbstractType
                 'required' => true,
             ])
             ->add('city', TextType::class, [
-                'label' => 'Ville / Province',
+                'label' => 'Ville *',
                 'required' => true,
             ])
             ->add('email', EmailType::class, [

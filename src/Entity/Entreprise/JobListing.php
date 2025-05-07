@@ -157,7 +157,7 @@ class JobListing
     #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: Assignation::class, cascade: ['remove'])]
     private Collection $assignations;
 
-    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Referral::class)]
+    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Referral::class, cascade: ['remove'])]
     private Collection $referrals;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
@@ -184,7 +184,7 @@ class JobListing
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
     private ?BoostFacebook $boostFacebook = null;
 
-    #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: BoostVisibility::class)]
+    #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: BoostVisibility::class, cascade: ['remove'])]
     private Collection $boostVisibilities;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]

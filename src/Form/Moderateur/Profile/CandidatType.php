@@ -13,6 +13,7 @@ use App\Form\Profile\Candidat\Edit\InfoUserType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
+use App\Form\EventSubscriber\ProvinceRegionSubscriber;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -30,6 +31,27 @@ class CandidatType extends AbstractType
                 'required' => true,
                 'label' => 'Titre *',
             ])
+            ->add('gender', ChoiceType::class, [
+                'label' => 'Genre *',
+                'choices' => CandidateProfile::getGenderLabels(),
+                'expanded' => false,
+                'multiple' => false,
+                'required' => true,
+            ])
+            ->add('province', ChoiceType::class, [
+                'choices' => [
+                    'Antananarivo' => 'Antananarivo',
+                    'Fianarantsoa' => 'Fianarantsoa',
+                    'Toamasina' => 'Toamasina',
+                    'Mahajanga' => 'Mahajanga',
+                    'Toliara' => 'Toliara',
+                    'Antsiranana' => 'Antsiranana',
+                ],
+                'required' => false,
+                'placeholder' => 'Sélectionnez une province',
+                'help' => 'Choisissez d’abord une province pour voir les régions disponibles.',
+            ])
+            ->addEventSubscriber(new ProvinceRegionSubscriber())
             ->add('candidat', InfoUserType::class, ['label' => false])
             ->add('resume', TextareaType::class, [
                 'required' => false ,
