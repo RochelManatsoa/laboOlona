@@ -65,6 +65,11 @@
                                 5 avis
                             </div>
                         </div>
+                        <i class="bi bi-pin"></i> 
+                        {% if candidat.candidat.city is not null %} {{ candidat.candidat.city }},  {% endif %} 
+                        {% if candidat.region is not null %} {{ candidat.region }} -  {% endif %} 
+                        {% if candidat.province is not null %} {{ candidat.province }} -  {% endif %} 
+                        {{ show_country(candidat.localisation) }}
                     </div>
                 </div>
                 <div class="btn-profils">

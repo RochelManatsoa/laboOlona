@@ -10,6 +10,8 @@
 								<img src="{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" class="img-fluid profile-img" style="border-radius: 10px; object-fit: cover;">
                                 {{ form_widget(formCandidate.file) }}
                                 {{ form_errors(formCandidate.file) }}
+								<h2 class="h3 text-center my-3">Genre</h2>
+									{{ form_widget(formCandidate.gender)}}
                                 <h2 class="h3 text-center my-3">Secteurs</h2>
 									{{ form_widget(formCandidate.secteurs)}}
                                 <h2 class="h3 text-center my-3">Premium</h2>
@@ -49,16 +51,30 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-4">
+									<div class="col-6">
 										<div class="form-floating mb-3">
 											{{ form_widget(formCandidate.candidat.adress)}}
 											{{ form_label(formCandidate.candidat.adress)}}
 										</div>
 									</div>
-									<div class="col-4">
+									<div class="col-6">
 										<div class="form-floating mb-3">
 											{{ form_widget(formCandidate.candidat.city)}}
 											{{ form_label(formCandidate.candidat.city)}}
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.province)}}
+											{{ form_label(formCandidate.province)}}
+										</div>
+									</div>
+									<div class="col-4">
+										<div class="form-floating mb-3">
+											{{ form_widget(formCandidate.region)}}
+											<label class="form-label required" for="candidat_region">Region</label>
 										</div>
 									</div>
 									<div class="col-4">

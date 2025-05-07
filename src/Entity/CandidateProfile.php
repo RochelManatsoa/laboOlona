@@ -38,6 +38,9 @@ class CandidateProfile
     const STATUS_VALID = 'VALID';
     const STATUS_FEATURED = 'FEATURED';
     const STATUS_RESERVED = 'RESERVED';
+    const GENDER_MALE = 'MALE';
+    const GENDER_FEMALE = 'FEMALE';
+    const GENDER_OTHER = 'OTHER';
 
     public static function getStatuses() {
         return [
@@ -56,6 +59,22 @@ class CandidateProfile
              self::STATUS_VALID ,
              self::STATUS_FEATURED ,
              self::STATUS_RESERVED ,
+        ];
+    }
+
+    public static function getGenderLabels() {
+        return [
+            'Masculin' => self::GENDER_MALE ,
+            'Féminin' => self::GENDER_FEMALE ,
+            'Autre' => self::GENDER_OTHER ,
+        ];
+    }
+
+    public static function getArrayGender() {
+        return [
+             self::GENDER_MALE ,
+             self::GENDER_FEMALE ,
+             self::GENDER_OTHER ,
         ];
     }
 
@@ -216,6 +235,15 @@ class CandidateProfile
 
     #[ORM\Column(nullable: true)]
     private ?bool $isPremium = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $gender = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $province = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $region = null;
 
     public function __construct()
     {
@@ -1129,5 +1157,41 @@ class CandidateProfile
         if ($this->cv) $score++;
     
         return intval(($score / $total) * 100);
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?string $gender): static
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getProvince(): ?string
+    {
+        return $this->province;
+    }
+
+    public function setProvince(?string $province): static
+    {
+        $this->province = $province;
+
+        return $this;
+    }
+
+    public function getRegion(): ?string
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?string $region): static
+    {
+        $this->region = $region;
+
+        return $this;
     }
 }

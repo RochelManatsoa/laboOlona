@@ -436,5 +436,71 @@
         }
     });
 </script>
+<script>
+	function initCandidateForm() {
+        console.log('initCandidateForm')
+		const localisationSelect = document.querySelector('#candidat_localisation');
+		const madagascarInfoDiv = document.querySelector('#madagascar-info');
+		const provinceSelect = document.querySelector('#candidat_province');
+		const regionSelect = document.querySelector('#candidat_region');
 
+		if (!localisationSelect || localisationSelect.dataset.initialized === 'true') return;
+
+		localisationSelect.dataset.initialized = 'true'; // éviter double binding
+
+		const toggleMadagascarInfo = () => {
+			if (localisationSelect.value === 'MG') {
+				madagascarInfoDiv && (madagascarInfoDiv.style.display = 'block');
+			} else {
+				madagascarInfoDiv && (madagascarInfoDiv.style.display = 'none');
+			}
+		};
+
+		localisationSelect.addEventListener('change', toggleMadagascarInfo);
+		toggleMadagascarInfo();
+
+		if (provinceSelect && regionSelect && !provinceSelect.dataset.initialized) {
+			provinceSelect.dataset.initialized = 'true';
+			fetch('/data/provinces_regions.json')
+				.then(response => response.json())
+				.then(data => {
+					provinceSelect.addEventListener('change', () => {
+						const selectedProvince = provinceSelect.value;
+						regionSelect.innerHTML = '<option value="">Sélectionnez une région</option>';
+						const province = data.find(p => p.province === selectedProvince);
+						if (province) {
+							province.regions.forEach(region => {
+								const option = document.createElement('option');
+								option.value = region.region;
+								option.textContent = region.region;
+								regionSelect.appendChild(option);
+							});
+						}
+					});
+				});
+		}
+	}
+
+	// 1. Initialisation classique
+	document.addEventListener('DOMContentLoaded', initCandidateForm);
+
+	// 2. Initialisation après update dynamique avec MutationObserver
+	const observer = new MutationObserver((mutations) => {
+		for (const mutation of mutations) {
+			if ([...mutation.addedNodes].some(node =>
+				node.nodeType === 1 && (
+					node.querySelector?.('#candidate_localisation') ||
+					node.id === 'candidate_localisation'
+				)
+			)) {
+				setTimeout(initCandidateForm, 0);
+			}
+		}
+	});
+
+	observer.observe(document.body, {
+		childList: true,
+		subtree: true
+	});
+</script>
 {% endblock %}
