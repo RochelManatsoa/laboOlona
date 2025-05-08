@@ -65,12 +65,26 @@ class IndexCandidateProfilesCommand extends Command
                 ];
             }
 
+            $experienceYears = 0;
+
             foreach ($profile->getExperiences() as $experience) {
+                $dateDebut = $experience->getDateDebut();
+                $dateFin = $experience->getDateFin() ?? new \DateTime(); // en cours
+
+                if ($dateDebut instanceof \DateTimeInterface && $dateFin instanceof \DateTimeInterface) {
+                    $interval = $dateDebut->diff($dateFin);
+                    $experienceYears += $interval->y; // Ajoute le nombre d'années complètes
+                }
+
                 $body['experiences'][] = [
-                    'nom'       => $experience->getNom(),
-                    'description' => $experience->getDescription(),
+                    'nom'        => $experience->getNom(),
+                    'description'=> $experience->getDescription(),
                 ];
             }
+            
+            $body['gender'] = $profile->getGender(); // MALE, FEMALE, OTHER
+            $body['province'] = $profile->getProvince(); // ex: Antananarivo
+            $body['experience_years'] = $experienceYears;
 
             foreach ($profile->getSecteurs() as $secteur) {
                 $body['secteurs'][] = [

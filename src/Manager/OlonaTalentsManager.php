@@ -32,9 +32,9 @@ class OlonaTalentsManager
         return $params;
     }
 
-    public function searchEntities(string $type, int $from, int $size, string $query): array
+    public function searchEntities(string $type, int $from, int $size, string $query, array $filters = []): array
     {
-        $paramsSearch = $this->getSearchParams($type, $from, $size, $query);
+        $paramsSearch = $this->getSearchParams($type, $from, $size, $query, $filters);
         $searchResults = $this->elasticsearch->search($paramsSearch);
 
         $ids = array_map(fn($hit) => $hit['_id'], $searchResults['hits']['hits']);
@@ -72,10 +72,10 @@ class OlonaTalentsManager
         return array_slice($boostEntities, $boostFrom, $size);
     }
 
-    private function getSearchParams(string $type, int $from, int $size, string $query): array
+    private function getSearchParams(string $type, int $from, int $size, string $query, array $filters = []): array
     {
         return match ($type) {
-            'candidates' => $this->getParamsCandidates($from, $size, $query),
+            'candidates' => $this->getParamsCandidates($from, $size, $query, $filters),
             'joblistings' => $this->getParamsJoblisting($from, $size, $query),
             'prestations' => $this->getParamsPrestations($from, $size, $query),
             default => throw new \InvalidArgumentException("Invalid type: $type"),
@@ -102,33 +102,57 @@ class OlonaTalentsManager
         };
     }
 
-    public function getParamsCandidates(int $from, int $size, string $query): array
+    public function getParamsCandidates(int $from, int $size, string $query, array $filters = []): array
     {
+        $must = [];
+
+        // Requête principale multi_match
+        if ($query) {
+            $must[] = [
+                'multi_match' => [
+                    'query'  => $query,
+                    'fields' => [
+                        'titre',
+                        'resume',
+                        'localisation',
+                        'technologies',
+                        'tools',
+                        'resultFree',
+                        'metaDescription',
+                        'traductionEn',
+                        'competences.nom',
+                        'experiences.titre',
+                        'experiences.description',
+                        'secteurs.nom',
+                        'langages.nom'
+                    ],
+                    'fuzziness' => 'AUTO',
+                ]
+            ];
+        }
+
+        // Ajout des filtres si fournis
+        if (!empty($filters['gender'])) {
+            $must[] = ['term' => ['gender' => $filters['gender']]];
+        }
+
+        if (!empty($filters['province'])) {
+            $must[] = ['term' => ['province' => $filters['province']]];
+        }
+
+        if (!empty($filters['experience_years'])) {
+            $must[] = ['range' => ['experience_years' => ['gte' => (int) $filters['experience_years']]]];
+        }
+
         return [
             'index' => 'candidate_profile_index',
             'body'  => [
                 'from' => $from,
                 'size' => $size,
                 'query' => [
-                    'multi_match' => [
-                        'query'  => $query,
-                        'fields' => [
-                            'titre', 
-                            'resume', 
-                            'localisation', 
-                            'technologies', 
-                            'tools', 
-                            'resultFree', 
-                            'metaDescription', 
-                            'traductionEn', 
-                            'competences.nom', 
-                            'experiences.titre', 
-                            'experiences.description',
-                            'secteurs.nom', 
-                            'langages.nom'
-                        ],
-                        'fuzziness' => 'AUTO',
-                    ],
+                    'bool' => [
+                        'must' => $must
+                    ]
                 ],
                 'highlight' => [
                     'fields' => [
@@ -148,7 +172,7 @@ class OlonaTalentsManager
                     'pre_tags' => ['<strong>'],
                     'post_tags' => ['</strong>']
                 ]
-            ],
+            ]
         ];
     }
     
