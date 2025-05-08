@@ -270,8 +270,15 @@ class EntrepriseController extends AbstractController
         $from = ($page - 1) * $size;
         $title = $request->query->get('filter-title', $filterTitle);
         $gender = $request->query->get('filter-gender', null);
-        $year = $request->query->get('filter-year', null);
-        $searchResults = $olonaTalentsManager->searchEntities('candidates', $from, $size, $title);
+        $province = $request->query->get('filter-province', null);
+        $experienceYears = $request->query->get('filter-experience-years', null);
+
+        $filters = [];
+        if ($gender) $filters['gender'] = $gender;
+        if ($province) $filters['province'] = $province;
+        if ($experienceYears) $filters['experience_years'] = $experienceYears;
+        
+        $searchResults = $olonaTalentsManager->searchEntities('candidates', $from, $size, $title, $filters);
         $totalPages = ceil($searchResults['totalResults'] / $size);
         $params['searchResults'] = $searchResults['entities'];
         $params['totalResults'] = $searchResults['totalResults'];

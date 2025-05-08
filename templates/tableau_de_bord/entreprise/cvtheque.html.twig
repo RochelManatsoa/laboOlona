@@ -38,13 +38,13 @@
     {% endif %}
     {% set filter_title = app.request.query.get('filter-title', filterTitle) %}
     {% set filter_gender = app.request.query.get('filter-gender', '') %}
-    {% set filter_degree = app.request.query.get('filter-degree', '') %}
-    {% set filter_year = app.request.query.get('filter-year', '') %}
+    {% set filter_province = app.request.query.get('filter-province', '') %}
+    {% set filter_experience_years = app.request.query.get('filter-experience-years', '') %}
     <section class="recruteur-container">
         <div class="recruteur-block d-block p-5 mb-4">
             <div class="recruteur-top-item recruteur-filter">
                 <h1>Votre succès commence avec les bons candicats!</h1>
-                <form action="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}" class="form-search filter-listing-form-wrapper" method="GET">
+                <form id="filter-form" action="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}" class="form-search filter-listing-form-wrapper" method="GET">
                     <div class="filter-listing-form">
                         <div class="main-inner clearfix">
                             <div class="content-main-inner">
@@ -68,36 +68,33 @@
                                 <div class="row">
                                     <div class="col-xs-12 col-md-4 has-border">
                                         <div class="form-group-inner form-group-genre">
-                                            <select name="filter-gender" class="form-control select2-hidden-accessible" data-placeholder="Genres" tabindex="-1" aria-hidden="true">
-                                                <option value="0">Genres</option>
-                                                <option value="1">Tous genres</option>
-                                                <option value="2">Féminins</option>
-                                                <option value="3">Masculins</option>
+                                            <select name="filter-gender" class="form-control">
+                                                <option value="">Genres</option>
+                                                <option value="MALE" {{ filter_gender == 'MALE' ? 'selected' }}>Masculin</option>
+                                                <option value="FEMALE" {{ filter_gender == 'FEMALE' ? 'selected' }}>Féminin</option>
+                                                <option value="OTHER" {{ filter_gender == 'OTHER' ? 'selected' }}>Autre</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-md-4 has-border">
                                         <div class="form-group-inner form-group-degree">
-                                            <select name="filter-degree" class="form-control select2-hidden-accessible" data-placeholder="Province" tabindex="-1" aria-hidden="true">
+                                            <select name="filter-province" class="form-control select2-hidden-accessible" data-placeholder="Province" tabindex="-1" aria-hidden="true">
                                                 <option value="">Province</option>
-                                                <option value="Antananarivo">Antananarivo</option>
-                                                <option value="Fianarantsoa">Fianarantsoa</option>
-                                                <option value="Toamasina">Toamasina</option>
-                                                <option value="Mahajanga">Mahajanga</option>
-                                                <option value="Toliara">Toliara</option>
-                                                <option value="Antsiranana">Antsiranana</option>
+                                                {% for prov in ['Antananarivo','Fianarantsoa','Toamasina','Mahajanga','Toliara','Antsiranana'] %}
+                                                    <option value="{{ prov }}" {{ filter_province == prov ? 'selected' : '' }}>{{ prov }}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-md-4">
                                         <div class="form-group-inner form-group-year">
-                                            <select name="filter-year" class="form-control select2-hidden-accessible" data-placeholder="Experiences" tabindex="-1" aria-hidden="true">
-                                                <option value="">Experiences</option>
-                                                <option value="">Moins d'un an</option>
-                                                <option value="">2 ans</option>
-                                                <option value="">3 ans</option>
-                                                <option value="">4 ans</option>
-                                                <option value="">5 ans et +</option>
+                                            <select name="filter-experience-years" class="form-control select2-hidden-accessible" data-placeholder="Experiences" tabindex="-1" aria-hidden="true">
+                                                <option value="">Expérience</option>
+                                                <option value="0" {{ filter_experience_years == '0' ? 'selected' }}>Moins d'un an</option>
+                                                <option value="2" {{ filter_experience_years == '2' ? 'selected' }}>2 ans</option>
+                                                <option value="3" {{ filter_experience_years == '3' ? 'selected' }}>3 ans</option>
+                                                <option value="4" {{ filter_experience_years == '4' ? 'selected' }}>4 ans</option>
+                                                <option value="5" {{ filter_experience_years == '5' ? 'selected' }}>5 ans et +</option>
                                             </select>
                                         </div>
                                     </div>
@@ -241,8 +238,8 @@
                             'size': size,
                             'filter-title': filter_title,
                             'filter-gender': filter_gender,
-                            'filter-degree': filter_degree,
-                            'filter-year': filter_year,
+                            'filter-province': filter_province,
+                            'filter-experience-years': filter_experience_years,
                         })
                     }}">Précédent</a>
                 </li>
@@ -257,8 +254,8 @@
                                 'size': size,
                                 'filter-title': filter_title,
                                 'filter-gender': filter_gender,
-                                'filter-degree': filter_degree,
-                                'filter-year': filter_year,
+                                'filter-province': filter_province,
+                                'filter-experience-years': filter_experience_years,
                             })
                         }}">{{ i }}</a>
                     </li>
@@ -277,8 +274,8 @@
                             'size': size,
                             'filter-title': filter_title,
                             'filter-gender': filter_gender,
-                            'filter-degree': filter_degree,
-                            'filter-year': filter_year,
+                            'filter-province': filter_province,
+                            'filter-experience-years': filter_experience_years,
                         })
                     }}">Suivant</a>
                 </li>
@@ -358,5 +355,19 @@
         document.getElementById('sizeForm').submit();
     });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('filter-form');
+    if (!form) return;
+
+    const selects = form.querySelectorAll('select');
+
+    selects.forEach(select => {
+        select.addEventListener('change', function () {
+            form.submit();
+        });
+    });
+});
+</script>   
 
 {% endblock %}
