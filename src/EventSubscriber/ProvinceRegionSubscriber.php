@@ -1,6 +1,5 @@
 <?php 
-// src/Form/EventSubscriber/ProvinceRegionSubscriber.php
-namespace App\Form\EventSubscriber;
+namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
