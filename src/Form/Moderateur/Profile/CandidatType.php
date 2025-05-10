@@ -13,7 +13,7 @@ use App\Form\Profile\Candidat\Edit\InfoUserType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
-use App\Form\EventSubscriber\ProvinceRegionSubscriber;
+use App\EventSubscriber\ProvinceRegionSubscriber;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
