@@ -1,0 +1,64 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Abonnement #{{ subcription.id }}{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <div class="row mb-3">
+                <h1 class="h3">Abonnement #{{ subcription.id }}</h1>
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ subcription.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Durée</th>
+                            <td>{{ subcription.duration }}</td>
+                        </tr>
+                        <tr>
+                            <th>Compte</th>
+                            <td>
+                                {{ subcription.labels[subcription.type]|raw }}
+                                {% if subcription.type == 'ENTREPRISE' %}
+                                    <a href="{{ path('app_moderateur_entreprise_profile_show', {'id': subcription.entreprise.id}) }}"><span class="fw-bold">{{ subcription.entreprise.nom }}</span></a>
+                                {% endif %}
+                                {% if subcription.type == 'CANDIDAT' %}
+                                    <span class="fw-bold">{{ subcription.candidat.prenom }} {{ subcription.candidat.nom }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Active</th>
+                            <td>{{ subcription.active ? 'Oui' : 'Non' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Créé le</th>
+                            <td>{{ subcription.createdAt|date('d/m/Y') }} <span class="fw-lighter">{{ subcription.createdAt|time_ago }}</span></td>
+                        </tr>
+                        <tr>
+                            <th>Relance</th>
+                            <td>{{ subcription.relance }}</td>
+                        </tr>
+                        <tr>
+                            <th>Debut</th>
+                            <td>{{ subcription.startDate ? subcription.startDate|date('d/m/Y') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fin</th>
+                            <td>{{ subcription.endDate ? subcription.endDate|date('d/m/Y') : '' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-end w-100">
+                    <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_moderateur_subcription_edit', {'id': subcription.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                    {{ include('moderateur/subcription/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

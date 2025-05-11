@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\BusinessModel\Subcription;
 use App\Entity\Candidate\CV;
 use App\Entity\Candidate\Langages;
 use App\Entity\Candidate\Social;
@@ -245,6 +246,12 @@ class CandidateProfile
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $region = null;
 
+    /**
+     * @var Collection<int, Subcription>
+     */
+    #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: Subcription::class)]
+    private Collection $subcriptions;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
@@ -266,6 +273,7 @@ class CandidateProfile
         $this->contestEntries = new ArrayCollection();
         $this->localisation = 'MG';
         $this->isGeneretated = false;
+        $this->subcriptions = new ArrayCollection();
     }
 
     public function __toString()
@@ -1191,6 +1199,36 @@ class CandidateProfile
     public function setRegion(?string $region): static
     {
         $this->region = $region;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subcription>
+     */
+    public function getSubcriptions(): Collection
+    {
+        return $this->subcriptions;
+    }
+
+    public function addSubcription(Subcription $subcription): static
+    {
+        if (!$this->subcriptions->contains($subcription)) {
+            $this->subcriptions->add($subcription);
+            $subcription->setCandidat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubcription(Subcription $subcription): static
+    {
+        if ($this->subcriptions->removeElement($subcription)) {
+            // set the owning side to null (unless already changed)
+            if ($subcription->getCandidat() === $this) {
+                $subcription->setCandidat(null);
+            }
+        }
 
         return $this;
     }

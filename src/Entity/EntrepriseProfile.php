@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\BusinessModel\Boost;
 use App\Entity\BusinessModel\BoostFacebook;
 use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\BusinessModel\Subcription;
 use App\Entity\Finance\Devise;
 use App\Entity\Entreprise\Favoris;
 use App\Entity\Moderateur\Metting;
@@ -142,6 +143,12 @@ class EntrepriseProfile
     #[ORM\Column(nullable: true)]
     private ?bool $isPremium = null;
 
+    /**
+     * @var Collection<int, Subcription>
+     */
+    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Subcription::class)]
+    private Collection $subcriptions;
+
     public function __construct()
     {
         $this->jobListings = new ArrayCollection();
@@ -151,6 +158,7 @@ class EntrepriseProfile
         $this->prestations = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->status = self::STATUS_PENDING;
+        $this->subcriptions = new ArrayCollection();
     }
 
     public function __toString()
@@ -538,6 +546,36 @@ class EntrepriseProfile
     public function setIsPremium(?bool $isPremium): static
     {
         $this->isPremium = $isPremium;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subcription>
+     */
+    public function getSubcriptions(): Collection
+    {
+        return $this->subcriptions;
+    }
+
+    public function addSubcription(Subcription $subcription): static
+    {
+        if (!$this->subcriptions->contains($subcription)) {
+            $this->subcriptions->add($subcription);
+            $subcription->setEntreprise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubcription(Subcription $subcription): static
+    {
+        if ($this->subcriptions->removeElement($subcription)) {
+            // set the owning side to null (unless already changed)
+            if ($subcription->getEntreprise() === $this) {
+                $subcription->setEntreprise(null);
+            }
+        }
 
         return $this;
     }
