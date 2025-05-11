@@ -1,0 +1,16 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Nouvel abonnement{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <div class="row mb-3">
+                <h1 class="h3">Créer un nouvel abonnement</h1>
+                {{ include('moderateur/subcription/_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
