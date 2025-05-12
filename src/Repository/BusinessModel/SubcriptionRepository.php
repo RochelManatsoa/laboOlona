@@ -37,29 +37,31 @@ class SubcriptionRepository extends ServiceEntityRepository
             []
         );
     }
+    
+    public function findAbonnementsToRelance(string $targetDate, int $relanceNumber): array
+    {
+        $start = new \DateTime($targetDate . ' 00:00:00');
+        $end = new \DateTime($targetDate . ' 23:59:59');
+    
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.endDate BETWEEN :start AND :end')
+            ->andWhere('s.relance = :relanceLevel')
+            ->andWhere('s.active = true')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('relanceLevel', $relanceNumber - 1)
+            ->getQuery()
+            ->getResult();
+    }
+    
 
-    //    /**
-    //     * @return Subcription[] Returns an array of Subcription objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Subcription
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findExpiredActives(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.endDate < :now')
+            ->andWhere('s.active = true')
+            ->setParameter('now', new \DateTime())
+            ->getQuery()
+            ->getResult();
+    }
 }

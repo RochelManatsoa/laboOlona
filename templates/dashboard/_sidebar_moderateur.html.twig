@@ -63,6 +63,13 @@
 
       </li>
       <li>
+        <a href="{{ path('app_moderateur_order_index')}}" 
+            class="nav-link {{ current_route == 'app_moderateur_order_index' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-cart3"></i>
+            Commandes  
+        </a>
+      </li>
+      <li>
         <a href="{{ path('app_dashboard_moderateur_business_model_transaction')}}" 
             class="nav-link {{ current_route == 'app_dashboard_moderateur_business_model_transaction' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-credit-card-fill"></i>

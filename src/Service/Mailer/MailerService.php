@@ -2,14 +2,15 @@
 
 namespace App\Service\Mailer;
 
+use App\Entity\User;
 use App\Entity\Notification;
 use App\Entity\CandidateProfile;
+use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
 use Symfony\Component\Mime\Address;
 use App\Manager\NotificationManager;
-use App\Repository\TemplateEmailRepository;
-use App\Service\User\UserService;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\TemplateEmailRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Notifier\Exception\TransportExceptionInterface;
@@ -134,6 +135,48 @@ class MailerService
     
                 $this->mailer->send($email);
                 $notification = $this->notificationManager->createNotification($this->moderateurManager->getModerateurs()[1], $profile->getCandidat(), Notification::TYPE_PROFIL, $emailTemplate->getTitre(), '<p>Bonjour '.$profile->getCandidat()->getPrenom().',</p>'.$emailTemplate->getContenu() );
+                $this->em->persist($notification);
+                $this->em->flush();
+    
+            }catch(TransportExceptionInterface $transportException){
+    
+                throw $transportException;
+    
+            }
+        }
+    }
+
+
+    public function sendAbonnementRelanceEmail(User $user, string $type, string $categorie, string $compte)
+    {
+        $emailTemplate = $this->templateEmailRepository->findByTypeAndCategorieAndCompte($type, $categorie, $compte);
+        // dd($emailTemplate, $type, $categorie, $compte);
+
+        if ($emailTemplate) {
+            $email = new TemplatedEmail();
+            $sender = 'support@olona-talents.com';
+            $env = 'Olona Talents';
+            if ($this->env === 'prod') {
+                $email->to($user->getEmail());
+            } else {
+                $env = '[Preprod] Olona Talents';
+                $email->to('support@olona-talents.com'); 
+            }
+            $email 
+                ->from(new Address($sender, $env))
+                ->replyTo('contact@olona-talents.com')
+                ->subject($emailTemplate->getTitre())
+                ->htmlTemplate("mails/relance/profile/candidat.html.twig")
+                ->context([
+                    'user' => $user,
+                    'contenu' => '<p>Bonjour '.$user->getPrenom().',</p>'.$emailTemplate->getContenu(),
+                ])
+                ;
+    
+            try{
+    
+                $this->mailer->send($email);
+                $notification = $this->notificationManager->createNotification($this->moderateurManager->getModerateurs()[1], $user, Notification::TYPE_PROFIL, $emailTemplate->getTitre(), '<p>Bonjour '.$user->getPrenom().',</p>'.$emailTemplate->getContenu() );
                 $this->em->persist($notification);
                 $this->em->flush();
     

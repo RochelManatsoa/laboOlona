@@ -6,7 +6,9 @@ use App\Service\PdfService;
 use Twig\Environment as Twig;
 use Symfony\Component\Form\Form;
 use App\Entity\BusinessModel\Invoice;
+use App\Entity\EntrepriseProfile;
 use App\Entity\Marketing\Lead;
+use App\Entity\Marketing\Source;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,6 +28,21 @@ class LeadManager
     public function init(): Lead
     {
         $lead = new Lead();
+
+        return $lead;
+    }
+
+    public function initEntreprise(EntrepriseProfile $entrepriseProfile): Lead
+    {
+        $sourceEntreprise = $this->em->getRepository(Source::class)->findOneBy(['slug' => 'entreprise']);
+        $lead = new Lead();
+        $lead->setSource($sourceEntreprise);
+        $lead->setComment('Validation entreprise - '.$entrepriseProfile->getDescription());
+        $lead->setFullName($entrepriseProfile->getEntreprise());
+        $lead->setEmail($entrepriseProfile->getEntreprise()->getEmail());
+        $lead->setPhone($entrepriseProfile->getEntreprise()->getTelephone());
+        $lead->setUser($entrepriseProfile->getEntreprise());
+        $this->save($lead);
 
         return $lead;
     }
