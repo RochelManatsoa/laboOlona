@@ -33,7 +33,7 @@
                     {% for subcription in subcriptions %}
                         <tr>
                             <td>{{ subcription.id }}</td>
-                            <td>{{ subcription.duration }}</td>
+                            <td>{{ subcription.duration }} mois</td>
                             <td>
                                 {{ subcription.labels[subcription.type]|raw }}<br>
                                 {% if subcription.type == 'ENTREPRISE' %}

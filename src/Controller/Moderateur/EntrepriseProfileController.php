@@ -6,6 +6,7 @@ use App\Entity\EntrepriseProfile;
 use App\Form\EntrepriseProfileType;
 use App\Entity\Entreprise\JobListing;
 use App\Manager\Marketing\LeadManager;
+use App\Manager\Marketing\SubcriptionManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -86,23 +87,18 @@ class EntrepriseProfileController extends AbstractController
         EntrepriseProfile $entrepriseProfile, 
         EntityManagerInterface $entityManager,
         LeadManager $leadManager,
-        SourceRepository $sourceRepository,
+        SubcriptionManager $subcriptionManager,
     ): Response
     {
-        $sourceEntreprise = $sourceRepository->findOneBy(['slug' => 'entreprise']);
         $form = $this->createForm(EntrepriseProfileType::class, $entrepriseProfile);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if($entrepriseProfile->getStatus() !== EntrepriseProfile::STATUS_BANNED && $entrepriseProfile->getStatus() !== EntrepriseProfile::STATUS_PENDING ){
-                $lead = $leadManager->init();
-                $lead->setSource($sourceEntreprise);
-                $lead->setComment('Validation entreprise - '.$entrepriseProfile->getDescription());
-                $lead->setFullName($entrepriseProfile->getEntreprise());
-                $lead->setEmail($entrepriseProfile->getEntreprise()->getEmail());
-                $lead->setPhone($entrepriseProfile->getEntreprise()->getTelephone());
-                $lead->setUser($entrepriseProfile->getEntreprise());
-                $leadManager->save($lead);
+                $leadManager->initEntreprise($entrepriseProfile);
+                if($entrepriseProfile->isIsPremium()){
+                    $subcriptionManager->initEntreprisePro($entrepriseProfile);
+                }
             }
             $entityManager->flush();
 

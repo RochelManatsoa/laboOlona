@@ -33,7 +33,7 @@ class TemplateEmailCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('categorie'),
-            ChoiceField::new('type')->setChoices(Notification::getInverseStatuses()),
+            ChoiceField::new('type')->setChoices(Notification::getStatuses()),
             ChoiceField::new('compte')->setChoices(User::getInverseChoices()),
             TextField::new('titre'),
             TextEditorField::new('contenu')->hideOnIndex(),

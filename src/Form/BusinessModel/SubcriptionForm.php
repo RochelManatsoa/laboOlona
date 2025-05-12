@@ -17,6 +17,26 @@ class SubcriptionForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $subcription = $options['data'] ?? null;
+
+        // Gestion manuelle des dates si invalide ou null
+        $start = null;
+        $end = null;
+
+        if ($subcription instanceof Subcription) {
+            $start = $subcription->getStartDate();
+            if (!$start instanceof \DateTimeInterface) {
+                $start = new \DateTime();
+            }
+
+            $end = $subcription->getEndDate();
+            if (!$end instanceof \DateTimeInterface) {
+                $end = (clone $start)->modify('+1 month');
+            }
+        } else {
+            $start = new \DateTime();
+            $end = (clone $start)->modify('+1 month');
+        }
         $builder
             ->add('duration', null, [
                 'label' => 'Durée',
@@ -36,24 +56,20 @@ class SubcriptionForm extends AbstractType
             ->add('active')
             ->add('startDate', DateType::class, [
                 'label' => 'Date du début',
-                'label_attr' => [
-                    'class' => 'fw-bold fs-5' 
-                ],
+                'label_attr' => ['class' => 'fw-bold fs-5'],
                 'help' => 'Type de compte.',
                 'required' => false,
                 'attr' => ['class' => 'date-picker'],
-                'data' => new \DateTime(),
+                'data' => $start,
             ])
             ->add('endDate', DateType::class, [
                 'label' => 'Date de fin',
-                'label_attr' => [
-                    'class' => 'fw-bold fs-5' 
-                ],
+                'label_attr' => ['class' => 'fw-bold fs-5'],
                 'help' => 'Type de compte.',
                 'required' => false,
                 'attr' => ['class' => 'date-picker'],
-                'data' => new \DateTime(),
-            ])
+                'data' => $end,
+            ])            
             ->add('entreprise', EntityType::class, [
                 'class' => EntrepriseProfile::class,
                 'label_attr' => [

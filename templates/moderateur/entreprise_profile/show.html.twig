@@ -1,13 +1,15 @@
 {% extends 'dashboard/base.html.twig' %}
 
-{% block title %}EntrepriseProfile{% endblock %}
+{% block title %}Entreprise{% endblock %}
 
 {% block body %}
 <section class="p-0 m-0">
     <div class="container">
         <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
             <h1 class="h3">{{ entreprise_profile.nom }} </h1>
-
+            <div class="d-flex justify-content-end w-100">
+                <a class="btn btn-warning px-5 rounded-pill" href="{{ path('app_v2_staff_history_user', {'user': entreprise_profile.entreprise.id}) }}"><i class="bi me-2 bi-clock-history"></i>Historique</a>
+            </div>
             <table class="table">
                 <tbody>
                     <tr>
@@ -17,6 +19,24 @@
                     <tr>
                         <th class="col-3">Inscrit le</th>
                         <td>{{ entreprise_profile.createdAt ? entreprise_profile.createdAt|date('d/m/Y') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Crédits</th>
+                        <td>{{ entreprise_profile.entreprise.credit.total }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Premium</th>
+                        <td>{{ entreprise_profile.isIsPremium ? 'Oui' : 'Non' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Commandes</th>
+                        <td>
+                            {% if entreprise_profile.entreprise.orders|length > 0 %}
+                                <a href="{{ path('app_moderateur_order_index', {'userId': entreprise_profile.entreprise.id})}}"><span class="badge bg-primary">{{ entreprise_profile.entreprise.orders|length }} commandes</span></a>
+                            {% else %}
+                                <span class="badge bg-danger">0</span>
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr>
                         <th class="col-3">Taille</th>
