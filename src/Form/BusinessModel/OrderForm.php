@@ -14,23 +14,55 @@ use App\Form\Autocomplete\UserAutocompleteField;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class OrderForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('orderNumber')
-            ->add('updatedAt')
-            ->add('status')
-            ->add('totalAmount')
-            ->add('description')
-            ->add('paymentId')
-            ->add('payerId')
-            ->add('token')
+            ->add('orderNumber', TextType::class, [
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Numéro de commande.',
+            ])
+            ->add('status', ChoiceType::class, [
+                'choices' => Order::getStatuses(),
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Statut de la commande.',
+            ])
+            ->add('totalAmount', TextType::class, [
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Montant.',
+            ])
+            ->add('description', TextareaType::class, [
+                'required' => false,
+                'label' => 'Description',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Description de la commande.',
+                'attr' => [
+                    'rows' => 6,
+                    'class' => 'full-ckeditor-textarea'
+                ]
+            ])
+            // ->add('paymentId')
+            // ->add('payerId')
             ->add('currency', EntityType::class, [
                 'class' => Devise::class,
-                'choice_label' => 'id',
+                'choice_label' => 'symbole',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Devise choisie pour la commande.',
             ])
             ->add('customer', UserAutocompleteField::class, [
                 'label_attr' => [
@@ -45,20 +77,28 @@ class OrderForm extends AbstractType
             ])
             ->add('paymentMethod', EntityType::class, [
                 'class' => TypeTransaction::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Devise choisie pour la commande.',
             ])
             ->add('package', EntityType::class, [
                 'class' => Package::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Devise choisie pour la commande.',
             ])
-            ->add('transaction', EntityType::class, [
-                'class' => Transaction::class,
-                'choice_label' => 'id',
-            ])
-            ->add('invoice', EntityType::class, [
-                'class' => Invoice::class,
-                'choice_label' => 'id',
-            ])
+            // ->add('transaction', EntityType::class, [
+            //     'class' => Transaction::class,
+            //     'choice_label' => 'id',
+            // ])
+            // ->add('invoice', EntityType::class, [
+            //     'class' => Invoice::class,
+            //     'choice_label' => 'id',
+            // ])
         ;
     }
 
