@@ -2,6 +2,7 @@
 
 namespace App\Form\BusinessModel;
 
+use App\Entity\BusinessModel\Package;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
 use Symfony\Component\Form\AbstractType;
@@ -88,6 +89,16 @@ class SubcriptionForm extends AbstractType
                 ],
                 'label' => 'Candidat',
                 'required' => false,
+            ])        
+            ->add('package', EntityType::class, [
+                'class' => Package::class,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5' 
+                ],
+                'choice_label' => 'name',
+                'placeholder' => 'Séléctionner un package',
+                'required' => false,
+                'autocomplete' => true
             ])
         ;
     }

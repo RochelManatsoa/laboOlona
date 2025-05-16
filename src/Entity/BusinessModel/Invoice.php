@@ -51,6 +51,9 @@ class Invoice
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $city = null;
 
+    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    private ?Subcription $subcription = null;
+
     public function __construct()
     {
         $this->setCreatedAt(new  \DateTime());
@@ -235,6 +238,18 @@ class Invoice
     public function setContract(?Contract $contract): static
     {
         $this->contract = $contract;
+
+        return $this;
+    }
+
+    public function getSubcription(): ?Subcription
+    {
+        return $this->subcription;
+    }
+
+    public function setSubcription(?Subcription $subcription): static
+    {
+        $this->subcription = $subcription;
 
         return $this;
     }

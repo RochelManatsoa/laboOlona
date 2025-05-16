@@ -156,6 +156,15 @@ class ActivityLogger
         $details = sprintf('Achant crédit: %s via %s', $amount, $context);
         $this->logActivity($user, ActivityLog::ACTIVITY_CREDIT_SPENDING, $details, ActivityLog::LEVEL_INFO);
     }
+    
+    /**
+     * Log a subcription purchased activity
+     */
+    public function logSubcriptionPurchased(User $user, float $amount, string $context): void
+    {
+        $details = sprintf('Abonnement Premium : %s via %s', $amount, $context);
+        $this->logActivity($user, ActivityLog::ACTIVITY_PURCHASE, $details, ActivityLog::LEVEL_INFO);
+    }
     /**
      * Retrieve user's IP address
      *

@@ -37,16 +37,15 @@ class SubcriptionRepository extends ServiceEntityRepository
             []
         );
     }
-    
+
     public function findAbonnementsToRelance(string $targetDate, int $relanceNumber): array
     {
-        $start = new \DateTime($targetDate . ' 00:00:00');
-        $end = new \DateTime($targetDate . ' 23:59:59');
-    
+        $start = new \DateTimeImmutable($targetDate . ' 00:00:00');
+        $end = new \DateTimeImmutable($targetDate . ' 23:59:59');
+
         return $this->createQueryBuilder('s')
             ->andWhere('s.endDate BETWEEN :start AND :end')
             ->andWhere('s.relance = :relanceLevel')
-            ->andWhere('s.active = true')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
             ->setParameter('relanceLevel', $relanceNumber - 1)
@@ -54,13 +53,15 @@ class SubcriptionRepository extends ServiceEntityRepository
             ->getResult();
     }
     
-
     public function findExpiredActives(): array
     {
+        $sevenDaysAgo = (new \DateTimeImmutable())->modify('-7 days');
+    
         return $this->createQueryBuilder('s')
-            ->andWhere('s.endDate < :now')
+            ->andWhere('s.endDate <= :limitDate')
             ->andWhere('s.active = true')
-            ->setParameter('now', new \DateTime())
+            ->andWhere('s.relance = 2') // uniquement ceux à qui on a déjà envoyé J+3
+            ->setParameter('limitDate', $sevenDaysAgo)
             ->getQuery()
             ->getResult();
     }

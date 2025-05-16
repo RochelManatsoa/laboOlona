@@ -5,13 +5,14 @@ namespace App\Manager\BusinessModel;
 use App\Entity\User;
 use App\Entity\Notification;
 use Twig\Environment as Twig;
+use App\Service\ActivityLogger;
 use Symfony\Component\Form\Form;
 use App\Entity\BusinessModel\Credit;
 use App\Manager\NotificationManager;
+use App\Entity\BusinessModel\Invoice;
 use App\Entity\BusinessModel\Package;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
-use App\Service\ActivityLogger;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -23,6 +24,7 @@ class CreditManager
         private NotificationManager $notificationManager,
         private RequestStack $requestStack,
         private ActivityLogger $activityLogger,
+        private TransactionManager $transactionManager,
         private Security $security
     ){}
 
@@ -155,20 +157,27 @@ class CreditManager
             return false;
         }
 
-        $user = $transaction->getUser();
-        $creditsToAdd = $transaction->getCreditsAdded();
-
-        $credit = $user->getCredit();
-
-        if (!$credit) {
-            $credit = $this->init();
-            $credit->setUser($user);
+        if($transaction->getPackage()->getType() === 'ABONNEMENT'){
+            $invoice = $transaction->getCommand()->getInvoice();
+            if(!$invoice instanceof Invoice){
+                $this->transactionManager->createInvoice($transaction);
+            }
+            $this->activityLogger->logSubcriptionPurchased($transaction->getUser(), $transaction->getAmount(), $context);
+        }else{
+            $user = $transaction->getUser();
+            $creditsToAdd = $transaction->getCreditsAdded();
+            $credit = $user->getCredit();
+    
+            if (!$credit) {
+                $credit = $this->init();
+                $credit->setUser($user);
+            }
+    
+            $credit->setTotal($credit->getTotal() + $creditsToAdd);
+            $this->activityLogger->logCreditPurchased($user, $creditsToAdd, $context);
+            $this->em->persist($credit);
         }
-
-        $credit->setTotal($credit->getTotal() + $creditsToAdd);
-        $this->activityLogger->logCreditPurchased($user, $creditsToAdd, $context);
         
-        $this->em->persist($credit);
         $this->em->persist($transaction);
         $this->em->flush();
 

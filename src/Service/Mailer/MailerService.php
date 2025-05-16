@@ -2,6 +2,7 @@
 
 namespace App\Service\Mailer;
 
+use App\Entity\BusinessModel\Subcription;
 use App\Entity\User;
 use App\Entity\Notification;
 use App\Entity\CandidateProfile;
@@ -143,6 +144,110 @@ class MailerService
                 throw $transportException;
     
             }
+        }
+    }
+    
+    public function sendSubcriptionRelanceEmail(User $user, Subcription $subcription, string $categorie, string $compte)
+    {
+        $prenom = $user->getPrenom();
+        $montant = $compte === 'ENTREPRISE' ? '100 000 AR (≈ 20 €)' : '24 000 AR (≈ 5 €)';
+        $subject = '';
+        $contenu = '';
+        $nextRenewalDate = $subcription->getEndDate() ? $subcription->getEndDate() : new \DateTimeImmutable('+1 month');
+        $formattedRenewalDate = $nextRenewalDate->format('d F Y');
+
+        switch ($categorie) {
+            case 'premium_relance_1':
+                $subject = 'Renouvellement de votre abonnement Premium ' . ucfirst(strtolower($compte)) . ' – Olona Talents';
+                $contenu = "
+                    <p>Bonjour $prenom,</p>
+                    <p>Nous vous confirmons que votre abonnement Premium $compte a bien été renouvelé sur la plateforme Olona Talents.</p>
+                    <p><strong>🔁 Résumé de l’abonnement</strong><br>
+                    Formule : Premium $compte – Mensuel<br>
+                    Montant : $montant<br>
+                    Durée : 1 mois<br>
+                    Date du prochain renouvellement : $formattedRenewalDate</p>
+
+                    <p><strong>💳 Modalités de paiement disponibles</strong><br>
+                    - Carte bancaire (CB)<br>
+                    - PayPal<br>
+                    - Mobile Money (Mvola, Orange Money, Airtel Money)<br>
+                    - Virement bancaire<br>
+                    - Paiement en espèces auprès de notre équipe</p>
+
+                    <p>⚠️ Merci de bien vouloir effectuer votre règlement dans un délai maximum de 7 jours, si ce n’est pas déjà fait.</p>
+                ";
+                break;
+
+            case 'premium_relance_2':
+                $subject = 'Rappel – Paiement en attente pour votre abonnement Premium Olona Talents';
+                $contenu = "
+                    <p>Bonjour $prenom,</p>
+                    <p>Nous nous permettons de vous adresser ce message de rappel concernant le renouvellement de votre abonnement Premium $compte.</p>
+                    <p>À ce jour, nous n’avons pas encore reçu votre règlement de $montant.</p>
+                    <p><strong>🕒 Délai de règlement</strong><br>
+                    Le règlement doit être effectué dans un délai maximum de 7 jours après renouvellement.</p>
+                    <p><strong>💳 Moyens de paiement disponibles</strong><br>
+                    - Carte bancaire (CB)<br>
+                    - PayPal<br>
+                    - Mobile Money (Mvola, Orange Money, Airtel Money)<br>
+                    - Virement bancaire<br>
+                    - Paiement en espèces auprès de notre équipe</p>
+                    <p>Passé ce délai, votre accès pourra être suspendu automatiquement.</p>
+                ";
+                break;
+
+            case 'premium_relance_3':
+                $subject = 'Relance finale – Suspension imminente de votre abonnement Premium Olona Talents';
+                $contenu = "
+                    <p>Bonjour $prenom,</p>
+                    <p>Malgré nos précédents rappels, nous constatons que le règlement de votre abonnement Premium $compte de $montant n’a toujours pas été effectué.</p>
+                    <p><strong>⚠️ Suspension et majoration</strong><br>
+                    Sans règlement sous 48h :<br>
+                    - Suspension temporaire de votre accès Premium<br>
+                    - Majoration de 10 % à chaque période de 7 jours supplémentaires</p>
+                    <p><strong>💳 Rappel des moyens de paiement</strong><br>
+                    - Carte bancaire (CB)<br>
+                    - PayPal<br>
+                    - Mobile Money (Mvola, Orange Money, Airtel Money)<br>
+                    - Virement bancaire<br>
+                    - Paiement en espèces auprès de notre équipe</p>
+                ";
+                break;
+
+            default:
+                return;
+        }
+
+        $email = new TemplatedEmail();
+        $sender = 'support@olona-talents.com';
+        $envName = $this->env === 'prod' ? 'Olona Talents' : '[Preprod] Olona Talents';
+
+        $email->from(new Address($sender, $envName))
+            ->to($this->env === 'prod' ? $user->getEmail() : 'support@olona-talents.com')
+            ->replyTo('contact@olona-talents.com')
+            ->subject($subject)
+            ->htmlTemplate('mails/relance/abonnement.html.twig')
+            ->context([
+                'user' => $user,
+                'contenu' => $contenu,
+            ]);
+
+        try {
+            $this->mailer->send($email);
+
+            $notification = $this->notificationManager->createNotification(
+                $this->moderateurManager->getModerateurs()[1],
+                $user,
+                Notification::TYPE_PROFIL,
+                $subject,
+                $contenu
+            );
+
+            $this->em->persist($notification);
+            $this->em->flush();
+        } catch (TransportExceptionInterface $e) {
+            throw $e;
         }
     }
 

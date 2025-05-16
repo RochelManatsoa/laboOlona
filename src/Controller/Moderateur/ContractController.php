@@ -2,9 +2,11 @@
 
 namespace App\Controller\Moderateur;
 
+use App\Entity\BusinessModel\Subcription;
 use App\Entity\Coworking\Contract;
 use App\Form\Coworking\ContractPremiumType;
 use App\Manager\Coworking\ContractManager;
+use App\Manager\Marketing\SubcriptionManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -103,6 +105,15 @@ class ContractController extends AbstractController
             return $this->redirectToRoute('app_contract_edit', [ 'id' => $contract->getId() ]);
         }
         $file = $contractManager->generateContract($contract);
+
+        return new BinaryFileResponse($file);
+    }
+
+    #[Route('/subcription/{subcription}', name: 'app_contract_subcription_pdf')]
+    public function subcriptionPdf(Subcription $subcription, SubcriptionManager $subcriptionManager)
+    {
+        // dd($subcription);
+        $file = $subcriptionManager->generateContract($subcription);
 
         return new BinaryFileResponse($file);
     }

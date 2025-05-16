@@ -14,14 +14,14 @@
             <div class="d-flex align-items-center">
                 <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
                 <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-                <h5 class="mb-0"> Mes commandes </h5>
+                <h5 class="mb-0"> Facturation </h5>
             </div>
             <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
                 <li class="breadcrumb-item position-relative">
                     <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
                     <i class="ri-home-8-line"></i> Tableau de bord </a>
                 </li>
-                <li class="breadcrumb-item position-relative"> Mes commandes </li>
+                <li class="breadcrumb-item position-relative"> Facturation </li>
             </ol>
         </div>
     </section>
@@ -32,6 +32,114 @@
             Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
         </div>
     </section>
+    {% endif %}
+    {% if subcriptions|length > 0 %}
+        {% set subcription = subcriptions[0] %}
+        <section class="tarfis-container d-block p-5 mb-4">
+            <div class="wrapper-abonnement-c">
+                <div class="title-abonnement-c">
+                    <h1>Facturation</h1>
+                    <p>Gerer vos factures et vos paiements.</p>
+                </div>
+                <div class="row">
+                    <!-- Carte 1 : Solde dû -->
+                    <div class="col-md-4 d-flex">
+                        <div class="card text-white bg-secondary mb-3 w-100">
+                            <div class="card-body d-flex flex-column justify-content-between h-100">
+                                <div>
+                                    <p class="card-text">💰 Solde dû</p>
+                                    <h2 class="card-title">{{ subcription.isActive ? 0 : package.price }} MGA</h2>
+                                </div>
+                                <div class="text-end">
+                                {% if typeTransaction is defined and typeTransaction is not null and typeTransaction.slug == 'paypal' %}
+                                    <a href="{{ path('app_tableau_de_bord_entreprise_abonnement')}}" class="btn btn-light btn-sm {{ subcription.isActive ? 'disabled' : '' }}">Payer maintenant</a>
+                                {% else %}
+                                    {{ form_start(form) }}
+                                    <div style="display: none;">
+                                    {{ form_widget(form) }}
+                                    </div>
+                                    <button class="btn btn-light btn-sm {{ subcription.isActive ? 'disabled' : '' }}">Payer maintenant</button>
+                                    {{ form_end(form) }}
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carte 2 : Cycle de facturation -->
+                    <div class="col-md-4 d-flex">
+                        <div class="card text-white bg-primary mb-3 w-100">
+                            <div class="card-body d-flex flex-column justify-content-between h-100">
+                                <div>
+                                    <p class="card-text">🗓️ Cycle de facturation</p>
+                                    <p class="small mb-2">Votre cycle s'étend du <span class="fw-bold">{{ subcription.startDate|date('d M')}}</span> au <span class="fw-bold">{{ subcription.endDate|date('d M')}}</span>.</p>
+                                        <a target=_blank href="{{ path('app_contract_subcription_pdf', {'subcription': subcription.id})}}" class="small">
+                                            Contrat <i class="bi bi-file-pdf"></i>
+                                        </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carte 3 : Mode de paiement -->
+                    <div class="col-md-4 d-flex">
+                        <div class="card text-white bg-success mb-3 w-100">
+                            <div class="card-body d-flex flex-column justify-content-between h-100">
+                                <div>
+                                    <p class="card-text">💳 Mode de paiement</p>
+                                    <p class="small mb-2">{{ subcription.lastTypeTransaction ? subcription.lastTypeTransaction.name : '' }}</p>
+                                </div>
+                                <div class="text-end">
+                                    <a href="{{ path('app_tableau_de_bord_entreprise_abonnement')}}" class="btn btn-light btn-sm">Modifier</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pack_standard_list m-b30">
+                    <div class="row"> 
+                    {# {{ dump(subcription.invoices|length) }} #}
+                    {% if subcription.invoices|length > 0 %}
+                    <table class="table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Date d'échéance</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">N° de facture</th>
+                                <th scope="col">Méthode</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Solde dû</th>
+                                <th scope="col">Status</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for invoice in subcription.invoices %}
+                                <tr>
+                                    <th scope="row">{{ invoice.createdAt|date('d/m/Y') }}</th>
+                                    <td>{{ invoice.createdAt|date_modify('+1 month')|date('d/m/Y') }}</td>
+                                    <td>Abonnement</td>
+                                    <td>{{ invoice.numeroFactureValue }}</td>
+                                    <td>{{ subcription.lastTypeTransaction.name }}</td>
+                                    <td>{{ package.price }} MGA</td>
+                                    <td>{{ package.price }} MGA</td>
+                                    <td>{{ invoice.createdAt|date_modify('+1 month') < "now"|date ? 'Expiré' : 'En cours' }}</td>
+                                    <td>
+                                        <a target=_blank href="{{ path('payment_facture', {'order': invoice.commande.id})}}" class="small">
+                                            <i class="bi bi-file-pdf"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}                                  
+                    </div>
+                </div>
+            </div>
+        </section>
     {% endif %}
     <section class="tarfis-container d-block p-5 mb-4">
         <div class="wrapper-abonnement-c">
@@ -46,8 +154,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <td scope="col" class="fw-bolder">{{ knp_pagination_sortable(orders, 'Produit', 'p.name') }}</td>
-                                <td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Montant', 'o.totalAmount') }}</td>
+                                <td scope="col" class="fw-bolder">{{ knp_pagination_sortable(orders, 'Description', 'p.name') }}</td>
                                 <td scope="col-2" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Paiement', 'type.name') }}</td>
                                 <td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Date', 'o.createdAt') }}</td>
                                 <td scope="col-1" class="fw-bolder text-center">{{ knp_pagination_sortable(orders, 'Statut', 'o.status') }}</td>
@@ -58,17 +165,14 @@
                             <tr id="row_prestation_recruiter_{{item.id}}">
                                 {% if item.orderItems|length > 0 %}
                                     <td class="">
-                                        Coworking 
+                                        Coworking : <span class="fw-bolder">{{ item.totalAmount }} {{ entreprise.devise.symbole }}</span>
                                         <br>
                                         <span class="fw-lighter small">
                                             {{ item.orderNumber }}
                                         </span>
                                     </td>
-                                    <td class="col-1 small text-center">
-                                        {{ item.totalAmount }} Ar
-                                    </td>
                                     <td class="col-1 text-center">
-                                        {# <img src="{{ asset('/images/' ~ item.paymentMethod.slug ~ '.png') }}" class="img-fluid border" alt="{{ item.paymentMethod.name }}"> #}
+                                        <img src="{{ asset('/images/' ~ item.paymentMethod.slug ~ '.png') }}" class="img-fluid border" alt="{{ item.paymentMethod.name }}">
                                     </td>
                                     <td class="col-1 text-center small">
                                         {{ item.createdAt|date('d/m/Y') }}<br>
@@ -95,14 +199,11 @@
                                     <td class="">
                                         {{ item.package.name }} | 
                                         <span class="fw-bolder">{{ item.package.credit }}</span>
-                                        <span class="fw-light">crédits</span>
+                                        <span class="fw-light">crédits</span> : <span class="fw-bolder">{{ amount }}</span>
                                         <br>
                                         <span class="fw-lighter small">
                                             {{ item.orderNumber }}
                                         </span>
-                                    </td>
-                                    <td class="col-1 small text-center">
-                                        {{ amount }}
                                     </td>
                                     <td class="col-2 text-center">
                                         <img src="{{ asset('/images/' ~ item.paymentMethod.slug ~ '.png') }}" class="img-fluid border w-50" alt="{{ item.paymentMethod.name }}">

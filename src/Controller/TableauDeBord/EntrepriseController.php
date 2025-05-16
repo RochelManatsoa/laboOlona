@@ -31,14 +31,17 @@ use App\Entity\BusinessModel\Package;
 use App\Entity\Entreprise\JobListing;
 use App\Form\BusinessModel\OrderType;
 use App\Service\Mailer\MailerService;
+use Google\Service\PeopleService\Url;
 use App\Entity\Candidate\Applications;
 use App\Entity\Moderateur\ContactForm;
+use App\Form\BusinessModel\CommandType;
 use App\Form\Entreprise\JobListingType;
 use App\Manager\Finance\EmployeManager;
 use App\Security\Voter\JobListingVoter;
 use App\Security\Voter\SimulationVoter;
 use App\Form\Profile\EditEntrepriseType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\BusinessModel\Subcription;
 use App\Entity\BusinessModel\Transaction;
 use App\Form\TableauDeBord\AssistanceType;
 use App\Form\BusinessModel\TransactionType;
@@ -57,7 +60,6 @@ use App\Repository\Entreprise\JobListingRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\BusinessModel\PurchasedContactRepository;
-use Google\Service\PeopleService\Url;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -322,12 +324,49 @@ class EntrepriseController extends AbstractController
     }
     
     #[Route('/mes-commandes', name: 'app_tableau_de_bord_entreprise_mes_commandes')]
-    public function orders(): Response
+    public function orders(Request $request, OrderManager $orderManager, TransactionManager $transactionManager): Response
     {
         $params = $this->getData();
         if ($params instanceof RedirectResponse) {
             return $params; 
         }
+        $subcriptions = $this->em->getRepository(Subcription::class)->findBy(['entreprise' => $params['entreprise']]);
+        $package = $this->em->getRepository(Package::class)->findOneBy(['slug' => 'abonnement']);
+        $devise = $params['entreprise']->getDevise();
+        if(count($subcriptions) !== 0){
+            $typeTransaction = $subcriptions[0]->getLastTypeTransaction();
+            $order = $orderManager->init();
+            $order->setPackage($package);
+            $order->setCurrency($devise);
+            $order->setPaymentMethod($typeTransaction);
+            $order->setTotalAmount($package->getPrice());
+            $form = $this->createForm(CommandType::class, $order);
+            $form->handleRequest($request);
+            
+            if ($form->isSubmitted() && $form->isValid()) {
+                $order = $form->getData();
+                $order->setPaymentMethod($typeTransaction);
+                $transaction = $order->getTransaction();
+                if(!$transaction instanceof Transaction){
+                    $transaction = $transactionManager->init();
+                    $transaction->setCommand($order);
+                }
+                $transaction->setTypeTransaction($typeTransaction);
+                $transaction->setPackage($package);
+                $transaction->setAmount($package->getPrice());
+                $transactionManager->save($transaction);
+                $orderManager->save($order);
+                
+                return $this->redirectToRoute('app_tableau_de_bord_entreprise_mobile_money_checkout', [
+                    'orderNumber' => $order->getOrderNumber()
+                ]);
+            } 
+            $params['form'] = $form->createView();
+            $params['mobileMoney'] = $order->getPaymentMethod();
+            $params['typeTransaction'] = $typeTransaction;
+        }
+        $params['package'] = $package;
+        $params['subcriptions'] = $subcriptions;
         $params['orders'] = $this->em->getRepository(Order::class)->filterByUser(new QuerySearchData);
 
         return $this->render('tableau_de_bord/entreprise/mes_commandes.html.twig', $params);
