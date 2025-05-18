@@ -11,6 +11,8 @@ use App\Entity\BusinessModel\TypeTransaction;
 use App\Form\Autocomplete\UserAutocompleteField;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -27,8 +29,24 @@ class TransactionAdminForm extends AbstractType
                 ],
                 'help' => 'Montant de la transaction.',
             ])
-            ->add('creditsAdded')
-            // ->add('transactionDate')
+            ->add('creditsAdded', IntegerType::class, [
+                'label' => 'Crédits',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Crédits ajoutés.',
+            ])
+            ->add('transactionDate', DateTimeType::class, [
+                'date_widget' => 'single_text',
+                'time_widget' => 'single_text',
+                'required' => false,
+                'attr' => ['class' => 'date-picker'],
+                'label' => 'Date de transaction (*)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Date et heure de la réservation.',
+            ])
             ->add('reference', TextType::class, [
                 'label' => 'Référence',
                 'label_attr' => [

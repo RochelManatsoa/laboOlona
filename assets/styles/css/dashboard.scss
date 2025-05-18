@@ -2679,6 +2679,7 @@ span.vue_profil {
     $orange-money-image: '/public/images/pubs/entreprise_orange_money.webp';
     $airtel-money-image: '/public/images/pubs/icon_airtel_money.webp';
     $virement-bancaire-image: '/public/images/pubs/virement-bancaire.webp';
+    $paiement-cash: '/public/images/pubs/paiement-cash.webp';
     #order_paymentMethod {
         display: flex;
         justify-content: center;
@@ -2715,6 +2716,9 @@ span.vue_profil {
     }
     #order_paymentMethod_5 + label {
         background-image: url($virement-bancaire-image);
+    }
+    #order_paymentMethod_6 + label {
+        background-image: url($paiement-cash);
     }
 }
 

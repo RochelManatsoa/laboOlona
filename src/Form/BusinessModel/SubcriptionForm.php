@@ -2,6 +2,7 @@
 
 namespace App\Form\BusinessModel;
 
+use App\Entity\BusinessModel\Invoice;
 use App\Entity\BusinessModel\Package;
 use App\Entity\CandidateProfile;
 use App\Entity\EntrepriseProfile;
@@ -99,6 +100,18 @@ class SubcriptionForm extends AbstractType
                 'placeholder' => 'Séléctionner un package',
                 'required' => false,
                 'autocomplete' => true
+            ]) 
+            ->add('invoices', EntityType::class, [
+                'class' => Invoice::class,
+                'label' => 'Factures',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-5'
+                ],
+                'placeholder' => 'Sélectionner les factures',
+                'required' => false,
+                'autocomplete' => true,
+                'multiple' => true,
+                'by_reference' => false,
             ])
         ;
     }

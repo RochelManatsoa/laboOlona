@@ -59,6 +59,11 @@ class Invoice
         $this->setCreatedAt(new  \DateTime());
     }
 
+    public function __toString()
+    {
+        return $this->getName().' - Commande du '. $this->getCreatedAt()->format('d/m/Y');
+    }
+
     public function getId(): ?int
     {
         return $this->id;

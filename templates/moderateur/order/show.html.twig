@@ -32,7 +32,7 @@
                     </tr>
                     <tr>
                         <th>Montant</th>  
-                        <td>{{ order.totalAmount }} {{ order.currency.symbole }}</td>
+                        <td>{{ order.totalAmount }} {{ order.currency ? order.currency.symbole : 'Ar' }}</td>
                     </tr>
                     <tr>
                         <th>Utilisateur</th>

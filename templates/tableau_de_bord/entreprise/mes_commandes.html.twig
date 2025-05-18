@@ -73,9 +73,11 @@
                                 <div>
                                     <p class="card-text">🗓️ Cycle de facturation</p>
                                     <p class="small mb-2">Votre cycle s'étend du <span class="fw-bold">{{ subcription.startDate|date('d M')}}</span> au <span class="fw-bold">{{ subcription.endDate|date('d M')}}</span>.</p>
-                                        <a target=_blank href="{{ path('app_contract_subcription_pdf', {'subcription': subcription.id})}}" class="small">
-                                            Contrat <i class="bi bi-file-pdf"></i>
+                                    <div class="text-end">
+                                        <a target=_blank href="{{ path('app_contract_subcription_pdf', {'contractNumber': subcription.contractNumber})}}" class="btn btn-light btn-sm">
+                                            <i class="bi bi-file-pdf"></i> Contrat 
                                         </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +101,6 @@
 
                 <div class="pack_standard_list m-b30">
                     <div class="row"> 
-                    {# {{ dump(subcription.invoices|length) }} #}
                     {% if subcription.invoices|length > 0 %}
                     <table class="table">
                         <thead class="table-dark">
@@ -122,7 +123,7 @@
                                     <td>{{ invoice.createdAt|date_modify('+1 month')|date('d/m/Y') }}</td>
                                     <td>Abonnement</td>
                                     <td>{{ invoice.numeroFactureValue }}</td>
-                                    <td>{{ subcription.lastTypeTransaction.name }}</td>
+                                    <td>{{ subcription.lastTypeTransaction ? subcription.lastTypeTransaction.name : '' }}</td>
                                     <td>{{ package.price }} MGA</td>
                                     <td>{{ package.price }} MGA</td>
                                     <td>{{ invoice.createdAt|date_modify('+1 month') < "now"|date ? 'Expiré' : 'En cours' }}</td>

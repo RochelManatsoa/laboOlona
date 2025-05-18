@@ -103,6 +103,7 @@ class TransactionManager
         $invoice = $order->getInvoice();
         if(!$invoice instanceof Invoice){
             $invoice = new Invoice();
+            $invoice->setCreatedAt($transaction->getTransactionDate());
         }
         $invoice->setAdress($order->getCustomer()->getAdress());
         $invoice->setPostalCode($order->getCustomer()->getPostalCode());

@@ -1,199 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Contrat N°{{ subscription.contractNumber }}</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            font-size: 12px;
+            font-size: 13px;
+            color: #333;
             margin: 0;
-            padding: 0;
+            padding: 20px;
+            background: #fff;
         }
 
         .container {
-            margin: 20mm 15mm 20mm 15mm;
+            max-width: 800px;
+            margin: auto;
         }
 
         h1 {
-            color: #333;
             text-align: center;
+            font-size: 20px;
+            margin-bottom: 30px;
         }
 
         h2 {
             font-size: 16px;
-            margin-top: 20px;
-            margin-bottom: 10px;
+            margin-top: 25px;
+            color: #222;
         }
 
-        p {
+        p, li {
             text-align: justify;
             line-height: 1.6;
-            margin-bottom: 10px;
         }
 
         ul {
-            margin: 0 0 10px 20px;
-            padding: 0;
-            list-style-type: disc;
+            margin: 5px 0 20px 20px;
         }
 
-        .text-center {
+        .note {
+            margin-top: 40px;
+            font-style: italic;
             text-align: center;
+            font-size: 12px;
+            color: #555;
         }
-
-        .mb-4 {
-            margin-bottom: 20px;
-        }
-
-        .page-break {
-            page-break-before: always;
-        }
-
-        header, footer {
-            position: fixed;
-            left: 0;
-            right: 0;
-            font-size: 10px;
-            text-align: center;
-            line-height: 15px;
-        }
-
-        header {
-            top: 0;
-            height: 30px;
-        }
-
-        footer {
-            bottom: 0;
-            height: 20px;
-        }
-
-        .footer-content {
-            border-top: 1px solid #ddd;
-            padding-top: 5px;
-        }
-
-        .cols {
-            display: flex;
-            flex-wrap: wrap;
-            margin-right: -15px;
-            margin-left: -15px;
-        }
-        .col-6 {
-            flex: 0 0 50%; /* Largeur de 50% */
-            max-width: 45%;
-            padding-right: 15px;
-            padding-left: 15px;
-            box-sizing: border-box;
-        }
-
-        .text-center {
-            text-align: center;
+        .logo-facture {
+            display: block;
+            margin: 0 auto 20px auto;
+            width: 200px;
         }
     </style>
 </head>
 
-{% set fullName = "" %}
-{% set pageNumber = 1 %}
-{% set totalPages = 1 %}
-{% if entreprise %}
-    {% set fullName = profile.nom %}
-{% else %}
-    {% set fullName = user.nom|upper ~ " " ~ user.prenom|capitalize %}
-{% endif %}
+{% set fullName = entreprise ? profile.nom : user.nom|upper ~ " " ~ user.prenom|capitalize %}
 
 <body>
+<div class="container">
+	<img src="{{ pathToWeb ~ asset('images/logo-olona-talents-black600x200.png') }}" alt="Olona Talents" class="logo-facture">
+    <h1>Contrat d’Abonnement Premium Olona Talents</h1>
+    <p>
+        <strong>Entre les soussignés :</strong><br>
+        Ci-après dénommé : <strong>{{ fullName }}</strong><br>
+        Adresse : {{ user.adress }} {{ user.postalCode }} {{ user.city }}
+    </p>
 
-    <div class="container">
-        <div class="invoice">
-            <div class="row">
-                <h1 class="display-5">Contrat d’Abonnement Premium Olona Talents</h1>
-                <br>
-                <br>
-                <br>
-                <p>
-                    Entre les soussignés :<br>
-                    Ci-après dénommé : {{ fullName }}<br>
-                    Adresse : {{ user.adress }} {{ user.postalCode }} {{ user.city }}<br>
-                </p>
-                <p>ET</p>
-                <p>
-                    Ci-après dénommée : Société OLONAPROD, dont le siège est situé Lot VE 48 Bis Ambatovinaky, représentée par Madame Niaina RALISATA, La Gérante ; Monsieur Stephane MAUREL, Co-gérant.
-                </p>
-            </div>
+    <p><strong>ET</strong></p>
 
-            <div class="row">
-                <h2>Préambule</h2>
-                <p>
-                    Les présentes conditions d’utilisation régissent les modalités du <strong>Contrat d’Abonnement Premium Olona Talents</strong>.
-                    En souscrivant à cet abonnement, le client accepte l’intégralité des présentes conditions.
-                </p>
+    <p>
+        Ci-après dénommée : <strong>Société OLONAPROD</strong>, Lot VE 48 Bis Ambatovinaky,<br>
+        représentée par Madame <strong>Niaina RALISATA</strong>, Gérante, et Monsieur <strong>Stephane MAUREL</strong>, Co-gérant.
+    </p>
 
-                <h2>Article 1 – Objet du contrat</h2>
-                <p>
-                    Ce contrat a pour objet la souscription à l’offre <strong>Premium Olona Talents</strong>, permettant au client de bénéficier
-                    de services numériques exclusifs en matière de recrutement, de visibilité et d’accès à la CVthèque Olona Talents.
-                </p>
+    <h2>Préambule</h2>
+    <p>
+        Les présentes conditions d’utilisation régissent les modalités du <strong>Contrat d’Abonnement Premium Olona Talents</strong>.
+        En souscrivant à cet abonnement, le client accepte l’intégralité des présentes conditions.
+    </p>
 
-                <h2>Article 2 – Services inclus</h2>
-                <ul>
-                    <li>Mise en avant du profil de l’entreprise sur la plateforme Olona Talents.</li>
-                    <li>Accès illimité à la CVthèque .</li>
-                    <li>Diffusion illimitée d’offres d’emploi.</li>
-                    <li>Mise en avant automatique des annonces pendant 7 jours.</li>
-                    <li>Accès à un espace statistique personnalisé.</li>
-                    <li>Support dédié pour assistance et conseil en recrutement.</li>
-                    <li>Remises exclusives sur les prestations de portage salarial.</li>
-                </ul>
+    <h2>Article 1 – Objet du contrat</h2>
+    <p>
+        Ce contrat a pour objet la souscription à l’offre Premium Olona Talents, permettant au client de bénéficier
+        de services numériques exclusifs en matière de recrutement, de visibilité et d’accès à la CVthèque.
+    </p>
 
-                <h2>Article 3 – Modalités d’utilisation et d’accès</h2>
-                <p>
-                    Les services sont accessibles depuis l’espace personnel de l’entreprise sur <a href="https://www.olona-talents.com">www.olona-talents.com</a>.<br>
-                    Un accompagnement par notre équipe est disponible sur demande via :
-                </p>
-                <ul>
-                    <li>Téléphone</li>
-                    <li>WhatsApp</li>
-                    <li>Email</li>
-                </ul>
+    <h2>Article 2 – Services inclus</h2>
+    <ul>
+        <li>Mise en avant du profil de l’entreprise.</li>
+        <li>Accès illimité à la CVthèque.</li>
+        <li>Diffusion illimitée d’offres d’emploi.</li>
+        <li>Mise en avant des annonces pendant 7 jours.</li>
+        <li>Accès à un espace statistique personnalisé.</li>
+        <li>Support dédié pour assistance en recrutement.</li>
+        <li>Remises sur les prestations de portage salarial.</li>
+    </ul>
 
-                <h2>Article 4 – Engagement et renouvellement</h2>
-                <p>
-                    Le présent contrat est conclu pour une durée <strong>mensuelle, renouvelable tacitement</strong> à sa date d’anniversaire.<br>
-                    Le client peut résilier son abonnement à tout moment, avec un préavis minimum de <strong>2 jours avant la date d’échéance mensuelle</strong>,
-                    en adressant une demande écrite par email ou message.
-                </p>
+    <h2>Article 3 – Modalités d’utilisation</h2>
+    <p>
+        Accès via <a href="https://www.olona-talents.com">www.olona-talents.com</a>.<br>
+        Accompagnement disponible sur demande par téléphone, WhatsApp ou email.
+    </p>
 
-                <h2>Article 5 – Conditions de paiement</h2>
-                <ul>
-                    <li>Premier paiement exigible à la signature.</li>
-                    <li>Paiements suivants : à chaque date anniversaire mensuelle.</li>
-                    <li>Modes acceptés : Virement bancaire, Mobile Money, espèces.</li>
-                    <li>En cas de retard de plus de 7 jours, les services seront suspendus, et une majoration de 10 % sera appliquée tous les 7 jours.</li>
-                </ul>
+    <h2>Article 4 – Engagement et renouvellement</h2>
+    <p>
+        Contrat mensuel, <strong>renouvelable tacitement</strong> à chaque date d’anniversaire.<br>
+        Résiliation possible avec un préavis de 2 jours avant échéance.
+    </p>
 
-                <h2>Article 6 – Engagement de la Société</h2>
-                <p>
-                    La société garantit les tarifs en vigueur pendant une période de 12 mois à compter de la signature.<br>
-                    Toute révision tarifaire sera communiquée avec un préavis d’un mois et prendra effet au <strong>1er janvier 2026</strong> au plus tôt.
-                </p>
+    <h2>Article 5 – Paiement</h2>
+    <ul>
+        <li>Premier paiement à la souscription.</li>
+        <li>Renouvellement à chaque mois.</li>
+        <li>Modes acceptés : virement, mobile money, espèces.</li>
+        <li>Retard > 7 jours : suspension + majoration 10% tous les 7 jours.</li>
+    </ul>
 
-                <h2>Article 7 – Responsabilités et obligations</h2>
-                <p>
-                    Le Client s’engage à utiliser les services conformément à leur destination.<br>
-                    La Société ne saurait être tenue responsable en cas d’utilisation abusive ou frauduleuse du compte client.
-                </p>
+    <h2>Article 6 – Engagement tarifaire</h2>
+    <p>
+        Tarifs garantis 12 mois. Révision possible au 1er janvier 2026 avec préavis d’un mois.
+    </p>
 
-                <h2>Article 8 – Législation applicable</h2>
-                <p>
-                    Le présent contrat est régi par les lois en vigueur à Madagascar.<br>
-                    En cas de litige, compétence est attribuée aux tribunaux d’Antananarivo.
-                </p>
-            </div>
-        </div>
-    </div>
+    <h2>Article 7 – Responsabilités</h2>
+    <p>
+        Le client s’engage à un usage conforme. La société décline toute responsabilité en cas d’usage abusif ou frauduleux.
+    </p>
+
+    <h2>Article 8 – Droit applicable</h2>
+    <p>
+        Droit malgache applicable. Litiges soumis aux juridictions d’Antananarivo.
+    </p>
+
+    <p class="note">
+        Ce contrat est généré automatiquement et disponible à tout moment depuis votre espace personnel.
+    </p>
+</div>
 </body>
-
 </html>

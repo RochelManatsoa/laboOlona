@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\Repository\BusinessModel\SubcriptionRepository;
 
 #[ORM\Entity(repositoryClass: SubcriptionRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Subcription
 {
     const TYPE_ENTREPRISE = 'ENTREPRISE';
@@ -92,7 +93,7 @@ class Subcription
 
     private function generateUniqueOrderNumber(): string
     {
-        return uniqid('subcription_', true);
+        return uniqid('sub_', true);
     }
 
     public function getId(): ?int

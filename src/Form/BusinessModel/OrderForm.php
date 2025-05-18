@@ -16,6 +16,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class OrderForm extends AbstractType
@@ -53,6 +54,17 @@ class OrderForm extends AbstractType
                     'rows' => 6,
                     'class' => 'full-ckeditor-textarea'
                 ]
+            ])
+            ->add('createdAt', DateTimeType::class, [
+                'date_widget' => 'single_text',
+                'time_widget' => 'single_text',
+                'required' => false,
+                'attr' => ['class' => 'date-picker'],
+                'label' => 'Date de transaction (*)',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Date et heure de la réservation.',
             ])
             // ->add('paymentId')
             // ->add('payerId')

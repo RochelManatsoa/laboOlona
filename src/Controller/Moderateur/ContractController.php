@@ -109,7 +109,7 @@ class ContractController extends AbstractController
         return new BinaryFileResponse($file);
     }
 
-    #[Route('/subcription/{subcription}', name: 'app_contract_subcription_pdf')]
+    #[Route('/subcription/{contractNumber}', name: 'app_contract_subcription_pdf')]
     public function subcriptionPdf(Subcription $subcription, SubcriptionManager $subcriptionManager)
     {
         // dd($subcription);
