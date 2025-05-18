@@ -51,6 +51,16 @@
                             <th>Fin</th>
                             <td>{{ subcription.endDate ? subcription.endDate|date('d/m/Y') : '' }}</td>
                         </tr>
+                        <tr>
+                            <th>Factures</th>
+                            <td>
+                                <ul>
+                                    {% for invoice in subcription.invoices %}
+                                        <li><a target=_blank href="{{ path('payment_facture', {'order': invoice.commande.id}) }}"><span class="fw-bold">{{ invoice }}</span></a></li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-end w-100">

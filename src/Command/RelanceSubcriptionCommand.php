@@ -1,4 +1,5 @@
 <?php  
+
 namespace App\Command;
 
 use App\Entity\Cron\CronLog;
@@ -13,10 +14,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use App\Repository\BusinessModel\SubcriptionRepository;
 
 #[AsCommand(
-    name: 'app:relance-subcriptions-1',
-    description: 'Envoie des relances email pour les abonnements qui expirent bientôt.',
+    name: 'app:relance-subcriptions',
+    description: 'Envoie les relances email pour les abonnements Premium et désactive ceux expirés.'
 )]
-class RelanceAbonnementCommand extends Command
+class RelanceSubcriptionCommand extends Command
 {
     public function __construct(
         private SubcriptionRepository $subcriptionRepository,
@@ -39,57 +40,69 @@ class RelanceAbonnementCommand extends Command
         $emailsSent = 0;
         $relanceDone = 0;
 
+        // Délais de relance : J, J+3, J+7
         $relanceDelays = [
-            1 => 5,
-            2 => 2,
-            3 => 1,
+            1 => 0,
+            2 => 3,
+            3 => 7,
         ];
 
-        foreach ($relanceDelays as $relanceNumber => $daysBeforeEnd) {
-            $targetDate = (clone $now)->modify("+{$daysBeforeEnd} days")->format('Y-m-d');
-
+        foreach ($relanceDelays as $relanceNumber => $daysAfterStart) {
+            $targetDate = (clone $now)->modify("+{$daysAfterStart} days")->format('Y-m-d');
+            dump($targetDate, $relanceNumber);
             $subcriptions = $this->subcriptionRepository->findAbonnementsToRelance($targetDate, $relanceNumber);
             foreach ($subcriptions as $subcription) {
                 if (
-                    $subcription->getRelance() === $relanceNumber - 1 && 
-                    $subcription->isActive() &&
+                    $subcription->getRelance() === $relanceNumber - 1 &&
                     null !== $subcription->getEndDate()
                 ) {
-                    $categorie = 'abonnement_' . $relanceNumber;
-                    $relanceType = 'RELANCE';
-                    $compte = 'ENTREPRISE';
-                    if($subcription->getEntreprise() instanceof EntrepriseProfile){
-                        $user = $subcription->getEntreprise()->getEntreprise();
-                    }
-                    if($subcription->getCandidat() instanceof CandidateProfile){
-                        $user = $subcription->getCandidat()->getCandidat();
-                    }
-                    $this->mailerService->sendAbonnementRelanceEmail(
-                        $user,
-                        $relanceType,
-                        $categorie,
-                        $compte
-                    );
+                    // Détermination du type de compte (ENTREPRISE ou CANDIDAT)
+                    $compte = '';
+                    $user = null;
 
-                    $subcription->setRelance($relanceNumber);
-                    $this->em->persist($subcription);
-                    $emailsSent++;
+                    if ($subcription->getEntreprise() instanceof EntrepriseProfile) {
+                        $user = $subcription->getEntreprise()->getEntreprise();
+                        $compte = 'ENTREPRISE';
+                    } elseif ($subcription->getCandidat() instanceof CandidateProfile) {
+                        $user = $subcription->getCandidat()->getCandidat();
+                        $compte = 'CANDIDAT';
+                    }
+
+                    if ($user) {
+                        $categorie = 'premium_relance_' . $relanceNumber;
+
+                        // Envoi du mail correspondant
+                        $this->mailerService->sendSubcriptionRelanceEmail(
+                            $user,
+                            $subcription,
+                            $categorie,
+                            $compte
+                        );
+
+                        // Mise à jour du statut de relance
+                        $subcription->setRelance($relanceNumber);
+                        $subcription->setActive(false);
+                        $this->em->persist($subcription);
+                        $emailsSent++;
+                    }
                 }
             }
         }
 
-        // Désactivation des subcriptions expirés
+        // Désactivation automatique des abonnements à J+7
         $expiredAbos = $this->subcriptionRepository->findExpiredActives();
         foreach ($expiredAbos as $expiredAbo) {
             $expiredAbo->setActive(false);
-            if($expiredAbo->getEntreprise() instanceof EntrepriseProfile){
+            $expiredAbo->setRelance(3);
+
+            if ($expiredAbo->getEntreprise() instanceof EntrepriseProfile) {
                 $profile = $expiredAbo->getEntreprise();
                 $profile->setIsPremium(false);
-            }
-            if($expiredAbo->getCandidat() instanceof CandidateProfile){
+            } elseif ($expiredAbo->getCandidat() instanceof CandidateProfile) {
                 $profile = $expiredAbo->getCandidat();
                 $profile->setIsPremium(false);
             }
+
             $this->em->persist($expiredAbo);
             $this->em->persist($profile);
             $relanceDone++;
@@ -97,7 +110,7 @@ class RelanceAbonnementCommand extends Command
 
         $this->em->flush();
 
-        // Enregistrement dans le log
+        // Enregistrement du log
         $endTime = new \DateTime();
         $cronLog = new CronLog();
         $cronLog->setStartTime($startTime)
@@ -108,7 +121,7 @@ class RelanceAbonnementCommand extends Command
         $this->em->persist($cronLog);
         $this->em->flush();
 
-        $output->writeln("✅ $emailsSent relances envoyées, $relanceDone subcriptions désactivés.");
+        $output->writeln("✅ $emailsSent relances envoyées, $relanceDone abonnements désactivés.");
 
         return Command::SUCCESS;
     }

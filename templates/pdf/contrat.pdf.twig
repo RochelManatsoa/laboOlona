@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Contrat N°{{ subscription.contractNumber }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 13px;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin-top: 25px;
+            color: #222;
+        }
+
+        p, li {
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        ul {
+            margin: 5px 0 20px 20px;
+        }
+
+        .note {
+            margin-top: 40px;
+            font-style: italic;
+            text-align: center;
+            font-size: 12px;
+            color: #555;
+        }
+        .logo-facture {
+            display: block;
+            margin: 0 auto 20px auto;
+            width: 200px;
+        }
+    </style>
+</head>
+
+{% set fullName = entreprise ? profile.nom : user.nom|upper ~ " " ~ user.prenom|capitalize %}
+
+<body>
+<div class="container">
+	<img src="{{ pathToWeb ~ asset('images/logo-olona-talents-black600x200.png') }}" alt="Olona Talents" class="logo-facture">
+    <h1>Contrat d’Abonnement Premium Olona Talents</h1>
+    <p>
+        <strong>Entre les soussignés :</strong><br>
+        Ci-après dénommé : <strong>{{ fullName }}</strong><br>
+        Adresse : {{ user.adress }} {{ user.postalCode }} {{ user.city }}
+    </p>
+
+    <p><strong>ET</strong></p>
+
+    <p>
+        Ci-après dénommée : <strong>Société OLONAPROD</strong>, Lot VE 48 Bis Ambatovinaky,<br>
+        représentée par Madame <strong>Niaina RALISATA</strong>, Gérante, et Monsieur <strong>Stephane MAUREL</strong>, Co-gérant.
+    </p>
+
+    <h2>Préambule</h2>
+    <p>
+        Les présentes conditions d’utilisation régissent les modalités du <strong>Contrat d’Abonnement Premium Olona Talents</strong>.
+        En souscrivant à cet abonnement, le client accepte l’intégralité des présentes conditions.
+    </p>
+
+    <h2>Article 1 – Objet du contrat</h2>
+    <p>
+        Ce contrat a pour objet la souscription à l’offre Premium Olona Talents, permettant au client de bénéficier
+        de services numériques exclusifs en matière de recrutement, de visibilité et d’accès à la CVthèque.
+    </p>
+
+    <h2>Article 2 – Services inclus</h2>
+    <ul>
+        <li>Mise en avant du profil de l’entreprise.</li>
+        <li>Accès illimité à la CVthèque.</li>
+        <li>Diffusion illimitée d’offres d’emploi.</li>
+        <li>Mise en avant des annonces pendant 7 jours.</li>
+        <li>Accès à un espace statistique personnalisé.</li>
+        <li>Support dédié pour assistance en recrutement.</li>
+        <li>Remises sur les prestations de portage salarial.</li>
+    </ul>
+
+    <h2>Article 3 – Modalités d’utilisation</h2>
+    <p>
+        Accès via <a href="https://www.olona-talents.com">www.olona-talents.com</a>.<br>
+        Accompagnement disponible sur demande par téléphone, WhatsApp ou email.
+    </p>
+
+    <h2>Article 4 – Engagement et renouvellement</h2>
+    <p>
+        Contrat mensuel, <strong>renouvelable tacitement</strong> à chaque date d’anniversaire.<br>
+        Résiliation possible avec un préavis de 2 jours avant échéance.
+    </p>
+
+    <h2>Article 5 – Paiement</h2>
+    <ul>
+        <li>Premier paiement à la souscription.</li>
+        <li>Renouvellement à chaque mois.</li>
+        <li>Modes acceptés : virement, mobile money, espèces.</li>
+        <li>Retard > 7 jours : suspension + majoration 10% tous les 7 jours.</li>
+    </ul>
+
+    <h2>Article 6 – Engagement tarifaire</h2>
+    <p>
+        Tarifs garantis 12 mois. Révision possible au 1er janvier 2026 avec préavis d’un mois.
+    </p>
+
+    <h2>Article 7 – Responsabilités</h2>
+    <p>
+        Le client s’engage à un usage conforme. La société décline toute responsabilité en cas d’usage abusif ou frauduleux.
+    </p>
+
+    <h2>Article 8 – Droit applicable</h2>
+    <p>
+        Droit malgache applicable. Litiges soumis aux juridictions d’Antananarivo.
+    </p>
+
+    <p class="note">
+        Ce contrat est généré automatiquement et disponible à tout moment depuis votre espace personnel.
+    </p>
+</div>
+</body>
+</html>

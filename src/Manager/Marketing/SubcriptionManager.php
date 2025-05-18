@@ -74,4 +74,30 @@ class SubcriptionManager
 
         return $subcription;
     }
+
+    
+    public function generateContract(Subcription $subscription)
+    {
+        $profile = $subscription->getEntreprise() ? $subscription->getEntreprise() : $subscription->getCandidat();
+        $user = $subscription->getEntreprise() ? $subscription->getEntreprise()->getEntreprise() : $subscription->getCandidat()->getCandidat();
+		$folder = $subscription->getGeneratedDocsPath();
+        $file = $subscription->getGeneratedContractPathFile();
+        // create directory
+        if (!is_dir($folder)) mkdir($folder, 0777, true);
+        $snappy = $this->pdfService->createPdf();
+        $html = $this->twig->render("pdf/contrat.pdf.twig", [
+            'subscription' => $subscription, 
+            'user' => $user,
+            'profile' => $profile,
+            'entreprise' => $subscription->getEntreprise() ? true : false,
+            'package' => $subscription->getPackage()->getSlug(),
+            'pathToWeb' => $this->urlGeneratorInterface->generate('app_home', [], UrlGeneratorInterface::ABSOLUTE_URL)
+        ]);
+
+        $output = $snappy->getOutputFromHtml($html);
+        
+        $filefinal = file_put_contents($file, $output);
+        
+        return $file;
+	}
 }

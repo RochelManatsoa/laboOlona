@@ -5,13 +5,15 @@ namespace App\Manager\BusinessModel;
 use App\Entity\User;
 use Twig\Environment as Twig;
 use Symfony\Component\Form\Form;
+use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\Credit;
 use App\Entity\BusinessModel\Invoice;
-use App\Entity\BusinessModel\Order;
 use App\Entity\BusinessModel\Package;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\BusinessModel\Subcription;
 use App\Entity\BusinessModel\Transaction;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Manager\Marketing\SubcriptionManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class TransactionManager
@@ -20,6 +22,7 @@ class TransactionManager
         private EntityManagerInterface $em,
         private Twig $twig,
         private RequestStack $requestStack,
+        private SubcriptionManager $subcriptionManager,
         private Security $security
     ){}
 
@@ -100,6 +103,7 @@ class TransactionManager
         $invoice = $order->getInvoice();
         if(!$invoice instanceof Invoice){
             $invoice = new Invoice();
+            $invoice->setCreatedAt($transaction->getTransactionDate());
         }
         $invoice->setAdress($order->getCustomer()->getAdress());
         $invoice->setPostalCode($order->getCustomer()->getPostalCode());
@@ -107,6 +111,32 @@ class TransactionManager
         $invoice->setName($order->getCustomer()->getNom());
         $invoice->setFirstName($order->getCustomer()->getPrenom());
         $invoice->setCommande($order);
+        if($transaction->getPackage()->getType() === 'ABONNEMENT'){
+            if ($transaction->getUser()->getType() === User::ACCOUNT_CANDIDAT) {
+                $profile = $transaction->getUser()->getCandidateProfile();
+                $subcription = $this->em->getRepository(Subcription::class)->findOneBy(['candidat' => $profile]);
+                if(!$subcription instanceof Subcription){
+                    $subcription = $this->subcriptionManager->initCandidatPro($profile);
+                }
+                $invoice->setSubcription($subcription);
+            }else{
+                $profile = $transaction->getUser()->getEntrepriseProfile();
+                $subcription = $this->em->getRepository(Subcription::class)->findOneBy(['entreprise' => $profile]);
+                if(!$subcription instanceof Subcription){
+                    $subcription = $this->subcriptionManager->initEntreprisePro($profile);
+                }
+                $invoice->setSubcription($subcription);
+            }
+            $subcription->setDuration($subcription->getDuration() + 1);
+            $subcription->setRelance(0);
+            $subcription->setStartDate(new \DateTime());
+            $subcription->setEndDate((clone $subcription->getStartDate())->modify('+1 month'));
+            $subcription->addInvoice($invoice);
+            $subcription->setActive(true);
+            $profile->setIsPremium(true);
+            $this->em->persist($subcription);
+            $this->em->persist($profile);
+        }
 
         $this->em->persist($invoice);
         $this->em->flush();

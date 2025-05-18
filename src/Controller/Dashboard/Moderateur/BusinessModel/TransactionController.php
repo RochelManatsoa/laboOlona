@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BusinessModel\Transaction;
 use App\Data\BusinessModel\TransactionData;
 use App\Entity\BusinessModel\Order;
+use App\Form\BusinessModel\TransactionAdminForm;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -94,6 +95,39 @@ class TransactionController extends AbstractController
             'transaction' => $transaction,
             'form' => $form->createView(),
             'total' => $total,
+        ]);
+    }
+
+    #[Route('/new', name: 'app_dashboard_moderateur_business_model_transaction_new')]
+    public function new(Request $request, TransactionManager $transactionManager): Response
+    {
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux administrateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
+        $transaction = $transactionManager->init();
+        $form = $this->createForm(TransactionAdminForm::class, $transaction);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $transaction = $this->transactionManager->saveForm($form);
+            $order = $transaction->getCommand();
+            if(!$order instanceof Order){
+                $order = new Order();
+                $order->setTransaction($transaction);
+                $order->setCustomer($transaction->getUser());
+                $order->setPaymentMethod($transaction->getTypeTransaction());
+                $order->setPackage($transaction->getPackage());
+            }
+            $order->setStatus($transaction->getStatus());
+            $order->setPaymentId($transaction->getReference()); 
+            $order->setPayerId($transaction->getUser()->getId());
+            $order->setTotalAmount($transaction->getPackage()->getPrice()); 
+            $this->orderManager->save($order);
+            $this->creditManager->notifyTransaction($transaction);
+            $this->addFlash('success', 'Transaction créée');
+
+            return $this->redirectToRoute('app_dashboard_moderateur_business_model_transaction');
+        }
+        
+        return $this->render('dashboard/moderateur/business_model/transaction/new.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 

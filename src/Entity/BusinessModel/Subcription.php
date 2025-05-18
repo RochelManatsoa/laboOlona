@@ -3,15 +3,20 @@
 namespace App\Entity\BusinessModel;
 
 use App\Entity\CandidateProfile;
-use App\Entity\EntrepriseProfile;
-use App\Repository\BusinessModel\SubcriptionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\EntrepriseProfile;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\BusinessModel\TypeTransaction;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Repository\BusinessModel\SubcriptionRepository;
 
 #[ORM\Entity(repositoryClass: SubcriptionRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Subcription
 {
     const TYPE_ENTREPRISE = 'ENTREPRISE';
-    const TYPE_CANDIDAT = 'CANDIDAT';
+    const TYPE_CANDIDAT = 'CANDIDAT';   
+    const DOC_DOWNLOAD = 'subcriptions/';
 
     public static function getTypes() {
         return [
@@ -53,19 +58,42 @@ class Subcription
     #[ORM\Column(nullable: true)]
     private ?int $relance = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Invoice $invoice = null;
-
     #[ORM\Column(nullable: true)]
     private ?\DateTime $startDate = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTime $endDate = null;
 
+    /**
+     * @var Collection<int, Invoice>
+     */
+    #[ORM\OneToMany(mappedBy: 'subcription', targetEntity: Invoice::class, cascade: ['remove'], orphanRemoval: true)]
+    private Collection $invoices;
+
+    #[ORM\ManyToOne(inversedBy: 'subcriptions')]
+    private ?Package $package = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $contractNumber = null;
+
     public function __construct()
     {
         $this->setCreatedAt(new  \DateTime());
         $this->setRelance(0);
+        $this->invoices = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    public function generateOrderNumber(): void
+    {
+        if ($this->contractNumber === null) {
+            $this->contractNumber = $this->generateUniqueOrderNumber();
+        }
+    }
+
+    private function generateUniqueOrderNumber(): string
+    {
+        return uniqid('sub_', true);
     }
 
     public function getId(): ?int
@@ -157,18 +185,6 @@ class Subcription
         return $this;
     }
 
-    public function getInvoice(): ?Invoice
-    {
-        return $this->invoice;
-    }
-
-    public function setInvoice(?Invoice $invoice): static
-    {
-        $this->invoice = $invoice;
-
-        return $this;
-    }
-
     public function getStartDate(): ?\DateTime
     {
         return $this->startDate;
@@ -193,6 +209,18 @@ class Subcription
         return $this;
     }
 
+    public function getContractNumber(): ?string
+    {
+        return $this->contractNumber;
+    }
+
+    public function setContractNumber(string $contractNumber): static
+    {
+        $this->contractNumber = $contractNumber;
+
+        return $this;
+    }
+
     public function calculerFin(): void
     {
         if ($this->startDate && $this->duration) {
@@ -201,4 +229,88 @@ class Subcription
             $this->endDate = $fin;
         }
     }
+
+    /**
+     * @return Collection<int, Invoice>
+     */
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+
+    public function addInvoice(Invoice $invoice): static
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices->add($invoice);
+            $invoice->setSubcription($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): static
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getSubcription() === $this) {
+                $invoice->setSubcription(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPackage(): ?Package
+    {
+        return $this->package;
+    }
+
+    public function setPackage(?Package $package): static
+    {
+        $this->package = $package;
+
+        return $this;
+    }
+    
+    public function getLastTypeTransaction(): ?TypeTransaction
+    {
+        // On récupère les factures triées par date décroissante
+        $lastInvoice = $this->invoices
+            ->filter(fn($invoice) => $invoice->getCreatedAt() !== null)
+            ->toArray();
+
+        usort($lastInvoice, fn($a, $b) => $b->getCreatedAt() <=> $a->getCreatedAt());
+
+        $lastInvoice = $lastInvoice[0] ?? null;
+
+        if (!$lastInvoice) {
+            return null;
+        }
+
+        $order = $lastInvoice->getCommande();
+        if (!$order) {
+            return null;
+        }
+
+        $transaction = $order->getTransaction();
+        if (!$transaction) {
+            return null;
+        }
+
+        return $transaction->getTypeTransaction();
+    }
+
+    public function getGeneratedContractPathFile(): ?string
+    {
+        return $this->getGeneratedDocsPath().'/contrat.pdf';
+    }
+
+    public function getGeneratedDocsPath(): ?string
+    {
+        $path = $this::DOC_DOWNLOAD . $this->id ."/".
+            $this->contractNumber;
+
+        return $path;
+    }
+
 }

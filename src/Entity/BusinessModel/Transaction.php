@@ -324,4 +324,9 @@ class Transaction
 
         return $this;
     }
+
+    public function getSubcription(): ?Subcription
+    {
+        return $this->getCommand()?->getInvoice()?->getSubcription();
+    }
 }

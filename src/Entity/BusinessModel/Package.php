@@ -54,11 +54,18 @@ class Package
     #[ORM\OneToMany(mappedBy: 'package', targetEntity: Contract::class)]
     private Collection $contracts;
 
+    /**
+     * @var Collection<int, Subcription>
+     */
+    #[ORM\OneToMany(mappedBy: 'package', targetEntity: Subcription::class)]
+    private Collection $subcriptions;
+
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->contracts = new ArrayCollection();
+        $this->subcriptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -258,6 +265,36 @@ class Package
             // set the owning side to null (unless already changed)
             if ($contract->getPackage() === $this) {
                 $contract->setPackage(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subcription>
+     */
+    public function getSubcriptions(): Collection
+    {
+        return $this->subcriptions;
+    }
+
+    public function addSubcription(Subcription $subcription): static
+    {
+        if (!$this->subcriptions->contains($subcription)) {
+            $this->subcriptions->add($subcription);
+            $subcription->setPackage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubcription(Subcription $subcription): static
+    {
+        if ($this->subcriptions->removeElement($subcription)) {
+            // set the owning side to null (unless already changed)
+            if ($subcription->getPackage() === $this) {
+                $subcription->setPackage(null);
             }
         }
 

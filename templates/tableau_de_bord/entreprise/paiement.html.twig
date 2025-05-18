@@ -36,17 +36,22 @@
         <div class="pack_standard_list m-b30">
             <div class="row">
                 <div class="col-md-6">
-                <div class="row align-items-center p-3" >
-                  <div class="col-3">
-                    <img src="{{ asset('/images/' ~ mobileMoney.slug ~ '.png') }}" class="img-fluid border" alt="{{ mobileMoney.name }}">
-                  </div>
-                  <div class="col text-center">
-                    <span class="fw-light h5">Numéro</span><br>
-                    <span class="fw-bolder h2">{{ mobileMoney.number }}</span>
-                  </div>
-                </div>
-                <p class="">Veuillez envoyer le montant exact sur le numéro de mobile money indiqué ci-dessous. Une fois le paiement effectué, entrez la référence de transaction dans le champ prévu à cet effet et cliquez sur le bouton <span class="fw-bold">"Soumettre"</span> pour finaliser votre achat.</p>
-                <p class=" fw-lighter"><strong><i class="bi bi-info-circle"></i></strong> Assurez-vous d'utiliser la même référence indiquée lors de votre paiement pour éviter tout retard dans le traitement de votre commande.</p>      
+                    <div class="row align-items-center p-3" >
+                    <div class="col-3">
+                        <img src="{{ asset('/images/' ~ mobileMoney.slug ~ '.png') }}" class="img-fluid border" alt="{{ mobileMoney.name }}">
+                    </div>
+                    <div class="col text-center">
+                        <span class="fw-light h5">Numéro</span><br>
+                        <span class="fw-bolder {{ mobileMoney.slug == 'virement-bancaire' ? '' : 'h2' }}">{{ mobileMoney.number }}</span>
+                    </div>
+                    </div>
+                    {% if mobileMoney.slug == 'virement-bancaire' %}
+                        <img src="{{ asset('images/image.png')}}" class="img-fluid border" alt="virement">
+                        <p class="fw-lighter">Une fois votre paiement effectué, entrez la référence de transaction dans le champ prévu à cet effet et cliquez sur le bouton <span class="fw-bold">"Soumettre"</span>.</p>
+                    {% else %}
+                        <p class="">Veuillez envoyer le montant exact sur le numéro de mobile money indiqué ci-dessous. Une fois le paiement effectué, entrez la référence de transaction dans le champ prévu à cet effet et cliquez sur le bouton <span class="fw-bold">"Soumettre"</span> pour finaliser votre achat.</p>
+                        <p class=" fw-lighter"><strong><i class="bi bi-info-circle"></i></strong> Assurez-vous d'utiliser la même référence indiquée lors de votre paiement pour éviter tout retard dans le traitement de votre commande.</p>      
+                    {% endif %}
                 </div>    
                 <div class="col-md-6">
                 {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
