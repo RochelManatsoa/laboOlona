@@ -16,6 +16,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Notifier\Exception\TransportExceptionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MailerService 
 {
@@ -27,6 +28,7 @@ class MailerService
         private ModerateurManager $moderateurManager,
         private EntityManagerInterface $em,
         private UserService $userService,
+        private UrlGeneratorInterface $urlGenerator,
         ParameterBagInterface $params
     ){
         $this->env = $params->get('app.env');
@@ -153,8 +155,17 @@ class MailerService
         $montant = $compte === 'ENTREPRISE' ? '100 000 AR (≈ 20 €)' : '24 000 AR (≈ 5 €)';
         $subject = '';
         $contenu = '';
-        $nextRenewalDate = $subcription->getEndDate() ? $subcription->getEndDate() : new \DateTimeImmutable('+1 month');
-        $formattedRenewalDate = $nextRenewalDate->format('d F Y');
+        $link = $this->urlGenerator->generate('app_tableau_de_bord_entreprise_mes_commandes');
+        $nextRenewalDate = $subcription->getEndDate() ? $subcription->getEndDate()->modify('+1 month') : new \DateTimeImmutable('+1 month');
+        $formatter = new \IntlDateFormatter(
+            'fr_FR',
+            \IntlDateFormatter::LONG,
+            \IntlDateFormatter::NONE,
+            $nextRenewalDate->getTimezone(),
+            \IntlDateFormatter::GREGORIAN,
+            'd MMMM yyyy'
+        );
+        $formattedRenewalDate = $formatter->format($nextRenewalDate);
 
         switch ($categorie) {
             case 'premium_relance_1':
@@ -231,6 +242,7 @@ class MailerService
             ->context([
                 'user' => $user,
                 'contenu' => $contenu,
+                'dashboard_url' => $link,
             ]);
 
         try {
