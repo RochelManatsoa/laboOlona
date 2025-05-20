@@ -130,6 +130,33 @@ class CandidatSearchFormType extends AbstractType
                 'required' => false,
                 'placeholder' => 'Photo',
             ])
+            ->add('province', ChoiceType::class, [
+                'choices' => [
+                    'Sans province' => 0,
+                    'Avec province' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Province',
+            ])
+            ->add('region', ChoiceType::class, [
+                'choices' => [
+                    'Sans region' => 0,
+                    'Avec region' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Région',
+            ])
+            ->add('gender', ChoiceType::class, [
+                'choices' => [
+                    'Sans genre' => 0,
+                    'Avec genre' => 1,
+                ],
+                'label' => false,
+                'required' => false,
+                'placeholder' => 'Genre',
+            ])
         ;
     }
 

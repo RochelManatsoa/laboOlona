@@ -81,4 +81,19 @@ class CandidatSearchData
      * @var null|integer
      */
     public $matricule;
+
+    /**
+     * @var null|integer
+     */
+    public $province;
+    
+    /**
+     * @var null|integer
+     */
+    public $region;
+    
+    /**
+     * @var null|integer
+     */
+    public $gender;
 }
