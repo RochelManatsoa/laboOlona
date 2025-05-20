@@ -63,6 +63,8 @@ class JobListingController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $jobListing->setUpdatedAt(new \DateTime());
+            $entityManager->persist($jobListing);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_moderateur_job_listing_index', [], Response::HTTP_SEE_OTHER);

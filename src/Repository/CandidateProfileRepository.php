@@ -223,6 +223,30 @@ class CandidateProfileRepository extends ServiceEntityRepository
                 ->andWhere('c.resume IS NULL');
         }
 
+        if ($searchData->province === 1) {
+            $qb = $qb
+                ->andWhere('c.province IS NOT NULL');
+        } elseif ($searchData->province === 0) {
+            $qb = $qb
+                ->andWhere('c.province IS NULL');
+        }
+
+        if ($searchData->region === 1) {
+            $qb = $qb
+                ->andWhere('c.region IS NOT NULL');
+        } elseif ($searchData->region === 0) {
+            $qb = $qb
+                ->andWhere('c.region IS NULL');
+        }
+
+        if ($searchData->gender === 1) {
+            $qb = $qb
+                ->andWhere('c.gender IS NOT NULL');
+        } elseif ($searchData->gender === 0) {
+            $qb = $qb
+                ->andWhere('c.gender IS NULL');
+        }
+
         if ($searchData->tarif === 1) {
             $qb = $qb
                 ->andWhere('t.id IS NOT NULL');

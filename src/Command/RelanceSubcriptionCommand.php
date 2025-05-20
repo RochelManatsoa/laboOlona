@@ -49,7 +49,6 @@ class RelanceSubcriptionCommand extends Command
 
         foreach ($relanceDelays as $relanceNumber => $daysAfterStart) {
             $targetDate = (clone $now)->modify("+{$daysAfterStart} days")->format('Y-m-d');
-            dump($targetDate, $relanceNumber);
             $subcriptions = $this->subcriptionRepository->findAbonnementsToRelance($targetDate, $relanceNumber);
             foreach ($subcriptions as $subcription) {
                 if (
