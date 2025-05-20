@@ -58,7 +58,7 @@ class NotifyCandidateCommand extends Command
                         [
                             'user' => $candidat->getCandidat(),
                             'details_annonce' => $jobListing,
-                            'dashboard_url' => $this->urlGeneratorInterface->generate('app_dashboard_candidat_annonce_show', ['jobId' => $jobListing->getJobId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                            'dashboard_url' => $this->urlGeneratorInterface->generate('app_tableau_de_bord_candidat_view_job_offer', ['id' => $jobListing->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
                         ]
                     );
                     $emailsSent++;

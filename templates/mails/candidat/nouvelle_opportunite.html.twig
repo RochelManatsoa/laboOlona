@@ -7,7 +7,6 @@
             <p>Voici les détails :</p>
             <p><strong>Titre de l'offre </strong> : {{ details_annonce.titre|raw }}</p>
             <p><strong>Type de contrat </strong> : {{ details_annonce.typeContrat.nom }}</p>
-            <p><strong>Salaire</strong> : {{ getBudgetAnnonceStr(details_annonce) }} </p>
             <p><strong>Date d'expiration</strong> : {{ details_annonce.dateExpiration|date('d/m/Y') }}</p>
             
             <p>
