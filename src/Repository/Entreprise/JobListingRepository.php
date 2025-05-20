@@ -217,8 +217,8 @@ class JobListingRepository extends ServiceEntityRepository
             ->getQuery();
             
         return $query->getResult();
-    }    
-
+    }   
+    
     public function findJoblistingsForNotification()
     {
         $queryBuilder = $this->createQueryBuilder('j');
@@ -228,26 +228,29 @@ class JobListingRepository extends ServiceEntityRepository
             $queryBuilder->expr()->eq('j.status', ':statusFeatured')
         );
 
-        $updatedAtCondition = $queryBuilder->expr()->gte(
-            'j.updatedAt',
-            ':yesterday'
+        $isNotifiedCondition = $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->eq('j.isNotified', ':isNotifiedFalse'),
+            $queryBuilder->expr()->isNull('j.isNotified')
         );
 
-        $isNotifiedCondition = $queryBuilder->expr()->eq('j.isNotified', ':isNotifiedFalse');
+        $start = new \DateTimeImmutable('yesterday 00:00:00');
+        $end = new \DateTimeImmutable('yesterday 23:59:59');
 
         $query = $queryBuilder
             ->andWhere($orConditions)
-            ->andWhere($updatedAtCondition)
+            ->andWhere('j.updatedAt BETWEEN :start AND :end')
             ->andWhere($isNotifiedCondition)
             ->setParameter('statusValid', JobListing::STATUS_PUBLISHED)
             ->setParameter('statusFeatured', JobListing::STATUS_FEATURED)
-            ->setParameter('yesterday', new \DateTime('-1 day'))
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->setParameter('isNotifiedFalse', false)
             ->orderBy('j.id', 'DESC')
             ->getQuery();
 
         return $query->getResult();
-    } 
+    }
+
 
     public function findJoblistingsForPostFacebook()
     {
