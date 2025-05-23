@@ -50,7 +50,7 @@ security:
         #         target:         admin_login
         client1:
             pattern: ^/
-            host: ^client1\.olona-talents\.local\.com$
+            host: ^client1\.olona-talents\.com$
             provider: client1_user_provider
             custom_authenticator: App\Security\Client1\Client1Authenticator
             logout:

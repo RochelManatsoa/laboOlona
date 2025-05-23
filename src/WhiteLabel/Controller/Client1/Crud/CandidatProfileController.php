@@ -2,8 +2,11 @@
 
 namespace App\WhiteLabel\Controller\Client1\Crud;
 
+use App\WhiteLabel\Entity\Client1\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use App\WhiteLabel\Form\Client1\CandidatType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +22,8 @@ class CandidatProfileController extends AbstractController
 {
     public function __construct(
         private ManagerRegistry $managerRegistry,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private PaginatorInterface $paginatorInterface
     ){
         $this->entityManager = $managerRegistry->getManager('client1');
     }
@@ -27,13 +31,18 @@ class CandidatProfileController extends AbstractController
     #[Route('/', name: 'app_white_label_candidat_profile_index', methods: ['GET'])]
     public function index(
         Request $request, 
+        Security $security
     ): Response
     {
         $page = $request->query->getInt('page', 1);
-        $status = $request->query->get('status', null);
+        /** @var User $user */
+        $user = $security->getUser();
+        $userId = $user->getId();
+        $canListAll = true;
+        $candidats = $this->entityManager->getRepository(CandidateProfile::class)->paginateRecipes($page, $this->paginatorInterface, $canListAll ? null : $userId);
 
         return $this->render('white_label/client1/admin/candidat/index.html.twig', [
-            'candidats' => $this->entityManager->getRepository(CandidateProfile::class)->findAll(),
+            'candidats' => $candidats,
         ]);
     }
 
@@ -79,7 +88,7 @@ class CandidatProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('app_moderateur_candidat_profile_show', ['id' => $candidat->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_white_label_candidat_profile_show', ['id' => $candidat->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('white_label/client1/admin/candidat/edit.html.twig', [
@@ -96,6 +105,6 @@ class CandidatProfileController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_moderateur_entreprise_profile_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_white_label_candidat_profile_index', [], Response::HTTP_SEE_OTHER);
     }
 }

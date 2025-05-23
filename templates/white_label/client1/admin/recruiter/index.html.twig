@@ -1,6 +1,6 @@
 {% extends 'white_label/client1/base.html.twig' %}
 
-{% block title %}Recruteurs{% endblock %}
+{% block title %}Tous les recruteurs{% endblock %}
 
 {% block body %}
 
@@ -9,11 +9,40 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Recruteurs</h1>
-
-            <div>
-                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_white_label_entreprise_profile_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
-            </div>
+    <h1>Tous les recruteurs</h1>
+    <div>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_white_label_entreprise_profile_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(entreprise_profiles, 'ID', 'e.id') }}</th>
+                <th>{{ knp_pagination_sortable(entreprise_profiles, 'Nom et prénom(s)', 'u') }}</th>
+                <th>{{ knp_pagination_sortable(entreprise_profiles, 'Annonces', 'jobCount') }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in entreprise_profiles %}
+        {% set entreprise = item[0] %}
+        {% set user = item[1] %}
+            <tr>
+                <td>{{ entreprise.id }}</td>
+                <td>{{ user }}</td>
+                <td>{{ entreprise.jobListings|length }}</td>
+                <td>
+                    <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_white_label_entreprise_profile_show', {'id': entreprise.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_white_label_entreprise_profile_edit', {'id': entreprise.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">Aucun recruteur trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ knp_pagination_render(entreprise_profiles) }}
 </div>
 
 {% endblock %}

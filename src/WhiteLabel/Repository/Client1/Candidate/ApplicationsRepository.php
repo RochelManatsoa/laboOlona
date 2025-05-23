@@ -24,6 +24,22 @@ class ApplicationsRepository extends ServiceEntityRepository
         parent::__construct($registry, Applications::class);
     }
 
+    public function paginateRecipes($page, PaginatorInterface $paginator, ?int $userId): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('a')
+        ->select('a, j, e')
+        ->leftJoin('a.annonce', 'j')
+        ->leftJoin('j.entreprise', 'e')
+        ->addOrderBy('a.id', 'DESC');
+
+        return $paginator->paginate(
+            $queryBuilder,
+            $page,
+            20,
+            []
+        );
+    }
+
     public function countAll(): int
     {
         return (int) $this->createQueryBuilder('a')

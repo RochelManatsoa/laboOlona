@@ -21,6 +21,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class JobListingRepository extends EntityRepository
 {
+
+    public function paginateRecipes($page, PaginatorInterface $paginator, ?int $userId): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('j')
+        ->select('j, COUNT(v.id) AS views, COUNT(a.id) AS offers')
+        ->leftJoin('j.annonceVues', 'v')
+        ->leftJoin('j.applications', 'a')
+        ->addOrderBy('j.id', 'DESC');
+
+        return $paginator->paginate(
+            $queryBuilder,
+            $page,
+            20,
+            []
+        );
+    }
+
     public function countAll(): int
     {
         return (int) $this->createQueryBuilder('j')

@@ -4,6 +4,8 @@ namespace App\WhiteLabel\Controller\Client1\Crud;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,7 +20,8 @@ class EntrepriseProfileController extends AbstractController
 {
     public function __construct(
         private ManagerRegistry $managerRegistry,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private PaginatorInterface $paginatorInterface
     ){
         $this->entityManager = $managerRegistry->getManager('client1');
     }
@@ -26,17 +29,18 @@ class EntrepriseProfileController extends AbstractController
     #[Route('/', name: 'app_white_label_entreprise_profile_index', methods: ['GET'])]
     public function index(
         Request $request, 
+        Security $security
     ): Response
     {
         $page = $request->query->getInt('page', 1);
-        $status = $request->query->get('status', null);
+        /** @var User $user */
+        $user = $security->getUser();
+        $userId = $user->getId();
+        $canListAll = true;
+        $entreprise_profiles = $this->entityManager->getRepository(EntrepriseProfile::class)->paginateRecipes($page, $this->paginatorInterface, $canListAll ? null : $userId);
 
         return $this->render('white_label/client1/admin/recruiter/index.html.twig', [
-            // 'entreprise_profiles' => $entrepriseProfileRepository->paginateEntrepriseProfiles($page, $status),
-            // 'count' => $entrepriseProfileRepository->countAll(),
-            // 'countStatus' => $entrepriseProfileRepository->countStatus($status),
-            // 'statuses' => array_merge(['Tous' => 'ALL' ],EntrepriseProfile::getStatuses()),
-            // 'selectedStatus' => $status,
+            'entreprise_profiles' => $entreprise_profiles,
         ]);
     }
 
@@ -82,7 +86,7 @@ class EntrepriseProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('app_moderateur_entreprise_profile_show', ['id' => $entrepriseProfile->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_white_label_entreprise_profile_show', ['id' => $entrepriseProfile->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('white_label/client1/admin/recruiter/edit.html.twig', [
@@ -99,6 +103,6 @@ class EntrepriseProfileController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_moderateur_entreprise_profile_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_white_label_entreprise_profile_index', [], Response::HTTP_SEE_OTHER);
     }
 }

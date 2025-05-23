@@ -6,15 +6,12 @@ use App\WhiteLabel\Entity\Client1\User;
 use Doctrine\ORM\EntityManagerInterface;
 use App\WhiteLabel\Form\Client1\UserType;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use App\WhiteLabel\Form\Client1\CandidatType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\WhiteLabel\Entity\Client1\CandidateProfile;
 use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -107,6 +104,6 @@ class UserController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_moderateur_entreprise_profile_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_white_label_user_index', [], Response::HTTP_SEE_OTHER);
     }
 }

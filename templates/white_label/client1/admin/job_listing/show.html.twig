@@ -1,0 +1,82 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Annonce {{ job_listing.id }}{% endblock %}
+
+{% block body %}
+    <h1>Annonce {{ job_listing.id }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ job_listing.id }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ job_listing.titre }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ job_listing.description }}</td>
+            </tr>
+            <tr>
+                <th>DateCreation</th>
+                <td>{{ job_listing.dateCreation ? job_listing.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateExpiration</th>
+                <td>{{ job_listing.dateExpiration ? job_listing.dateExpiration|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ job_listing.status }}</td>
+            </tr>
+            <tr>
+                <th>Salaire</th>
+                <td>{{ job_listing.salaire }}</td>
+            </tr>
+            <tr>
+                <th>Lieu</th>
+                <td>{{ job_listing.lieu }}</td>
+            </tr>
+            <tr>
+                <th>JobId</th>
+                <td>{{ job_listing.jobId }}</td>
+            </tr>
+            <tr>
+                <th>NombrePoste</th>
+                <td>{{ job_listing.nombrePoste }}</td>
+            </tr>
+            <tr>
+                <th>Prime</th>
+                <td>{{ job_listing.prime }}</td>
+            </tr>
+            <tr>
+                <th>ShortDescription</th>
+                <td>{{ job_listing.shortDescription }}</td>
+            </tr>
+            <tr>
+                <th>IsGenerated</th>
+                <td>{{ job_listing.isGenerated ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>CleanDescription</th>
+                <td>{{ job_listing.cleanDescription }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ job_listing.updatedAt ? job_listing.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>IsNotified</th>
+                <td>{{ job_listing.isNotified ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_white_label_job_listing_index') }}">back to list</a>
+
+    <a href="{{ path('app_white_label_job_listing_edit', {'id': job_listing.id}) }}">edit</a>
+
+    {{ include('white_label/client1/admin/job_listing/_delete_form.html.twig') }}
+{% endblock %}

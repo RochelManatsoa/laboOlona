@@ -1,17 +1,17 @@
 {% extends 'white_label/client1/base.html.twig' %}
 
-{% block title %}Modifier candidat{% endblock %}
+{% block title %}Modifier utilisateur{% endblock %}
 
 {% block body %}
 <section class="p-0 m-0">
     <div class="container">
         <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
-            <h1 class="h3">Modifier candidat</h1>
+            <h1 class="h3">Modifier {{ application }}</h1>
 
-            {{ include('white_label/client1/admin/candidat/_form.html.twig', {'button_label': 'Update'}) }}
+            {{ include('white_label/client1/admin/candidature/_form.html.twig', {'button_label': 'Update'}) }}
 
             <div class="d-flex justify-content-end w-100">
-                {{ include('white_label/client1/admin/candidat/_delete_form.html.twig') }}
+                {{ include('white_label/client1/admin/candidature/_delete_form.html.twig') }}
             </div>
         </div>
     </div>

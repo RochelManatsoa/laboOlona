@@ -1,6 +1,6 @@
 {% extends 'white_label/client1/base.html.twig' %}
 
-{% block title %}Candidats{% endblock %}
+{% block title %}Tous les utilisateurs{% endblock %}
 
 {% block body %}
 
@@ -9,14 +9,14 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Candidats</h1>
+    <h1>Tous les utilisateurs</h1>
     <div>
         <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_white_label_user_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
     </div>
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>{{ knp_pagination_sortable(users, 'ID', 'u.id') }}</th>
                 <th>{{ knp_pagination_sortable(users, 'Email', 'u.email') }}</th>
                 <th>{{ knp_pagination_sortable(users, 'Nom et prénom(s)', 'u.nom') }}</th>
                 <th>{{ knp_pagination_sortable(users, 'Compte', 'u.type') }}</th>

@@ -1,0 +1,67 @@
+{{ form_start(form) }}
+{{ form_row(form.titre)}}
+{{ form_row(form.description)}}
+<div class="row">
+    <div class="col">
+    {{ form_row(form.dateExpiration)}}
+    </div>
+    <div class="col">
+    {{ form_row(form.lieu)}}
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+    {{ form_row(form.secteur)}}
+    </div>
+    <div class="col">
+    {{ form_row(form.nombrePoste)}}
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+    {{ form_row(form.competences)}}
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+    {{ form_row(form.entreprise)}}
+    </div>
+    <div class="col">
+    {{ form_row(form.status)}}
+    </div>
+</div>
+    <div class="col-12">
+        {{ form_label(form.budgetAnnonce, null, {
+            'label_attr': {
+                'class': 'fw-bold fs-6'
+            }
+        }) }}
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="mb-3">
+                <label class="fw-bold small" for="prestation_tarifPrestation_typeTarif">Tarif</label>
+                {{ form_widget(form.budgetAnnonce.typeBudget)}}
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="mb-3">
+                <label class="fw-bold small" for="prestation_tarifPrestation_montant">Montant</label>
+                {{ form_widget(form.budgetAnnonce.montant)}}
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="mb-3">
+                <label class="fw-bold small" for="prestation_tarifPrestation_currency">Devise</label>
+                {{ form_widget(form.budgetAnnonce.currency)}}
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        {{ form_help(form.budgetAnnonce) }}
+    </div>
+    <div style="display:none;">
+        {{ form_widget(form) }}
+    </div>
+    <button class="btn btn-primary px-5 rounded-pill my-4"><i class="bi me-2 bi-save"></i>{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

@@ -57,11 +57,11 @@ services:
         arguments:
             $apiKey: '%env(YOUTUBE_API_KEY)%'
     
-    # App\EventListener\ExceptionListener:
-    #    tags:
-    #        - { name: kernel.event_listener, event: kernel.exception, priority: 10 }
-    #    arguments:
-    #        - '@twig'
+    App\EventListener\ExceptionListener:
+       tags:
+           - { name: kernel.event_listener, event: kernel.exception, priority: 10 }
+       arguments:
+           - '@twig'
 
     App\WhiteLabel\Service\Client1\GoogleDriveService:
         arguments:
@@ -70,6 +70,12 @@ services:
             
     App\OAuth\GoogleDriveClient:
         alias: KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient
+
+    App\EventListener\RedirectToHomeListener:
+        arguments:
+            $targetHost: 'client1.olona-talents.com'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     App\Manager\Facebook\FacebookTokenManager:
         arguments:

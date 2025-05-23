@@ -1,6 +1,6 @@
 {% extends 'white_label/client1/base.html.twig' %}
 
-{% block title %}Candidats{% endblock %}
+{% block title %}Tous les candidats{% endblock %}
 
 {% block body %}
 
@@ -9,31 +9,31 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Candidats</h1>
+    <h1>Tous les candidats</h1>
     <div>
         <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_white_label_candidat_profile_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
     </div>
     <table class="table">
-        {# <thead>
+        <thead>
             <tr>
-                <th>{{ knp_pagination_sortable(candidats, '#', 'e.id') }}</th>
-                <th>{{ knp_pagination_sortable(candidats, 'Nom', 'e.nom') }}</th>
-                <th>{{ knp_pagination_sortable(candidats, 'Abo', 'premium') }}</th>
-                <th>{{ knp_pagination_sortable(candidats, 'Taille', 'e.taille') }}</th>
-                <th>{{ knp_pagination_sortable(candidats, 'Localisation', 'e.localisation') }}</th>
-                <th>{{ knp_pagination_sortable(candidats, 'Status', 'e.status') }}</th>
-                <th>{{ knp_pagination_sortable(candidats, 'Annonces', 'jobCount') }}</th>
+                <th>{{ knp_pagination_sortable(candidats, 'ID', 'c.id') }}</th>
+                <th>{{ knp_pagination_sortable(candidats, 'Nom', 'nom') }}</th>
+                <th>{{ knp_pagination_sortable(candidats, 'Province', 'c.province') }}</th>
+                <th>{{ knp_pagination_sortable(candidats, 'Région', 'c.region') }}</th>
+                <th>{{ knp_pagination_sortable(candidats, 'Status', 'c.status') }}</th>
                 <th></th>
             </tr>
-        </thead> #}
+        </thead>
         <tbody>
-        {% for candidat in candidats %}
+        {% for item in candidats %}
+            {% set candidat = item[0] %}
             <tr>
                 <td>{{ candidat.id }}</td>
-                <td>{{ candidat.candidat }}</td>
-                <td>{{ candidat.isIsPremium ? '<i class="bi bi-check2-square"></i>' : '-' }}</td>
-                <td><i class="bi bi-geo-alt-fill"></i> {{ show_country(candidat.localisation) }} </td>
-                <td>{{ candidat.applications|length }}</td>
+                <td>{{ candidat.candidat }} <br>
+                    <span class="small fw-lighter">{{ candidat.titre }}</span></td>
+                <td>{{ candidat.province }}</td>
+                <td>{{ candidat.region }}</td>
+                <td>{{ candidat.status }}</td>
                 <td>
                     <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_white_label_candidat_profile_show', {'id': candidat.id}) }}"><i class="bi bi-eye"></i></a>
                     <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_white_label_candidat_profile_edit', {'id': candidat.id}) }}"><i class="bi bi-pencil"></i></a>
@@ -41,11 +41,12 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="11">no records found</td>
+                <td colspan="11">Aucun candidat trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    {{ knp_pagination_render(candidats) }}
 </div>
 
 {% endblock %}

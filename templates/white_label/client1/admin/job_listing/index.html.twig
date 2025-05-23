@@ -1,0 +1,56 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Gestion des annonces{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Gestion des annonces</h1>
+    <div>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_white_label_job_listing_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-1">{{ knp_pagination_sortable(job_listings, '#', 'j.id') }}</th>
+                <th class="col">{{ knp_pagination_sortable(job_listings, 'Titre', 'j.titre') }}</th>
+                <th class="col-2">{{ knp_pagination_sortable(job_listings, 'Status', 'j.status') }}</th>
+                <th class="col-2 text-center">{{ knp_pagination_sortable(job_listings, 'Vues', 'views') }}</th>
+                <th class="col-2 text-center">{{ knp_pagination_sortable(job_listings, 'Offres', 'offers') }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in job_listings %}
+            {% set job_listing = item[0] %}
+            <tr>
+                <td>{{ job_listing.id }}</td>
+                <td>
+                    {{ job_listing.titre }}<br>
+                    <span class="small text-muted">{{ job_listing.entreprise.nom|upper }} | {{ job_listing.dateCreation|time_ago }}</span>
+                </td>
+                <td>{{ job_listing.labels[job_listing.status]|raw }}</td>
+                <td class="text-center">{{ job_listing.annonceVues|length }}</td>
+                <td class="text-center">{{ job_listing.applications|length }}</td>
+                <td>
+                <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_moderateur_job_listing_edit', {'id': job_listing.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="17">Aucune annonce trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation mt-5">
+    {{ knp_pagination_render(job_listings) }}
+    </div>
+                
+</div>
+{% endblock %}

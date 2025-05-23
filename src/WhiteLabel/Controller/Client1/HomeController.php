@@ -26,16 +26,18 @@ class HomeController extends AbstractController
     public function index(Security $security): Response
     {
         $user = $this->getUser();
-        if(!$user){
+
+        if (!$user) {
             return $this->redirectToRoute('app_client1_login');
-        }elseif ($security->isGranted('ROLE_RECRUITER')) {
-            return $this->redirectToRoute('app_white_label_client1_recruiter');
-        }elseif ($security->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_white_label_client1_admin');
         }
-        return $this->render('white_label/client1/home/index.html.twig', [
-            'user' => $user,
-        ]);
+
+        return match (true) {
+            $security->isGranted('ROLE_ADMIN')     => $this->redirectToRoute('app_white_label_client1_admin'),
+            $security->isGranted('ROLE_RECRUITER') => $this->redirectToRoute('app_white_label_client1_recruiter'),
+            default => $this->render('white_label/client1/home/index.html.twig', [
+                'user' => $user,
+            ]),
+        };
     }
 
     #[Route('/inscription', name: 'app_white_label_register')]

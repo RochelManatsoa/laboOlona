@@ -80,7 +80,7 @@ class AdminController extends AbstractController
                 }
             }
 
-            return $this->redirectToRoute('app_white_label_client1_admin_cvtheque');
+            return $this->redirectToRoute('app_white_label_candidat_profile_index');
         }
 
         return $this->render('white_label/client1/admin/csv_upload.html.twig', [

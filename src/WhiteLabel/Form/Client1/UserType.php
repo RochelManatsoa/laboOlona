@@ -25,8 +25,9 @@ class UserType extends AbstractType
         $builder->add('roles', ChoiceType::class, [
             'choices' => [
                 'Admin' => 'ROLE_ADMIN',
+                'Annonceur' => 'ROLE_ANNOUNCER',
                 'Candidat' => 'ROLE_CANDIDAT',
-                'Recruteur' => 'ROLE_RECRUITEUR',
+                'Recruteur' => 'ROLE_RECRUITER',
             ],
             'autocomplete' => true,
             'multiple' => true,

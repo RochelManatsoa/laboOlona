@@ -30,6 +30,19 @@ class CandidateProfileRepository extends ServiceEntityRepository
         parent::__construct($registry, CandidateProfile::class);
     }
 
+    public function paginateRecipes($page, PaginatorInterface $paginator, ?int $userId): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('c')->select('c, u.nom  AS nom')->leftJoin('c.candidat', 'u');
+        $queryBuilder->addOrderBy('c.id', 'DESC');
+
+        return $paginator->paginate(
+            $queryBuilder,
+            $page,
+            20,
+            []
+        );
+    }
+
     public function countAll(): int
     {
         return (int) $this->createQueryBuilder('c')

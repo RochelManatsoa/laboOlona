@@ -23,6 +23,21 @@ class EntrepriseProfileRepository extends ServiceEntityRepository
         parent::__construct($registry, EntrepriseProfile::class);
     }
 
+    public function paginateRecipes($page, PaginatorInterface $paginator, ?int $userId): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('e')->select('e, u, COUNT(j.id) AS jobCount')
+        ->leftJoin('e.entreprise', 'u')
+        ->leftJoin('e.jobListings', 'j')
+        ->addOrderBy('e.id', 'DESC');
+
+        return $paginator->paginate(
+            $queryBuilder,
+            $page,
+            20,
+            []
+        );
+    }
+
     public function countAll(): int
     {
         return (int) $this->createQueryBuilder('e')

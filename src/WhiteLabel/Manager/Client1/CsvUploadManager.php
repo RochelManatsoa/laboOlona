@@ -66,6 +66,7 @@ class CsvUploadManager
             $profile = new CandidateProfile();
             $profile->setCandidat($user);
             $profile->setResume($data['biographie']);
+            $profile->setTitre($data['poste']);
             $profile->setStatus(CandidateProfile::STATUS_PENDING);
             $profile->setIsValid(false);
             $profile->setCreatedAt(new \DateTime());

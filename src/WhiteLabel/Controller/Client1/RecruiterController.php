@@ -90,4 +90,20 @@ class RecruiterController extends AbstractController
             'controller_name' => 'AdminController',
         ]);
     }
+
+    #[Route('/configuration', name: 'app_white_label_client1_recruiter_configuration')]
+    public function configuration(): Response
+    {
+        return $this->render('white_label/client1/recruiter/configuration.html.twig', [
+            'controller_name' => 'AdminController',
+        ]);
+    }
+
+    #[Route('/assistance', name: 'app_white_label_client1_recruiter_assistance')]
+    public function assistance(): Response
+    {
+        return $this->render('white_label/client1/recruiter/assistance.html.twig', [
+            'controller_name' => 'AdminController',
+        ]);
+    }
 }
