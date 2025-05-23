@@ -1,0 +1,118 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Mes prestations | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endif %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+	{% set tableClass = 'table' %}
+	{% if app.request.cookies.get('theme') == 'bootstrap-dark' %}
+		{% set tableClass = tableClass ~ ' table-dark' %}
+	{% endif %}
+	<section class="">
+
+		<div class="shadow-custom p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-journals text-warning me-2"></i>
+				Bienvenue dans votre Annuaire de services.
+			</h2>
+			<p class="text-center"> 
+				Découvrez ou proposez des solutions professionnelles sur mesure. Boostez votre entreprise, avancez dans votre carrière et valorisez vos compétences. Trouvez le partenaire idéal pour votre réussite.
+			</p>
+			<div class="row">
+				<div class="col-12 col-sm-8" id="prestations-container">
+				{% include "v2/dashboard/result/parts/_part_prestations_list.html.twig" %}
+				</div>
+				<div class="col-12 col-sm-4">
+					<div class="d-flex flex-column flex-shrink-0 py-3 position-sticky top-0">
+						<div class="card mb-3">
+						<div class="card-body small">
+
+							<h3 class="card-title h5 mb-3">Mes services</h3>
+							<a href="{{ path('app_v2_prestation_my_created') }}" class="my-3 text-center">
+								<span class="fw-bolder me-2">{{ getTotalCount(app.user) }}</span> 
+								<span class="fw-light">
+									{% if getTotalCount(app.user) == 0 %}
+										prestation
+									{% elseif getTotalCount(app.user) == 1 %}
+										prestation
+									{% else %}
+										prestations
+									{% endif %}
+								</span><br>
+							</a>
+							
+							<a href="{{ path('app_v2_create_prestation') }}" class="px-3 btn btn-sm mt-2 rounded-pill btn-primary">
+								<i class="bi bi-person-workspace me-2"></i> Créer une prestation
+							</a>
+						</div>
+						</div>
+						<div class="card mb-3" id="candidate-card-container">
+							<div class="m-4 position-relative text-center">
+								<a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
+									<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	{% endblock %}
+	{% block javascripts %}
+		{{ parent() }}
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script> 
+		
+		var currentPage = 1;
+		var allDataLoaded = false;
+	
+		$(window).scroll(function() {
+			if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !allDataLoaded) {
+				loadMoreJobs();
+			}
+		});
+	
+		function loadMoreJobs() {
+			if (!allDataLoaded) {
+				currentPage++;
+				var url = `{{ path('app_v2_prestation_scroll') }}?page=${currentPage}`;
+				$.ajax({
+					url: url,
+					type: 'GET',
+					dataType: 'json', 
+					success: function(data) {
+						$('#prestations-container').append(data.html);
+						if (!data.hasMore) {
+							allDataLoaded = true;
+						}
+					},
+					error: function() {
+						allDataLoaded = true; 
+					}
+				});
+			}
+		}
+		</script>
+	{% endblock %}

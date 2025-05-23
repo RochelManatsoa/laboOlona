@@ -1,0 +1,151 @@
+<div class="text-small my-4">
+	{{ totalJobListingsResults }}
+	resultat(s)
+</div>
+
+{% for item in annonces %}
+	<div class="d-flex w-100 align-items-center justify-content-between">
+		<!-- Avatar container -->
+		<div class="rounded-circle" style="
+			width: 40px;
+			height: 40px;
+			background-image: url('{{ asset('images/annonce.png') }}');
+			background-size: cover;
+			background-position: center;
+		"></div>
+		<!-- Text content -->
+		<div class="flex-grow-1 ms-3">
+			{% if app.user %}
+				<a href="{{ path('app_v2_job_offer_view', {'id': item['_id']})}}">{{ generateJobReference(item['_id'])}}</a>
+			{% else %}
+				<a href="#" data-id="{{ item['_id'] }}" class="annonce-link">
+					<strong class="mb-1">{{ generateJobReference(item['_id'])}}</strong>
+				</a>
+			{% endif %}
+            <div class="col-10 mb-1 fw-semibold">{{ item['_source'].titre|upper }}</div>
+		</div>
+		<!-- Date or any other information -->
+		<span data-annonce="{{ item['_id'] }}" style="display:none">
+
+			<div class="mb-4 mb-2">
+				<div class="">
+					<div class="card-img-top bg-image-candidat" style="background-image: url('{{ asset('images/annonce.jpg')}}');">
+						<div class="titre-overlay position-absolute w-100">
+							<h6 class="card-title m-0 p-2">{{ item['_source'].titre|upper }}</h6>
+						</div>
+					</div>
+					<div class="card-body">
+						<p class="card-text small">
+							{{ item['_source'].shortDescription|raw }}
+						</p>
+						{% if item['_source'].competences|length > 0 %}
+							<p class="card-text fw-bold small">
+								<span class="fs-5">Compétences requises</span><br>
+								{% set count = 0 %}
+								{% for skill in item['_source'].competences %}
+									{% if count < 3 %}
+										<span class="badge bg-info">{{ skill.nom }}</span>
+										{% set count = count + 1 %}
+									{% endif %}
+								{% endfor %}
+								{% if item['_source'].competences|length > 4 %}
+									<span class="badge bg-dark rounded-pill">+{{ item['_source'].competences|length - 3 }}</span>
+								{% endif %}
+							</p>
+						{% endif %}
+						<p class="small">
+							<span class="fw-bold fs-5">Type contrat</span><br>
+							<i class="bi bi-bookmark-check"></i>
+							{{ item['_source'].typeContrat }}
+						</p>
+						{% if item['_source'].budgetAnnonce is not empty %}
+							<p class="small">
+								<span class="fw-bold fs-5">Budget indicatif</span><br>
+								<i class="bi bi-currency-exchange"></i>
+								{{ item['_source'].budgetAnnonce }}
+							</p>
+						{% endif %}
+						<p class="small">
+							<span class="fw-bold fs-5">Date création</span><br>
+							<i class="bi bi-hourglass-top"></i>
+							{{ item['_source'].dateCreation|date("d/m/Y") }}
+						</p>
+						<p class="small">
+							<span class="fw-bold fs-5">Date expiration</span><br>
+							<i class="bi bi-hourglass-top"></i>
+							{{ item['_source'].dateExpiration|date("d/m/Y") }}
+						</p>
+						<p class="small">
+							<span class="fw-bold fs-5">Secteur</span><br>
+							<i class="bi bi-tag"></i>
+							{{ item['_source'].secteur }}
+						</p>
+						<div class="text-center">
+                            {% if app.user %}
+                                <a class="dropdown-item" href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir le contact (100 crédits)</a>
+                                <a class="dropdown-item add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}" href="#">Ajouter comme favoris</a>
+                            {% else %}
+                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Voir contact</button>
+                                <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Postuler</button>
+                            {% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</span>
+	</div>
+	<div class="small fw-light">
+		{% if item.highlight %}
+			{% set displayed = false %}
+			{% for field, fragments in item.highlight %}
+				{% if not displayed %}
+					{% if fragments|length > 1 %}
+						{{ fragments[1]|raw }}
+						{% set displayed = true %}
+					{% elseif fragments|length > 0 %}
+						{{ fragments[0]|raw }}
+						{% set displayed = true %}
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+		...
+		{% set cleanDescription = item['_source'].shortDescription | striptags %}
+		{% set words = cleanDescription | split(' ') %}
+		{% if words|length > 12 %}
+			{{ words|slice(0, 12)|join(' ') ~ '...' }}
+		{% else %}
+			{{ cleanDescription }}
+		{% endif %}
+	</div>
+	<div class="small mb-3 mb-sm-4">
+		<span class="small me-3">
+			<i class="bi bi-hourglass-top"></i>
+			Créée le
+			{{ item['_source'].dateCreation|date("d/m/Y") }}</span>
+		<span class="small me-3">
+			<i class="bi bi-hourglass-bottom"></i>
+			Expire le
+			{{ item['_source'].dateExpiration|date("d/m/Y") }}</span>
+		<span class="small me-3">
+			<i class="bi bi-bookmarks"></i>
+			{{ item['_source'].applications|length }}
+			Candidatures</span>
+        <span class="dropdown small me-3">
+            <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                Plus d'informations 
+            </a>
+            <ul class="dropdown-menu dropdown-menu-lg-end">
+				{% if app.user %}
+                <li><a class="dropdown-item" data-id="{{ item['_id'] }}" href="{{ path('app_v2_job_offer_view', {'id': item['_id']})}}">Voir l'offre</a></li>
+				<li><a class="dropdown-item annonce-link" href="{{ path('app_v2_job_offer_view', {'id': item['_id']})}}">Contacter l'entreprise</a></li>
+				{% else %}
+                <li><a class="dropdown-item annonce-link" data-id="{{ item['_id'] }}" href="#">Aperçu</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Ajouter comme favoris</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item['_id']}) }}">Contacter l'entreprise</a></li>
+				{% endif %}
+            </ul>
+        </span>
+	</div>
+{% endfor %}

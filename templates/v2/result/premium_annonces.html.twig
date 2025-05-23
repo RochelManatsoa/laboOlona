@@ -1,0 +1,57 @@
+<div class="container-fluid mt-5">
+    {% if top_annonces.items is not empty %}
+        {% set numSlides = top_annonces.items|length // 5 %}
+        {% if top_annonces.items|length % 5 > 0 %}
+            {% set numSlides = numSlides + 1 %}
+        {% endif %}
+        <div id="carousel_posting_component" class="carousel slide mb-5" data-bs-ride="carousel">
+
+            <div class="carousel-inner">
+                {% for i in 0..numSlides - 1 %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <div class="container-fluid">
+                            <div class="row row-cols-1 row-cols-md-5 g-2"> <!-- Changement ici pour 4 colonnes -->
+                                {% for j in 0..4 %} <!-- Itérer sur 6 top_annonces.items par slide -->
+                                    {% set index = i * 5 + j %} <!-- Calcul de l'index basé sur 6 top_annonces.items par slide -->
+                                    {% if index < top_annonces.items|length %}
+                                        {% set posting = top_annonces.items[index] %}
+
+                                        <div class="col">
+                                            <div class="card position-relative text-center">
+                                                <!-- Badge -->
+                                                <span class="badge bg-danger rounded-pill position-absolute top-0 start-0 translate-middle mt-2 ms-3">URGENT</span>
+                                                <p class="card-title h6 bg-dark text-white text-center py-2" style="height:120px; display: flex; align-items: center; justify-content: center;">{{ posting['_source'].titre|upper }} Réf:{{ generateJobReference(posting['_id']) }}</p>
+                                                <div class="card-body-candidat">
+                                                    <small class="mt-auto">
+                                                        <small class="card-text"><i class="bi bi-eye"></i> {{ posting['_source'].annonceVues|length }} vues</small> |
+                                                        <small class="card-text"><i class="mx-1 bi bi-patch-check"></i> {{ posting['_source'].applications|length }} offres</small>
+                                                    </small><br>
+                                                    <small class="">
+                                                        Contrat : <span class="badge bg-info">{{ posting['_source'].typeContrat }}</span><br>
+                                                        Date limite : <br>{{ posting['_source'].dateExpiration|date('d/m/Y') }}<br>
+                                                    </small>
+                                                </div>
+                                                {% if app.user %}
+                                                    <a href="{{ path('app_v2_candidate_view_job_offer', {'id': posting['_id']})}}" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto">Consulter</a>
+                                                {% else %}
+                                                    <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_candidate_view_job_offer', {'id':posting['_id']}) }}">Contacter</button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {# <div class="carousel-indicators mb-3">
+                {% for i in 0..numSlides - 1 %}
+                <button type="button" data-bs-target="#carousel_posting_component" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
+                {% endfor %}
+            </div> #}
+        </div>
+    {% endif %}
+</div>

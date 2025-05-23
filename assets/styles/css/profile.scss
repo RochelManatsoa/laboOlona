@@ -5,3 +5,21 @@
     object-fit: cover; /* Recadre l'image pour remplir le conteneur */
     object-position: center; /* Centre l'image */
 }
+
+.ai-button {
+    background-color: #9664e7;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.ai-button:hover {
+    background-color: #76b6d3;
+}
+
+.ai-button .fa-robot {
+    margin-right: 8px;
+}

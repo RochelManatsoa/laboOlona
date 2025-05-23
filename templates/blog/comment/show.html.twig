@@ -1,0 +1,49 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}Commentaire{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Commentaire</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>#</th>
+                <td>{{ comment.id }}</td>
+            </tr>
+            <tr>
+                <th>Auteur</th>
+                <td>{{ comment.author }}</td>
+            </tr>
+            <tr>
+                <th>Contenu</th>
+                <td>{{ comment.content }}</td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ getCommentStatus(comment.status)|raw }}</td>
+            </tr>
+            <tr>
+                <th>Créé le</th>
+                <td>{{ comment.createdAt ? comment.createdAt|date('d/m/Y à H:i') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ comment.updatedAt ? comment.updatedAt|date('d/m/Y à H:i') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ comment.email }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-end w-100">
+        <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_blog_comment_edit', {'id': comment.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+        {{ include('blog/comment/_delete_form.html.twig') }}
+    </div>
+
+    <div>
+        <a class="btn btn-info my-3 px-5 rounded-pill" href="{{ path('app_blog_comment_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Administration{% endblock %}
+
+{% block body %}
+
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Hello Admin! ✅</h1>
+    <a href="{{ path('app_white_label_client1_admin_csv_upload') }}" class="btn btn-secondary my-3">Importer un CV</a>
+    <a href="{{ path('connect_google_drive') }}" class="btn btn-primary">Connecter Google Drive</a>
+    <section class="visibility_p d-md-flex bp_">
+        <div class="biographie-profil mb-4 p-4 apparition_">
+            <strong>Total utilisateurs</strong>
+            <div class="d-flex align-items-center">
+            {{ users }}
+            </div>
+        </div>
+        <div class="biographie-profil mb-4 p-4 vu_">
+            <strong>Nombre de CV</strong>
+            <div class="d-flex align-items-center">
+            0
+            </div>
+        </div>
+        <div class="biographie-profil mb-4 p-4 mission_">
+            <strong>Total annonces</strong>
+            <div class="d-flex align-items-center">
+            0
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

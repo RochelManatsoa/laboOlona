@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SecteurRepository::class)]
 class Secteur
@@ -18,22 +19,28 @@ class Secteur
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['identity', 'annonce'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['identity', 'annonce'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['identity'])]
     private ?string $description = null;
 
     #[ORM\ManyToMany(targetEntity: EntrepriseProfile::class, mappedBy: 'secteurs')]
     private Collection $entreprise;
 
-    #[ORM\ManyToMany(targetEntity: CandidateProfile::class, mappedBy: 'secteurs')]
+    #[ORM\ManyToMany(targetEntity: CandidateProfile::class, mappedBy: 'secteurs', cascade: ['persist', 'remove'])]
     private Collection $candidat;
 
     #[ORM\OneToMany(mappedBy: 'secteur', targetEntity: JobListing::class)]
     private Collection $jobListings;
+
+    #[ORM\OneToMany(mappedBy: 'secteurs', targetEntity: Prestation::class)]
+    private Collection $prestations;
 
     public function __toString()
     {
@@ -45,6 +52,7 @@ class Secteur
         $this->entreprise = new ArrayCollection();
         $this->candidat = new ArrayCollection();
         $this->jobListings = new ArrayCollection();
+        $this->prestations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -160,6 +168,36 @@ class Secteur
             // set the owning side to null (unless already changed)
             if ($jobListing->getSecteur() === $this) {
                 $jobListing->setSecteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Prestation>
+     */
+    public function getPrestations(): Collection
+    {
+        return $this->prestations;
+    }
+
+    public function addPrestation(Prestation $prestation): static
+    {
+        if (!$this->prestations->contains($prestation)) {
+            $this->prestations->add($prestation);
+            $prestation->setSecteurs($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrestation(Prestation $prestation): static
+    {
+        if ($this->prestations->removeElement($prestation)) {
+            // set the owning side to null (unless already changed)
+            if ($prestation->getSecteurs() === $this) {
+                $prestation->setSecteurs(null);
             }
         }
 

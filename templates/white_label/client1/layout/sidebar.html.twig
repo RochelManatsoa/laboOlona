@@ -1,0 +1,101 @@
+
+{% set current_route = app.request.attributes.get('_route') %}
+<div class="sidebar-area bg-white">
+	<div class="logo-brand d-flex justify-content-between align-items-center">
+	<a class="navbar-brand" href="{{ path('app_home') }}">
+		<img id="logo" src="{{ asset('images/dashboard/logo_defaut_entreprise.webp') }}" width="150" height="56" class="" alt="Logo">
+	</a>
+	<button id="menuIcon" class="menu-icon" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" aria-expanded="false" aria-label="Toggle navigation">
+		<span></span>
+        <span></span>
+        <span></span>
+	</button>
+	</div>
+  <div id="sidebarT" class="scroll-container">
+    <ul class="nav nav-pills flex-column mb-auto mt-5 pt-3">
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_home')}}" class="nav-link {{ current_route == 'app_white_label_home' ? 'underline' : '' }}" aria-current="page">
+        <img src="{{ asset('v2/images/dashboard/dashboard.svg')}}" alt=""><span class="sidebar-text">Tableau de bord </span> 
+        </a>
+      </li>
+    {% if is_granted('ROLE_CANDIDAT') %}
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_client1_user_missions')}}" class="nav-link {{ (current_route == 'app_white_label_client1_user_missions' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+        <img src="{{ asset('v2/images/dashboard/missions.svg')}}" alt=""><span class="sidebar-text">Trouver des missions</span>
+        </a>
+      </li>
+      <li class="nav-item click-sub">
+        <span class="nav-link sous-menu_ {{ (current_route == 'app_white_label_client1_user_profile' or current_route == 'app_white_label_client1_user_password' or current_route == 'app_white_label_client1_user_candidatures' or current_route == 'app_tableau_de_bord_candidat_reseaux_professionnelles') ? 'underline' : '' }}" aria-current="page"><img src="{{ asset('v2/images/dashboard/profil.svg')}}" alt=""><span class="sidebar-text">Mes infos</span> </span>
+        <ul class="sub-nav-pills">
+          <li class="sub-nav-item">
+            <a href="{{ path('app_white_label_client1_user_profile')}}" class="sub-nav-link {{ current_route == 'app_white_label_client1_user_profile' ? 'underline' : '' }}" aria-current="page">
+            Mon profil
+            </a>
+          </li>
+          <li class="sub-nav-item">
+            <a href="{{ path('app_white_label_client1_user_candidatures')}}" class="sub-nav-link {{ current_route == 'app_white_label_client1_user_candidatures' ? 'underline' : '' }}" aria-current="page">
+            Mes candidatures
+            </a>
+          </li>
+          <li class="sub-nav-item">
+            <a href="{{ path('app_white_label_client1_user_password')}}" class="sub-nav-link {{ (current_route == 'app_white_label_client1_user_password' or current_route == 'app_v2_create_prestation' or current_route == 'app_v2_edit_prestation') ? 'underline' : '' }}" aria-current="page">
+            Modifier mon mot de passe
+            </a>
+          </li>
+        </ul>
+      </li>
+    {% endif %}
+    {% if is_granted('ROLE_RECRUITER') %}
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_client1_recruiter_cvtheque')}}" class="nav-link {{ (current_route == 'app_white_label_client1_recruiter_cvtheque' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+        <img src="{{ asset('v2/images/dashboard/cvtheque.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">CVthèque</span>
+        </a>
+      </li> 
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_client1_recruiter_creer_une_annonce')}}" class="nav-link {{ current_route == 'app_white_label_client1_recruiter_creer_une_annonce' ? 'underline' : '' }}" aria-current="page">
+        <img src="{{ asset('v2/images/dashboard/announcement.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">Publier une annonce</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_client1_recruiter_toutes_les_annonces')}}" class="nav-link {{ current_route == 'app_white_label_client1_recuiter_toutes_les_annonces' ? 'underline' : '' }}" aria-current="page">
+        <img src="{{ asset('v2/images/dashboard/discussions.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">Annonces</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_client1_recruiter_candidatures')}}" class="nav-link {{ current_route == 'app_white_label_client1_recruiter_candidatures' ? 'underline' : '' }}" aria-current="page">
+        <img src="{{ asset('v2/images/dashboard/search-people.svg')}}" alt="" width="23" height="23"><span class="sidebar-text">Candidatures</span>
+        </a>
+      </li>
+      <li class="nav-item click-sub">
+        <span class="sep-menu"></span> 
+        <span class="nav-link sous-menu_ {{ (current_route == 'app_white_label_client1_admin_configuration' or current_route == 'app_white_label_client1_admin_configuration_password' or current_route == 'app_white_label_client1_admin_assistance') ? 'underline' : '' }}"><img src="{{ asset('v2/images/dashboard/setting.svg')}}" alt=""><span class="sidebar-text">Paramètres </span></span>
+        <ul class="sub-nav-pills">
+          <li class="sub-nav-item">
+            <a href="{{ path('app_white_label_client1_admin_configuration')}}" class="sub-nav-link {{ current_route == 'app_white_label_client1_admin_configuration' ? 'underline' : '' }}" aria-current="page">
+            Configuration
+            </a>
+          </li>
+          <li class="sub-nav-item">
+            <a href="{{ path('app_white_label_client1_admin_configuration_password')}}" class="sub-nav-link {{ current_route == 'app_white_label_client1_admin_configuration_password' ? 'underline' : '' }}" aria-current="page">
+            Modifier mon mot de passe
+            </a>
+          </li>
+          <li class="sub-nav-item">
+            <a href="{{ path('app_white_label_client1_admin_assistance')}}" class="sub-nav-link {{ current_route == 'app_white_label_client1_admin_assistance' ? 'underline' : '' }}" aria-current="page">
+            Besoin d'assistance ?
+            </a>
+          </li>
+        </ul>
+      </li>
+    {% endif %}
+      <li class="nav-item">
+        <span class="sep-menu"></span> 
+        <a href="{{ path('app_client1_logout')}}" class="nav-link">
+        <img src="{{ asset('v2/images/dashboard/logout.svg')}}" alt=""><span class="sidebar-text">Se déconnecter</span> 
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+</div>
+<div class="db-content d-flex flex-column">

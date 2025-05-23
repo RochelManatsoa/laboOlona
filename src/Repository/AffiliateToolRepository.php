@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\AffiliateTool;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<AffiliateTool>
@@ -16,9 +18,26 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AffiliateToolRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry $registry, 
+        private PaginatorInterface $paginator
+    )
     {
         parent::__construct($registry, AffiliateTool::class);
+    }
+
+    public function paginateTools($page): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('a')->select('a');
+        $queryBuilder
+            ->addOrderBy('a.creeLe', 'DESC');
+
+        return $this->paginator->paginate(
+            $queryBuilder,
+            $page,
+            10,
+            []
+        );
     }
 
    /**
@@ -37,69 +56,30 @@ class AffiliateToolRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
-    /**
-     * @return AffiliateTool[] Returns an array of AffiliateTool objects
-     */
-    public function findByCategory($value, int $max = 12, int $offset = null): array
+    
+    public function getAffiliateToolsByTag($tag)
     {
-        return $this->createQueryBuilder('a')
-            ->leftJoin('a.categories', 'c')
-            ->andWhere('c.slug = :category')
-            ->andWhere('a.type = :status') // Utilisation d'un paramètre pour 'publish'
-            ->andWhere('a.image IS NOT NULL')
-            ->setParameter('category', $value)
-            ->setParameter('status', 'publish') // Définir la valeur de 'status'
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults($max)
-            ->setFirstResult($offset)
-            ->getQuery()
-            ->getResult()
-        ;
+        $qb = $this->createQueryBuilder('a')
+           ->join('a.tags', 't') 
+           ->where('t.id = :tagId') 
+           ->andWhere('a.type = :status') 
+           ->andWhere('a.image IS NOT NULL')
+           ->setParameter('status', 'publish')
+           ->setParameter('tagId', $tag->getId()); 
+           
+        return $qb->getQuery()->getResult();
     }
-
-    /**
-     * @return AffiliateTool[] Returns an array of AffiliateTool objects
-     */
-    public function findByTag($value, int $max = 12, int $offset = null): array
+    
+    public function getAffiliateToolsByCategory($category)
     {
-        return $this->createQueryBuilder('a')
-            ->leftJoin('a.tags', 't')
-            ->andWhere('t.slug = :tag')
-            ->andWhere('a.type = :status') // Utilisation d'un paramètre pour 'publish'
-            ->andWhere('a.image IS NOT NULL')
-            ->setParameter('tag', $value)
-            ->setParameter('status', 'publish') // Définir la valeur de 'status'
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults($max)
-            ->setFirstResult($offset)
-            ->getQuery()
-            ->getResult()
-        ;
+        $qb = $this->createQueryBuilder('a')
+           ->join('a.categories', 'c') 
+           ->where('c.id = :catId') 
+           ->andWhere('a.type = :status') 
+           ->andWhere('a.image IS NOT NULL')
+           ->setParameter('status', 'publish')
+           ->setParameter('catId', $category->getId()); 
+           
+        return $qb->getQuery()->getResult();
     }
-
-//    /**
-//     * @return AffiliateTool[] Returns an array of AffiliateTool objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?AffiliateTool
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

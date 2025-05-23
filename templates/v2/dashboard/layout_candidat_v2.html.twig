@@ -1,0 +1,93 @@
+
+{% set current_route = app.request.attributes.get('_route') %}
+<div class="sidebar-area bg-white">
+	<div class="logo-brand d-flex justify-content-between align-items-center">
+	<a class="navbar-brand" href="{{ path('app_home') }}">
+		<img id="logo" src="{{ asset('images/logo-olona-talents-black600x200.png') }}" width="150" height="56" class="" alt="Logo">
+	</a>
+	<button id="menuIcon" class="menu-icon" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" aria-expanded="false" aria-label="Toggle navigation">
+		<span></span>
+        <span></span>
+        <span></span>
+	</button>
+	</div>
+  <div class="scroll-container">
+    <ul class="nav nav-pills flex-column mb-auto mt-5 pt-3">
+    <li class="nav-item">
+      <a href="{{ path('app_v2_candidate_dashboard')}}" class="nav-link {{ current_route == 'app_v2_candidate_dashboard' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/dashboard.svg')}}" alt="">Tableau de bord <span class="link-bulle">2</span> 
+      </a>
+    </li>
+    {#nouveau menu statique#}
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_candidat_trouver_des_missions')}}" class="nav-link {{ (current_route == 'app_tableau_de_bord_candidat_trouver_des_missions' or current_route == 'app_v2_view_prestation' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/missions.svg')}}" alt="">Trouver des missions
+      </a>
+    </li>
+    <li class="nav-item click-sub">
+      <span class="nav-link sous-menu_"><img src="{{ asset('v2/images/dashboard/profil.svg')}}" alt="">Profil </span>
+      <ul class="sub-nav-pills">
+        <li class="sub-nav-item ">
+          <a href="{{ path('app_tableau_de_bord_candidat_profil')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_profil' }}" aria-current="page">
+          Voir ou modifier mon profil
+          </a>
+        </li>
+        <li class="sub-nav-item ">
+          <a href="{{ path('app_tableau_de_bord_candidat_mes_prestations')}}" class="sub-nav-link {{ (current_route == 'app_tableau_de_bord_candidat_mes_prestations' or current_route == 'app_v2_create_prestation' or current_route == 'app_v2_edit_prestation') }}" aria-current="page">
+          Mes prestations
+          </a>
+        </li>
+        <li class="sub-nav-item ">
+          <a href="{{ path('app_tableau_de_bord_candidat_mes_candidatures')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_mes_candidatures' }}" aria-current="page">
+          Mes candidatures
+          </a>
+        </li>
+        <li class="sub-nav-item ">
+          <a href="{{ path('app_tableau_de_bord_candidat_missions_obtenues')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_missions_obtenues' }}" aria-current="page">
+          Missions obtenus
+          </a>
+        </li>
+        <li class="sub-nav-item ">
+          <a href="{{ path('app_tableau_de_bord_candidat_reseaux_professionnelles')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_reseaux_professionnelles' }}" aria-current="page">
+          Réseaux professionnels
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a href="{{ path('app_tableau_de_bord_candidat_notification')}}" class="nav-link {{ current_route == 'app_tableau_de_bord_candidat_notification' ? 'underline' : '' }}" aria-current="page">
+      <img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt="">Notifications<span class="link-bulle">2</span>
+      </a>
+    </li>
+    <li class="nav-item click-sub">
+      <span class="sep-menu"></span> 
+      <span class="nav-link sous-menu_"><img src="{{ asset('v2/images/dashboard/setting.svg')}}" alt="">Paramètres </span>
+      <ul class="sub-nav-pills">
+        <li class="sub-nav-item ">
+          <a href="{{ path('app_tableau_de_bord_candidat_mon_compte')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_mon_compte' }}" aria-current="page">
+          Mon compte
+          </a>
+        </li>
+        <li class="sub-nav-item ">
+          <a href="{{ path('app_tableau_de_bord_candidat_mise_a_jour_mot_de_passe')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_mise_a_jour_mot_de_passe' }}" aria-current="page">
+          Modifier mon mot de passe
+          </a>
+        </li>
+        <li class="sub-nav-item ">
+          <a href="{{ path('app_tableau_de_bord_candidat_assistance')}}" class="sub-nav-link {{ current_route == 'app_tableau_de_bord_candidat_assistance' }}" aria-current="page">
+          Besoin d'assistance ?
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <span class="sep-menu"></span> 
+      <a href="{{ path('app_logout')}}" class="nav-link">
+      <img src="{{ asset('v2/images/dashboard/logout.svg')}}" alt="">Se déconnecter
+      </a>
+    </li>
+    </ul>
+  </div>
+</div>
+</div>
+<div class="db-content d-flex flex-column">

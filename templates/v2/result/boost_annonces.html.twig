@@ -1,0 +1,138 @@
+<div class="container-fluid d-block d-md-none">
+    {% if joblistings_boost|length > 0 %}
+        <div id="carousel_expert_component_mobile_{{ from }}" class="carousel slide mb-5" data-bs-interval="5000" data-bs-ride="carousel">
+            <div class="carousel-inner" role="listbox">
+                {% for joblisting in joblistings_boost %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <div class="container-fluid">
+                            <div class="row justify-content-center g-2">
+                                <div class="col-12 col-md-3"> 
+                                    <div class="card mt-3 text-center">
+                                        <div class="">
+                                            <span class="position-absolute top-0 start-0 ms-5 px-3 translate-middle badge bg-danger rounded-pill" style="z-index:999">URGENT</span>
+                                        </div>
+                                        <div class="card-image-wrapper">
+                                            <div class="job-image card-img-top" style="background-image: url('{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/annonce.png') }}');" alt="{{ generatePseudoById(joblisting.id) }}"></div>
+                                            <div class="card-body-candidat">
+                                                <p class="job-title">Ref: {{ generateJobReference(joblisting.id) }}</p>
+                                                <div style="min-height:50px;display: flex; align-items: center; justify-content: center;">
+                                                    <h2 class="fw-bold text-uppercase fs-6">
+                                                        {% set title_words = joblisting.titre|striptags|split(' ') %}
+                                                        {% if title_words|length > 5 %}
+                                                            {{ title_words|slice(0, 5)|join(' ') }}...
+                                                        {% else %}
+                                                            {{ title_words|join(' ') }}
+                                                        {% endif %}
+                                                    </h2>
+                                                </div>
+                                                <div class="">
+                                                    <span class="">
+                                                        <small><i class="bi bi-eye"></i> {{ joblisting.annonceVues|length }} vues</small> |
+                                                        <small><i class="mx-1 bi bi-patch-check"></i> {{ joblisting.applications|length }} offres</small>
+                                                    </span><br>
+                                                    <span class="">
+                                                        <small class="badge bg-info rounded-pill">{{ joblisting.typeContrat }}</small><br>
+                                                        <span class="fw-lighter small">Date limite :</span> {{ joblisting.dateExpiration|date('d/m/Y') }}
+                                                    </span>
+                                                </div>
+                                                {% if app.user %}
+                                                    <a href="{{ path('app_v2_job_offer_view', {'id': joblisting.id})}}" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mt-3 mx-auto">Contacter</a>
+                                                {% else %}
+                                                    <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mt-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_job_offer_view', {'id':joblisting.id}) }}">Contacter</button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div class="container-fluid d-none d-md-block">
+    {% if joblistings_boost|length > 0 %}
+        <div id="carousel_expert_component_{{from}}" class="carousel slide mb-5" data-bs-interval="5000" data-bs-ride="carousel">
+            <div class="carousel-inner" role="listbox">
+                {% set totalAnnonces = joblistings_boost|length %}
+                {% set fillCount = totalAnnonces % 3 == 0 ? 0 : 3 - (totalAnnonces % 3) %}
+                {% set totalItems = totalAnnonces + fillCount %}
+                {% set pageCount = (totalItems + 2) // 3 %}
+                {% set itemsPerSlide = 3 %}
+                
+                {% for i in 0..(pageCount - 1) %}
+                    <div class="carousel-item {% if i == 0 %}active{% endif %}">
+                        <div class="container-fluid">
+                            <div class="row row-cols-1 row-cols-md-3 g-2">
+                                {% for j in 0..itemsPerSlide - 1 %}
+                                    {% set index = i * itemsPerSlide + j %}
+                                    {% if index < totalAnnonces %}
+                                        {% set joblisting = joblistings_boost[index] %}
+                                        <div class="col">
+                                            <div class="card mt-3 text-center">
+                                                <div class="">
+                                                    <span class="position-absolute top-0 start-0 ms-5 px-3 translate-middle badge bg-danger rounded-pill" style="z-index:999">URGENT</span>
+                                                </div>
+                                                <div class="card-image-wrapper">
+                                                    <div class="job-image card-img-top" style="background-image: url('{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/annonce.png') }}');" alt="{{ generatePseudoById(joblisting.id) }}"></div>
+                                                    <div class="card-body-candidat">
+                                                        <p class="job-title">Ref: {{ generateJobReference(joblisting.id) }}</p>
+                                                        <div class="job-h2">
+                                                            <h2 class="fw-bold text-uppercase">
+                                                                {% set title_words = joblisting.titre|striptags|split(' ') %}
+                                                                {% if title_words|length > 6 %}
+                                                                    {{ title_words|slice(0, 6)|join(' ') }}...
+                                                                {% else %}
+                                                                    {{ title_words|join(' ') }}
+                                                                {% endif %}
+                                                            </h2>
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="">
+                                                                <small><i class="bi bi-eye"></i> {{ joblisting.annonceVues|length }} vues</small> |
+                                                                <small><i class="mx-1 bi bi-patch-check"></i> {{ joblisting.applications|length }} offres</small>
+                                                            </span><br>
+                                                            <span class="">
+                                                                <small class="badge bg-info rounded-pill">{{ joblisting.typeContrat }}</small><br>
+                                                                <span class="fw-lighter small">Date limite :</span> {{ joblisting.dateExpiration|date('d/m/Y') }}
+                                                            </span>
+                                                        </div>
+                                                        {% if app.user %}
+                                                            <a href="{{ path('app_v2_job_offer_view', {'id': joblisting.id})}}" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mt-3 mx-auto">Contacter</a>
+                                                        {% else %}
+                                                            <button type="button" class="btn btn-primary btn-sm fw-semibold mb-3 px-3 mt-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_job_offer_view', {'id':joblisting.id}) }}">Contacter</button>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="col">
+                                            <div class="card mt-3 text-center">
+                                                <a href="{{ path('app_v2_contact') }}">
+                                                    <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel_expert_component_{{from}}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel_expert_component_{{from}}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    {% endif %}
+</div>

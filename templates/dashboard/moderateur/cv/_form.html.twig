@@ -1,0 +1,10 @@
+
+	{{ form_start(formCvEdit, {'action': path('app_edit_cv', {'cvId': cv.id}), 'attr': {'id': formCvEdit.vars.id}}) }}
+	
+    <div class="col">
+        {{ form_widget(formCvEdit.cvEdit) }}
+    </div>
+    <div class="col">
+        <button type="submit" class="btn btn-outline-primary rounded-pill btn-sm px-5 my-3">Envoyer</button>
+    </div>
+	{{ form_end(formCvEdit) }}

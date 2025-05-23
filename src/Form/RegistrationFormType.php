@@ -4,15 +4,19 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Validator\Constraints\Sequentially;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 
 class RegistrationFormType extends AbstractType
 {
@@ -20,19 +24,26 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => false,
-                'row_attr' => ['class' => 'col-md-12 mb-3'],
+                'label' => 'Adresse email *',
+                'attr' => ['class' => 'form-control', 'placeholder' => 'app_register.email']
+                ])
+            ->add('nom', null, [
+                'label' => 'Nom *',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Champ obligatoire',
+                    ]),
+                ],
                 'attr' => ['class' => 'form-control', 'placeholder' => 'app_register.email']
             ])
-            ->add('nom', null, [
-                'label' => false,
-                'row_attr' => ['class' => 'col-md-6 mb-3'],
-                'attr' => ['class' => 'form-control', 'placeholder' => 'app_register.first_name']
-            ])
             ->add('prenom', null, [
-                'label' => false,
-                'row_attr' => ['class' => 'col-md-6 mb-3'],
-                'attr' => ['class' => 'form-control', 'placeholder' => 'app_register.last_name']
+                'label' => 'Prénom(s) *',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Champ obligatoire',
+                    ]),
+                ],
+                'attr' => ['class' => 'form-control', 'placeholder' => 'app_register.email']
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => false,
@@ -46,28 +57,46 @@ class RegistrationFormType extends AbstractType
                     'label' => 'app_register.agree_terms',
                 ],
             ])
+            ->add('captcha', Recaptcha3Type::class, [
+                'constraints' => new Recaptcha3(),
+                'action_name' => 'register',
+                'locale' => 'fr',
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
-                'invalid_message' => 'The password fields must match.',
-                'options' => ['attr' => ['class' => '']],
+                'invalid_message' => 'Les mots de passe ne correspondent pas.',
                 'required' => true,
-                'first_options'  => [ 'label' => false, 'attr' => ['placeholder' => 'app_register.password']],
-                'second_options' => [ 'label' => false, 'attr' => ['placeholder' => 'app_register.repeat_password']],
+                'first_options'  => [ 
+                    'label' => 'Mot de passe',
+                    'attr' => [
+                        'placeholder' => 'app_register.password',
+                        'class' => 'form-control pe-5'
+                    ],
+                ],
+                'second_options' => [ 
+                    'label' => 'Repeter le mot de passe',
+                    'attr' => [
+                        'placeholder' => 'app_register.repeat_password',
+                        'class' => 'form-control pe-5'
+                    ],
+                ],
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
+                'constraints' =>  new Sequentially([
                     new NotBlank([
-                        'message' => 'app_register.not_blank',
+                        'message' => 'Champ obligatoire',
                     ]),
                     new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
+                        'min' => 8,
+                        'max' => 1024,
+                        'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères',
+                        'maxMessage' => 'Mot de passe trop long',
                     ]),
-                ],
+                    new Regex([
+                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/',
+                        'message' => 'Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre.',
+                    ]),
+                ]),
             ])
         ;
     }

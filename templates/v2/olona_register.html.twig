@@ -1,0 +1,173 @@
+{% extends 'security/base_login.html.twig' %}
+
+{% block title %}Inscription | Olona Talents{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Inscrivez-vous sur https://olona-talents.com/ pour créer votre compte et accéder à un large éventail de services, publier des annonces, trouver des talents ou des opportunités professionnelles, et optimiser votre visibilité.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement, travail, emploi, talents, candidat, recruteur, offres, agence, olona, olona talents, olona talents agence, talents agence, agence talents, candidature, candidature agence, candidature olona, candidature olona talents">
+<meta property="og:title" content="Inscription | Olona Talents">
+<meta property="og:description" content="Inscrivez-vous sur https://olona-talents.com/ pour créer votre compte et accéder à un large éventail de services, publier des annonces, trouver des talents ou des opportunités professionnelles, et optimiser votre visibilité.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ path('app_olona_talents_register') }}">
+{% endblock %}
+
+{% block body %}
+
+<section class="login-wrap">
+    <div class="bg-mask"></div>
+    <div class="login-header">
+        <div class="container pt-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="{{ path('app_home') }}">
+                        <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" class="img-fluid" alt="Image">
+                    </a>
+                </div>
+                <div class="col-md-8 ">
+                    <div class="sign-up_">
+                        Déjà membre ? <a href="{{ path('app_login') }}" class="fw-bolder text-white">Connectez-vous</a> et profitez des avantages de Olona-talents.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="login-content">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 col-xl-8">
+                    <div class="login-left-block">
+                        
+                        <h1>Le <span>1<sup>er</sup></span>moteur de recherche dédié à l'emploi à Madagascar</h1>
+                        <ul class="features_list_">
+                            <li><a href="{{ path('app_coworking_main')}}" class="text-white" target="_blank">Espace coworking</a></li>
+                            <li><a href="" class="link-disabled text-white">Recrutement</a></li>
+                            <li><a href="{{ path('app_home_simulateur_portage')}}" class="text-white" target="_blank">Portage salarial</a></li>
+                            <li><a href="" class="link-disabled text-white">Domiciliation</a></li>
+                            <li><a href="" class="link-disabled text-white">AutoPromotion</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-4">
+                    <div class="card shadow-lg border-0 rounded">
+                        <div class="card-body p-4">
+                            {% for flash_error in app.flashes('verify_email_error') %}
+                            <div class="alert alert-light" role="alert">
+                                {{ flash_error }}
+                            </div>
+                            {% endfor %}
+                            
+                            {% if app.user %}
+                            <div class="alert alert-dark text-center">
+                                Vous êtes connecté en tant que {{ app.user.userIdentifier }},
+                                <a href="{{ path('app_logout') }}">Déconnexion</a>
+                            </div>
+                            {% endif %}
+                            
+                            {{ form_start(registrationForm, {'attr': {'data-turbo': 'false'}}) }}
+
+                            {{ form_errors(registrationForm) }}
+
+                            <div class="form-floating mb-3">
+                                {{ form_widget(registrationForm.nom) }}
+                                {{ form_label(registrationForm.nom) }}
+                                {{ form_errors(registrationForm.nom) }}
+                            </div>
+                            <div class="form-floating mb-2">
+                                {{ form_widget(registrationForm.prenom) }}
+                                {{ form_label(registrationForm.prenom) }}
+                                {{ form_errors(registrationForm.prenom) }}
+                            </div>
+                            <div class="form-floating mb-2">
+                                {{ form_widget(registrationForm.email) }}
+                                {{ form_label(registrationForm.email) }}
+                                {{ form_errors(registrationForm.email) }}
+                            </div>
+                            <div class="form-floating mb-3 position-relative" data-controller="toggle-password">
+                                {{ form_widget(registrationForm.plainPassword.first, {
+                                    'attr': {
+                                        'class': 'form-control password-field pe-5',
+                                        'data-toggle-password-target': 'input',
+                                        'type': 'password',
+                                        'autocomplete': 'new-password',
+                                        'placeholder': 'Entrez votre mot de passe',
+                                    }
+                                }) }}
+                                {{ form_label(registrationForm.plainPassword.first) }}
+                                {{ form_errors(registrationForm.plainPassword.first) }}
+                                
+                                <button type="button"
+                                        class="btn btn-link position-absolute end-0 top-50 translate-middle-y p-0 me-3"
+                                        data-action="click->toggle-password#toggle"
+                                        data-toggle-password-target="icon">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+
+                            <div class="form-floating mb-3 position-relative" data-controller="toggle-password">
+                                {{ form_widget(registrationForm.plainPassword.second, {
+                                    'attr': {
+                                        'class': 'form-control password-field pe-5',
+                                        'data-toggle-password-target': 'input',
+                                        'type': 'password',
+                                        'placeholder': 'Repétez votre mot de passe',
+                                    }
+                                }) }}
+                                {{ form_label(registrationForm.plainPassword.second) }}
+                                {{ form_errors(registrationForm.plainPassword.second) }}
+                                
+                                <button type="button"
+                                        class="btn btn-link position-absolute end-0 top-50 translate-middle-y p-0 me-3"
+                                        data-action="click->toggle-password#toggle"
+                                        data-toggle-password-target="icon">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+
+                            <div class="form-check form-check-inline d-flex">
+                                    <div class="form-check form-check-inline">
+                                        {{ form_widget(registrationForm.agreeTerms) }}
+                                    </div>
+                                    <label class="form-check-label fs-6" for="{{ registrationForm.agreeTerms.vars.id }}">
+                                        {{ attribute(registrationForm.agreeTerms.vars.attr, 'label')|trans({
+                                            '%terms_url%': path('app_home_terms'),
+                                            '%privacy_url%': path('app_home_privacy')
+                                        })|raw }}
+                                    </label>
+                            </div>
+                            <div class="text-center my-3">
+                                <button class="btn btn-login" type="submit" id="register-submit">
+                                    {{ 'app_register.menu'|trans }}                
+                                </button>
+                            </div>
+                            {{ form_end(registrationForm) }}
+                            <section class="social-login_ mt-3">
+                                <div class="d-flex align-items-center my-3">
+                                    <hr class="flex-grow-1">
+                                    <h2 class="h5 text-center mx-3">Utiliser les réseaux sociaux</h2>
+                                    <hr class="flex-grow-1">
+                                </div>
+                                <div class="d-flex gap-3 justify-content-center mt-3">
+                                    <a href="{{ path('connect_google_start') }}" class="text-white btn btn-google">
+                                        <img src="{{ asset('images/google-svg-icon.svg') }}" class="img-fluid" alt="icon google">
+                                        {#Se connecter avec Google#}
+                                    </a>
+                                    <a href="{{ path('connect_facebook_start') }}" class="text-white btn btn-fb">
+                                        <img src="{{ asset('images/facebook-svg-icon.svg') }}" class="img-fluid" alt="icon fb">
+                                        {#Se connecter avec Facebook#}
+                                    </a>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block preview %}{% endblock %}

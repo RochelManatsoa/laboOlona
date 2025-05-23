@@ -21,23 +21,10 @@ class EntrepriseCandidatureSearchType extends AbstractType
                     'placeholder' => 'Titre de l\'annonce ...',
                 ]
             ])
-            ->add('candidat', TextType::class, [
-                'required' => false,
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Candidat ...',
-                ]
-            ])
-            ->add('status', ChoiceType::class, [
-                'choices' => Applications::getStatuses(),
-                'required' => false,
-                'label' => false,
-                'placeholder' => 'Status ...',
-            ])
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'method' => 'GET',

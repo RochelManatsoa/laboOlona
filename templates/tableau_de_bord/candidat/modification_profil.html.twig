@@ -1,0 +1,190 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Mon profile </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> Modifier mon profile </li>
+            </ol>
+        </div>
+        <section class="warning_freemium mb-4 d-flex align-items-center">
+            <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+            <div class="warning-block">
+                Vous êtes actuellement sur un plan gratuit. <a routerlink="" class="btn-primary" href="">Achetez du credit</a> pour booster la visibilité de votre profil ou encore, passez à un <a routerlink="" class="btn-primary" href="">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+            </div>
+        </section>
+        <div class="biographie-profil mb-4 p-4">
+            <div class="tab-pane fade" id="edit">
+                {% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) %}
+                    <div class="alert alert-warning alert-dismissible fade show small" role="alert">
+                        En modifiant votre profil, celui-ci sera réexaminé avant validation.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                {{ form_start(form_one, {'attr': {'data-turbo': 'false', 'id': 'formOne'}}) }}
+
+                <div class="row">
+
+                    <div class="col-12 col-sm-6">
+
+                        <h3 class="fs-5 text-uppercase my-3">
+                            <i class="bi bi-person-circle"></i>
+                            Informations personnelles
+                        </h3>
+
+                        <span class="fs-6 fw-bold lh-base">Votre nom complet</span><br>
+                        <span class="fw-lighter lh-1 small">Indiquez votre prénom et votre nom de famille.</span>
+                        <div class="row">
+                            <div class="col">
+                                {{ form_widget(form_one.candidat.nom, {'attr': {'class': 'form-control mb-4'}}) }}
+                                {{ form_errors(form_one.candidat.nom) }}
+                            </div>
+                            <div class="col">
+                                {{ form_widget(form_one.candidat.prenom, {'attr': {'class': 'form-control mb-4'}}) }}
+                                {{ form_errors(form_one.candidat.prenom) }}
+                            </div>
+                        </div>
+
+                        <span class="fs-6 fw-bold lh-base">Adresse Email</span><br>
+                        <span class="fw-lighter lh-1 small">Utilisez une adresse email que vous consultez régulièrement pour ne manquer aucune opportunité.</span>
+                        <div class="row">
+                            <div class="col">
+                                {{ form_widget(form_one.candidat.email, {'attr': {'class': 'form-control mb-4'}}) }}
+                                {{ form_errors(form_one.candidat.email) }}
+                            </div>
+                        </div>
+
+                        <span class="fs-6 fw-bold lh-base">Numéro de Téléphone</span><br>
+                        <span class="fw-lighter lh-1 small">Fournissez un numéro de téléphone où vous pouvez être facilement contacté.</span>
+                        <div class="row">
+                            <div class="col">
+                                {{ form_widget(form_one.candidat.telephone, {'attr': {'class': 'form-control mb-4'}}) }}
+                                {{ form_errors(form_one.candidat.telephone) }}
+                            </div>
+                        </div>
+
+                        <h3 class="fs-5 text-uppercase my-3">
+                            <i class="bi bi-person-badge"></i>
+                            Informations professionnelle
+                        </h3>
+
+                        <span class="fs-6 fw-bold lh-base">Titre</span><br>
+                        <span class="fw-lighter lh-1 small">Renseigner votre titre professionnel.</span>
+                        <div class="row">
+                            <div class="col">
+                                {{ form_widget(form_one.titre, {'attr': {'class': 'form-control mb-4'}}) }}
+                                {{ form_errors(form_one.titre) }}
+                            </div>
+                        </div>
+
+                        <span class="fs-6 fw-bold lh-base">Secteur(s) d'activité</span><br>
+                        <span class="fw-lighter lh-1 small">Vos secteurs d'activité professionnel.</span>
+                        <div class="row">
+                            <div class="col">
+                                {{ form_widget(form_one.secteurs, {'attr': {'class': 'form-control mb-4'}}) }}
+                                {{ form_errors(form_one.secteurs) }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 col-sm-6">
+                        <div class="row my-4 justify-content-center">
+                            <div class="col-auto">
+                                <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form_one.vars.data.fileName ? asset('uploads/experts/' ~ form_one.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}');cursor:pointer;" alt="Avatar">
+                                    <div class="overlay-text">Changer la photo</div>
+                                </div>
+                                {{ form_widget(form_one.file) }}
+                                {{ form_errors(form_one.file) }}
+                            </div>
+                        </div>
+                        <div class="row my-4 align-items-center">
+                            <span class="fs-6 fw-bold lh-base">Biographie</span>
+                            {{ form_widget(form_one.resume) }}
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="col-md-6 col-sm-12">
+                            <h5 class="fs-4 fw-bold">
+                                <i class="bi bi-graph-up"></i>
+                                Experiences ({{ experiences|length }})
+                            </h5>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+
+                        </div>
+                    </div>
+                    <div class="experience-form">
+                    {{ form_label(form_one.experiences) }}
+                    {{ form_errors(form_one.experiences) }}
+                    {{ form_widget(form_one.experiences) }} 
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="col-md-6 col-sm-12">
+                            <h5 class="fs-4 fw-bold">
+                                <i class="bi bi-person-fill-gear mx-2 h5"></i>
+                                Competences ({{ competences|length }})</h5>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+
+                        </div>
+                    </div>
+                    <div class="experience-form">
+                    {{ form_label(form_one.competences) }}
+                    {{ form_errors(form_one.competences) }}
+                    {{ form_widget(form_one.competences) }} 
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-md-6 col-sm-12">
+                            <h5 class="fs-4 fw-bold">
+                                <i class="bi bi-globe-europe-africa mx-2 h5"></i>
+                                Langues ({{ langages|length }})</h5>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                    <div class="experience-form">
+                    {{ form_label(form_one.langages) }}
+                    {{ form_errors(form_one.langages) }}
+                    {{ form_widget(form_one.langages) }} 
+                    </div>
+                    </div>
+                    <hr class="mb-4">
+
+                </div>
+
+                <div style="display:none">
+                    {{ form_widget(form_one) }}
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+                    <i class="bi bi-save"></i>
+                    Enregister
+                </button>
+
+                {{ form_end(form_one, { 'render_rest': false }) }}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

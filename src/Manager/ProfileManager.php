@@ -2,15 +2,20 @@
 
 namespace App\Manager;
 
+use DateTime;
+use App\Entity\User;
 use App\Entity\Candidate\CV;
 use Twig\Environment as Twig;
+use App\Entity\ReferrerProfile;
 use Symfony\Component\Uid\Uuid;
 use App\Entity\CandidateProfile;
 use Symfony\Component\Form\Form;
 use App\Entity\EntrepriseProfile;
-use App\Entity\Moderateur\EditedCv;
 use App\Entity\ModerateurProfile;
-use DateTime;
+use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostFacebook;
+use App\Entity\Moderateur\EditedCv;
+use App\Entity\BusinessModel\Credit;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -56,6 +61,17 @@ class ProfileManager
         return $moderateur;
     }
 
+    public function createReferrer($user)
+    {
+        $referrer = new ReferrerProfile();
+        $referrer->setReferrer($user);
+        $referrer->setCreatedAt(new DateTime());
+        $referrer->setStatus(ReferrerProfile::STATUS_PENDING);
+        $referrer->setCustomId(new Uuid(Uuid::v1()));
+
+        return $referrer;
+    }
+
     public function saveCandidate(CandidateProfile $candidate)
     {
         $this->em->persist($candidate);
@@ -96,22 +112,32 @@ class ProfileManager
         ->setUploadedAt(new DateTime())
         ->setCandidat($candidat)
         ;
+        
+        // Vérifiez si l'entité CandidateProfile est déjà gérée
+        if (!$this->em->contains($candidat)) {
+            // Si ce n'est pas le cas, persistez l'entité CandidateProfile
+            $this->em->persist($candidat);
+        }
 
         $this->em->persist($cv);
         $this->em->flush();
     }
 
-    public function saveCVEdited(array $fileName, CandidateProfile $candidat)
+    public function saveCVEdited(array $fileName, CandidateProfile $candidat, CV $cv)
     {
-        $cv = new EditedCv();
-        $cv
+        $editedCv = $cv->getEdited();
+        if (!$editedCv instanceof EditedCv) {
+            $editedCv = new EditedCv();
+        }
+        $editedCv
         ->setCvLink($fileName[0])
         ->setSafeFileName($fileName[1])
         ->setUploadedAt(new DateTime())
         ->setCandidat($candidat)
+        ->setCV($cv)
         ;
 
-        $this->em->persist($cv);
+        $this->em->persist($editedCv);
         $this->em->flush();
     }
 
@@ -127,5 +153,104 @@ class ProfileManager
         $formattedFileName = implode('-', $parts);
     
         return $formattedFileName;
+    }
+
+    public function canApplyBoost(User $user, Boost $boost): bool
+    {
+        $credit = $user->getCredit();
+        $amount = $boost->getCredit();
+        if ($credit instanceof Credit) {
+            if($credit->getTotal() > $amount){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function canApplyBoostFacebook(User $user, ?BoostFacebook $boost): bool
+    {
+        if($boost === null){
+            return false;
+        }
+        $credit = $user->getCredit();
+        $amount = $boost->getCredit();
+        if ($credit instanceof Credit) {
+            if($credit->getTotal() > $amount){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function canApplyAction(User $user, string $action): bool
+    {
+        $credit = $user->getCredit();
+        $amount = $this->getCreditAmount($action);
+
+        if ($credit instanceof Credit) {
+            if($credit->getTotal() > $amount){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function canBuy(User $user, int $amount): bool
+    {
+        $credit = $user->getCredit();
+
+        if ($credit instanceof Credit) {
+            if($credit->getTotal() > $amount){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getCreditAmount(string $action): float
+    {
+        switch ($action) {
+            case Credit::ACTION_VIEW_CANDIDATE :
+                $amount = 75;
+                break;
+
+            case Credit::ACTION_VIEW_RECRUITER :
+                $amount = 150;
+                break;
+                
+            case Credit::ACTION_UPLOAD_CV :
+                $amount = 120;
+                break;
+                
+            case Credit::ACTION_APPLY_OFFER :
+                $amount = 20;
+                break;
+                
+            case Credit::ACTION_APPLY_JOB :
+                $amount = 20;
+                break;
+                
+            case Credit::ACTION_APPLY_PRESTATION_CANDIDATE :
+                $amount = 20;
+                break;
+                
+            case Credit::ACTION_APPLY_PRESTATION_RECRUITER :
+                $amount = 20;
+                break;
+                
+            case Credit::ACTION_SIMULATE :
+                $amount = 10;
+                break;
+            
+            default:
+                $amount = 0;
+                break;
+        }
+
+        return $amount;
     }
 }

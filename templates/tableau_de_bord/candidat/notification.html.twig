@@ -1,0 +1,104 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Mes notifications{% endblock %}
+
+{% block body %}
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Notifications </h5>
+            </div>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Mes notifications </li>
+        </ol>
+    </div>
+</section>
+{% if not candidat.isIsPremium %}
+<section class="warning_freemium mb-4 d-flex align-items-center">
+    <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+    <div class="warning-block">
+        Vous êtes actuellement sur un plan gratuit. <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">Achetez du credit</a> pour <a routerlink="{{ path('app_tableau_de_bord_candidat_boost')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_boost')}}">booster la visibilité</a> de votre profil ou encore, passez à un <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs')}}">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+    </div>
+</section>
+{% endif %}
+<section class="detail_db d-md-flex bp_">
+    <div class="biographie-profil mb-4 p-4">
+        <div class="notification-top-item">
+            <h1>Mes notifications</h1>
+                {% if notifications|length > 0 %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                        <th scope="col">{{ knp_pagination_sortable(notifications, 'Titre', 'n.titre') }}</th>
+                        <th scope="col" class="text-center">{{ knp_pagination_sortable(notifications, 'Reçu le', 'n.dateMessage') }}</th>
+                        <th scope="col" class="text-center">{{ knp_pagination_sortable(notifications, 'Lu', 'n.isRead') }}</th>
+                        <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for notification in notifications %}
+                    {% set class = "fw-semibold" %}
+                    {% set icone = "bi-bell-fill" %}
+                    {% set status = '<span class="badge bg-primary"> Nouveau </span>' %}
+                    {% if notification.isRead %}
+                        {% set class = "fw-lighter" %}
+                        {% set icone = "bi-bell" %}
+                        {% set status = '<span class="badge bg-success px-3"><i class="bi bi-check2-square"></i> Lu </span>' %}
+                    {% endif %}
+                        <tr>
+                            <td>{{ notification.titre }}</td>
+                            <td class="text-center">{{ notification.dateMessage|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ notification.isRead ? '<i class="h3 bi bi-toggle-on"></i>' : '<i class="h3 bi bi-toggle-off"></i>' }}</td>
+                            <td>
+                                <button 
+                                    type="button" 
+                                    class="btn btn-sm btn-secondary rounded-pill" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#notification"
+                                    data-bs-id="{{ notification.id }}"
+                                    data-bs-title='<i class="bi {{ icone }}"></i> {{ notification.titre }}'
+                                    data-bs-content="{{ notification.contenu }}"
+                                    data-bs-expediteur="{{ notification.expediteur.nom | slice(0, 1) | upper }}. {{ notification.expediteur.prenom }}"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <form action="{{ path('app_v2_dashboard_notification_delete', {'id': notification.id})}}" method="post" id="delete-contact">
+                                    <button type="submit" class="btn btn-sm btn-danger rounded-pill">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {{ knp_pagination_render(notifications) }}
+                {% else %}
+                <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                    <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                    <p class="text-center">Aucune notification trouvée</p>
+                </div>
+                {% endif %}
+        </div>
+    </div>
+</section>
+<!-- Modal -->
+<div class="modal fade" id="notification" tabindex="-1" aria-labelledby="notificationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title fs-5" id="notificationLabel">Notification</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

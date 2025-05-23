@@ -1,49 +1,65 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
-{% block title %}Tableau de bord{% endblock %}
+{% block title %}Tableau de bord
+{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <a class="my-3 btn btn-sm btn-warning rounded-pill" href="{{ path('app_dashboard_entreprise_edit_annonce', {'id': annonce.id}) }}"><i class="bi bi-pencil"></i> Editer</a>  
-    <div class="card border-primary">
-        <div class="card-header bg-primary h3 text-white">
-            {{ annonce.titre }}
-        </div>
-                <div class="card-body">
-        
-        
-                       
-            <h5 class="card-title text-secondary">Resumé de l'annonce</h5>
-            <div class="row">
-                <div class="col-md-6">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">ID: {{ annonce.id }}</li>
-                        <li class="list-group-item">Entreprise: {{ annonce.entreprise.nom }}</li>
-                        <li class="list-group-item">Salaire: <span class="text-success">{{ annonce.salaire }}</span></li>
-                    </ul>
+	<div class="container">
+        <div class="annonce-list p-0 p-sm-2">
+            <div class="annonce-item shadow p-2 p-sm-5 m-1 m-sm-4">
+                <h1 class="card-title h2">{{ annonce.titre }}</h1>
+                <p class="text-muted small">
+                    <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ getStatuses(annonce.status) }} 
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
+                    {{ annonce.typeContrat }} 
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
+                    <i class="bi bi-geo-alt-fill"></i> {{ annonce.lieu }} 
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
+                    <i class="bi bi-hourglass-split"></i> Expire le {{ annonce.dateExpiration|date('d/m/Y') }}
+                        <span class="small text-center mx-1 mx-sm-3">|</span>
+                    <i class="bi bi-eye"></i> {{ annonce.annonceVues|length }} vues
+                </p>
+
+                <a href="{{ path('app_dashboard_entreprise_edit_annonce', {'id': annonce.id}) }}" class="btn btn-primary rounded-pill mx-3 px-3 px-sm-5"><i class="bi bi-pencil"></i> Modifier</a>
+
+                <hr>
+
+                <div class="card-text pb-3">
+                    <div>{{ annonce.description|raw }}</div>
                 </div>
-                <div class="col-md-6">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Lieu: <span class="text-info">{{ annonce.lieu }}</span></li>
-                        <li class="list-group-item">Type de contrat: <span class="badge bg-warning text-dark">{{ annonce.typeContrat }}</span></li>
-                        <li class="list-group-item">Date de création: <span class="text-muted">{{ annonce.dateCreation|date('d/m/Y') }}</span></li>
-                    </ul>
+
+                <div class="mt-3">
+                    <p class="">
+                    <i class="bi bi-gear mx-1 mx-sm-3 text-primary"></i>
+                    Compétences requises : 
+                    {% if annonce.competences|length > 0 %}
+                        {% for skill in annonce.competences %}
+                            <span class="badge text-bg-warning">{{ skill.nom }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <p>Aucune compétence spécifique requise.</p>
+                    {% endif %}
+                    </p>
                 </div>
-                <div class="col-md-12">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Date d'expiration: <span class="text-danger">{{ annonce.dateExpiration|date('d/m/Y') }}</span></li>
-                        <li class="list-group-item">Statut: <span class="badge bg-success">{{ annonce.status|status_label }}</span></li>
-                        <li class="list-group-item">Nombre de postes: {{ annonce.nombrePoste ?: 'Non spécifié' }}</li>
-                    </ul>
+
+                <div class="mb-3">
+                    <p class="">
+                        <i class="bi bi-cash-stack mx-1 mx-sm-3 text-primary"></i>
+                        Budget indicatif : 
+						<span class="text-strong">
+							{% if annonce.budgetAnnonce is defined and annonce.budgetAnnonce is not null %}
+							{{ annonce.budgetAnnonce.montant }} {{ annonce.budgetAnnonce.devise }}
+							{% else %}
+							{{ annonce.salaire }} €
+							{% endif %}
+                        </span>
+                    </p>
                 </div>
+
+
             </div>
-            <hr>
-        <h5 class="card-title text-secondary">Contenu de l'annonce </h5>
-        <p class="card-text">{{ annonce.description|raw }}</p>
         </div>
-    </div>
-    <hr>
-    <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-</div>
+		<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+	</div>
 
 {% endblock %}

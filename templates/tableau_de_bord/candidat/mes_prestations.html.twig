@@ -1,0 +1,129 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Mes prestations </h5>
+            </div>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Profil </li>
+            <li class="breadcrumb-item position-relative"> Mes prestations </li>
+        </ol>
+    </div>
+</section>
+{% if not candidat.isIsPremium %}
+<section class="warning_freemium mb-4 d-flex align-items-center">
+    <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+    <div class="warning-block">
+        Vous êtes actuellement sur un plan gratuit. <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">Achetez du credit</a> pour <a routerlink="{{ path('app_tableau_de_bord_candidat_boost')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_boost')}}">booster la visibilité</a> de votre profil ou encore, passez à un <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs')}}">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+    </div>
+</section>
+{% endif %}
+<section class="detail_db d-md-flex bp_">
+    <div class="biographie-profil mb-4 p-4">
+        <div class="mission-list-title">
+            <div class="d-lg-flex justify-content-between mb-4">
+                <h1>Mes prestations</h1>
+                <a href="{{ path('app_tableau_de_bord_candidat_creation_prestation')}}" class="btn btn-primary btn-lg fw-semibold text-uppercase">
+                    <i class="bi bi-plus-lg"></i>
+                    Créer une prestation (10 crédits)
+                </a>
+            </div>
+            {% set tableClass = 'table' %}
+            {% if prestations|length > 0 %}
+                <div class="table-responsive pt-4">
+                    <table class="{{ tableClass }}">
+                        <thead>
+                            <tr>
+                                <td scope="col" class="h5">{{ knp_pagination_sortable(prestations, 'Titre', 'p.titre') }}</td>
+                                <td scope="col-1" class="h5">{{ knp_pagination_sortable(prestations, 'Statut', 'p.status') }}</td>
+                                <td scope="col-2" class=""></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in prestations %}
+                                <tr id="row_prestation_recruiter_{{item.id}}">
+                                    <td class="">
+                                            <a href="{{ path('app_v2_edit_prestation', { 'prestation': item.id })}}">
+                                                {{ item.titre }}
+                                            </a>
+                                        <br>
+                                        <span class="fw-lighter small">Créé le
+                                            {{ item.createdAt|date('d/m/Y') }}</span>
+                                    </td>
+                                    <td class="col-2">{{ satusPrestation(item)|raw }}</td>
+                                    <td class="col-2">
+                                        <a href="{{ path('app_tableau_de_bord_candidat_view_prestation', { 'prestation': item.id })}}" class="btn btn-sm btn-secondary rounded-pill">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <form method="POST" action="{{ path('app_v2_delete_prestation')}}">
+                                            <input type="hidden" name="prestationId" value="{{item.id}}">
+                                            <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette prestation?');" class="btn btn-sm btn-danger rounded-pill">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation mt-5">
+                        {{ knp_pagination_render(prestations, 'parts/_pagination.html.twig') }}
+                    </div>
+                </div>
+            {% else %}
+                <h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+                    <span class="">
+                        <img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+                    </span>
+                    Vous n'avez pas encore créé une prestation!
+                </h3>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{#% for prestation in prestations %}
+	<div class="card my-3 small px-5 py-4">
+		<div class="row">
+            <div class="col-1 me-3">
+                <div class="rounded-circle" style="
+                    width: 45px;
+                    height: 45px;
+                    background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/prestation.png') }}');
+                    background-size: cover;
+                    background-position: center;
+                ">
+                </div>
+            </div>
+            <div class="col">
+                <span class="fs-6">
+                    <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">
+                        {{ prestation.titre }}
+                    </a>
+                </span><br>
+                <span class="small fw-lighter">{{ getAuthor(prestation)}}</span>
+            </div>
+		</div>
+		<div class="small">
+			{{ prestation.openai|raw }}
+		</div>
+		<div class="d-flex ms-auto small my-2 me-2">
+			<a class="btn btn-sm btn-primary rounded-pill px-3 me-2 mt-2" href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">Plus de details</a>
+		</div>
+		<div class="">
+            <span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
+                <i class="bi bi-tags"></i> {{ prestation.secteurs.nom}}
+            </span>
+		</div>
+	</div>
+{% endfor %#}
+{% endblock %}

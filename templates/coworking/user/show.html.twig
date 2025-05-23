@@ -1,0 +1,241 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Utilisateur{% endblock %}
+
+{% block paralax %}{% endblock %}
+
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-5 align-items-center rounded-3 border shadow-lg">
+            <h1 class="h3">Utilisateur #{{ user.id}}</h1>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom complet</th>
+                        <td>{{ user.nom }} {{ user.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th>Téléphone</th>
+                        <td>{{ user.telephone ? user.telephone : '<span class="badge bg-danger rounded-pill">Non défini</span>' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Compte</th>
+                        <td>{{ user.type ? user.type|ucfirst : '<span class="badge bg-danger rounded-pill">Non défini</span>' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Crédits</th>
+                        <td>{{ user.credit ? user.credit.total : '<span class="badge bg-danger rounded-pill">Non défini</span>' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Dépenses</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Réservations</th>
+                        <td>{{ user.events|length }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end w-100">
+                <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_user_edit', {'id': user.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                {{ include('coworking/user/_delete_form.html.twig') }}
+            </div>
+            {% if user.type == 'CANDIDAT' and user.candidateProfile is not null %}
+            {% set candidat = user.candidateProfile %}
+                <!-- Onglets -->
+                <ul class="nav nav-underline text-center mt-5">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="details-tab" data-bs-toggle="tab" href="#details">Résumé</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="competences-tab" data-bs-toggle="tab" href="#competences">Compétences ({{ candidat.competences|length }})</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="experiences-tab" data-bs-toggle="tab" href="#experiences">Expériences ({{ candidat.experiences|length }})</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="candidatures-tab" data-bs-toggle="tab" href="#candidatures">Candidatures ({{ candidat.applications|length }})</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="cv-tab" data-bs-toggle="tab" href="#cv">CV / Autres infos</a>
+                    </li>
+                </ul>
+
+                <!-- Contenu des onglets -->
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="details">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img src="{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" class="img-fluid profile-img" style="border-radius: 10px; object-fit: cover;">
+                                        <h2 class="h3 text-center my-3">Secteurs</h2>
+                                        {% for sector in candidat.secteurs %}
+                                            <span class="badge bg-primary rounded-pill">{{ sector.nom }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="mb-3">
+                                            <h5 for="candidat_titre">Titre</h5>
+                                            {{  candidat.titre}}
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <h5 for="candidat_titre">Nom</h5>
+                                                    {{  candidat.candidat.nom}}
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <h5 for="candidat_titre">Prénom(s)</h5>
+                                                    {{  candidat.candidat.prenom }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <h5 for="candidat_titre">Adresse</h5>
+                                                    {{  candidat.candidat.adress ? candidat.candidat.adress : '<span class="badge bg-danger rounded-pill">Non renseigné</span>' }}
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <h5 for="candidat_titre">Localisation</h5>
+                                                    {{  candidat.localisation ? candidat.localisation : '<span class="badge bg-danger rounded-pill">Non renseigné</span>' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <h5 for="candidat_resume">Biographie</h5>
+                                            {{ candidat.resume|raw }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% include "dashboard/moderateur/profile/candidat/sections/competences.html.twig" %}
+                    {% include "dashboard/moderateur/profile/candidat/sections/experiences.html.twig" %}
+                    {% include "dashboard/moderateur/profile/candidat/sections/candidatures.html.twig" %}
+                </div>
+            {% endif %}
+            {% if user.type == 'ENTREPRISE' and user.entrepriseProfile is not null %}
+            {% set entreprise = user.entrepriseProfile %}
+                <!-- Onglets -->
+                <ul class="nav nav-underline mt-5">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="details-tab" data-bs-toggle="tab" href="#details">Résumé</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="annonces-tab" data-bs-toggle="tab" href="#annonces">Annonces ({{ entreprise.jobListings|length }})</a>
+                    </li>
+                </ul>
+
+                <!-- Contenu des onglets -->
+                <div class="tab-content mt-3">
+
+                    <div class="tab-pane fade show active" id="details">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                    <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ asset('images/dashboard/logo_defaut_entreprise.webp') }}');" alt="Avatar"></div>
+                                    </div> 
+                                    <div class="col-md-9">
+                                        <h5 class="card-title">{{ entreprise.nom }}</h5>
+                                        <p class="card-text">
+                                        <span class="text-muted">Site Web :</span> {{ entreprise.siteweb }}<br>
+                                        <span class="text-muted">Email :</span> {{ entreprise.entreprise.email }}<br>
+                                        <span class="text-muted">Téléphone : </span> <span class="text-dark">{{ entreprise.entreprise.telephone }}</span><br>
+                                        <span class="text-muted">Adresse : </span> <span class="text-dark">{{ entreprise.entreprise.adress }} - {{ show_country(entreprise.localisation) }}</span><br>
+                                        <span class="text-muted">Dernière connexion : </span> <span class="text-dark">  {{ entreprise.entreprise.lastLogin|time_ago }} </span><br> 
+                                        <span class="text-muted">Secteur d'activité : </span><br> 
+                                            {% for item in entreprise.secteurs %}
+                                            <span class="badge text-bg-warning">
+                                                {{ item.nom }}
+                                            </span>
+                                            {% endfor %}<br> 
+                                        </p> 
+                                    </div> 
+                                </div> 
+                                <p class="card-text mt-3">
+                                    <strong>Description:</strong> {{ entreprise.description|raw }}<br>
+                                </p> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="annonces">
+                        <div class="card">
+                            <div class="card-body">
+                                {% if entreprise.jobListings|length > 0 %}
+                                    <table class="table" id="competencesTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-3">Créée le</th>
+                                                <th class="col-9">Détails</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for annonce in entreprise.jobListings %}
+                                                <tr>
+                                                    <td>
+                                                        {{ annonce.dateCreation|date('d/m/Y à h:i') }}
+                                                    </td>
+                                                    <td>
+                                                    <a href="{{ path('app_dashboard_moderateur_annonce_view', {'id': annonce.id })}}" class="">{{ annonce.titre }}</a>
+                                                    <p class="text-muted small">
+                                                        <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ getStatuses(annonce.status) }} 
+                                                            <span class="small text-center mx-3">|</span>
+                                                        {{ annonce.typeContrat }} 
+                                                            <span class="small text-center mx-3">|</span>
+                                                        <i class="bi bi-hourglass-split"></i> Expire le {{ annonce.dateExpiration|date('d/m/Y') }}
+                                                            <span class="small text-center mx-3">|</span>
+                                                        <i class="bi bi-eye"></i> {{ annonce.annonceVues|length }} vues
+                                                    </p>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                <div class="row">
+                                    <div class="col-md-9 mx-auto">
+                                        <div class="container my-5">
+                                            <div class="p-5 text-center bg-body-tertiary rounded-3">
+                                            <h1 class="text-body-emphasis">Aucune</h1>
+                                            <p class="">
+                                                <i class="bi bi-info-circle"></i> L'entreprise n'a pas encore publier d'annonces
+                                            </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div>
+                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_user_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

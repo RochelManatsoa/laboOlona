@@ -1,0 +1,52 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}Toutes les catégories{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Toutes les catégories</h1>
+    <div class="my-4">
+        <a class="btn btn-sm rounded-pill px-5 btn-primary" href="{{ path('app_blog_category_new') }}" class="btn btn-info">Créer</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th class="text-center">MetaTitle</th>
+                <th class="text-center">MetaDesc</th>
+                <th class="text-center">Mots clés</th>
+                <th class="text-center">Créée le</th>
+                <th class="text-center">Image</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+            <tr>
+                <td>{{ category.id }}</td>
+                <td>{{ category.title }}</td>
+                <td class="text-center">{{ category.metaTitle ? '<i class="bi bi-check2-square text-info"></i>' : '<i class="bi bi-exclamation-circle text-danger"></i>'}}</td>
+                <td class="text-center">{{ category.metaDescription ? '<i class="bi bi-check2-square text-info"></i>' : '<i class="bi bi-exclamation-circle text-danger"></i>'}}</td>
+                <td class="text-center">{{ category.metaKeywords ? '<i class="bi bi-check2-square text-info"></i>' : '<i class="bi bi-exclamation-circle text-danger"></i>'}}</td>
+                <td class="text-center">{{ category.createdAt ? category.createdAt|date('d/m/Y H:i:s') : '' }}</td>
+                <td class="text-center">
+                    {% if category.imageName %}
+                        <img src="{{ asset('images/blogs/' ~ category.imageName) }}" alt="{{ category.title }}" class="img-thumbnail" style="width: 200px;"/>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-sm rounded-circle btn-info" href="{{ path('app_blog_category_show', {'id': category.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-sm rounded-circle btn-danger" href="{{ path('app_blog_category_edit', {'id': category.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ knp_pagination_render(categories) }}
+    
+{% endblock %}

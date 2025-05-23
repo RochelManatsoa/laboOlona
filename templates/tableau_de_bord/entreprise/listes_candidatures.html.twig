@@ -1,0 +1,95 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Entreprise </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> Liste des candidatures </li>
+            </ol>
+        </div>
+    </section>
+    {% if not entreprise.isIsPremium %}
+    <section class="warning_freemium mb-4 d-flex align-items-center">
+        <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+        <div class="warning-block">
+            Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
+        </div>
+    </section>
+    {% endif %}
+    <section class="recruteur-container">
+        <div class="recruteur-block d-block p-5 mb-4">
+            <div class="favoris-list-item mb-4">
+                    <div class="offre-emploi-item d-flex align-items-center justify-content-between">
+                        <div>
+                            <h1>Liste des candidatures</h1>
+                        </div>
+                        <a href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="btn btn-primary">Créer une annonce</a>
+                    </div>
+                    {% if candidatures|length > 0 %}
+                    Trier par :
+                        {{ knp_pagination_sortable(candidatures, 'Date candidature', 'a.dateCandidature') }} | 
+                        {{ knp_pagination_sortable(candidatures, 'Annonce', 'j.titre') }} |
+                        {{ knp_pagination_sortable(candidatures, 'Candidat', 'c.titre') }}
+                        <div class="biographie-profil-list"> 
+                        {% for item in candidatures %}
+                            <div class="profil-list-item d-md-flex align-items-center justify-content-between">
+                                <div class="profil-list-name d-flex align-items-center">
+                                    <div class="profil-info_">
+                                        {{ item.annonce.titre}}
+                                        <span class="profil-titire_">Publié {{ item.annonce.dateCreation|time_ago }}</span>
+                                    </div>
+                                </div>
+                                <div class="profil-list-name d-flex align-items-center">
+                                    <span class="profil-photo_"><img src="{{ item.candidat.fileName ? asset('uploads/experts/' ~ item.candidat.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                                    <div class="profil-info_">
+                                        <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.candidat.id})}}">
+                                            {{ generatePseudo(item.candidat)}}
+                                            <span class="profil-titire_">{{ item.candidat.titre }}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="profil-list-link d-flex align-items-center">
+                                    <button class="favoris-add active"><i class="bi bi-star"></i></button>
+                                    <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.candidat.id})}}">Voir son profil</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                        {{ knp_pagination_render(candidatures) }}
+                        {% else %}
+                            <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                                <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                                <p class="text-center">Vous n'avez pas encore de candidatures.</p>
+                            </div>
+                        {% endif %}  
+            </div>
+        </div>
+        <div class="recruteur-block box-recrutement_ p-5 pb-3 mb-4">
+            <div class="recruteur-item d-md-flex justify-content-between align-items-center">
+                <div>
+                    <h2>Prêt à recruter ?</h2>
+                    <p>Sélectionnez l'offre qui correspond à vos besoins.</p>
+                </div>
+                <div class="recruteur-btn">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="d-inline-block position-relative btn btn-pdp" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">Commencer maintenant</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

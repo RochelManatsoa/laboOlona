@@ -3,7 +3,6 @@
 namespace App\Controller\Dashboard\Moderateur;
 
 use App\Entity\Secteur;
-use App\Entity\ModerateurProfile;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
 use App\Form\Moderateur\SecteurType;
@@ -26,29 +25,12 @@ class SecteurController extends AbstractController
         private EntityManagerInterface $em,
         private MailerService $mailerService,
         private ModerateurManager $moderateurManager,
-    ) {
-    }
-
-    private function checkModerateur()
-    {
-        /** @var User $user */
-        $user = $this->userService->getCurrentUser();
-        $moderateur = $user->getModerateurProfile();
-        if (!$moderateur instanceof ModerateurProfile){ 
-            return $this->redirectToRoute('app_connect');
-        }
-
-        return null;
-    }
+    ) {}
 
     #[Route('/secteurs', name: 'app_dashboard_moderateur_secteur')]
     public function sectors(Request $request, SecteurRepository $secteurRepository, PaginatorInterface $paginatorInterface): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** Formulaire de recherche secteur */
         $form = $this->createForm(SecteurSearchType::class);
         $form->handleRequest($request);
@@ -85,11 +67,7 @@ class SecteurController extends AbstractController
     #[Route('/secteur/new', name: 'app_dashboard_moderateur_new_secteur')]
     public function newSecteur(Request $request): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** Initialiser une instance de Secteur */
         $secteur = $this->moderateurManager->initSector();
         $form = $this->createForm(SecteurType::class, $secteur);
@@ -111,11 +89,7 @@ class SecteurController extends AbstractController
     #[Route('/secteur/{slug}/edit', name: 'app_dashboard_moderateur_edit_secteur')]
     public function editSecteur(Request $request, Secteur $secteur): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** @var Secteur $secteur qui vient de {slug} */
         $form = $this->createForm(SecteurType::class, $secteur);
         $form->handleRequest($request);
@@ -136,11 +110,7 @@ class SecteurController extends AbstractController
     #[Route('/secteur/supprimer/{slug}', name: 'app_dashboard_moderateur_delete_secteur')]
     public function deleteSecteur(Secteur $secteur): Response
     {
-        $redirection = $this->checkModerateur();
-        if ($redirection !== null) {
-            return $redirection; 
-        }
-
+        $this->denyAccessUnlessGranted('MODERATEUR_ACCESS', null, 'Vous n\'avez pas les permissions nécessaires pour accéder à cette partie du site. Cette section est réservée aux modérateurs uniquement. Veuillez contacter l\'administrateur si vous pensez qu\'il s\'agit d\'une erreur.');
         /** Supprimer le Secteur */
         $this->moderateurManager->deleteSector($secteur);
         $this->addFlash('success', 'Secteur supprimé avec succès.');

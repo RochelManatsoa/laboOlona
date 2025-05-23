@@ -1,0 +1,27 @@
+<turbo-stream action="update" target="current-user-credit">
+  <template>
+    {{ credit }}
+  </template>
+</turbo-stream>
+<turbo-stream action="update" target="alert-application">
+  <template>
+    <div class="alert alert-light-primary d-flex align-items-center" role="alert">
+      <i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
+      <div>
+        Votre candidature a été bien envoyée, veuillez vérifier régulièrement votre mail
+        <a href="{{ path('app_v2_applications')}}" class="mx-4 btn btn-primary" class="">Mes candidatures</a>
+      </div>
+    </div>
+  </template>
+</turbo-stream>
+<turbo-stream action="update" target="errorToast">
+    <template>
+        <div class="toast-header">
+            <strong class="me-auto">{{ status|raw }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            {{ message }}
+        </div>
+    </template>
+</turbo-stream>

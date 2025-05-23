@@ -1,0 +1,15 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}New ContestEntry{% endblock %}
+
+{% block body %}
+<h1 class="h3">Nouvelle entrée de concours</h1>
+
+<div id="coworking">
+    {{ include('facebook/contest_entry/_form.html.twig') }}
+</div>
+
+<div>
+    <a class="btn btn-info my-3 px-5 rounded-pill" href="{{ path('app_facebook_contest_entry_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+</div>
+{% endblock %}

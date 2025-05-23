@@ -1,0 +1,226 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Boost profil{% endblock %}
+
+{% block body %}
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Boost </h5>
+            </div>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Boost profil </li>
+        </ol>
+    </div>
+</section>
+<section class="tarfis-container d-block p-5 mb-4">
+    <div class="wrapper-abonnement-c">
+        <div class="title-abonnement-c">
+            <h1>Boostez votre Visibilité !</h1>
+            <p>Augmentez vos chances d'être vu par les recruteurs en boostant votre profil !<br/> Cela vous garantit une meilleure visibilité et une place prioritaire dans les résultats de recherche.</p>
+        </div>
+        
+        <div class="boost-profil btn-custom_">
+            {% if boostVisibility is defined and boostVisibility is not null and not isExpiredBoost(boostVisibility) %}
+                <section class="top-dashboard {{ premiumInterface }}">
+                    <div class="inner-block-dashboard d-md-flex justify-content-between align-items-center">
+                        <div class="left-inner-block">
+                        {% if boostVisibility is defined and boostVisibility is not null and not isExpiredBoost(boostVisibility) %}
+                            Votre profil est boosté jusqu'au {{ boostVisibility.endDate|date('d/m/Y') }}
+                            <h1 class="left-inner-block"><img src="{{ asset('v2/images/dashboard/stars-color-icon.svg')}}" alt="">Olona Talents</h1>
+                                <div class="boost-block">
+                                    <div class="boost-block-title">
+                                        <small class="fw-lighter">Expire {{ boostVisibility.endDate|timeUntil }}</small>
+                                        </div>
+                                    </div>
+                            {% endif %}
+                        </div>
+                        <div class="rightt-inner-block">
+                        </div>
+                    </div>
+                </section>
+            {% else %}
+                <div class="item-boost">
+
+                    {{ form_start(form)}}
+                    <div class="row row-cols-1 row-cols-md-3 my-4">
+
+
+                        {% for boost in form.boost %}
+
+                            <div class="col">
+                                <div class="custom-control custom-radio image-checkbox photo-gris">
+                                    {{ form_widget(boost, {'attr': {
+                                        'style': 'display:none', 
+                                        'data-credit': getBoostInfo(boost.vars.id).credit
+                                        }}) 
+                                    }}
+                                    <label class="custom-control-label" for="{{ boost.vars.id }}">
+                                        <div class="card mb-4 rounded-3 shadow-sm">
+                                            <div class="card-header py-3 bg-info text-dark text-center">
+                                                <h2 class="my-0 fw-bolder fs-5" data-label="{{ getBoostInfo(boost.vars.id).credit }} crédits">{{ boost.vars.label }}</h2>
+                                            </div>
+                                            <div class="card-body">
+                                                <h3 class="card-title pricing-card-title text-primary text-center">{{ getBoostInfo(boost.vars.id).credit }}<small class="fw-light">crédits</small>
+                                                </h3>
+                                                <ul class="list-unstyled small my-3">
+                                                    <li>
+                                                        <i class="bi bi-check h5 text-danger"></i>Badge Olona Talent</li>
+                                                    <li>
+                                                        <i class="bi bi-check h5 text-danger"></i>Optimisation de votre profil</li>
+                                                    <li>
+                                                        <i class="bi bi-check h5 text-danger"></i>Analyse avancée de votre CV par notre IA spécialisée dans le recrutement</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                        
+                    </div>
+                    <div class="btn_boost text-center mb-4">
+                        <div class="text-center">
+                        {% if completion == 100 %}
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-price="50 crédits" data-bs-type="show-recruiter-contact" >
+                                Booster mon profil
+                            </button>
+                        {% else %}
+                            <button type="button" class="btn btn-primary" disabled>
+                                Booster mon profil
+                            </button>
+                            <div class="alert alert-warning my-4" role="alert">
+                                Complétez votre profil pour booster votre visibilité. <a href="{{ path('app_tableau_de_bord_candidat_mon_compte')}}" class="alert-link">Finaliser mon profil</a>.
+                            </div>
+                        {% endif %}
+                            
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+
+                    <div class="boost_en_images">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="boost_en_images_item">
+                                    <span>Aperçu resultat de recherche</span>
+                                    <img src="{{ asset('images/dashboard/illustration_boost_.webp')}}" class="img-fluid" alt="">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="boost_en_images_item">
+                                    <span>Aperçu tableau de bord</span>
+                                    <img src="{{ asset('images/dashboard/illustration_profil_.webp')}}" class="img-fluid" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="boost-box boost-description">
+                                <h2>Profil gratuit = visibilité limitée!</h2>
+                                <h3>Les limites du profil gratuit</h3>
+                                <ul class="boost-free">
+                                    <li>Votre profil est noyé parmi des milliers d'autres.</li>
+                                    <li>Pas de statistiques pour suivre votre performance.</li>
+                                    <li>Moins de chances d'être contacté par les recruteurs</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="boost-box boost-description">
+                                <h2>Passez en premium pour être en haut des résultats</h2>
+                                <h3>Une visibilité maximale</h3>
+                                <ul class="boost-premium">
+                                    <li>Votre profil est mis en avant dans les résultats de recherche.</li>
+                                    <li>Jusqu'à 3x plus de vues de la part des recruteurs.</li>
+                                    <li>Priorité dans les suggestions de candidats.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="boost-box boost-description">
+                                <h2>Accédez à des statistiques détaillées</h2>
+                                <h3>Des données pour progresser</h3>
+                                <ul class="boost-stat">
+                                    <li>Suivez le nombre de vues de votre profil.</li>
+                                    <li>Découvrez quels recruteurs vous ont consulté.</li>
+                                    <li>Analysez votre classement par rapport aux autres candidats.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="boost-box boost-description">
+                                <h2>Bénéficiez d'un badge premium</h2>
+                                <h3>Un profil qui inspire confiance</h3>
+                                <ul class="boost-stat">
+                                    <li>Un badge premium visible sur votre profil.</li>
+                                    <li>Montrez votre sérieux et votre engagement.</li>
+                                    <li>Attirez l'attention des recruteurs les plus exigeants.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="boost-box boost-description">
+                                <h2>Ils nous fait confiances</h2>
+                                <h3>Ils ont boosté leur profil avec nous !</h3>
+                                <div class="boost-avis">
+                                    <p>"Grâce au pack premium, j'ai été contacté par 5 recruteurs en une semaine !" – Julie, Développeuse.</p>
+                                    <p>"J'ai trouvé un emploi mieux rémunéré en moins d'un mois." – Ahmed, Chef de projet.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="boost-box boost-description">
+                                <h2>Rejoignez l'univers PREMIUM !</h2>
+                                <h3>Boostez votre profil dès maintenant !</h3>
+                                <ul class="boost-stat">
+                                    <li>Cliquez sur le bouton ci-dessous pour activer votre pack premium.</li>
+                                    <li>En moins de 2 minutes, multipliez vos chances de décrocher l'emploi de vos rêves.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="btn_boost text-center mt-4">
+                            <a href="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn btn-primary" aria-current="page">Je booste mon profil !</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+</section>
+<script>
+document.addEventListener("turbo:load", function () {
+    const userCredits = {{ app.user.credit.total|default(0) }};
+    const boostRadios = document.querySelectorAll('input[type="radio"][name="{{ form.boost.vars.full_name }}"]');
+    const boostButton = document.querySelector('[data-bs-type="show-recruiter-contact"]');
+
+    boostRadios.forEach(function (radio) {
+        radio.addEventListener("change", function () {
+            if (this.checked) {
+                const boostCredit = parseInt(this.dataset.credit); // lecture directe de data-credit
+                const priceLabel = boostCredit + " crédits";
+
+                // Mise à jour du bouton
+                boostButton.setAttribute("data-bs-price", priceLabel);
+
+                if (userCredits < boostCredit) {
+                    boostButton.setAttribute("data-bs-target", "#lowCreditModal");
+                } else {
+                    boostButton.setAttribute("data-bs-target", "#confirmationModal");
+                }
+            }
+        });
+    });
+});
+</script>
+
+
+{% include "/tableau_de_bord/layout/_credit_modal_candidat.html.twig" %}
+{% endblock %}

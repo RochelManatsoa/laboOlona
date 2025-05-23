@@ -5,8 +5,14 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     cv_expert: /uploads/experts
+    medias_prestation: /uploads/prestations
+    logo_company: /uploads/compagnies
     app.locales: [en, fr]
     cv_directory: '%kernel.project_dir%/public/uploads/cv'
+    csv_directory: '%kernel.project_dir%/public/uploads/csv'
+    app.env: '%env(APP_ENV)%'
+    google_drive.credentials_path: '%kernel.project_dir%/config/google/credentials.json'
+    google_drive.token_path: '%kernel.project_dir%/config/google/token.json'
 
 services:
     # default configuration for services in *this* file
@@ -30,6 +36,7 @@ services:
         arguments:
             $targetDirectory: '%kernel.project_dir%/public/uploads/cv'
             $targetDirectoryEdited: '%kernel.project_dir%/public/uploads/cv/edited'
+            $targetDirectoryEditedOlona: '%kernel.project_dir%/public/uploads/cv/olona'
 
 
     App\Service\WooCommerce:
@@ -49,8 +56,70 @@ services:
     App\Service\YouTubeService:
         arguments:
             $apiKey: '%env(YOUTUBE_API_KEY)%'
+    
+    # App\EventListener\ExceptionListener:
+    #    tags:
+    #        - { name: kernel.event_listener, event: kernel.exception, priority: 10 }
+    #    arguments:
+    #        - '@twig'
 
-    App\EventListener\ExceptionListener:
-        tags: [kernel.event_listener]
-        arguments: ['@twig']
+    App\WhiteLabel\Service\Client1\GoogleDriveService:
+        arguments:
+            $credentialsPath: '%google_drive.credentials_path%'
+            $tokenPath: '%google_drive.token_path%'
+            
+    App\OAuth\GoogleDriveClient:
+        alias: KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient
 
+    App\Manager\Facebook\FacebookTokenManager:
+        arguments:
+            $userToken: '%env(FACEBOOK_USER_LONG_TOKEN)%'
+            $pageName: '%env(FACEBOOK_PAGE_NAME)%'
+    
+    App\Service\JitsiMeetService:
+        arguments:
+            $domain: 'meet.olona-talents.com'
+            
+    # App\Service\ErrorLogger:
+    #     tags:
+    #         - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException', priority: 100 }
+
+    App\Service\ElasticsearchService:
+        arguments: []
+        
+    App\Service\PaymentService:
+        arguments:
+            $clientId: '%env(PAYPAL_CLIENT_ID)%'
+            $clientSecret: '%env(PAYPAL_CLIENT_SECRET)%'
+            $mode: '%env(PAYPAL_MODE)%'
+            
+    App\Service\PdfService:
+        arguments:
+            $wkhtmltopdfPath: '%env(WKHTMLTOPDF_PATH)%'
+
+    App\Security\Firewall\RequestMatcherClient1:
+        public: true
+        tags:
+            - { name: security.request_matcher }
+
+    app.sitemap.blog_post_subscriber:
+        class: App\EventListener\SitemapSubscriber
+        arguments:
+            - '@App\Repository\Blog\PostRepository'
+            - '@App\Repository\Blog\CategoryRepository'
+        tags:
+            - { name: "kernel.event_subscriber", priority: 100 }
+        
+    App\Service\MobileMoney\AirtelMoneyService:
+        arguments:
+            $clientId: '%env(AIRTEL_CLIENT_ID)%'
+            $clientSecret: '%env(AIRTEL_CLIENT_SECRET)%'
+            $apiUrl: '%env(AIRTEL_API_URL)%'
+
+    App\WhiteLabel\Manager\Client1\CsvUploadManager:
+        arguments:
+            $entityManager: '@doctrine.orm.client1_entity_manager'
+            
+    App\WhiteLabel\Manager\Client1\CVThequeManager:
+        arguments:
+            $em: '@doctrine.orm.client1_entity_manager'

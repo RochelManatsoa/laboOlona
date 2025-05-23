@@ -1,0 +1,85 @@
+{% extends 'security/client1/base_login.html.twig' %}
+
+{% block title %}Connexion | Olona Talents{% endblock %}
+
+{% block body %}
+
+<section class="login-wrap">
+    <div class="bg-mask"></div>
+    <div class="login-header">
+        <div class="container pt-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="{{ path('app_home') }}">
+                        <img src="{{ asset('images/dashboard/logo_defaut_entreprise.webp') }}" style="height:120px;" class="img-fluid" alt="Image">
+                    </a>
+                </div>
+                <div class="col-md-8">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="login-content">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 col-xl-8">
+                    <div class="login-left-block">
+                        
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-4">
+                    <div class="card shadow-lg border-0 rounded">
+                        <div class="card-body p-4">
+                            {% if error %}
+                            <div class="alert alert-danger">
+                                {{ error.messageKey|trans(error.messageData, 'security') }}
+                            </div>
+                            {% endif %}
+                            
+                            {% if app.user %}
+                            <div class="alert alert-dark text-center">
+                                Vous êtes connecté en tant que {{ app.user.userIdentifier }},
+                                <a href="{{ path('app_logout') }}">Déconnexion</a>
+                            </div>
+                            {% endif %}
+                            
+                            <form method="post" data-turbo="false">
+                                <div class="form-floating mb-2">
+                                    <input type="email" class="form-control" id="email" name="email" required autofocus placeholder="Email">
+                                    <label for="email">Adresse email</label>
+                                </div> 
+                                <div class="form-floating mb-3 position-relative" data-controller="toggle-password">
+                                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" data-toggle-password-target="input">
+                                    <label for="password">Mot de passe</label>
+        
+                                    <button type="button"
+                                            class="btn btn-link position-absolute end-0 top-50 translate-middle-y p-0 me-2"
+                                            data-action="click->toggle-password#toggle"
+                                            data-toggle-password-target="icon">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="_remember_me" id="remember_me">
+                                    <label class="form-check-label" for="remember_me">
+                                        Se souvenir de moi
+                                    </label>
+                                </div>
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                <div class="text-center my-3">
+                                    <button type="submit" class="btn btn-login">Connexion</button>
+                                </div>
+                                <div class="mb-4 text-center text-forgot">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block preview %}{% endblock %}

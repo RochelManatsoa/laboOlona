@@ -1,0 +1,172 @@
+@import 'variables';
+
+body.bootstrap-dark {
+    background-color: $dark-bg;
+    color: $dark-text;
+    a:not(.btn-primary) {
+        color: $link-dark !important;
+    }
+    a .btn-primary{
+        color: #ffffff !important;
+    }
+
+    .nav-link .link-text {
+        transition: border-bottom 0.3s ease-in-out; 
+        border-bottom: 2px solid transparent; 
+    }
+    
+    .nav-link:hover .link-text {
+        border-bottom: 3px solid $link-dark; 
+    }
+    
+    .underline .link-text {
+        border-bottom: 3px solid $link-dark; 
+    }
+
+    .card, .offcanvas {
+        background-color: $dark-bg;
+        color: $dark-text;
+        border-color: $link-light;
+    }
+
+    .btn-secondary, .dropdown-menu {
+        background-color: #444c57;
+        border-color: #444c57;
+    }
+
+    .btn-primary {
+        background-color: #375a7f;
+        border-color: #375a7f;
+    }
+
+    .shadow-custom {
+        box-shadow: 0 .5rem 1rem rgba(255, 255, 255, 0.1);
+    }
+
+    .carousel-indicators button {
+        background-color: #adb5bd;
+    }
+
+    .carousel-indicators .active {
+        background-color: #375a7f;
+    }
+
+    .table {
+        background-color: #343a40 !important;
+        color: #f8f9fa !important;
+    }
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) {
+        --bs-table-accent-bg: rgba(255, 255, 255, 0.05) !important;
+        color: inherit !important; // Optional if you need to over-ride text color
+
+    }
+
+    .table > thead > tr > th {
+        background-color: #444c57 !important;
+        color: #f8f9fa !important;
+    }
+    #paypal-button-container, .paypal-button-container{
+        background: none!important;
+    }
+
+    .pagination {
+        .page-link {
+            color: #adb5bd !important;
+            background-color: #1e1e2d;
+            border-color: #444c57;
+
+            &:hover {
+                background-color: darken(#1e1e2d, 5%);
+                border-color: darken(#444c57, 5%);
+            }
+
+            &.active {
+                color: #ffffff;
+                background-color: #375a7f;
+                border-color: #375a7f;
+            }
+        }
+    }
+    .modal-content {
+        background-color: #2c2c2c;
+        color: white;
+    }
+    .btn-light {
+        background-color: #2c2c2c;
+        color: white;
+    }
+    .ck-editor__editable {
+        background-color: #2c2c2c; /* Fond sombre */
+        color: #ffffff; /* Texte clair */
+    }
+    
+    .ck-toolbar, .ck-editor__main {
+        background-color: #3c3c3c; /* Fond sombre pour la barre d'outils */
+        color: #ffffff;
+    }
+    
+    .ck-button {
+        color: #ffffff;
+    }
+    
+    .ck-button.ck-on {
+        background-color: #555555; /* Bouton actif */
+    }
+
+    .ck.ck-editor__main>.ck-editor__editable {
+        background-color: #555555!important;
+        border-radius: 0;
+    }
+    
+    /* Autres styles personnalisés pour s'assurer que tout est visible dans le thème sombre */
+    .ui-widget-content a{
+        border: 1px solid #dddddd!important;
+        background: #ffffff!important;
+        color: #333333!important;
+    }
+    .dropdown-menu {
+        background-color: #444c57; 
+        border-color: #444c57; 
+
+        .dropdown-item {
+            color: #f8f9fa; 
+
+            &:hover, &:focus {
+                background-color: darken(#444c57, 10%); 
+                color: #ffffff; 
+            }
+        }
+    }
+    .toast {
+        background-color: #f8f9fa;
+        color: #343a40;
+
+        .toast-header {
+            background-color: #e9ecef;
+            color: #343a40;
+        }
+    }
+    .loader-container {    
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+    .cookie-consent {
+        position: fixed;
+        color: #000000;
+        background-color: #f8f9fa;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000; 
+        a{
+            color: #343a40!important;
+        }
+    }
+    .boosts_navigation {
+        background-color: #007bff;
+        color: white;
+    }
+}

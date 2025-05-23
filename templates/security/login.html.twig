@@ -1,90 +1,127 @@
-{% extends 'base.html.twig' %}
+{% extends 'security/base_login.html.twig' %}
+
+{% block title %}Connexion | Olona Talents{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Connectez-vous à votre compte sur https://olona-talents.com/ pour accéder à vos services personnalisés, gérer vos annonces, consulter vos candidatures et profiter d'une expérience utilisateur optimale.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement, travail, emploi, talents, candidat, recruteur, offres, agence, olona, olona talents, olona talents agence, talents agence, agence talents, candidature, candidature agence, candidature olona, candidature olona talents">
+<meta property="og:title" content="Connexion | Olona Talents">
+<meta property="og:description" content="Connectez-vous à votre compte sur https://olona-talents.com/ pour accéder à vos services personnalisés, gérer vos annonces, consulter vos candidatures et profiter d'une expérience utilisateur optimale.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ path('app_login') }}">
+{% endblock %}
 
 {% block body %}
-  <section id="login" class="" style="background-color: black;">
-    <div class="container d-flex justify-content-center align-items-center ">
-      <div class="row w-100">
-        <div class="col-md-6 text-center mx-auto">
-          <img src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" class="img-fluid" alt="login olona talents" />
-        </div>
-        <div class="col-md-6 text-white">
-          <h1 class="fs-2 mb-3 font-weight-normal">
-            {{ meta_title() }}
-          </h1>
-          {# <p class="text-light fs-5">
-            <small>
-              {{ meta_description() }}
-            </small>
-          </p> #}
-          <p class="my-4 text-white">
-          {{ 'app_login.not_member'|trans }}
-          <a href="{{ path('app_register') }}" style="color:#0e6efd!important;" class="text-primary transition ">
-            {{ 'app_login.register'|trans }}
-          </a>
-          {{ 'app_login.join'|trans }}
-        </p>
-          <form method="post">
-            {% if error %}
-              <div class="alert alert-dark">
-                {{ error.messageKey|trans(error.messageData, 'security') }}
-              </div>
-            {% endif %}
-            <div class="mx-auto text-dark " id="button-text">
-              <a href="{{ path('connect_google_start') }}" class="btn btn-light">
-                {{ 'app_register.continue'|trans }}
-                <i class="bi bi-google h5 mx-2 "></i>
-              </a>
-              {# <button type="button" class="btn btn-outline-secondary">
-                {{ 'app_register.continue'|trans }}
-                <i class="bi bi-linkedin h5 mx-2"></i>
-              </button> #}
-            </div>
-            <hr>
 
-              {% if app.user %}
-                <div class="mb-3">
-                  You are logged in as  {{ app.user.userIdentifier }},                                     
-                  <a href="{{ path('app_logout') }}">
-                    Logout
-                                      
-                  </a>
+<section class="login-wrap">
+    <div class="bg-mask"></div>
+    <div class="login-header">
+        <div class="container pt-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="{{ path('app_home') }}">
+                        <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" class="img-fluid" alt="Image">
+                    </a>
                 </div>
-              {% endif %}
-
-              <label for="inputEmail" class="mt-1">
-                {{ 'app_login.email'|trans }}
-              </label>
-              <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-                <label for="inputPassword" class="mt-3">
-                  {{ 'app_login.password'|trans }}
-                </label>
-                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-                  <div class="my-3 form-check">
-                    <div class="row">
-                      <div class="col-6">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                          <label class="form-check-label" for="exampleCheck1">
-                            {{ 'app_login.remember'|trans }}
-                          </label>
-                        </div>
-                        <div class="col-6 text-right">
-                          <!--Forgot password link-->
-                          <a href="{{ path('app_forgot_password_request')}}" class="">
-                            {{ 'app_forgot_password_request.link'|trans }}
-                          </a>
-                        </div>
-                      </div>
+                <div class="col-md-8">
+                    <div class="sign-up_">
+                        Pas encore membre ? <a href="{{ path('app_olona_talents_register') }}" class="fw-bolder text-white">Inscrivez-vous</a> et rejoignez la communauté Olona-talents.
                     </div>
-
-                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                      <button class="btn btn-lg btn-primary" type="submit">
-                        {{ "app_login.button"|trans }}
-                      </button>
-                    </form>
-                  </div>
                 </div>
-          </div>
-        </section>
-      {% endblock %}
-          
+            </div>
+        </div>
+    </div>
+    <div class="login-content">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 col-xl-8">
+                    <div class="login-left-block">
+                        
+                        <h1>Le <span>1<sup>er</sup></span>moteur de recherche dédié à l'emploi à Madagascar</h1>
+                        <ul class="features_list_">
+                            <li><a href="{{ path('app_coworking_main')}}" class="text-white" target="_blank">Espace coworking</a></li>
+                            <li><a href="" class="link-disabled text-white">Recrutement</a></li>
+                            <li><a href="{{ path('app_home_simulateur_portage')}}" class="text-white" target="_blank">Portage salarial</a></li>
+                            <li><a href="" class="link-disabled text-white">Domiciliation</a></li>
+                            <li><a href="" class="link-disabled text-white">AutoPromotion</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-4">
+                    <div class="card shadow-lg border-0 rounded">
+                        <div class="card-body p-4">
+                            {% if error %}
+                            <div class="alert alert-danger">
+                                {{ error.messageKey|trans(error.messageData, 'security') }}
+                            </div>
+                            {% endif %}
+                            
+                            {% if app.user %}
+                            <div class="alert alert-dark text-center">
+                                Vous êtes connecté en tant que {{ app.user.userIdentifier }},
+                                <a href="{{ path('app_logout') }}">Déconnexion</a>
+                            </div>
+                            {% endif %}
+                            
+                            <form method="post" data-turbo="false">
+                                <div class="form-floating mb-2">
+                                    <input type="email" class="form-control" id="email" name="email" required autofocus placeholder="Email">
+                                    <label for="email">Adresse email</label>
+                                </div> 
+                                <div class="form-floating mb-3 position-relative" data-controller="toggle-password">
+                                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" data-toggle-password-target="input">
+                                    <label for="password">Mot de passe</label>
+        
+                                    <button type="button"
+                                            class="btn btn-link position-absolute end-0 top-50 translate-middle-y p-0 me-2"
+                                            data-action="click->toggle-password#toggle"
+                                            data-toggle-password-target="icon">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="_remember_me" id="remember_me">
+                                    <label class="form-check-label" for="remember_me">
+                                        Se souvenir de moi
+                                    </label>
+                                </div>
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                <div class="text-center my-3">
+                                    <button type="submit" class="btn btn-login">Connexion</button>
+                                </div>
+                                <div class="mb-4 text-center text-forgot">
+                                    <a href="{{ path('app_forgot_password_request') }}" class="fw-light small">Mot de passe oublié?</a>
+                                </div>
+                            </form>
+                            <section class="social-login_ mt-3">
+                                <div class="d-flex align-items-center my-3">
+                                    <hr class="flex-grow-1">
+                                    <h2 class="h5 text-center mx-3">Utiliser les réseaux sociaux</h2>
+                                    <hr class="flex-grow-1">
+                                </div>
+                                <div class="d-flex gap-3 justify-content-center mt-3">
+                                    <a href="{{ path('connect_google_start') }}" class="text-white btn btn-google">
+                                        <img src="{{ asset('images/google-svg-icon.svg') }}" class="img-fluid" alt="icon google">
+                                        {#Se connecter avec Google#}
+                                    </a>
+                                    <a href="{{ path('connect_facebook_start') }}" class="text-white btn btn-fb">
+                                        <img src="{{ asset('images/facebook-svg-icon.svg') }}" class="img-fluid" alt="icon fb">
+                                        {#Se connecter avec Facebook#}
+                                    </a>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block preview %}{% endblock %}

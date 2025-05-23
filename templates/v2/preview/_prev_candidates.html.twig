@@ -1,0 +1,92 @@
+
+    <div class="mb-2">
+        <div class="">
+            <div class="card-body">
+                <div class="d-flex p-2 align-items-center">
+                    <div class="me-3">
+                        <div class="rounded-circle" style="
+                            width: 65px;
+                            height: 65px;
+                            background-image: url('{{ candidate.fileName ? asset('uploads/experts/' ~ candidate.fileName) : asset('uploads/experts/avatar-default.jpg') }}');
+                            background-size: cover;
+                            background-position: center;
+                        ">
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <span class="fs-6">
+                            {% if app.user %}
+                                <a href="{{ path('app_v2_recruiter_view_profile', {'id': candidate.id })}}">
+                                    {{ candidate.titre }}
+                                </a>
+                            {% else %}
+                                <span style="cursor:pointer;" class="candidate-link" data-id="{{ candidate.id }}">{{ candidate.titre }}</span>
+                            {% endif %}
+                        </span><br>
+                        <span class="small fw-lighter">{{ generatePseudo(candidate) }}</span><br>
+                        <i class="bi bi-clock-history"></i> {{ candidate.availability }}</span>
+                    </div>
+                </div>
+                <hr>
+                <p class="card-text small">
+                {{ candidate.metaDescription|raw}}
+                </p>
+                <div class="row">
+                    <div class="col-5">
+                        {% if candidate.tarifCandidat is not empty %}
+                        <p class="small">
+                            <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-tags"></i></span> {{ candidate.tarifCandidat }}</span>
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="col-7">
+                        {% if candidate.experiences|length > 0 %}
+                        <p class="small">
+                            <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-trophy"></i></span>  {{ candidate.experiences|length }} missions réalisées
+                        </p>
+                        {% else %}
+                        <p class="small">
+                            <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-trophy"></i></span>  Aucune missions réalisées
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                        {% if candidate.langages|length > 0 %}
+                        <p class="">
+                            <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-globe-europe-africa"></i></span>
+                            {% for langage in candidate.langages %}
+                            {{ isoToEmoji(langage.langue.code) }}
+                            {% endfor %}
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="col-7">
+                        {% if candidate.competences|length > 0 %}
+                        <p class="small">
+                            <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-inboxes-fill"></i></span>  {{ candidate.experiences|length }} compétences
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+                <p class="fw-bold text-center">
+                    <span class="fs-5">Secteur d'activité</span><br>
+                    {% set countSecteurs = 0 %}
+                    {% for skill in candidate.secteurs %}
+                        {% if countSecteurs < 3 %}
+                            <span class="badge bg-secondary rounded-pill px-3 lh-1">{{ skill.nom }}</span>
+                            {% set countSecteurs = countSecteurs + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if candidate.secteurs|length > 4 %}
+                        <span class="badge bg-dark rounded-pill">+{{ candidate.secteurs|length - 3 }}</span>
+                    {% endif %}
+                </p>
+                <div class="text-center">
+                        <button type="button" class="btn btn-outline-primary btn-sm rounded fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_view_profile', {'id':candidate.id}) }}">Voir contact</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm rounded fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_recruiter_view_profile', {'id':candidate.id}) }}">Ajouter comme favoris</button>
+                </div>
+            </div>
+        </div>
+    </div>

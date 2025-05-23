@@ -1,0 +1,842 @@
+@import 'styles.scss';
+
+.bg-cover {
+    background-size: cover;
+}
+.home-header-top {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    z-index: 2;
+}
+.home-ot {
+    .btn-signUp {
+        text-align: center !important;
+    }
+    .content-block {
+        .btn-signUp {
+            text-align: left !important;
+        }
+    }
+}
+.page-content {
+    background-color: $white;
+    .home-banner-section{
+        position: relative;
+        padding-top: 315px;
+        overflow: hidden;
+        @include breakpoint-1600{
+            padding-top: 240px;	
+        }
+        @include breakpoint-767{
+            padding-top: 170px;	
+        }
+        &.header-home-user {
+            #liveDateTime {
+                color: #f0b722;
+                margin-bottom: 2rem;
+                font-size: 24px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
+            @include breakpoint-1600{
+                padding-top: 140px;	
+            }
+        }
+    
+        .home-inner-section{
+            
+            .mid-section{
+                max-width: 1176px;
+                width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: 15px;
+                padding-right: 15px;
+                text-align: center;
+                padding-bottom: 160px;
+                @include breakpoint-1600{
+                    padding-bottom: 100px;
+                }
+                @include breakpoint-767{
+                    padding: 0px 15px 30px 15px;
+    
+                }
+                
+                .title-large{
+                    font-size: 66px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    line-height: 70px;
+                    text-transform: uppercase;
+                    font-weight: 500;
+                    color: $white;
+                    span {
+                        color: $yelow-primary;
+                    }
+                    @include breakpoint-991{
+                        font-size: 38px;
+                        line-height: 38px;
+                        margin-bottom: 10px;
+                    }
+                    @include breakpoint-575{
+                        font-size: 28px;
+                        line-height: 36px;
+                    }
+                }
+                .title-light{
+                    margin-left: auto;
+                    margin-right: auto;
+                    font-size: 66px;
+                    line-height: 70px;
+                    font-weight: 100;
+                    color: $white;
+                    margin-bottom: 30px;
+                    @include breakpoint-991{
+                        font-size: 38px;
+                        line-height: 38px;
+                        margin-bottom: 10px;
+                    }
+                    @include breakpoint-575{
+                        font-size: 28px;
+                        line-height: 36px;
+                    }
+                }
+                .description{
+                    font-size: 22px; 
+                    margin-bottom: 50px; 
+                    color: $white;
+                    letter-spacing: 1px;
+                }
+    
+                .popular-search{
+                    position: relative;
+                    font-size: 14px;
+                    margin-top: 30px;
+                    color: $white;
+                    .ot-title{
+                        margin-right: 20px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: $white
+                    }
+                    a{
+                        color: $white;
+                        &:hover{
+                            opacity: 0.8;
+                        }
+                    }
+                }
+            
+            }
+        }
+        
+        .bottom-section{
+            padding: 0px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            @include breakpoint-1199{
+                display: block;
+                text-align: center;
+            }
+            @include breakpoint-540{
+                padding: 0px 15px;
+            }
+            .ot-cvth{
+                font-size: 60px;
+                font-weight: 700;
+                opacity: 0.3;
+                text-transform: uppercase;
+                color: $white;
+                @include breakpoint-1440{
+                    font-size: 40px;
+                }
+                @include breakpoint-540{
+                    font-size: 24px;
+                }
+            }
+    
+            .blocks-wrap{
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                @include breakpoint-767{
+                    display: block;
+                }
+                .blocks{
+                    display: flex;
+                    position: relative;
+                    padding: 10px 20px;
+                    border-radius: 10px;
+                    margin: 0px 10px;
+                    @include breakpoint-767{
+                        display: inline-block;
+                        margin-bottom: 20px;
+                    }
+                
+                    .ot-content{
+                        .count-number {
+                            font-size: 38px;
+                            line-height: 38px;
+                            font-weight: 700;
+                            .counter {
+                                font-size: 38px;
+                                line-height: 40px;
+                                font-weight: 600;
+                            }
+                            &.text-clr-pink{color: #e47dff;}
+                            &.text-clr-yellow{color: #e2d438;}
+                        }
+                        .icon-content-info{
+                            color: $white;
+                            margin-bottom: 0px;
+                            font-size: 16px;
+                            text-align: right;
+                        }
+                    }
+                }
+    
+                .blocks-3{
+                    display: flex;
+                    position: relative;
+                    margin: 0px 10px;
+                    @include breakpoint-767{
+                        margin-left: auto;
+                        margin-right: auto;
+                        max-width: 225px;
+                        margin-bottom: 30px;
+                    }
+                    
+                    .pics{
+                        margin-left: 15px;
+                        margin-right: 15px;
+                        display: flex;
+                        align-items: center;
+                        span{
+                            display: inline-block;
+                            width: 34px;
+                            height: 34px;
+                            border-radius: 50%;
+                            border: 2px solid $white;
+                            overflow: hidden;
+                            margin-left: -15px;
+                        }
+                    }
+                    .ot-content{
+                        .count-number {
+                            font-size: 38px;
+                            line-height: 38px;
+                            font-weight: 700;
+                            font-family: "Rubik", sans-serif;
+                            .counter {
+                                font-size: 38px;
+                                line-height: 40px;
+                                font-weight: 600;
+                                font-family: "Rubik", sans-serif;
+                            }
+                        }
+                        .icon-content-info{
+                            color: $white;
+                            margin-bottom: 0px;
+                            font-size: 16px;
+                            text-align: right;
+                        }
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+/*Search Bar*/
+.search-bar{
+	background-color: $white;
+	border-radius: 10px;
+	border: 1px solid rgba(47, 47, 47, 0.09);
+	height: 70px;
+	box-shadow: 0px 0px 30px rgba(230, 230, 230, 0.3);
+	padding: 5px 5px 5px 15px;
+	text-align: left;
+	@include breakpoint-1199{
+		height: auto;
+		padding: 10px;
+		.form-group{
+			margin: 5px 0px;
+		}
+	}
+	label{
+		font-size: 14px;
+		line-height: 16px;
+		color: #999999;
+		text-transform: uppercase;
+		display: block;
+		padding-top: 0px;
+		margin-top: 7px;
+	}
+	.form-control{
+        font-size: 14px;
+		height: 34px;
+		padding: 0px;
+		font-weight: 500;
+		border: none;
+		&:focus{box-shadow: none;}
+		&::-webkit-input-placeholder {
+			color: $black;
+			font-size: 14px;
+		}
+		&::-moz-placeholder { 
+			color: $black;
+			font-size: 14px;
+		}
+		&:-ms-input-placeholder { 
+			color: $black;
+			font-size: 14px;
+		}
+		&:-moz-placeholder {
+			color: $black;
+			font-size: 14px;
+		}
+	}
+	.btn-search_{
+        background-color: $yelow-primary;
+        color: rgba(0, 0, 0, 0) !important;
+		display: block;
+		width: 100%;
+		padding: 15px 8px;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-shadow: 0 0 0 $brown-primary, 400px 0 0 $brown-primary;
+        &:hover {
+            text-shadow: -400px 0 0 $white, 0 0 0 $white;
+            background-color: $brown-primary;
+        }
+	}
+}
+
+.inputicon-box{
+	position: relative;
+	.form-control{
+		padding-right: 40px;
+		background: transparent;
+	}
+}
+
+.popular-search{
+	position: relative;
+	font-size: 14px;
+	margin-top: 30px;
+	.title{
+		margin-right: 20px;
+		font-size: 16px;
+		font-weight: 600;
+		color: $black;
+	}
+}
+.section-head {
+    margin-bottom: 50px;
+    text-align:center;
+    max-width: 645px;
+    margin-left: auto;
+    margin-right: auto;
+    h2{
+       max-width:650px;
+       font-size: 46px;
+       margin:0px auto;
+       color: $black;
+        @include breakpoint_991{
+            font-size: 30px;
+        }
+        @include breakpoint_768{
+            font-size: 30px;
+            margin-bottom:20px;
+        }
+        @include breakpoint_575{
+            font-size:22px;
+            
+        }
+    }
+    .ot-text-primary {
+        margin-bottom: 10px;
+        position: relative;
+        display: inline-block;
+        color: $purple-primary;
+        font-size: 18px;
+        line-height: 40px;
+        font-weight: 500;
+    }
+}
+.section-ccm {
+    background: #f7f3ff;
+    padding-bottom: 90px;
+    padding-top: 120px;
+    margin-bottom: 90px;;
+    .ot-ccm-section {
+        .process-step {
+            margin-bottom: 30px;
+            padding:15px 15px 30px 30px;
+            background-color: $white;
+            border-radius: 10px;
+            height: 100%;
+            border: 1px solid;
+            @include breakpoint_1023{
+                margin: 15px 0;
+                height: auto;
+            }
+            p{
+                margin-bottom: 0px;
+            }
+            .large-number{
+                font-size: 75px;
+                line-height: 65px;
+                font-weight: 800;
+                @include breakpoint-420{
+                    font-size: 40px;
+                }
+            }
+            .pro-top{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+            .title{
+                color: $black; 
+                margin-bottom: 0px;
+            }
+            &.box-red {
+                border-color: $red-light;
+                box-shadow: 0px 0px 18px rgb(255 122 121 / 30%);
+                .large-number {
+                    color: $red-light;
+                }
+            }
+            &.box-purple {
+                border-color: $purple-light;
+                box-shadow: 0px 0px 18px rgb(185 156 246 / 30%);
+                .large-number {
+                    color: $purple-light;
+                }
+            }
+            &.box-green {
+                border-color: $green-light;
+                box-shadow: 0px 0px 18px rgb(61 154 100 / 30%);
+                .large-number {
+                    color: $green-light;
+                }
+            }
+        }
+    }
+}
+.btn-signUp {
+    margin-top: 60px;
+    text-align: center;
+    .btn-primary {
+        outline: none;
+        color: rgba(0, 0, 0, 0) !important;
+        padding: 15px 30px;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        display: inline-table;
+        background-color: $yelow-primary !important;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        transition: 0.5s all ease;
+        transition: all 0.3s ease !important;
+        text-shadow: 0 0 0 $black, 400px 0 0 $black;
+        &:hover {
+            text-shadow: -400px 0 0 $white, 0 0 0 $white;
+            background-color: $brown-primary;
+        }
+    }
+}
+
+.section-ils-recrutent {
+    background-color: #f7fbfd;
+}
+.featured-area{
+	position: relative;
+}
+.featured-content-warp{
+	position: relative;
+	z-index: 1;
+	margin-top: -470px;
+	@include breakpoint-991{
+		margin-top: -120px;
+		.row{
+			display: flex;
+			justify-content: center;
+		}
+	}
+}
+.featured-bg-warp{
+	max-width: 1380px;
+	margin: 0px auto;
+	background-color: $purple-primary;
+	border-radius: 40px;
+	height: 580px;
+	position: relative;
+	@include breakpoint-1366{
+		max-width: 1280px;
+		margin: 0px 15px;
+	}
+	@include breakpoint-991{
+		height: 300px;
+	}
+	.media{
+		max-width: 390px;
+		position: absolute;
+		right: 80px;
+		bottom: 0px;
+		@include breakpoint-991{
+			max-width: 200px;
+		}
+		img{
+			width: 100%;
+		}
+		
+	}
+}
+
+.featured-block{
+	padding: 20px 20px 40px 20px;
+	border-radius: 10px;
+	background-color: $white;
+	.inner-content{
+		padding: 20px;
+		border-radius: 10px;
+		background-color: #f3edfe;
+        .job-time{
+            color: $purple-primary;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+		.job-post-time{
+            color: $black;
+            font-size: 12px;
+        }
+		.mid-content{
+			display: flex;
+			align-items: center;
+			padding-bottom: 20px;
+			margin-bottom: 20px;
+			border-bottom: 1px solid #e1e1e1;
+            position: relative;
+			.company-logo{
+				min-width: 125px;
+                width: 125px;
+                height: 125px;
+                margin-right: 15px;
+                background-color: #f7f7f7;
+                border-radius: 15px;
+                overflow: hidden;
+                img {
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                    display: block;
+                }
+			}
+			.company-info{
+				.company-name{
+					font-size: 24px;
+					color: $black !important;
+					font-weight: 600;
+				}
+				.company-secteur{
+					color: #7f7f7f;
+					font-size: 13px;
+					margin-bottom: 0px;
+				}
+			}
+		}
+		.bottom-content{
+            display: flex;
+            justify-content: space-between;
+			.job-name-title{
+				font-size: 20px;
+                color: $black;
+			}
+		}
+		.aply-btn-area{
+			text-align: center;
+			.aplybtn{
+				width: 48px;
+				height: 48px;
+				line-height: 48px;
+				color: $white;
+				border-radius: 50%;
+				background-color: $purple-light;
+				display: block;
+				margin: 20px auto -40px;
+				transition: 0.5s all ease;
+                font-size: 26px;
+				&:hover{
+					transform: rotate(360deg);
+					box-shadow: 0px 0px 0px 10px rgba(0, 0, 0, 0.05);
+				}
+			}
+		}
+	}
+}
+
+
+.our-comu-area{
+	background-size: cover;
+    background-position: right center;
+}
+
+/* footer */
+.footer-light{
+    padding-left: 0 !important;
+	color: $black;
+	font-size: 16px;
+	padding-top:80px;
+	background-color: #f7f7f7;
+	p{font-weight: 300;}
+	.logo-footer{
+		margin-bottom: 25px;
+		max-width: 174px;
+	}
+	.footer-top{
+		border-bottom: 1px solid rgba(0,0,0,0.3);
+		padding-bottom: 30px;
+	}
+	.ftr-list{
+		list-style: none;
+        padding-left: 0;
+		li{
+			p{
+				margin-bottom: 0px;
+				font-size: 16px;
+				
+				span{
+					margin-right: 5px;
+					font-weight: 500;
+				}
+			}
+		}
+	}
+	.title {
+		color: $purple-primary;
+		font-weight: 400;
+		font-size: 20px;
+		margin-bottom: 30px;
+		padding-bottom: 23px;
+		position: relative;
+		&:before{
+			content: '';
+			position: absolute;
+			bottom: 0px;
+			left: 0px;
+			background-color: $black;
+			width: 40px;
+			height: 3px;
+		}
+	}
+	.social-icons{
+			margin: 0px;
+		 li{
+			display: inline-block;
+			a {
+				height:45px;
+				width: 45px;
+				line-height: 45px;
+				padding: 0px;
+				color:$purple-primary;
+				font-size: 22px;
+				text-align: center;
+				margin-right: 3px;
+                display: block;
+				&:hover {
+					color: $black;
+				}
+			}
+		}
+	}
+	.footer-bottom {
+		padding: 0px;
+		color: $white;
+		position: relative;
+		z-index: 1;
+		font-weight: 400;		
+		.footer-bottom-info{
+			display: flex;
+			justify-content: space-between;
+			padding: 30px 0px;
+			align-items: center;
+			
+			@include breakpoint_991{
+				display: block;
+			}
+
+		}
+		.footer-copy-right{
+			@include breakpoint_991{
+				margin: 5px 10px 5px 0px;
+				display: inline-block;
+			}
+			.copyrights-text {
+				color: $black;
+				font-size: 14px;
+			}
+		}
+	}
+	.ot_services{
+		ul {
+			li {
+				a {
+					color: $black;
+					&:hover{
+						color: $purple-primary;
+					}
+				}
+			}
+		}	
+	}
+}
+/*Services*/
+.ot_services{
+	ul {
+		list-style: none;
+		padding-left: 0;
+		margin-bottom: 0;
+		li {
+			display:block;
+			width:100%;
+			padding:2px 0px;
+			border:0px;
+			overflow:hidden;
+			a {
+				color: $white;
+				position:relative;
+				padding:0px 0px 5px 0px;
+				display:block;
+				margin-left: 0px;
+				transition: all .3s ease;
+				font-size: 14px;
+				font-weight: 300;
+				&:hover{
+					color: $purple-primary;
+				}
+			}
+		}
+	}
+}
+.section-coworking {
+    background-color: #f7f3ff;
+	max-width: 1560px;
+	margin: 120px auto;
+	border-radius: 80px;
+	padding: 120px 125px 0px 125px;
+	overflow: hidden;
+	@include breakpoint-991{
+		padding: 40px 30px;
+		margin: 40px;
+	}
+	@include breakpoint-991{
+		margin: 40px 15px;
+	}
+	.coworking-content{
+		.row{
+			display: flex;
+			align-items: center;
+		}
+     	.top-section {
+			margin-bottom: 40px;
+			@include breakpoint-991{
+				margin-right: 0px;
+			}
+            .section-head {
+                text-align: left !important;
+                h2 {
+                    margin-bottom: 30px;
+                }
+            }
+            .btn-signUp {
+                margin-top: -25px;
+                text-align: left;
+                &.text-center {
+                    text-align: center !important;
+                }
+            }
+		}
+		.right-section{
+			position: relative;
+			z-index: 1;
+			height: 100%;
+			.media{
+				text-align: center;
+				position: relative;
+				width: 100%;
+				img{
+					width: 100%;
+				}
+				.employee-pic{position: relative; z-index: 1; width: 61.6%;left: 50%;	transform: translateX(-50%);}
+				.shot-pic1,
+				.shot-pic2,
+				.shot-pic3{position: absolute;}
+				.shot-pic1{ top: 1%;  right: 15%;}
+				.shot-pic2{ top: 45%;  left: 10%;}
+				.shot-pic3{bottom: 35%;  right: 10%;}
+			}
+            .icon-content {
+                img {
+                    width: 40px;
+                    height: auto;
+                    object-fit: contain;
+                    margin-bottom: 0.5rem;
+                }
+                
+            }
+			.counter-outer-two{
+				position: absolute;
+				background-color: $white;
+				width: 220px;
+				border-radius: 10px;
+				padding: 10px;
+                box-shadow: 0 0 14px rgb(0 0 0 / 6%);
+				.icon-content-info{
+					color: $black;
+					margin-bottom: 0px;
+					font-size: 16px;
+				}
+
+				&.one{
+					top: 5%;
+					left: 5%;
+					z-index: 1;
+				}
+				&.two{
+					top: 35%;
+					right: 0%;
+					z-index: 2;
+				}
+				&.three{
+					bottom: 30%;
+					left: 0%;
+					z-index: 2;
+				}
+				@include breakpoint-767{
+					position: inherit;
+					width: 100%;
+					&.one,&.two,&.three{
+						left: auto;
+						top: auto;
+						right: auto;
+						bottom: auto;
+					}
+					&.three{margin-bottom: 0px;}
+				}
+			
+			}
+		} 
+	}
+}

@@ -1,0 +1,99 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container my-5">
+    <h2>Détail transaction Ref:{{transaction.reference}}</h2>
+
+    <hr>
+    <div class="row">
+        <div class="col">
+            <p>
+            <span class="fw-bold">Créée le :</span>
+            {{transaction.transactionDate|date('d/m/y h:m:i')}}<br>
+            <span class="fw-bold">Type :</span>
+            {{transaction.typeTransaction.name}}<br>
+            <span class="fw-bold">Utilisateur :</span>
+            {{transaction.user.nom}} {{transaction.user.prenom}}<br>
+            <span class="fw-bold">Email :</span>
+            {{transaction.user.email}}<br>
+            <span class="fw-bold">Numéro :</span>
+            {{transaction.user.telephone}}<br>
+            <span class="fw-bold">Compte :</span>
+            {{transaction.user.type}}<br>
+            </p>
+        </div>
+        <div class="col">
+            <p>
+            {% if transaction.transactionReferences|length > 0 %}
+            <div class="p-3 border rounded">
+                <span class="fw-bold">Paiement multiple :</span>
+                <span class="badge bg-danger fs-7">Oui</span> <br>
+                {% for transactionReference in transaction.transactionReferences %}
+                    Référence : {{ transactionReference.reference }} | <span class="badge bg-info fs-7">{{ transactionReference.typeTransaction.name}}</span> | {{ transactionReference.montant }} Ar<br>
+                {% endfor %}
+            </div>
+            {% endif %}
+            </p>
+        </div>
+    </div>
+
+
+
+    {{ form_start(form)}}
+    <div class="input-group mb-3">
+        <div class="form-floating">
+            {{ form_widget(form.amount, {'attr': {'class': 'form-control', 'readonly':'true'}}) }}
+            {{ form_label(form.amount)}}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.reference, {'attr': {'class': 'form-control', 'readonly':'true'}}) }}
+            {{ form_label(form.reference)}}
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" readonly id="" placeholder="name@example.com" value="{{transaction.typeTransaction.name}}">
+            <label for="">Plateforme</label>
+        </div>
+    </div>
+    {% if transaction.transactionReferences|length > 0 %}
+        {% for item in transaction.transactionReferences %}
+        <div class="input-group mb-3">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" readonly id="" placeholder="name@example.com" value="{{ item.montant }}">
+                <label for="">Montant</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" readonly id="" placeholder="name@example.com" value="{{ item.reference }}">
+                <label for="">Référence</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" readonly id="" placeholder="name@example.com" value="{{ item.typeTransaction.name}}">
+                <label for="">Plateforme</label>
+            </div>
+        </div>
+            
+        {% endfor %}
+    {% endif %}
+    <div class="input-group mb-3">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" readonly id="floatingInputInvalid" placeholder="name@example.com" value="{{total}}">
+            <label for="floatingInputInvalid">Total</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.status)}}
+        </div>
+    </div>
+        {{ form_row(form.details, {'attr': {'class': 'form-control'}}) }}
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-dark px-5 rounded-pill" type="submit"><i class="mx-2 h5 bi bi-save"></i> Mettre à jour</button>
+        </div>
+    {{ form_end(form)}}
+
+</div>
+
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#transaction_staff_details' ) )
+</script>
+{% endblock %}
+

@@ -21,9 +21,8 @@ class CompetencesTransformer implements DataTransformerInterface
     ){       
     }
 
-    public function transform($competences)
+    public function transform($competences): mixed
     {
-        // dd(count($competences));
         if (null === $competences) {
             return '';
         }
@@ -38,7 +37,7 @@ class CompetencesTransformer implements DataTransformerInterface
         }, $competences));
     }
 
-    public function reverseTransform($competencesString)
+    public function reverseTransform($competencesString): mixed
     {
         if ('' === $competencesString || null === $competencesString) {
             return new ArrayCollection(); // ou null, selon votre cas
@@ -73,7 +72,6 @@ class CompetencesTransformer implements DataTransformerInterface
                 $competencesCollection->add($competence);
             }
         }
-        dump($competencesCollection);
 
         return $competencesCollection;
     }

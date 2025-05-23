@@ -1,0 +1,56 @@
+
+{% set current_route = app.request.attributes.get('_route') %}
+<div class="sidebar-area bg-white">
+	<div class="logo-brand d-flex justify-content-between align-items-center">
+	<a class="navbar-brand" href="{{ path('app_home') }}">
+		<img id="logo" src="{{ asset('images/dashboard/logo_defaut_entreprise.webp') }}" width="150" height="56" class="" alt="Logo">
+	</a>
+	<button id="menuIcon" class="menu-icon" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" aria-expanded="false" aria-label="Toggle navigation">
+		<span></span>
+        <span></span>
+        <span></span>
+	</button>
+	</div>
+  <div id="sidebarT" class="scroll-container">
+    <ul class="nav nav-pills flex-column mb-auto mt-5 pt-3">
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_home')}}" class="nav-link {{ current_route == 'app_white_label_home' ? 'underline' : '' }}" aria-current="page">
+        <i class="mx-2 h5 bi bi-house-door"></i><span class="sidebar-text">Tableau de bord </span> 
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_user_index')}}" class="nav-link {{ (current_route == 'app_white_label_user_index' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+        <i class="mx-2 h5 bi bi-people"></i><span class="sidebar-text">Utilisateurs</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_candidat_profile_index')}}" class="nav-link {{ (current_route == 'app_white_label_candidat_profile_index' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+        <i class="mx-2 h5 bi bi-person-check"></i><span class="sidebar-text">Candidats</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_entreprise_profile_index')}}" class="nav-link {{ (current_route == 'app_white_label_entreprise_profile_index' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+        <i class="mx-2 h5 bi bi-person-gear"></i><span class="sidebar-text">Recruteur</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_client1_user_missions')}}" class="nav-link {{ (current_route == 'app_white_label_client1_user_missions' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+        <i class="mx-2 h5 bi bi-megaphone"></i><span class="sidebar-text">Annonces</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_client1_user_missions')}}" class="nav-link {{ (current_route == 'app_white_label_client1_user_missions' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+        <i class="mx-2 h5 bi bi-person-vcard"></i><span class="sidebar-text">Candidatures</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <span class="sep-menu"></span> 
+        <a href="{{ path('app_client1_logout')}}" class="nav-link">
+        <img src="{{ asset('v2/images/dashboard/logout.svg')}}" alt=""><span class="sidebar-text">Se déconnecter</span> 
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+</div>
+<div class="db-content d-flex flex-column">

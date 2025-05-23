@@ -18,14 +18,12 @@ class ApplicationsType extends AbstractType
             //     'attr' => ['id' => 'cv-link-field']
             // ])
             ->add('lettreMotivation', TextareaType::class, [
-                'label' =>  'Lettre de motivation',
+                'label' =>  false,
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Bonjour,
-je suis intéressé.e par votre offre.
-Je vous remercie d\'avance de considérer ma candidature pour le poste de…',
-                    'rows' => 8,
-                ],
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ]
             ])
             // ->add('pretentionSalariale')
         ;

@@ -1,0 +1,15 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}Modifier un commentaire{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Modifier un commentaire</h1>
+
+    {{ include('blog/comment/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <div>
+        <a class="btn btn-info my-3 px-5 rounded-pill" href="{{ path('app_blog_comment_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+    </div>
+
+    {{ include('blog/comment/_delete_form.html.twig') }}
+{% endblock %}

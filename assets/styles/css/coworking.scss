@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');#base-coworking{
+    a.nav-link{
+        text-transform: uppercase!important;
+        font-weight: bold!important;
+        font-family: "Outfit", serif;
+        color: white!important;
+        text-shadow: 1px 1px 2px black;
+    }
+    a.nav-link:hover, a.nav-link:active, a.nav-link:active{
+        color:$link-warning!important;
+    }
+    a.nav-link.active{
+        border-bottom: 2px solid $link-warning!important;
+        color:$link-warning!important;
+    }
+}
+
+.navbar-toggler {
+    border: none;
+    color: white!important;
+}
+.navbar-toggler {
+    transition: all 0.3s ease-in-out;
+}
+  
+.navbar-toggler:hover {
+    transform: scale(1.1); /* Agrandit légèrement au survol */
+}
+
+.home-inner-section {
+    .btn-signUp {
+        .btn-primary {
+            width: 300px;
+            margin: 0 15px;
+        }
+    }
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

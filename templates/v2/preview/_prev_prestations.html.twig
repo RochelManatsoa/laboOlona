@@ -1,0 +1,74 @@
+
+    <div class="mb-2">
+        <div class="">
+            {# <div class="card-img-top bg-image-candidat" style="background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/Coopteur.png') }}');">
+                <div class="titre-overlay position-absolute w-100">
+                    <h6 class="card-title m-0 p-2">{{ prestation.titre }} </h6>
+                </div>
+            </div> #}
+            <div class="card-body">
+                <div class="d-flex p-2 align-items-center">
+                    <div class="me-3">
+                        <div class="rounded-circle" style="
+                            width: 65px;
+                            height: 65px;
+                            background-image: url('{{ prestation.fileName ? asset('uploads/prestations/' ~ prestation.fileName) : asset('images/Coopteur.png') }}');
+                            background-size: cover;
+                            background-position: center;
+                        ">
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <span class="fs-6">
+                            {% if app.user %}
+                                <a href="{{ path('app_v2_view_prestation', {'prestation': prestation.id })}}">
+                                    {{ prestation.titre }}
+                                </a>
+                            {% else %}
+                                <span style="cursor:pointer;" class="prestation-link" data-id="{{ prestation.id }}">{{ prestation.titre }}</span>
+                            {% endif %}
+                        </span><br>
+                        <span class="small fw-lighter">{{ generateprestationReference(prestation.id) }}</span>
+                    </div>
+                </div>
+                <hr>
+                <p class="card-text small">
+                {{ prestation.openai|raw}}
+                </p>
+                {% if prestation.tarifPrestation is defined and prestation.tarifPrestation is not null %}
+                <p class="small ">
+                    <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-currency-exchange"></i></span>
+                    <span class="">Tarif : </span>
+                    {{ prestation.tarifPrestation }}
+                </p>
+                {% endif %}
+                <p class="small">
+                    <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-bookmark-check"></i></span>
+                    <span class="">Modalité prestation : </span>
+                    {{ prestation.modalitesPrestation }}</span>
+                </p>
+                {% if prestation.competences|length > 0 %}
+                    <p class="small">
+                        <span class="badge bg-secondary rounded-circle p-2 lh-1"><i class="bi bi-inboxes-fill"></i></span>  Spécialités : 
+                        {% set count = 0 %}
+                        {% for skill in prestation.competences %}
+                            {% if count < 3 %}
+                                <span class="badge bg-info rounded-pill px-2 lh-1">{{ skill.nom }}</span>
+                                {% set count = count + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if prestation.competences|length > 4 %}
+                            <span class="badge bg-dark rounded-pill">+{{ prestation.competences|length - 3 }}</span>
+                        {% endif %}
+                    </p>
+                {% endif %}
+                <p class="card-text fw-bold small text-center">
+                    <span class="fs-5">Secteur</span><br>
+                    <span class="badge bg-dark rounded-pill">{{ prestation.secteurs.nom }}</span>
+                </p>
+                <div class="text-center">
+                    <button type="button" class="btn btn-outline-primary btn-sm rounded fw-semibold mb-3 px-3 mx-auto" data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_v2_view_prestation', {'prestation':prestation.id}) }}">Voir contact</button>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,5 @@
+# config/routes/white_label.yaml
+
+white_label_routes:
+    resource: ../../src/WhiteLabel/Controller/
+    type: annotation

@@ -1,0 +1,38 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Nouvelle place{% endblock %}
+
+{% block paralax %}{% endblock %}
+
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<header class="header-home">
+    <div class="page-content">
+        <div class="home-banner-section header-home-user bg-cover" style="background-image:url({{ asset('v2/images/coworking-olona-talents.webp')}})">
+            <div class="home-inner-section">
+                <div class="mid-section">
+                    <div id="liveDateTime" data-initial-date="{{ 'now'|date('Y-m-d H:i:s') }}"></div>
+                    <h1 class="title-large">Nouvelle place</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-5 align-items-center rounded-3 border shadow-lg">
+
+            {{ include('coworking/place/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+
+            <div>
+                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_place_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

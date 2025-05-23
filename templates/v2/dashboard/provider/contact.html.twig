@@ -1,0 +1,88 @@
+{% extends 'base_register.html.twig' %}
+
+{% block title %}
+	Vos coordonnées Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+<section class="login-wrap">
+    <div class="bg-mask"></div>
+    <div class="login-header">
+        <div class="container pt-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" class="img-fluid" alt="Image">
+                </div>
+            	{#<div class="col-md-8">
+                    <div class="sign-up_">
+                        Déjà membre ? <a href="{{ path('app_login') }}" class="fw-bolder">Connectez-vous</a> et profitez des avantages de Olona-talents.
+                    </div>
+                </div>#}
+            </div>
+        </div>
+    </div>
+	<div class="login-content">
+		<div class="container">
+			<div class="row">
+				<div class="col-12 col-lg-8">
+					<div class="register-left p-5">
+						<div class="register-item">
+							<h1 class="fs-2 text-center">
+								Vos informations de contact
+							</h1>
+							<div class="col">
+								<hr class="my-4">
+								{{ form_start(form, {'attr': {'data-turbo': 'false'}})}}
+								{{ form_errors(form)}}
+								<div class="row mb-3">
+									<div class="col-lg-6">
+										{{ form_row(form.nom) }}
+									</div>
+									<div class="col-lg-6">
+										{{ form_row(form.prenom) }}
+									</div>
+								</div>
+								{{ form_row(form.email) }}
+								{{ form_row(form.telephone) }}
+								{{ form_row(form.adress) }}
+								<div class="row mb-3">
+									<div class="col-lg-6">
+										{{ form_row(form.postalCode) }}
+									</div>
+									<div class="col-lg-6">
+										{{ form_row(form.city) }}
+									</div>
+								</div>
+								
+								<div style="display:none;">
+									{{ form_widget(form) }}
+								</div>
+									<button type="submit" class="btn btn-primary">
+										Suivant	<i class="bi bi-arrow-right ms-2"></i>
+									</button>
+									<a href="{{ path('app_v2_dashboard_create_profile', {'id':app.user.id, 'typology':app.user.type|ucfirst})}}" class="btn btn-primary btn-outline-primary ml-5">
+										<i class="bi bi-arrow-left me-2"></i> Précedent
+									</a>
+							</div>
+							{{ form_end(form) }}
+						</div>
+					</div>
+				</div>
+				<div class="col-12 col-lg-4">
+					{% include "v2/dashboard/provider/_sticky_sidebar.html.twig" %}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+{% block preview %}{% endblock %}

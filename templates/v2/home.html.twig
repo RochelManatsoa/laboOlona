@@ -1,0 +1,373 @@
+{% extends 'v2/base_home.html.twig' %}
+
+{% block title %}Olona Talents, le #1 moteur de recherche dédié à l'emploi à Madagascar{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement, travail, emploi, talents, candidat, recruteur, offres, agence, olona, olona talents, olona talents agence, talents agence, agence talents, candidature, candidature agence, candidature olona, candidature olona talents">
+<meta property="og:title" content="Olona Talents, le #1 moteur de recherche dédié à l'emploi à Madagascar">
+<meta property="og:description" content="Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:alt" content="Logo Olona Talents">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+
+{% block header %}
+	{% set last_query = app.request.query.get('q', '') %}
+	<!-- Boutons en haut à droite -->
+	<div class="home-header-top">
+        <div class="container d-flex justify-content-between p-2">
+            <div class="logo_to_home">
+                <a href="/" class="login_home"><img src="{{ asset('images/logo-olona-talents-white600x200.png')}}" alt="Olona Talents" width="150" height="56"></a>
+            </div>
+            <a href="{{ path('app_login')}}" class="login_home btn-primary me-3 mt-2">Se connecter</a>
+        </div>
+	</div>
+	<header class="header-home">
+		<div class="page-content">
+			<div class="home-banner-section bg-cover" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
+                <div class="home-inner-section">
+                    <div class="mid-section">
+                        <div class="title-large">Le <span>#1</span> moteur de recherche</div>
+                        <div class="title-light">dédié à l'emploi à Madagascar</div>
+                        <div class="description">Faites une recherche dès maintenant et découvrez nos services!</div>
+
+                        <div class="search-bar">
+							<form action="{{ path('app_olona_talents_candidates') }}">
+								<div class="row">
+                                    <div class="form-group col-xl-9 col-md-8">
+                                        <label>Champ de recherche</label>
+                                        <div class="inputicon-box">
+											<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="tapez ce que vous chercher...">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-xl-3 col-md-4">
+										<button class="btn btn-search_" type="submit">Chercher</button>
+                                    </div>
+                                </div>
+							</form>
+                        </div>
+
+                        <div class="popular-search">
+                            <span class="ot-title">Recherche populaire :</span>
+                            <a href="{{ path('app_olona_talents_candidates', {'q':'Developpeur'})}}">Developpeur</a> ,
+                            <a href="{{ path('app_olona_talents_candidates', {'q':'UI/UX designer'})}}">UI/UX designer</a> ,
+                            <a href="{{ path('app_olona_talents_candidates', {'q':'Marketing'})}}">Marketing</a> ,
+                            <a href="{{ path('app_olona_talents_candidates', {'q':'Ingenieur'})}}">Ingenieur</a> ...
+                        </div>
+                    </div>
+                    <div class="bottom-section">
+                        <div class="ot-cvth">+ De 10000 CVthèque</div>
+                        <div class="blocks-wrap">
+                            <!--icon-block-1-->
+                            <div class="blocks blocks-position-1">
+                                <div class="ot-content">
+                                    <div class="count-number text-clr-pink">
+                                        + <span class="counter">500</span>
+                                    </div>
+                                    <p class="icon-content-info">Entreprises</p>
+                                </div>
+                            </div>
+
+                            <!--icon-block-2-->
+                            <div class="blocks blocks-position-2">
+                                <div class="ot-content">
+                                    <div class="count-number text-clr-yellow">
+                                        + <span class="counter">300</span>
+                                    </div>
+                                    <p class="icon-content-info">Offres d'emploi </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</header>
+{% endblock %}
+
+{% block body %}
+<section class="section-ccm ot-ccm">                   
+    <div class="container">
+        <div class="section-head">
+            <div class="small-separator ot-text-primary">
+                <div>Vous êtes un prestataire?</div>                                
+            </div>
+            <h2 class="title">Voici comment ça marche</h2>
+        </div>               
+        <div class="ot-ccm-section">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="process-step box-red">
+                        <div class="pro-top">
+                            <span class="large-number">01</span>
+                        </div>
+                        <h4 class="title">Enregistrez votre compte</h4>
+                        <p>Inscrivez-vous pour découvrir des opportunités professionnelles stratégiques et motivantes.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="process-step box-purple">
+                        <div class="pro-top">
+                            <span class="large-number">02</span>
+                        </div>
+                        <h4 class="title">Trouvez et postulez à votre emploi de rêve</h4>
+                        <p>Créez un compte pour accéder aux offres d'emploi les plus adaptées à votre profil</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="process-step box-green">
+                        <div class="pro-top">
+                            <span class="large-number">03</span>
+                        </div>
+                        <h4 class="title">Posez votre CV</h4>
+                        <p>Posez votre CV pour permettre au recruteur de consulter facilement votre profil et de vous contacter rapidement si votre candidature retient son attention.</p>
+                    </div>
+                </div>                  
+            </div>
+            <div class="btn-signUp">
+                <a href="{{ path('app_olona_talents_register') }}" class="btn btn-primary">Commencer maintenant</a>
+            </div>
+        </div>  
+    </div>
+</section>
+<section class="section-ils-recrutent bg-white">
+    <div class="section-head">
+        <div class="ot-text-primary">
+            <div>Entreprises</div>                                
+        </div>
+        <h2 class="title">Ils recrutent</h2>
+    </div>             
+    <div class="featured-area">
+        <div class="featured-bg-warp">
+            <div class="media">
+                <img src="{{ asset('v2/images/home/ils_recrutent_img.webp')}}" alt="ils_recrutent_img">
+            </div>
+        </div>
+        <div class="container">
+        {% set first_two_offers = job_offers|slice(0, 2) %}
+        {% set next_three_offers = job_offers|slice(2, 3) %}
+            <div class="featured-content-warp mb-5">
+                <div class="row">
+                    <div class="col-lg-8 col-md-12">
+                        <div class="row">
+                        {% for job_offer in first_two_offers %}
+                            <div class="col-lg-6 col-md-6 mb-5">
+                                <div class="featured-block">
+                                    <div class="inner-content">
+                                        <div class="mid-content">
+                                            <span class="job-time">{{ job_offer.typeContrat.nom }}</span>
+                                            <div class="company-logo">
+                                                <img src="{{ job_offer.entreprise.fileName ? asset('uploads/compagnies/' ~ job_offer.entreprise.fileName) : asset('images/logo_defaut_entreprise.webp') }}" alt="logo company">
+                                            </div>
+                                            <div class="company-info">
+                                                <a href="{{ path('app_v2_view_recruiter_profile', {'id' : job_offer.entreprise.id}) }}" class="company-name">{{ job_offer.entreprise.nom }}</a>
+                                                <p class="company-secteur">{{ job_offer.entreprise.secteurs|length > 0 ? job_offer.entreprise.secteurs[0].nom : '-' }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="bottom-content">
+                                            <h4 class="job-name-title">{{ job_offer.titre }}</h4>
+                                            <span class="job-post-time">{{ job_offer.dateCreation|time_ago }}</span>
+                                        </div>
+                                        <div class="aply-btn-area">
+                                            <a href="{{ path('app_olona_talents_view_job_offer', {'id': job_offer.id })}}" class="aplybtn btn-primary">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                
+                </div>
+                <div class="row">
+                {% for job_offer in next_three_offers %}
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="featured-block">
+                            <div class="inner-content">
+                                <div class="mid-content">
+                                    <span class="job-time">{{ job_offer.typeContrat.nom }}</span>
+                                    <div class="company-logo">
+                                    <img src="{{ job_offer.entreprise.fileName ? asset('uploads/compagnies/' ~ job_offer.entreprise.fileName) : asset('images/logo_defaut_entreprise.webp') }}" alt="logo company">
+                                    </div>
+                                    <div class="company-info">
+                                        <a href="{{ path('app_v2_view_recruiter_profile', {'id' : job_offer.entreprise.id}) }}" class="company-name">{{ job_offer.entreprise.nom }}</a>
+                                        <p class="company-secteur">{{ job_offer.entreprise.secteurs|length > 0 ? job_offer.entreprise.secteurs[0].nom : '-' }}</p>
+                                    </div>
+                                </div>
+                                <div class="bottom-content">
+                                    <h4 class="job-name-title">{{ job_offer.titre }}</h4>
+                                    <span class="job-post-time">{{ job_offer.dateCreation|time_ago }}</span>
+                                </div>
+                                <div class="aply-btn-area">
+                                    <a href="{{ path('app_olona_talents_view_job_offer', {'id': job_offer.id })}}" class="aplybtn btn-primary">
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+                <div class="btn-signUp">
+                    <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}" class="btn btn-primary">Afficher tous les recruteurs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section-coworking">
+    <div class="container">
+        <div class="section-content">
+            <div class="coworking-content">
+                <div class="row">
+                    <div class="col-xl-7 col-lg-12 col-md-12">
+                        <div class="right-section">
+                            <div class="media">
+                                <div class="employee-pic"><img src="{{ asset('v2/images/home/coworking_.webp')}}" alt=""></div>
+                                <div class="shot-pic1"><img src="{{ asset('v2/images/home/sq-1.png')}}" alt=""></div>
+                                <div class="shot-pic2"><img src="{{ asset('v2/images/home/triangle.png')}}" alt=""></div>
+                                <div class="shot-pic3"><img src="{{ asset('v2/images/home/circle.png')}}" alt=""></div>
+                            </div>
+                            <div class="counter-outer-two one">
+                                <div class="icon-content">
+                                    <img src="{{ asset('v2/images/home/wifi_icon.svg')}}" alt="">
+                                    <p class="icon-content-info">Wi-Fi ultra-rapide</p>
+                                </div>
+                            </div>
+                            <div class="counter-outer-two two">
+                                <div class="icon-content">
+                                    <img src="{{ asset('v2/images/home/coffee_icon.svg')}}" alt="">
+                                    <p class="icon-content-info">Services inclus</p>
+                                </div>
+                            </div>
+                            <div class="counter-outer-two three">
+                                <div class="icon-content">
+                                    <img src="{{ asset('v2/images/home/map_icon.svg')}}" alt="">
+                                    <p class="icon-content-info">Emplacement central</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-lg-12 col-md-12">
+                        <div class="content-block">
+                            <div class="top-section">
+                                <div class="section-head">
+                                    <div class="ot-text-primary">
+                                        <div>Espace coworking</div>                                
+                                    </div>
+                                    <h2>Besoin d'un environnement collaboratif et inspirant?</h2>
+                                    <p>Découvrez nos espaces de travail conçus pour votre confort et votre productivité. Profitez de chaises ergonomiques, d'une lumière naturelle abondante, d'une connexion Wi-Fi fibre ultra-rapide et d'une ambiance professionnelle stimulante avec coin café et espaces communs.</p>
+                                </div>
+                                <div class="btn-signUp text-center">
+                                    <a href="/coworking/" class="btn btn-primary">Découvrir</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer class="footer-light bg-cover">
+    <div class="container">
+        <div class="footer-top">
+            <div class="row">
+                <div class="col-lg-3 col-md-12">
+                    <div class="ot_about">
+                        <div class="logo-footer clearfix">
+                            <a href="/"><img src="{{ asset('images/logo-olona-talents-black.png')}}" alt="Olona Talents" width="250" height="103"></a>
+                        </div>
+                        <p>Olona Talents, le <span>#1</span> moteur de recherche</p>
+                        <ul class="ftr-list">
+                            <li><p><span>Address :</span>Ambatonakanga, Antananarivo, Madagascar </p></li>
+                            <li><p><span>Horaire :</span>Lundi au Vendredi de 8h à 18h</p></li>
+                            <li><p><span>Tel. :</span>+261 32 03 734 31</p></li>
+                            <li><p><span>Suivez-nous sur :</span><a href="https://www.facebook.com/olonatalents" target="_blank"><i class="bi bi-facebook"></i></a></p></li>
+                        </ul>
+                    </div>                            
+                    
+                </div> 
+
+                <div class="col-lg-9 col-md-12">
+                    <div class="row">
+                        
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="ot_services ftr-list-center">
+                                <h3 class="title">Pour les candidats</h3>
+                                <ul>
+                                    <li><a href="{{ path('app_tableau_de_bord_candidat')}}">Tableau de bord utilisateur</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_candidat_trouver_des_missions')}}">Alerte d'emploi</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_candidat_mes_candidatures')}}">Candidature</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_candidat_annuaire_de_services')}}">Annonces de services</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="ot_services ftr-list-center">
+                                <h3 class="title">Pour les entreprises</h3>
+                                <ul>
+                                    <li><a href="{{ path('app_tableau_de_bord_entreprise')}}">Tableau de bord utilisateur</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_entreprise_cvtheque')}}">Consultation CVthèque</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_entreprise_offre_emploi')}}">Offre d'emploi</a></li>
+                                    <li><a href="{{ path('app_tableau_de_bord_entreprise_assistance')}}">Contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">  
+                            <div class="ot_services ftr-list-center">
+                                <h3 class="title">Infos</h3>
+                                <ul>
+                                    <li><a href="/legal-mentions">Mentions Légales</a></li>
+                                    <li><a href="/privacy-policy">Politique de Confidentialité</a></li>
+                                    <li><a href="/terms-and-conditions">Conditions d'Utilisation</a></li>
+                                    <li><a href="{{ path('app_contact_us')}}">Nous contacter</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">  
+                            <div class="ot_services ftr-list-center">
+                                <h3 class="title">Liens divers</h3>
+                                <ul>
+                                    <li><a href="{{ path('app_home')}}" target="_blank">Accueil</a></li>
+                                    <li><a href="{{ path('app_home_simulateur_portage')}}" target="_blank">Portage salariale</a></li>
+                                    <li><a href="{{ path('app_coworking_main')}}" target="_blank">Coworking</a></li>
+                                    <li><a href="#">Prestations</a></li>
+                                    <li><a href="{{ path('app_blog_index')}}" target="_blank">Le Blog</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>  
+
+                </div> 
+
+            </div>
+        </div>
+        <!-- FOOTER COPYRIGHT -->
+        <div class="footer-bottom">
+        
+            <div class="footer-bottom-info">
+                <div class="footer-copy-right">
+                    <span class="copyrights-text">Copyright © 2025 OlonaTalents.</span>
+                </div>
+                <ul class="social-icons">
+                    <li><a href="https://www.facebook.com/olonatalents/"  target=_blank class="profil-social"><img src="{{ asset('v2/images/dashboard/facebook.svg')}}"  alt=""></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+{% endblock %}
+
+{% block preview %}{% endblock %}

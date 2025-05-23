@@ -1,0 +1,67 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Entreprise </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a> 
+                </li>
+                <li class="breadcrumb-item position-relative"> Paramètres </li>
+                <li class="breadcrumb-item position-relative"> Mon compte </li>
+            </ol>
+        </div>
+    </section>
+    {% if not entreprise.isIsPremium %}
+    <section class="warning_freemium mb-4 d-flex align-items-center">
+        <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+        <div class="warning-block">
+            Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
+        </div>
+    </section>
+    {% endif %}
+    <section class="recruteur-container">
+        <div class="recruteur-block d-block p-5 mb-4">
+            {{ form_start(form, {'attr': {'data-turbo': 'false'}})}}
+            <div class="col-lg-2 col-sm-12 text-center mb-3">
+                <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/compagnies/' ~ form.vars.data.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}');cursor:pointer;" alt="Avatar">
+                    <div class="overlay-text">Changer le logo</div>
+                </div>
+                {{ form_widget(form.file) }}
+                {{ form_errors(form.file) }}
+            </div>
+            {{ form_widget(form)}}
+            <button type="submit" class="btn btn-primary">Sauvegarder</button>
+            {{ form_end(form)}}
+        </div>
+    </section>
+
+<script>
+    document.querySelector('.profile-img').addEventListener('click', function() {
+        document.getElementById('{{ form.file.vars.id }}').click();
+    });
+
+    document.getElementById('{{ form.file.vars.id }}').addEventListener('change', function(event) {
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.profile-img').style.backgroundImage = 'url(' + e.target.result + ')';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    });
+</script>
+{% endblock %}

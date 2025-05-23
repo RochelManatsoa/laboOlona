@@ -1,0 +1,53 @@
+[
+    {
+      "province": "Antananarivo",
+      "regions": [
+        { "region": "Analamanga", "code_postal": "101" },
+        { "region": "Vakinankaratra", "code_postal": "110" },
+        { "region": "Bongolava", "code_postal": "119" }
+      ]
+    },
+    {
+      "province": "Fianarantsoa",
+      "regions": [
+        { "region": "Haute Matsiatra", "code_postal": "301" },
+        { "region": "Amoron’i Mania", "code_postal": "306" },
+        { "region": "Atsimo-Atsinanana", "code_postal": "309" },
+        { "region": "Ihorombe", "code_postal": "311" },
+        { "region": "Vatovavy", "code_postal": "315" }
+      ]
+    },
+    {
+      "province": "Toamasina",
+      "regions": [
+        { "region": "Alaotra-Mangoro", "code_postal": "503" },
+        { "region": "Atsinanana", "code_postal": "501" },
+        { "region": "Analanjirofo", "code_postal": "507" }
+      ]
+    },
+    {
+      "province": "Mahajanga",
+      "regions": [
+        { "region": "Boeny", "code_postal": "401" },
+        { "region": "Betsiboka", "code_postal": "408" },
+        { "region": "Sofia", "code_postal": "414" }
+      ]
+    },
+    {
+      "province": "Toliara",
+      "regions": [
+        { "region": "Atsimo-Andrefana", "code_postal": "601" },
+        { "region": "Androy", "code_postal": "607" },
+        { "region": "Anosy", "code_postal": "614" },
+        { "region": "Menabe", "code_postal": "619" }
+      ]
+    },
+    {
+      "province": "Antsiranana",
+      "regions": [
+        { "region": "Diana", "code_postal": "201" },
+        { "region": "Sava", "code_postal": "208" }
+      ]
+    }
+  ]
+  

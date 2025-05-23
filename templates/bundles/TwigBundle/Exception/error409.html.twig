@@ -1,0 +1,31 @@
+
+{% extends 'base_error.html.twig' %}
+
+{% block title %}Lien expiré{% endblock %}
+
+{% block body %}
+<div class="section-full error_page">
+    <div class="container">
+        <div class="ot-error-wrap">
+            <div class="row">
+                <div class="col-12">
+                    <div class="ot-error-content">
+                        <h2 class="ot-error-title"><i class="bi bi-exclamation-octagon"></i></h2>
+                        <h4 class="ot-error-title2 site-text-primary">
+                            {% if message is defined %}
+                                {{ message }}
+                            {% else %}
+                                Désolé, ce lien est expiré
+                            {% endif %}
+                        </h4>
+                        <p>Désolé, la page que vous souhaitez consulter n'existe plus.</h4>
+                        <a href="{{ path('app_home')}}" class="btn btn-primary site-button">Aller à l'accueil</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block preview %}{% endblock %}

@@ -1,0 +1,60 @@
+<div class="boosts-container" data-slider>
+    <div class="boosts" data-slider-wrapper>
+        {% if candidates_boost|length > 0 %}
+            {% for candidat in candidates_boost %}
+                <div class="boost"> 
+                    <div class="card mb-3 boost-card" style="max-width: 400px;">
+                        <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': candidat.id })}}">
+                            <div class="">
+                                <span class="position-absolute top-0 start-50 ms-5 px-3 translate-middle" style="z-index:999"><span class="bg-pro">PRO</span></span>
+                            </div>
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                <img 
+                                    class="img-fluid profile-img"
+                                    style="border-radius: 10px; object-fit: cover; object-position: center; width: 100%; aspect-ratio: 1 / 1;"
+                                    src="{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}"
+                                >
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                        {% set title_words = candidat.titre|striptags|split(' ') %}
+                                        {% if title_words|length > 5 %}
+                                            {{ title_words|slice(0, 5)|join(' ') }}...
+                                        {% else %}
+                                            {{ title_words|join(' ') }}
+                                        {% endif %}</h5>
+                                        <p class="card-text">
+                                        <strong class="text-body-secondary">Ref: {{ generatePseudoById(candidat.id) }}</strong><br>
+                                            {% if entreprise is defined and isLikedByRecruiter(entreprise, candidat.id) %}
+                                            <span class="favoris-add" id="row_star_favorite_{{ candidat.id }}"><i class="bi bi-star-fill"></i></span>
+                                            {% else %}
+                                            <span class="favoris-add" id="row_star_favorite_{{ candidat.id }}"><i class="bi bi-star"></i></span>
+                                            {% endif %}
+                                    </div>
+                                </div>
+                            <p class="card-text p-3">{{ candidat.metaDescription|striptags|slice(0, 200) ~ '...' }}</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+            {% if candidates_boost|length == 1 %}
+                <div class="card mt-3 text-center">
+                    <a href="{{ path('app_contact') }}">
+                        <img class="img-fluid rounded" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                    </a>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% if candidates_boost|length > 0 %}
+        <span class="boosts_navigation prev-boost shadow" data-slider-prev hidden>
+            <i class="bi bi-chevron-left"></i>
+        </span>
+        <span class="boosts_navigation next-boost shadow" data-slider-next>
+            <i class="bi bi-chevron-right"></i>
+        </span>
+    {% endif %}
+</div>

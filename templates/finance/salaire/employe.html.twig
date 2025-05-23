@@ -1,0 +1,74 @@
+{% extends 'finance/base.html.twig' %}
+
+{% block title %}Salaire
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="annonce-list p-2">
+			<div class="annonce-item shadow p-5 m-4">
+				<h1 class="card-title h2 mb-3">Salaires simulés par <span class="text-info">{{employe.user.fullName|capitalize}}</span></h1>
+                    {% include "finance/_filter_user.html.twig" with {form:form} %}
+				<hr>
+				<div class="tab-content mt-3">
+					<div class="tab-pane fade show active" id="simulation1">
+							<div class="container">
+								<div class="row text-strong">
+									<div class="col-sm-5">Utilisateur | Salaire Net</div>
+									<div class="col-sm-6">
+										<div class="row">
+											<div class="col-sm-6 col-md-4 text-center text-dark small">{{ knp_pagination_sortable(simulations, 'Statut', 's.statusFinance') }}</div>
+											<div class="col-sm-6 col-md-4 text-center text-dark small">{{ knp_pagination_sortable(simulations, 'Créé le', 's.createdAt') }}</div>
+											<div class="col-sm-6 col-md-4 text-center text-dark small" >{{ knp_pagination_sortable(simulations, 'Simulations', 's.montant') }}</div>
+										</div>
+									</div>
+									<div class="col-sm-1"></div>
+								</div>
+								<hr>
+								{% for item in simulations %}
+									<div class="row text-muted">
+										<div class="col-sm-5 small">
+											<a href="#" class="">
+												{{ item[0].employe.user.nom}}
+												{{ item[0].employe.user.prenom}}
+											</a>
+											|
+											<span class="text-dark text-strong">{{ item[0].salaireNet }}
+												{{ item[0].devise.symbole}}</span>
+											<br>
+											<span class="text-muted">{{ item[0].employe.user.email}}</span>
+										</div>
+										<div class="col-sm-6">
+											<div class="row">
+												<div class="col-sm-6 col-md-4 text-center">
+													{{ satusSimulateur(item[0])|raw }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-center">
+													{{ item[0].createdAt|date('d/m/Y') }}<br>
+													{{ item[0].createdAt|date('à h:i') }}
+												</div>
+												<div class="col-sm-6 col-md-4 small text-dark">
+													{{ convertToAriary(item[0].salaireNet, item[0])|number_format(0, '.', '.') }}
+													Ar
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-1 small">
+											<a href="{{ path('app_finance_salaire_view', {'id':item[0].id})}}" class="btn btn-sm btn-info">
+												<i class="bi bi-eye"></i>
+											</a>
+										</div>
+									</div>
+									<hr>
+								{% endfor %}
+								<!-- Plus de lignes et colonnes ici -->
+							</div>
+							<div class="navigation mt-5">
+								{{ knp_pagination_render(simulations, 'parts/_pagination.html.twig') }}
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

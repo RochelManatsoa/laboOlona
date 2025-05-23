@@ -1,0 +1,66 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Résultat de recherche | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+<input type="hidden" id="hidden-query" value="{{ getSearchQuery('q') }}">
+	<div class="container">
+		<div class="row mt-3 mt-sm-5">
+			<ul class="nav nav-underline">
+				<li class="nav-item">
+					<a class="nav-link" aria-current="page" id="candidats-tab" href="{{ path('app_olona_talents_candidates', {'q': getSearchQuery('q')})}}">Candidats</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" id="annonces-tab" href="{{ path('app_olona_talents_joblistings', {'q': getSearchQuery('q')})}}">Offre d'emploi</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="services-tab" href="{{ path('app_olona_talents_prestations', {'q': getSearchQuery('q')})}}">Services</a>
+				</li>
+			</ul>
+			<div class="row">
+				<div class="default-results col-12 col-sm-8">
+					<div id="joblistings-list">
+						{% if joblistings|length > 0 %}
+						<p class="small fw-light mt-3">
+							{% if totalResults > 2 %}
+							{{ totalResults }} resultats trouvés
+							{% else %}
+							{{ totalResults }} resultat trouvé
+							{% endif %}
+						</p>
+							{% include "v2/dashboard/result/parts/_part_joblistings_list.html.twig" %}
+						{% else %}
+							{% include "v2/dashboard/result/none/_none_joblistings.html.twig" %}
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-12 col-sm-4">
+					<div class="d-flex flex-column flex-shrink-0 py-3 position-sticky top-0">
+						<div class="card mb-3" id="candidate-card-container">
+							<div class="m-4 position-relative text-center">
+								<a href="{{ path('app_v2_view_recruiter_profile', {'id': 118 }) }}">
+									<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block preview %}
+{% endblock %}

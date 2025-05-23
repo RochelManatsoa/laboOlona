@@ -1,0 +1,77 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Résultat de recherche | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+	{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT'))  %}
+		{% include "v2/dashboard/layout_candidat.html.twig" %}
+	{% endif %}
+
+	{% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE'))  %}
+		{% include "v2/dashboard/layout_entreprise.html.twig" %}
+	{% endif %}
+
+{% endblock %}
+
+{% block body %}
+<input type="hidden" id="hidden-query" value="{{ getSearchQuery('q') }}">
+	<div class="container">
+		<div class="shadow-custom p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-journals text-warning me-2"></i>
+				Bienvenue dans votre Annuaire de services.
+			</h2>
+			<p class="text-center"> 
+				Découvrez ou proposez des solutions professionnelles sur mesure. Boostez votre entreprise, avancez dans votre carrière et valorisez vos compétences. Trouvez le partenaire idéal pour votre réussite.
+			</p>
+			<div class="row">
+				<div class="user-results col-12 col-sm-8">
+					<div id="prestations-list">
+						{% if prestations|length > 0 %}
+							{% include "v2/dashboard/result/parts/_part_prestations_list.html.twig" %}
+						{% else %}
+							{% include "v2/dashboard/result/none/_none_prestations.html.twig" %}
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-12 col-sm-4 d-none d-md-block">
+					<div class="d-flex flex-column flex-shrink-0 py-3 position-sticky top-0">
+						<div class="card mb-3">
+							<div class="card-body small">
+								<h3 class="card-title h5 mb-3">Statistiques</h3>
+								<span class="fw-bolder me-2">{{ app.user.credit.total }}</span>
+								<span class="fw-light">crédits disponibles</span><br>
+								<span class="fw-bolder me-2">0</span>
+								<span class="fw-light">annonces publiées</span><br>
+								<span class="fw-bolder me-2">0</span>
+								<span class="fw-light">favoris</span><br>
+								<span class="fw-bolder me-2">0</span>
+								<span class="fw-light">prestations</span><br>
+							</div>
+						</div>
+						<div class="card mb-3" id="candidate-card-container">
+							<div class="m-4 position-relative text-center">
+								<a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
+									<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+{% endblock %}

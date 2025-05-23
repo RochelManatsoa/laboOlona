@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Opportunité de carrière chez Olona Talents{% endblock %}
+
+{% block body %}
+    <div class="container bg-dark">
+        <div class="annonce-list p-2">
+            <div class="annonce-item shadow p-5 m-4">
+                <h1 class="card-title h2">{{ annonce.titre }}</h1>
+                <p class="text-warning small">
+                    <i class="bi bi-circle-fill small mx-2 text-danger"></i>{{ getStatuses(annonce.status) }}  
+                        <span class="small text-center mx-3">|</span>
+                    {{ annonce.typeContrat }} 
+                        <span class="small text-center mx-3">|</span>
+                    <i class="bi bi-geo-alt-fill"></i> {{ annonce.lieu }} 
+                        <span class="small text-center mx-3">|</span>
+                    <i class="bi bi-hourglass-split"></i> Expire le {{ annonce.dateExpiration|date('d/m/Y') }}
+                        <span class="small text-center mx-3">|</span>
+                    <i class="bi bi-eye"></i> {{ annonce.annonceVues|length }} vues
+                </p>
+
+                <hr>
+
+                <div class="card-text pb-3">
+                    <div>{{ annonce.description|raw }}</div>
+                </div>
+
+                <div class="mt-3">
+                    <p class="">
+                    <i class="bi bi-gear mx-3"></i>
+                    Compétences requises : 
+                    {% if annonce.competences|length > 0 %}
+                        {% for skill in annonce.competences %}
+                            <span class="text-strong">{{ skill.nom }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <p>Aucune compétence spécifique requise.</p>
+                    {% endif %}
+                    </p>
+                </div>
+
+                <div class="mb-3">
+                    <p class="">
+                        <i class="bi bi-calendar mx-3"></i>
+                        Publication : 
+                        <span class="text-strong">{{ annonce.dateCreation|time_ago }}</span>
+                    </p>
+                </div>
+
+                <div class="mb-3">
+                    <p class="">
+                        <i class="bi bi-cash-stack mx-3"></i>
+                        Budget indicatif : 
+                        <span class="text-strong">
+                        {% if annonce.budgetAnnonce is defined and annonce.budgetAnnonce is not null %}
+                        {{ annonce.budgetAnnonce.montant }} {{annonce.budgetAnnonce.devise}}
+                        {% else %}
+                        {{ annonce.salaire }} €
+                        {% endif %}
+                        </span>
+                    </p>
+                </div>
+                <hr>
+                <button type="button" class="btn btn-primary rounded-pill px-5" data-bs-target="#referenceModal" data-bs-toggle="modal">Postuler</button>
+
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="referenceModal" tabindex="-1" aria-labelledby="referenceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content  bg-dark">
+        <div class="modal-header">
+            <h2 class="modal-title fs-5" id="referenceModalLabel"><i class="mx-2 h3 bi bi-code-slash"></i> Créer un compte Olona Talents</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+
+                    <div class="mx-auto text-dark " id="button-text">
+                        <a href="{{ path('connect_google_start') }}" class="btn btn-light">
+                            {{ 'app_register.continue'|trans }}  <i class="bi bi-google h5 mx-3 "></i>           
+                        </a>
+                    </div>
+                    
+                    <hr>
+                    {{ form_errors(form) }}
+
+                    {{ form_start(form, {'attr': {'class': 'row'}}) }}
+
+
+                    {{ form_row(form.nom) }}
+                    {{ form_row(form.prenom) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.plainPassword) }}
+                    <div class="form-check form-check-inline">
+                        <div class="row">
+                            <div class="col-1 m-0 p-0">
+                                <div class="form-check form-check-inline">
+                                    {{ form_widget(form.agreeTerms) }}
+                                </div>
+                            </div>
+                            <div class="col-11 m-0 pl-0">
+                                <label class="form-check-label fs-6" for="{{ form.agreeTerms.vars.id }}">
+                                    {{ attribute(form.agreeTerms.vars.attr, 'label')|trans({
+                                        '%terms_url%': path('app_home_terms'),
+                                        '%privacy_url%': path('app_home_privacy')
+                                    })|raw }}
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <button class="btn btn-lg btn-primary" type="submit" id="register-submit">
+                        {{ 'app_register.menu'|trans }}                
+                    </button>
+                    {{ form_end(form) }}
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

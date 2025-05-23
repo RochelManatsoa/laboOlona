@@ -1,0 +1,6 @@
+presta_sitemap:
+    defaults:
+        priority: 0.5
+        changefreq: daily
+        lastmod: ~
+    dump_directory: '%kernel.project_dir%/public'

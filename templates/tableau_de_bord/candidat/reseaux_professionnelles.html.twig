@@ -1,0 +1,96 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Mon réseau professionnel{% endblock %}
+
+{% block body %}
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Mon réseau professionnel </h5>
+            </div>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Profil </li>
+            <li class="breadcrumb-item position-relative"> Réseaux professionnels </li>
+        </ol>
+    </div>
+</section>
+{% if not candidat.isIsPremium %}
+<section class="warning_freemium mb-4 d-flex align-items-center">
+    <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+    <div class="warning-block">
+        Vous êtes actuellement sur un plan gratuit. <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">Achetez du credit</a> pour <a routerlink="{{ path('app_tableau_de_bord_candidat_boost')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_boost')}}">booster la visibilité</a> de votre profil ou encore, passez à un <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs')}}">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+    </div>
+</section>
+{% endif %}
+<section class="detail_db d-md-flex bp_">
+    <div class="biographie-profil mb-4 p-4">
+        <div class="mission-list-title">
+            <h1>Mon réseau professionnel</h1>
+            <p>Bienvenue sur votre page de gestion de contacts. Ici, vous pouvez consulter et gérer toutes vos connexions professionnelles. Utilisez les fonctionnalités ci-dessous pour optimiser votre réseau.</p>
+         </div>        
+        {% set tableClass = 'table' %}
+        {% if allContacts|length > 0 %}
+            <div class="table-responsive">
+                <table class="{{ tableClass }}">
+                    <thead>
+                        <tr>
+                            <td scope="col" class="h5">{{ knp_pagination_sortable(allContacts, 'Nom et Prénom', 'pc.contact') }}</td>
+                            <td scope="col" class="h5">{{ knp_pagination_sortable(allContacts, 'Type', 'pc.isAccepted') }}</td>
+                            <td scope="col" class="h5">{{ knp_pagination_sortable(allContacts, 'Ajouté le', 'pc.acceptedAt') }}</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in allContacts %}
+                            {% if item.contact.type == 'CANDIDAT' %}
+                            <tr id="row_contact_{{item.id}}">
+                                <td class="">
+                                    {{ item.contact }}<br>
+                                    <span class="fw-bold text-primary">{{ item.contact.candidateProfile.titre }}</span><br>
+                                    <span class="fw-bold">{{ item.contact.email }}</span> | Tél: {{ item.contact.telephone }}
+                                </td>
+                                <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
+                                    {{ item.contact.type }}<br>
+                                    <span class="fw-bold text-primary">{{ generatePseudo(item.contact.candidateProfile) }}</span>
+                                </td>
+                                <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
+                            </tr>
+                            {% else %}
+                            <tr id="row_contact_{{item.id}}">
+                                <td class="">
+                                    <a href="{{ path('app_tableau_de_bord_candidat_view_recruiter', {'id' : item.contact.entrepriseProfile.id}) }}">{{ item.contact }}</a><br>
+                                    <span class="fw-bold text-warning">{{ item.contact.entrepriseProfile.nom }}</span><br>
+                                    <span class="fw-bold">{{ item.contact.email }}</span> | Tél: {{ item.contact.telephone }}
+                                </td>
+                                <td class="col-2" id="col_prestation_recruiter_{{item.id}}">
+                                    {{ item.contact.type }}<br>
+                                    <span class="fw-bold text-primary"><a href="{{ path('app_tableau_de_bord_candidat_view_recruiter', {'id' : item.contact.entrepriseProfile.id}) }}">{{ generateReference(item.contact.entrepriseProfile) }}</a></span>
+                                </td>
+                                <td class="col-2">{{ item.acceptedAt|date('d/m/Y') }}</td>
+                            </tr>
+                            {% endif %}                                
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="navigation mt-5">
+                    {{ knp_pagination_render(allContacts, 'parts/_pagination.html.twig') }}
+                </div>
+            </div>
+        {% else %}
+            <h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+                <span class="">
+                    <img src="{{ asset('v2/images/6939131.png') }}" alt="icone" style="width: 30px;">
+                </span>
+                Vous n'avez pas de réseaux professionnels
+            </h3>
+        {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

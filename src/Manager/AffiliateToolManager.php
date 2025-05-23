@@ -24,6 +24,8 @@ class AffiliateToolManager
     public function init(): AffiliateTool
     {
         $tool = new AffiliateTool();
+        $tool->setCreeLe(new \DateTime());
+        $tool->setDescription("Nouvelle IA ajouté sur Olona Talents");
 
         return $tool;
     }
@@ -60,7 +62,7 @@ class AffiliateToolManager
         $conditions = [];
 
         if($nom == null && $type == null){
-            return $this->findAllAITools();
+            return $this->getAllAITools();
         }
 
         if (!empty($nom)) {
@@ -75,43 +77,35 @@ class AffiliateToolManager
 
         $qb->select('a')
             ->from('App\Entity\AffiliateTool', 'a')
-            // ->leftJoin('a.categories', 'c')
             ->leftJoin('a.tags', 't')
             ->where(implode(' AND ', $conditions))
             ->setParameters($parameters);
         
         return $qb->getQuery()->getResult();
     }
-
-    public function advancedSearchTools(?array $nom = null, ?array $type = null): array
+    
+    public function getAllAITools(?int $from = 0, ?int $size = 9, ?string $query = null): array
     {
         $qb = $this->em->createQueryBuilder();
 
         $parameters = [];
         $conditions = [];
-
-        // if($nom == null && $type == null){
-        //     return $this->findAllAITools();
-        // }
-
-        // if (!empty($nom)) {
-        //     $conditions[] = '(a.nom LIKE :nom )';
-        //     $parameters['nom'] = '%' . $nom . '%';
-        // }
-
-        // if (!empty($type) ) {
-        //     $conditions[] = '(a.type LIKE :type )';
-        //     $parameters['type'] = '%' . $type . '%';
-        // }
+        
+        if (!empty($query)) {
+            $conditions[] = '(a.nom LIKE :nom OR a.description LIKE :nom OR a.shortDescription LIKE :nom OR a.shortDescription LIKE :nom OR a.descriptionFr LIKE :nom OR a.descriptionEn LIKE :nom)';
+            $parameters['nom'] = '%' . $query . '%';
+        }
 
         $qb->select('a')
-            ->from('App\Entity\AffiliateTool', 'a')
-            // ->leftJoin('j.competences', 'c')
-            // ->leftJoin('j.typeContrat', 't')
-            ->where(implode(' AND ', $conditions))
-            ->setParameters($parameters);
+            ->from('App\Entity\AffiliateTool', 'a');
+            if (!empty($query)) {
+                $qb
+                ->where(implode(' AND ', $conditions))
+                ->setParameters($parameters);
+            }
+            $qb->setMaxResults($size)
+            ->setFirstResult($from); 
         
-        // return $qb->getQuery()->getResult();
-        return [];
+        return $qb->getQuery()->getResult();
     }
 }

@@ -1,0 +1,216 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Modifier une prestation | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endif %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+	<section class="">
+		<div class="shadow-custom p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-person-workspace text-warning me-2"></i>
+				Modification de votre prestation
+			</h2>
+			<p class="text-center">
+				Bienvenue sur la page de modification de prestation. Ici, vous pouvez ajuster les détails de votre service pour mieux répondre aux attentes de vos clients et améliorer la visibilité de votre offre. Veuillez noter que toute modification apportée sera soumise à une validation par notre équipe de modération afin de garantir la conformité avec nos standards de qualité et d'exactitude. Assurez-vous de remplir tous les champs avec des informations précises et détaillées. Après soumission, le processus de validation peut prendre jusqu'à 48 heures. Merci de votre collaboration pour maintenir l'excellence de notre plateforme.
+			</p>
+			<div class="col-12 col-sm-10 mx-auto p-2 p-sm-4">
+                <turbo-frame id="prestation_{{ prestation.id}}">
+					{{ form_start(form, { 
+						'action' : path('app_v2_edit_prestation', { prestation : prestation.id }), 
+						'attr': {'id': 'createPrestation'}
+						})
+					}}
+				<div class="row">
+					<div id="prestation_titre_row" class="">
+						{{ form_row(form.titre) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_secteurs_row" class="">
+						{{ form_row(form.secteurs) }}
+					</div>	
+				</div>
+				<div class="row">
+					<div id="prestation_description_row" class="">
+						{{ form_row(form.description) }}
+					</div>	
+				</div>
+				<div id="prestation_tarifPrestation_row" class="">
+
+					<div class="row">
+						<div class="col-4">
+							<div class="mb-3">
+								<label class="fw-bold small" for="prestation_tarifPrestation_typeTarif">Tarif</label>
+								{{ form_widget(form.tarifPrestation.typeTarif)}}
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="mb-3">
+								<label class="fw-bold small" for="prestation_tarifPrestation_montant">Montant</label>
+								{{ form_widget(form.tarifPrestation.montant)}}
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="mb-3">
+								<label class="fw-bold small" for="prestation_tarifPrestation_currency">Devise</label>
+								{{ form_widget(form.tarifPrestation.currency)}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_modalitesPrestation_row" class="">
+						{{ form_row(form.modalitesPrestation) }}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<div class="disponibilite-form">
+						
+								<div class="radio-options">
+									{{ form_row(form.availability.nom) }}
+								</div>
+							
+								<div class="date-picker-container mt-2">
+									{{ form_row(form.availability.dateFin) }}
+								</div>
+					
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_competences_row" class="">
+						{{ form_row(form.competences) }}
+					</div>
+				</div>
+				<div class="row my-4 text-center">
+					<div class="col mx-auto">
+						<label class="fw-bold fs-6 form-label" for="prestation_file">Ajouter votre logo ici</label>
+						<div class="rounded-circle profile-img bg-image-candidat-account mx-auto" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/prestations/' ~ form.vars.data.fileName) : asset('images/prestation.png') }}');cursor:pointer;" alt="Avatar">
+							<div class="overlay-text">Changer le logo</div>
+						</div>
+						{{ form_widget(form.file) }}
+						{{ form_help(form.file) }}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6">
+						<div class="row">
+							<div id="prestation_contactEmail_row" class="">
+								{{ form_row(form.contactEmail) }}
+							</div>
+						</div>
+					</div>
+					<div class="col-6">
+						<div class="row">
+							<div id="prestation_contactTelephone_row" class="">
+								{{ form_row(form.contactTelephone) }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_motsCles_row" class="">
+						{{ form_row(form.motsCles) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_conditionsParticulieres_row" class="">
+						{{ form_row(form.conditionsParticulieres) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_portfolioLinks_row" class="">
+						{{ form_row(form.portfolioLinks) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_preferencesCommunication_row" class="">
+						{{ form_row(form.preferencesCommunication) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_engagementQualite_row" class="">
+						{{ form_row(form.engagementQualite) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_contactReseauxSociaux_row" class="">
+						{{ form_row(form.contactReseauxSociaux) }}
+					</div>
+				</div>
+					<div style="display:none;">
+						{{ form_widget(form) }}
+					</div>
+					<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+						<i class="bi bi-save"></i>
+						Mettre à jour
+					</button>
+					{{ form_end(form) }}
+                </turbo-frame>
+			</div>
+		</div>
+	</section>
+	<script>
+		ClassicEditor.create(document.querySelector('#prestation_description'))
+	</script>
+
+<script>
+    document.querySelector('.profile-img').addEventListener('click', function() {
+        document.getElementById('{{ form.file.vars.id }}').click();
+    });
+
+    document.getElementById('{{ form.file.vars.id }}').addEventListener('change', function(event) {
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.profile-img').src = e.target.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    });
+
+	document.addEventListener("DOMContentLoaded", function() {
+		var availabilityDropdown = document.getElementById('prestation_availability_nom');
+		var dateField = document.getElementById('prestation_availability_dateFin');
+
+		function toggleDateInput() {
+			// Check if the selected option is "A partir du"
+			if (availabilityDropdown.value === 'from-date') {
+			dateField.style.display = '';  // Show the date field
+			} else {
+			dateField.style.display = 'none';  // Hide the date field
+			}
+		}
+
+		// Attach change event listener to the dropdown
+		availabilityDropdown.addEventListener('change', toggleDateInput);
+
+		// Initial check in case the page loads with "A partir du" already selected
+		toggleDateInput();
+	})
+</script>
+{% endblock %}

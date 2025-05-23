@@ -1,0 +1,40 @@
+
+<div class="row row-cols-1 row-cols-md-3 g-4 my-2 my-sm-4">
+    {% for aitool in aiTools %}
+    {% set description = aitool.shortDescriptionFr ?? aitool.shortDescription %}
+    <div class="col">
+        <div class="card">
+            {% if aitool.imageName %}
+                <img src="{{ vich_uploader_asset(aitool, 'imageFile') }}" alt="thumbail IA" class="img-fluid rounded-top">
+            {% else %}
+                <img src="{{ aitool.image }}" class="img-fluid rounded-top" alt="thumbail IA">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{{path('app_dashboard_moderateur_view_affiliate_tool', { 'slug': aitool.slug}) }}">
+                        {{ aitool.nom }}
+                    </a>
+                </h5>
+                <p class="small">
+                    {% set desc_words = description|striptags|split(' ') %}
+                    {% if desc_words|length > 12 %}
+                        {{ desc_words|slice(0, 12)|join(' ') }}...
+                        <a href="{{path('app_dashboard_moderateur_view_affiliate_tool', { 'slug': aitool.slug}) }}">
+                            En savoir plus
+                        </a>
+                    {% else %}
+                        {{ desc_words|join(' ') }}
+                    {% endif %}
+                </p>
+                <p class="card-text">
+                    <small class="text-body-secondary">
+                        {% for category in aitool.categories %}
+                        <span class="badge text-bg-info">{{ category.nom }}</span>
+                        {% endfor %}
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

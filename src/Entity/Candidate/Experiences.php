@@ -5,6 +5,7 @@ namespace App\Entity\Candidate;
 use Doctrine\DBAL\Types\Types;
 use App\Entity\CandidateProfile;
 use Doctrine\ORM\Mapping as ORM;
+use App\Form\Profile\Candidat\CompetencesType;
 use App\Repository\Candidate\ExperiencesRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -13,15 +14,15 @@ class Experiences
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'open_ai'])]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'open_ai'])]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[Groups(['identity'])]
+    #[Groups(['identity', 'open_ai'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
@@ -43,6 +44,11 @@ class Experiences
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Groups(['identity'])]
     private ?\DateTimeInterface $dateFin = null;
+
+    public function __construct()
+    {
+        $this->dateDebut = new \DateTime();
+    }
 
     public function getId(): ?int
     {

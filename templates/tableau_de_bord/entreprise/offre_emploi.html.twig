@@ -1,0 +1,106 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Mes annonces </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a> 
+                </li>
+                <li class="breadcrumb-item position-relative"> Mes annonces </li>
+            </ol>
+        </div>
+    </section>
+
+    {% if not entreprise.isIsPremium %}
+    <section class="warning_freemium mb-4 d-flex align-items-center">
+        <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+        <div class="warning-block">
+            Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
+        </div>
+    </section>
+    {% endif %}
+    
+    <section class="recruteur-container">
+        <div class="recruteur-block d-block p-5 mb-4">
+            <div class="offre-emploi-item">
+                <h1>Liste des offres d'emploi ({{ entreprise.joblistings|length }} offre{{ entreprise.joblistings|length > 1 ? 's' : '' }})</h1>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p>Vous avez {{ offres|length }} offre{{ offres|length > 1 ? 's' : '' }} d'emploi {{ labels[selectedStatus]|raw }}</p>
+                    </div>
+                    <div class="row w-50">
+                        <div class="col">
+                            <form action="{{ path('app_tableau_de_bord_entreprise_offre_emploi')}}" method="get">
+                                <select class="form-select" name="status" onchange="this.form.submit()" aria-label="Default select example">
+                                    {% for label, status in statuses %}
+                                        <option value="{{ status }}" {% if selectedStatus == status %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="btn btn-primary mb-3">Créer une annonce</a>
+            {% if offres|length > 0 %}
+                {% for item in offres %}
+                    {% set offre = item[0] %}
+                    <article class="article-item_">
+                        <div class="offre-emploi-list">
+                            <div class="row">
+                                <div class="col-xl-8">
+                                    <div class="detail_annonce_">
+                                        <h2><a href="{{ path('app_tableau_de_bord_entreprise_view_job_offer', {'id':offre.id})}}" class="btn-primary">{{ offre.titre }}</a></h2>
+                                        <h3><a href="" class="btn-primary">{{ entreprise.nom }}</a></h3>
+                                        <div class="type_contact_">{{ offre.typeContrat }}</div>
+                                        <div class="description_courte_">
+                                            {{ offre.description|raw }}
+                                        </div>
+                                        <div class="info_publication_">
+                                            <span class="small fw-light">
+                                                <span class="badge rounded-pill px-2 text-bg-danger">{{ getStatuses(offre.status)}}</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <span class="">Publié
+                                                    {{ offre.dateCreation|time_ago }}</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-eye"></i> {{ offre.annonceVues|length }} vues
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="mx-2 bi bi-person-workspace"></i> DISTANCE
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 mt-4">
+                                    <p><a class="btn btn-light" href="{{ path('app_tableau_de_bord_entreprise_listes_candidatures')}}">{{ offre.applications|length }} candidat{{ offre.applications|length > 1 ? 's' : '' }} ont posté leur candidature</a></p>
+                                    <p><a class="btn btn-light" href="{{ path('app_tableau_de_bord_entreprise_favoris')}}">Vous avez {{ entreprise.favoris|length }} favori{{ entreprise.favoris|length > 1 ? 's' : '' }} </a></p>
+                                    <p><a class="btn btn-warning disabled" href="{{ path('app_tableau_de_bord_entreprise_favoris')}}" disabled>{{ offre.applications|length + entreprise.favoris|length}} candidat{{ offre.applications|length > 1 ? 's' : '' }} proposés par Olona Talents</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+                {{ knp_pagination_render(offres) }}
+            
+                {% else %}
+                    <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                        <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                        <p class="text-center">Vous n'avez pas encore d'annonce {{ labels[selectedStatus]|raw }}.</p>
+                    </div>
+                {% endif %}  
+        </div>
+    </section>
+{% endblock %}

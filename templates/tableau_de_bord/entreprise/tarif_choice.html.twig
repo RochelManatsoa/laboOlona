@@ -1,0 +1,131 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block admin %}{% endblock %}
+
+{% block body %}
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Crédits </h5>
+            </div>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a routerlink="{{ path('app_tableau_de_bord_entreprise')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_entreprise')}}">
+                    <i class="ri-home-8-line"></i> Tableau de bord </a>
+                </li>
+                <li class="breadcrumb-item position-relative"> Recharger mon crédit </li>
+            </ol>
+        </div>
+    </section>
+    {% if not entreprise.isIsPremium %}
+    <section class="warning_freemium mb-4 d-flex align-items-center">
+        <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+        <div class="warning-block">
+            Vous êtes actuellement sur un plan gratuit. commencez notre <a routerlink="{{ path('app_tableau_de_bord_entreprise_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_entreprise_tarifs')}}">abonnement premium</a> pour accéder à notre CVthèque exclusive et publier des annonces en illimité !.
+        </div>
+    </section>
+    {% endif %}
+    <section class="tarfis-container d-block p-5 mb-4">
+        <div class="wrapper-abonnement-c">
+            <div class="title-abonnement-c">
+                <h1>Pack Standard</h1>
+                <p>Nous comprenons que chaque candidat et chaque entreprise a des besoins uniques. C'est pourquoi nous avons conçu une gamme de packs sur mesure pour vous aider à atteindre vos objectifs de carrière ou d'entreprise avec plus d'efficacité et de précision. Que vous cherchiez à accélérer votre recrutement ou à enrichir votre parcours professionnel, nos packs sont conçus pour vous offrir une expérience optimale.</p>
+            </div>
+            <div class="pack_standard_list m-b30">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="pack_standard_item m-b30">
+                            <div class="ps_media">
+                                <div class="flaticon-dashboard"><img src="{{ asset('images/dashboard/icon_premium_plus.svg')}}" alt="icon_premium_plus" width="70" height="70"></div>
+                            </div>                                   
+                            <div class="ps_content">
+                                <a href="{{ path('app_tableau_de_bord_entreprise_credit', {'slug': packages[0].slug})}}" class="btn btn-primary">{{ packages[0].name }}</a>
+                                <div class="credit__">{{ packages[0].credit }} <sup>crédits</sup></div>
+                                <span>{{ packages[0].price|number_format(0, ',', '.') }} Ariary</span>
+                                <span class="euro_">{{ convertToEuro(packages[0].price, devise)|number_format(2, '.', '') }} €</span>
+                            </div>                               
+                        </div>
+                    </div>    
+                    <div class="col-md-6">
+                        <div class="pack_standard_item m-b30">
+                            <div class="ps_media">
+                                <div class="flaticon-dashboard"><img src="{{ asset('images/dashboard/icon_premium.svg')}}" alt="" width="70" height="70"></div>
+                            </div>                                   
+                            <div class="ps_content">
+                                <a href="{{ path('app_tableau_de_bord_entreprise_credit', {'slug': packages[1].slug})}}" class="btn btn-primary">{{ packages[1].name }}</a>
+                                <div class="credit__">{{ packages[1].credit }} <sup>crédits</sup></div>
+                                <span>{{ packages[1].price|number_format(0, ',', '.') }} Ariary</span>
+                                <span class="euro_">{{ convertToEuro(packages[1].price, devise)|number_format(2, '.', '') }} €</span>
+                            </div>                              
+                        </div>
+                    </div>  
+                    <div class="col-lg-4 col-md-6">
+                        <div class="pack_standard_item m-b30">
+                            <div class="ps_media">
+                                <div class="flaticon-dashboard"><img src="{{ asset('images/dashboard/icon_up_plus.svg')}}" alt="icon_up +" width="70" height="70"></div>
+                            </div>                                   
+                            <div class="ps_content">
+                                <a href="{{ path('app_tableau_de_bord_entreprise_credit', {'slug': packages[2].slug})}}" class="btn btn-primary">{{ packages[2].name }}</a>
+                                <div class="credit__">{{ packages[2].credit }} <sup>crédits</sup></div>
+                                <span>{{ packages[2].price|number_format(0, ',', '.') }} Ariary</span>
+                                <span class="euro_">{{ convertToEuro(packages[2].price, devise)|number_format(2, '.', '') }} €</span>
+                            </div>                             
+                        </div>
+                    </div>    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="pack_standard_item m-b30">
+                            <div class="ps_media">
+                                <div class="flaticon-dashboard"><img src="{{ asset('images/dashboard/icon_up.svg')}}" alt="icon_up" width="50" height="50"></div>
+                            </div>                                   
+                            <div class="ps_content">
+                                <a href="{{ path('app_tableau_de_bord_entreprise_credit', {'slug': packages[3].slug})}}" class="btn btn-primary">{{ packages[3].name }}</a>
+                                <div class="credit__">{{ packages[3].credit }} <sup>crédits</sup></div>
+                                <span>{{ packages[3].price|number_format(0, ',', '.') }} Ariary</span>
+                                <span class="euro_">{{ convertToEuro(packages[3].price, devise)|number_format(2, '.', '') }} €</span>
+                            </div>                           
+                        </div>
+                    </div>    
+                    <div class="col-lg-4 col-md-6">
+                        <div class="pack_standard_item m-b30">
+                            <div class="ps_media">
+                                <div class="flaticon-dashboard"><img src="{{ asset('images/dashboard/icon_go.svg')}}" alt="icon go" width="70" height="70"></div>
+                            </div>                                   
+                            <div class="ps_content">
+                                <a href="{{ path('app_tableau_de_bord_entreprise_credit', {'slug': packages[4].slug})}}" class="btn btn-primary">{{ packages[4].name }}</a>
+                                <div class="credit__">{{ packages[4].credit }} <sup>crédits</sup></div>
+                                <span>{{ packages[4].price|number_format(0, ',', '.') }} Ariary</span>
+                                <span class="euro_">{{ convertToEuro(packages[4].price, devise)|number_format(2, '.', '') }} €</span>
+                            </div>                          
+                        </div>
+                    </div>                                      
+                </div>
+            </div>
+            <div class="info_supp_boost info_supp_boost_entr">
+                <h2>Offre Gratuite </br>Fonctionnement à Crédits</h2>
+                <div class="info_supp_boost_item">200 crédits offerts à l'inscription</div>
+                <div class="grid_row">
+                    <div class="box-grid">
+                        <strong>20 crédits </strong>
+                        <br/>/ <br/>annonce publiée
+                    </div>
+                    <div class="box-grid">
+                        <strong>75 crédits</strong>
+                        <br/>/ <br/> accès aux coordonnées d'un candidat
+                    </div>
+                    <div class="box-grid">
+                        <strong>100 crédits</strong>
+                        <br/>/ <br/> boost annonce avec badge "Urgent"
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

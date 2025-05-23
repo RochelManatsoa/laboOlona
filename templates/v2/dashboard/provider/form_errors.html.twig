@@ -1,0 +1,33 @@
+{% for child in form.children %}
+    {% if child.vars.name == 'candidateProfile' %}
+        {% for candidateProfile in child %}
+            {% if not candidateProfile.vars.valid %}
+                <turbo-stream action="update" target="{{ candidateProfile.vars.id }}_row">
+                    <template>
+                    {% if candidateProfile.vars.name == 'tarifCandidat' %}
+                        <div class="input-group mb-3">
+                            {% for item in candidateProfile %}
+                                {% if item.vars.id != 'profile_candidateProfile_tarifCandidat_devise' %}
+                                    <div class="form-floating">
+                                    {{ form_widget(item) }}
+                                    {{ form_errors(item) }}
+                                    {{ form_label(item) }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    </template>
+                </turbo-stream>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {% if not child.vars.valid %}
+        <turbo-stream action="update" target="{{ child.vars.id }}_row">
+            <template>
+                {{ form_row(child) }}
+            </template>
+        </turbo-stream>
+        {% endif %}
+    {% endif %}
+{% endfor %}

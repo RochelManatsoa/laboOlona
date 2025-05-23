@@ -1,0 +1,44 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Utilisateur{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">{{ user }} </h1>
+
+            
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom complet</th>
+                        <td>{{ user.nom }} {{ user.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th>Téléphone</th>
+                        <td>{{ user.telephone ? user.telephone : '<span class="badge bg-danger rounded-pill">Non défini</span>' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Compte</th>
+                        <td>{{ user.type ? user.type|ucfirst : '<span class="badge bg-danger rounded-pill">Non défini</span>' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Adresse</th>
+                        <td>{{ user.adress }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end w-100">
+                <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_white_label_user_edit', {'id': user.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                {{ include('white_label/client1/admin/user/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

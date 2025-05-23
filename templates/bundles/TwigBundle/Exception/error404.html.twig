@@ -1,31 +1,31 @@
 
-{% extends 'base.html.twig' %}
+
+{% extends 'base_error.html.twig' %}
 
 {% block title %}Page Introuvable{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="text-center">
-        <div class="container">
-            <div class="p-5 text-center bg-dark rounded-3">
-                <h1 class="text-light display-1">404</h1>
-                <p class="col-lg-8 mx-auto fs-5 text-light">
-                Nous sommes désolés, mais la page que vous recherchez semble introuvable. Il se pourrait qu'elle ait été déplacée, renommée, ou qu'elle n'existe tout simplement pas.
-                </p>
-                
-                <!-- Centrez les boutons en ajoutant un nouveau div ici -->
-                <div class="d-flex justify-content-center gap-2 my-5">
-                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
-                        <a class="btn btn-primary btn-md px-4 rounded-pill mb-2 mb-sm-0" href="{{ path('app_home')}}">
-                            Retour à l'accueil
-                        </a>
-                        <a class="btn btn-outline-light btn-md px-4 rounded-pill" href="{{ path('app_home_contact')}}">
-                            Nous contacter
-                        </a>
+<div class="section-full error_page">
+    <div class="container">
+        <div class="ot-error-wrap">
+            <div class="row">
+                <div class="col-lg-6 col-md-12">
+                    <div class="ot-error-image">
+                        <img src="{{ asset('images/page-not-exist.png')}}" alt="Page 404" class="img-fluid">
                     </div>
                 </div>
+                <div class="col-lg-6 col-md-12">
+                    <div class="ot-error-content">
+                        <h2 class="ot-error-title">404</h2>
+                        <h4 class="ot-error-title2 site-text-primary">Nous sommes désolés, la page que vous recherchez semble introuvable</h4>
+                        <p>Il se pourrait qu'elle ait été déplacée, renommée, ou qu'elle n'existe tout simplement pas.</p>
+                        <a href="{{ path('app_home')}}" class="btn btn-primary site-button">Aller à l'accueil</a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
+{% block preview %}{% endblock %}

@@ -15,6 +15,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\Moderateur\MettingRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Uid\Uuid;
 
 class RendezVousManager
 {
@@ -23,6 +25,7 @@ class RendezVousManager
         private Twig $twig,
         private MettingRepository $mettingRepository,
         private RequestStack $requestStack,
+        private UrlGeneratorInterface $urlGenerator,
         private Security $security
     ){}
 
@@ -34,6 +37,15 @@ class RendezVousManager
     ) : Metting
     {
         $rendezVous = new Metting();
+        $uuid = new Uuid(Uuid::v4());
+        $rendezVous->setCustomId($uuid);
+        $rendezVous->setLink($this->urlGenerator->generate(
+            'app_dashboard_conference',
+            [
+                'uuid' => $uuid
+            ], 
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ));
         $rendezVous->setModerateur($moderateur);
         $rendezVous->setEntreprise($entreprise);
         $rendezVous->setCandidat($candidat);

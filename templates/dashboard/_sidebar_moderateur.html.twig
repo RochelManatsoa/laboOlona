@@ -10,42 +10,70 @@
         </a>
       </li>
       <hr>
-      <li class="nav-item">
-        <a href="{{ path('app_dashboard_moderateur_secteur')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_secteur' ? 'active' : 'text-white' }}" 
-            {{ current_route == 'app_dashboard_moderateur_secteur' ? 'aria-current=page' : '' }}>
-            <i class="mx-2 h5 bi bi-bookmarks"></i>
-            Secteur d'activité   
-        </a>
-      </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_type_contrat')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_type_contrat' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-list-columns"></i>
-            Type de contrat   
+        <a href="{{ path('app_marketing_lead_index')}}" 
+            class="nav-link {{ current_route == 'app_marketing_lead_index' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-chat-dots"></i>
+            Leads
         </a>
 
       </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_annonces')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_annonces' ? 'active' : 'text-white' }}">
+        <a href="{{ path('app_moderateur_subcription_index')}}" 
+            class="nav-link {{ current_route == 'app_moderateur_subcription_index' ? 'active' : 'text-white' }}">
+            <i class="h5 mx-2 bi bi-fire"></i>
+            Abonnements    
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_moderateur_activity_page_chart')}}" 
+            class="nav-link {{ current_route == 'app_moderateur_activity_page_chart' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-graph-up"></i>
+            Metrics  
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_dashboard_moderateur_profile_candidat')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_profile_candidat' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-people"></i>
+            Profils  
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_moderateur_entreprise_profile_index')}}" 
+            class="nav-link {{ current_route == 'app_moderateur_entreprise_profile_index' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-building"></i>
+            Entreprises  
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_moderateur_job_listing_index')}}" 
+            class="nav-link {{ current_route == 'app_moderateur_job_listing_index' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-megaphone"></i>
             Annonces   
         </a>
 
       </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_entreprises')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_entreprises' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-building"></i>
-            Entreprises  
+        <a href="{{ path('app_v2_staff_prestation')}}" 
+            class="nav-link {{ current_route == 'app_v2_staff_prestation' ? 'active' : 'text-white' }}">
+            <i class="bi bi-person-workspace mx-2 h5"></i>
+            Prestations   
+        </a>
+
+      </li>
+      <li>
+        <a href="{{ path('app_moderateur_order_index')}}" 
+            class="nav-link {{ current_route == 'app_moderateur_order_index' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-cart3"></i>
+            Commandes  
         </a>
       </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_candidats')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_candidats' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-people"></i>
-            Candidats  
+        <a href="{{ path('app_dashboard_moderateur_business_model_transaction')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_business_model_transaction' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-credit-card-fill"></i>
+            Transactions  
         </a>
       </li>
       <li>
@@ -56,15 +84,22 @@
         </a>
       </li>
       <li>
-        <a href="{{ path('rendezvous_index')}}" 
-            class="nav-link {{ current_route == 'rendezvous_index' ? 'active' : 'text-white' }}">
+        <a href="{{ path('app_v2_staff_history')}}" 
+            class="nav-link {{ current_route == 'app_v2_staff_history' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-calendar3"></i>
-            Rendez-vous  
+            Logs Utilisateurs  
         </a>
       </li>
       <li>
-        <a href="{{ path('app_dashboard_moderateur_affiliate_tool')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_affiliate_tool' ? 'active' : 'text-white' }}">
+        <a href="{{ path('app_dashboard_moderateur_invitation')}}" 
+            class="nav-link {{ current_route == 'app_dashboard_moderateur_invitation' ? 'active' : 'text-white' }}">
+            <i class="mx-2 h5 bi bi-send"></i>
+            Invitations  
+        </a>
+      </li>
+      <li>
+        <a href="{{ path('app_affiliate_tool_index')}}" 
+            class="nav-link {{ current_route == 'app_affiliate_tool_index' ? 'active' : 'text-white' }}">
             <i class="mx-2 h5 bi bi-robot"></i>
             AI Tools  
         </a>
@@ -76,27 +111,6 @@
             Formations  
         </a>
       </li>
-      {# <li>
-        <a href="{{ path('app_dashboard_moderateur_notifications')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_moderateur_notifications' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-bell"></i>
-            Notifications  
-        </a>
-      </li> #}
-      {# <li>
-        <a href="{{ path('app_dashboard_entreprise_message')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_entreprise_message' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-chat-right-text"></i>
-            {{ 'app_dashboard_entreprise.messaging'|trans }} 
-        </a>
-      </li>
-      <li>
-        <a href="{{ path('app_dashboard_entreprise_notification')}}" 
-            class="nav-link {{ current_route == 'app_dashboard_entreprise_notification' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-bell"></i>
-            {{ 'app_dashboard_entreprise.notification'|trans }}  
-        </a>
-      </li> #}
     </ul>
 
     <hr>

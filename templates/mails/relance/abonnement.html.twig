@@ -1,0 +1,18 @@
+
+{% include "mails/_header.html.twig" %}
+
+            <div class="moderateur">
+                {{ contenu|raw }}
+                <p>
+                    👉 <a href="{{ dashboard_url|raw }}" style="text-decoration: none;">Tableau de bord</a>
+                </p>
+                <p>Pour toute question ou besoin d’assistance, notre équipe reste à votre disposition.</p>
+                <p>
+                    Cordialement,<br><br>
+                    L’équipe Olona Talents<br>
+                    🌐 www.olona-talents.com<br>
+                    📩 admin@olona-talents.com<br>
+                </p>
+            </div>
+         
+{% include "mails/_footer.html.twig" %}

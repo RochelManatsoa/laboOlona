@@ -1,0 +1,23 @@
+{% include "mails/_header.html.twig" %}
+            <p>Hello Admin,</p>
+            <p>Une réservation de place coworking a été effectuée par <strong>{{ reservation.fullName }}</strong></p>
+            <div>
+                Voici les détails : 
+                <div>
+                <p><strong>Nom complet</strong> : {{ reservation.fullName }}</p>
+                <p><strong>Nombre de  place</strong> : {{ reservation.guest }}</p>
+                <p><strong>Date réservée </strong> : {{ reservation.date|date('d/m/Y') }}</p>
+                <p><strong>Heure</strong> : {{ reservation.date|date('h:i') }}</p>
+                <p><strong>Téléphone</strong> {{ reservation.phone }} </p>
+                <p><strong>Email</strong> {{ reservation.email }} </p>
+                <p><strong>Date de réservation </strong> : {{ reservation.createdAt|date('d/m/Y à h:i') }}</p>
+                </div>
+            </div>
+            <p>   
+                Voici le lien pour acceder à cette réservation
+            </p>
+            <p style="text-align: center;">    
+            <a href="{{ url|raw }}" style="display: inline-block; padding: 12px 24px; background-color: #0D6EFD; color: #FFFFFF; border-radius: 5px; text-decoration: none; font-weight: 500; margin-bottom: 20px;">Détail réservation</a>
+            </p>
+          
+{% include "mails/_footer.html.twig" %}

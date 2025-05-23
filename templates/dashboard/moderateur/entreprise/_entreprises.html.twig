@@ -5,34 +5,75 @@
     <div class="navigation">
     {{ knp_pagination_render(entreprises, 'parts/_pagination.html.twig') }}
     </div>
-    <table class="table table-responsive">
+    <table class="table">
         <thead>
             <tr>
-                <th class="col-3">Titre</th>
-                <th class="col-1">Secteurs</th>
-                <th class="col-1">Annonces</th>
-                <th class="col-1">RDV</th>
-                <th class="col-1">Status</th>
-                <th class="col-2">Actions</th>
+                <th rowspan="2" class="col-4">Titre</th>
+                <th rowspan="2" class="col-1 text-center">Secteurs</th>
+                <th colspan="2" class="col-2 text-center">Annonces</th>
+                <th rowspan="2" class="col-1 text-center">RDV</th>
+                <th rowspan="2" class="col-1 text-center">Assign.</th>
+                <th rowspan="2" class="col-2 text-center">Actions</th>
+            </tr>
+            <tr>
+                <th class="col-1 text-center text-muted">Valide</th>
+                <th class="col-1 text-center text-muted">En attente</th>
             </tr>
         </thead>
         <tbody>
             {% for entreprise in entreprises %}
                 <tr>
                     <td>{{ entreprise.nom }}</td>
-                    <td>{{ entreprise.secteurs|length }}</td>
-                    <td>
-                        <a href="{{path('app_dashboard_moderateur_entreprises_annonces', { 'id': entreprise.id}) }}" class="btn btn-sm btn-info">
-                            {{ entreprise.jobListings|length }}
+                    <td class="text-center">{{ entreprise.secteurs|length }}</td>
+                    <td class="text-center">
+                        <!-- Remplacer avec la logique pour le nombre d'annonces valides -->
+                        {% if findValidJobListing(entreprise)|length > 0 %}
+                        <a href="{{path('app_dashboard_moderateur_entreprises_annonces', { 'id': entreprise.id, 'status':'PUBLISHED'}) }}" class="btn btn-sm btn-success">
+                        {{ findValidJobListing(entreprise)|length }}
                         </a>
+                        {% else %}
+                        -
+                        {% endif %}
                     </td>
-                    <td>{{ entreprise.mettings|length }}</td>
-                    <td>{{ entreprise.status }}</td>
-                    <td class="actions-col">
-                        <a href="{{path('voir_entreprise', { 'id': entreprise.id}) }}" class="btn btn-sm btn-info rounded-pill"><i class="bi mx-1 bi-eye"></i></a>
-                        <a href="{{path('supprimer_entreprise', { 'id': entreprise.id}) }}" class="btn btn-sm btn-danger rounded-pill" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce type de contrat ?');"><i class="bi mx-1 bi-trash"></i></a>
+                    <td class="text-center">
+                        <!-- Remplacer avec la logique pour le nombre d'annonces en attente -->
+                        {% if findPendingJobListing(entreprise)|length > 0 %}
+                        <a href="{{path('app_dashboard_moderateur_entreprises_annonces', { 'id': entreprise.id, 'status':'PENDING'}) }}" class="btn btn-sm btn-primary">
+                        {{ findPendingJobListing(entreprise)|length }}
+                        </a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if entreprise.mettings|length > 0 %}
+                        <a href="{{path('rendezvous_entreprise', { 'id': entreprise.id}) }}" class="btn btn-sm btn-warning">
+                            {{ entreprise.mettings|length }}
+                        </a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if getAssignByEntreprise(entreprise)|length > 0 %}
+                        <a href="{{path('app_dashboard_moderateur_assignation_entreprise', { 'id': entreprise.id}) }}" class="btn btn-sm btn-dark">
+                            {{ getAssignByEntreprise(entreprise)|length }}
+                        </a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td class="text-center actions-col">
+                        {{ form_start(form, {'action': path('supprimer_entreprise', {'id': entreprise.id}), 'method': 'POST'}) }}
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ entreprise.id) }}">
+                            <a href="{{path('app_dashboard_moderateur_profile_entreprise_view', { 'id': entreprise.id}) }}" class="btn btn-sm btn-info rounded-pill"><i class="bi bi-eye"></i></a>
+                            <button class="btn btn-sm btn-danger rounded-pill" type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette entreprise ?');">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        {{ form_end(form, {'render_rest': false}) }}
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+

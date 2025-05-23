@@ -1,0 +1,48 @@
+{% include "mails/_header.html.twig" %}
+<p>Bonjour {{ user.prenom }},</p>
+
+<p>
+    Nous avons bien pris en compte votre inscription au concours <strong>Olona Talents</strong>. 🎉  
+    Cependant, nous avons remarqué que votre CV n’a pas encore été reçu. Or, il est indispensable pour valider définitivement votre participation.
+</p>
+
+<div>
+    <strong>📌 Pour finaliser votre participation, assurez-vous que :</strong>  
+    <ul>
+        <li>Votre CV est bien au format <strong>PDF</strong>.</li>
+        <li>Il pèse <strong>moins de 1 Mo</strong> (compressez-le si nécessaire).</li>
+    </ul>
+</div>
+
+<p>
+    👉 <a href="{{ dashboard_url|raw }}" style="text-decoration: none;">Ajoutez votre CV maintenant</a> pour valider votre participation au tirage au sort !
+</p>
+
+<p>
+    🕒 <strong>Rappel :</strong>  
+    <div>
+        <p>🏆 12 gagnants seront tirés au sort à la fin du mois de février.</p>
+        <p>📅 Le tirage au sort final aura lieu à la fin du mois.</p>
+        <p>📢 Les résultats seront annoncés sur notre page Facebook.</p>
+    </div>
+</p>
+
+<p>
+    Pour ne rien manquer, suivez dès maintenant notre page Facebook :
+</p>
+
+<p>
+    👉 <a href="https://www.facebook.com/olonatalents" style="text-decoration: none;">Suivre notre page Facebook</a>
+</p>
+
+<p>
+    Si vous avez rencontré une difficulté pour ajouter votre CV, notre équipe est à votre disposition pour vous aider.  
+    <strong>N’hésitez pas à nous contacter !</strong>
+</p>
+
+<p>
+    Bonne chance et à bientôt sur <strong>Olona Talents</strong> ! 🚀  
+</p>
+
+
+{% include "mails/_footer.html.twig" %}

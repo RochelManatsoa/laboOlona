@@ -1,0 +1,32 @@
+
+{% include "mails/_header.html.twig" %}
+            <p>Bonjour,</p>
+            <p>Nous vous remercions d’avoir souscrit à notre contrat VIP Coworking Olona Talents. Votre souscription a bien été prise en compte, et nous sommes ravis de vous accueillir parmi nos membres privilégiés.</p>
+            <div>
+                Détails de votre souscription : 
+                <div>
+                <p><strong>Nom</strong> : {% if contract.typePerson %} Société {{ contract.socialReason }} {% else %} {{ contract.firstName }} {{ contract.lastName }}{% endif %}</p>
+                <p><strong>Date de souscription </strong> : {{ contract.createdAt|date('d/m/Y à h:i') }}</p>
+                <p><strong>Type de contrat</strong> : {{ contract.package.name }} </p>
+                <p><strong>Tarif mensuel</strong> : {{ contract.package.price }} </p>
+                <p><strong>N° contrat</strong> : {{ contract.contractNumber }} </p>
+                <p><strong>Durée</strong> : Reconduction tacite mensuelle </p>
+                </div>
+            </div>
+            <div>
+                Avantages inclus dans votre offre VIP : 
+                <ul>
+                <li>Réservations illimitées et prioritaires (du lundi au vendredi, de 8h à 18h, sous réservation).</li>
+                <li>Connexion haut débit Starlink et service continu avec groupes électrogènes.</li>
+                <li>1 publication "Coworker du jour" (facultatif) sur notre page Facebook.</li>
+                <li>Remises : 25 % sur les services Olona Talents et 50 % pour les accompagnants.</li>
+                </ul>
+            </div>
+            <div>
+                Besoin d’aide ? : 
+                <div>
+                <p>Notre équipe est disponible pour répondre à vos questions ou vous accompagner. Contactez-nous à <a href="mailto:contact@olona-talents.com" style="text-decoration: none; color: #0D6EFD;">contact@olona-talents.com</a> ou par téléphone au <a href="tel:+261320373431" style="text-decoration: none; color: #0D6EFD;">+261320373432</a>.</p>
+                <p>Merci de votre confiance, et bienvenue dans l’univers Olona Talents VIP Coworking. Nous sommes impatients de vous accompagner dans vos projets.</p>
+                </div>
+            </div>
+            {% include "mails/_footer.html.twig" %}

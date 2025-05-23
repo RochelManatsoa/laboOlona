@@ -1,0 +1,21 @@
+{% for child in form.children %}
+    {% if child.vars.name != 'transactionReferences' %}
+        {% if not child.vars.valid %}
+            <turbo-stream action="update" target="{{ child.vars.id }}_row">
+                <template>
+                    {{ form_row(child) }}
+                </template>
+            </turbo-stream>
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+{% for transactionReference in form.transactionReferences %}
+    {% if not transactionReference.vars.valid %}
+        <turbo-stream action="update" target="{{ transactionReference.vars.id }}">
+            <template>
+                {{ form_row(transactionReference) }}
+            </template>
+        </turbo-stream>
+    {% endif %}
+{% endfor %}

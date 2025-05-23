@@ -3,15 +3,28 @@
 namespace App\Service;
 
 use App\Twig\AppExtension;
+use App\Service\PdfProcessor;
+use App\Entity\CandidateProfile;
+use App\Entity\Entreprise\JobListing;
+use App\Entity\Prestation;
+use App\Manager\CandidatManager;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class OpenAITranslator
 {
+    private $projectDir;
+
     public function __construct(
         private HttpClientInterface $client, 
         private AppExtension $appExtension, 
-        private string $apiKey
+        private CandidatManager $candidatManager, 
+        private PdfProcessor $pdfProcessor, 
+        private string $apiKey,
+        ParameterBagInterface $params
     ){
+        $this->projectDir = $params->get('kernel.project_dir');
     }
 
     public function translate(string $text, string $sourceLang, string $targetLang): string
@@ -135,13 +148,76 @@ class OpenAITranslator
     }
 
     public function trans($text) {
-        $command = "node /home/mast9834/sites/laboOlona/assets/node_app/index.js " . escapeshellarg($text);
+        $scriptPath = $this->projectDir . '/assets/node_app/index.js';
+        $nodePath = '/root/.nvm/versions/node/v18.17.0/bin/node';  
+        $command = sprintf('sudo %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($text), escapeshellarg($this->apiKey));
+
         exec($command, $output, $return_var);
-    
+
         if ($return_var === 0) {
             return implode("\n", $output);
         } else {
-            return "Erreur lors de l'exécution du script Node.js";
+            return "Erreur lors de l'exécution du script index.js";
+        }
+    }
+
+    public function parse(CandidateProfile $candidateProfile)
+    {
+        $cv = $candidateProfile->getCv();
+        if($cv === null){
+            return "CV manquant";
+        }
+        $scriptPath = $this->projectDir . '/assets/node_app/test1.js';
+        $nodePath = '/root/.nvm/versions/node/v18.17.0/bin/node';  
+        $command = sprintf('sudo %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getCv()), escapeshellarg($this->apiKey));
+        exec($command, $output, $return_var);
+
+        if ($return_var === 0) {
+            return implode("\n", $output);
+        } else {
+            return "Erreur lors de l'exécution du script parse.js";
+        }
+    }
+
+    public function report(CandidateProfile $candidateProfile)
+    {
+        $scriptPath = $this->projectDir . '/assets/node_app/assistant.js';
+        $nodePath = '/root/.nvm/versions/node/v18.17.0/bin/node';  
+        $command = sprintf('sudo %s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($candidateProfile->getCv()), escapeshellarg($this->apiKey), escapeshellarg($candidateProfile->getId()));
+        
+        exec($command, $output, $return_var);
+        if ($return_var === 0) {
+            return implode("\n", $output);
+        } else {
+            return "Erreur lors de l'exécution du script assistant.js";
+        }
+    }
+
+    public function metaDescription(JobListing $annonce)
+    {
+        $scriptPath = $this->projectDir . '/assets/node_app/shortdesc.js';
+        $nodePath = '/root/.nvm/versions/node/v18.17.0/bin/node';  
+        $command = sprintf('sudo %s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($annonce->getDescription()), escapeshellarg($this->apiKey), escapeshellarg($annonce->getId()));
+        
+        exec($command, $output, $return_var);
+        if ($return_var === 0) {
+            return implode("\n", $output);
+        } else {
+            return "Erreur lors de l'exécution du script shortdesc.js";
+        }
+    }
+
+    public function resumePrestation(Prestation $prestation)
+    {
+        $scriptPath = $this->projectDir . '/assets/node_app/prestation.js';
+        $nodePath = '/root/.nvm/versions/node/v18.17.0/bin/node';  
+        $command = sprintf('sudo %s %s %s %s %s 2>&1', escapeshellarg($nodePath), escapeshellarg($scriptPath), escapeshellarg($prestation->getDescription()), escapeshellarg($this->apiKey), escapeshellarg($prestation->getTitre()));
+        
+        exec($command, $output, $return_var);
+        if ($return_var === 0) {
+            return implode("\n", $output);
+        } else {
+            return "Erreur lors de l'exécution du script prestation.js";
         }
     }
 

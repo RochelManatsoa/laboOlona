@@ -1,0 +1,75 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+	<div class="container mt-5">
+        <h1 class="h4 mb-3">Utilisateurs connéctés à Olona Talents</h1>
+        <form action="{{ path('app_v2_staff_history')}}" method="get" class="p-4">
+          <div class="row g-2 align-items-end">
+            <div class="col-auto">
+              <label for="user_data_days" class="col-form-label fw-lighter small">Période</label>
+              <select id="user_data_days" name="days" class="form-select" aria-label="Période">
+                <option value="0" {% if query.days == 0 %}selected{% endif %}>Choisir période</option>
+                <option value="1" {% if query.days == 1 %}selected{% endif %}>Aujourd'hui</option>
+                <option value="2" {% if query.days == 2 %}selected{% endif %}>Hier</option>
+                <option value="7" {% if query.days == 7 %}selected{% endif %}>7 derniers jours</option>
+                <option value="14" {% if query.days == 14 %}selected{% endif %}>14 derniers jours</option>
+                <option value="30" {% if query.days == 30 %}selected{% endif %}>30 derniers jours</option>
+                <option value="60" {% if query.days == 60 %}selected{% endif %}>60 derniers jours</option>
+                <option value="90" {% if query.days == 90 %}selected{% endif %}>90 derniers jours</option>
+              </select>
+            </div>
+            <div class="col-auto">
+              <label for="user_data_startDate" class="col-form-label fw-lighter small">Date de début</label>
+              <input type="date" id="user_data_startDate" name="startDate" class="form-control" value="{{ query.startDate }}">
+            </div>
+            <div class="col-auto">
+              <label for="user_data_endDate" class="col-form-label fw-lighter small">Date de fin</label>
+              <input type="date" id="user_data_endDate" name="endDate" class="form-control" value="{{ query.endDate }}">
+            </div>
+            <div class="col-auto">
+              <label for="user_data_submit" class="col-form-label">  </label>
+              <button type="submit" id="user_data_submit" class="btn btn-dark">Filtrer</button>
+            </div>
+          </div>
+          <input type="hidden" id="user_data_page" name="page" value="{{ query.page }}">
+        </form>
+        
+        {% if users|length > 0 %}
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">{{ knp_pagination_sortable(users, 'Nom et prénoms', 'u.nom') }}</th>
+                <th scope="col">{{ knp_pagination_sortable(users, 'Compte', 'u.type') }}</th>
+                <th scope="col">{{ knp_pagination_sortable(users, 'Date', 'u.lastLogin') }}</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                  <td>
+                    {{ user.nom }} {{ user.prenom }} <br>
+                    <span class="small fw-lighter">{{ user.email }}</span>
+                  </td>
+                  <td>{{ user.type }}</td>
+                  <td>
+                    {{ user.lastLogin|date('d/m/Y') }}<br>
+                    <span class="small fw-lighter">{{ user.lastLogin|date('H:i:s') }}</span>
+                  </td>
+                  <td><a target="_blank" href="{{ path('app_v2_staff_history_user', {'user': user.id })}}" class="btn-primary btn btn-sm rounded-pill px-3">Voir</a></td>
+                </tr>                    
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="navigation">
+            {{ knp_pagination_render(users, 'parts/_pagination.html.twig') }}
+        </div>
+
+        {% else %}
+            <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                <p class="text-center">Aucune historique à afficher.</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

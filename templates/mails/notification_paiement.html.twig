@@ -1,0 +1,21 @@
+{% include "mails/_header.html.twig" %}
+            <p>Bonjour Niaina,</p>
+            <p>
+                Nous vous informons qu'un paiement vient d'être effectué sur <strong>olona-talents.com</strong>
+            </p>
+            <div>
+                Voici les détails de la transaction :
+                <ul>
+                    <li><strong>Nom de l'utilisateur :</strong>  {{ user.nom }} {{ user.prenom }}</li>
+                    <li><strong>Email :</strong>  {{ user.email }}</li>
+                    <li><strong>Téléphone :</strong>  {{ user.telephone }}</li>
+                    <li><strong>Montant de la transaction : </strong>  {{ transaction.amount }} Ar</li>
+                    <li><strong>Moyen de paiement :</strong>  {{ order.paymentMethod.slug }}</li>
+                    <li><strong>Référence de la transaction : </strong>  {{ transaction.reference }}</li>
+                    <li><strong>Date et heure : </strong>  {{ transaction.updatedAt|date('d/m/Y à h:m') }}</li>
+                </ul>
+            </div>
+            <p>
+                👉 <a href="{{ dashboard_url }}" style="text-decoration:none;"> Tableau de bord</a>
+            </p>
+{% include "mails/_footer.html.twig" %}

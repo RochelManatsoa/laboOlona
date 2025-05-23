@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block title %}Candidatures{% endblock %}
 
@@ -46,42 +46,33 @@
             <div class="col-md-4">
                 <div class="card shadow text-white bg-success mb-3">
                     <div class="card-body">
-                        <h2 class="card-title">{{ applications|length }}</h2>
+                        <h2 class="card-title">{{ count.candidatures }}</h2>
                         <p class="card-text">Candidatures reçues</p>
                     </div>
                 </div>
             </div>
         
             <div class="col-md-4">
-                <a href="{{ path('app_dashboard_entreprise_rendez_vous') }}" class="text-decoration-none">
                     <div class="card shadow text-white bg-warning mb-3">
                         <div class="card-body">
-                            <h2 class="card-title">{{ meetings|length }}</h2>
-                            <p class="card-text">Rendez-vous programmés</p>
+                            <h2 class="card-title">{{ count.suggestions }}</h2>
+                            <p class="card-text">Suggestions OLONA</p>
                         </div>
                     </div>
-                </a>
             </div>
         </div>
         <div class="row my-4">
             <div class="col-md-12">
                 <p class="text-muted">
-                    <i class="fa fa-info-circle"></i> Astuce : Utilisez les filtres ci-dessous pour affiner les résultats de vos candidatures. Cela peut vous aider à gérer plus efficacement vos offres d'emploi et les réponses reçues.
+                    <i class="bi bi-lightbulb"></i> Astuce : Utilisez les filtres ci-dessous pour affiner les résultats de vos candidatures. Cela peut vous aider à gérer plus efficacement vos offres d'emploi et les réponses reçues.
                 </p>
             </div>
         </div>
         {{ form_start(form, {'attr': {'class': 'form-group', 'id':'entreprise-candidature-search-form'}}) }}
         <div class="row">
             <div class="input-group">
-                    <div class="col">
+                    <div class="col-12 col-sm-6 mx-auto">
                         {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    <div class="col">
-                        {{ form_widget(form.candidat, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    <div class="col
-                    ">
-                        {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
                     </div>
             </div>
         </div>
@@ -90,6 +81,7 @@
         <div id="candidatures-container">
             {% include 'dashboard/entreprise/candidature/_candidatures.html.twig' %}
         </div>
+        <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
     </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

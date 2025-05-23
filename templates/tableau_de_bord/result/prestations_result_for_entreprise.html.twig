@@ -1,0 +1,80 @@
+{% extends 'tableau_de_bord/base_entreprise.html.twig' %}
+
+{% block title %}Résultat de recherche | Olona Talents{% endblock %}
+
+{% block body %}
+
+<div class="loader-container" id="loader-container" style="display:none;">
+	<span class="loader"></span>
+</div>
+
+<section class="">
+	<div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+		<div class="d-flex align-items-center">
+			<a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+			<i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+			<h5 class="mb-0"> Annuaire de services </h5>
+		</div>
+		<ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+			<li class="breadcrumb-item position-relative">
+				<a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+				<i class="ri-home-8-line"></i> Tableau de bord </a> 
+			</li>
+			<li class="breadcrumb-item position-relative"> Annuaire de services </li>
+		</ol>
+	</div>
+</section>
+{% if not entreprise.isIsPremium %}
+<section class="warning_freemium mb-4 d-flex align-items-center">
+	<span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+	<div class="warning-block">
+		Vous êtes actuellement sur un plan gratuit. <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">Achetez du credit</a> pour <a routerlink="{{ path('app_tableau_de_bord_candidat_boost')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_boost')}}">booster la visibilité</a> de votre profil ou encore, passez à un <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs')}}">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+	</div>
+</section>
+{% endif %}
+<section class="detail_db d-md-flex bp_">
+	<div class="biographie-profil mb-4 p-4">
+        <div class="mission-list-title">
+            <h1>Bienvenue dans votre Annuaire de services.</h1>
+            <p>Accédez à un vivier de compétences disponibles pour vos projets. Externalisez, collaborez ou trouvez des prestataires fiables en un clic. Cet espace vous permet de consulter les offres de services des talents inscrits et de booster l'efficacité de votre entreprise.</p>
+        </div>
+
+		<input type="hidden" id="hidden-query" value="{{ getSearchQuery('q') }}">
+		<div class="container">
+			<div class="row">
+				<div class="user-results col-lg-8 col-md-12">
+					<div id="prestations-list">
+						{% if prestations|length > 0 %}
+							{% include "v2/dashboard/result/parts/_part_prestations_list.html.twig" %}
+						{% else %}
+							{% include "v2/dashboard/result/none/_none_prestations.html.twig" %}
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-12 col-sm-4 d-none d-md-block">
+					<div class="position-sticky" style="top: 2rem;">
+						<div class="theiaStickySidebar">
+							<div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
+								<h4 class="title">Recrutement</h4>
+								<p>Obtenez les emplois les mieux adaptés à vos besoins <br>
+								Ajoutez votre CV MAINTENANT !</p>
+								<div class="btn-signUp">
+									<a href="" class="btn btn-primary white">En savoir plus</a> 
+								</div>
+							</div>
+							<div class="pub_veticales mt-4 pt-1">
+								<a href="">
+									<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+								</a>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+{% endblock %}

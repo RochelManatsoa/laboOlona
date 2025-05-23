@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<section id="hero" class="" style="background-color: black;">
+<section id="hero" class="pt-5" style="background-color: black;">
     <div class="container">
         <h1 class="h3 text-center py-4 text-white font-bold">
             {{ 'app_identity_company.title'|trans }}
@@ -14,8 +14,14 @@
                     {{ 'app_identity_company.description'|trans }}
                 </p>
                 <hr class="my-4">
-                <div class="mb-3">
                 {{ form_start(form) }}
+                <div class="mb-3">
+                    {{ form_label(form.devise) }}
+                    <div class="text-dark col-6">
+                        {{ form_widget(form.devise, {'attr': {'class': ''}}) }}
+                    </div>
+                </div>
+                <div class="mb-3">
                     {{ form_label(form.nom) }}
                     <div class="text-dark">
                         {{ form_widget(form.nom, {'attr': {'class': ''}}) }}
@@ -46,9 +52,21 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    {{ form_label(form.entreprise) }}
+                    <label class="form-label">Adresse éléctronique</label>
                     <div class="text-dark">
-                        {{ form_widget(form.entreprise, {'attr': {'class': ''}}) }}
+                        {{ form_widget(form.entreprise.email, {'attr': {'class': ''}}) }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Téléphone</label>
+                    <div class="text-dark">
+                        {{ form_widget(form.entreprise.telephone, {'attr': {'class': ''}}) }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Adresse</label>
+                    <div class="text-dark">
+                        {{ form_widget(form.entreprise.adress, {'attr': {'class': ''}}) }}
                     </div>
                 </div>
                 <div class="mb-3">
@@ -57,8 +75,11 @@
                         {{ form_widget(form.localisation, {'attr': {'class': ''}}) }}
                     </div>
                 </div>
+                    <div style="display:none">
+                        {{ form_widget(form) }}
+                    </div>
                 <div class="d-flex justify-content-center mb-5 mt-4">
-                    <button type="submit" id="get_started" class="btn btn-primary">
+                    <button type="submit" id="get_started" class="btn btn-primary rounded-pill px-5">
                         {{ 'app_identity_company.button'|trans }}
                     </button>
                 </div>

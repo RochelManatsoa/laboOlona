@@ -1,0 +1,50 @@
+<div class="boosts-container" data-slider>
+    <div class="boosts" data-slider-wrapper>
+        {% if joblistings_boost|length > 0 %}
+            {% for joblisting in joblistings_boost %}
+                <div class="boost"> 
+                    <div class="card mb-3 boost-card" style="max-width: 400px;">
+                        <a href="{{ path('app_olona_talents_view_job_offer', {'id': joblisting.id })}}">
+                            <div class="">
+                                <span class="position-absolute top-0 start-0 ms-5 px-3 translate-middle badge bg-danger rounded-pill" style="z-index:999">URGENT</span>
+                            </div>
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="{{ joblisting.entreprise.fileName ? asset('uploads/compagnies/' ~ joblisting.entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}" alt="{{ generatePseudoById(joblisting.id) }}" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{joblisting.titre}}</h5>
+                                        <p class="card-text">
+                                        <strong class="text-body-secondary">{{ joblisting.entreprise.nom }}</strong><br>
+                                        <small class="text-body-secondary"><span class="secteur_job"><i class="bi bi-tags"></i> {{ joblisting.secteur.nom}}</span></small><br>
+                                        <small class="text-body-secondary">Publié {{ joblisting.dateCreation|time_ago }}</small></p>
+                                    </div>
+                                </div>
+                                <p class="card-text p-3">{{ joblisting.shortDescription|striptags|slice(0, 350) ~ '...' }}</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if joblistings_boost|length == 1 %}
+                <div class="boost"> 
+                    <div class="card mb-3 boost-card" style="max-width: 400px;">
+                        <a href="{{ path('app_contact') }}">
+                            <img class="img-fluid rounded" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% if joblistings_boost|length > 0 %}
+        <span class="boosts_navigation prev-boost shadow" data-slider-prev hidden>
+            <i class="bi bi-chevron-left"></i>
+        </span>
+        <span class="boosts_navigation next-boost shadow" data-slider-next>
+            <i class="bi bi-chevron-right"></i>
+        </span>
+    {% endif %}
+</div>

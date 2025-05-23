@@ -1,0 +1,22 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Dashboard | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+  <link rel="stylesheet" href="{{ asset('css/dashboard.scss') }}">
+{% endblock %}
+
+{% block sidebar %}
+  {% include "v2/dashboard/layout_candidat_v2.html.twig" %}
+{% endblock %}
+
+{% block body %}
+
+{% endblock %}

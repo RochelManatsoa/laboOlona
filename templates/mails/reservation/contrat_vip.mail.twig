@@ -1,0 +1,21 @@
+
+{% include "mails/_header.html.twig" %}
+            <p>Hello Admin,</p>
+            <p>Une souscription VIP de place coworking a été effectuée par <strong>{{ contract.firstName }} {{ contract.lastName }}</strong></p>
+            <div>
+                Voici les détails : 
+                <div>
+                <p><strong>Nom complet</strong> : {{ contract.firstName }} {{ contract.lastName }}</p>
+                <p><strong>Téléphone</strong> : {{ contract.telephone }} </p>
+                <p><strong>Email</strong> : {{ contract.email }} </p>
+                <p><strong>N° contrat</strong> : {{ contract.contractNumber }} </p>
+                <p><strong>Date de souscription </strong> : {{ contract.createdAt|date('d/m/Y à h:i') }}</p>
+                </div>
+            </div>
+            <p>   
+                Voici le lien pour acceder au contrat
+            </p>
+            <p style="text-align: center;">    
+            <a href="{{ url|raw }}" style="display: inline-block; padding: 12px 24px; background-color: #0D6EFD; color: #FFFFFF; border-radius: 5px; text-decoration: none; font-weight: 500; margin-bottom: 20px;">Détail réservation</a>
+            </p>
+{% include "mails/_footer.html.twig" %}

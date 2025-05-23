@@ -1,34 +1,57 @@
 
-{% extends 'base.html.twig' %}
+{% extends 'security/base_login.html.twig' %}
 
 {% block title %}Accès non autorisé{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="text-center">
-        <div class="container">
-            <div class="p-5 text-center bg-dark rounded-3">
-                <h1 class="text-light">Accès non autorisé</h1>
-                <p class="col-lg-8 mx-auto fs-5 text-light">
-                {% if message is defined %}
-                    {{ message }}
-                {% else %}
-                    Désolé, la page que vous souhaitez consulter est réservée à certaines autorisations.
-                {% endif %}
-                </p>
-
-                <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 my-5">
-
-                    <a class="d-inline-flex align-items-center btn btn-primary btn-md px-4 rounded-pill mb-2 mb-sm-0" href="{{ path('app_home')}}">
-                        Retour à l'accueil
-                    </a>
-                    <a class="btn btn-outline-light btn-md px-4 rounded-pill" href="{{ path('app_home_contact')}}">
-                        Nous contacter
+<section class="login-wrap">
+    <div class="bg-mask"></div>
+    <div class="login-header">
+        <div class="container pt-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="{{ path('app_home') }}">
+                        <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" class="img-fluid" alt="Image">
                     </a>
                 </div>
+                <div class="col-md-8">
+                    <div class="sign-up_">
+                        Pas encore membre ? <a href="{{ path('app_olona_talents_register') }}" class="fw-bolder">Inscrivez-vous</a> et rejoignez la communauté Olona-talents.
+                    </div>
+                </div>
             </div>
-
         </div>
     </div>
-</div>
+    <div class="login-content">
+        <div class="container">
+            <div class="card shadow-lg border-0 rounded">
+                <h1 class="display-6 text-center mt-5"><i class="bi bi-exclamation-octagon me-2"></i> Accès refusé. </h1>
+                <div class="text-center col-6 mx-auto">
+                <img src="{{ asset('images/not-allowed.png')}}" class="w-50 img-fluid">
+                <p class="my-3">
+                    {% if message is defined %}
+                        {{ message }}
+                    {% else %}
+                        Désolé, la page que vous souhaitez consulter est réservée à certaines autorisations.
+                    {% endif %}
+                </p>
+                </div>
+                
+                <!-- Centrez les boutons en ajoutant un nouveau div ici -->
+                <div class="d-flex justify-content-center gap-2 my-5">
+                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+                        <a class="btn btn-primary fw-bold text-uppercase mb-2 mb-sm-0" href="{{ path('app_home')}}">
+                            <i class="bi bi-house me-2"></i> Retour à l'accueil
+                        </a>
+                        <a class="btn btn-outline-primary fw-bold text-uppercase mb-2 mb-sm-0" href="{{ path('app_v2_contact')}}">
+                            <i class="bi bi-envelope-at me-2"></i> Nous contacter
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
+
+{% block preview %}{% endblock %}

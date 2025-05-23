@@ -1,10 +1,13 @@
-{% extends 'dashboard/base.html.twig' %}
+
+{% set base_template = app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) ? 'dashboard/base.html.twig' : 'dashboard/base_new.html.twig' %}
+
+{% extends base_template %}
 
 {% block body %}
 <div class="container mt-3">
-    <h1 class="mb-4">Outil IA</h1>
+    <h1 class="mb-4">Outils IA</h1>
     {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
-    <a href="{{ path('app_dashboard_moderateur_new_affiliate_tool')}}" class="btn btn-secondary my-3">Nouveau</a>
+    <a href="{{ path('app_dashboard_moderateur_new_affiliate_tool')}}" class="btn btn-warning my-3 rounded-pill px-5">Nouveau</a>
     {% endif %}
     {{ form_start(form, {'attr': {'class': 'form-group mb-2 col-6', 'id':'moderateur-aitools-search-form'}}) }}
     <div class="input-group">
@@ -14,6 +17,7 @@
     <div id="aitools-container">
         {% include 'dashboard/moderateur/affiliate_tool/_aitools.html.twig' %}
     </div>
+    <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

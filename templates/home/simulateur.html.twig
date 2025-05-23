@@ -1,0 +1,228 @@
+{% extends 'base_portage.html.twig' %}
+
+{% block title %}Portage salarial | Olona-Talents {% endblock %}
+
+{% block meta %}
+<meta name="description" content="Simplifiez la gestion de votre activité avec le portage salarial d'Olona Talents. Profitez d'un cadre sécurisé, d'un accompagnement personnalisé et de services adaptés pour développer votre carrière en toute liberté.">
+<meta name="keywords" content="coworking, antananarivo, madagascar, espace francophone, talents, freelance, projet, offre, portage salarial, cooptation, recrutement">
+<meta property="og:title" content="Portage salarial | Olona Talents">
+<meta property="og:description" content="Simplifiez la gestion de votre activité avec le portage salarial d'Olona Talents. Profitez d'un cadre sécurisé, d'un accompagnement personnalisé et de services adaptés pour développer votre carrière en toute liberté.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/opengraph/portage.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+{% block paralax %}
+    {% if not is_granted('ROLE_ADMIN') %}
+        {% include "blog/_nav.html.twig" %}
+        {% include "home/portage/_paralax.html.twig" %}
+    {% endif %}
+{% endblock %}
+
+{% block admin %}{% endblock %}
+{% block body %}
+<section class="liberte_securite">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="item-liberte_">
+                    <h2 class="display-6 fw-bold">Liberté & Sécurité :</br> L'indépendance sans risques</h2>
+                    <p>
+                        Le portage salarial vous permet de bénéficier d'une protection sociale complète (assurance maladie, retraite, chômage) tout en gardant votre indépendance. Plus besoin de vous soucier de la paperasse administrative, concentrez-vous sur votre cœur de métier pendant que nous gérons tout le reste.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="videoBlock">
+                    <iframe src="https://www.youtube.com/embed/-Klu8JAxdBU?si=dMg-sto_OlLQmZr-" title="YouTube video" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</section>
+<section class="nous-faire-confiance">
+    <div class="container">
+        <h2 class="display-5 fw-bold text-center">Pourquoi nous faire confiance ?</h2>
+        <div class="row row-cols-1 row-cols-lg-4 row-cols-md-2 g-4 text-center">
+            <div class="col">
+                <div class="card shadow h-100">
+                    <i class="bi bi-file-earmark-text display-4 fw-bolder ms-4 mt-4 text-warning"></i>
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold card-title">Contrats sur-mesure</h3>
+                        <p class="card-text">Ajustez vos conditions comme vous le souhaitez.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow h-100">
+                    <i class="bi bi-person-badge display-4 fw-bolder ms-4 mt-4 text-warning"></i>
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold card-title">Accompagnement personnalisé</h3>
+                        <p class="card-text">Un conseiller dédié pour vous guider.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow h-100">
+                    <i class="bi bi-cash-stack display-4 fw-bolder ms-4 mt-4 text-warning"></i>
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold card-title">Paiements rapides et sécurisés</h3>
+                        <p class="card-text">Garantissez votre trésorerie, sans retard.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow h-100">
+                    <i class="bi bi-graph-up display-4 fw-bolder ms-4 mt-4 text-warning"></i>
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold card-title">Transparence totale</h3>
+                        <p class="card-text">Aucune surprise, vous savez où va votre argent.</p>
+                    </div>
+                </div>
+            </div>
+          </div>
+      </div>
+</section>
+<section class="etape_simulation">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-5 col-lg-12 col-md-12">
+                <div class="how-it-left">
+                    <div class="how-it-section">
+                        <div class="section-head">
+                            <h2 class="display-5 fw-bold mb-4">3 étapes simples pour démarrer</h2>
+                        </div>
+                        <div class="step-section_">
+                            <ul>
+                                <li>
+                                    <div class="step-count bg-clr-sky-light">01</div>
+                                    <div class="step-content">
+                                        <h4 class="title">Etape 01</h4>
+                                        <p>Signez votre contrat de portage en ligne (rapide et sans paperasse).</p>
+                                    </div>
+                                </li>
+                                
+                                <li>
+                                    <div class="step-count bg-clr-yellow-light">02</div>
+                                    <div class="step-content">
+                                        <h4 class="title">Etape 2</h4>
+                                        <p>Réalisez vos missions en toute liberté, nous gérons l'administratif.</p>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="step-count bg-clr-pink-light">02</div>
+                                    <div class="step-content">
+                                        <h4 class="title">Etape 3</h4>
+                                        <p>Recevez vos paiements en temps et en heure, sans stress.</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-7 col-lg-12 d-none d-lg-block">
+                <div class="how-it-right-section">
+                    <div class="media">
+                        <div class="main-bg"><img src="{{ asset('v2/images/etapape_portage_.webp')}}" alt="etapape_portage_"></div>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+</section>
+<section class="avis_">
+    <div class="container">
+        <h2 class="display-5 fw-bold">Ils ont choisi Olona Talents</h2>
+        <div class="row mt-5 justify-content-center">
+        <div class="col-md-5">
+            <div class="card h-100 mb-3 d-flex align-items-center shadow" style="max-width: 540px;">
+                <div class="row g-0 align-items-center h-100">
+                    <div class="col-lg-4 d-flex align-items-center p-20">
+                        <img src="{{ asset('images/coworking/casmir.png')}}" class="img-fluid rounded-pill img-thumbnail" alt="...">
+                    </div>
+                    <div class="col-lg-8 d-flex align-items-center">
+                            <div class="card-body">
+                            <p class="card-text">"J'ai enfin pu me lancer en freelance sans craindre pour ma protection sociale."</p>
+                            <p class="card-text">
+                                <small class="fw-bold">Casmir</small>
+                                <br>
+                                <small class="text-body-secondary">Content Manager SEO</small>
+                            </p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card h-100 mb-3 d-flex align-items-center shadow" style="max-width: 540px;">
+                <div class="row g-0 align-items-center h-100">
+                    <div class="col-lg-4 d-flex align-items-center p-20">
+                        <img src="{{ asset('images/coworking/ravaka.png')}}" class="img-fluid rounded-pill img-thumbnail" alt="...">
+                    </div>
+                    <div class="col-lg-8 d-flex align-items-center">
+                        <div class="card-body">
+                            <p class="card-text">"Olona Talents m'a permis de me concentrer sur mes missions, pas sur la paperasse."</p>
+                            <p class="card-text">
+                                <small class="fw-bold">Ravaka</small>
+                                <br>
+                                <small class="text-body-secondary">Assistante virtuelle</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</section>
+<section class="vister_notre_espace portage_adresse">
+    <div class="container">
+        <h2 class="display-6 fw-bold text-center">Prêt à prendre votre envol ?</h2>
+        <div class="block_contactForm">
+            <div class="row align-items-center">
+                <div class="col-12 col-sm-6">
+                <img src="{{ asset('images/coworking/map_olona-talents_compressed.png')}}" alt="map" class="img-fluid">
+                </div>
+                <div class="col-12 col-sm-6">
+                    <div class="block_contact_">
+                        <p class="lead"><i class="bi bi-phone"></i> <a href="tel:+261320373431">+261 32 03 734 31</a></p>
+                        <p class="lead"><i class="bi bi-geo-alt"></i> Ambatonakanga, Antananarivo</p>
+                        <div id="contactForm">
+                            <h3 class="h4 mb-4 fw-bold">Contact rapide</h3>
+                            {{ form_start(contactForm)}}
+                            <div class="mb-3">
+                            {{ form_widget(contactForm.titre, {'attr': {'placeholder': 'Nom complet'}}) }}
+                            </div>
+                            <div class="mb-3">
+                            {{ form_widget(contactForm.email, {'attr': {'placeholder': 'Email'}}) }}
+                            </div>
+                            <div class="mb-3">
+                            {{ form_widget(contactForm.numero, {'attr': {'placeholder': 'Téléphone'}}) }}
+                            </div>
+                            <div class="mb-3">
+                            {{ form_widget(contactForm.message, {'attr': {'placeholder': 'Votre message'}}) }}
+                            </div>
+                            <div class="col text-center">
+                                <!-- Button -->
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                                </div>
+                            </div>
+                            <div style="display: none;">
+                            {{ form_widget(contactForm) }}
+                            </div>
+                            {{ form_end(contactForm)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

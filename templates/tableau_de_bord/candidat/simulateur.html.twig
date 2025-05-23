@@ -1,0 +1,207 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Simulateur de salaire{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link href="{{asset('assets/css/jquery.steps.css')}}" rel="stylesheet">
+    <script src="{{asset('assets/js/jquery.min.js')}}"></script>
+    <script src="{{asset('assets/js/jquery.steps.min.js')}}"></script>
+    <script src="{{asset('assets/js/jqueryValidate.js')}}"></script>
+{% endblock %}
+{% block body %}
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Simulateur de salaire </h5>
+            </div>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Profil </li>
+            <li class="breadcrumb-item position-relative"> Simulateur de salaire </li>
+        </ol>
+    </div>
+</section>
+{% if not candidat.isIsPremium %}
+<section class="warning_freemium mb-4 d-flex align-items-center">
+    <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+    <div class="warning-block">
+        Vous êtes actuellement sur un plan gratuit. <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">Achetez du credit</a> pour <a routerlink="{{ path('app_tableau_de_bord_candidat_boost')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_boost')}}">booster la visibilité</a> de votre profil ou encore, passez à un <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs')}}">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+    </div>
+</section>
+{% endif %}
+<section class="detail_db d-md-flex bp_">
+    <div class="biographie-profil mb-4 p-4">
+        <div class="mission-list-title">
+            <h1>Simulateur de salaire</h1>
+            <p>Vous êtes un freelancer résidant à Madagascar et travaillez avec des clients internationaux ? Notre simulateur de portage salarial est conçu spécialement pour vous. Ce puissant outil vous aidera à calculer facilement le montant à facturer à vos clients pour garantir le salaire net souhaité après déduction des frais de portage salarial.</p>
+        </div>
+        <section class="" id="result-simulator">
+            <div class="p-3 p-sm-5 m-1 m-sm-4 border">
+                <div class="">
+                    {{ form_start(form, {
+                        'attr': {
+                            'data-turbo': 'false', 
+                            'id': 'example-basic', 
+                            'data-action': path('app_v2_candidate_simulator_create'), 
+                            'data-can-apply': app.user.credit.total < simulate_price ? 'true' : 'false'
+                        }
+                    } ) }}
+                    {{ form_widget(form.deviseSymbole, {'attr': {'data-id': 'simulateur_deviseSymbole'}})}}
+                    <!-- Début du formulaire avec l'ID "example-basic" -->
+                    <h3 class="mb-3">Devise</h3>
+                    <section
+                        style="position: relative;width: 100%;">
+                        <!-- Explication du champ "Taux de change" -->
+                        <legend class="h2">{{ form_label(form.devise) }}</legend>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                {{ form_widget(form.devise)}}
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    {{ form_widget(form.taux)}}
+                                    <span class="input-group-text">Ar</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-4">Le taux de change correspond au taux utilisé pour convertir le montant de votre paiement dans la devise de votre client.</p>
+                        <legend class="h2">{{ form_label(form.type) }}</legend>
+                        <div class="">
+                            {{ form_widget(form.type)}}
+                        </div>
+                    </section>
+
+                    <h3 class="mb-3">Statut</h3>
+                    <section
+                        style="position: relative;width: 100%;">
+                        <!-- Explication du champ "Taux de change" -->
+                        <legend class="h2">{{ form_label(form.status) }}</legend>
+                        <div class="row">
+                            {{ form_widget(form.status)}}
+                        </div>
+                        <p id="status-explanation" class="mt-4">Le taux de change est le taux appliqué pour convertir les coûts salariaux estimés dans la devise de votre entreprise à partir de celle du pays de résidence de l'employé potentiel.</p>
+                    </section>
+
+                    <h3 class="mb-3">Salaire Net</h3>
+                    <section
+                        class="text-grey" style="position: relative;width: 100%;">
+                        <!-- Explication du champ "Salaire Net" -->
+                        <legend class="h2">{{ form_label(form.salaireNet) }}</legend>
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="input-group">
+                                {{ form_widget(form.salaireNet)}}
+                                <span class="input-group-text change-devise">€</span>
+                            </div>
+                        </div>
+                        <p class="mt-4">Le salaire net représente le montant que vous souhaitez percevoir après déduction des impôts et des cotisations sociales.</p>
+                    </section>
+
+                    <h3 class="mb-3">Avantages</h3>
+                    <section
+                        class="text-grey" style="position: relative;width: 100%;">
+                        <!-- Explication du champ "Charge" -->
+                        <div class="row align-items-center">
+                            <div class="col-lg-4 col-sm-6">
+                                <label class="col-form-label mt-3">{{ form_label(form.nombreEnfant) }}
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Pour calculer les avantages fiscaux et les allocations familiales.">
+                                        <i class="bi bi-info-circle-fill"></i>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="input-group">
+                                    {{ form_widget(form.nombreEnfant)}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-center" id="freelance">
+                            <div class="col-lg-4 col-sm-6">
+                                <label class="col-form-label mt-3">{{ form_label(form.avantage.primeConnexion) }}
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Forfait mensuel souhaité.">
+                                        <i class="bi bi-info-circle-fill"></i>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="input-group">
+                                    {{ form_widget(form.avantage.primeConnexion)}}
+                                    <span class="input-group-text change-devise">€</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-lg-4 col-sm-6">
+                                <label class="col-form-label mt-3">Indemnités repas</label>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="input-group">
+                                    {{ form_widget(form.jourRepas)}}
+                                    {{ form_widget(form.prixRepas)}}
+                                    <span class="input-group-text change-devise">€</span>
+                                </div>
+                                <div class="row small">
+                                    <div class="col-5 fw-lighter">Nombre de jour</div>
+                                    <div class="col-7 fw-lighter">Prix journalier</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-center" id="employe" style="display: none;">
+                            <div class="col-lg-4 col-sm-6">
+                                <label class="col-form-label mt-3">Indemnités deplacement</label>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="input-group">
+                                    {{ form_widget(form.jourDeplacement)}}
+                                    {{ form_widget(form.prixDeplacement)}}
+                                    <span class="input-group-text change-devise">€</span>
+                                </div>
+                                <div class="row small">
+                                    <div class="col-5 fw-lighter">Nombre de jour</div>
+                                    <div class="col-7 fw-lighter">Prix journalier</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-lg-4 ">
+                                <label class="col-form-label mt-3">{{ form_label(form.avantage.primeFonction) }}
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Frais professionnels">
+                                        <i class="bi bi-info-circle-fill"></i>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="col-lg-3 ">
+                                <div class="input-group">
+                                    {{ form_widget(form.avantage.primeFonction)}}
+                                    <span class="input-group-text change-devise">€</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <h3 class="mb-3">Résumé</h3>
+                    <section
+                        class="text-grey" style="position: relative;width: 100%;">
+                        <!-- Explication du champ "Prime" -->
+                        <div id="resum"></div>
+                        <div style="display:none;">
+                            <button type="button" id="popup" data-bs-toggle="modal" data-bs-target="#lowCreditModal"></button>
+                        </div>
+                    </section>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+
+<script src="{{asset('assets/simulateur-candidat.js')}}"></script>
+<script src="{{asset('assets/main.js')}}"></script>
+{% include "/tableau_de_bord/layout/_credit_modal_candidat.html.twig" %}
+
+{% endblock %}

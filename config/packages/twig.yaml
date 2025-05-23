@@ -1,6 +1,8 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
-    form_themes: ['bootstrap_5_layout.html.twig']
+    form_themes: ['bootstrap_5_layout.html.twig', 'form/form_layout.html.twig']
+    debug: true  # Active le mode débogage de Twig
+    strict_variables: true  # Active la vérification des variables non définies ou nulles
 
 when@test:
     twig:

@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Availability;
 use App\Entity\CandidateProfile;
+use App\Entity\Vues\CandidatVues;
 use App\Service\User\UserService;
 use App\Entity\Moderateur\Metting;
 use App\Entity\Entreprise\JobListing;
@@ -11,6 +12,7 @@ use App\Service\Mailer\MailerService;
 use App\Entity\Candidate\Applications;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CandidateProfileRepository;
+use Symfony\Component\Routing\RouterInterface;
 use App\Repository\EntrepriseProfileRepository;
 use App\Repository\Moderateur\MettingRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,8 +35,15 @@ class CandidatManager
         private MailerService $mailerService,
         private ModerateurManager $moderateurManager,
         private UrlGeneratorInterface $urlGenerator,
+        private RouterInterface $routerInterface,
         private UserService $userService
     ){}
+
+    
+    public function generatePdfLink(CandidateProfile $candidat): string
+    {
+        return $this->routerInterface->generate('app_home', [], UrlGeneratorInterface::ABSOLUTE_URL).'uploads/cv/'.$candidat->getCv();
+    }
 
     
     public function annoncesCandidatDefaut(CandidateProfile $candidat): array
@@ -160,41 +169,51 @@ class CandidatManager
     public function getPendingApplications(CandidateProfile $candidat): array
     {
         return $this->applicationsRepository->findBy([
-            'candidat' => $candidat,
-            'status' => Applications::STATUS_PENDING
-        ]);
+                'candidat' => $candidat,
+                'status' => Applications::STATUS_PENDING
+            ],
+            ['id' => 'DESC']
+        );
     }
 
     public function getAcceptedApplications(CandidateProfile $candidat): array
     {
         return $this->applicationsRepository->findBy([
-            'candidat' => $candidat,
-            'status' => Applications::STATUS_ACCEPTED
-        ]);
+                'candidat' => $candidat,
+                'status' => Applications::STATUS_ACCEPTED
+            ],
+            ['id' => 'DESC']
+        );
     }
 
     public function getRefusedApplications(CandidateProfile $candidat): array
     {
         return $this->applicationsRepository->findBy([
-            'candidat' => $candidat,
-            'status' => Applications::STATUS_REJECTED
-        ]);
+                'candidat' => $candidat,
+                'status' => Applications::STATUS_REJECTED
+            ],
+            ['id' => 'DESC']
+        );
     }
 
     public function getArchivedApplications(CandidateProfile $candidat): array
     {
         return $this->applicationsRepository->findBy([
-            'candidat' => $candidat,
-            'status' => Applications::STATUS_ARCHIVED
-        ]);
+                'candidat' => $candidat,
+                'status' => Applications::STATUS_ARCHIVED
+            ],
+            ['id' => 'DESC']
+        );
     }
 
     public function getMettingApplications(CandidateProfile $candidat): array
     {
         return $this->applicationsRepository->findBy([
-            'candidat' => $candidat,
-            'status' => Applications::STATUS_METTING
-        ]);
+                'candidat' => $candidat,
+                'status' => Applications::STATUS_METTING
+            ],
+            ['id' => 'DESC']
+        );
     }
 
     public function initAvailability(CandidateProfile $candidat): Availability
@@ -209,13 +228,16 @@ class CandidatManager
     }
     
     public function sendNotificationEmail($candidat) {
+        $candidat->setStatus(CandidateProfile::STATUS_PENDING);
+        $this->em->persist($candidat);
+        $this->em->flush();
         $this->mailerService->sendMultiple(
             $this->moderateurManager->getModerateurEmails(),
             $candidat->getCandidat()->getPrenom().' a mis à jour son profil sur Olona Talents',
             "moderateur/notification_update_profile.html.twig",
             [
                 'user' => $candidat->getCandidat(),
-                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_candidat_view', ['id' => $candidat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                'dashboard_url' => $this->urlGenerator->generate('app_dashboard_moderateur_profile_candidat_view', ['id' => $candidat->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
             ]
         );
     }
@@ -272,5 +294,24 @@ class CandidatManager
         });
         
         return $langages;
+    }
+    
+    public function incrementView(CandidateProfile $candidat, string $ipAddress) {        
+        $viewRepository = $this->em->getRepository(CandidatVues::class);
+        $existingView = $viewRepository->findOneBy([
+            'candidat' => $candidat,
+            'ipAddress' => $ipAddress,
+        ]);
+
+        if (!$existingView) {
+            $view = new CandidatVues();
+            $view->setCandidat($candidat);
+            $view->setIpAddress($ipAddress);
+            $view->setCreatedAt(new \DateTime());
+
+            $this->em->persist($view);
+            $candidat->addVue($view);
+            $this->em->flush();
+        }
     }
 }

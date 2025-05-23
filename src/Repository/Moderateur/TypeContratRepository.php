@@ -21,6 +21,14 @@ class TypeContratRepository extends ServiceEntityRepository
         parent::__construct($registry, TypeContrat::class);
     }
 
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 //    /**
 //     * @return TypeContrat[] Returns an array of TypeContrat objects
 //     */

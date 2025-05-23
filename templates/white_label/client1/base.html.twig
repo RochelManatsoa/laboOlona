@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html data-bs-theme="light">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{% block title %}Olona Talents{% endblock %}</title>
+		{% block meta %}{% endblock %}
+		{% block stylesheets %}
+			<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
+	</head>
+	{% set premiumInterface = '' %}
+	{% set containerPrem = '' %}
+	{% set premiumNav = '' %}
+	<body class="bootstrap-light {{containerPrem}}" {% block turbo %}{% endblock %}>
+		<div class="transition-fade">
+			{% block header %}
+			{% set last_query = app.request.query.get('q', '') %}
+				<nav class="header-area bg-white {{ premiumNav }}"> 
+					<div class="d-flex justify-content-between align-items-center">
+						<a class="navbar-brand d-block d-lg-none" href="{{ path('app_home') }}">
+							<img id="logo" src="{{ asset('images/dashboard/logo_defaut_entreprise.webp') }}" width="150" height="56" class="" alt="Logo">
+						</a>
+						<div class="db-search">
+						{% if action is defined %}
+							<form action="{{ action }}" class="input-group rounded-pill w-100">
+								<button class="btn" type="submit"><i class="bi bi-search"></i></button>
+								<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+							</form>
+						{% else %}
+							<form action="{{ path('app_olona_talents_candidates') }}" class="input-group rounded-pill w-100">
+								<button class="btn" type="submit"><i class="bi bi-search"></i></button>
+								<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+							</form>
+						{% endif %}
+						</div>
+						<button id="menuMobile" class="d-lg-none menu-icon" type="button" aria-controls="offcanvasScrolling" aria-expanded="false" aria-label="Toggle navigation">
+							<span></span>
+							<span></span>
+							<span></span>
+						</button>
+					</div>
+				</nav>
+			{% endblock %}
+			{% block sidebar %}
+				{% if is_granted('ROLE_ADMIN') %}
+					{% include "white_label/client1/layout/admin.html.twig" %}
+				{% else %}
+					{% include "white_label/client1/layout/sidebar.html.twig" %}
+				{% endif %}
+			{% endblock %}
+			{% for message in app.flashes('success') %}
+				<div class="my-4 alert alert-success alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			{% endfor %}
+			{% for message in app.flashes('error') %}
+				<div class="my-4 alert alert-danger alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			{% endfor %}
+			{% block body %}{% endblock %}
+			{% block preview %}
+        	<a href="javascript:history.back()" class="d-none d-sm-block d-md-none btn btn-info fw-semibold text-uppercase px-4 my-5 me-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+			{% endblock %}
+		</div>
+		<script>
+
+			function loadCKEditor() {
+				if (typeof ClassicEditor === 'undefined') {
+					var scriptTag = document.createElement('script');
+					scriptTag.src = "{{ asset('assets/ckeditor5/ckeditor.js') }}";
+					document.body.appendChild(scriptTag);
+				}
+			}
+
+			loadCKEditor();
+			document.addEventListener('turbo:load', loadCKEditor);
+
+		</script>
+
+	{{ encore_entry_script_tags('main') }}
+	{{ encore_entry_script_tags('iary') }}
+	</body>
+</html>

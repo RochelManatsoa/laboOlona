@@ -1,0 +1,71 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="annonce-list p-2">
+            <div class="annonce-item shadow p-5 m-4">
+                <h1 class="card-title h5 mb-3"># Cooptation {{ cooptation.id }}</h1>
+                <p class="text-muted small">
+                    <span class="text-dark">
+                        <a href="{{ path('app_dashboard_moderateur_annonce_view', {'id' : cooptation.annonce.id})}}" target=_blank class="text-dark">
+                            {{ cooptation.annonce.titre }} 
+                            <i class="bi bi-box-arrow-up-right small" style="font-size:10px;"></i>
+                        </a>
+                    </span>
+                         par
+                    <span class="text-dark">
+                        <a href="{{ path('app_dashboard_moderateur_coopteur_view', {'customId': cooptation.referredBy.customId})}}" target=_blank class="text-dark">
+                            {{ cooptation.referredBy.referrer.nom }} 
+                            {{ cooptation.referredBy.referrer.prenom }} 
+                            <i class="bi bi-box-arrow-up-right small" style="font-size:10px;"></i>
+                        </a>
+                    </span> 
+                    <span class="small text-center text-dark mx-3">|</span>
+                    {{ generateCoopteurPseudo(cooptation.referredBy)}}
+                </p>
+                <hr>
+
+                <div class="container">
+                    <div class="row text-strong">
+                        {{ form_start(form)}}
+                        {{ form_row(form.annonce)}}
+                        <div class="row">
+                            <div class="col">
+                            {{ form_row(form.referredEmail)}}
+                            </div>
+                            <div class="col">
+                            {{ form_row(form.referralCode)}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                            {{ form_row(form.status)}}
+                            </div>
+                            <div class="col">
+                            {{ form_row(form.rewards)}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                            {{ form_row(form.step)}}
+                            </div>
+                            <div class="col">
+                            </div>
+                        </div>
+                        <div style="display:none;">{{ form_widget(form)}}</div>
+                        <button type="submit" class="btn btn-primary rounded-pill px-5">Mettre à jour</button>
+                        {{ form_end(form)}}
+                    </div>
+                    <hr>
+                </div>
+                <!-- Plus de lignes et colonnes ici -->
+
+            </div>
+        </div>
+    </div>
+
+<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+
+    </section>
+</div>
+{% endblock %}

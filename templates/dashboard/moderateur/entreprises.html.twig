@@ -33,7 +33,7 @@
                     </td>
                     <td>{{ entreprise.jobListings|length }}</td>
                     <td>
-                        <a href="{{ path('voir_entreprise', {'id': entreprise.id}) }}" class="btn btn-info">Voir</a>
+                        <a href="{{ path('app_dashboard_moderateur_profile_entreprise_view', {'id': entreprise.id}) }}" class="btn btn-info">Voir</a>
                         <form method="post" action="{{ path('supprimer_entreprise', {'id': entreprise.id}) }}" style="display:inline-block;">
                             <button type="submit" class="btn btn-danger">Supprimer</button>
                         </form>

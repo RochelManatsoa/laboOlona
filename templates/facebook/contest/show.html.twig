@@ -1,0 +1,58 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}Contest{% endblock %}
+
+{% block body %}
+<h1 class="h3">Concours #{{ contest.id }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>#</th>
+                <td>{{ contest.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ contest.name }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ contest.slug }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ contest.status }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ contest.description|raw }}</td>
+            </tr>
+            <tr>
+                <th>Début</th>
+                <td>{{ contest.startDate ? contest.startDate|date('d/m/Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Fin</th>
+                <td>{{ contest.endDate ? contest.endDate|date('d/m/Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Créé le</th>
+                <td>{{ contest.createdAt ? contest.createdAt|date('d/m/Y') : '-' }}</td>
+            </tr>
+            <tr>
+                <th>Mise à jour le</th>
+                <td>{{ contest.updatedAt ? contest.updatedAt|date('d/m/Y') : '-' }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-end w-100">
+        <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_facebook_contest_edit', {'id': contest.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+        {{ include('facebook/contest/_delete_form.html.twig') }}
+    </div>
+
+    <div>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_facebook_contest_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+    </div>
+
+    
+{% endblock %}

@@ -1,0 +1,863 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Dashboard | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('public/v2/css/dashboard.css') }}">
+{% endblock %}
+{% block sidebar %}
+	{% include "v2/dashboard/layout_candidat_v2.html.twig" %}
+{% endblock %}
+
+{% block body %}
+	{% block header %}
+	{% set last_query = app.request.query.get('q', '') %}
+		<nav class="header-area bg-white">
+			<div class="d-flex justify-content-between align-items-center">
+				<div class="db-search">
+				{% if action is defined %}
+					<form action="{{ action }}" class="input-group rounded-pill w-100">
+						<button class="btn" type="submit"><i class="bi bi-search"></i></button>
+						<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+					</form>
+				{% else %}
+					<form action="{{ path('app_olona_talents_candidates') }}" class="input-group rounded-pill w-100">
+						<button class="btn" type="submit"><i class="bi bi-search"></i></button>
+						<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+					</form>
+				{% endif %}
+				</div>
+				<div class="d-none d-md-flex justify-content-end align-items-center info_db">
+					{% if app.user %}
+						<button id="switch-theme">
+							<i class="bi bi-moon-stars-fill"></i>
+						</button>
+						<a href="{{ path('app_v2_dashboard_notification', {'isRead':'0'}) }}" class="position-relative">
+							<img src="{{ asset('v2/images/dashboard/discussions.svg')}}" alt="">
+							<span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
+							{{ component('count_notification_component')}}
+							<span class="visually-hidden">unread messages</span>
+							</span>
+						</a>
+						<a href="{{ path('app_v2_dashboard_notification', {'isRead':'0'}) }}" class="position-relative">
+							<img src="{{ asset('v2/images/dashboard/notification.svg')}}" alt="">
+							<span class="position-absolute top-0 start-100 translate-middle rounded-pill ">
+							{{ component('count_notification_component')}}
+							<span class="visually-hidden">unread messages</span>
+							</span>
+						</a>
+						{{ component('credit_user_component') }}
+						<div class="dropdown">
+							<button type="button" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle btn" data-bs-toggle="dropdown" aria-expanded="false">
+								{% if app.user.gravatar is not null %}
+									{% if (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) and app.user.candidateProfile is not null and app.user.candidateProfile.fileName is not empty) %}
+										<img src="{{ asset('uploads/experts/' ~ app.user.candidateProfile.fileName) }}" alt="Avatar" width="45px" height="45px" class="rounded-circle">
+									{% elseif (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) and app.user.entrepriseProfile is not null and app.user.entrepriseProfile.fileName is not empty)  %}
+										<img src="{{ asset('uploads/compagnies/' ~ app.user.entrepriseProfile.fileName) }}" alt="Avatar" width="45px" height="45px" class="rounded-circle">
+									{% else %}
+										<img src="{{ app.user.gravatar }}" alt="Avatar" width="45px" height="45px" class="rounded-circle">
+									{% endif %}
+								{% elseif (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) and app.user.candidateProfile is not null and app.user.candidateProfile.fileName is not empty) %}
+									<img src="{{ asset('uploads/experts/' ~ app.user.candidateProfile.fileName) }}" alt="Avatar" width="45px" height="45px" class="rounded-circle">
+								{% elseif (app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) and app.user.entrepriseProfile is not null and app.user.entrepriseProfile.fileName is not empty) %}
+									<img src="{{ asset('uploads/compagnies/' ~ app.user.entrepriseProfile.fileName) }}" alt="Avatar" width="45px" height="45px" class="rounded-circle">
+								{% else %}
+									<img src="{{ asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" width="45px" height="45px" class="rounded-circle">
+								{% endif %}
+							</button>
+							<ul class="dropdown-menu text-small shadow">
+								<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Tableau de bord</a></li>
+								<li><a class="dropdown-item" href="{{ path('app_v2_prestation')}}">Mes prestations</a></li>
+								<li><a class="dropdown-item" href="{{ path('app_v2_dashboard_notification')}}">Mes notifications</a></li>
+								<li><a class="dropdown-item" href="{{ path('app_v2_dashboard')}}">Mon profil</a></li>
+								<li><a class="dropdown-item" href="{{ path('app_v2_contacts')}}">Mon réseau</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item" href="{{ path('app_coworking_main')}}">Coworking</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item" href="{{ path('app_logout')}}">Se déconnecter</a></li>
+							</ul>
+						</div>
+					{% else %}
+						<a href="{{ path('app_login')}}" class="me-3 mt-2">Se connecter</a>
+					{% endif %}
+				</div>
+				{#<div class="col-12 col-sm-6 mx-auto d-block d-md-none">
+					{% if action is defined %}
+						<form action="{{ action }}" class="input-group rounded-pill w-100 mt-3">
+							<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+							<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
+						</form>
+					{% else %}
+						<form action="{{ path('app_olona_talents_candidates') }}" class="input-group rounded-pill w-100 mt-3">
+							<input class="form-control" type="search" name="q" value="{{last_query}}" placeholder="Rechercher">
+							<button class="btn btn-outline-success" type="submit"><i class="bi bi-stars"></i></button>
+						</form>
+					{% endif %}
+				</div>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<div class="col-12 col-sm-6 mx-auto">
+						
+					</div>
+
+					
+				</div>#}
+			</div>
+		</nav>
+	{% endblock %}
+	<div class="loader-container" id="loader-container" style="display:none;">
+		<span class="loader"></span>
+	</div>
+	<section class="">
+		<div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+			<h5 class="mb-0"> Profile </h5>
+			<ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+				<li class="breadcrumb-item position-relative">
+					<a routerlink="v2/candidate/dashboard/" class="d-inline-block position-relative" href="v2/candidate/dashboard/">
+					<i class="ri-home-8-line"></i> Tableau de bord </a>
+				</li>
+				<li class="breadcrumb-item position-relative"> Profil candidat </li>
+			</ol>
+		</div>
+		<div class="profil-banner mb-4">
+			<div class="couverture-banner-bg"></div>
+			<div class="left-infos-profils d-md-flex justify-content-between">
+				<div class="infos-profils d-md-flex justify-content-between">
+					<div class="img-profils">
+						<div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
+					</div>
+					<div class="detail-profils">
+						<div class="nomBlock d-md-flex align-items-center">
+							<div class="Noms__">
+							{{ candidat.candidat.nom }}
+							{{ candidat.candidat.prenom }}
+							</div>
+							<div class="Tarif-indicatif">
+								<span>Tarif indicatif : </span>
+								{% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+									<span class="fw-lighter">Base mensuel :</span>
+									<span class="mx-4 text-strong">{{ candidat.tarifCandidat.simulation.salaireNet|number_format(2, '.', '') }}
+										{{ candidat.tarifCandidat.simulation.devise.symbole }}
+									</span>
+									<span class="small">
+										<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : candidat.tarifCandidat.simulation.id })}}" class="">
+											<i class="bi bi-box-arrow-up-right"></i>
+											Détails
+										</a>
+									</span>
+									{% else %}
+								{% endif %}
+							</div>
+						</div>
+						<div class="TitreBlock">
+							{{ candidat.titre }}
+						</div>
+					</div>
+				</div>
+				<div class="btn-profils">
+					<a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="">Partager mon profil</a>
+					<a routerlink="" class="d-inline-block position-relative btn btn-pdp" href="">Voir mon CV</a>
+				</div>
+			</div>	
+		</div>	
+		<div class="btn_divers mb-4 d-flex">
+			<div class="cv-pdf">
+				{% if candidat.cv is defined and candidat.cv is not null %}
+					<a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" title="Ouvrir" target="_blank">
+						<i class="bi bi-filetype-pdf" style="font-size: 2rem;"></i>
+						<span class="small fw-light">{{ candidat.cv }}</span>
+					</a>
+				{% else %}
+					<i class="bi bi-info-circle" style="font-size: 1.2rem; color: red;"></i>
+					<span class="small fw-light">Vous n'avez pas encore envoyé de CV. <br>Veuillez télécharger votre CV pour améliorer vos chances de sélection.</span>
+				{% endif %}
+			</div>
+			<div class="boost-profil btn-custom_">
+				{{ checkBoost(app.user)|raw }}
+			</div>
+			<div class="recharge-credit btn-custom_">
+				<a href="{{ path('app_v2_credit')}}">
+					<img src="{{ asset('v2/images/dashboard/money.svg')}}" alt="">
+					Recharger mes <span>crédits</span>
+				</a>
+			</div>
+		</div>
+		<div class="biographie-profil mb-4 p-4">
+			<span class="fs-5 mb-3 fw-bold lh-base st-title">A propos de moi</span>
+			{{ candidat.resume|raw}}
+			<br/>
+			<br/>
+			<span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
+			<div class="link-social">
+				<a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/facebook.svg')}}" alt=""></a>
+				<a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/linkedin.svg')}}" alt=""></a>
+				<a routerlink="" href=""><img src="{{ asset('v2/images/dashboard/mail_icon.svg')}}" alt=""></a>
+			</div>
+		</div>
+		<div class="d-md-flex mb-4 bp_">
+			<div class="biographie-profil mb-4 p-4">
+				<span class="fs-5 mb-3 fw-bold lh-base st-title">Informations personnelles</span>
+				<div class="d-md-flex flex-box_">
+					<span class="fs-6 lh-base">Nom complet</span>
+					<div class="d-md-flex fw-bold info-bx flex-box_">
+						{{ candidat.candidat.nom }}
+						{{ candidat.candidat.prenom }}
+					</div>
+				</div>
+				<div class="d-md-flex flex-box_">
+					<span class="fs-6 lh-base">Adresse email</span>
+					<div class="d-md-flex fw-bold info-bx flex-box_">
+						{{ candidat.candidat.email }}
+					</div>
+				</div>	
+				<div class="d-md-flex flex-box_">
+					<span class="fs-6 lh-base">Numéro de téléphone</span>
+					<div class="d-md-flex fw-bold info-bx flex-box_">
+						{{ candidat.candidat.telephone }}			
+					</div>
+				</div>	
+				<div class="d-md-flex flex-box_">
+					<span class="fs-6 lh-base">Référence</span>
+					<div class="d-md-flex fw-bold info-bx flex-box_">
+						{{ generatePseudo(candidat) }}
+					</div>
+				</div>	
+			</div>
+			<div class="biographie-profil mb-4 p-4">
+				<span class="fs-5 fw-bold mb-3 lh-base st-title">Informations professionnelles</span>
+				<div class="d-md-flex flex-box_">
+					<span class="fs-6 lh-base">Titre</span>
+					<div class="d-md-flex fw-bold info-bx flex-box_">
+						{{ candidat.titre }}
+					</div>
+				</div>	
+				<div class="d-md-flex flex-box_">
+					<span class="fs-6 lh-base">Secteur(s) d'activité</span>
+					<div class="d-md-flex fw-bold info-bx flex-box_">
+						{% for secteur in candidat.secteurs %}
+						<span class="badge bg-secteur">{{ secteur.nom }}</span>
+						{% endfor %}
+					</div>
+				</div>	
+				<div class="d-md-flex flex-box_">
+					<span class="fs-6 lh-base">Prétention salariale</span>
+					<div class="d-md-flex fw-bold info-bx flex-box_">
+						{% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+							<span class="fw-lighter">Base mensuel :</span>
+							<span class="mx-4 text-strong">{{ candidat.tarifCandidat.simulation.salaireNet|number_format(2, '.', '') }}
+								{{ candidat.tarifCandidat.simulation.devise.symbole }}
+							</span>
+							<span class="small">
+								<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : candidat.tarifCandidat.simulation.id })}}" class="">
+									<i class="bi bi-box-arrow-up-right"></i>
+									Détails
+								</a>
+							</span>
+							{% else %}
+						{% endif %}
+					</div>
+				</div>				
+			</div>
+		</div>
+		<div class="d-md-flex mb-4 bp_">
+			<div class="biographie-profil mb-4 p-4">
+				<span class="fs-5 mb-3 fw-bold lh-base st-title">Experiences</span>
+				<div class="exp-block">
+					{% if experiences|length > 0 %}
+						{% for experience in experiences %}
+							<div class="experience" data-experience-id="{{ experience.id }}">
+								<span class="justify-content-between align-items-center">
+									{% if experience.enPoste %}
+										Depuis
+										{{ experience.dateDebut|date('M Y')}}
+									{% else %}
+										{{ experience.dateDebut|date('M Y')}}
+										-
+										{{ experience.dateFin|date('M Y')}}
+									{% endif %}
+								</span>
+								<p class="small d-flex justify-content-between align-items-center">
+									<span>
+										<strong>{{ experience.nom }}</strong>
+										chez
+										<strong>{{ experience.entreprise }}</strong>
+										{% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
+											({{ date_difference(experience.dateFin, experience.dateDebut) }})
+										{% endif %}
+
+									</span>
+								</p>
+							</div>
+						{% endfor %}
+					{% else %}
+						<div class="alert fw-lighter" role="alert">
+							<i class="bi bi-info-circle"></i>
+							Aucune expérience renseignée.
+						</div>
+					{% endif %}
+				</div>
+			</div>
+			<div class="biographie-profil mb-4 p-4">
+				<span class="fs-5 fw-bold mb-3 lh-base st-title">Compétences</span>
+				<div class="compt-block">
+					{% if competences|length > 0 %}
+						{% for competence in competences %}
+							<div class="competence" data-competence-id="{{ competence.id }}">
+								<p class="small">
+									{{ competence.nom }}
+									<span class="">
+										{% for i in 1..5 %}
+											{% if i <= competence.note %}
+												<i class="small bi bi-star-fill text-warning"></i>
+											{% else %}
+												<i class="small bi bi-star "></i>
+											{% endif %}
+										{% endfor %}
+									</span>
+								</p>
+							</div>
+						{% endfor %}
+					{% else %}
+						<div class="alert fw-lighter" role="alert">
+							<i class="bi bi-info-circle"></i>
+							Aucune expérience renseignée.
+						</div>
+					{% endif %}
+				</div>				
+			</div>
+		</div>
+		<div class="biographie-profil mb-4 p-4">
+			<span class="fs-5 mb-3 fw-bold lh-base st-title">Langue</span>
+			{% if langages|length > 0 %}
+				<div class="row">
+					{% for langue in langages %}
+						<div class="langue" data-langue-id="{{ langue.id }}">
+							<p class="">
+								{{ isoToEmoji(langue.langue.code) }}
+								{{ langue.langue.nom }}
+								{% for i in 1..5 %}
+									{% if i <= langue.niveau %}
+										<i class="small bi bi-star-fill text-warning"></i>
+									{% else %}
+										<i class="small bi bi-star "></i>
+									{% endif %}
+								{% endfor %}
+							</p>
+						</div>
+					{% endfor %}
+				</div>
+			{% else %}
+				<div class="alert fw-lighter" role="alert">
+					<i class="bi bi-info-circle"></i>
+					Aucune expérience renseignée.
+				</div>
+			{% endif %}
+		</div>
+		{#<div class="content-db_ p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<span class="">
+					<img src="{{ asset('v2/images/7108023.png')}}" alt="icone" style="width:30px;">
+				</span>
+				Bienvenue dans votre espace VIP Olona Talents
+				<span class="">
+					<img src="{{ asset('v2/images/7108023.png')}}" alt="icone" style="width:30px;">
+				</span>
+			</h2>
+
+			<p class="text-center">
+				Multiplier vos opportunités de décrocher l'emploi de vos rêves en remplissant soigneusement ce formulaire. Notre IA de recrutement analysera et optimisera votre profil pour vous proposer les meilleures opportunités.
+			</p>
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			{% endfor %}
+			{% for message in app.flashes('danger') %}
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			{% endfor %}
+
+			<h3 class="fs-5 fw-bolder my-3 my-sm-5 text-center">
+				<span class="">
+					<img src="{{ asset('v2/images/6939131.png')}}" alt="icone" style="width:30px;">
+				</span>
+				1ère chose à faire
+			</h3>
+			{{ form_start(form, {'attr': {'id': 'cvForm', 'class':'text-center', 'data-action': path('app_v2_candidate_dashboard')}})}}
+			<div id="file-upload-container">
+				{{ form_widget(form.cv, {'attr': {'style': 'display:none;'}}) }}
+			</div>
+
+			<p id="file-name" class="mt-2"></p>
+			<button id="upload-button" type="button" class="btn btn-primary btn-lg mb-3 mb-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+				<i class="bi bi-download"></i>
+				Mettre en ligne un cv {% if candidat.isGeneretated %}( {{ creditAmount }} Crédits){% endif %}
+			</button>
+				{% set modalId = 'confirmationModal' %}
+				{% if app.user.credit.total < creditAmount %}
+				{% set modalId = 'lowCreditModal' %}
+				{% endif %}
+			<button id="submit-button" type="button" data-bs-toggle="modal" data-bs-type="upload-cv" data-bs-target="#{{ modalId }}" data-bs-price="{{ creditAmount }} crédits" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase" style="display:none;">
+				<i class="bi bi-save"></i>
+				Soumettre {% if candidat.isGeneretated %}( {{ creditAmount }} Crédits){% endif %}
+			</button>
+			{{ form_end(form)}}
+
+			<p class="text-center">
+				{% if candidat.cv is defined and candidat.cv is not null %}
+					<a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" title="Ouvrir" target="_blank">
+						<i class="bi bi-filetype-pdf" style="font-size: 2rem;"></i>
+						<span class="small fw-light">{{ candidat.cv }}</span>
+					</a>
+				{% else %}
+					<i class="bi bi-info-circle" style="font-size: 1.2rem; color: red;"></i>
+					<span class="small fw-light">Vous n'avez pas encore envoyé de CV. <br>Veuillez télécharger votre CV pour améliorer vos chances de sélection.</span>
+				{% endif %}
+			</p>
+			<div class="mt-4">
+
+				<ul class="nav nav-underline justify-content-center">
+					<li class="nav-item">
+						<a class="nav-link px-3 active" id="view-tab" data-bs-toggle="tab" href="#view">Voir le profil public</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-3" id="edit-tab" data-bs-toggle="tab" href="#edit">Modifier votre profil</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link px-3" id="history-tab" data-bs-toggle="tab" href="#history">Historique d'activité</a>
+					</li>
+				</ul>
+
+				<!-- Contenu des onglets -->
+				<div class="tab-content mt-3">
+
+					<div class="tab-pane fade" id="edit">
+						{% if candidat.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_VALID')) %}
+							<div class="alert alert-warning alert-dismissible fade show small" role="alert">
+								En modifiant votre profil, celui-ci sera réexaminé avant validation.
+								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+						{% endif %}
+						{{ form_start(form_one, {'attr': {'data-turbo': 'false', 'id': 'formOne'}}) }}
+
+						<div class="row">
+
+							<div class="col-12 col-sm-6">
+
+								<h3 class="fs-5 text-uppercase my-3">
+									<i class="bi bi-person-circle"></i>
+									Informations personnelles
+								</h3>
+
+								<span class="fs-6 fw-bold lh-base">Votre nom complet</span><br>
+								<span class="fw-lighter lh-1 small">Indiquez votre prénom et votre nom de famille.</span>
+								<div class="row">
+									<div class="col">
+										{{ form_widget(form_one.candidat.nom, {'attr': {'class': 'form-control mb-4'}}) }}
+										{{ form_errors(form_one.candidat.nom) }}
+									</div>
+									<div class="col">
+										{{ form_widget(form_one.candidat.prenom, {'attr': {'class': 'form-control mb-4'}}) }}
+										{{ form_errors(form_one.candidat.prenom) }}
+									</div>
+								</div>
+
+								<span class="fs-6 fw-bold lh-base">Adresse Email</span><br>
+								<span class="fw-lighter lh-1 small">Utilisez une adresse email que vous consultez régulièrement pour ne manquer aucune opportunité.</span>
+								<div class="row">
+									<div class="col">
+										{{ form_widget(form_one.candidat.email, {'attr': {'class': 'form-control mb-4'}}) }}
+										{{ form_errors(form_one.candidat.email) }}
+									</div>
+								</div>
+
+								<span class="fs-6 fw-bold lh-base">Numéro de Téléphone</span><br>
+								<span class="fw-lighter lh-1 small">Fournissez un numéro de téléphone où vous pouvez être facilement contacté.</span>
+								<div class="row">
+									<div class="col">
+										{{ form_widget(form_one.candidat.telephone, {'attr': {'class': 'form-control mb-4'}}) }}
+										{{ form_errors(form_one.candidat.telephone) }}
+									</div>
+								</div>
+
+								<h3 class="fs-5 text-uppercase my-3">
+									<i class="bi bi-person-badge"></i>
+									Informations professionnelle
+								</h3>
+
+								<span class="fs-6 fw-bold lh-base">Titre</span><br>
+								<span class="fw-lighter lh-1 small">Renseigner votre titre professionnel.</span>
+								<div class="row">
+									<div class="col">
+										{{ form_widget(form_one.titre, {'attr': {'class': 'form-control mb-4'}}) }}
+										{{ form_errors(form_one.titre) }}
+									</div>
+								</div>
+
+								<span class="fs-6 fw-bold lh-base">Secteur(s) d'activité</span><br>
+								<span class="fw-lighter lh-1 small">Vos secteurs d'activité professionnel.</span>
+								<div class="row">
+									<div class="col">
+										{{ form_widget(form_one.secteurs, {'attr': {'class': 'form-control mb-4'}}) }}
+										{{ form_errors(form_one.secteurs) }}
+									</div>
+								</div>
+
+							</div>
+
+							<div class="col-12 col-sm-6">
+								<div class="row my-4 justify-content-center">
+									<div class="col-auto">
+										<div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form_one.vars.data.fileName ? asset('uploads/experts/' ~ form_one.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}');cursor:pointer;" alt="Avatar">
+											<div class="overlay-text">Changer la photo</div>
+										</div>
+										{{ form_widget(form_one.file) }}
+										{{ form_errors(form_one.file) }}
+									</div>
+								</div>
+								<div class="row my-4 align-items-center">
+									<span class="fs-6 fw-bold lh-base">Biographie</span>
+                                    {{ form_widget(form_one.resume) }}
+								</div>
+							</div>
+
+							<div class="row my-3">
+								<div class="col-md-6 col-sm-12">
+									<h5 class="fs-4 fw-bold">
+										<i class="bi bi-graph-up"></i>
+										Experiences ({{ experiences|length }})
+                                    </h5>
+								</div>
+								<div class="col-md-6 col-sm-12">
+
+								</div>
+							</div>
+							<div class="experience-form">
+							{{ form_label(form_one.experiences) }}
+							{{ form_errors(form_one.experiences) }}
+							{{ form_widget(form_one.experiences) }} 
+							</div>
+
+							<div class="row my-3">
+								<div class="col-md-6 col-sm-12">
+									<h5 class="fs-4 fw-bold">
+										<i class="bi bi-person-fill-gear mx-2 h5"></i>
+										Competences ({{ competences|length }})</h5>
+								</div>
+								<div class="col-md-6 col-sm-12">
+
+								</div>
+							</div>
+							<div class="experience-form">
+							{{ form_label(form_one.competences) }}
+							{{ form_errors(form_one.competences) }}
+							{{ form_widget(form_one.competences) }} 
+							</div>
+							<div class="row my-3">
+								<div class="col-md-6 col-sm-12">
+									<h5 class="fs-4 fw-bold">
+										<i class="bi bi-globe-europe-africa mx-2 h5"></i>
+										Langues ({{ langages|length }})</h5>
+								</div>
+								<div class="col-md-6 col-sm-12">
+									<div class="">
+									</div>
+								</div>
+							</div>
+							<div class="row">
+							<div class="experience-form">
+							{{ form_label(form_one.langages) }}
+							{{ form_errors(form_one.langages) }}
+							{{ form_widget(form_one.langages) }} 
+							</div>
+							</div>
+							<hr class="mb-4">
+
+						</div>
+
+						<div style="display:none">
+							{{ form_widget(form_one) }}
+						</div>
+						<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+							<i class="bi bi-save"></i>
+							Enregister
+						</button>
+
+						{{ form_end(form_one, { 'render_rest': false }) }}
+					</div>
+
+					<div class="tab-pane fade show active" id="view">
+						<div class="row">
+
+							<div class="col-12 col-sm-6">
+
+								<h3 class="fs-5 text-uppercase my-3">
+									<i class="bi bi-person-circle"></i>
+									Informations personnelles
+								</h3>
+								<span class="fs-6 fw-bold lh-base">Nom complet</span><br>
+								<div class="row mb-4">
+									<div class="col">
+										{{ candidat.candidat.nom }}
+										{{ candidat.candidat.prenom }}
+									</div>
+								</div>
+								<span class="fs-6 fw-bold lh-base">Adresse email</span><br>
+								<div class="row mb-4">
+									<div class="col">
+										{{ candidat.candidat.email }}
+									</div>
+								</div>
+								<span class="fs-6 fw-bold lh-base">Numéro de téléphone</span><br>
+								<div class="row mb-4">
+									<div class="col-md-6 col-sm-12">
+										{{ candidat.candidat.telephone }}
+									</div>
+								</div>
+								<span class="fs-6 fw-bold lh-base">Référence</span><br>
+								<div class="row mb-4">
+									<div class="col-md-6 col-sm-12">
+										{{ generatePseudo(candidat) }}
+									</div>
+								</div>
+
+								<h3 class="fs-5 text-uppercase my-3">
+									<i class="bi bi-person-badge"></i>
+									Informations professionnelle
+								</h3>
+
+								<span class="fs-6 fw-bold lh-base">Titre</span><br>
+								<div class="row mb-4">
+									<div class="col">
+										{{ candidat.titre }}
+									</div>
+								</div>
+
+								<span class="fs-6 fw-bold lh-base">Secteur(s) d'activité</span><br>
+								<div class="row mb-4">
+									<div class="col">
+									{% for secteur in candidat.secteurs %}
+										<span class="badge bg-primary">{{ secteur.nom }}</span>
+									{% endfor %}
+									</div>
+								</div>
+
+								<span class="fs-6 fw-bold lh-base">Prentention salariale</span><br>
+								<div class="row mb-4">
+									<div class="col">
+										{% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+											<span class="fw-lighter">Base mensuel :</span>
+											<span class="mx-4 text-strong">{{ candidat.tarifCandidat.simulation.salaireNet|number_format(2, '.', '') }}
+												{{ candidat.tarifCandidat.simulation.devise.symbole }}
+											</span>
+											<span class="small">
+												<a href="{{ path('app_dashboard_employes_simulation_view', {'id' : candidat.tarifCandidat.simulation.id })}}" class="">
+													<i class="bi bi-box-arrow-up-right"></i>
+													Détails
+												</a>
+											</span>
+											{% else %}
+										{% endif %}
+									</div>
+								</div>
+
+								<h3 class="fs-5 text-uppercase my-3">
+									<i class="bi bi-suitcase-lg"></i>
+									Informations liées à votre CV
+								</h3>
+
+								<div id="experience-skill">
+									<h4 class="fs-6 mt-5 fw-bolder">- Experiences</h4>
+									{% if experiences|length > 0 %}
+										{% for experience in experiences %}
+											<div class="experience" data-experience-id="{{ experience.id }}">
+												<span class="justify-content-between align-items-center">
+													{% if experience.enPoste %}
+														Depuis
+														{{ experience.dateDebut|date('M Y')}}
+													{% else %}
+														{{ experience.dateDebut|date('M Y')}}
+														-
+														{{ experience.dateFin|date('M Y')}}
+													{% endif %}
+												</span>
+												<p class="small d-flex justify-content-between align-items-center">
+													<span>
+														<strong>{{ experience.nom }}</strong>
+														chez
+														<strong>{{ experience.entreprise }}</strong>
+														{% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
+															({{ date_difference(experience.dateFin, experience.dateDebut) }})
+														{% endif %}
+
+													</span>
+												</p>
+											</div>
+										{% endfor %}
+									{% else %}
+										<div class="alert fw-lighter" role="alert">
+											<i class="bi bi-info-circle"></i>
+											Aucune expérience renseignée.
+										</div>
+									{% endif %}
+
+									<h4 class="fs-6 mt-5 fw-bolder">- Compétences</h4>
+									{% if competences|length > 0 %}
+										{% for competence in competences %}
+											<div class="competence" data-competence-id="{{ competence.id }}">
+												<p class="small">
+													{{ competence.nom }}
+													<span class="">
+														{% for i in 1..5 %}
+															{% if i <= competence.note %}
+																<i class="small bi bi-star-fill text-warning"></i>
+															{% else %}
+																<i class="small bi bi-star "></i>
+															{% endif %}
+														{% endfor %}
+													</span>
+												</p>
+											</div>
+										{% endfor %}
+									{% else %}
+										<div class="alert fw-lighter" role="alert">
+											<i class="bi bi-info-circle"></i>
+											Aucune expérience renseignée.
+										</div>
+									{% endif %}
+								</div>
+
+								<h4 class="fs-6 mt-5 fw-bolder">- Langues</h4>
+								{% if langages|length > 0 %}
+									<div class="row">
+										{% for langue in langages %}
+											<div class="langue" data-langue-id="{{ langue.id }}">
+												<p class="">
+													{{ isoToEmoji(langue.langue.code) }}
+													{{ langue.langue.nom }}
+													{% for i in 1..5 %}
+														{% if i <= langue.niveau %}
+															<i class="small bi bi-star-fill text-warning"></i>
+														{% else %}
+															<i class="small bi bi-star "></i>
+														{% endif %}
+													{% endfor %}
+												</p>
+											</div>
+										{% endfor %}
+									</div>
+								{% else %}
+									<div class="alert fw-lighter" role="alert">
+										<i class="bi bi-info-circle"></i>
+										Aucune expérience renseignée.
+									</div>
+								{% endif %}
+
+							</div>
+
+							<div class="col-12 col-sm-6">
+								<div class="row my-4 justify-content-center">
+									<div class="col-auto">
+										<div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');" alt="Avatar"></div>
+									</div>
+								</div>
+								
+								<div class="text-center my-4" id="checkBoostProfile">
+									{{ checkBoost(app.user)|raw }}
+								</div>
+
+								<div class="row my-4 align-items-center">
+									<div class="h-100 p-4 border rounded-3">
+										<span class="fs-5 fw-bold lh-base text-uppercase">Biographie</span>
+										{{ candidat.resume|raw}}
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="history">
+					{% include "v2/activity_log/_list_activities.html.twig" with {activities: activities} %}
+					</div>
+				</div>
+
+			</div>
+
+			<div class="">
+				<h3 class="fs-5 fw-bolder mt-3 mt-sm-5 text-center">
+					<span class="u-file-icon u-icon">
+						<img src="{{ asset('v2/images/3221746.png')}}" alt="icone" style="width:32px;">
+					</span>
+					Conseils pour Compléter Votre Profil
+				</h3>
+				<ul class="col-12 col-sm-8 mx-auto">
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								Prenez votre temps pour corriger chaque section de manière détaillée et précise.
+							</div>
+						</div>
+					</li>
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								Relisez votre profil avant de le soumettre pour éviter les erreurs.
+							</div>
+						</div>
+					</li>
+					<li class="list-group-item mx-2">
+						<div class="row mb-3">
+							<div class="col-1">
+								<i class="bi bi-check h5 text-danger"></i>
+							</div>
+							<div class="col-11">
+								Les modifications que vous apporterez seront soumis aux modérateurs pour validation.
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>#}
+	</section>
+	{#Page dashboard#}
+<script>
+    document.querySelector('.profile-img').addEventListener('click', function() {
+        document.getElementById('{{ form_one.file.vars.id }}').click();
+    });
+
+    document.getElementById('{{ form_one.file.vars.id }}').addEventListener('change', function(event) {
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.profile-img').style.backgroundImage = 'url(' + e.target.result + ')';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    });
+	document.addEventListener('DOMContentLoaded', function() {
+		document.querySelector('.nav-item').addEventListener('click', function() {
+			document.querySelector('.sub-nav-pills').classList.toggle('visible');
+		});
+	});
+</script>
+
+{% include "tuto_credits_candidate.html.twig" %}
+
+
+{% endblock %}

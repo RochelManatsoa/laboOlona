@@ -12,6 +12,9 @@ class EditedCvType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        if ($options['form_id']) {
+            $builder->setAttribute('id', $options['form_id']);
+        }
         $builder
             ->add('cvEdit', FileType::class, [
                 'label' => false,
@@ -37,6 +40,7 @@ class EditedCvType extends AbstractType
     {
         $resolver->setDefaults([
             'csrf_protection' => false,
+            'form_id' => null,
         ]);
     }
 }

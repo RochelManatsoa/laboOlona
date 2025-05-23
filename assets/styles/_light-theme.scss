@@ -1,0 +1,118 @@
+@import 'variables';
+
+body.bootstrap-light {
+    background-color: $light-bg;
+    color: $light-text;
+    a:not(.btn-primary, .nav-link, .text-white) {
+        color: $link-light !important;
+    }
+    a .btn-primary, a .nav-link, a .text-white{
+        color: #ffffff !important;
+    }
+
+    .nav-link .link-text {
+        transition: border-bottom 0.3s ease-in-out; 
+        border-bottom: 2px solid transparent; 
+    }
+    
+    .nav-link:hover .link-text {
+        border-bottom: 3px solid $link-light; 
+    }
+    
+    .underline .link-text {
+        border-bottom: 3px solid $link-light; 
+    }
+
+    .card, .offcanvas {
+        background-color: #ffffff;
+        color: $link-light;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .shadow-custom {
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+
+    .carousel-indicators button {
+        background-color: #343a40;
+    }
+
+    .carousel-indicators .active {
+        background-color: #0d6efd;
+    }
+
+    .table {
+        background-color: #f8f9fa !important;
+        color: #343a40 !important;
+    }
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) {
+        --bs-table-accent-bg: rgba(0, 0, 0, 0.05) !important;
+        color: inherit !important; // Optional if you need to over-ride text color
+    }
+
+    .table > thead > tr > th {
+        background-color: #e9ecef !important;
+        color: #343a40 !important;
+    }
+
+    .pagination {
+        .page-link {
+            color: $dark !important; // Texte en noir du thème clair
+            background-color: #f8f9fa;
+            border-color: #6c757d;
+
+            &:hover {
+                background-color: darken(#f8f9fa, 5%);
+                border-color: darken(#6c757d, 5%);
+            }
+
+            &.active {
+                color: #ffffff;
+                background-color: #0d6efd;
+                border-color: #0d6efd;
+            }
+        }
+    }
+    .modal-content {
+        background-color: white;
+        color: black;
+    }
+    .btn-light {
+        background-color: white;
+        color: black;
+    }
+    .toast {
+        background-color: #343a40;
+        color: #f8f9fa;
+
+        .toast-header {
+            background-color: #444c57;
+            color: #ffffff;
+        }
+    }
+    .loader-container {    
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .cookie-consent {
+        position: fixed;
+        color: #ffffff;
+        background-color: #000000;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000; /* High z-index to stay on top */
+    }
+}

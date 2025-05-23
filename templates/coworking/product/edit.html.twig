@@ -1,0 +1,31 @@
+{% extends 'base_coworking.html.twig' %}
+
+{% block title %}Détail du produit{% endblock %}
+
+
+{% block paralax %}{% endblock %}
+
+{% block admin %}
+  {% if is_granted('ROLE_ADMIN') %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container my-5">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+            <div class="p-3 p-lg-5 pt-lg-3">
+                <h1 class="h3">Modifier un produit</h1>
+
+                {{ include('coworking/product/_form.html.twig', {'button_label': 'Modifier'}) }}
+                <div class="d-flex justify-content-end w-100">
+                    <a class="btn btn-primary px-5 rounded-pill" href="{{ path('app_product_index') }}"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+                    {{ include('coworking/product/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

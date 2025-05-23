@@ -1,93 +1,117 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_page.html.twig' %}
+
+{% block title %}Conditions Générales d'Utilisations{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Découvrez les Conditions Générales d'Utilisation de https://olona-talents.com/. Informez-vous sur les termes, droits et obligations liés à l'utilisation de nos services en ligne. Lisez attentivement pour garantir une utilisation conforme et sécurisée.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement, travail, emploi, talents, candidat, recruteur, offres, agence, olona, olona talents, olona talents agence, talents agence, agence talents, candidature, candidature agence, candidature olona, candidature olona talents">
+<meta property="og:title" content="Conditions Générales d'Utilisations">
+<meta property="og:description" content="Découvrez les Conditions Générales d'Utilisation de https://olona-talents.com/. Informez-vous sur les termes, droits et obligations liés à l'utilisation de nos services en ligne. Lisez attentivement pour garantir une utilisation conforme et sécurisée.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+
 {% block body %}
-<section id="terms" class="my-5" style="background-color: black;">
+<header class="header-home">
+    <div class="page-content">
+        <div class="home-banner-section bg-cover" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
+            <div class="home-inner-section">
+                <div class="mid-section">
+                    <h1 class="title-large">{{ 'app_home.terms.h1'|trans }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<section id="terms">
     <div class="container my-5 d-flex flex-column justify-content-center">
         <div class="row my-4">
             <div class="col d-flex flex-column justify-content-center">
-                <h1 class="text-white text-center display-2">{{ 'app_home.terms.h1'|trans }}</h1>
                 <div class="">
-                    <p class="text-white fs-6">{{ 'app_home.terms.section1.p'|trans |raw }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.terms.section1.p1'|trans |raw }}</p>
+                    <p class="fs-6">{{ 'app_home.terms.section1.p'|trans |raw }}</p>
+                    <p class="fs-6">{{ 'app_home.terms.section1.p1'|trans |raw }}</p>
                 </div>
 
-                <h2 class="text-white display-6 my-3">{{ 'app_home.terms.section2.h2'|trans | raw }}</h2>
+                <h2 class="display-6 my-3">{{ 'app_home.terms.section2.h2'|trans | raw }}</h2>
                 <div class="">
-                    <h3 class="text-white display-7 my-3">{{ 'app_home.terms.section2.h3'|trans | raw }}</h3>
-                    <p class="text-white fs-6">{{ 'app_home.terms.section2.p'|trans({
-                        '%terms_url%': path('app_home_terms'),
+                    <h3 class="display-7 my-3">{{ 'app_home.terms.section2.h3'|trans | raw }}</h3>
+                    <p class="fs-6">{{ 'app_home.terms.section2.p'|trans({
+                        '%home_url%': path('app_home'),
                     })|raw }}</p>
-                    <h3 class="text-white display-7 my-3">{{ 'app_home.terms.section3.h3'|trans | raw }}</h3>
-                    <p class="text-white fs-6">{{ 'app_home.terms.section3.p'|trans({
-                        '%terms_url%': path('app_home_terms'),
+                    <h3 class="display-7 my-3">{{ 'app_home.terms.section3.h3'|trans | raw }}</h3>
+                    <p class="fs-6">{{ 'app_home.terms.section3.p'|trans({
+                        '%home_url%': path('app_home'),
                     })|raw }}</p>
-                    <ul class="text-white fs-6">
+                    <ul class="fs-6">
                         <li>
                             {{ 'app_home.terms.section3.li0'|trans({
-                                '%terms_url%': path('app_home_terms'),
+                                '%home_url%': path('app_home'),
                             })|raw }}
                         </li><br>
                         <li>
                             {{ 'app_home.terms.section3.li1'|trans({
-                                '%terms_url%': path('app_home_terms'),
+                                '%home_url%': path('app_home'),
                             })|raw }}
                         </li><br>
                         <li>
                             {{ 'app_home.terms.section3.li2'|trans({
-                                '%terms_url%': path('app_home_terms'),
+                                '%home_url%': path('app_home'),
                             })|raw }}
                         </li><br>
                         <li>
                             {{ 'app_home.terms.section3.li3'|trans({
-                                '%terms_url%': path('app_home_terms'),
+                                '%home_url%': path('app_home'),
                             })|raw }}
                         </li><br>
                         <li>
                             {{ 'app_home.terms.section3.li4'|trans({
-                                '%terms_url%': path('app_home_terms'),
+                                '%home_url%': path('app_home'),
                             })|raw }}
                         </li><br>
                         <li>
                             {{ 'app_home.terms.section3.li5'|trans({
-                                '%terms_url%': path('app_home_terms'),
+                                '%model_url%': 'https://www.privacypolicies.com/blog/privacy-policy-template/',
                             })|raw }}
                         </li><br>
                         <li>
                             {{ 'app_home.terms.section3.li6'|trans({
-                                '%terms_url%': path('app_home_terms'),
+                                '%home_url%': path('app_home'),
                             })|raw }}
                         </li><br>
                         <li>
                             {{ 'app_home.terms.section3.li7'|trans({
-                                '%terms_url%': path('app_home_terms'),
+                                '%home_url%': path('app_home'),
                             })|raw }}
                         </li><br>
                         <li>
                             {{ 'app_home.terms.section3.li8'|trans({
-                                '%terms_url%': path('app_home_terms'),
+                                '%home_url%': path('app_home'),
                             })|raw }}
                         </li><br>
                     </ul>
                 </div>
 
-                <h2 class="text-white display-6 my-3">{{ 'app_home.privacy.section5.h2'|trans }}</h2>
+                <h2 class="display-6 my-3">{{ 'app_home.privacy.section5.h2'|trans }}</h2>
                 <div class="">
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section5.p'|trans }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section5.p1'|trans({
-                        '%terms_url%': path('app_home_terms'),
+                    <p class="fs-6">{{ 'app_home.privacy.section5.p'|trans }}</p>
+                    <p class="fs-6">{{ 'app_home.privacy.section5.p1'|trans({
+                        '%home_url%': path('app_home'),
                     })|raw }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section5.p3'|trans }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section5.p4'|trans({
-                        '%terms_url%': path('app_home_terms'),
+                    <p class="fs-6">{{ 'app_home.privacy.section5.p3'|trans }}</p>
+                    <p class="fs-6">{{ 'app_home.privacy.section5.p4'|trans({
+                        '%home_url%': path('app_home'),
                     })|raw }}</p>
                 </div>
 
-                <h2 class="text-white display-6 my-3">{{ 'app_home.privacy.section6.h2'|trans }}</h2>
+                <h2 class="display-6 my-3">{{ 'app_home.privacy.section6.h2'|trans }}</h2>
                 <div class="">
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section6.p'|trans }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section6.p1'|trans({
-                        '%terms_url%': path('app_home_terms'),
+                    <p class="fs-6">{{ 'app_home.privacy.section6.p'|trans }}</p>
+                    <p class="fs-6">{{ 'app_home.privacy.section6.p1'|trans({
+                        '%home_url%': path('app_home'),
                     })|raw }}</p>
-                    <p class="text-white fs-6">{{ 'app_home.privacy.section6.p2'|trans }}</p>
+                    <p class="fs-6">{{ 'app_home.privacy.section6.p2'|trans }}</p>
                 </div>
             </div>
         </div>
@@ -95,3 +119,4 @@
 </section>
 
 {% endblock %}
+{% block preview %}{% endblock %}

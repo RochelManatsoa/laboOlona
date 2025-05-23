@@ -1,0 +1,256 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}CVthèque{% endblock %}
+
+{% block body %}
+
+    {% set filter_title = app.request.query.get('filter-title', filterTitle) %}
+    {% set filter_gender = app.request.query.get('filter-gender', '') %}
+    {% set filter_province = app.request.query.get('filter-province', '') %}
+    {% set filter_experience_years = app.request.query.get('filter-experience-years', '') %}
+    {% set isPrem = '' %}
+    <section class="recruteur-container">
+        <div class="recruteur-block d-block p-5 mb-4">
+            <div class="recruteur-top-item recruteur-filter">
+                <h1>CVthéque</h1>
+                <form id="filter-form" action="{{ path('app_white_label_client1_recruiter_cvtheque')}}" class="form-search filter-listing-form-wrapper" method="GET">
+                    <div class="filter-listing-form">
+                        <div class="main-inner clearfix">
+                            <div class="content-main-inner">
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-10  col-sm-8 has-border">
+                                        <div class="form-group-inner has-icon">
+                                            <i class="bi bi-search"></i>
+                                            <input type="text" name="filter-title" class="form-control " value="{{filter_title}}" placeholder="profil recherche, mot cle">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-2  col-sm-4 wrapper-submit flex-middle">
+                                        <button class="btn-submit btn btn-inverse" type="submit">Trouver des candidats</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {#Sous filtre - il s'affiche après la première recherche pour une recherche plus poussée#}
+                        <div class="advance-search-wrapper {{isPrem}}">
+                            <h2>Une recherche plus précise ?</h2>
+                            <div class="advance-search-wrapper-fields">
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-4 has-border">
+                                        <div class="form-group-inner form-group-genre">
+                                            <select name="filter-gender" class="form-control">
+                                                <option value="">Genres</option>
+                                                <option value="MALE" {{ filter_gender == 'MALE' ? 'selected' }}>Masculin</option>
+                                                <option value="FEMALE" {{ filter_gender == 'FEMALE' ? 'selected' }}>Féminin</option>
+                                                <option value="OTHER" {{ filter_gender == 'OTHER' ? 'selected' }}>Autre</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-4 has-border">
+                                        <div class="form-group-inner form-group-degree">
+                                            <select name="filter-province" class="form-control select2-hidden-accessible" data-placeholder="Province" tabindex="-1" aria-hidden="true">
+                                                <option value="">Province</option>
+                                                {% for prov in ['Antananarivo','Fianarantsoa','Toamasina','Mahajanga','Toliara','Antsiranana'] %}
+                                                    <option value="{{ prov }}" {{ filter_province == prov ? 'selected' : '' }}>{{ prov }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-4">
+                                        <div class="form-group-inner form-group-year">
+                                            <select name="filter-experience-years" class="form-control select2-hidden-accessible" data-placeholder="Experiences" tabindex="-1" aria-hidden="true">
+                                                <option value="">Expérience</option>
+                                                <option value="0" {{ filter_experience_years == '0' ? 'selected' }}>Moins d'un an</option>
+                                                <option value="2" {{ filter_experience_years == '2' ? 'selected' }}>2 ans</option>
+                                                <option value="3" {{ filter_experience_years == '3' ? 'selected' }}>3 ans</option>
+                                                <option value="4" {{ filter_experience_years == '4' ? 'selected' }}>4 ans</option>
+                                                <option value="5" {{ filter_experience_years == '5' ? 'selected' }}>5 ans et +</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="recruteur-block list-profil d-block p-5 mb-4">
+            <div class="layout-profil-container">
+                <div class="d-flex ordering-wrapper mb-4 justify-content-between">
+                    <div class="results-count">Affichage de 1 - {{ searchResults|length }} sur {{ totalResults }} résultats</div>								
+                    <form id="sizeForm" method="get">
+                        <div class="form-group d-flex align-items-center">
+                            <h4 class="section-head-small">Afficher par</h4>
+                            <div class="dropdown bootstrap-select">
+                                <select id="selectSize" name="size" class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size" tabindex="null">
+                                    <option value="10">10</option>
+                                    <option value="20" {% if size == 20 %}selected{% endif %}>20</option>
+                                    <option value="30" {% if size == 30 %}selected{% endif %}>30</option>
+                                    <option value="40" {% if size == 40 %}selected{% endif %}>40</option>
+                                    <option value="50" {% if size == 50 %}selected{% endif %}>50</option>
+                                    <option value="60" {% if size == 60 %}selected{% endif %}>60</option>
+                                </select>
+                                <input type="hidden" name="filter-title" value="{{filter_title}}">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="item_profil-container">
+                    <div class="row">
+                        {% for item in searchResults %}
+                            {% if item.status is same as(constant('App\\Entity\\CandidateProfile::STATUS_FEATURED')) %}
+                            <div class="col-xl-6">
+                                <div class="candidate-card">
+                                    <div class="candidate-card-item">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="candidate-photo">
+                                                <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.id })}}"><img src="{{ item.fileName ? asset('uploads/experts/' ~ item.fileName) : asset('v2/images/dashboard/.svg')}}" alt="Avatar"></a>
+                                            </div>
+                                            <div class="candidate-info-content">
+                                                <h2>
+                                                    {{ generatePseudo(item)}}
+                                                    {% if isLikedByRecruiter(entreprise, item.id) %}
+                                                    <span class="favoris-add" id="row_star_favorite_{{ item.id }}"><i class="bi bi-star-fill"></i></span>
+                                                    {% else %}
+                                                    <span class="favoris-add" id="row_star_favorite_{{ item.id }}"><i class="bi bi-star"></i></span>
+                                                    {% endif %}
+                                                    <span class="diamond_">
+                                                        <img src="{{ asset('v2/images/dashboard/diamond_icon.svg')}}" alt="">
+                                                        <div class="popover">
+                                                            <div class="popover-content">Profil PREMIUM</div>
+                                                        </div>
+                                                    </span>
+                                                </h2>
+                                                <div class="featured d-md-flex align-items-center">{{ item.titre }} <span class="certificated">Certifié</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="infos-middle d-flex align-items-center">
+                                            <div class="ville-info"><i class="bi bi-pin"></i> {{ show_country(item.localisation) }}</div>
+                                            <div class="pretention-info"><i class="bi bi-cash-coin"></i> {{ item.tarifCandidat }}</div>
+                                        </div>
+                                        <div class="infos-desc">
+                                            {% if item.metaDescription is defined and item.metaDescription is not null %}
+                                                {{ item.metaDescription }}
+                                            {% endif %}
+                                        </div>
+                                        <div class="infos-footer d-flex align-items-center">
+                                            <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.id })}}">Voir son profil</a>
+                                            <div id="row_favorite_{{ item.id }}">
+                                                {% if isLikedByRecruiter(entreprise, item.id) %}
+                                                    <button type="button" class="btn btn-info remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':item.id}) }}"><i class="bi bi-star-fill me-2"></i>Effacer de mes favoris</button>
+                                                {% else %}
+                                                    <button type="button" class="btn btn-primary text-primary add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item.id}) }}"><i class="bi bi-star me-2"></i>Ajouter à mes favoris</button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="col-xl-6">
+                                <div class="candidate-card">
+                                    <div class="candidate-card-item">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="candidate-photo">
+                                                <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.id })}}"><img src="{{ item.fileName ? asset('uploads/experts/' ~ item.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                                            </div>
+                                            <div class="candidate-info-content">
+                                                <h2>
+                                                    {{ generatePseudo(item)}}
+                                                    {% if isLikedByRecruiter(entreprise, item.id) %}
+                                                    <span class="favoris-add" id="row_star_favorite_{{ item.id }}"><i class="bi bi-star-fill"></i></span>
+                                                    {% else %}
+                                                    <span class="favoris-add" id="row_star_favorite_{{ item.id }}"><i class="bi bi-star"></i></span>
+                                                    {% endif %}
+                                                </h2>
+                                                <div class="featured d-md-flex align-items-center">{{ item.titre }} <span class="certificated">Certifié</span></div>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="infos-middle d-flex align-items-center">
+                                            <div class="ville-info"><i class="bi bi-pin"></i> {{ show_country(item.localisation) }}</div>
+                                            <div class="pretention-info"><i class="bi bi-cash-coin"></i> {{ item.tarifCandidat }}</div>
+                                        </div>
+                                        <div class="infos-desc">
+                                            {% if item.metaDescription is defined and item.metaDescription is not null %}
+                                                {{ item.metaDescription }}
+                                            {% endif %}
+                                        </div>
+                                        <div class="infos-footer d-flex align-items-center">
+                                            <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.id })}}">Voir son profil</a>
+                                            <div id="row_favorite_{{ item.id }}">
+                                                {% if isLikedByRecruiter(entreprise, item.id) %}
+                                                    <button type="button" class="btn btn-info remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':item.id}) }}"><i class="bi bi-star-fill me-2"></i>Effacer de mes favoris</button>
+                                                {% else %}
+                                                    <button type="button" class="btn btn-primary text-primary add-to-favorites" data-href="{{ path('app_v2_recruiter_favorite_add_candidate', {'id':item.id}) }}"><i class="bi bi-star me-2"></i>Ajouter à mes favoris</button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pagination -->
+        {% if totalPages > 1 %}
+        <nav aria-label="Pagination">
+            <ul class="pagination justify-content-center">
+                <!-- Lien "Précédent" -->
+                <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
+                    <a class="page-link" href="{{
+                        path('app_tableau_de_bord_entreprise_cvtheque', {
+                            'page': currentPage - 1,
+                            'size': size,
+                            'filter-title': filter_title,
+                            'filter-gender': filter_gender,
+                            'filter-province': filter_province,
+                            'filter-experience-years': filter_experience_years,
+                        })
+                    }}">Précédent</a>
+                </li>
+
+                <!-- Liens des pages -->
+                {% for i in 1..totalPages %}
+                {% if totalPages <= 6 or i == 1 or i == totalPages or (i >= currentPage - 2 and i <= currentPage + 2) %}
+                    <li class="page-item {% if i == currentPage %}active{% endif %}">
+                        <a class="page-link" href="{{
+                            path('app_tableau_de_bord_entreprise_cvtheque', {
+                                'page': i,
+                                'size': size,
+                                'filter-title': filter_title,
+                                'filter-gender': filter_gender,
+                                'filter-province': filter_province,
+                                'filter-experience-years': filter_experience_years,
+                            })
+                        }}">{{ i }}</a>
+                    </li>
+                {% elseif i == currentPage - 3 or i == currentPage + 3 %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+                <!-- Lien "Suivant" -->
+                <li class="page-item {% if currentPage == totalPages %}disabled{% endif %}">
+                    <a class="page-link" href="{{
+                        path('app_tableau_de_bord_entreprise_cvtheque', {
+                            'page': currentPage + 1,
+                            'size': size,
+                            'filter-title': filter_title,
+                            'filter-gender': filter_gender,
+                            'filter-province': filter_province,
+                            'filter-experience-years': filter_experience_years,
+                        })
+                    }}">Suivant</a>
+                </li>
+            </ul>
+        </nav>
+        {% endif %}
+
+    </section>
+{% endblock %}

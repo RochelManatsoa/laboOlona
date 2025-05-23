@@ -5,142 +5,141 @@
  * (and its CSS file) in your base layout (base.html.twig).
  */
 
-// any CSS you import will output into a single css file (app.css in this case)
-import './styles/app.scss';
-import 'bootstrap';
+import './styles/app.scss'; 
 import './bootstrap.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import $ from 'jquery';
+import { Calendar } from 'fullcalendar';
+import { Modal } from 'bootstrap';
+require('tom-select/dist/css/tom-select.css');
 
 
-$(function() {
-    $('[data-bs-toggle="tooltip"]').tooltip();
-    $('#experience').on('shown.bs.modal', function () {
-        // Fonction pour gérer la logique de chaque groupe de champs
-        function handleFieldGroup(baseId) {
-            for (let i = 0; i < 10; i++) {  // Ajustez le nombre selon vos besoins
-                const $currentlyCheckbox = $(`#${baseId}_${i}_enPoste`);
-                const $endDateFieldContainer = $(`#${baseId}_${i}_dateFin`).closest('div');
-    
-                if (!$currentlyCheckbox.length) {
-                    break; // Sortir si le checkbox n'existe pas
-                }
-    
-                // Afficher ou masquer le conteneur en fonction de l'état du checkbox
-                $endDateFieldContainer.parent().toggle(!$currentlyCheckbox.is(':checked'));
-    
-                // Gérer les changements d'état du checkbox
-                $currentlyCheckbox.off('change').change(function() {
-                    $endDateFieldContainer.parent().toggle(!$(this).is(':checked'));
-                });
-            }
-        }
-    
-        // Appeler la fonction pour chaque groupe de champs
-        handleFieldGroup('step_two_experiences');
-        handleFieldGroup('step_three_experiences');
-    });
-    
+document.addEventListener('turbo:load', function() {
 
-    var modalIds = ['experience', 'technicalSkill', 'language'];
+  const backToTopButton = document.getElementById('backToTop');
+  
+  if(backToTopButton){
 
-    modalIds.forEach(function(modalId) {
-        $('#' + modalId).on('hidden.bs.modal', function () {
-            $(this).find('ul[data-form-collection-target="collectionContainer"]').empty();
-        });
-    });
-
-    $('#account_identity .custom-control-input').on('change', function() {
-        $(this).closest('form').submit();
-    });
-
-    $('.image-checkbox img').on('click', function() {
-        // Ajouter l'effet de clignotement
-        $(this).addClass('blinking');
-        
-        // Retirer l'effet de clignotement après 1.2 secondes (2 cycles d'animation)
-        setTimeout(() => {
-            $(this).removeClass('blinking');
-        }, 900);
-    });
-    let offset = 10; 
-    $(window).on('scroll', function() {
-        const threshold = 1;
-        const position = $(window).scrollTop() + $(window).height();
-        const height = $(document).height();
-    
-        if (position >= height - threshold && offset <= 20) { // Ajout de la condition offset <= 20
-            console.log('fini');
-            $.ajax({
-                url: `/ajax/candidat?offset=${offset}`,
-                type: 'GET',
-                success: function(response) {
-                    if (response) {
-                        const $produitItemDiv = $('#candidates .expert-item');
-                        if ($produitItemDiv.length) {
-                            $produitItemDiv.append(response.html);
-                        }
-                        offset += 10; // Incrémente pour le prochain lot
-                    }
-                },
-                error: function(error) {
-                    console.error('Une erreur est survenue:', error);
-                }
-            });
+    // Écoute de l'événement de défilement
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            // Afficher le bouton après avoir défilé 300 px
+            backToTopButton.style.display = 'block';
+        } else {
+            // Cacher le bouton
+            backToTopButton.style.display = 'none';
         }
     });
 
-    $('#previewButton').on('click', function(e) {
-        e.preventDefault();
-        const typeText = $('select[name="annonce[typeContrat]"] option:selected').text();
-        const sectorText = $('select[name="annonce[secteur]"] option:selected').text();
-        const descriptionContent = globalEditorInstance.getData();
-        // Récupérer les données du formulaire
-        const formData = {
-            titre: $('input[name="annonce[titre]"]').val(),
-            description: descriptionContent,
-            salaire: $('input[name="annonce[salaire]"]').val(),
-            nombrePoste: $('input[name="annonce[nombrePoste]"]').val(),
-            dateExpiration: $('input[name="annonce[dateExpiration]"]').val(),
-        };
-        // Créer un tableau pour stocker les valeurs
-        var values = [];
-
-        // Sélectionner tous les éléments avec la classe 'item' et itérer sur chacun
-        $('.ts-control .item').each(function() {
-            // Récupérer le texte de l'élément, qui est la valeur souhaitée
-            var value = $(this).text().trim().replace('×', '');
-
-            // Ajouter la valeur au tableau
-            values.push(value);
+    // Ajouter l'événement de clic pour revenir en haut
+    backToTopButton.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Défilement fluide
         });
-
-        const content = `
-        <div class="container">
-            <div class="row">
-                <!-- Colonne pour la description -->
-                <div class="col-md-6">
-                <p><span class="text-strong">Titre :</span> <br>${formData.titre}</p>
-                <p><span class="text-strong">Type :</span> <br>${typeText}</p>
-                <p><span class="text-strong">Secteur d'activité :</span> <br>${sectorText}</p>
-                <p><span class="text-strong">Budget :</span> <br>${formData.salaire} €</p>
-                <p><span class="text-strong">Nombre de personne à chercher :</span> <br>${formData.nombrePoste}</p>
-                <p><span class="text-strong">Date du début :</span> <br>${formData.dateExpiration} </p>
-                <!-- Et ainsi de suite pour les autres champs... -->
-                </div>
-                <!-- Colonne pour la liste des éléments dans values -->
-                <div class="col-md-6">
-                <p><span class="text-strong">Comptétences requises :</span></p>
-                <ul>
-                    ${values.map(value => `<li>${value}</li>`).join('')}
-                </ul>
-                <p><span class="text-strong">Description du poste:</span> <br>${formData.description}</p>
-                </div>
-            </div>
-            </div>
-
-        `;
-        $('#previewModal .modal-body').html(content);
-    
     });
-});
+  }
+  
+    const calendarEl = document.getElementById('calendar')
+    if (!calendarEl || calendarEl === '') {
+      return; 
+    }
+    const eventData = calendarEl.getAttribute('data-events');
+    if (!eventData || eventData === '') {
+      return; 
+    }
+    // Parse the JSON data
+    const events = JSON.parse(eventData);
+    const calendar = new Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      locale: 'fr',
+      timeZone: 'Eastern/Africa',
+      editable: true,
+      eventResizableFromStart: true,
+      events: events, 
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay',
+      },
+      buttonText: {
+        today: 'Aujourd\'hui',
+        month: 'Mois',
+        week: 'Semaine',
+        day: 'Jour',
+        list: 'Liste',
+      },
+    })
+    calendar.on('eventChange', function(e) {
+      console.log('eventChange', e);
+      let url = '/coworking/api/event/' + e.event.id + '/edit';
+      let donnees = {
+        "title": e.event.title,
+        "description": e.event.extendedProps.description,
+        "user": e.event.extendedProps.user,
+        "start": e.event.start,
+        "end": e.event.end,
+        "allDay": e.event.allDay,
+        "backgroundColor": e.event.backgroundColor,
+        "borderColor": e.event.borderColor,
+        "textColor": e.event.textColor,
+      }
+      fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(donnees),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          console.log('success', data);
+        } else {
+          console.log('error', data);
+        }
+      })
+    })
+    calendar.on('eventClick', function(e) {
+      console.log('eventClick', e);
+      
+      const eventTitle = e.event.title || "Sans titre"; 
+      const eventDescription = e.event.extendedProps.description || "Aucune description";
+      const eventUser = e.event.extendedProps.user || "Non défini";
+      const eventPlaces = e.event.extendedProps.places.length || 0;
+    
+      // Récupération des éléments modal
+      const modalTitleElement = document.getElementById('modalTitle');
+      const modalDescriptionElement = document.getElementById('modalDescription');
+      const modalUserElement = document.getElementById('modalUser');
+      const modalPlacesElement = document.getElementById('modalPlaces');
+    
+      // Mise à jour du contenu du modal
+      if (modalTitleElement) {
+        modalTitleElement.textContent = eventTitle;
+      }
+    
+      if (modalDescriptionElement) {
+        modalDescriptionElement.textContent = eventDescription;
+      }
+    
+      if (modalUserElement) {
+        modalUserElement.textContent = 'Utilisateur : ' + eventUser;
+      }
+    
+      if (modalPlacesElement) {
+        modalPlacesElement.textContent = 'Nombre de place : ' + eventPlaces;
+      }
+  
+  
+      const bsmodal = document.getElementById('exampleModal')
+      if (bsmodal) {
+        const viewevent = new bootstrap.Modal(bsmodal);
+        viewevent.show();
+      }
+    })
+    calendar.render()
+  })
+
+  
+

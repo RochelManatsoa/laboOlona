@@ -2,9 +2,17 @@
 
 namespace App\Entity;
 
+use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostFacebook;
+use App\Entity\BusinessModel\BoostVisibility;
+use App\Entity\BusinessModel\Subcription;
 use App\Entity\Candidate\CV;
 use App\Entity\Candidate\Langages;
 use App\Entity\Candidate\Social;
+use App\Entity\Candidate\TarifCandidat;
+use App\Entity\Entreprise\Favoris;
+use App\Entity\Facebook\ContestEntry;
+use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\EditedCv;
 use App\Entity\Vues\CandidatVues;
 use Doctrine\DBAL\Types\Types;
@@ -20,6 +28,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Uid\Uuid;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CandidateProfileRepository::class)]
 #[Vich\Uploadable]
@@ -30,26 +39,70 @@ class CandidateProfile
     const STATUS_VALID = 'VALID';
     const STATUS_FEATURED = 'FEATURED';
     const STATUS_RESERVED = 'RESERVED';
+    const GENDER_MALE = 'MALE';
+    const GENDER_FEMALE = 'FEMALE';
+    const GENDER_OTHER = 'OTHER';
+
+    public static function getStatuses() {
+        return [
+            'En attente' => self::STATUS_PENDING ,
+            'Bani' => self::STATUS_BANNISHED ,
+            'Valide' => self::STATUS_VALID ,
+            'Mis en avant' => self::STATUS_FEATURED ,
+            'Vivier' => self::STATUS_RESERVED ,
+        ];
+    }
+
+    public static function getArrayStatuses() {
+        return [
+             self::STATUS_PENDING ,
+             self::STATUS_BANNISHED ,
+             self::STATUS_VALID ,
+             self::STATUS_FEATURED ,
+             self::STATUS_RESERVED ,
+        ];
+    }
+
+    public static function getGenderLabels() {
+        return [
+            'Masculin' => self::GENDER_MALE ,
+            'Féminin' => self::GENDER_FEMALE ,
+            'Autre' => self::GENDER_OTHER ,
+        ];
+    }
+
+    public static function getArrayGender() {
+        return [
+             self::GENDER_MALE ,
+             self::GENDER_FEMALE ,
+             self::GENDER_OTHER ,
+        ];
+    }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['identity', 'open_ai'])]
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'candidateProfile', cascade: ['persist', 'remove'])]
     private ?User $candidat = null;
+    
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['identity'])]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['identity', 'open_ai'])]
     private ?string $resume = null;
 
     #[ORM\ManyToMany(targetEntity: Competences::class, mappedBy: 'profil', cascade: ['persist', 'remove'])]
     private Collection $competences;
 
+    #[Groups(['open_ai'])]
     #[ORM\OneToMany(mappedBy: 'profil', targetEntity: Experiences::class, cascade: ['persist', 'remove'])]
     private Collection $experiences;
 
@@ -59,24 +112,30 @@ class CandidateProfile
     #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: Metting::class, cascade: ['persist', 'remove'])]
     private Collection $mettings;
 
-    #[ORM\ManyToMany(targetEntity: Secteur::class,  inversedBy: 'canditat')]
+    #[ORM\ManyToMany(targetEntity: Secteur::class,  inversedBy: 'candidat')]
+    #[Groups(['identity'])]
     private Collection $secteurs;
 
     #[Vich\UploadableField(mapping: 'cv_expert', fileNameProperty: 'fileName')]
     private ?File $file = null;
     
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['identity'])]
     private ?string $fileName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['identity'])]
     private ?string $localisation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['identity'])]
     private ?\DateTimeInterface $birthday = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['identity', 'open_ai'])]
     private ?string $titre = null;
 
+    #[Groups(['open_ai'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $cv = null;
 
@@ -93,9 +152,11 @@ class CandidateProfile
     private ?bool $isValid = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['identity', 'open_ai'])]
     private ?string $status = null;
 
     #[ORM\Column(type: 'uuid')]
+    #[Groups(['identity'])]
     private ?Uuid $uid = null;
 
     #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: CV::class, cascade: ['persist', 'remove'])]
@@ -108,7 +169,88 @@ class CandidateProfile
     private Collection $editedCvs;
 
     #[ORM\ManyToOne(inversedBy: 'candidats', cascade: ['persist', 'remove'])]
+    #[Groups(['identity'])]
     private ?Availability $availability = null;
+
+    #[ORM\OneToOne(mappedBy: 'candidat', cascade: ['persist', 'remove'])]
+    private ?TarifCandidat $tarifCandidat = null;
+
+    #[ORM\OneToMany(mappedBy: 'profil', targetEntity: Assignation::class, cascade: ['persist', 'remove'])]
+    private Collection $assignations;
+
+    #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: Favoris::class)]
+    private Collection $favoris;
+
+    #[ORM\Column]
+    private ?int $relanceCount = 0;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $relancedAt = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $tesseractResult = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $resultFree = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $resultPremium = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $metaDescription = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $traductionEn = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $badKeywords = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $tools = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $technologies = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $resumeCandidat = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isGeneretated = null;
+
+    #[ORM\OneToMany(mappedBy: 'candidateProfile', targetEntity: Prestation::class)]
+    private Collection $prestations;
+
+    #[Groups(['boost'])]
+    #[ORM\ManyToOne(inversedBy: 'candidateProfile', cascade: ['persist', 'remove'])]
+    private ?BoostVisibility $boostVisibility = null;
+
+    #[Groups(['boost'])]
+    #[ORM\ManyToOne(inversedBy: 'candidateProfiles', cascade: ['persist', 'remove'])]
+    private ?Boost $boost = null;
+
+    #[ORM\ManyToOne(inversedBy: 'candidateProfiles')]
+    private ?BoostFacebook $boostFacebook = null;
+
+    #[ORM\OneToMany(mappedBy: 'candidateProfile', targetEntity: ContestEntry::class)]
+    private Collection $contestEntries;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isPremium = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $gender = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $province = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $region = null;
+
+    /**
+     * @var Collection<int, Subcription>
+     */
+    #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: Subcription::class)]
+    private Collection $subcriptions;
 
     public function __construct()
     {
@@ -122,30 +264,35 @@ class CandidateProfile
         $this->vues = new ArrayCollection();
         $this->cvs = new ArrayCollection();
         $this->editedCvs = new ArrayCollection();
+        $this->assignations = new ArrayCollection();
+        $this->favoris = new ArrayCollection();
+        $this->prestations = new ArrayCollection();
+        $this->uid = new Uuid(Uuid::v4());
+        $this->isValid = false;
+        $this->status = self::STATUS_PENDING;
+        $this->contestEntries = new ArrayCollection();
+        $this->localisation = 'MG';
+        $this->isGeneretated = false;
+        $this->subcriptions = new ArrayCollection();
     }
 
     public function __toString()
     {
-        return $this->getCandidat()->getNom();
+        return $this->getCandidat() ? $this->getCandidat()->getPrenom() : $this->titre;
     }
     
     public function __serialize(): array
     {
-        // Retournez ici les propriétés à sérialiser
         return [
             'id' => $this->id,
             'createdAt' => $this->createdAt,
-            // Ajoutez d'autres propriétés si nécessaire
-            // Notez que certaines propriétés, comme les objets et les collections d'entités, ne doivent pas être sérialisées
         ];
     }
 
     public function __unserialize(array $data): void
     {
-        // Restaurez l'état de l'objet à partir des données sérialisées
         $this->id = $data['id'] ?? null;
         $this->createdAt = $data['createdAt'] ?? null;
-        // Restaurez d'autres propriétés si elles étaient sérialisées
     }
 
     public function getId(): ?int
@@ -372,17 +519,6 @@ class CandidateProfile
         $this->fileName = $fileName;
 
         return $this;
-    }
-    
-    public function serialize()
-    {
-        $this->fileName = base64_encode($this->fileName);
-    }
-
-    public function unserialize($serialized)
-    {
-        $this->fileName = base64_decode($this->fileName);
-
     }
 
     public function getLocalisation(): ?string
@@ -631,6 +767,468 @@ class CandidateProfile
     public function setAvailability(?Availability $availability): static
     {
         $this->availability = $availability;
+
+        return $this;
+    }
+
+    public function getTarifCandidat(): ?TarifCandidat
+    {
+        return $this->tarifCandidat;
+    }
+
+    public function setTarifCandidat(?TarifCandidat $tarifCandidat): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($tarifCandidat === null && $this->tarifCandidat !== null) {
+            $this->tarifCandidat->setCandidat(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($tarifCandidat !== null && $tarifCandidat->getCandidat() !== $this) {
+            $tarifCandidat->setCandidat($this);
+        }
+
+        $this->tarifCandidat = $tarifCandidat;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Assignation>
+     */
+    public function getAssignations(): Collection
+    {
+        return $this->assignations;
+    }
+
+    public function addAssignation(Assignation $assignation): static
+    {
+        if (!$this->assignations->contains($assignation)) {
+            $this->assignations->add($assignation);
+            $assignation->setProfil($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignation(Assignation $assignation): static
+    {
+        if ($this->assignations->removeElement($assignation)) {
+            // set the owning side to null (unless already changed)
+            if ($assignation->getProfil() === $this) {
+                $assignation->setProfil(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Favoris>
+     */
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Favoris $favori): static
+    {
+        if (!$this->favoris->contains($favori)) {
+            $this->favoris->add($favori);
+            $favori->setCandidat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(Favoris $favori): static
+    {
+        if ($this->favoris->removeElement($favori)) {
+            // set the owning side to null (unless already changed)
+            if ($favori->getCandidat() === $this) {
+                $favori->setCandidat(null);
+            }
+        }
+
+        return $this;
+    }
+
+    #[Groups(['identity'])]
+    public function getCountViews(): int
+    {
+        return $this->vues->count();
+    }
+
+    #[Groups(['identity'])]
+    public function getCountApplications(): int
+    {
+        return $this->applications->count();
+    }
+
+    #[Groups(['identity'])]
+    public function getCountExperiences(): int
+    {
+        return $this->experiences->count();
+    }
+
+    #[Groups(['identity'])]
+    public function getCountCompetences(): int
+    {
+        return $this->competences->count();
+    }
+
+    #[Groups(['identity'])]
+    public function getUrlImage(): string
+    {
+        return 'https://app.olona-talents.com/uploads/experts/'.$this->fileName;
+    }
+
+    #[Groups(['identity'])]
+    public function getMatricule(): string
+    {
+        $letters = 'OT';
+        $paddedId = sprintf('%04d', $this->getId());
+
+        return $letters . $paddedId;
+    }
+
+    public function getRelanceCount(): ?int
+    {
+        return $this->relanceCount;
+    }
+
+    public function incrementRelanceCount(): self
+    {
+        $this->relanceCount++;
+        $this->setRelancedAt(new DateTime());
+
+        return $this;
+    }
+
+    public function setRelanceCount(int $relanceCount): static
+    {
+        $this->relanceCount = $relanceCount;
+
+        return $this;
+    }
+
+    public function getRelancedAt(): ?\DateTimeInterface
+    {
+        return $this->relancedAt;
+    }
+
+    public function setRelancedAt(?\DateTimeInterface $relancedAt): static
+    {
+        $this->relancedAt = $relancedAt;
+
+        return $this;
+    }
+
+    public function getTesseractResult(): ?string
+    {
+        return $this->tesseractResult;
+    }
+
+    public function setTesseractResult(?string $tesseractResult): static
+    {
+        $this->tesseractResult = $tesseractResult;
+
+        return $this;
+    }
+
+    public function getResultFree(): ?string
+    {
+        return $this->resultFree;
+    }
+
+    public function setResultFree(?string $resultFree): static
+    {
+        $this->resultFree = $resultFree;
+
+        return $this;
+    }
+
+    public function getResultPremium(): ?string
+    {
+        return $this->resultPremium;
+    }
+
+    public function setResultPremium(?string $resultPremium): static
+    {
+        $this->resultPremium = $resultPremium;
+
+        return $this;
+    }
+
+    public function getMetaDescription(): ?string
+    {
+        return $this->metaDescription;
+    }
+
+    public function setMetaDescription(?string $metaDescription): static
+    {
+        $this->metaDescription = $metaDescription;
+
+        return $this;
+    }
+
+    public function getTraductionEn(): ?string
+    {
+        return $this->traductionEn;
+    }
+
+    public function setTraductionEn(?string $traductionEn): static
+    {
+        $this->traductionEn = $traductionEn;
+
+        return $this;
+    }
+
+    public function getBadKeywords(): ?string
+    {
+        return $this->badKeywords;
+    }
+
+    public function setBadKeywords(?string $badKeywords): static
+    {
+        $this->badKeywords = $badKeywords;
+
+        return $this;
+    }
+
+    public function getTools(): ?string
+    {
+        return $this->tools;
+    }
+
+    public function setTools(?string $tools): static
+    {
+        $this->tools = $tools;
+
+        return $this;
+    }
+
+    public function getTechnologies(): ?string
+    {
+        return $this->technologies;
+    }
+
+    public function setTechnologies(?string $technologies): static
+    {
+        $this->technologies = $technologies;
+
+        return $this;
+    }
+
+    public function getResumeCandidat(): ?string
+    {
+        return $this->resumeCandidat;
+    }
+
+    public function setResumeCandidat(?string $resumeCandidat): static
+    {
+        $this->resumeCandidat = $resumeCandidat;
+
+        return $this;
+    }
+
+    public function isIsGeneretated(): ?bool
+    {
+        return $this->isGeneretated;
+    }
+
+    public function setIsGeneretated(?bool $isGeneretated): static
+    {
+        $this->isGeneretated = $isGeneretated;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Prestation>
+     */
+    public function getPrestations(): Collection
+    {
+        return $this->prestations;
+    }
+
+    public function addPrestation(Prestation $prestation): static
+    {
+        if (!$this->prestations->contains($prestation)) {
+            $this->prestations->add($prestation);
+            $prestation->setCandidateProfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrestation(Prestation $prestation): static
+    {
+        if ($this->prestations->removeElement($prestation)) {
+            // set the owning side to null (unless already changed)
+            if ($prestation->getCandidateProfile() === $this) {
+                $prestation->setCandidateProfile(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getBoostVisibility(): ?BoostVisibility
+    {
+        return $this->boostVisibility;
+    }
+
+    public function setBoostVisibility(?BoostVisibility $boostVisibility): static
+    {
+        $this->boostVisibility = $boostVisibility;
+
+        return $this;
+    }
+
+    public function getBoost(): ?Boost
+    {
+        return $this->boost;
+    }
+
+    public function setBoost(?Boost $boost): static
+    {
+        $this->boost = $boost;
+
+        return $this;
+    }
+
+    public function getBoostFacebook(): ?BoostFacebook
+    {
+        return $this->boostFacebook;
+    }
+
+    public function setBoostFacebook(?BoostFacebook $boostFacebook): static
+    {
+        $this->boostFacebook = $boostFacebook;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ContestEntry>
+     */
+    public function getContestEntries(): Collection
+    {
+        return $this->contestEntries;
+    }
+
+    public function addContestEntry(ContestEntry $contestEntry): static
+    {
+        if (!$this->contestEntries->contains($contestEntry)) {
+            $this->contestEntries->add($contestEntry);
+            $contestEntry->setCandidateProfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContestEntry(ContestEntry $contestEntry): static
+    {
+        if ($this->contestEntries->removeElement($contestEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($contestEntry->getCandidateProfile() === $this) {
+                $contestEntry->setCandidateProfile(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isIsPremium(): ?bool
+    {
+        return $this->isPremium;
+    }
+
+    public function setIsPremium(?bool $isPremium): static
+    {
+        $this->isPremium = $isPremium;
+
+        return $this;
+    }
+    
+    public function getProfileCompletion(): int
+    {
+        $score = 0;
+        $total = 6; 
+    
+        if ($this->resume) $score++;
+        if (!$this->competences->isEmpty()) $score++;
+        if (!$this->langages->isEmpty()) $score++;
+        if (!$this->secteurs->isEmpty()) $score++;
+        if ($this->titre) $score++;
+        if ($this->cv) $score++;
+    
+        return intval(($score / $total) * 100);
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?string $gender): static
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getProvince(): ?string
+    {
+        return $this->province;
+    }
+
+    public function setProvince(?string $province): static
+    {
+        $this->province = $province;
+
+        return $this;
+    }
+
+    public function getRegion(): ?string
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?string $region): static
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subcription>
+     */
+    public function getSubcriptions(): Collection
+    {
+        return $this->subcriptions;
+    }
+
+    public function addSubcription(Subcription $subcription): static
+    {
+        if (!$this->subcriptions->contains($subcription)) {
+            $this->subcriptions->add($subcription);
+            $subcription->setCandidat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubcription(Subcription $subcription): static
+    {
+        if ($this->subcriptions->removeElement($subcription)) {
+            // set the owning side to null (unless already changed)
+            if ($subcription->getCandidat() === $this) {
+                $subcription->setCandidat(null);
+            }
+        }
 
         return $this;
     }

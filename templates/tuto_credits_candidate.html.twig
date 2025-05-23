@@ -1,0 +1,43 @@
+<div class="modal fade" id="tutorialModal1Toggle" aria-hidden="true" aria-labelledby="tutorialModal1ToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-6 fw-bolder" id="tutorialModal1ToggleLabel">Système de Crédits Olona Talents</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body lead">
+                <h3 class="text-center display-6 fw-bolder">Bienvenue sur Olona-Talents! 🎉</h3>
+                <p>Chaque utilisateur reçoit un crédit de bienvenue de 200 crédits à l'inscription. Ces crédits vous permettent d'effectuer diverses actions sur le site.</p>
+                <p>Voici comment les crédits sont utilisés :</p>
+                <ul class="list-unstyled">
+                    <li>👉 Simuler un salaire : 10 crédits par simulation</li>
+                    <li>👉 Postuler à une offre : 20 crédits par candidature</li>
+                    <li>👉 Créer une prestation : 20 crédits par demande</li>
+                    <li>👉 Consulter un contact de recruteur : 150 crédits</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info px-4 rounded-pill" data-bs-target="#tutorialModal2Toggle" data-bs-toggle="modal">Suivant <i class="bi bi-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="tutorialModal2Toggle" aria-hidden="true" aria-labelledby="tutorialModal2ToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-6 fw-bolder" id="tutorialModal2ToggleLabel">Gestion des Crédits</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body lead">
+                <p>Si vous épuisez vos crédits initiaux, ne vous inquiétez pas! Vous avez la possibilité de recharger vos crédits à tout moment.</p>
+                <p>N'hésitez pas à toujours vous assurer d'avoir suffisamment de crédits pour ne manquer aucune opportunité sur notre plateforme.</p>
+                <a href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn btn-primary rounded-pill px-4">👉 Recharger mon crédit</a>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info px-4 rounded-pill" data-bs-target="#tutorialModal1Toggle" data-bs-toggle="modal"><i class="bi bi-arrow-left"></i> Précédent</button>
+            </div>
+        </div>
+    </div>
+</div>

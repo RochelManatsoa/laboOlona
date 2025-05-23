@@ -9,27 +9,73 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+        client1_user_provider:
+            entity:
+                class: App\WhiteLabel\Entity\Client1\User
+                property: email
+                manager_name: client1
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        
+        login:
+            pattern: ^/api/login
+            stateless: true
+            provider: app_user_provider
+            json_login:
+                check_path: /api/login_check # or api_login_check as defined in config/routes.yaml
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            provider: app_user_provider
+            jwt: ~
+
+        # admin:
+        #     pattern:            /admin(.*)
+        #     form_login:
+        #         provider:       app_user_provider
+        #         login_path:     admin_login
+        #         use_forward:    false
+        #         check_path:     admin_login
+        #         failure_path:   null
+        #     custom_authenticator: 
+        #         - App\Security\Admin\AdminLoginAuthenticator
+        #     entry_point: App\Security\Admin\AdminLoginAuthenticator
+        #     logout:
+        #         path:           admin_logout
+        #         target:         admin_login
+        client1:
+            pattern: ^/
+            host: ^client1\.olona-talents\.local\.com$
+            provider: client1_user_provider
+            custom_authenticator: App\Security\Client1\Client1Authenticator
+            logout:
+                path: app_client1_logout
+                target: app_client1_login
+            lazy: true
+            
         main:
             lazy: true
             provider: app_user_provider
             custom_authenticator: 
                 - App\Security\AppAuthenticator
                 - App\Security\GoogleAuthenticator
+                - App\Security\FacebookAuthenticator
             logout:
                 path: app_logout
                 # where to redirect after logout
-                # target: app_any_route
-                invalidate_session: true # Ceci va effacer la session
+                target: app_login
+                invalidate_session: true
 
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
-                always_remember_me: true
+                always_remember_me: false
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -40,10 +86,31 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # - { path: ^/admin/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/moderateur, roles: ROLE_USER }
         - { path: ^/profile/, roles: ROLE_USER }
         - { path: ^/dashboard/, roles: ROLE_USER }
+        - { path: ^/v2/candidate, roles: ROLE_USER }
+        - { path: ^/v2/recruiter, roles: ROLE_USER }
+        - { path: ^/v2/staff, roles: ROLE_USER }
+        - { path: ^/v2/dashboard, roles: ROLE_USER }
+        - { path: ^/finance, roles: ROLE_FINANCE }
+        - { path: ^/employes-hub, roles: ROLE_EMPLOYE }
         - { path: ^/youtube/playlist, roles: ROLE_USER }
+        - { path: ^/tableau-de-bord/, roles: ROLE_USER }
+
+    
+    role_hierarchy:
+        ROLE_FINANCE: [ROLE_CANDIDAT]
+        ROLE_COOPTEUR: [ROLE_CANDIDAT]
+        ROLE_EMPLOYE: [ROLE_CANDIDAT]
+        ROLE_MODERATEUR: []
+        ROLE_ENTREPRISE: [] 
+        ROLE_ADMIN_BLOG: [ROLE_USER] 
+        ROLE_COWORKING: [ROLE_USER]
+        ROLE_ADMIN: [ROLE_ADMIN_BLOG, ROLE_ENTREPRISE, ROLE_MODERATEUR, ROLE_COWORKING]
 
 when@test:
     security:

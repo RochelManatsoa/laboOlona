@@ -1,0 +1,50 @@
+{% extends 'dashboard/base.html.twig' %}
+{% block body %}
+<section class="p-0 m-0">
+  <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+        <h1 class="h3">Invitations</h1>
+    
+        <div>
+            <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_dashboard_moderateur_invitation_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+        </div>
+
+        {% if invitations|length > 0 %}
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">{{ knp_pagination_sortable(invitations, 'ID', 'i.id') }}</th>
+                <th scope="col">{{ knp_pagination_sortable(invitations, 'Email', 'i.email') }}</th>
+                <th scope="col" class="text-center">{{ knp_pagination_sortable(invitations, 'Créée le', 'i.createdAt') }}</th>
+                <th scope="col" class="text-center">{{ knp_pagination_sortable(invitations, 'Utilisé le', 'i.usedAt') }}</th>
+                <th scope="col" class="text-center">{{ knp_pagination_sortable(invitations, 'Status', 'i.status') }}</th>
+                <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for invitation in invitations %}
+                <tr>
+                    <td>{{ invitation.id }}</td>
+                    <td>{{ invitation.reader.email }}</td>
+                    <td class="text-center">{{ invitation.createdAt|date('d/m/Y') }}</td>
+                    <td class="text-center">{{ invitation.usedAt|date('d/m/Y')  }}</td>
+                    <td class="text-center">{{ invitation.status ? invitation.labels[invitation.status]|raw : '' }}</td>
+                    <td>
+                        <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_dashboard_moderateur_invitation_show', {'id': invitation.id}) }}"><i class="bi bi-eye"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {{ knp_pagination_render(invitations) }}
+        {% else %}
+        <div class="text-center col-lg-6 col-sm-12 mx-auto">
+            <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+            <p class="text-center">Aucune invitation trouvée</p>
+        </div>
+        {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

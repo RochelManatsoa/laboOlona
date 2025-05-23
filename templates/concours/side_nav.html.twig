@@ -1,0 +1,28 @@
+
+<div class="position-sticky" style="top: 2rem;">
+    <h2 class="text-center">Concours <i class="bi bi-facebook text-primary"></i></h2>
+    <hr>
+    <ul class="nav flex-column nav-pills justify-content-center mb-4" id="">
+        <li class="nav-item d-inline-flex align-items-center">
+            <button class="nav-link btn-sm rounded-circle {{ step == 1 ? 'active' : '' }}" type="button">1</button>
+            <span class="ms-3">Déjà membre?</span>
+        </li>
+        <li class="nav-item d-inline-flex align-items-center">
+            <button class="nav-link rounded-circle {{ step == 2 ? 'active' : '' }}" type="button">2</button>
+            <span class="ms-3">Régle de jeu</span>
+        </li>
+        <li class="nav-item d-inline-flex align-items-center">
+            <button class="nav-link rounded-circle {{ step == 3 ? 'active' : '' }}" type="button">3</button>
+            <span class="ms-3">Mes infos</span>
+        </li>
+        <li class="nav-item d-inline-flex align-items-center">
+            <button class="nav-link rounded-circle {{ step == 4 ? 'active' : '' }}" type="button">4</button>
+            <span class="ms-3">J'envoie mon CV</span>
+        </li>
+        <li class="nav-item d-inline-flex align-items-center">
+            <button class="nav-link rounded-circle {{ step == 5 ? 'active' : '' }}" type="button">5</button>
+            <span class="ms-3">Participer au jeu</span>
+        </li>
+    </ul>
+    <img src="{{ asset('images/facebook_contest.png') }}" alt="facebook contest" class="img-fluid">
+</div>

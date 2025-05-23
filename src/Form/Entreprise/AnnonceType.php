@@ -2,25 +2,29 @@
 
 namespace App\Form\Entreprise;
 
-use App\Entity\Candidate\Competences;
 use App\Entity\Secteur;
+use App\Entity\EntrepriseProfile;
+use App\Entity\BusinessModel\Boost;
+use App\Entity\Candidate\Competences;
 use App\Entity\Entreprise\JobListing;
-use App\Entity\Moderateur\TypeContrat;
 use Symfony\Component\Form\FormEvent;
+use App\Entity\Moderateur\TypeContrat;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
+use App\Entity\BusinessModel\BoostFacebook;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\IsTrue;
 use App\Form\DataTransformer\CompetencesTransformer;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use App\Form\Autocomplete\CompetencesAutocompleteField;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Validator\Constraints\Sequentially;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class AnnonceType extends AbstractType
@@ -35,34 +39,142 @@ class AnnonceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('titre', TextType::class, ['label' => 'Donnez un titre à votre annonce',])
+            ->add('titre', TextType::class, [
+                'required' => false,
+                'label' => 'Donnez un titre à votre annonce',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Le titre doit captiver l\'attention et refléter clairement le poste à pourvoir.',
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Le titre est obligatoires.'),
+                ]),
+            ])
             ->add('secteur', EntityType::class, [
-                'label' => 'app_dashboard_entreprise_posting_new.sector',
+                'label' => 'Sélectionnez le secteur d\'activité',
                 'class' => Secteur::class,
-                'attr' => []
+                'attr' => [],
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'required' => false,
+                'help' => 'Quel secteur d\'activité de votre entreprise sera sollicité pour cette mission ? ',
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Le secteur est obligatoires.'),
+                ]),
             ])
             ->add('dateExpiration', DateType::class, [
-                'label' => 'app_dashboard_entreprise_posting_new.planned_date',
+                'required' => false,
+                'label' => 'Date fin de candidature',
                 'widget' => 'single_text',  
                 'format' => 'yyyy-MM-dd',   
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Indiquez la date de début de la mission ou de l\'emploi.'
+            ])
+            ->add('entreprise', EntityType::class, [
+                'required' => false,
+                'class' => EntrepriseProfile::class,
+                'label' => 'Selectionnez une entreprise',
+                'attr' => []
             ])
             ->add('typeContrat', EntityType::class, [
                 'class' => TypeContrat::class,
-                'label' => 'app_dashboard_entreprise_posting_new.type',
+                'label' => 'Type de contrat',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Déterminez le type de contrat proposé pour cette position.',
                 'attr' => []
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'app_dashboard_entreprise_posting_new.desc_form',
+                'label' => 'Décrivez les responsabilités et les tâches du poste.',
                 'required' => false,
                 'attr' => [
-                    'rows' => 8
-                ]
+                    'rows' => 6,
+                    'class' => 'ckeditor-textarea'
+                ],
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Fournissez une description détaillée des responsabilités et des tâches liées au poste.',
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'La description est obligatoires.'),
+                ]),
             ])
-            ->add('salaire', MoneyType::class, ['label' => 'app_dashboard_entreprise_posting_new.tarif'])
-            ->add('lieu', TextType::class, ['label' => 'Lieu',])
-            ->add('nombrePoste', null, ['label' => 'Nombre de personne à chercher',])
+            ->add('boost', EntityType::class, [
+                'class' => Boost::class,
+                'choices' => $this->entityManager->getRepository(Boost::class)->findBy(['type' => 'JOB_LISTING']),
+                'choice_label' => function ($boost) {
+                    return $boost->getName(); 
+                },
+                'expanded' => true,  
+                'required' => false, 
+                'placeholder' => 'Pas de boost',
+                'label' => false
+            ])
+            ->add('boostFacebook', EntityType::class, [
+                'class' => BoostFacebook::class,
+                'attr' => ['class' => 'boost-select radio-grid', 'data-html' => true],
+                'choices' => $this->entityManager->getRepository(BoostFacebook::class)->findBy(['type' => 'OT_PLUS_FB']),
+                'choice_label' => function ($boostFB) {
+                    return $boostFB->getName().' ('.$boostFB->getCredit().' crédits)'; 
+                },
+                'expanded' => true,  
+                'required' => false, 
+                'placeholder' => 'Pas de boost',
+                'label' => false
+            ])
+            ->add('budgetAnnonce', BudgetAnnonceType::class, [
+                'label' => 'Budget prévu pour la mission',
+                'required' => false,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Champ obligatoire.'),
+                ]),
+                'help' => 'Définissez le budget alloué pour cette annonce ou mission.'
+            ])
+            ->add('lieu', ChoiceType::class, [
+                'choices' => [
+                    'Remote' => 'Remote',
+                    'Local' => 'Local',
+                    'Télétravail' => 'Télétravail',
+                    'Coworking Olona Talents' => 'Coworking Olona Talents',
+                ],
+                'required' => false,
+                'label' => 'Lieu',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Ce champ est obligatoires.'),
+                ]),
+                'help' => 'Indiquez le lieu de travail principal pour ce poste.'
+            ])
+            ->add('nombrePoste', null, [
+                'label' => 'Nombre de personne à chercher',
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Ce champ est obligatoires.'),
+                ]),
+                'help' => 'Précisez le nombre de postes disponibles.'
+            ])
             ->add('competences', TextType::class, [
                 'autocomplete' => true,
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'required' => false,
+                'constraints' => new Sequentially([
+                    new NotBlank(message:'Ce champ est obligatoires.'),
+                ]),
+                'help' => 'Ajoutez les compétences clés requises pour le poste. Séparez-les par des virgules.',
                 'attr' => [
                     'data-controller' => 'technical-add-autocomplete',
                     'palcehoder' => "Domaine d'expertise",
@@ -76,7 +188,6 @@ class AnnonceType extends AbstractType
                 'no_results_found_text' => 'Aucun résultat' ,
                 'no_more_results_text' => 'Plus de résultats' ,
             ])
-            // ->add('langues')
         ;
 
         $builder->get('competences')
@@ -89,7 +200,6 @@ class AnnonceType extends AbstractType
         
             // récupérer la valeur du champ "aicores" depuis le formulaire
             $competencesDataValue = $form->get('competences')->getNormData();
-            dump($competencesDataValue);
             
             // diviser la chaîne en tableau
             $skillValues = explode(',', $competencesDataValue);

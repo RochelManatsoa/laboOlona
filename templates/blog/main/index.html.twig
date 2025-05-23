@@ -1,0 +1,78 @@
+{% extends 'base_blog.html.twig' %}
+{% block body %}
+<header class="header-home">
+    <div class="page-content">
+        <div class="home-banner-section bg-cover" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
+            <div class="home-inner-section">
+                <div class="mid-section">
+                    <div class="title-large">Le blog</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main id="blog-post">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                {% for post in posts %}
+                <article class="liste_article"> 
+                    <div class="row">      
+                        <div class="col-md-4">
+                            <div class="bg-article-blog" style="background-image: url('{{ asset('images/blogs/' ~ post.imageName) }}');">
+                                <span class="datePosted">{{ post.createdAt|date('M Y')}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-8">                        
+                            <div class="blog-post">
+                                <h2 class="display-6 link-body-emphasis mb-1"><a href="{{ path('app_blog_view', {'slug': post.slug})}}">{{ post.title }}</a></h2>
+                                <div class="blog-content">
+                                    {{ post.metaDescription|raw }}
+                                </div>
+                                <p class="blog-post-meta"> by <a href="#">{{ post.author }}</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+                <div class="pagination_">
+                    {{ knp_pagination_render(posts) }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="position-sticky sidebar" style="top: 2rem;">
+                    
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle py-3 w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Toutes les catégories
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            {% for category in categories %}
+                            <li class="list-group-item w-100">
+                                <a href="{{ path('app_blog_category', {'slug': category.slug}) }}" 
+                                class="dropdown-item d-flex justify-content-between align-items-center w-100 py-3 text-white">
+                                    {{ category.title }}
+                                    <span class="badge bg-success rounded-pill">{{ category.posts|length }}</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="theiaStickySidebar">
+                        <div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
+                            <h4 class="title">Recrutement</h4>
+                            <p>Trouvez les meilleurs talents pour renforcer votre équipe <br>
+                            Publiez votre offre DÈS MAINTENANT !</p>
+                            <div class="btn-signUp">
+                                <a href="{{ path('app_contact_us')}}" class="btn btn-primary white">En savoir plus</a> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Résultat de recherche | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+<input type="hidden" id="hidden-query" value="{{ getSearchQuery('q') }}">
+<div class="home-header-top">
+	<div class="container d-flex justify-content-between p-2">
+		<div class="logo_to_home">
+			<a href="/" class="login_home"><img src="{{ asset('images/logo-olona-talents-white600x200.png')}}" alt="Olona Talents" width="150" height="56"></a>
+		</div>
+		<a href="{{ path('app_login')}}" class="login_home btn-primary me-3 mt-2">Se connecter</a>
+	</div>
+</div>
+<div class="bnr-inr overlay-wraper bg-center" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
+	<div class="container">
+		<div class="bnr-inr-entry">
+			<div class="banner-title-outer">
+				<div class="banner-title-name">
+					<h2 class="title">Liste des préstations de services</h2>
+				</div>
+			</div>
+			<div>
+				<ul class="nav nav-underline">
+					<li class="nav-item">
+						<a class="nav-link" id="candidats-tab" href="{{ path('app_olona_talents_candidates', {'q': getSearchQuery('q')})}}">Candidats</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="annonces-tab" href="{{ path('app_olona_talents_joblistings', {'q': getSearchQuery('q')})}}">Offre d'emploi</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" id="services-tab" href="{{ path('app_olona_talents_prestations', {'q': getSearchQuery('q')})}}">Services</a>
+					</li>
+				</ul>
+			</div>
+			
+			<!-- BREADCRUMB ROW END -->                        
+		</div>
+	</div>
+</div>
+<div class="section-full bg-white">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4 col-md-12 rightSidebar">
+				<div class="theiaStickySidebar sticky-top" style="top: 20px;">
+					<div class="side-bar">
+						<div class="sidebar-elements search-bx">	
+							<form id="searchForm" action="{{ path('app_olona_talents_prestations') }}">
+								<div class="form-group mb-4">
+									<h4 class="section-head-small mb-4">Recherche par mots clés</h4>
+									<input type="search" name="q" value="{{ getSearchQuery('q') }}" class="form-control" placeholder="Tapez ce que vous cherchez...">
+								</div>
+								<div class="form-group mb-4">
+									<h4 class="section-head-small mb-4">Catégorie</h4>
+									<div class="dropdown bootstrap-select">
+										<select id="searchType" class="select-bar-large selectpicker" data-live-search="true" data-bv-field="size">
+											<option value="candidates">Candidats</option>
+											<option value="jobs">Offre d'emploi</option>
+											<option selected value="services">Services</option>
+										</select>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="m-4 card position-relative text-center d-block d-md-none">
+						<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+					</div>
+					<div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
+						<h4 class="title">Recrutement</h4>
+						<p>Trouvez les meilleurs talents pour renforcer votre équipe <br>
+						Publiez votre offre DÈS MAINTENANT !</p>
+						<div class="btn-signUp">
+							<a href="{{ path('app_tableau_de_bord_entreprise_creer_une_annonce')}}" class="btn btn-primary white">En savoir plus</a> 
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="user-results col-lg-8 col-md-12">
+				{% if prestations|length > 0 %}
+					<!--Filter Short By-->
+					<div class="product-filter-wrap d-flex justify-content-between align-items-center m-b30">
+						<span class="result-count-left">
+							{% if totalResults > 2 %}
+							{{ totalResults }} resultats trouvés
+							{% else %}
+							{{ totalResults }} resultat trouvé
+							{% endif %}
+						</span>
+					</div>
+					<div id="prestations-list">
+						{% include "v2/dashboard/result/parts/_part_prestations_list.html.twig" %}
+					</div>
+				{% else %}
+					{% include "v2/dashboard/result/none/_none_prestations.html.twig" %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+document.addEventListener('turbo:load', function() {
+    const form = document.getElementById('searchForm');
+    const select = document.getElementById('searchType');
+    
+    select.addEventListener('change', function() {
+        const value = this.value;
+        let actionUrl = '';
+        
+        switch(value) {
+            case 'candidates':
+                actionUrl = "{{ path('app_olona_talents_candidates') }}";
+                break;
+            case 'jobs':
+                actionUrl = "{{ path('app_olona_talents_joblistings') }}";
+                break;
+            case 'services':
+                actionUrl = "{{ path('app_olona_talents_prestations') }}";
+                break;
+        }
+        
+        form.action = actionUrl;
+    });
+    
+    // Initialize form action based on current selection
+    const initialValue = select.value;
+    select.dispatchEvent(new Event('change'));
+});
+</script>
+{% endblock %}
+
+{% block preview %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Nouveau recruteur{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">Créer un EntrepriseProfile</h1>
+
+            {{ include('white_label/client1/admin/candidat/_form.html.twig') }}
+        </div>
+    </div>
+</section>
+{% endblock %}

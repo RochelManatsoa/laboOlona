@@ -1,0 +1,97 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+{{ aiTool.nom }} | Olona Talents
+{% endblock %}
+
+{% block meta %}
+{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endif %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+
+<section class="">
+    <div class="shadow-custom p-2 p-sm-4">
+        <h1 class="h2 my-3">{{ aiTool.nom }}</h1>
+        <p>{{(aiTool.sloganFr ?? aiTool.slogan|raw)}}</p>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="d-flex justify-content-center">
+                    <div class="card-image-ia-single" style="background-image: url('{{aiTool.image}}');">
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="{{ aiTool.lienAffiliation }}" target="_blank" class="btn btn-outline-secondary">Visiter le
+                        site web</a>
+
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="text-bg-dark small rounded-3 p-3">
+                    <p class="small mt-3"> 
+                        <i class="bi bi-calendar-check"></i> 
+                        Ajouté le {{aiTool.creeLe|date('d M Y')}}
+                    </p>
+                    <p>{{(aiTool.shortDescriptionFr ?? aiTool.shortDescription)|raw}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3 mt-sm-5">
+            <div class="col-md-8">
+                {{(aiTool.descriptionFR ?? filterContent(doShortcode(aiTool.description)))|raw}}
+            </div>
+            <div class="col-12 col-sm-4 d-none d-md-block">
+                <div class="d-flex flex-column flex-shrink-0 py-3 position-sticky top-0">
+                {% if aiTool.categories|length > 0 %}
+                <h2 class="h4 mt-3">Catégories</h2>
+                <div class="small">
+                    {% for category in aiTool.categories %}
+                    <a href="{{ path('app_ai_tools_category', {'slug': category.slug}) }}"><span
+                            class="badge text-bg-dark rounded-pill"><i class="bi bi-tags"></i> {{ category.nomFr ??
+                            category.nom }}</span></a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if aiTool.tags|length > 0 %}
+                <h2 class="h4 mt-3">Etiquettes</h2>
+                <div class="small">
+                    {% for tag in aiTool.tags %}
+                    <a href="{{ path('app_ai_tools_tag', {'slug': tag.slug}) }}"><span
+                            class="badge text-bg-primary rounded-pill"> # {{ tag.nomFr ?? tag.nom }}</span></a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        </div>
+</section>
+
+{% if relateds|length > 0 %}
+<h2 class="h5 mt-4">Outils IA similaire à {{ aiTool.nom }}</h2>
+
+    <div class="container">
+        <div id="ia-container">
+            {% include "v2/dashboard/ai_tools/_part_ai_tools_list.html.twig" with {aiTools : relateds}%}
+        </div>
+    </div>
+    
+{% endif %}
+
+
+{% endblock %}

@@ -3,6 +3,8 @@
 {% block body %}
 <div class="container mt-5">
     <h2>Gestion des annonces</h2>
+    <a href="{{ path('new_annonce_moderateur')}}" class="btn btn-warning my-3 rounded-pill px-5">Nouveau</a>
+    
     {{ form_start(form, {'attr': {'class': 'form-group my-4', 'id':'moderateur-annonce-search-form'}}) }}
     <div class="row">
         <div class="input-group">

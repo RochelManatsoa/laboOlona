@@ -1,0 +1,136 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% block body %}
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Mon profil </h5>
+            </div>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Paramètres </li>
+            <li class="breadcrumb-item position-relative"> Mon profil </li>
+        </ol>
+    </div>
+</section>
+{% if not candidat.isIsPremium %}
+<section class="warning_freemium mb-4 d-flex align-items-center">
+    <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+    <div class="warning-block">
+        Vous êtes actuellement sur un plan gratuit. <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">Achetez du credit</a> pour <a routerlink="{{ path('app_tableau_de_bord_candidat_boost')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_boost')}}">booster la visibilité</a> de votre profil ou encore, passez à un <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs')}}">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+    </div>
+</section>
+{% endif %}
+<div class="form_compte_">
+    {{ form_start(form, {'attr': {'data-turbo': 'false'}})}}
+    <div class="biographie-profil mb-4 p-4 apparition_">
+        <span class="fs-5 mb-1 fw-bold lh-base st-title">Votre CV</span>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+                {{ form_row(form.cv) }}
+            </div>
+            <div class="col-lg-6 col-sm-12 d-flex justify-content-center align-items-center">
+                <div class="cv-pdf text-center">
+                    {% if candidat.cv is defined and candidat.cv is not null %}
+                        <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" title="Ouvrir" target="_blank">
+                            <i class="bi bi-filetype-pdf" style="font-size: 2rem;"></i>
+                            <span class="small fw-light">{{ candidat.cv }}</span>
+                        </a>
+                    {% else %}
+                        <i class="bi bi-info-circle" style="font-size: 1.2rem; color: red;"></i>
+                        <span class="small fw-light">Vous n'avez pas encore envoyé de CV. <br>Veuillez télécharger votre CV pour améliorer vos chances de sélection.</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="biographie-profil mb-4 p-4 apparition_">
+        <span class="fs-5 mb-1 fw-bold lh-base st-title">Informations personnelles</span>
+        <hr/>
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-2 col-sm-12 text-center">
+                <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/experts/' ~ form.vars.data.fileName) : asset('uploads/experts/avatar-default.jpg') }}');cursor:pointer;" alt="Avatar">
+                    <div class="overlay-text">Changer la photo</div>
+                </div>
+                {{ form_widget(form.file) }}
+                {{ form_errors(form.file) }}
+            </div>
+            <div class="col-lg-10 col-sm-12">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                    {{ form_row(form.candidat.nom)}}
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                    {{ form_row(form.candidat.prenom)}}
+                    </div>
+                </div>
+                {{ form_row(form.birthday)}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+            {{ form_row(form.candidat.email)}}
+            </div>
+            <div class="col-lg-6 col-sm-12">
+            {{ form_row(form.candidat.telephone)}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+            {{ form_row(form.candidat.adress)}}
+            </div>
+            <div class="col-lg-6 col-sm-12">
+            {{ form_row(form.candidat.city)}}
+            </div>
+        </div>
+    </div>
+    <div class="biographie-profil mb-4 p-4 apparition_">
+        <span class="fs-5 mb-1 fw-bold lh-base st-title">Informations professionnelles</span>
+        <hr/>
+        {{ form_row(form.titre)}}
+        {{ form_row(form.secteurs)}}
+        {{ form_row(form.resume)}}
+        <div class="row">
+            <div class="col-sm-12 col-md-4">{{ form_row(form.tarifCandidat.montant) }}</div>
+            <div class="col-sm-12 col-md-4">{{ form_row(form.tarifCandidat.typeTarif) }}</div>
+            <div class="col-sm-12 col-md-4">{{ form_row(form.tarifCandidat.currency) }}</div>
+        </div>
+        {{ form_row(form.competences)}}
+        {{ form_row(form.experiences)}}
+        {{ form_row(form.langages)}}
+    </div>
+    <div class="biographie-profil mb-4 p-4 apparition_">
+        <span class="fs-5 mb-1 fw-bold lh-base st-title">Profil social</span>
+        <hr/>
+        {{ form_row(form.social)}}
+    </div>
+    <button type="submit" class="btn btn-primary px-5 rounded-pill btn-lg mb-5">Sauvegarder</button>
+    <div style="display:none;">
+        {{ form_widget(form)}}
+    </div>
+    {{ form_end(form)}}
+</div>
+<script>
+    document.querySelector('.profile-img').addEventListener('click', function() {
+        document.getElementById('{{ form.file.vars.id }}').click();
+    });
+
+    document.getElementById('{{ form.file.vars.id }}').addEventListener('change', function(event) {
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.profile-img').style.backgroundImage = 'url(' + e.target.result + ')';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    });
+</script>
+{% endblock %}

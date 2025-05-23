@@ -3,6 +3,7 @@
 namespace App\Entity\Candidate;
 
 use App\Entity\CandidateProfile;
+use App\Entity\Moderateur\EditedCv;
 use App\Repository\Candidate\CVRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,6 +27,12 @@ class CV
 
     #[ORM\Column(length: 255)]
     private ?string $safeFileName = null;
+
+    #[ORM\OneToOne(inversedBy: 'cV', cascade: ['persist', 'remove'])]
+    private ?EditedCv $edited = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
 
     public function getId(): ?int
     {
@@ -76,6 +83,30 @@ class CV
     public function setSafeFileName(string $safeFileName): static
     {
         $this->safeFileName = $safeFileName;
+
+        return $this;
+    }
+
+    public function getEdited(): ?EditedCv
+    {
+        return $this->edited;
+    }
+
+    public function setEdited(?EditedCv $edited): static
+    {
+        $this->edited = $edited;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

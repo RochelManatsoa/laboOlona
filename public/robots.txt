@@ -1,0 +1,23 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /ajax/
+Disallow: /dashboard/
+Disallow: /v2/dashboard/
+Disallow: /v2/candidate/
+Disallow: /v2/recruiter/
+Disallow: /v2/staff/
+Disallow: /finance/
+Disallow: /uploads/
+Disallow: /coworking/event/
+Disallow: /coworking/order/
+Disallow: /coworking/order/
+Disallow: /coworking/reservation/
+Disallow: /coworking/category/
+Disallow: /coworking/place/
+Disallow: /coworking/user/
+
+sitemap: https://olona-talents.com/sitemap.xml
+sitemap: https://olona-talents.com/sitemap.default.xml
+sitemap: https://olona-talents.com/sitemap.blog.xml
+sitemap: https://olona-talents.com/sitemap.category.xml

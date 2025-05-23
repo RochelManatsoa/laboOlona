@@ -2,11 +2,16 @@
 
 namespace App\Entity\Entreprise;
 
+use App\Entity\BusinessModel\Boost;
+use App\Entity\BusinessModel\BoostFacebook;
+use App\Entity\BusinessModel\BoostVisibility;
 use App\Entity\Candidate\Applications;
 use App\Entity\Candidate\Competences;
 use App\Entity\EntrepriseProfile;
 use App\Entity\Langue;
+use App\Entity\Moderateur\Assignation;
 use App\Entity\Moderateur\TypeContrat;
+use App\Entity\Referrer\Referral;
 use App\Entity\Secteur;
 use App\Entity\Vues\AnnonceVues;
 use App\Repository\Entreprise\JobListingRepository;
@@ -15,6 +20,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: JobListingRepository::class)]
 class JobListing
@@ -30,6 +36,16 @@ class JobListing
     const STATUS_FEATURED = 'FEATURED';
     const STATUS_RESERVED = 'RESERVED';
 
+    public static function getCompanyStatuses() {
+        return [
+            'En attente' => self::STATUS_PENDING ,
+            'Bruillon' => self::STATUS_DRAFT ,
+            'Publiée' => self::STATUS_PUBLISHED ,
+            'Rejetée' => self::STATUS_REJECTED ,
+            'Archivée' => self::STATUS_ARCHIVED ,
+            'Mis en avant' => self::STATUS_FEATURED ,
+        ];
+    }
 
     public static function getStatuses() {
         return [
@@ -60,6 +76,21 @@ class JobListing
              self::STATUS_RESERVED ,
         ];
     }
+
+    public static function getLabels() {
+        return [
+             self::STATUS_DRAFT =>        '<span class="badge bg-info">Brouillon</span>' ,
+             self::STATUS_PUBLISHED =>        '<span class="badge bg-success">Publiée</span>' ,
+             self::STATUS_PENDING =>        '<span class="badge bg-warning">En attente</span>' ,
+             self::STATUS_REJECTED =>        '<span class="badge bg-danger">Rejetée</span>' ,
+             self::STATUS_EXPIRED =>        '<span class="badge bg-danger">Expirée</span>' ,
+             self::STATUS_ARCHIVED =>        '<span class="badge bg-dark">Archivée</span>' ,
+             self::STATUS_UNPUBLISHED =>        '<span class="badge bg-warning">Non publiée</span>' ,
+             self::STATUS_DELETED =>        '<span class="badge bg-dark">Effacée</span>' ,
+             self::STATUS_FEATURED =>        '<span class="badge bg-primary">Mis en avant</span>' ,
+             self::STATUS_RESERVED =>        '<span class="badge bg-secondary">Réservée</span>' ,
+        ];
+    }
     
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -70,27 +101,34 @@ class JobListing
     private ?EntrepriseProfile $entreprise = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['annonce'])]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['annonce'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['annonce'])]
     private ?\DateTimeInterface $dateCreation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['annonce'])]
     private ?\DateTimeInterface $dateExpiration = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['annonce'])]
     private ?string $status = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[Groups(['annonce'])]
     private ?string $salaire = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['annonce'])]
     private ?string $lieu = null;
 
-    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Applications::class)]
+    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Applications::class, cascade: ['remove'])]
     private Collection $applications;
 
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
@@ -99,20 +137,69 @@ class JobListing
     #[ORM\ManyToMany(targetEntity: Competences::class, inversedBy: 'jobListings')]
     private Collection $competences;
 
-    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: AnnonceVues::class)]
+    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: AnnonceVues::class, cascade: ['remove'])]
     private Collection $annonceVues;
 
     #[ORM\ManyToMany(targetEntity: Langue::class, inversedBy: 'jobListings')]
     private Collection $langues;
 
     #[ORM\Column(type: 'uuid')]
+    #[Groups(['annonce'])]
     private ?Uuid $jobId = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['annonce'])]
     private ?int $nombrePoste = null;
 
     #[ORM\ManyToOne(inversedBy: 'jobListings')]
     private ?TypeContrat $typeContrat = null;
+
+    #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: Assignation::class, cascade: ['remove'])]
+    private Collection $assignations;
+
+    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Referral::class, cascade: ['remove'])]
+    private Collection $referrals;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
+    private ?string $prime = null;
+
+    #[ORM\ManyToOne(inversedBy: 'annonce', cascade: ['persist'])]
+    private ?BudgetAnnonce $budgetAnnonce = null;
+
+    #[ORM\OneToOne(mappedBy: 'annonce', cascade: ['persist', 'remove'])]
+    private ?PrimeAnnonce $primeAnnonce = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $shortDescription = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isGenerated = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $cleanDescription = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jobListings')]
+    private ?Boost $boost = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jobListings')]
+    private ?BoostFacebook $boostFacebook = null;
+
+    #[ORM\OneToMany(mappedBy: 'jobListing', targetEntity: BoostVisibility::class, cascade: ['remove'])]
+    private Collection $boostVisibilities;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isNotified = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isPublishedOnFacebook = null;
+
+    public function __toString()
+    {
+        return $this->titre;        
+    }
 
     public function __construct()
     {
@@ -120,6 +207,9 @@ class JobListing
         $this->competences = new ArrayCollection();
         $this->annonceVues = new ArrayCollection();
         $this->langues = new ArrayCollection();
+        $this->assignations = new ArrayCollection();
+        $this->referrals = new ArrayCollection();
+        $this->boostVisibilities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -375,6 +465,306 @@ class JobListing
     public function setTypeContrat(?TypeContrat $typeContrat): static
     {
         $this->typeContrat = $typeContrat;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Assignation>
+     */
+    public function getAssignations(): Collection
+    {
+        return $this->assignations;
+    }
+
+    public function addAssignation(Assignation $assignation): static
+    {
+        if (!$this->assignations->contains($assignation)) {
+            $this->assignations->add($assignation);
+            $assignation->setJobListing($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignation(Assignation $assignation): static
+    {
+        if ($this->assignations->removeElement($assignation)) {
+            // set the owning side to null (unless already changed)
+            if ($assignation->getJobListing() === $this) {
+                $assignation->setJobListing(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Referral>
+     */
+    public function getReferrals(): Collection
+    {
+        return $this->referrals;
+    }
+
+    public function addReferral(Referral $referral): static
+    {
+        if (!$this->referrals->contains($referral)) {
+            $this->referrals->add($referral);
+            $referral->setAnnonce($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferral(Referral $referral): static
+    {
+        if ($this->referrals->removeElement($referral)) {
+            // set the owning side to null (unless already changed)
+            if ($referral->getAnnonce() === $this) {
+                $referral->setAnnonce(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPrime(): ?string
+    {
+        return $this->prime;
+    }
+
+    public function setPrime(?string $prime): static
+    {
+        $this->prime = $prime;
+
+        return $this;
+    }
+
+    public function getBudgetAnnonce(): ?BudgetAnnonce
+    {
+        return $this->budgetAnnonce;
+    }
+
+    public function setBudgetAnnonce(?BudgetAnnonce $budgetAnnonce): static
+    {
+        $this->budgetAnnonce = $budgetAnnonce;
+
+        return $this;
+    }
+
+    public function getPrimeAnnonce(): ?PrimeAnnonce
+    {
+        return $this->primeAnnonce;
+    }
+
+    public function setPrimeAnnonce(?PrimeAnnonce $primeAnnonce): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($primeAnnonce === null && $this->primeAnnonce !== null) {
+            $this->primeAnnonce->setAnnonce(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($primeAnnonce !== null && $primeAnnonce->getAnnonce() !== $this) {
+            $primeAnnonce->setAnnonce($this);
+        }
+
+        $this->primeAnnonce = $primeAnnonce;
+
+        return $this;
+    }
+
+    #[Groups(['annonce'])]
+    public function getSecteurName(): string
+    {
+        return $this->secteur->getNom();
+    }
+
+    #[Groups(['annonce'])]
+    public function getCountViews(): int
+    {
+        return $this->annonceVues->count();
+    }
+
+    #[Groups(['annonce'])]
+    public function getCountApplications(): int
+    {
+        return $this->applications->count();
+    }
+
+    #[Groups(['annonce'])]
+    public function getBudget(): string
+    {
+        $type = '-';
+        if($this->budgetAnnonce){
+            $type = BudgetAnnonce::arrayInverseTarifType()[$this->budgetAnnonce->getTypeBudget()];
+        }
+        return $type;
+    }
+
+    #[Groups(['annonce'])]
+    public function getMontantBudget(): string
+    {
+        $montant = $this->salaire.' €';
+        if($this->budgetAnnonce){
+            if($this->budgetAnnonce->getCurrency()){
+                $montant = $this->budgetAnnonce->getMontant().' '.$this->budgetAnnonce->getCurrency()->getSymbole();
+            }else{
+                $montant = $this->budgetAnnonce->getMontant().' €';
+            }
+        }
+        return $montant;
+    }
+
+    #[Groups(['annonce'])]
+    public function getMontantPrime(): string
+    {
+        $montant = '-';
+        if($this->primeAnnonce && $this->primeAnnonce->getDevise()){
+            $montant = $this->primeAnnonce->getMontant().' '.$this->primeAnnonce->getDevise()->getSymbole();
+        }
+        return $montant;
+    }
+
+    #[Groups(['annonce'])]
+    public function getContrat(): string
+    {
+        $contrat = '-';
+        if($this->typeContrat){
+            $contrat = $this->typeContrat->getNom();
+        }
+        return $contrat;
+    }
+
+    #[Groups(['annonce'])]
+    public function getUrl(): string
+    {
+        return 'https://app.olona-talents.com/dashboard/candidat/annonce/'.$this->jobId;
+    }
+
+    public function getShortDescription(): ?string
+    {
+        return $this->shortDescription;
+    }
+
+    public function setShortDescription(?string $shortDescription): static
+    {
+        $this->shortDescription = $shortDescription;
+
+        return $this;
+    }
+
+    public function isIsGenerated(): ?bool
+    {
+        return $this->isGenerated;
+    }
+
+    public function setIsGenerated(?bool $isGenerated): static
+    {
+        $this->isGenerated = $isGenerated;
+
+        return $this;
+    }
+
+    public function getCleanDescription(): ?string
+    {
+        return $this->cleanDescription;
+    }
+
+    public function setCleanDescription(?string $cleanDescription): static
+    {
+        $this->cleanDescription = $cleanDescription;
+
+        return $this;
+    }
+
+    public function getBoost(): ?Boost
+    {
+        return $this->boost;
+    }
+
+    public function setBoost(?Boost $boost): static
+    {
+        $this->boost = $boost;
+
+        return $this;
+    }
+
+    public function getBoostFacebook(): ?BoostFacebook
+    {
+        return $this->boostFacebook;
+    }
+
+    public function setBoostFacebook(?BoostFacebook $boostFacebook): static
+    {
+        $this->boostFacebook = $boostFacebook;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BoostVisibility>
+     */
+    public function getBoostVisibilities(): Collection
+    {
+        return $this->boostVisibilities;
+    }
+
+    public function addBoostVisibility(BoostVisibility $boostVisibility): static
+    {
+        if (!$this->boostVisibilities->contains($boostVisibility)) {
+            $this->boostVisibilities->add($boostVisibility);
+            $boostVisibility->setJobListing($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBoostVisibility(BoostVisibility $boostVisibility): static
+    {
+        if ($this->boostVisibilities->removeElement($boostVisibility)) {
+            // set the owning side to null (unless already changed)
+            if ($boostVisibility->getJobListing() === $this) {
+                $boostVisibility->setJobListing(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function isIsNotified(): ?bool
+    {
+        return $this->isNotified;
+    }
+
+    public function setIsNotified(?bool $isNotified): static
+    {
+        $this->isNotified = $isNotified;
+
+        return $this;
+    }
+
+    public function isIsPublishedOnFacebook(): ?bool
+    {
+        return $this->isPublishedOnFacebook;
+    }
+
+    public function setIsPublishedOnFacebook(?bool $isPublishedOnFacebook): static
+    {
+        $this->isPublishedOnFacebook = $isPublishedOnFacebook;
 
         return $this;
     }

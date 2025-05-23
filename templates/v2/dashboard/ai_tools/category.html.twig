@@ -1,0 +1,49 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+{{category.nomFr ?? category.nom}} | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endif %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+	<section class="">
+		<div class="shadow-custom p-2 p-sm-4">
+			<h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-magic text-warning me-2"></i></span> 
+				Ai Tools
+			</h1>
+			<h2 class="fs-5 text-center">Catégorie : {{category.nomFr ?? category.nom}}</h2> 
+			<p class="my-4 text-center">{{ category.description|raw }}</p>
+			<div id="outils-ia-tag-list">
+				{% if aiTools|length > 0 %}
+				{% include 'v2/dashboard/ai_tools/_part_ai_tools_list.html.twig' %}
+				{% else %}
+				<div class="text-center col-lg-6 col-sm-12 mx-auto">
+					<img src="{{ asset('images/empty.png')}}" class="img-fluid">
+					<p class="text-center">Aucun outils enregistrés pour cette catégorie.</p>
+				</div>
+				{% endif %}
+			</div>
+
+		</div>
+	</section>
+{% endblock %}

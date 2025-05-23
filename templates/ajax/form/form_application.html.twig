@@ -1,0 +1,16 @@
+<form method="post" action="{{ path('app_ajax_update_application', {'id': application.id })}}" class="row border-top py-2 applications" data-application-id={{ application.id }}>
+    <input type="hidden" name="application_id_{{ application.id }}" value="{{ application.id }}">
+    <div class="col-3">
+        {{ application.annonce.titre }}<br>
+        <span class="small">Status <span class="text-muted">{{ application.status }}</span><br>
+            Le {{ application.dateCandidature|date('d M Y')}}
+        </span>
+    </div>
+    <div class="col-9">
+        <textarea id="application_lettreMotivation_{{ application.id }}" name="lettreMotivation" class="form-control ckeditor-textarea" rows="6">{{ application.lettreMotivation ?? '' }}</textarea>
+    </div>
+    <div class="col-6 mx-auto">
+        <button type="submit" class="btn btn-info rounded-pill my-1 px-4 btn-sm">Soumettre</button>
+        <button type="button" class="btn btn-outline-dark rounded-pill my-1 px-4 btn-sm cancel-applications">Annuler</button>
+    </div>
+</form>

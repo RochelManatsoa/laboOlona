@@ -1,0 +1,124 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Recharger mes crédits | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% else %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+
+{% block body %}
+<section class="">
+
+    {{ form_start(form) }}
+      <div class="modal-header">
+        <h2 class="modal-title fs-4 fw-bold mx-auto" id="packageLabel">Achat securisé</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="col-10 mx-auto">
+          <div class="row mt-4" id="mobileMoney">
+            <div class="col-12">
+              <h3 class="fs-5 fw-bolder">Mobile Money</h3>
+            </div>
+            {% for type in form.typeTransaction %}
+                {% if loop.index <= 3 %}
+                    <div class="col-md-3">
+                        <div class="custom-control custom-radio image-checkbox photo-gris">
+                            {{ form_widget(type, {'attr': {'class': 'custom-control-input'}}) }}
+                              <h3 class="fs-6">{{type.vars.label|upper}}</h3>
+                            <label class="custom-control-label" for="{{ type.vars.id }}">
+                                <img src="{{ asset('/images/' ~ type.vars.id ~ '.png') }}" class="img-fluid border" alt="{{ type.vars.label }}">
+                            </label>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if loop.index == 4 %}
+                        </div> 
+                        <div class="row mt-4" id="bankCard">
+                          <div class="col-12">
+                            <h3 class="fs-5 fw-bolder">Carte Bancaire</h3>
+                          </div> 
+                    {% endif %}
+                    <div class="col-md-3">
+                        <div class="custom-control custom-radio image-checkbox photo-gris">
+                            {{ form_widget(type, {'attr': {'class': 'custom-control-input'}}) }}
+                            <h3 class="fs-6">{{type.vars.label|upper}}</h3>
+                            <label class="custom-control-label" for="{{ type.vars.id }}">
+                                <img src="{{ asset('/images/' ~ type.vars.id ~ '.png') }}" class="img-fluid border" alt="{{ type.vars.label }}">
+                            </label>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+          </div> 
+
+          <div id="pointMarchand" style="display:none;">
+              <div class="my-3">
+                <p>Veuillez envoyer le montant exact sur le numéro de mobile money indiqué ci-dessous. Une fois le paiement effectué, entrez la référence de transaction dans le champ prévu à cet effet et cliquez sur le bouton "Soumettre" pour finaliser votre achat.</p>
+                
+                <div class="my-3 text-center mx-auto">
+                  <label for="pointMarchandNumber" class="form-label">Numéro de mobile money</label>
+                  <div class="row g-2 my-3">
+                    <div class="col border rounded py-3">
+                      <span class="fw-light">MVola</span><br>                    
+                      <span class="fw-bold fs-5">0340012345</span>
+                    </div>
+                    <div class="col border rounded py-3">
+                      <span class="fw-light">Orange Money</span><br>                    
+                      <span class="fw-bold fs-5">0320012345</span>
+                    </div>
+                    <div class="col border rounded py-3">
+                      <span class="fw-light">Airtel Money</span><br>                    
+                      <span class="fw-bold fs-5">0330012345</span>
+                    </div>
+                  </div>
+                </div>
+
+                <p><strong><i class="bi bi-info-circle"></i></strong> Assurez-vous d'utiliser la même référence indiquée lors de votre paiement pour éviter tout retard dans le traitement de votre commande.</p>      
+              </div>
+              <div id="transaction_amount_row">
+              {{ form_row(form.amount) }}
+              </div>
+              <div id="transaction_reference_row">
+              {{ form_row(form.reference) }}
+              </div>
+              <div id="multipay">
+                  {{ form_row(form.transactionReferences) }}
+              </div>
+          </div>
+
+          <div id="bankApi" style="display:none;">
+              <div class="my-3">
+                <p>Information API de la banque</p>
+              </div>
+          </div>
+
+            <div style="display:none;">
+                {{ form_widget(form) }}
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary fw-semibold text-uppercase" id="submitModal">Soumettre</button>
+      </div>
+    {{ form_end(form) }}
+
+</section>
+{% endblock %}

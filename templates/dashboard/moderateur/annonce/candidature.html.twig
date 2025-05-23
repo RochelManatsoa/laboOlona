@@ -9,7 +9,7 @@
             <div class="col">
             <dl>
                 <dt>Entreprise</dt>
-                <dd><a href="{{ path('voir_entreprise', {'id': annonce.entreprise.id }) }}"><i class="bi bi-building mx-2"></i>{{ annonce.entreprise.nom }}</a></dd>
+                <dd><a href="{{ path('app_dashboard_moderateur_profile_entreprise_view', {'id': annonce.entreprise.id }) }}"><i class="bi bi-building mx-2"></i>{{ annonce.entreprise.nom }}</a></dd>
             </dl>            
             </div>
             <div class="col">
@@ -91,7 +91,7 @@
         <thead>
             <tr>
                 <th class="col-2">Candidat</th>
-                <th class="col-3">Titre</th>
+                <th class="col-3">Date</th>
                 <th class="col-2">Status</th>
                 <th class="col-3">Actions</th>
             </tr>
@@ -100,14 +100,13 @@
             {% for application in candidatures %}
                 <tr>
                     <td>
-                        <a href="{{ path('app_dashboard_moderateur_candidat_view', {'id': application.candidat.id} ) }}">
+                        <a href="{{ path('app_dashboard_moderateur_profile_candidat_view', {'id': application.candidat.id} ) }}">
                             {{ application.candidat.candidat.nom }} {{ application.candidat.candidat.prenom }}
-                        </a>
+                        </a><br>
+                        <span class="text-muted small">{{ application.candidat.titre }}</span>
                     </td>
                     <td>
-                        <a href="{{ path('app_dashboard_moderateur_candidat_view', {'id': application.candidat.id}) }}">
-                            {{ application.candidat.titre }}
-                        </a>
+                        {{ application.dateCandidature|time_ago }}
                     </td>
                     <td>
                         <form method="post" action="{{ path('app_dashboard_moderateur_candidature_status', {'id': application.id}) }}">

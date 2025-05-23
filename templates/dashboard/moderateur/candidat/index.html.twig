@@ -3,6 +3,8 @@
 {% block body %}
 <div class="container mt-5">
     <h2>Gestion des candidats</h2>
+
+        <button type="button" data-bs-target="#newCandidateModalToggle" data-bs-toggle="modal" class="btn btn-warning my-3 rounded-pill px-5">Nouveau</button>
         {{ form_start(form, {'attr': {'class': 'form-group my-4', 'id':'moderateur-candidat-search-form'}}) }}
         <div class="row">
             <div class="input-group">
@@ -45,6 +47,109 @@ $(document).ready(function() {
         searchAnnonces();
     });
 });
+</script>
+{{ form_start(formCandidate)}}
+<div class="modal fade" id="newCandidateModalToggle" aria-hidden="true" aria-labelledby="newCandidateModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="newCandidateModalToggleLabel">Information personnelle</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      
+        <div class="row">
+            <div class="col">
+                {{ form_label(formCandidate.candidat.nom) }}
+                {{ form_widget(formCandidate.candidat.nom, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formCandidate.candidat.nom) }}
+            </div>
+            <div class="col">
+                {{ form_label(formCandidate.candidat.prenom) }} 
+                {{ form_widget(formCandidate.candidat.prenom, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formCandidate.candidat.prenom) }}
+            </div>
+        </div>
+      
+        <div class="row">
+            <div class="col">
+                {{ form_label(formCandidate.candidat.email) }}
+                {{ form_widget(formCandidate.candidat.email, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formCandidate.candidat.email) }}
+            </div>
+            <div class="col">
+                {{ form_label(formCandidate.candidat.telephone) }} 
+                {{ form_widget(formCandidate.candidat.telephone, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formCandidate.candidat.telephone) }}
+            </div>
+        </div>
+      
+        <div class="row">
+            <div class="col">
+                {{ form_label(formCandidate.candidat.adress) }}
+                {{ form_widget(formCandidate.candidat.adress, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formCandidate.candidat.adress) }}
+            </div>
+            <div class="col">
+                {{ form_label(formCandidate.localisation) }} 
+                {{ form_widget(formCandidate.localisation, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formCandidate.localisation) }}
+            </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary rounded-pill px-5" data-bs-target="#newCandidateModalToggle2" data-bs-toggle="modal">Suivant</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="newCandidateModalToggle2" aria-hidden="true" aria-labelledby="newCandidateModalToggleLabel2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="newCandidateModalToggleLabel2">Information professionnelle</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        {{ form_label(formCandidate.titre) }} 
+        {{ form_widget(formCandidate.titre, {'attr': {'class': 'form-control mb-4'}}) }}
+        {{ form_errors(formCandidate.titre) }}
+                
+      
+        <div class="row">
+            <div class="col">
+                {{ form_label(formCandidate.cv) }}
+                {{ form_widget(formCandidate.cv, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formCandidate.cv) }}
+            </div>
+            <div class="col">
+                {{ form_label(formCandidate.secteurs) }} 
+                {{ form_widget(formCandidate.secteurs, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formCandidate.secteurs) }}
+            </div>
+        </div>
+        
+        {{ form_label(formCandidate.resume) }} 
+        {{ form_widget(formCandidate.resume, {'attr': {'class': 'form-control mb-4'}}) }}
+        {{ form_errors(formCandidate.resume) }}
+
+        <div style="display:none;">
+            {{ form_widget(formCandidate) }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-primary rounded-pill px-5" data-bs-target="#newCandidateModalToggle" data-bs-toggle="modal">Précédent</button>
+        <button class="btn btn-primary rounded-pill px-5" type="submit" >Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{ form_end(formCandidate)}}
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#candidat_resume' ) )
 </script>
 {% endblock %}
 

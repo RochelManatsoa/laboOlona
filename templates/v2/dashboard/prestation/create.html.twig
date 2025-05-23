@@ -1,0 +1,228 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Créer une prestation | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+	{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+		{% include "v2/dashboard/layout_candidat.html.twig" %}
+	{% endif %}
+
+	{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+		{% include "v2/dashboard/layout_entreprise.html.twig" %}
+	{% endif %}
+
+{% endblock %}
+
+
+{% block body %}
+	<section class="">
+		<div class="shadow-custom p-2 p-sm-4">
+			<h2 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+				<i class="bi bi-person-workspace text-warning me-2"></i>
+				Publier une prestation
+			</h2>
+			<p class="text-center">
+				Créez et publiez votre prestation en quelques étapes simples. Remplissez les informations demandées ci-dessous pour décrire votre service de manière claire et précise. Une fois la prestation complétée, vous pourrez choisir d'améliorer sa visibilité grâce à l'option de boost disponible. N'oubliez pas que la publication d'une prestation coûte 10 crédits et qu'un boost peut vous aider à atteindre plus de clients potentiels. Assurez-vous que toutes les informations sont exactes avant de soumettre.
+			</p>
+			<div class="col-12 col-sm-10 mx-auto p-2 p-sm-4">
+				{{ form_start(form, {'attr': {'id': 'createPrestation', 'action': path('app_v2_create_prestation')}}) }}
+				{{ form_errors(form)}}
+				<div class="row">
+					<div id="prestation_titre_row" class="">
+						{{ form_row(form.titre) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_secteurs_row" class="">
+						{{ form_row(form.secteurs) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_description_row" class="">
+						{{ form_row(form.description) }}
+					</div>
+				</div>
+				<div id="prestation_tarifPrestation_row" class="">
+
+					<div class="row">
+						<div class="col-4">
+							<div class="mb-3">
+								<label class="fw-bold small" for="prestation_tarifPrestation_typeTarif">Tarif</label>
+								{{ form_widget(form.tarifPrestation.typeTarif)}}
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="mb-3">
+								<label class="fw-bold small" for="prestation_tarifPrestation_montant">Montant</label>
+								{{ form_widget(form.tarifPrestation.montant)}}
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="mb-3">
+								<label class="fw-bold small" for="prestation_tarifPrestation_currency">Devise</label>
+								{{ form_widget(form.tarifPrestation.currency)}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_modalitesPrestation_row" class="">
+						{{ form_row(form.modalitesPrestation) }}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="mb-3">
+							<div class="disponibilite-form">
+
+								<div class="radio-options">
+									{{ form_row(form.availability.nom) }}
+								</div>
+
+								<div class="date-picker-container mt-2">
+									{{ form_row(form.availability.dateFin) }}
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_competences_row" class="">
+						{{ form_row(form.competences) }}
+					</div>
+				</div>
+				<div class="row my-4 text-center">
+					<div class="col mx-auto">
+						<label class="fw-bold fs-6 form-label" for="prestation_file">Ajouter votre affiche ici</label>
+						<div class="rounded-circle profile-img bg-image-candidat-account mx-auto" style="background-image: url('{{ form.vars.data.fileName ? asset('uploads/prestations/' ~ form.vars.data.fileName) : asset('images/prestation.png') }}');cursor:pointer;" alt="Avatar">
+							<div class="overlay-text">Changer l'affiche</div>
+						</div>
+						{{ form_widget(form.file) }}
+						{{ form_help(form.file) }}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6">
+						<div class="row">
+							<div id="prestation_contactEmail_row" class="">
+								{{ form_row(form.contactEmail) }}
+							</div>
+						</div>
+					</div>
+					<div class="col-6">
+						<div class="row">
+							<div id="prestation_contactTelephone_row" class="">
+								{{ form_row(form.contactTelephone) }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_motsCles_row" class="">
+						{{ form_row(form.motsCles) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_conditionsParticulieres_row" class="">
+						{{ form_row(form.conditionsParticulieres) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_portfolioLinks_row" class="">
+						{{ form_row(form.portfolioLinks) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_preferencesCommunication_row" class="">
+						{{ form_row(form.preferencesCommunication) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_engagementQualite_row" class="">
+						{{ form_row(form.engagementQualite) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_contactReseauxSociaux_row" class="">
+						{{ form_row(form.contactReseauxSociaux) }}
+					</div>
+				</div>
+				<div class="row">
+					<div id="prestation_boost">
+						<fieldset class="mb-3">
+							<div id="prestation_boost" class="radio-grid" data-html="data-html" aria-describedby="prestation_boost_help">
+								<div class="form-check selected">
+									<input type="radio" id="prestation_boost_placeholder" name="prestation[boost]" class="form-check-input" value="" checked="checked">
+									<label class="form-check-label" for="prestation_boost_placeholder">Pas de boost</label>
+								</div>
+								<div class="form-check">
+									<input type="radio" id="prestation_boost_7" name="prestation[boost]" data-content="Ce boost offre une visibilité accrue de votre prestation pendant une semaine. Il est idéal pour des missions urgentes nécessitant une attention rapide. Votre prestation sera mise en avant dans les résultats de recherche, augmentant ainsi vos chances de recevoir des propositions." class="form-check-input" value="7">
+									<label class="form-check-label" for="prestation_boost_7">Boost 7 jours (1000 crédits)</label>
+								</div>
+								<div class="form-check">
+									<input type="radio" id="prestation_boost_boost_8" name="prestation[boost]" data-content="Doublez la durée de visibilité avec notre Boost Avancé. Conçu pour les prestations nécessitant plus de temps pour attirer le bon client, cette option vous assure une place de choix dans les recherches pendant deux semaines." class="form-check-input" value="8">
+									<label class="form-check-label" for="prestation_boost_boost_8">Boost 15 jours (2000 crédits)</label>
+								</div>
+								<div class="form-check">
+									<input type="radio" id="prestation_boost_boost_9" name="prestation[boost]" data-content="Maximisez votre présence sur la plateforme avec le Boost Premium. Offrant un mois de visibilité étendue, cette option est parfaite pour les prestataires cherchant à établir une présence solide et continuelle. Profitez également d'un placement préférentiel dans les recommandations envoyées aux clients." class="form-check-input" value="9">
+									<label class="form-check-label" for="prestation_boost_boost_9">Boost 30 jours (4000 crédits)</label>
+								</div>
+							</div>
+							<small class="fw-lighter">Choisissez un boost pour augmenter la visibilité de votre prestation (optionnel).</small>
+						</fieldset>
+						<fieldset class="mb-3">
+							<div id="prestation_boostFacebook" style="display:none;">
+                				<h4 class="text-center fw-bolder h5 mb-2">Augmentez votre influence sur Facebook</h4>
+								<div class="radio-grid">
+									<div class="form-check selected-facebook">
+										<input type="radio" id="prestation_boostFacebook_placeholder" name="prestation[boostFacebook]" class="form-check-input" value="" checked="checked">
+										<label class="form-check-label" for="prestation_boostFacebook_placeholder">Pas de boost <i class="bi bi-facebook mx-2 h5"></i></label>
+									</div>
+									<div class="form-check">
+										<input type="radio" id="prestation_boostFacebook_1" name="prestation[boostFacebook]" class="form-check-input" value="1">
+										<label class="form-check-label" for="prestation_boostFacebook_1">Boost <i class="bi bi-facebook mx-2 h5"></i> 7 jours (2100 crédits)</label>
+									</div>
+									<div class="form-check">
+										<input type="radio" id="prestation_boostFacebook_2" name="prestation[boostFacebook]" class="form-check-input" value="2">
+										<label class="form-check-label" for="prestation_boostFacebook_2">Boost <i class="bi bi-facebook mx-2 h5"></i> 15 jours (4500 crédits)</label>
+									</div>
+									<div class="form-check">
+										<input type="radio" id="prestation_boostFacebook_3" name="prestation[boostFacebook]" class="form-check-input" value="3">
+										<label class="form-check-label" for="prestation_boostFacebook_3">Boost <i class="bi bi-facebook mx-2 h5"></i> 30 jours (9000 crédits)</label>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+				<div style="display:none;">
+					{{ form_widget(form) }}
+				</div>
+				{% if app.user.credit.total < creditAmount %}
+				<button type="button" data-bs-toggle="modal" data-bs-target="#lowCreditModal" data-bs-price="{{ creditAmount }} crédits" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+					<i class="bi bi-save"></i>
+					Publier ( {{ creditAmount }} crédits )
+				</button>
+				{% else %}
+				<button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+					<i class="bi bi-save"></i>
+					Publier ( {{ creditAmount }} crédits )
+				</button>
+				{% endif %}
+				{{ form_end(form) }}
+			</div>
+		</div>
+	</section>
+{% endblock %}

@@ -4,6 +4,7 @@ namespace App\Form\Profile\Candidat\Edit;
 
 use App\Entity\Secteur;
 use App\Entity\CandidateProfile;
+use App\Form\Candidat\TarifCandidatType;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Profile\Candidat\Edit\SocialType;
 use App\Form\Profile\Candidat\ExperiencesType;
@@ -24,6 +25,10 @@ class StepTwoType extends AbstractType
             ->add('titre', TextType::class, [
                 'required' => false,
                 'label' => 'app_identity_expert.name',
+            ])
+            ->add('tarifCandidat', TarifCandidatType::class, [
+                'required' => false,
+                'label' => 'Prétention salariale',
             ])
             ->add('resume', TextareaType::class, [
                 'label' => 'app_identity_expert.aspiration',

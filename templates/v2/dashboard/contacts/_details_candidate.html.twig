@@ -1,0 +1,103 @@
+
+    <h1 class="fs-4 fw-bolder text-center mt-3 mt-sm-5">
+      <i class="bi bi-journal-check me"></i> Candidat {{ generatePseudo(candidat)}}
+    </h1>
+    <h2 class="fs-5 fw-semibold text-center text-uppercase">
+      {{ candidat.titre}}
+    </h2>
+
+    <div class="col-12 col-sm-6 mx-auto text-center mb-4">
+        <img src="{{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}" alt="Avatar" class="rounded-circle img-fluid mx-auto object-fit-cover" style="width:150px;height:150px;">
+        <p>{{ candidat.metaDescription|raw}}</p>
+    </div>
+    
+    <div class="row mt-4">
+
+    <div class="col-12 col-sm-4">
+        <h4 class="fs-5 text-uppercase">Informations générales</h4>
+        <p>
+        <strong>Date d'inscription :</strong> <span class="">{{ candidat.createdAt|date('d/m/Y') }}</span><br>
+        <strong>Dernière connexion :</strong> <span class="">{{ candidat.candidat.lastLogin|time_ago }}</span><br>
+        <i class="bi bi-geo-alt-fill"></i> {{ candidat.localisation|countryName }}</span><br>
+        <strong>Âge :</strong> <span class="">{{ candidat|displayAge }}</span><br>
+        <strong>Profil Certifié :</strong> <span class="badge {{ candidat.isValid ? 'bg-dark' : 'bg-danger' }}">{{ candidat.isValid ? 'Non' : 'Oui' }}</span><br>
+        <strong>Diponibilité :</strong> 
+            <span class="text-dark">
+                {% if candidat.availability is not null %}
+                    {{ checkAvailability(candidat.candidat)|raw}}
+                {% else %}
+                    <i class="bi bi-exclamation-circle-fill"></i> Non renseigné
+                {% endif %} 
+            </span>
+        <br><!-- Button trigger modal -->
+        {% if candidat.tarifCandidat.simulation is defined and candidat.tarifCandidat.simulation is not null %}
+        
+            <strong>Coût total sur base mensuel :</strong>
+            <span class="mx-4 ">{{ candidat.tarifCandidat.simulation.salaireNet }} {{ candidat.tarifCandidat.simulation.devise.symbole }} </span>
+            <span class="small">
+            <a href="{{ path('app_dashboard_entreprise_simulation_candidat', {'id' : candidat.id })}}" class="">
+                <i class="bi bi-box-arrow-up-right"></i> Détails
+            </a>
+            </span>
+        {% endif %}
+        </p>
+
+    </div>
+
+    <div class="col-12 col-sm-4 text-center">
+        <h4 class="fs-5 text-uppercase">Contact</h4>
+        {{ candidat.candidat.nom }} {{ candidat.candidat.prenom }} <br>
+        {{ candidat.candidat.email }} <br>
+        {{ candidat.candidat.telephone }}
+    </div>
+
+    <div class="col-12 col-sm-4 text-center">
+    </div>
+
+    </div>
+    
+    {% if candidat.competences|length > 0 %}
+      <h2 class="fs-5 text-uppercase">Compétences({{ candidat.competences|length}})</h2>
+      <ul class="mb-4">
+          {% for competence in candidat.competences %}
+              <li class="">{{ competence.nom }} 
+                <span class="p-1 lh-1">
+                    {% for i in 1..5 %}
+                        {% if i <= competence.note %}
+                            <i class="small bi bi-star-fill text-warning"></i>
+                        {% else %}
+                            <i class="small bi bi-star text-dark"></i>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+
+                {% if competence.description %}
+                    <ul class="list-group mb-4">
+                        <li class="no-list-style"><span>{{ competence.description|raw }} </span></li>
+                    </ul>
+                {% endif %} 
+              </li>
+          {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if candidat.experiences|length > 0 %}
+      <h2 class="fs-5 text-uppercase">Expériences ({{ candidat.experiences|length}})</h2>
+      <ul class="mb-4">
+          {% for experience in candidat.experiences %}
+              <li class=""><strong>{{ experience.nom|upper }} </strong> : 
+                  <ul class="list-group mb-4">
+                      <li class="no-list-style"><span>{{ experience.dateDebut|date('d/m/Y') }} - {{ experience.dateFin|date('d/m/Y') }}</span></li>
+                      <li class="no-list-style"><span>{{ experience.description|raw }} </span></li>
+                  </ul>
+              </li>
+          {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if candidat.resultFree is not empty %}
+        <div class="p-5 border"> 
+        <h2 class="fs-2 text-uppercase mb-4"><i class="bi bi-bookmark-star me-2 text-warning"></i> Résumé Olona Talents</h2>
+        {{ candidat.resultFree|raw}}
+        </div>
+    {% endif %}

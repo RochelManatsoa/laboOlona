@@ -1,9 +1,122 @@
-@import "~bootstrap/scss/bootstrap";
-@import 'css/form.scss';
-@import 'css/variables.scss';
-@import 'css/radio.scss';
-@import 'css/media-queries.scss';
-@import 'css/navbar.scss';
-@import 'css/body.scss';
+// assets/styles/app.scss
+// Import Bootstrap functions and variables
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+@import "light-theme";
+@import "dark-theme";
+
+body {
+    font-family: "Outfit", serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Outfit", serif;
+}
+
+a:not(.btn-primary):not(.btn-success):not(.btn-info):not(.text-primary){
+    text-decoration: none !important;
+    font-family: "Outfit", serif;
+    color: inherit;
+}
+
+a:hover {
+    text-decoration: none !important;
+}
+
+.underline {
+    text-decoration: underline!important;
+}
+
+.switch-theme-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.fixed-top {
+  right: 10px;
+  top: 10px;
+  z-index: 1000;
+}
+
+.fixed-top .btn {
+  margin-right: 10px;
+}
+
+.no-list-style {
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0; 
+}
+
+.no-list-style li {
+    padding: 0.5rem 0; 
+}
+
+.experience-form {
+    margin-top: 1rem;
+}
+
+.experience-form .form-control {
+    margin-bottom: 1rem;
+}
+
+.experience-form .row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.experience-form .row > .experience-field {
+    width: 100%;
+}
+
+.experience-form .my-2 {
+    margin: .5rem 0;
+}
+
+.experience-form {
+    margin-top: 1rem; /* Marges extérieures */
+}
+
+
+/* Cible uniquement les premiers fieldset enfants directs sous .experience-form */
+.experience-form fieldset {
+    margin-bottom: 1.5rem; /* Marge extérieure */
+    background: inherit; /* Arrière-plan hérité */
+    border: 2px solid #ddd; /* Bordure */ 
+    border-radius: 10px; /* Bordures arrondies */
+    padding: 1rem; /* Espacement intérieur */
+}
+[data-controller="toggle-password"] .form-control.is-invalid {
+    background-image: none !important;
+    padding-right: 4.5rem !important; 
+}
 @import 'css/sections.scss';
-@import 'css/perso.scss';
+@import 'css/loader.scss';
+@import 'css/radio.scss';
+@import 'css/coworking.scss';
+@import 'css/boost.scss';
+@import 'refonte/styles.scss';
+@import 'refonte/login.scss';
+@import 'refonte/media_q.scss';
+@import 'refonte/home.scss';
+@import 'refonte/listing.scss';
+@import 'refonte/coworking.scss';
+@import 'refonte/error.scss';
+@import 'refonte/blog.scss';
+@import 'refonte/portage.scss';
+@import 'refonte/view.scss';
+@import 'refonte/register.scss';
+@import 'css/dashboard.scss';
+// @import 'css/variables.scss';
+// @import 'css/media-queries.scss';
+// @import 'css/navbar.scss';
+// @import 'css/body.scss';
+// @import 'css/perso.scss';
+// @import 'css/profile.scss';
+
+

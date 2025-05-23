@@ -1,0 +1,101 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Entreprise {{ generateReference(recruiter)}} | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+{% if type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+  {% include "v2/dashboard/layout_candidat.html.twig" %}
+{% else %}
+  {% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+{% endblock %}
+
+
+{% block body %}
+<section class="">
+  <div class="shadow-custom p-2 p-sm-5">
+    <h1 class="fs-4 fw-bolder text-center mt-3 mt-sm-5">
+      {{ recruiter.nom}}
+    </h1>
+    <h2 class="fs-6 fw-lighter text-center text-uppercase">
+      Entreprise {{ generateReference(recruiter)}}
+    </h2>
+      <div class="col-12 col-sm-6 mx-auto text-center mb-4">
+        <img src="{{ recruiter.fileName ? asset('uploads/compagnies/' ~ recruiter.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}" alt="Logo" class="rounded-circle img-fluid mx-auto object-fit-cover" style="width:150px;height:150px;">
+        <p>{{ recruiter.description|raw}}</p>
+      </div>
+    <div class="row mt-4">
+
+      <div class="col-12 col-sm-6">
+        <h4 class="fs-5 text-uppercase">Informations générales</h4>
+          <p>
+          <strong>Nom de l'entreprise :</strong> <span class="">{{ recruiter.nom }}</span><br>
+          <strong>Date d'inscription :</strong> <span class="">{{ recruiter.createdAt|date('d/m/Y') }}</span><br>
+          <strong>Dernière connexion :</strong> <span class="">{{ recruiter.entreprise.lastLogin|time_ago }}</span><br>
+          <strong>Secteurs d'activité :</strong> 
+          {% for sector in recruiter.secteurs %}
+            <span class="badge rounded-pill text-bg-secondary px-3">{{ sector.nom }}</span>            
+          {% endfor %}
+          <br>
+          <i class="bi bi-geo-alt-fill"></i> {{ recruiter.localisation|countryName }}</span><br>
+          </p>
+
+      </div>
+
+      <div class="col-12 col-sm-6 text-center">
+        <h4 class="fs-5 text-uppercase">Contact</h4>
+        {% if purchasedContact is defined and purchasedContact is not null %}
+            <div class="experience-form">
+                <fieldset>
+                {% if purchasedContact %}
+                  <strong>Email:</strong> {{ purchasedContact.contact.email }}<br>
+                  <strong>Téléphone:</strong> {{ purchasedContact.contact.telephone }}<br>
+                  <strong>Nom complet:</strong> {{ purchasedContact.contact.nom }} {{ purchasedContact.contact.prenom }}
+                {% endif %}
+                </fieldset>
+            </div>
+        {% else %}
+				{% set modalId = 'confirmationModal' %}
+				{% if app.user.credit.total < show_recruiter_price %}
+				{% set modalId = 'lowCreditModal' %}
+				{% endif %}
+        <div id="contactDetails">
+          <form action="{{ path('app_v2_contact_show')}}" method="post" id="show-candidate-contact">
+            <input type="hidden" name="contactId" value="{{ recruiter.entreprise.id }}">
+						<input type="hidden" name="showContactPrice" value="{{ show_recruiter_price }}">
+						<input type="hidden" name="actionView" value="VIEW_RECRUITER">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#{{ modalId }}" data-bs-price="{{ show_recruiter_price }} crédits" data-bs-type="show-candidate-contact" class="align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact ({{ show_recruiter_price }} crédits)</button>
+          </form>
+        </div>
+        {% endif %}      
+
+      </div>
+
+    </div>
+    <div class="my-4 card position-relative text-center d-none d-md-block">
+        <a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
+            <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-horizontal.webp')}}">
+        </a>
+    </div>
+    
+    <div class="m-4 card position-relative text-center d-block d-md-none">
+        <a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
+            <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+        </a>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

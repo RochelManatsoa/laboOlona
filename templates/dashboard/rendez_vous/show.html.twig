@@ -1,12 +1,11 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 
 {% block title %}Détails du Rendez-vous: {{ rendezvous.title }}{% endblock %}
 
 {% block body %}
 <div class="container mt-3">
-<h1 class="mb-4">Détails du Rendez-vous</h1>
-    <hr>
+<h1 class="mb-4 h2">Détails du Rendez-vous</h1>
 
         <div class="card shadow">
             <div class="card-body">
@@ -18,12 +17,11 @@
                     <strong>Lien de l'entretien virtuel :</strong> <a href="{{ rendezvous.link }}">{{ rendezvous.link }}</a><br>
                     {% endif %}
                 </p>
-                <a href="{{ path('rendezvous_edit', {'id': rendezvous.id}) }}" class="btn btn-primary rounded-pill">Modifier le Rendez-vous</a>
+                <a href="{{ path('rendezvous_edit', {'id': rendezvous.id}) }}" class="btn btn-primary rounded-pill my-3 px-5"><i class="mx-2 bi bi-calendar3"></i> Modifier le Rendez-vous</a>
                 {# <a href="{{ path('rendezvous_reschedule', {'id': rendezvous.id}) }}" class="btn btn-warning">Reprogrammer le Rendez-vous</a> #}
             </div>
         </div>
     
 </div>
-
-<a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+<a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
 {% endblock %}

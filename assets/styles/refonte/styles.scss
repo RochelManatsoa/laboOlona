@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import 'media_q.scss';
+body {
+    font-family: "Outfit", sans-serif;
+    font-size: 16px;
+    letter-spacing: .4px;
+    color: #767474;
+}
+.login_home {
+    color: $white !important;
+    text-decoration: none !important;
+    &:hover {
+        text-decoration: underline !important;
+    }
+}
+$white: #ffffff;
+$black: #000000;
+
+$red-light: #ff3130;
+$red-primary: #bc3636;
+$yelow-primary: #f0b722;
+$orange-primary: #f6882d;
+$green-light: #3e9d66;
+$green-primary: #008037;
+$purple-light: #704fb6;
+$purple-primary: #54309c;
+$brown-light: #af6f09;
+$brown-primary: #7d5412;
+$blue-light: #324ef4;
+$blue-primary: #3b5998;
+
+.article-item_ {
+    .aside-left-item_ {
+        a {
+            display: block;
+            width: 125px;
+            height: 125px;
+            background-color: #f5f5f5;
+            border-radius: 100%;
+            overflow: hidden;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+    }
+}
+.nav-top-right {
+    @include breakpoint_991{
+        display: none;
+        position: absolute;
+        top: 100%;
+        width: 100%;
+        left: 0;
+    }
+    .nav-list-top {
+        display: table;
+        margin-bottom: 0;
+        @include breakpoint_991{
+            background: $white;
+            padding: 20px;
+            display: block;
+        }
+        .nav-item-top {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 0 5px;
+            @include breakpoint_991{
+                display: block;
+            }
+            &.nav_coworking {
+                .nav--link {
+                    background:$yelow-primary;
+                    color: $black !important;
+                    transition: all .3s ease;
+                    &:hover {
+                        background-color: $white !important;
+                        color: $black !important;
+                    }
+                }
+            }
+            &.nav_blog {
+                .nav--link {
+                    background:$red-primary;
+                    transition: all .3s ease;
+                    &:hover {
+                        background-color: $white !important;
+                        color: $black !important;
+                    }
+                }
+            }
+            &.nav_portage {
+                .nav--link {
+                    background:#308a57;
+                    transition: all .3s ease;
+                    &:hover {
+                        background-color: $white !important;
+                        color: $black !important;
+                    }
+                }
+            }
+            &.nav_contact {
+                .nav--link {
+                    background:$black;
+                    transition: all .3s ease;
+                    &:hover {
+                        background-color: $white !important;
+                        color: $black !important;
+                    }
+                }
+            }
+            .nav--link {
+                color: $white !important;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                font-weight: 300;
+                padding: 7px 10px;
+                border-radius: 3px;
+                @include breakpoint_991{
+                    display: block;
+                    width: 100%;
+                    color: $black !important;
+                    border-top: 1px dashed #ddd;
+                    border-radius: 0;
+                    border-bottom: 1px dashed #ddd;
+                    padding: 15px 0;
+                }
+            }
+        }
+    }
+}
+.right-top-login {
+    .btn-primary {
+        background-color: transparent !important;
+        &:hover {
+            background-color: transparent !important;
+            text-decoration: none !important;
+            color: $yelow-primary !important;
+        }
+    }
+}
+.home-header-top {
+    .navbar-toggler {
+        display: none;
+        @include breakpoint_991{
+            display: block;
+        }
+    }
+    .login_home {
+        background-color: transparent !important;
+        @include breakpoint_991{
+            margin-right: 0 !important;
+        }
+        &:hover {
+            background-color: transparent !important;
+            text-decoration: none !important;
+            color: $yelow-primary !important;
+        }
+    }
+}
+.btn-signUp {
+    &.portage-btn {
+        text-align: center !important;
+    }
+}
+
+.contactBlock {
+    color: $black;
+    .info-text {
+        text-align: center;
+        font-size: 24px;
+        @include breakpoint-991{
+            font-size: 14px;
+        }
+    }
+    .formBlock {
+        background-color: $white;
+        padding: 40px;
+    }
+    .info__ {
+        background-color: $yelow-primary !important;
+    }
+}
+
+.contact_fixed_bottom {
+    position: fixed;
+    z-index: 70;
+    bottom: 4rem;
+    left: 4rem;
+    .contact_fixed_bottom_item {
+        background: white;
+        padding: 20px;
+        border-radius: 25px;
+        box-shadow: 0px 0px 25px rgba(56, 152, 226, 0.3);
+        h4 {
+            color: #185d36;
+            font-size: 20px;
+        }
+        .whatsapp_item {
+            color: black;
+            .pulse-image {
+                display: block;
+                animation: pulse 1.5s infinite;
+                margin-left: 1rem;
+            }
+            i {
+                margin-right: 7px;
+                margin-top: 5px;
+                color: $white;
+            }
+            .mail_Block {
+                padding: 1px 7px !important;
+                line-height: 129%;
+                background-color: $blue-primary !important;
+                border: 0 !important;
+                &:hover {
+                    background-color: $blue-light !important;
+                }
+            }
+        }
+    }
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

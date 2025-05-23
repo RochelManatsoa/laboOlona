@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <section id="register" class="my-4" style="background-color: black;">
+    <section id="register" class="pt-5" style="background-color: black;">
         <div class="container d-flex justify-content-center align-items-center ">
             <div class="row">
                 {% for flash_error in app.flashes('verify_email_error') %}
@@ -9,7 +9,7 @@
                         {{ flash_error }}
                     </div>
                 {% endfor %}
-                <div class="col-md-6  text-center mx-auto">
+                <div class="col-md-6  text-center mx-auto d-none d-sm-block">
                     <img src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" class="img-fluid" alt="login olona talents" />
                 </div>
                 <div class="col-md-6 text-white">
@@ -23,7 +23,7 @@
                     </p>
 
                     <div class="mx-auto text-dark " id="button-text">
-                        <a href="{{ path('connect_google_start') }}" class="btn btn-light">
+                        <a href="{{ path('connect_google_start') }}" class="btn btn-light rounded-pill px-5">
                             {{ 'app_register.continue'|trans }}  <i class="bi bi-google h5 mx-3 "></i>           
                         </a>
                     </div>
@@ -58,7 +58,7 @@
                     </div>
 
 
-                    <button class="btn btn-lg btn-primary" type="submit" id="register-submit">
+                    <button class="btn btn-lg btn-primary rounded-pill px-5" type="submit" id="register-submit">
                         {{ 'app_register.menu'|trans }}                
                     </button>
                     {{ form_end(registrationForm) }}

@@ -8,7 +8,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class CompetencesType extends AbstractType
@@ -17,10 +16,12 @@ class CompetencesType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'app_identity_expert_step_two.skill.name',
+                'label' => 'Compétence',
+                'required' => false,
             ])
             ->add('note', ChoiceType::class, [
-                'label' => 'app_identity_expert_step_two.skill.level',
+                'label' => 'Niveau',
+                'required' => true,
                 'choices'  => [
                     'app_identity_expert_step_two.skill.one' => 1,
                     'app_identity_expert_step_two.skill.two' => 2,
@@ -28,6 +29,8 @@ class CompetencesType extends AbstractType
                     'app_identity_expert_step_two.skill.four' => 4,
                     'app_identity_expert_step_two.skill.five' => 5,
                 ],
+                'expanded' => false,
+                'multiple' => false,
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'app_identity_expert_step_two.experience.description',
@@ -35,12 +38,6 @@ class CompetencesType extends AbstractType
                 'attr' => [
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'
-                ]
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'app_identity_expert_step_two.skill.submit',
-                'attr' => [
-                    'class' => 'btn btn-dark rounded-pill'
                 ]
             ])
         ;

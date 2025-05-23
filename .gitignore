@@ -1,17 +1,34 @@
-
 ###> symfony/framework-bundle ###
+/.env
 /.env.local
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /public/uploads/*
+/public/contrats/*
+/public/documents/*
+/public/subcriptions/*
+/public/images/products/*
+/public/images/places/*
+/public/images/blogs/*
+/public/video/*
+/public/assets/ckeditor5/
+/public/robots.txt
+/public/sitemap.blog.xml
+/public/sitemap.category.xml
+/public/sitemap.default.xml
+/public/sitemap.xml
+/assets/node_app/
+/assets/node_app/node_modules/
+/assets/node_app/.env
+/assets/node_app/.env.*
 /nginx/
 /var/
 /migrations/
 /vendor/
 ###< symfony/framework-bundle ###
-
+/config/jwt/*
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache

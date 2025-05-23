@@ -1,0 +1,114 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Candidats | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% endif %}
+
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+    <section class="">
+      <div class="shadow-custom p-2 p-sm-4">
+        {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE'))  %}
+        <h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+            <i class="bi bi-search text-warning me-2"></i>
+            Simplifiez votre recrutement avec les talents qu'il vous faut
+        </h1>
+        <p class="text-center">
+            Recherchez les profils idéaux par mots-clés, titres de postes ou compétences spécifiques. Notre plateforme facilite votre processus de recrutement en vous connectant rapidement aux candidats qui propulseront votre équipe vers le succès.
+        </p>
+        {% else %}
+        <h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+            <i class="bi bi-search text-warning me-2"></i>
+            Simplifiez votre recrutement avec les talents qu'il vous faut
+        </h1>
+        <p class="text-center"> 
+            Explorez les projets et les équipes qui recherchent des compétences et des talents comme les vôtres. Notre plateforme facilite votre démarche de collaboration en vous connectant rapidement avec des partenaires potentiels. Trouvez les initiatives idéales où vous pouvez apporter votre expertise et contribuer au succès d'équipes ambitieuses.
+        </p>
+        {% endif %}
+          <div class="row">
+            <div class="col-12 col-sm-8" id="candidates-container">
+            {% include "v2/dashboard/result/parts/_part_candidates_list.html.twig" %}
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="d-flex flex-column flex-shrink-0 py-3 position-sticky top-0">
+                    <div class="card mb-3 shadow">
+                      <div class="card-body small">
+
+                        {% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+                            {% include "v2/dashboard/sidebar_candidat.html.twig" %}
+                        {% endif %}
+
+                        {% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+                            {% include "v2/dashboard/sidebar_entreprise.html.twig" %}
+                        {% endif %}
+
+                      </div>
+                    </div>
+                    <div class="card mb-3" id="candidate-card-container">
+                        <div class="m-4 position-relative text-center">
+                            <a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
+                                <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+      </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script> 
+    
+    var currentPage = 1;
+    var allDataLoaded = false;
+
+    $(window).scroll(function() {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !allDataLoaded) {
+            loadMoreJobs();
+        }
+    });
+
+    function loadMoreJobs() {
+        if (!allDataLoaded) {
+            currentPage++;
+            var url = `{{ path('api_candidate_secteurs') }}?page=${currentPage}`;
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json', 
+                success: function(data) {
+                    $('#candidates-container').append(data.html);
+                    if (!data.hasMore) {
+                        allDataLoaded = true;
+                    }
+                },
+                error: function() {
+                    allDataLoaded = true; 
+                }
+            });
+        }
+    }
+    </script>
+{% endblock %}

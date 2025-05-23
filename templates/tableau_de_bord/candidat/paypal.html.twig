@@ -1,0 +1,119 @@
+{% extends 'tableau_de_bord/base.html.twig' %}
+
+{% block title %}Mon réseau professionnel{% endblock %}
+
+{% block body %}
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+                <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                <h5 class="mb-0"> Mon réseau professionnel </h5>
+            </div>
+        <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+            <li class="breadcrumb-item position-relative">
+                <a routerlink="{{ path('app_tableau_de_bord_candidat')}}" class="d-inline-block position-relative" href="{{ path('app_tableau_de_bord_candidat')}}">
+                <i class="ri-home-8-line"></i> Tableau de bord </a>
+            </li>
+            <li class="breadcrumb-item position-relative"> Réseaux professionnels </li>
+        </ol>
+    </div>
+</section>
+{% if not candidat.isIsPremium %}
+<section class="warning_freemium mb-4 d-flex align-items-center">
+    <span><img src="{{ asset('v2/images/dashboard/warning_outline_icon.svg')}}" alt=""></span>
+    <div class="warning-block">
+        Vous êtes actuellement sur un plan gratuit. <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs_standard')}}">Achetez du credit</a> pour <a routerlink="{{ path('app_tableau_de_bord_candidat_boost')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_boost')}}">booster la visibilité</a> de votre profil ou encore, passez à un <a routerlink="{{ path('app_tableau_de_bord_candidat_tarifs')}}" class="btn-primary" href="{{ path('app_tableau_de_bord_candidat_tarifs')}}">abonnement premium</a> pour profiter d’avantages supplémentaires, gagné de rang pour être au sommet du resultat de recherche.
+    </div>
+</section>
+{% endif %}
+	<section class="">
+		<div class="shadow-custom p-2 p-sm-4">
+
+			{% if payment %}
+				<h1 class="text-center mt-4 text-success">Paiement réussi</h1>
+			{% else %}
+				<h1 class="text-center mt-4 text-primary">Paiement echoué</h1>
+			{% endif %}
+
+			{% if payment %}
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col-md-10">
+						<!-- Message d'erreur principal -->
+						<div class="alert mt-5" role="alert">
+							<h4 class="alert-heading">Paiement réussi</h4>
+							<p>Merci pour votre achat ! Votre paiement a été traité avec succès.</p>
+							<hr>
+							<p class="mb-0">Vous pouvez consulter les détails de votre commande ci-dessous.</p>
+						</div>
+
+						<!-- Détails de la commande -->
+						<div class="card mb-4">
+							<div class="card-header">
+								<h4 class="mt-3">Détails de la commande</h4>
+							</div>
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item">
+									<strong>Numéro de commande :</strong>
+									{{ order.orderNumber }}</li>
+								<li class="list-group-item">
+									<strong>Total :</strong>
+									{{ order.totalAmount }}
+									{{ order.currency.symbole }}</li>
+								<li class="list-group-item">
+									<strong>Statut :</strong>
+									{{ status }}</li>
+							</ul>
+						</div>
+
+						<!-- Boutons d'action -->
+						<div class="d-flex justify-content-center">
+							<a href="{{ path('app_v2_user_order')}}" class="btn btn-primary me-2 px-4">Mes commandes</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% else %}
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col-md-10">
+						<!-- Message d'erreur principal -->
+						<div class="alert mt-5" role="alert">
+							<h4 class="alert-heading">Échec du paiement</h4>
+							<p>Votre paiement n'a pas pu être traité à ce moment. Veuillez vérifier vos informations de paiement et réessayer.</p>
+							<hr>
+							<p class="mb-0">Si le problème persiste, veuillez contacter notre service d'assistance.</p>
+						</div>
+
+						<!-- Détails de la commande -->
+						<div class="card mb-4">
+							<div class="card-header">
+								Détails de la commande
+							</div>
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item">
+									<strong>Numéro de commande :</strong>
+									{{ order.orderNumber }}</li>
+								<li class="list-group-item">
+									<strong>Total :</strong>
+									{{ order.totalAmount }}
+									{{ order.currency.symbole }}</li>
+								<li class="list-group-item">
+									<strong>Statut :</strong>
+									{{ status }}</li>
+							</ul>
+						</div>
+
+						<!-- Boutons d'action -->
+						<div class="d-flex justify-content-center">
+							<a href="{{ path('app_v2_contact') }}" class="btn btn-secondary px-4">Contacter le support</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+
+		</div>
+	</section>
+{% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Entity\Moderateur;
 
 use App\Entity\CandidateProfile;
+use App\Entity\Candidate\CV;
 use App\Repository\Moderateur\EditedCvRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,6 +28,9 @@ class EditedCv
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $uploadedAt = null;
+
+    #[ORM\OneToOne(mappedBy: 'edited', cascade: ['persist'])]
+    private ?CV $cV = null;
 
     public function getId(): ?int
     {
@@ -77,6 +81,28 @@ class EditedCv
     public function setUploadedAt(\DateTimeInterface $uploadedAt): static
     {
         $this->uploadedAt = $uploadedAt;
+
+        return $this;
+    }
+
+    public function getCV(): ?CV
+    {
+        return $this->cV;
+    }
+
+    public function setCV(?CV $cV): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($cV === null && $this->cV !== null) {
+            $this->cV->setEdited(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($cV !== null && $cV->getEdited() !== $this) {
+            $cV->setEdited($this);
+        }
+
+        $this->cV = $cV;
 
         return $this;
     }

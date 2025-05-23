@@ -1,4 +1,7 @@
-{% extends 'dashboard/base.html.twig' %}
+
+{% set base_template = app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) ? 'dashboard/base.html.twig' : 'dashboard/base_new.html.twig' %}
+
+{% extends base_template %}
 
 {% block title %}Vidéos{% endblock %}
 

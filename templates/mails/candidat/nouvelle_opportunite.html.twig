@@ -1,0 +1,16 @@
+
+{% include "mails/_header.html.twig" %}
+
+            <p>Bonjour {{user.nom}} </p>
+            <p>Nous espérons que vous allez bien.</p>
+            <p>Nous sommes ravis de vous informer qu'une nouvelle opportunité de carrière correspondant à votre secteur d'activité a récemment été publiée sur notre plateforme. Nous pensons que cette opportunité pourrait parfaitement correspondre à votre profil professionnel et à vos aspirations de carrière</p>
+            <p>Voici les détails :</p>
+            <p><strong>Titre de l'offre </strong> : {{ details_annonce.titre|raw }}</p>
+            <p><strong>Type de contrat </strong> : {{ details_annonce.typeContrat.nom }}</p>
+            <p><strong>Date d'expiration</strong> : {{ details_annonce.dateExpiration|date('d/m/Y') }}</p>
+            
+            <p>
+                👉 <a href="{{ dashboard_url|raw }}" style="text-decoration:none;">Voir l'annonce</a>
+            </p>
+  
+{% include "mails/_footer.html.twig" %}

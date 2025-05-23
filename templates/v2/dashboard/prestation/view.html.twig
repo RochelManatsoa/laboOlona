@@ -1,0 +1,183 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	{{ prestation.titre }}
+	| Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+
+	{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+		{% include "v2/dashboard/layout_candidat.html.twig" %}
+	{% endif %}
+
+	{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+		{% include "v2/dashboard/layout_entreprise.html.twig" %}
+	{% endif %}
+
+{% endblock %}
+
+{% block body %}
+	<section class="container my-5">
+		<div class="card shadow">
+			<div class="card-body p-3 p-sm-5">
+				<div class="">
+					<span class="position-absolute top-0 start-50 px-3 translate-middle badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">
+						<i class="bi bi-person-workspace me-2"></i>
+						Prestation | Réf:{{ generateprestationReference(prestation.id) }}
+					</span>
+				</div>
+				<h1 class="card-title h3">{{ prestation.titre }}</h1>
+				<hr>
+				<p class="small fw-light">
+					{{ satusPrestation(prestation)|raw }}
+					<span class="small text-center mx-2">|</span>
+					<span class="">Publié
+						{{ prestation.createdAt|time_ago }}</span>
+					<span class="small text-center mx-2">|</span>
+          <span class="badge text-bg-primary rounded-pill mb-4"><i class="me-1 bi bi-tag"></i> {{ prestation.secteurs.nom }}</span>
+					<span class="small text-center mx-2">|</span>
+          <i class="bi bi-eye"></i> {{ prestation.prestationVues|length}} vues
+          <span class="small text-center mx-2">|</span>
+					<i class="mx-2 bi bi-person-workspace"></i> {{ prestation.modalitesPrestation }}</p>
+				</p>
+				<p>{{ prestation.description|raw }}</p>
+
+				<div class="mt-3">
+					<p class="">
+						<i class="bi bi-gear mx-1 mx-sm-3 text-primary"></i>
+						Spécialisations :
+							{% for skill in prestation.competences %}
+								<span class="badge rounded-pill text-bg-secondary">{{ skill.nom }}</span>
+							{% endfor %}
+					</p>
+				</div>
+
+				<div class="mb-3">
+					<p class="">
+						<i class="bi bi-currency-exchange mx-1 mx-sm-3 text-primary"></i>
+						Tarif :
+						<span class="text-strong">
+							{% if prestation.tarifPrestation is defined and prestation.tarifPrestation is not null %}
+								{{prestation.tarifPrestation}}
+							{% else %}
+                0 €
+							{% endif %}
+						</span>
+					</p>
+				</div>
+
+				{% if prestation.motsCles is not empty %}
+					<h2 class="h5">Mots clés</h2>
+					<p class="row">
+						{{prestation.motsCles|raw}}
+					</p>
+				{% endif %}
+
+				{% if prestation.conditionsParticulieres is not empty %}
+					<h2 class="h5">Conditions particulière</h2>
+					<p class="row">
+						{{prestation.conditionsParticulieres|raw}}
+					</p>
+				{% endif %}
+
+				{% if prestation.portfolioLinks is not empty %}
+					<h2 class="h5">Références</h2>
+					<p class="row">
+						{{prestation.portfolioLinks}}
+					</p>
+				{% endif %}
+
+				{% if prestation.preferencesCommunication is not empty %}
+					<h2 class="h5">Préférence communication</h2>
+					<p class="row">
+						{{prestation.preferencesCommunication}}
+					</p>
+				{% endif %}
+				{% if not owner %}
+					<div class="h-100 p-5 border rounded-3">
+						{% if purchasedContact is defined and purchasedContact is not null %}
+							{% if purchasedContact.isAccepted %}
+								<h2 class="fs-4">Information du prestataire</h2>
+								<div class="row my-4 align-items-center">
+									<div class="col-12 col-md-6">
+										<strong>Nom et prénom:</strong> {{ purchasedContact.contact.nom }} {{ purchasedContact.contact.prenom }}<br>
+										<strong>Email:</strong> {{ purchasedContact.contact.email }}<br>
+										<strong>Téléphone:</strong> {{ purchasedContact.contact.telephone }}<br>
+									</div>
+								</div>
+							{% else %}
+								Votre demande de contact a été envoyée au candidat et est en attente de son approbation. Vos crédits ne seront débités qu'une fois la demande approuvée.
+							{% endif %}
+						{% else %}
+							{% set modalId = 'confirmationModal' %}
+							{% if app.user.credit.total < showContactPrice %}
+							{% set modalId = 'lowCreditModal' %}
+							{% endif %}
+							
+							<div id="contactDetails">
+								<h2 class="fs-4">Contacter le prestataire</h2>
+								<p>Vous pouvez contacter directement le prestataire de service et l'ajouter à votre réseau professionnel pour explorer les opportunités et collaborations possibles.</p>
+								<form action="{{ path('app_v2_contact_show')}}" method="post" id="show-recruiter-contact">
+									<input type="hidden" name="contactId" value="{{ creater.id }}">
+									<input type="hidden" name="actionView" value="VIEW_CANDIDATE">
+									<input type="hidden" name="showContactPrice" value="{{ showContactPrice }}">
+									<input type="hidden" name="_csrf_token" value="{{ csrf_token('show-contact') }}">
+									<button type="button" data-bs-toggle="modal" data-bs-target="#{{ modalId}}" data-bs-price="{{ showContactPrice }} crédits" data-bs-type="show-recruiter-contact" class="align-items-center btn btn-primary text-uppercase fw-semibold">Afficher le contact ({{ showContactPrice }} crédits)</button>
+								</form>
+							</div>
+						{% endif %}
+					</div>
+					<div class="my-4 card position-relative text-center d-none d-md-block">
+						<a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
+							<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-horizontal.webp')}}">
+						</a>
+					</div>
+					
+					<div class="m-4 card position-relative text-center d-block d-md-none">
+						<a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
+							<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+						</a>
+					</div>
+				{% else %}
+					<a href="{{path('app_v2_edit_prestation', {'prestation': prestation.id})}}" class="btn btn-outline-warning  texte-uppercase  my-3 px-5">
+						<i class="mx-2 bi bi-pencil"></i>Editer
+					</a>
+					{% if prestation.boost is not empty or prestation.boostFacebook is not empty %}
+						{% if prestation.boost is not null %}
+							{{ getPrestationBoostVisibilityOT(prestation, app.user)|raw }}
+						{% endif %}
+						{% if prestation.boostFacebook is not null %}
+					 		{{ getPrestationBoostVisibilityFB(prestation, app.user)|raw }}
+						{% endif %}
+					{% else %}
+						<button type="button" data-bs-toggle="modal" data-bs-target="#boostPrestation{{ prestation.id }}" data-bs-type="boost-prestation" data-bs-prestation="{{ prestation.id }}" class="btn btn-dark  texte-uppercase  my-3 px-5">
+							<i class="mx-2 bi bi-rocket-takeoff"></i>Booster
+						</button>
+					{% endif %}
+				{% endif %}
+			</div>
+		</div>
+	</section>
+{% if owner and prestation.boost is null %}
+	{% include "/v2/modal/_boost_prestation.html.twig" with {'prestation': prestation } %}
+    <script>
+        document.addEventListener('turbo:load', function () {
+            var button = document.querySelector('[data-bs-target="#boostPrestation"]');
+            if (button) {
+                setTimeout(function() {
+                    button.click();
+                }, 5000);  // 5000 millisecondes correspondent à 5 secondes
+            }
+        });
+    </script>
+{% endif %}
+{% endblock %}

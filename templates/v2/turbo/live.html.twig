@@ -1,0 +1,72 @@
+<turbo-stream action="update" target="current-user-credit">
+  <template>
+    {{ credit }}
+  </template>
+</turbo-stream>
+{% if (candidat is defined and candidat is not null) and (purchasedContact is defined and purchasedContact is not null)%}
+    <turbo-stream action="update" target="contactDetails">
+        <template>
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Nom complet</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ purchasedContact.contact.nom }}
+                    {{ purchasedContact.contact.prenom }}
+                </div>
+            </div>
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Adresse email</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ purchasedContact.contact.email }}
+                </div>
+            </div>	
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Numéro de téléphone</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ purchasedContact.contact.telephone }}			
+                </div>
+            </div>	
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Référence</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ generatePseudo(purchasedContact.contact.candidateProfile) }}
+                </div>
+            </div>	
+        </template>
+    </turbo-stream>
+{% endif %}
+{% if (recruiter is defined and recruiter is not null) and (purchasedContact is defined and purchasedContact is not null) %}
+    <turbo-stream action="update" target="contactDetails">
+        <template>            
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Nom complet</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ purchasedContact.contact.nom }}
+                    {{ purchasedContact.contact.prenom }}
+                </div>
+            </div>
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Adresse email</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ purchasedContact.contact.email }}
+                </div>
+            </div>	
+            <div class="d-md-flex flex-box_">
+                <span class="fs-6 lh-base">Téléphone</span>
+                <div class="d-md-flex fw-bold info-bx flex-box_">
+                    {{ purchasedContact.contact.telephone }}			
+                </div>
+            </div>	
+        </template>
+    </turbo-stream>
+{% endif %}
+<turbo-stream action="update" target="errorToast">
+    <template>
+        <div class="toast-header">
+            <strong class="me-auto">{{ status|raw }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            {{ message }}
+        </div>
+    </template>
+</turbo-stream>

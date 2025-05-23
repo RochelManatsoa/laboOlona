@@ -22,7 +22,7 @@ class EntrepriseAnnonceSearchType extends AbstractType
                 ]
             ])
             ->add('status', ChoiceType::class, [
-                'choices' => JobListing::getStatuses(),
+                'choices' => JobListing::getCompanyStatuses(),
                 'required' => false,
                 'label' => false,
                 'placeholder' => 'Status ...',
@@ -46,7 +46,7 @@ class EntrepriseAnnonceSearchType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'method' => 'GET',

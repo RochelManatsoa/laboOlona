@@ -1,0 +1,51 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Candidats{% endblock %}
+
+{% block body %}
+
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Candidats</h1>
+    <div>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_white_label_candidat_profile_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+    </div>
+    <table class="table">
+        {# <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(candidats, '#', 'e.id') }}</th>
+                <th>{{ knp_pagination_sortable(candidats, 'Nom', 'e.nom') }}</th>
+                <th>{{ knp_pagination_sortable(candidats, 'Abo', 'premium') }}</th>
+                <th>{{ knp_pagination_sortable(candidats, 'Taille', 'e.taille') }}</th>
+                <th>{{ knp_pagination_sortable(candidats, 'Localisation', 'e.localisation') }}</th>
+                <th>{{ knp_pagination_sortable(candidats, 'Status', 'e.status') }}</th>
+                <th>{{ knp_pagination_sortable(candidats, 'Annonces', 'jobCount') }}</th>
+                <th></th>
+            </tr>
+        </thead> #}
+        <tbody>
+        {% for candidat in candidats %}
+            <tr>
+                <td>{{ candidat.id }}</td>
+                <td>{{ candidat.candidat }}</td>
+                <td>{{ candidat.isIsPremium ? '<i class="bi bi-check2-square"></i>' : '-' }}</td>
+                <td><i class="bi bi-geo-alt-fill"></i> {{ show_country(candidat.localisation) }} </td>
+                <td>{{ candidat.applications|length }}</td>
+                <td>
+                    <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_white_label_candidat_profile_show', {'id': candidat.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_white_label_candidat_profile_edit', {'id': candidat.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

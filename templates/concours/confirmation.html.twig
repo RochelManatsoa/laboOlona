@@ -1,0 +1,65 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}Concours | Olona Talents{% endblock %}
+
+{% block meta %}
+<link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ path('app_concours_etape_1') }}">
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container">
+    <div class="row py-5">
+        <div class="col-md-4 d-none d-lg-block">
+            {% include "concours/side_nav.html.twig" with {'step': 5} %}
+        </div>
+        <div class="col-md-8">
+            <section>
+                <div class="annonce-item shadow p-3 p-sm-5 m-1 m-sm-4">
+                    {% include "concours/nav_mobile.html.twig" %}
+                    <div id="contractFormStep">   
+                        <div id="step_5" class="step-contest">
+                            <div class="container text-center my-5">
+                                <h1 class="mb-4">Merci pour votre participation !</h1>
+                                <p class="lead">Votre participation a été prise en compte avec succès. 🎉</p>
+                                <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;"></canvas>
+                                <p class="fw-light mt-5 small">Les gagnants du concours seront contactés par téléphone ou par e-mail. Veuillez fournir des informations exactes pour assurer la réception de votre prix en cas de sélection. Toute information incorrecte pourrait entraîner l'invalidation de votre participation.</p>
+                                <h2 class="my-5">Découvrez Olona Talents 🚀</h2>
+                                <p class="lead">
+                                    En participant à ce jeu, vous avez déjà fait un premier pas vers une meilleure visibilité professionnelle. <strong>Olona Talents</strong>, c'est la plateforme idéale pour propulser votre carrière et trouver l'opportunité qui vous correspond.
+                                </p>
+                                <h3 class="my-5">Pourquoi rejoindre Olona Talents en tant que candidat ?</h3>
+                                <div class="list-group lead list-group-checkable d-grid gap-2 border-0">
+                                    <label class="list-group-item rounded-3 py-3" for="listGroupCheckableRadios1">
+                                        🌟 Une visibilité accrue
+                                      <span class="d-block small opacity-50"> Faites-vous remarquer par les recruteurs grâce à notre moteur de recherche optimisé et nos outils de mise en avant.</span>
+                                    </label>
+                                
+                                    <label class="list-group-item rounded-3 py-3" for="listGroupCheckableRadios2">
+                                        💼 Un espace candidat dédié
+                                      <span class="d-block small opacity-50">Créez votre profil, déposez votre CV, et accédez aux offres d'emploi correspondant à vos compétences.</span>
+                                    </label>
+                                
+                                    <label class="list-group-item rounded-3 py-3" for="listGroupCheckableRadios3">
+                                        🚀 Des services sur-mesure
+                                      <span class="d-block small opacity-50">Promotion de votre profil, gestion simplifiée des candidatures, et accompagnement personnalisé.</span>
+                                    </label>
+                                
+                                    <label class="list-group-item rounded-3 py-3" for="listGroupCheckableRadios4">
+                                        🔍 Des opportunités sur-mesure
+                                      <span class="d-block small opacity-50">Profitez d'une plateforme connectée avec les entreprises qui recrutent activement.</span>
+                                    </label>
+                                  </div>
+                                  <div class="my-4">
+                                    <a href="{{ path('app_connect') }}" class="btn btn-primary rounded-pill px-sm-5 px-2 btn-lg">👉 Explorez Olona Talents</a>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>              
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

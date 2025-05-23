@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'dashboard/base_new.html.twig' %}
 
 {% block title %}
     Tableau de bord
@@ -15,13 +15,14 @@
                <div class="row">
                     <div class="col-md-6 d-flex justify-content-left align-items-center">
                         <img src="{{vich_uploader_asset(application.candidat, 'file')}}" class="card-img-top" alt="avatar" style="width: 50%; height: auto; border-radius: 10px; object-fit: cover;">
+                        
                     </div>
                     <div class="col-md-6">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
                                 Candidat : 
                                 <span class="text-success">
-                                    {{ getPseudo(application.candidat) }}
+                                    {{ generatePseudo(application.candidat) }}
                                 </span>
                             </li>
                             <li class="list-group-item">
@@ -49,12 +50,15 @@
                                 </span>
                             </li>
                             <li class="list-group-item">
-                                <a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': application.candidat.id}) }}" class="btn btn-warning btn-sm rounded-pill"><i class="bi bi-eye"></i> Voir Profil complet de {{ application.candidat.candidat.nom }}</a>
+                                <a href="{{ path('app_dashboard_entreprise_details_candidat', {'id': application.candidat.id}) }}" class="btn btn-warning btn-sm rounded-pill"><i class="bi bi-eye"></i> Voir profil complet</a>
                             </li>
                         </ul>
                     </div>
                     
                     
+                        {% if application.status == 'ACCEPTED'  %}
+                            <button type="button" class="col-md-3 btn btn-dark rounded-pill"> Contacter le candidat</button>
+                        {% endif %}
                 
                 </div>
                 <hr>
@@ -66,10 +70,7 @@
                     </p>
                 </div>
             </div>
-            <a href="javascript:history.back()" class="btn btn-primary rounded-pill my-3">
-                    <i class="mx-2 bi bi-arrow-left"></i>
-                    Retour
-                </a>
+            <a href="javascript:history.back()" class="btn btn-success rounded-pill my-3 px-5"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
             </div>
 
         {% endblock %}

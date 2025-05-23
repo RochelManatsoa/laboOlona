@@ -1,0 +1,19 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Recruteurs{% endblock %}
+
+{% block body %}
+
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Recruteurs</h1>
+
+            <div>
+                <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_white_label_entreprise_profile_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+            </div>
+</div>
+
+{% endblock %}

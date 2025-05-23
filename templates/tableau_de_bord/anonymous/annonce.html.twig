@@ -1,0 +1,164 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+	Annonce Réf:{{ generateJobReference(jobOffer.id) }}| Olona Talents
+{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Découvrez des annonces exclusives sur Olona Talents : la plateforme qui connecte les recruteurs aux meilleurs profils malgaches et francophones. Trouvez ou publiez votre prochaine opportunité professionnelle.">
+<meta name="keywords" content="offre d'emploi, mission freelance, recrutement, annonce, emploi Madagascar, télétravail, portage salarial, job remote, talents malgaches, talents francophones, publier une annonce, trouver un emploi, candidat, recruteur, Olona Talents, job board, plateforme emploi, annonces Olona Talents">
+<meta property="og:title" content="Annonces – Trouvez ou publiez des opportunités sur Olona Talents">
+<meta property="og:description" content="Accédez aux dernières offres publiées sur Olona Talents et connectez-vous avec des talents qualifiés ou des entreprises ambitieuses.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ path('app_home') }}">
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="home-header-top">
+	<div class="container d-flex justify-content-between p-2">
+		<div class="logo_to_home">
+			<a href="/" class="login_home"><img src="{{ asset('images/logo-olona-talents-white600x200.png')}}" alt="Olona Talents" width="150" height="56"></a>
+		</div>
+		<a href="{{ path('app_login')}}" class="login_home btn-primary me-3 mt-2">Se connecter</a>
+	</div>
+</div>
+<div class="bnr-inr overlay-wraper bg-center" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}})">
+	<div class="container">
+		<div class="bnr-inr-entry">
+			<div class="banner-title-outer">
+				<div class="banner-title-name">
+					<h2 class="title">{{ jobOffer.titre }} | Réf:{{ generateJobReference(jobOffer.id) }}</h2>
+				</div>
+			</div>
+			
+			<!-- BREADCRUMB ROW END -->                        
+		</div>
+	</div>
+</div>
+<div class="section-full bg-white">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4 col-md-12 rightSidebar">
+				<div class="theiaStickySidebar">
+					<div class="side-bar">
+						<div class="sidebar-elements search-bx">
+                            <div class="view_s-info2-wrap mb-5">
+                                <div class="view_s-info2">
+                                    <h4 class="section-head-small mb-4">Informations de l'annonce</h4>
+                                    <ul class="view_job-hilites">
+                                        <li>
+                                            <i class="bi bi-circle-fill small mx-2 text-success"></i>
+                                            <span class="view_title">{{ getStatuses(jobOffer.status) }}</span>
+                                        </li>
+                                        <li>
+                                            <i class="bi bi-user"></i>
+                                            <span class="view_title">{{ jobOffer.typeContrat }}</span>
+                                        </li>
+                                        <li>
+                                            <i class="bi bi-eye"></i>
+                                            <span class="view_title">{{ jobOffer.annonceVues|length }} Vues</span>
+                                        </li>
+                                        <li>
+                                            <i class="bi bi-bookmark-check"></i>
+                                            <span class="view_title">{{ jobOffer.applications|length }} offres</span>
+                                        </li>
+                                    </ul>
+                                    <h4 class="section-head-small mb-4">Entreprise</h4>
+                                    <a href="{{ path('app_v2_view_recruiter_profile', {'id' : jobOffer.entreprise.id }) }}">{{ jobOffer.entreprise.nom }}</a>
+                                    {% if jobOffer.shortDescription is not null %}
+                                        <h4 class="section-head-small my-4">Résumé Olona Talents</h4>
+                                        {{ jobOffer.shortDescription|raw }}
+                                    {% endif %}
+                                </div>
+                            </div>
+						</div>
+					</div>
+					<div class="m-4 card position-relative text-center d-block d-md-none">
+						<img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+					</div>
+					<div class="advertisment" style="background-image:url({{ asset('v2/images/home/home-olona-talents.webp')}});">
+						<h4 class="title">Recrutement</h4>
+						<p>Obtenez les emplois les mieux adaptés à vos besoins <br>
+						Ajoutez votre CV MAINTENANT !</p>
+						<div class="btn-signUp">
+							<a href="{{ path('app_tableau_de_bord_candidat_mon_compte')}}" class="btn btn-primary white">En savoir plus</a> 
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-8 col-md-12">
+                <div class="cabdidate-de-info">
+                    <div class="view-job-wrap">
+                        <div class="view-job-info">
+                            <div class="view-job-top">
+                                <div class="view_media-bg">
+                                    <img src="{{ asset('v2/images/dashboard/fond_annonce_entreprise.webp')}}" class="img-fluid" alt="Societe">
+                                    <div class="view_jobs-category green"><span class="view_bg-green">Annonce | Réf:{{ generateJobReference(jobOffer.id) }}</span></div>
+                                </div>
+                                <div class="view_mid-content">
+                                    <div class="view_media">
+                                        <img src="{{ jobOffer.entreprise.fileName ? asset('uploads/compagnies/' ~ jobOffer.entreprise.fileName) : asset('images/dashboard/logo_defaut_entreprise.webp') }}" alt="#">
+                                    </div>
+                                    <h4 class="view_job-title">{{ jobOffer.titre }} <span class="view_job-post-duration">/ {{ jobOffer.dateCreation|time_ago }}</span></h4>
+                                    <div class="view-job-mid">
+                                        <div class="view_job-self-mid-left d-flex">
+                                            <span>Budget indicatif :</span>
+                                            <div class="view_jobs-amount">
+                                                {% if jobOffer.budgetAnnonce is defined and jobOffer.budgetAnnonce is not null %}
+                                                    {{ jobOffer.budgetAnnonce.montant }}
+                                                    {{jobOffer.budgetAnnonce.devise}}
+                                                {% else %}
+                                                    {{ jobOffer.salaire }}
+                                                    €
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="view_job-apllication-area">Expire le :
+                                            <span class="view_job-apllication-date">{{ jobOffer.dateExpiration|date('d/m/Y') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="view_s-title">Description :</h4>
+                    <div class="view_description-list-2">
+                        <p>{{ jobOffer.description|raw }}</p>
+                        <h4 class="view_s-title">Compétences requises :</h4>
+                        {% if jobOffer.competences|length > 0 %}
+                        <ul>
+                            {% for skill in jobOffer.competences %}
+                                <li>
+                                    {{ skill.nom }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                            <p>Aucune compétence spécifique requise.</p>
+                        {% endif %}
+                        <div class="btn-signUp">
+                            <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}" class="btn btn-primary">Postuler</a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="user-results">
+                        <div id="joblistings-list">
+                            <h4 class="view_job-title mb-5">Annonces urgentes :</h4>
+                            {% if joblistings_boost is defined %}
+                            {% include "v2/result/boost/_annonces.html.twig" %}
+                            {% endif %}
+                        </div>
+                    </div>                    
+                </div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

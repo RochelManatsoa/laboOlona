@@ -1,0 +1,111 @@
+{% extends 'base_v21.html.twig' %}
+
+{% block title %}
+  Offres d'emploi | Olona Talents
+{% endblock %}
+
+{% block meta %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block sidebar %}
+{% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+	{% include "v2/dashboard/layout_candidat.html.twig" %}
+{% else %}
+	{% include "v2/dashboard/layout_entreprise.html.twig" %}
+{% endif %}
+{% endblock %}
+
+{% block body %}
+    <section class="">
+      <div class="shadow-custom p-2 p-sm-4">
+        {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE'))  %}
+        <h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+            <i class="bi bi-search text-warning me-2"></i>
+            Saisissez de nouvelles opportunités pour votre entreprise
+        </h1>
+        <p class="text-center"> 
+            Accédez aux offres d'emploi publiées par d'autres entreprises dans votre secteur. Positionnez votre agence ou cabinet sur des projets pertinents pour élargir votre clientèle et collaborer avec de nouveaux partenaires.
+        </p>
+        {% else %}
+        <h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+            <i class="bi bi-search text-warning me-2"></i>
+            Saisissez de nouvelles opportunités pour votre carrière
+        </h1>
+        <p class="text-center"> 
+            Accédez aux offres d'emploi publiées par des entreprises dans votre secteur. Positionnez-vous sur des projets pertinents pour élargir vos compétences et collaborer avec de nouveaux partenaires. Explorez des possibilités qui peuvent dynamiser votre trajectoire professionnelle et ouvrir la porte à de nouvelles expériences enrichissantes.
+        </p>
+        {% endif %}
+          <div class="row">
+            <div class="col-12 col-sm-8" id="jobs-container">
+            {% include "v2/dashboard/result/parts/_part_joblistings_list.html.twig" %}
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="d-flex flex-column flex-shrink-0 py-3 position-sticky top-0">
+                    <div class="card mb-3">
+                      <div class="card-body small">
+
+                        {% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_CANDIDAT')) %}
+                            {% include "v2/dashboard/sidebar_candidat.html.twig" %}
+                        {% endif %}
+
+                        {% if app.user.type is defined and app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_ENTREPRISE')) %}
+                            {% include "v2/dashboard/sidebar_entreprise.html.twig" %}
+                        {% endif %}
+
+                      </div>
+                    </div>
+                    <div class="card mb-3" id="candidate-card-container">
+                        <div class="m-4 position-relative text-center">
+                            <a href="{{ path('app_v2_view_recruiter_profile', {'id': 5 }) }}">
+                                <img class="img-fluid" src="{{ asset('images/pubs/olona-talents-vertical.webp')}}">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+      </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script> 
+    
+    var currentPage = 1;
+    var allDataLoaded = false;
+
+    $(window).scroll(function() {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !allDataLoaded) {
+            loadMoreJobs();
+        }
+    });
+
+    function loadMoreJobs() {
+        if (!allDataLoaded) {
+            currentPage++;
+            var url = `{{ path('api_job_offers') }}?page=${currentPage}`;
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json', 
+                success: function(data) {
+                    $('#jobs-container').append(data.html);
+                    if (!data.hasMore) {
+                        allDataLoaded = true;
+                    }
+                },
+                error: function() {
+                    allDataLoaded = true; 
+                }
+            });
+        }
+    }
+    </script>
+{% endblock %}

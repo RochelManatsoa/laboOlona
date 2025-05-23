@@ -1,0 +1,131 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Gestion des entreprises</h2>
+
+        <button type="button" data-bs-target="#newEntrepriseModalToggle" data-bs-toggle="modal" class="btn btn-warning my-3 rounded-pill px-5">Nouveau</button>
+    {{ form_start(form, {'attr': {'class': 'form-group my-3', 'id':'moderateur-entreprise-search-form'}}) }}
+    <div class="row">
+        <div class="input-group">
+                <div class="col">
+                    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="col">
+                    {{ form_widget(form.secteur, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="col">
+                    {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+    <div id="entreprises-container">
+        {% include 'dashboard/moderateur/profile/entreprise/_entreprises.html.twig' %}
+    </div>
+    <div class="navigation">
+        {{ knp_pagination_render(entreprises, 'parts/_pagination.html.twig') }}
+    </div>
+</div>
+
+{{ form_start(formEntreprise)}}
+<div class="modal fade" id="newEntrepriseModalToggle" aria-hidden="true" aria-labelledby="newEntrepriseModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="newEntrepriseModalToggleLabel">Information personnelle</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      
+        <div class="row">
+            <div class="col">
+                {{ form_label(formEntreprise.nom) }}
+                {{ form_widget(formEntreprise.nom, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formEntreprise.nom) }}
+            </div>
+            <div class="col">
+                {{ form_label(formEntreprise.taille) }} 
+                {{ form_widget(formEntreprise.taille, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formEntreprise.taille) }}
+            </div>
+        </div>
+      
+        <div class="row">
+            <div class="col">
+                {{ form_label(formEntreprise.entreprise.email) }}
+                {{ form_widget(formEntreprise.entreprise.email, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formEntreprise.entreprise.email) }}
+            </div>
+            <div class="col">
+                {{ form_label(formEntreprise.entreprise.telephone) }} 
+                {{ form_widget(formEntreprise.entreprise.telephone, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formEntreprise.entreprise.telephone) }}
+            </div>
+        </div>
+      
+        <div class="row">
+            <div class="col">
+                {{ form_label(formEntreprise.entreprise.adress) }}
+                {{ form_widget(formEntreprise.entreprise.adress, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formEntreprise.entreprise.adress) }}
+            </div>
+            <div class="col">
+                {{ form_label(formEntreprise.localisation) }} 
+                {{ form_widget(formEntreprise.localisation, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formEntreprise.localisation) }}
+            </div>
+        </div>
+      
+        <div class="row">
+            <div class="col">
+                {{ form_label(formEntreprise.secteurs) }}
+                {{ form_widget(formEntreprise.secteurs, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formEntreprise.secteurs) }}
+            </div>
+            <div class="col">
+                {{ form_label(formEntreprise.siteWeb) }} 
+                {{ form_widget(formEntreprise.siteWeb, {'attr': {'class': 'form-control mb-4'}}) }}
+                {{ form_errors(formEntreprise.siteWeb) }}
+            </div>
+        </div>
+
+            {{ form_label(formEntreprise.description) }} 
+            {{ form_widget(formEntreprise.description, {'attr': {'class': 'form-control mb-4'}}) }}
+            {{ form_errors(formEntreprise.description) }}
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary rounded-pill px-5">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{ form_end(formEntreprise)}}
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#entreprise_description' ) )
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    function searchAnnonces() {
+        var formData = $('#moderateur-entreprise-search-form').serialize();
+
+        $.ajax({
+            url: '{{ path('app_dashboard_moderateur_profile_entreprise') }}',
+            type: 'GET',
+            data: formData,
+            success: function(data) {
+                $('#entreprises-container').html(data.content);
+            }
+        });
+    }
+    $('#moderateur-entreprise-search-form input, #moderateur-entreprise-search-form select').on('keyup change', function() {
+        searchAnnonces();
+    });
+});
+
+</script>
+{% endblock %}
+

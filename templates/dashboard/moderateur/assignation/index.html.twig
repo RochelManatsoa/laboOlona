@@ -1,0 +1,223 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Assignation</h2>
+    <div style="display:none;">
+    <button id="assignationModal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignation">
+    hidden
+    </button>
+    </div>
+
+    <!-- Onglets -->
+    <ul class="nav nav-tabs nav-underline">
+        <li class="nav-item">
+            <a class="nav-link px-4 active" id="assignations-tab" data-bs-toggle="tab" href="#assignations">Assignations</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link px-4" id="pending-tab" data-bs-toggle="tab" href="#pending">En attente</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link px-4" id="pending-tab" data-bs-toggle="tab" href="#moderated">En modération</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link px-4" id="accepted-tab" data-bs-toggle="tab" href="#accepted">Acceptées</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link px-4" id="refused-tab" data-bs-toggle="tab" href="#refused">Refusées</a>
+        </li>
+    </ul>
+
+    <!-- Contenu des onglets -->
+    <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="assignations">
+            <div class="card">
+                <div class="card-body">
+                    <table class="w-100 table">
+                        <tr>
+                            <th class="col-4">Profil</th>
+                            <th class="col-1"></th>
+                            <th class="col-7">Entreprises</th>
+                        </tr>
+                        {% for profil in profils %}
+                            {% set form = assignationForms[profil.id].form %}
+                            <tr class="border-bottom">
+                                {{ include('dashboard/moderateur/assignation/_form.html.twig', { 'profil': profil }) }}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                        <div class="navigation">
+                            {{ knp_pagination_render(profils, 'parts/_pagination.html.twig') }}
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="pending">
+            <div class="card">
+                <div class="card-body">
+                    {% if attentes|length > 0 %}
+                        <table class="w-100 table">
+                            <tr>
+                                <th class="col-7">Titre de l'annonce</th>
+                                <th class="col-2 text-center">Assignations</th>
+                                <th class="col-3 text-center">Entreprises</th>
+                            </tr>
+                        {% for item in attentes %}
+                            <tr>
+                                <td class="col-7">
+                                    <a class="" href="{{ path('app_dashboard_moderateur_annonce_assignation_view', {'id': item.jobListing.id })}}">{{ item.jobListing.titre}}</a><br>
+                                    <span class="text-muted small">Publiée {{item.jobListing.dateCreation|time_ago }} </span> | 
+                                    <span class="text-muted small">Budget 
+                                    {% if item.jobListing.budgetAnnonce is defined and item.jobListing.budgetAnnonce is not null %}
+                                    {{item.jobListing.budgetAnnonce.montant }} {{ item.jobListing.budgetAnnonce.devise }}</span>
+                                    {% else %}
+                                    {{item.jobListing.salaire }} €
+                                    {% endif %}
+                                </td>
+                                <td class="col-2 text-center">{{ item.assignations|length}}</td>
+                                <td class="col-3 text-center"><a class="" href="{{ path('app_dashboard_moderateur_assignation_entreprise', {'id': item.jobListing.entreprise.id })}}">{{ item.jobListing.entreprise.nom}}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {% else %}
+                    <div class="text-center col-6 mx-auto">
+                        <i class=" h1 mx-auto my-5 bi bi-archive"></i>
+                        <p class="text-center">Aucune assignation en attente.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="moderated">
+            <div class="card">
+                <div class="card-body">
+                    {% if moderees|length > 0 %}
+                        <table class="w-100 table">
+                            <tr>
+                                <th class="col-7">Titre de l'annonce</th>
+                                <th class="col-2 text-center">Assignations</th>
+                                <th class="col-3 text-center">Entreprises</th>
+                            </tr>
+                        {% for item in moderees %}
+                            <tr>
+                                <td class="col-7">
+                                    <a class="" href="{{ path('app_dashboard_moderateur_annonce_assignation_view', {'id': item.jobListing.id })}}">{{ item.jobListing.titre}}</a><br>
+                                    <span class="text-muted small">Publiée {{item.jobListing.dateCreation|time_ago }} </span> | 
+                                    <span class="text-muted small">Budget 
+                                    {% if item.jobListing.budgetAnnonce is defined and item.jobListing.budgetAnnonce is not null %}
+                                    {{item.jobListing.budgetAnnonce.montant }} {{ item.jobListing.budgetAnnonce.devise }}</span>
+                                    {% else %}
+                                    {{item.jobListing.salaire }} €
+                                    {% endif %}
+                                </td>
+                                <td class="col-2 text-center">{{ item.assignations|length}}</td>
+                                <td class="col-3 text-center"><a class="" href="{{ path('app_dashboard_moderateur_assignation_entreprise', {'id': item.jobListing.entreprise.id })}}">{{ item.jobListing.entreprise.nom}}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {% else %}
+                    <div class="text-center col-6 mx-auto">
+                        <i class=" h1 mx-auto my-5 bi bi-archive"></i>
+                        <p class="text-center">Aucune assignation en modération.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="accepted">
+            <div class="card">
+                <div class="card-body">
+                    {% if acceptees|length > 0 %}
+                        <table class="w-100 table">
+                            <tr>
+                                <th class="col-7">Titre de l'annonce</th>
+                                <th class="col-2 text-center">Assignations</th>
+                                <th class="col-3 text-center">Entreprises</th>
+                            </tr>
+                        {% for item in acceptees %}
+                            <tr>
+                                <td class="col-7">
+                                    <a class="" href="{{ path('app_dashboard_moderateur_annonce_assignation_view', {'id': item.jobListing.id })}}">{{ item.jobListing.titre}}</a><br>
+                                    <span class="text-muted small">Publiée {{item.jobListing.dateCreation|time_ago }} </span> | 
+                                    <span class="text-muted small">Budget 
+                                    {% if item.jobListing.budgetAnnonce is defined and item.jobListing.budgetAnnonce is not null %}
+                                    {{item.jobListing.budgetAnnonce.montant }} {{ item.jobListing.budgetAnnonce.devise }}</span>
+                                    {% else %}
+                                    {{item.jobListing.salaire }} €
+                                    {% endif %}
+                                </td>
+                                <td class="col-2 text-center">{{ item.assignations|length}}</td>
+                                <td class="col-3 text-center"><a class="" href="{{ path('app_dashboard_moderateur_assignation_entreprise', {'id': item.jobListing.entreprise.id })}}">{{ item.jobListing.entreprise.nom}}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {% else %}
+                        <div class="text-center col-6 mx-auto">
+                            <i class=" h1 mx-auto my-5 bi bi-archive"></i>
+                            <p class="text-center">Aucune assignation acceptées.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="refused">
+            <div class="card">
+                <div class="card-body">
+                    {% if refusees|length > 0 %}
+                        <table class="w-100 table">
+                            <tr>
+                                <th class="col-7">Titre de l'annonce</th>
+                                <th class="col-2 text-center">Assignations</th>
+                                <th class="col-3 text-center">Entreprises</th>
+                            </tr>
+                        {% for item in refusees %}
+                            <tr>
+                                <td class="col-7">
+                                    <a class="" href="{{ path('app_dashboard_moderateur_annonce_assignation_view', {'id': item.jobListing.id })}}">{{ item.jobListing.titre}}</a><br>
+                                    <span class="text-muted small">Publiée {{item.jobListing.dateCreation|time_ago }} </span> | 
+                                    <span class="text-muted small">Budget 
+                                    {% if item.jobListing.budgetAnnonce is defined and item.jobListing.budgetAnnonce is not null %}
+                                    {{item.jobListing.budgetAnnonce.montant }} {{ item.jobListing.budgetAnnonce.devise }}</span>
+                                    {% else %}
+                                    {{item.jobListing.salaire }} €
+                                    {% endif %}
+                                </td>
+                                <td class="col-2 text-center">{{ item.assignations|length}}</td>
+                                <td class="col-3 text-center"><a class="" href="{{ path('app_dashboard_moderateur_assignation_entreprise', {'id': item.jobListing.entreprise.id })}}">{{ item.jobListing.entreprise.nom}}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {% else %}
+                        <div class="text-center col-6 mx-auto">
+                            <i class=" h1 mx-auto my-5 bi bi-archive"></i>
+                            <p class="text-center">Aucune assignation refusées.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ include('parts/_modal_assignation_forfait.html.twig') }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modals = document.querySelectorAll('.modal'); // Sélectionne tous les éléments avec la classe 'modal'
+
+    modals.forEach(modal => {
+        modal.addEventListener('hidden.bs.modal', function() {
+            // Trouver le conteneur de la collection à l'intérieur du modal
+            const collectionContainer = modal.querySelector('[data-assignation-collection-target="collectionContainer"]');
+            if (collectionContainer) {
+                collectionContainer.innerHTML = ''; // Vide le contenu du conteneur de la collection
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}
+

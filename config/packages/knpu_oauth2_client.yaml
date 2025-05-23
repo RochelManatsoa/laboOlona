@@ -7,3 +7,21 @@ knpu_oauth2_client:
             redirect_route: connect_google_check
             redirect_params: {}
         # configure your clients as described here: https://github.com/knpuniversity/oauth2-client-bundle#configuration
+
+        google_drive:
+            type: google
+            client_id: '%env(GOOGLE_DRIVE_CLIENT_ID)%'
+            client_secret: '%env(GOOGLE_DRIVE_CLIENT_SECRET)%'
+            redirect_route: google_drive_callback
+            redirect_params: {}
+            access_type: offline     # ✅ Ici c'est bon
+            use_state: true
+            # scopes: ['https://www.googleapis.com/auth/drive.readonly']
+
+        facebook_main:
+            type: facebook
+            client_id: '%env(OAUTH_FACEBOOK_ID)%'
+            client_secret: '%env(OAUTH_FACEBOOK_SECRET)%'
+            redirect_route: connect_facebook_check
+            redirect_params: {}
+            graph_api_version: v2.12

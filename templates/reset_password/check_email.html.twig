@@ -1,15 +1,44 @@
-{% extends 'base.html.twig' %}
+{% extends 'security/base_login.html.twig' %}
 
-{% block title %}E-mail de réinitialisation de mot de passe envoyé{% endblock %}
+{% block title %}Veuillez consulter votre boîte de réception{% endblock %}
 
 {% block body %}
-
-<div class="col-md-6 mx-auto">
-    <p>
-        Si un compte correspondant à votre email existe, un email vient de vous être envoyé. Il contient un lien que vous pouvez utiliser pour réinitialiser votre mot de passe.
-        Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
-    </p>
-    <p>Si vous ne recevez pas d'email, veuillez vérifier votre dossier spam ou <a href="{{ path('app_forgot_password_request') }}">réessayez</a>.</p>
-    </p>
-</div>
+<section class="login-wrap">
+    <div class="bg-mask"></div>
+    <div class="login-header">
+        <div class="container pt-5">
+            <div class="row justify-content-center text-center">
+                <div class="col-md-4">
+                    <a href="{{ path('app_home') }}">
+                        <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" class="img-fluid" alt="Image">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="login-content">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-lg-5">
+                    <div class="card shadow-lg border-0 rounded">
+                        <div class="card-body p-4 text-center">
+                            <h1 class="fs-4 fw-bolder text-center my-3 my-sm-5">
+                                <i class="fs-1 bi bi-envelope-at text-warning me-2"></i><br/>
+                                Vérifiez votre mail
+                            </h1>
+                            <p>
+                                Nous avons envoyé un email de confirmation à l'adresse que vous avez fournie lors de l'inscription. Veuillez consulter votre boîte de réception et suivre les instructions pour activer votre compte.
+                            </p>
+                            <p>
+                                {{ 'app_email_sending.not_received'|trans({
+                                    '%resend_confirmation%': path('app_forgot_password_request'),
+                                })|raw }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

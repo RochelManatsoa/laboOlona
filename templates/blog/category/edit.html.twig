@@ -1,0 +1,15 @@
+{% extends 'base_admin_blog.html.twig' %}
+
+{% block title %}Modifier une catégorie{% endblock %}
+
+{% block body %}
+    <h1 class="h3">Modifier une catégorie</h1>
+
+    {{ include('blog/category/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <div class="my-5">
+    <a class="btn btn-info px-5 rounded-pill" href="javascript:history.back()"><i class="bi me-2 bi-arrow-left"></i>Retour à la liste</a>
+    </div>
+
+    {{ include('blog/category/_delete_form.html.twig') }}
+{% endblock %}
