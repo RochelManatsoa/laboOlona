@@ -176,7 +176,7 @@
                             <div class="col-12 col-sm-6 text-right text-strong">{{ results.frais_de_portage_euro|number_format(2, '.', '')}}</div>
                         </div>
                         <hr>
-                        {% if simulateur.type is same as('OLONA')  %}
+                        {% if simulateur.type is same as('OLONA') and simulateur.status is not same as('FREELANCE') %}
                             <div class="row">
                                 <div class="col text-danger h5">Espace Co Working Olona</div>
                             </div>
