@@ -25,7 +25,7 @@
         <tbody>
         {% for item in entreprise_profiles %}
         {% set entreprise = item[0] %}
-        {% set user = item[1] %}
+        {% set user = entreprise.entreprise %}
             <tr>
                 <td>{{ entreprise.id }}</td>
                 <td>{{ user }}</td>

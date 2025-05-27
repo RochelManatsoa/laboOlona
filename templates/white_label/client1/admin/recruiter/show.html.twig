@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html.twig' %}
+{% extends 'white_label/client1/base.html.twig' %}
 
 {% block title %}Recruteur #{{ entreprise_profile.id }}{% endblock %}
 
@@ -15,15 +15,11 @@
                         <td>{{ entreprise_profile.createdAt ? entreprise_profile.createdAt|date('d/m/Y') : '' }}</td>
                     </tr>
                     <tr>
-                        <th class="col-3">Taille</th>
-                        <td>{{ entreprise_profile.tailles[entreprise_profile.taille]|raw }}</td>
-                    </tr>
-                    <tr>
                         <th class="col-3">Localisation</th>
                         <td><i class="bi bi-geo-alt-fill"></i> {{ show_country(entreprise_profile.localisation) }}</td>
                     </tr>
                     <tr>
-                        <th class="col-3">Gérant(e)</th>
+                        <th class="col-3">Utilisateur</th>
                         <td>{{ entreprise_profile.entreprise }}</td>
                     </tr>
                     <tr>
@@ -33,10 +29,6 @@
                     <tr>
                         <th class="col-3">Téléphone</th>
                         <td> {{ entreprise_profile.entreprise.telephone }}</td>
-                    </tr>
-                    <tr>
-                        <th class="col-3">SiteWeb</th>
-                        <td>{{ entreprise_profile.siteWeb }}</td>
                     </tr>
                     <tr>
                         <th class="col-3">Status</th>
@@ -51,16 +43,6 @@
                             </a>
                             {% else %}
                             Aucune annonce
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="col-3">Logo</th>
-                        <td>
-                            {% if entreprise_profile.fileName %}
-                            <img src="{{ asset('uploads/compagnies/' ~ entreprise_profile.fileName) }}" alt="Logo" class="img-thumbnail" style="width: 100px;"/>
-                            {% else %}
-                            Aucun logo
                             {% endif %}
                         </td>
                     </tr>

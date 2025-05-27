@@ -2,6 +2,7 @@
 
 namespace App\WhiteLabel\Controller\Client1\Crud;
 
+use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
@@ -47,6 +48,9 @@ class JobListingController extends AbstractController
     public function new(Request $request): Response
     {
         $jobListing = new JobListing();
+        $jobListing->setDateCreation(new \DateTime());
+        $jobListing->setJobId(new Uuid(Uuid::v1()));
+        $jobListing->setStatus(JobListing::STATUS_PENDING);
         $form = $this->createForm(JobListing1Type::class, $jobListing);
         $form->handleRequest($request);
 

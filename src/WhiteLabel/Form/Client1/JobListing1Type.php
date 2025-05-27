@@ -2,35 +2,39 @@
 
 namespace App\WhiteLabel\Form\Client1;
 
-use App\WhiteLabel\Entity\Client1\Secteur;
-use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
-use App\WhiteLabel\Entity\Client1\Candidate\Competences;
-use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
-use App\Form\Entreprise\BudgetAnnonceType;
+use Doctrine\Persistence\ManagerRegistry;
+use App\WhiteLabel\Entity\Client1\Secteur;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+// use App\Form\Entreprise\BudgetAnnonceType;
 use Symfony\Component\Validator\Constraints\Length;
-use App\Form\DataTransformer\CompetencesTransformer;
+use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\WhiteLabel\Entity\Client1\Candidate\Competences;
+use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Sequentially;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use App\WhiteLabel\Form\Client1\DataTransformer\CompetencesTransformer;
 
 class JobListing1Type extends AbstractType
 {
     public function __construct(
+        private ManagerRegistry $managerRegistry,
         private CompetencesTransformer $competencesTransformer,
         private EntityManagerInterface $entityManager,
         private SluggerInterface $sluggerInterface,
-    ) {}
+    ) {
+        $this->entityManager = $managerRegistry->getManager('client1');
+    }
     
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -160,17 +164,17 @@ class JobListing1Type extends AbstractType
                 'no_results_found_text' => 'Aucun résultat' ,
                 'no_more_results_text' => 'Plus de résultats' ,
             ])
-            ->add('budgetAnnonce', BudgetAnnonceType::class, [
-                'label' => 'Budget prévu pour la mission',
-                'required' => false,
-                'label_attr' => [
-                    'class' => 'fw-bold fs-6' 
-                ],
-                'constraints' => new Sequentially([
-                    new NotBlank(message:'Champ obligatoire.'),
-                ]),
-                'help' => 'Définissez le budget alloué pour cette annonce ou mission.'
-            ])
+            // ->add('budgetAnnonce', BudgetAnnonceType::class, [
+            //     'label' => 'Budget prévu pour la mission',
+            //     'required' => false,
+            //     'label_attr' => [
+            //         'class' => 'fw-bold fs-6' 
+            //     ],
+            //     'constraints' => new Sequentially([
+            //         new NotBlank(message:'Champ obligatoire.'),
+            //     ]),
+            //     'help' => 'Définissez le budget alloué pour cette annonce ou mission.'
+            // ])
             // ->add('boost', EntityType::class, [
             //     'class' => Boost::class,
             //     'choice_label' => 'id',

@@ -16,24 +16,16 @@
                 <td>{{ job_listing.titre }}</td>
             </tr>
             <tr>
-                <th>Description</th>
-                <td>{{ job_listing.description }}</td>
+                <th>Créée le</th>
+                <td>{{ job_listing.dateCreation ? job_listing.dateCreation|date('d/m/Y') : '' }}</td>
             </tr>
             <tr>
-                <th>DateCreation</th>
-                <td>{{ job_listing.dateCreation ? job_listing.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>DateExpiration</th>
-                <td>{{ job_listing.dateExpiration ? job_listing.dateExpiration|date('Y-m-d H:i:s') : '' }}</td>
+                <th>Expire le</th>
+                <td>{{ job_listing.dateExpiration ? job_listing.dateExpiration|date('d/m/Y') : '' }}</td>
             </tr>
             <tr>
                 <th>Status</th>
                 <td>{{ job_listing.status }}</td>
-            </tr>
-            <tr>
-                <th>Salaire</th>
-                <td>{{ job_listing.salaire }}</td>
             </tr>
             <tr>
                 <th>Lieu</th>
@@ -48,35 +40,26 @@
                 <td>{{ job_listing.nombrePoste }}</td>
             </tr>
             <tr>
-                <th>Prime</th>
-                <td>{{ job_listing.prime }}</td>
+                <th>Description</th>
+                <td>{{ job_listing.description|raw }}</td>
             </tr>
             <tr>
-                <th>ShortDescription</th>
-                <td>{{ job_listing.shortDescription }}</td>
+                <th>Meta description</th>
+                <td>{{ job_listing.shortDescription|raw }}</td>
             </tr>
             <tr>
-                <th>IsGenerated</th>
-                <td>{{ job_listing.isGenerated ? 'Yes' : 'No' }}</td>
+                <th>Meta description générée?</th>
+                <td>{{ job_listing.isGenerated ? 'Oui' : 'Non' }}</td>
             </tr>
             <tr>
-                <th>CleanDescription</th>
-                <td>{{ job_listing.cleanDescription }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ job_listing.updatedAt ? job_listing.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>IsNotified</th>
-                <td>{{ job_listing.isNotified ? 'Yes' : 'No' }}</td>
+                <th>Notification envoyée ?</th>
+                <td>{{ job_listing.isNotified ? 'Oui' : 'Non' }}</td>
             </tr>
         </tbody>
     </table>
+            <div class="d-flex justify-content-end w-100">
+                <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_white_label_job_listing_edit', {'id': job_listing.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                {{ include('white_label/client1/admin/job_listing/_delete_form.html.twig') }}
+            </div>
 
-    <a href="{{ path('app_white_label_job_listing_index') }}">back to list</a>
-
-    <a href="{{ path('app_white_label_job_listing_edit', {'id': job_listing.id}) }}">edit</a>
-
-    {{ include('white_label/client1/admin/job_listing/_delete_form.html.twig') }}
 {% endblock %}

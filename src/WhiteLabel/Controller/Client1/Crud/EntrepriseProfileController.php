@@ -38,7 +38,7 @@ class EntrepriseProfileController extends AbstractController
         $userId = $user->getId();
         $canListAll = true;
         $entreprise_profiles = $this->entityManager->getRepository(EntrepriseProfile::class)->paginateRecipes($page, $this->paginatorInterface, $canListAll ? null : $userId);
-
+        // dd($entreprise_profiles);
         return $this->render('white_label/client1/admin/recruiter/index.html.twig', [
             'entreprise_profiles' => $entreprise_profiles,
         ]);

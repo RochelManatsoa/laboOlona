@@ -5,6 +5,7 @@ namespace App\WhiteLabel\Form\Client1;
 use App\WhiteLabel\Entity\Client1\Secteur;
 use App\WhiteLabel\Entity\Client1\Finance\Devise;
 use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
+use App\WhiteLabel\Form\Client1\Autocomplete\UserAutocompleteField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -70,6 +71,12 @@ class EntrepriseProfileType extends AbstractType
                     'class' => 'fw-bold fs-6' 
                 ],
                 'help' => 'Secteurs d\'activités de l\'entreprise.',
+            ])
+            ->add('entreprise', UserAutocompleteField::class, [
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Selectionner l\'utilisateur',
             ])
         ;
     }

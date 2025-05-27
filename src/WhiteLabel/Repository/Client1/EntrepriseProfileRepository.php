@@ -25,9 +25,9 @@ class EntrepriseProfileRepository extends ServiceEntityRepository
 
     public function paginateRecipes($page, PaginatorInterface $paginator, ?int $userId): PaginationInterface
     {
-        $queryBuilder = $this->createQueryBuilder('e')->select('e, u, COUNT(j.id) AS jobCount')
-        ->leftJoin('e.entreprise', 'u')
+        $queryBuilder = $this->createQueryBuilder('e')->select('e, COUNT(j.id) AS jobCount')
         ->leftJoin('e.jobListings', 'j')
+        ->groupBy('e.id')
         ->addOrderBy('e.id', 'DESC');
 
         return $paginator->paginate(
