@@ -52,7 +52,7 @@
                                                                 <img src="{{ job_offer.entreprise.fileName ? asset('uploads/compagnies/' ~ job_offer.entreprise.fileName) : asset('images/white-label/logoboa.png') }}" alt="logo company">
                                                             </div>
                                                             <div class="company-info">
-                                                                <a href="{{ path('app_v2_view_recruiter_profile', {'id' : job_offer.entreprise.id}) }}" class="company-name">{{ job_offer.entreprise.nom }}</a>
+                                                                <a href="#" class="company-name">{{ job_offer.entreprise.nom }}</a>
                                                                 <p class="company-secteur">{{ job_offer.entreprise.secteurs|length > 0 ? job_offer.entreprise.secteurs[0].nom : '-' }}</p>
                                                             </div>
                                                         </div>
@@ -86,7 +86,7 @@
                                                     <img src="{{ job_offer.entreprise.fileName ? asset('uploads/compagnies/' ~ job_offer.entreprise.fileName) : asset('images/white-label/logoboa.png') }}" alt="logo company">
                                                     </div>
                                                     <div class="company-info">
-                                                        <a href="{{ path('app_v2_view_recruiter_profile', {'id' : job_offer.entreprise.id}) }}" class="company-name">{{ job_offer.entreprise.nom }}</a>
+                                                        <a href="#" class="company-name">{{ job_offer.entreprise.nom }}</a>
                                                         <p class="company-secteur">{{ job_offer.entreprise.secteurs|length > 0 ? job_offer.entreprise.secteurs[0].nom : '-' }}</p>
                                                     </div>
                                                 </div>
