@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>{% block title %}Olona Talents{% endblock %}</title>
+		<link rel="icon" href="{{ asset('images/white-label/cropped-favicon-32x32.png') }}" sizes="32x32">
 		{% block meta %}{% endblock %}
 		{% block stylesheets %}
 			<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -48,11 +49,13 @@
 				</nav>
 			{% endblock %}
 			{% block sidebar %}
+			{% if app.user %}
 				{% if is_granted('ROLE_ADMIN') %}
 					{% include "white_label/client1/layout/admin.html.twig" %}
 				{% else %}
 					{% include "white_label/client1/layout/sidebar.html.twig" %}
 				{% endif %}
+			{% endif %}
 			{% endblock %}
 			{% for message in app.flashes('success') %}
 				<div class="my-4 alert alert-success alert-dismissible fade show" role="alert">

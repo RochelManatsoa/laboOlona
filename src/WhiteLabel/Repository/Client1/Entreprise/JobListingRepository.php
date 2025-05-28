@@ -105,7 +105,7 @@ class JobListingRepository extends EntityRepository
         );
     }
 
-    public function paginateJobListings(?string $status = null, $page = 1, $size = 10): PaginationInterface
+    public function paginateJobListings(?string $status = null, $page = 1, $size = 10, PaginatorInterface $paginator): PaginationInterface
     {
         $queryBuilder = $this->createQueryBuilder('j')
             ->select('j')
@@ -118,7 +118,7 @@ class JobListingRepository extends EntityRepository
                 ->setParameter('status', $status);
             }
 
-        return $this->paginator->paginate(
+        return $paginator->paginate(
             $queryBuilder,
             $page,
             $size,

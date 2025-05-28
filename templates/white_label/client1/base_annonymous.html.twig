@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html data-bs-theme="light">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{% block title %}Olona Talents{% endblock %}</title>
+		<link rel="icon" href="{{ asset('images/white-label/cropped-favicon-32x32.png') }}" sizes="32x32">
+		{% block meta %}{% endblock %}
+		{% block stylesheets %}
+			<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
+	</head>
+	<body class="bootstrap-light">
+		<div class="transition-fade">
+			{% block sidebar %}{% endblock %}
+			{% block body %}{% endblock %}
+			{% block preview %}
+        	<a href="javascript:history.back()" class="d-none d-sm-block d-md-none btn btn-info fw-semibold text-uppercase px-4 my-5 me-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+			{% endblock %}
+		</div>
+		<script>
+
+			function loadCKEditor() {
+				if (typeof ClassicEditor === 'undefined') {
+					var scriptTag = document.createElement('script');
+					scriptTag.src = "{{ asset('assets/ckeditor5/ckeditor.js') }}";
+					document.body.appendChild(scriptTag);
+				}
+			}
+
+			loadCKEditor();
+			document.addEventListener('turbo:load', loadCKEditor);
+
+		</script>
+		<!-- Modal porte d'entrée -->
+		<div class="modal fade" id="connectingModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<div class="modal-content">
+					<div class="">
+						<div class="row">
+							<div class="col-12 col-sm-4" style="
+								background-image:url('{{ asset('images/home/annexe/etape-2.webp')}}');
+								background-repeat: no-repeat;
+								background-size: cover;
+								background-position-x: left;
+								border-top-left-radius: 10px;
+								border-bottom-left-radius: 10px;">
+							</div>
+							<div class="col-12 col-sm-8 p-4 p-sm-5">
+								<h3 class="">Pour postuler à cette offre, inscrivez-vous gratuitement</h3>
+								<p class="">Creer votre profil :</p>
+								<a href="{{ path('app_white_label_register', {'typology': 'Candidat'})}}">
+								<div class="row border rounded mb-3">
+									<div class="col-4" style="
+										background-image:url('{{ asset('images/Candidat.png')}}');
+										background-repeat: no-repeat;
+										background-size: cover;
+										background-position-x: left;
+										border-top-left-radius: 5px;
+										border-bottom-left-radius: 5px;">
+									</div>
+									<div class="col-8 py-4">
+										<span class="fw-bold">Prestataire</span><br>
+										<span class="">Je cherche des projets</span>
+									</div>
+								</div>
+								</a>
+								<p class="">Déjà inscrit ? <a href="{{ path('app_client1_login')}}">Se connecter</a></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+        <!-- Bouton de retour en haut -->
+        <button id="backToTop" class="back-to-top" style="display: none;"><i class="bi bi-chevron-up"></i></button>
+
+	</body>
+	<script src="{{asset('assets/js/jquery.min.js')}}"></script>
+	<script src="{{asset('assets/js/jquery.steps.min.js')}}"></script>
+	<script src="{{asset('assets/js/jqueryValidate.js')}}"></script>
+	<script src="{{asset('assets/main.js')}}"></script>
+	{{ encore_entry_script_tags('main') }}
+</html>

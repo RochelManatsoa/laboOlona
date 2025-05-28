@@ -1,0 +1,122 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col user-results ">
+                <div id="joblistings-list">
+                    {% if joblistings|length > 0 %}
+                    <div class="jobs-list-wrap">
+                        {% for job in joblistings %}
+                        <article class="article-item_">
+                            <div class="row">
+                                <div class="col-md-2 aside-left-item_">
+                                    <span class="date_p">Publié {{ job.dateCreation|date('d/m/Y') }}</span>
+                                </div>
+                                <div class="col-md-10 aside-right-item_">
+                                    <div class="detail_annonce_">
+                                        <h2>
+                                                <a href="{{ path('app_white_label_annonce_view', {'jobId': job.jobId })}}" class="btn-primary">
+                                                    {{ job.titre }}
+                                                </a>
+                                        </h2>
+                                        <h3><a href="#" class="btn-primary">{{ job.entreprise.nom }}</a> <span class="secteur_job"><i class="bi bi-tags"></i> {{ job.secteur.nom}}</span></h3>
+                                        <div class="description_courte_">{{ job.shortDescription|raw }}</div>
+                                        <div class="info_publication_">
+                                            <span class="small fw-light">
+                                                <span class="badge bg-info rounded-pill px-2"></span>
+                                                <span class="badge rounded-pill px-2 text-bg-success">Ouvert</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <span class="">Date limite {{ job.dateExpiration|date('d/m/Y') }}</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-eye"></i> {{ job.annonceVues|length }}
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-bookmark-check"></i> {{ job.applications|length }} offres
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+                        {{ knp_pagination_render(joblistings) }}
+                    {% else %}
+                        {% include "v2/dashboard/result/none/_none_joblistings.html.twig" %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block modal %}
+    {{ parent() }}
+    <!-- Modal -->
+    <div class="modal fade" id="posting" tabindex="-1" aria-labelledby="postingLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 text-dark" id="postingLabel">Les annonces sur Olona Talents</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-dark">
+                <p class="">
+                Pour postuler à cette offre, veuillez créer un profil candidat.
+                </p>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ path('app_profile_candidate_step_one')}}" class="btn btn-warning rounded-pill px-5">Remplir mes info en tant que Candidat</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="cooptation" tabindex="-1" aria-labelledby="cooptationLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 text-dark" id="cooptationLabel">Recommander un ami</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-dark">
+                <p class="">
+                Nous sommes ravis de vous offrir la possibilité de participer à notre programme de recommandation. En nous recommandant à un ami qui est à la recherche d'opportunités, non seulement vous nous aidez à grandir, mais vous bénéficiez également d'une récompense lorsque votre ami signe un contrat avec nous. Voici comment ça fonctionne :
+                </p>
+                <p class="">
+                Recommandez un Ami : Partagez le lien de recommandation que vous trouverez dans votre espace utilisateur avec vos amis.
+                </p>
+                <p class="">
+                Complétez vos Infos de Paiement : Assurez-vous de remplir les informations de paiement nécessaires dans votre profil pour que nous puissions vous envoyer votre récompense sans accroc.
+                </p>
+                <p class="">
+                Récoltez les Fruits : Une fois que votre ami recommandé signe un contrat avec nous, vous recevrez votre récompense directement sur le moyen de paiement que vous avez indiqué.
+                </p>
+                <p class="">
+                Pourquoi participer ?
+                </p>
+                <p class="">
+                Soutenez vos Amis : Aidez vos amis à trouver une opportunité qui peut changer leur vie.
+                </p>
+                <p class="">
+                Contribuez à Notre Croissance : Aidez-nous à trouver les meilleurs talents grâce à votre réseau.
+                </p>
+                <p class="">
+                Recevez une Récompense : Gagnez une récompense financière en signe de notre gratitude.
+                </p>
+                <p class="">
+                Nous apprécions votre engagement envers notre communauté et sommes impatients de récompenser votre soutien. Pour plus de détails sur le programme de recommandation ou pour toute question, n'hésitez pas à nous contacter.
+                </p>
+                <p class="">
+                Merci de faire partie de notre succès ! Cliquez ci-dessous pour commencer.
+                </p>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ path('app_dashboard_referrer_become')}}" class="btn btn-warning rounded-pill px-5">Remplir mes info Coopteur</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

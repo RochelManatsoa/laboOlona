@@ -5,18 +5,18 @@
 {% block body %}
 
 <section class="login-wrap">
-    <div class="bg-mask"></div>
+    <div class="bg-mask-boa"></div>
     <div class="login-header">
         <div class="container pt-5">
             <div class="row">
                 <div class="col-md-4">
-                    <a href="{{ path('app_home') }}">
-                        <img src="{{ asset('images/logo-olona-talents-white600x200.png') }}" class="img-fluid" alt="Image">
+                    <a href="{{ path('app_white_label_home') }}">
+                        <img src="{{ asset('images/white-label/Logo_PP_off-small.png') }}" style="height:120px;" class="img-fluid" alt="Image">
                     </a>
                 </div>
                 <div class="col-md-8 ">
                     <div class="sign-up_">
-                        Déjà membre ? <a href="{{ path('app_login') }}" class="fw-bolder text-white">Connectez-vous</a> et profitez des avantages de Olona-talents.
+                        Déjà membre ? <a href="{{ path('app_client1_login') }}" class="fw-bolder text-white">Connectez-vous ici</a>
                     </div>
                 </div>
             </div>
@@ -25,11 +25,7 @@
     <div class="login-content">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-7 col-xl-8">
-                    <div class="login-left-block">
-                    </div>
-                </div>
-                <div class="col-lg-5 col-xl-4">
+                <div class="col-lg-6 col-xl-5 mx-auto">
                     <div class="card shadow-lg border-0 rounded">
                         <div class="card-body p-4">
                             {% for flash_error in app.flashes('verify_email_error') %}

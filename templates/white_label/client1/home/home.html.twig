@@ -1,0 +1,123 @@
+{% extends 'white_label/client1/base_home.html.twig' %}
+
+{% block title %} {{ parent() }}{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent.">
+<meta name="keywords" content="freelance, projet, offre, portage salarial, cooptation, recrutement, travail, emploi, talents, candidat, recruteur, offres, agence, olona, olona talents, olona talents agence, talents agence, agence talents, candidature, candidature agence, candidature olona, candidature olona talents">
+<meta property="og:title" content="Olona Talents, le #1 moteur de recherche dédié à l'emploi à Madagascar">
+<meta property="og:description" content="Rejoignez la première plateforme où projets ambitieux et talents de Madagascar et de l'espace francophone se rencontrent. Lancez-vous dans une aventure professionnelle sans précédent.">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('/images/logo-og.png') }}">
+<meta property="og:image:alt" content="Logo Olona Talents">
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+{% endblock %}
+
+{% block header %}
+	{% set last_query = app.request.query.get('q', '') %}
+	<!-- Boutons en haut à droite -->
+	<div class="home-header-top">
+        <div class="container d-flex justify-content-between p-2">
+            <div class="logo_to_home">
+                <a href="/" class="login_home"><img src="{{ asset('images/white-label/boa-madagascar.png')}}" alt="Olona Talents" width="250"></a>
+            </div>
+            <a href="{{ path('app_login')}}" class="login_home btn-primary me-3 mt-2">Se connecter</a>
+        </div>
+	</div>
+	<header class="">
+		<div class="page-content">
+			<div class="home-banner-section bg-cover" style="background-image:url({{ asset('0v2/images/home/home-olona-talents.webp')}})">
+                <div class="home-inner-section">
+                    <div class="featured-area">
+                        <div class="featured-bg-warp">
+                            <div class="media">
+                                <img src="{{ asset('v2/images/home/ils_recrutent_img.webp')}}" alt="ils_recrutent_img">
+                            </div>
+                        </div>
+                        <div class="container">
+                            {% set first_two_offers = job_offers|slice(0, 2) %}
+                            {% set next_three_offers = job_offers|slice(2, 3) %}
+                            <div class="featured-content-warp mb-5">
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-12">
+                                        <div class="row">
+                                        {% for job_offer in first_two_offers %}
+                                            <div class="col-lg-6 col-md-6 mb-5">
+                                                <div class="featured-block">
+                                                    <div class="inner-content">
+                                                        <div class="mid-content">
+                                                            <div class="company-logo">
+                                                                <img src="{{ job_offer.entreprise.fileName ? asset('uploads/compagnies/' ~ job_offer.entreprise.fileName) : asset('images/white-label/logoboa.png') }}" alt="logo company">
+                                                            </div>
+                                                            <div class="company-info">
+                                                                <a href="{{ path('app_v2_view_recruiter_profile', {'id' : job_offer.entreprise.id}) }}" class="company-name">{{ job_offer.entreprise.nom }}</a>
+                                                                <p class="company-secteur">{{ job_offer.entreprise.secteurs|length > 0 ? job_offer.entreprise.secteurs[0].nom : '-' }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="bottom-content">
+                                                            <a href="{{ path('app_white_label_annonce_view', {'jobId': job_offer.jobId })}}">
+                                                                <h4 class="job-name-title">{{ job_offer.titre }}</h4>
+                                                            </a>
+                                                            <span class="job-post-time">{{ job_offer.dateCreation|time_ago }}</span>
+                                                        </div>
+                                                        <div class="aply-btn-area">
+                                                            <a href="{{ path('app_white_label_annonce_view', {'jobId': job_offer.jobId })}}" class="aplybtn btn-primary">
+                                                                <i class="bi bi-arrow-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                                <div class="row">
+                                {% for job_offer in next_three_offers %}
+                                    <div class="col-lg-4 col-md-6 mb-5">
+                                        <div class="featured-block">
+                                            <div class="inner-content">
+                                                <div class="mid-content">
+                                                    <span class="job-time">{{ job_offer.typeContrat.nom }}</span>
+                                                    <div class="company-logo">
+                                                    <img src="{{ job_offer.entreprise.fileName ? asset('uploads/compagnies/' ~ job_offer.entreprise.fileName) : asset('images/white-label/logoboa.png') }}" alt="logo company">
+                                                    </div>
+                                                    <div class="company-info">
+                                                        <a href="{{ path('app_v2_view_recruiter_profile', {'id' : job_offer.entreprise.id}) }}" class="company-name">{{ job_offer.entreprise.nom }}</a>
+                                                        <p class="company-secteur">{{ job_offer.entreprise.secteurs|length > 0 ? job_offer.entreprise.secteurs[0].nom : '-' }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="bottom-content">
+                                                    <h4 class="job-name-title">{{ job_offer.titre }}</h4>
+                                                    <span class="job-post-time">{{ job_offer.dateCreation|time_ago }}</span>
+                                                </div>
+                                                <div class="aply-btn-area">
+                                                    <a href="{{ path('app_olona_talents_view_job_offer', {'id': job_offer.id })}}" class="aplybtn btn-primary">
+                                                        <i class="bi bi-arrow-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                                <div class="btn-signUp">
+                                    <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}" class="btn btn-primary">Afficher tous les recruteurs</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</header>
+{% endblock %}
+
+{% block body %}
+
+{% endblock %}
+
+{% block preview %}{% endblock %}
