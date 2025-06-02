@@ -72,6 +72,9 @@ class ReferrerProfile
     public function __construct()
     {
         $this->referrals = new ArrayCollection();
+        $this->totalRewards = 0;
+        $this->pendingRewards = 0;  
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int

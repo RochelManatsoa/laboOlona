@@ -79,6 +79,52 @@
 		</div>
         <!-- Bouton de retour en haut -->
         <button id="backToTop" class="back-to-top" style="display: none;"><i class="bi bi-chevron-up"></i></button>
+		<!-- Modal -->
+		<div class="modal fade" id="cooption" tabindex="-1" aria-labelledby="cooptionLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5 text-dark" id="cooptionLabel">Recommander un ami</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body text-dark">
+					<p class="">
+					Nous sommes ravis de vous offrir la possibilité de participer à notre programme de recommandation. En nous recommandant à un ami qui est à la recherche d'opportunités, non seulement vous nous aidez à grandir, mais vous bénéficiez également d'une récompense lorsque votre ami signe un contrat avec nous. Voici comment ça fonctionne :
+					</p>
+					<p class="">
+					Recommandez un Ami : Partagez le lien de recommandation que vous trouverez dans votre espace utilisateur avec vos amis.
+					</p>
+					<p class="">
+					Complétez vos Infos de Paiement : Assurez-vous de remplir les informations de paiement nécessaires dans votre profil pour que nous puissions vous envoyer votre récompense sans accroc.
+					</p>
+					<p class="">
+					Récoltez les Fruits : Une fois que votre ami recommandé signe un contrat avec nous, vous recevrez votre récompense directement sur le moyen de paiement que vous avez indiqué.
+					</p>
+					<p class="">
+					Pourquoi participer ?
+					</p>
+					<p class="">
+					Soutenez vos Amis : Aidez vos amis à trouver une opportunité qui peut changer leur vie.
+					</p>
+					<p class="">
+					Contribuez à Notre Croissance : Aidez-nous à trouver les meilleurs talents grâce à votre réseau.
+					</p>
+					<p class="">
+					Recevez une Récompense : Gagnez une récompense financière en signe de notre gratitude.
+					</p>
+					<p class="">
+					Nous apprécions votre engagement envers notre communauté et sommes impatients de récompenser votre soutien. Pour plus de détails sur le programme de recommandation ou pour toute question, n'hésitez pas à nous contacter.
+					</p>
+					<p class="">
+					Merci de faire partie de notre succès ! Cliquez ci-dessous pour commencer.
+					</p>
+					</div>
+					<div class="modal-footer">
+						<a href="{{ path('app_dashboard_referrer_become')}}" class="btn btn-warning rounded-pill px-5">Remplir mes info Coopteur</a>
+					</div>
+				</div>
+			</div>
+		</div>
 
 	</body>
 	<script src="{{asset('assets/js/jquery.min.js')}}"></script>

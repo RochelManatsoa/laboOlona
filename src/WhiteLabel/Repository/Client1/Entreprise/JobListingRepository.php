@@ -3,13 +3,15 @@
 namespace App\WhiteLabel\Repository\Client1\Entreprise;
 
 use App\Data\SearchData;
-use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
-use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
-use App\Data\Annonce\AnnonceSearchData;
 use App\Data\V2\JobOfferData;
-use Knp\Component\Pager\PaginatorInterface;
-use Knp\Component\Pager\Pagination\PaginationInterface;
 use Doctrine\ORM\EntityRepository;
+use App\Data\Annonce\AnnonceSearchData;
+use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<JobListing>
@@ -19,8 +21,16 @@ use Doctrine\ORM\EntityRepository;
  * @method JobListing[]    findAll()
  * @method JobListing[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class JobListingRepository extends EntityRepository
+class JobListingRepository extends ServiceEntityRepository
 {
+
+    public function __construct(
+        ManagerRegistry $registry, 
+        private PaginatorInterface $paginator,
+    )
+    {
+        parent::__construct($registry, JobListing::class);
+    }
 
     public function paginateRecipes($page, PaginatorInterface $paginator, ?int $userId): PaginationInterface
     {
@@ -105,7 +115,7 @@ class JobListingRepository extends EntityRepository
         );
     }
 
-    public function paginateJobListings(?string $status = null, $page = 1, $size = 10, PaginatorInterface $paginator): PaginationInterface
+    public function paginateJobListings(PaginatorInterface $paginator, ?string $status = null, $page = 1, $size = 10): PaginationInterface
     {
         $queryBuilder = $this->createQueryBuilder('j')
             ->select('j')

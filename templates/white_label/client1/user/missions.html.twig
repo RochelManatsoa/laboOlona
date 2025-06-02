@@ -4,11 +4,63 @@
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
 <div class="example-wrapper">
-    <h1>Trouver une mission</h1>
+    <h1 class="card-title mb-4">Trouver une mission</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col user-results ">
+                <div id="joblistings-list">
+                    {% if joblistings|length > 0 %}
+                    <div class="jobs-list-wrap">
+                        {% for job in joblistings %}
+                        <article class="article-item_">
+                            <div class="row">
+                                <div class="col-md-2 aside-left-item_">
+                                    <span class="date_p">Publié {{ job.dateCreation|date('d/m/Y') }}</span>
+                                </div>
+                                <div class="col-md-10 aside-right-item_">
+                                    <div class="detail_annonce_">
+                                        <h2>
+                                                <a href="{{ path('app_white_label_annonce_view', {'jobId': job.jobId })}}" class="btn-primary">
+                                                    {{ job.titre }}
+                                                </a>
+                                        </h2>
+                                        <h3><a href="#" class="btn-primary">{{ job.entreprise.nom }}</a> <span class="secteur_job"><i class="bi bi-tags"></i> {{ job.secteur.nom}}</span></h3>
+                                        <div class="description_courte_">{{ job.shortDescription|raw }}</div>
+                                        <div class="info_publication_">
+                                            <span class="small fw-light">
+                                                <span class="badge bg-info rounded-pill px-2"></span>
+                                                <span class="badge rounded-pill px-2 text-bg-success">Ouvert</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <span class="">Date limite {{ job.dateExpiration|date('d/m/Y') }}</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-eye"></i> {{ job.annonceVues|length }}
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-bookmark-check"></i> {{ job.applications|length }} offres
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+                        {{ knp_pagination_render(joblistings) }}
+                    {% else %}
+                        <div class="px-4 py-5 my-5 text-center">
+                            <img class="d-block mx-auto mb-4" src="{{ asset('images/prestation.png')}}" alt="" width="172" height="172">
+                            <div class="col-lg-10 mx-auto">
+                                <p class="lead mb-4">Aucune mission trouvée.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

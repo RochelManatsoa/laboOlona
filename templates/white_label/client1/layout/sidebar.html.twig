@@ -2,7 +2,7 @@
 {% set current_route = app.request.attributes.get('_route') %}
 <div class="sidebar-area bg-white">
 	<div class="logo-brand d-flex justify-content-between align-items-center">
-	<a class="navbar-brand" href="{{ path('app_home') }}">
+	<a class="navbar-brand" href="{{ path('app_white_label_home') }}">
 		<img id="logo" src="{{ asset('images/white-label/Bank_of_africa-logo.png') }}" width="150" height="56" class="" alt="Logo">
 	</a>
 	<button id="menuIcon" class="menu-icon" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,6 +23,11 @@
       <li class="nav-item">
         <a href="{{ path('app_white_label_client1_user_missions')}}" class="nav-link {{ (current_route == 'app_white_label_client1_user_missions' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
         <img src="{{ asset('v2/images/dashboard/missions.svg')}}" alt=""><span class="sidebar-text">Trouver des missions</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ path('app_referrer_references')}}" class="nav-link {{ (current_route == 'app_referrer_references' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
+        <img src="{{ asset('v2/images/dashboard/annuaire_icon.svg')}}" width="27" height="27" alt=""><span class="sidebar-text">Mes cooptés</span>
         </a>
       </li>
       <li class="nav-item click-sub">

@@ -33,6 +33,7 @@ class HomeController extends AbstractController
         return match (true) {
             $security->isGranted('ROLE_ADMIN')     => $this->redirectToRoute('app_white_label_client1_admin'),
             $security->isGranted('ROLE_RECRUITER') => $this->redirectToRoute('app_white_label_client1_recruiter'),
+            $security->isGranted('ROLE_CANDIDAT') => $this->redirectToRoute('app_white_label_client1_user'),
             default => $this->render('white_label/client1/home/home.html.twig', [
                 'job_offers' => $this->entityManager->getRepository(JobListing::class)->findBy(
                     ['status' => JobListing::STATUS_PUBLISHED],
@@ -78,20 +79,22 @@ class HomeController extends AbstractController
         $page = $request->query->getInt('page', 1);
         $size = $request->query->getInt('size', 10);        
         return $this->render('white_label/client1/home/annonces.html.twig', [
-            'joblistings' => $this->entityManager->getRepository(JobListing::class)->paginateJobListings(JobListing::STATUS_PUBLISHED, $page, $size, $paginatorInterface),
+            'joblistings' => $this->entityManager->getRepository(JobListing::class)->paginateJobListings($paginatorInterface, JobListing::STATUS_PUBLISHED, $page, $size),
         ]);
     }
 
-    #[Route('/detail-annonce/{jobId}', name: 'app_white_label_annonce_view')]
+    #[Route('/job/{jobId}', name: 'app_white_label_annonce_view')]
     public function viewJobOffer(Request $request, JobListing $annonce, JobListingManager $jobListingManager): Response
     {
         if ($annonce === null || $annonce->getStatus() === JobListing::STATUS_DELETED || $annonce->getStatus() === JobListing::STATUS_PENDING) {
             throw $this->createNotFoundException('Nous sommes désolés, mais le annonce demandé n\'existe pas.');
         }
         $currentUser = $this->getUser();
-        // if($currentUser){
-        //     $profile = $this->userService->checkUserProfile($currentUser);
-        // }
+        if($currentUser){
+            return $this->render("white_label/client1/user/annonce.html.twig", [
+                'jobOffer' => $annonce,
+            ]);
+        }
         // if ($currentUser && $profile) {
         //     if($profile instanceof CandidateProfile){
         //         return $this->redirectToRoute('app_tableau_de_bord_candidat_view_job_offer', ['id' => $id]);

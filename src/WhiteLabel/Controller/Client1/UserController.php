@@ -4,8 +4,11 @@ namespace App\WhiteLabel\Controller\Client1;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -37,10 +40,12 @@ class UserController extends AbstractController
     }
 
     #[Route('/trouver-une-mission', name: 'app_white_label_client1_user_missions')]
-    public function missions(): Response
+    public function missions(Request $request, PaginatorInterface $paginatorInterface): Response
     {
+        $page = $request->query->getInt('page', 1);
+        $size = $request->query->getInt('size', 10);        
         return $this->render('white_label/client1/user/missions.html.twig', [
-            'controller_name' => 'UserController',
+            'joblistings' => $this->entityManager->getRepository(JobListing::class)->paginateJobListings($paginatorInterface, JobListing::STATUS_PUBLISHED, $page, $size),
         ]);
     }
 

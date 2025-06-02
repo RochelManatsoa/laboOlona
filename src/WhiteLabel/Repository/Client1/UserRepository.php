@@ -22,8 +22,16 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends EntityRepository implements PasswordUpgraderInterface
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
+
+    public function __construct(
+        ManagerRegistry $registry, 
+        private PaginatorInterface $paginator,
+    ){
+        parent::__construct($registry, User::class);
+    }
+    
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */

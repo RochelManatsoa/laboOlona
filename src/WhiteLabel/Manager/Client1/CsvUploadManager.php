@@ -5,6 +5,7 @@ namespace App\WhiteLabel\Manager\Client1;
 use Symfony\Component\Uid\Uuid;
 use App\WhiteLabel\Entity\Client1\User;
 use Doctrine\ORM\EntityManagerInterface;
+use App\WhiteLabel\Entity\Client1\Finance\Employe;
 use App\WhiteLabel\Entity\Client1\CandidateProfile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -28,6 +29,30 @@ class CsvUploadManager
         if (!file_exists($filePath)) {
             throw new \RuntimeException("Fichier CSV introuvable : $filePath");
         }
+        
+        $secteurs = [
+            ['name' => 'Analyse et risque', 'slug' => 'analyse-et-risque'],
+            ['name' => 'Animation commerciale', 'slug' => 'animation-commerciale'],
+            ['name' => 'Audit', 'slug' => 'audit'],
+            ['name' => 'Commerciale : Réseau et centre d\'affaires', 'slug' => 'commerciale-reseau-et-centre-d-affaires'],
+            ['name' => 'Compliance', 'slug' => 'compliance'],
+            ['name' => 'Contrôle', 'slug' => 'controle'],
+            ['name' => 'Digitale', 'slug' => 'digitale'],
+            ['name' => 'Finance et comptabilité', 'slug' => 'finance-et-comptabilite'],
+            ['name' => 'Gestion de crédit', 'slug' => 'gestion-de-credit'],
+            ['name' => 'Informatique', 'slug' => 'informatique'],
+            ['name' => 'Juridique', 'slug' => 'juridique'],
+            ['name' => 'Marketing et communication', 'slug' => 'marketing-et-communication'],
+            ['name' => 'Monétique et transfert d\'argent', 'slug' => 'monetique-et-transfert-d-argent'],
+            ['name' => 'Moyen généraux', 'slug' => 'moyen-generaux'],
+            ['name' => 'Opérations (Locale et étrangère)', 'slug' => 'operations-locale-et-etrange'],
+            ['name' => 'Organisation et qualité', 'slug' => 'organisation-et-qualite'],
+            ['name' => 'Projet', 'slug' => 'projet'],
+            ['name' => 'Recouvrement et contentieux', 'slug' => 'recouvrement-et-contentieux'],
+            ['name' => 'Ressources humaines', 'slug' => 'ressources-humaines'],
+            ['name' => 'Sécurité', 'slug' => 'securite'],
+            ['name' => 'Trésorerie', 'slug' => 'tresorerie'],
+        ]; 
 
         $handle = fopen($filePath, 'r');
         if (!$handle) {
@@ -45,6 +70,8 @@ class CsvUploadManager
             if ($existingUser) {
                 continue; // Ignorer si email déjà existant
             }
+            $randomKey = array_rand($secteurs);
+            $randomSecteur = $secteurs[$randomKey];
 
             $user = new User();
             $user->setEmail($data['email']);
@@ -78,6 +105,12 @@ class CsvUploadManager
 
             $user->setCandidateProfile($profile);
 
+            $employe = new Employe();
+            $employe->setDateEmbauche(new \DateTime());
+            $employe->setNombreEnfants(0);
+            $employe->setCategorie($randomSecteur['slug']);
+            $employe->setUser($user);
+
             // Valider les données
             $errors = $this->validator->validate($user);
             if (count($errors) === 0) {
@@ -88,72 +121,6 @@ class CsvUploadManager
 
         fclose($handle);
         $this->entityManager->flush();
-    }
-
-    private function transformToHtml(string $text): string
-    {
-        // Convert the text to HTML
-        $html = '<div>';
-
-        // Split sections based on headers
-        $sections = preg_split('/(\r\n|\r|\n){2,}/', $text);
-        foreach ($sections as $section) {
-            // Split each section into lines
-            $lines = preg_split('/(\r\n|\r|\n)/', $section);
-
-            if (count($lines) > 1) {
-                // First line as header
-                $html .= '<h3>' . htmlspecialchars(array_shift($lines)) . '</h3>';
-                // Remaining lines as list items
-                $html .= '<ul>';
-                foreach ($lines as $line) {
-                    // Remove leading dash and space if present
-                    $line = preg_replace('/^\s*-\s*/', '', $line);
-                    $html .= '<li>' . htmlspecialchars($line) . '</li>';
-                }
-                $html .= '</ul>';
-            } else {
-                // Single line section
-                $html .= '<p>' . htmlspecialchars($section) . '</p>';
-            }
-        }
-
-        $html .= '</div>';
-
-        return $html;
-    }
-
-    private function extractProfessionalSummary(string $text): string
-    {
-        // Match the text after "Résumé Professionnel"
-        $pattern = '/Résumé Professionnel\s*(.*)/s';
-        preg_match($pattern, $text, $matches);
-
-        // If a match is found, clean up the result
-        if (isset($matches[1])) {
-            // Extract the text after "Résumé Professionnel"
-            $summary = trim($matches[1]);
-
-            // Remove the first character if it is a colon ':'
-            if (isset($summary[0]) && $summary[0] === ':') {
-                $summary = substr($summary, 1);
-            }
-
-            // Remove all dashes '-'
-            $summary = str_replace('-', '', $summary);
-
-            // Split the text into words and get the first 100 words
-            $words = preg_split('/\s+/', $summary);
-            $first100Words = array_slice($words, 0, 30);
-
-            // Join the first 100 words back into a string
-            $summary = implode(' ', $first100Words);
-
-            return $summary;
-        }
-
-        // Return an empty string if no match is found
-        return '';
     }
 
     public function slug(string $text): string

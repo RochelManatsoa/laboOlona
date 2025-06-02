@@ -128,6 +128,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastLogin = null;
 
+    #[ORM\OneToOne(mappedBy: 'referrer', cascade: ['persist', 'remove'])]
+    private ?ReferrerProfile $referrerProfile = null;
+
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Employe $employe = null;
 
@@ -464,6 +467,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastLogin(?\DateTimeInterface $lastLogin): static
     {
         $this->lastLogin = $lastLogin;
+
+        return $this;
+    }
+
+    public function getReferrerProfile(): ?ReferrerProfile
+    {
+        return $this->referrerProfile;
+    }
+
+    public function setReferrerProfile(?ReferrerProfile $referrerProfile): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($referrerProfile === null && $this->referrerProfile !== null) {
+            $this->referrerProfile->setReferrer(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($referrerProfile !== null && $referrerProfile->getReferrer() !== $this) {
+            $referrerProfile->setReferrer($this);
+        }
+
+        $this->referrerProfile = $referrerProfile;
 
         return $this;
     }

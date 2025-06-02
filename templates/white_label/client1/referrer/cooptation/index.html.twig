@@ -1,0 +1,19 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Cooptations{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="annonce-item p-4 m-4">
+            <h1 class="card-title mb-4">Recommander un ami</h1>
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-success rounded-pill mx-3 px-5">Envoyer l'invitation</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#referral_description' ) )
+</script>
+{% endblock %}
