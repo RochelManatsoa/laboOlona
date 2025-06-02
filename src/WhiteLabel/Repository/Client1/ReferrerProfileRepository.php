@@ -2,9 +2,12 @@
 
 namespace App\WhiteLabel\Repository\Client1;
 
-use App\WhiteLabel\Entity\Client1\ReferrerProfile;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use App\WhiteLabel\Entity\Client1\ReferrerProfile;
+use App\WhiteLabel\Entity\Client1\User;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<ReferrerProfile>
@@ -16,33 +19,31 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ReferrerProfileRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry $registry, 
+        private PaginatorInterface $paginator,
+    )
     {
         parent::__construct($registry, ReferrerProfile::class);
     }
 
-//    /**
-//     * @return ReferrerProfile[] Returns an array of ReferrerProfile objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function paginateRecipes($page, PaginatorInterface $paginator, ?int $userId, ?int $affiliateId): PaginationInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('r')->select('r, u.nom  AS nom, COUNT(ref.id) AS refCount')
+        ->leftJoin('r.referrer', 'u')
+        ->leftJoin('r.referrals', 'ref')
+        ->groupBy('r.id')
+        ->addOrderBy('r.id', 'DESC');
+        if ($affiliateId) {
+            $queryBuilder->andWhere('r.referrer = :affiliateId')
+                ->setParameter('affiliateId', $affiliateId);
+        };
 
-//    public function findOneBySomeField($value): ?ReferrerProfile
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $paginator->paginate(
+            $queryBuilder,
+            $page,
+            20,
+            []
+        );
+    }
 }

@@ -11,16 +11,20 @@
             <table class="table">
                 <tbody>
                     <tr>
+                        <th class="col-3">Département</th>
+                        <td>{{ entreprise_profile.nom}}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Résponsable</th>
+                        <td>{{ entreprise_profile.entreprise }}</td>
+                    </tr>
+                    <tr>
                         <th class="col-3">Inscrit le</th>
                         <td>{{ entreprise_profile.createdAt ? entreprise_profile.createdAt|date('d/m/Y') : '' }}</td>
                     </tr>
                     <tr>
                         <th class="col-3">Localisation</th>
                         <td><i class="bi bi-geo-alt-fill"></i> {{ show_country(entreprise_profile.localisation) }}</td>
-                    </tr>
-                    <tr>
-                        <th class="col-3">Utilisateur</th>
-                        <td>{{ entreprise_profile.entreprise }}</td>
                     </tr>
                     <tr>
                         <th class="col-3">Adresse email</th>

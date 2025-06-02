@@ -1,6 +1,6 @@
 <?php
 
-namespace App\WhiteLabel\Form\Client1\Referrer;
+namespace App\WhiteLabel\Form\Client1;
 
 use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use App\WhiteLabel\Entity\Client1\Referrer\Referral;

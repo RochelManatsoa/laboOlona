@@ -38,6 +38,7 @@ class JobListingRepository extends ServiceEntityRepository
         ->select('j, COUNT(v.id) AS views, COUNT(a.id) AS offers')
         ->leftJoin('j.annonceVues', 'v')
         ->leftJoin('j.applications', 'a')
+        ->groupBy('j.id')
         ->addOrderBy('j.id', 'DESC');
 
         return $paginator->paginate(

@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Manager\Referrer\ReferenceManager;
 use Knp\Component\Pager\PaginatorInterface;
+use App\WhiteLabel\Form\Client1\ReferralType;
 use App\WhiteLabel\Form\Client1\ReferrerType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\WhiteLabel\Entity\Client1\ReferrerProfile;
 use App\WhiteLabel\Entity\Client1\Referrer\Referral;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
-use App\WhiteLabel\Form\Client1\Referrer\ReferralType;
 use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\WhiteLabel\Repository\Client1\Referrer\ReferralRepository;
@@ -214,6 +214,21 @@ class ReferrerController extends AbstractController
 
         return $this->render('white_label/client1/referrer/become.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+    
+    #[Route('/{jobId}/references', name: 'app_referrer_cooptation_references')]
+    public function referencesAnnonce(Request $request, JobListing $annonce): Response
+    {
+        $referrer = $this->userService->getReferrer();
+        $data = $this->referralRepository->findBy(['referredBy' => $referrer, 'annonce' => $annonce]);
+        return $this->render('white_label/client1/referrer/cooptation/references.html.twig', [
+            'referrals' => $this->paginatorInterface->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            ),
+            'annonce' => $annonce
         ]);
     }
 }

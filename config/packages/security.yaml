@@ -50,7 +50,7 @@ security:
         #         target:         admin_login
         client1:
             pattern: ^/
-            host: ^client1\.olona-talents\.com$
+            host: ^client1\.olona-talents\.(local\.com|com)$
             provider: client1_user_provider
             custom_authenticator: App\Security\Client1\Client1Authenticator
             logout:
@@ -88,6 +88,8 @@ security:
     access_control:
         # - { path: ^/admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # - { path: ^/admin/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/referrer, host: ^client1\.olona-talents\.(local\.com|com)$, roles: ROLE_USER }
+        - { path: ^/recruiter, host: ^client1\.olona-talents\.(local\.com|com)$, roles: ROLE_USER }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/moderateur, roles: ROLE_USER }
         - { path: ^/profile/, roles: ROLE_USER }

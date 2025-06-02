@@ -11,7 +11,7 @@ use App\WhiteLabel\Manager\Client1\CVThequeManager;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[IsGranted('ROLE_RECRUITER')]
+#[IsGranted('ROLE_USER')]
 #[Route('/recruiter')]
 class RecruiterController extends AbstractController
 {

@@ -4,7 +4,7 @@
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5;}
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
@@ -16,7 +16,7 @@
             <div class="col-sm-5">Annonce</div>
             <div class="col-sm-7">
                 <div class="row">
-                    <div class="col-sm-6 col-md-4 text-center">Recommandations</div>
+                    <div class="col-sm-6 col-md-4 text-center">Cooptations</div>
                     <div class="col-sm-6 col-md-4"></div>
                     <div class="col-sm-6 col-md-4">Expire le</div>
                 </div>
@@ -26,7 +26,7 @@
         {% for item in referrals %}
             <div class="row text-muted">
                 <div class="col-sm-5">
-                    <a href="{{ path('app_dashboard_referrer_cooptation_references', {'jobId' : item.annonce.jobId })}}" class="">
+                    <a href="{{ path('app_referrer_cooptation_references', {'jobId' : item.annonce.jobId })}}" class="">
                         {{ item.annonce.titre}}
                     </a>
                 </div>

@@ -1,0 +1,63 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Employé #{{ employe.id }}{% endblock %}
+
+{% block body %}
+<section class="p-0 m-0">
+    <div class="container">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center">
+            <h1 class="h3">{{ employe.referrer }} </h1>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th class="col-3">Département</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Inscrit le</th>
+                        <td>{{ employe.createdAt ? employe.createdAt|date('d/m/Y') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Adresse email</th>
+                        <td>{{ employe.referrer.email }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Téléphone</th>
+                        <td> {{ employe.referrer.telephone }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Cooptations</th>
+                        <td>
+                            {% if (employe.referrals|length > 0) %}
+                            <a href="#" class="btn btn-sm rounded-pill px-4 btn-info">
+                                {{ employe.referrals|length }} invitations
+                            </a>
+                            {% else %}
+                            Aucune invitation
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Recompense</th>
+                        <td>{{ employe.totalRewards }} €</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Recompense en attente</th>
+                        <td>{{ employe.referrals|length * 10 }} €</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Description</th>
+                        <td>{{ employe.description|raw }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end w-100">
+                <a class="btn btn-secondary px-5 rounded-pill" href="{{ path('app_white_label_employe_profile_edit', {'id': employe.id}) }}"><i class="bi me-2 bi-pencil"></i>Modifier</a>
+                {{ include('white_label/client1/admin/employe/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

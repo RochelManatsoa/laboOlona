@@ -12,8 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\WhiteLabel\Form\Client1\JobListing1Type;
 use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/offre-emploi')]
 class JobListingController extends AbstractController
 {
