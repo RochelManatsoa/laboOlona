@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[IsGranted('ROLE_ADMIN')]
-#[Route('/offre-emploi')]
+#[Route('/wl-admin/offre-emploi')]
 class JobListingController extends AbstractController
 {
     public function __construct(

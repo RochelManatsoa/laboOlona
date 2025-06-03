@@ -27,7 +27,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     {% endif %}
-                    <form method="post" role="form">
+                    <form method="post" role="form" action="{{ path('admin_login') }}">
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                         <div class="mb-3"> <!-- Classe modifiée pour le margin -->
                             <input type="text" class="form-control" id="username" name="{{ form.email.vars.full_name }}"

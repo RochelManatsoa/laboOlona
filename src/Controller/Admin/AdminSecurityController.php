@@ -21,21 +21,25 @@ final class AdminSecurityController extends AbstractController
     }
 
     #[Route('/admin/login', name: 'admin_login')]
-    public function loginAction(): Response
+    public function fakeLoginRedirect(): never
     {
-        $form = $this->createForm(AdminLoginForm::class, [
-            'email' => $this->authenticationUtils->getLastUsername()
-        ]);
-
-        return $this->render('security/admin/login.html.twig', [
-            'last_username' => $this->authenticationUtils->getLastUsername(),
-            'form' => $form->createView(),
-            'error' => $this->authenticationUtils->getLastAuthenticationError(),
-        ]);
+        throw new \LogicException('Cette route ne devrait jamais être appelée directement. Elle est interceptée par le custom authenticator.');
     }
 
     #[Route('/admin/logout', name: 'admin_logout')]
     public function logoutAction(): void
+    {
+        // Left empty intentionally because this will be handled by Symfony.
+    }
+    
+    #[Route('/wl-admin/login', name: 'wl_admin_login')]
+    public function wlAdminLogin(): never
+    {
+        throw new \LogicException('Interception par authenticator.');
+    }
+
+    #[Route('/wl-admin/logout', name: 'wl_admin_logout')]
+    public function wlAdminLogout(): void
     {
         // Left empty intentionally because this will be handled by Symfony.
     }

@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 #[IsGranted('ROLE_ADMIN')]
-#[Route('/admin')]
+#[Route('/wl-admin')]
 class AdminController extends AbstractController
 {
     public function __construct(

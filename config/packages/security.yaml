@@ -1,53 +1,64 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+
         client1_user_provider:
             entity:
                 class: App\WhiteLabel\Entity\Client1\User
                 property: email
                 manager_name: client1
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        
+
         login:
             pattern: ^/api/login
             stateless: true
             provider: app_user_provider
             json_login:
-                check_path: /api/login_check # or api_login_check as defined in config/routes.yaml
+                check_path: /api/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         api:
-            pattern:   ^/api
+            pattern: ^/api
             stateless: true
             provider: app_user_provider
             jwt: ~
 
-        # admin:
-        #     pattern:            /admin(.*)
-        #     form_login:
-        #         provider:       app_user_provider
-        #         login_path:     admin_login
-        #         use_forward:    false
-        #         check_path:     admin_login
-        #         failure_path:   null
-        #     custom_authenticator: 
-        #         - App\Security\Admin\AdminLoginAuthenticator
-        #     entry_point: App\Security\Admin\AdminLoginAuthenticator
-        #     logout:
-        #         path:           admin_logout
-        #         target:         admin_login
+        ### 🔐 FIREWALL ADMIN MARQUE BLANCHE
+        admin_white_label:
+            pattern: ^/wl-admin
+            host: ^(client\d+|boa)(\.olona-talents\.local\.com|\.olona-talents\.com|\-talents\.com)(:\d+)?$
+            provider: client1_user_provider
+            custom_authenticator: App\Security\WhiteLabel\AdminWhiteLabelAuthenticator
+            entry_point: App\Security\WhiteLabel\AdminWhiteLabelAuthenticator
+            logout:
+                path: wl_admin_logout
+                target: wl_admin_login
+            lazy: true
+
+        ### 🔐 FIREWALL ADMIN PRINCIPAL
+        admin_main:
+            pattern: ^/admin
+            host: ^(127\.0\.0\.1|localhost|dev\.olona-talents\.com|olona-talents\.com)(:\d+)?$
+            provider: app_user_provider
+            custom_authenticator: App\Security\Admin\AdminLoginAuthenticator
+            entry_point: App\Security\Admin\AdminLoginAuthenticator
+            logout:
+                path: admin_logout
+                target: admin_login
+            lazy: true
+
+        ### 🔐 FIREWALL CLIENT1 WEB
         client1:
             pattern: ^/
             host: ^client1\.olona-talents\.(local\.com|com)$
@@ -57,40 +68,42 @@ security:
                 path: app_client1_logout
                 target: app_client1_login
             lazy: true
-            
+
+        ### 🔐 FIREWALL GENERAL (SITE GLOBAL)
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: 
+            custom_authenticator:
                 - App\Security\AppAuthenticator
                 - App\Security\GoogleAuthenticator
                 - App\Security\FacebookAuthenticator
             logout:
                 path: app_logout
-                # where to redirect after logout
                 target: app_login
                 invalidate_session: true
-
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
                 always_remember_me: false
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        # - { path: ^/admin/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # Admin principal
+        - { path: ^/admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+
+        # Admin marque blanche
+        - { path: ^/wl-admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/wl-admin/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/wl-admin, host: ^(client1|boa)\.olona-talents\.(local\.com|com)$, roles: ROLE_ADMIN }
+
+        # Public access
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
+        # Client1 & autres
         - { path: ^/referrer, host: ^client1\.olona-talents\.(local\.com|com)$, roles: ROLE_USER }
         - { path: ^/recruiter, host: ^client1\.olona-talents\.(local\.com|com)$, roles: ROLE_USER }
-        - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/moderateur, roles: ROLE_USER }
         - { path: ^/profile/, roles: ROLE_USER }
         - { path: ^/dashboard/, roles: ROLE_USER }
@@ -103,7 +116,6 @@ security:
         - { path: ^/youtube/playlist, roles: ROLE_USER }
         - { path: ^/tableau-de-bord/, roles: ROLE_USER }
 
-    
     role_hierarchy:
         ROLE_FINANCE: [ROLE_CANDIDAT]
         ROLE_COOPTEUR: [ROLE_CANDIDAT]
@@ -113,16 +125,3 @@ security:
         ROLE_ADMIN_BLOG: [ROLE_USER] 
         ROLE_COWORKING: [ROLE_USER]
         ROLE_ADMIN: [ROLE_ADMIN_BLOG, ROLE_ENTREPRISE, ROLE_MODERATEUR, ROLE_COWORKING]
-
-when@test:
-    security:
-        password_hashers:
-            # By default, password hashers are resource intensive and take time. This is
-            # important to generate secure password hashes. In tests however, secure hashes
-            # are not important, waste resources and increase test times. The following
-            # reduces the work factor to the lowest possible values.
-            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
-                algorithm: auto
-                cost: 4 # Lowest possible value for bcrypt
-                time_cost: 3 # Lowest possible value for argon
-                memory_cost: 10 # Lowest possible value for argon

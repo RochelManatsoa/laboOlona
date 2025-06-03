@@ -16,7 +16,7 @@ use App\WhiteLabel\Entity\Client1\Candidate\Applications;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[IsGranted('ROLE_ADMIN')]
-#[Route('/candidature')]
+#[Route('/wl-admin/candidature')]
 class CandidatureController extends AbstractController
 {
     public function __construct(

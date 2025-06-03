@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[IsGranted('ROLE_ADMIN')]
-#[Route('/employe/profile')]
+#[Route('/wl-admin/employe')]
 class ReferreProfileController extends AbstractController
 {
     public function __construct(
