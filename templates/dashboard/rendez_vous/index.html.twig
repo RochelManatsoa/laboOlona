@@ -33,7 +33,6 @@
                             <a href="{{ path('rendezvous_show', {'id': rendezvous.id}) }}" class="btn btn-info m-1 rounded-pill px-5">Détails</a>
                             {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_MODERATEUR')) %}
                                 <a href="{{ path('rendezvous_reschedule', {'id': rendezvous.id}) }}" class="btn btn-warning m-1">Reprogrammer</a>
-                                <a href="{{ path('rendezvous_send_invitation', {'id': rendezvous.id}) }}" class="btn btn-success m-1">Envoyer Invitation</a>
                                 <a href="{{ path('rendezvous_send_reminder', {'id': rendezvous.id}) }}" class="btn btn-secondary m-1">Envoyer Rappel</a>
                             {% endif %}
                         </div>

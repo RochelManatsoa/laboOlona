@@ -898,10 +898,6 @@ rendezvous_edit:
     title: Rendez-vous sur Olona Talents
     dashboard_title: Modifier un rendez-vous
 
-rendezvous_send_invitation:
-    title: Rendez-vous sur Olona Talents
-    dashboard_title: Invitation à un rendez-vous
-
 rendezvous_reschedule:
     title: Rendez-vous sur Olona Talents
     dashboard_title: Reprogrammer un rendez-vous

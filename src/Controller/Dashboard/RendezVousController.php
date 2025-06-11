@@ -206,36 +206,6 @@ class RendezVousController extends AbstractController
         ]);
     }
     
-    #[Route('/{id}/delete', name: 'rendezvous_delete')]
-    public function delete(Request $request, Metting $rendezvous): Response
-    {
-        return $this->render('dashboard/rendez_vous/index.html.twig', [
-            'rendezvous' => $rendezvous,
-        ]);
-    }
-    
-    #[Route('/{id}/send-invitation', name: 'rendezvous_send_invitation')]
-    public function sendInvitation(Request $request, Metting $rendezvous): Response
-    {
-        // $notification = new Notification();
-        // $notification->setExpediteur($rendezvous->getModerateur()->getModerateur());
-        // $notification->setDestinataire($rendezvous->getCandidat()->getCandidat());
-        
-
-        return $this->render('dashboard/rendez_vous/invitation.html.twig', [
-            'rendezvous' => $rendezvous,
-            'confirmationLink' => $this->urlGenerator->generate('rendezvous_show', ['id' => $rendezvous->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-        ]);
-    }
-    
-    #[Route('/sync-calendar', name: 'rendezvous_sync_calendar')]
-    public function sync(): Response
-    {
-        return $this->render('dashboard/rendez_vous/index.html.twig', [
-            'rendezvousList' => $this->moderateurManager->findAllOrderDesc($this->mettingRepository),
-        ]);
-    }
-    
     #[Route('/{id}/send-reminder', name: 'rendezvous_send_reminder')]
     public function sendReminder(Request $request, Metting $rendezVous): Response
     {
