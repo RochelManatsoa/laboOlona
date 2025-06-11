@@ -882,25 +882,6 @@ app_guides_reseautage:
     keywords: lettre, motivation, guide, reseautage
 
 
-rendezvous_index:
-    title: Rendez-vous sur Olona Talents
-    dashboard_title: Tout les rendez-vous
-
-rendezvous_show:
-    title: Rendez-vous sur Olona Talents
-    dashboard_title: Détails d'un rendez-vous
-
-rendezvous_create:
-    title: Rendez-vous sur Olona Talents
-    dashboard_title: Programmer un rendez-vous
-
-rendezvous_edit:
-    title: Rendez-vous sur Olona Talents
-    dashboard_title: Modifier un rendez-vous
-
-rendezvous_reschedule:
-    title: Rendez-vous sur Olona Talents
-    dashboard_title: Reprogrammer un rendez-vous
 
 app_dashboard_moderateur_import_affiliate_tool:
     title: Outils IA sur Olona Talents
@@ -1009,9 +990,6 @@ app_dashboard_moderateur_assignation_entreprise :
     title : Assignations entreprise
     dashboard_title : Assignations entreprise
 
-rendezvous_entreprise : 
-    title : Rendez-vous entreprise
-    dashboard_title : Rendez-vous entreprise
 
 app_dashboard_moderateur_annonce_assignation_view : 
     title : Assignation d'une annonce

@@ -4,7 +4,10 @@ namespace App\Controller\V2;
 
 use App\Entity\User;
 use App\Service\User\UserService;
-use App\Manager\RendezVousManager;
+use App\Entity\CandidateProfile;
+use App\Entity\EntrepriseProfile;
+use App\Entity\ModerateurProfile;
+use App\Repository\Moderateur\MettingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +21,7 @@ class MettingController extends AbstractController
     public function __construct(
         private EntityManagerInterface $em,
         private UserService $userService,
-        private RendezVousManager $rendezVousManager,
+        private MettingRepository $mettingRepository,
         private PaginatorInterface $paginator,
     ){}
     
@@ -27,8 +30,22 @@ class MettingController extends AbstractController
     {
         /** @var User $user */
         $user = $this->userService->getCurrentUser();
-        $role = $this->rendezVousManager->getUserRole($user);
-        $mettings = $this->rendezVousManager->findMettingByRole($role);
+        $role = match ($user->getType()) {
+            User::ACCOUNT_CANDIDAT => $user->getCandidateProfile(),
+            User::ACCOUNT_ENTREPRISE => $user->getEntrepriseProfile(),
+            User::ACCOUNT_MODERATEUR => $user->getModerateurProfile(),
+            default => null,
+        };
+
+        if ($role instanceof EntrepriseProfile) {
+            $mettings = $this->mettingRepository->findBy(['entreprise' => $role], ['id' => 'DESC']);
+        } elseif ($role instanceof CandidateProfile) {
+            $mettings = $this->mettingRepository->findBy(['candidat' => $role], ['id' => 'DESC']);
+        } elseif ($role instanceof ModerateurProfile) {
+            $mettings = $this->mettingRepository->findBy(['moderateur' => $role], ['id' => 'DESC']);
+        } else {
+            $mettings = [];
+        }
         
         return $this->render('v2/dashboard/metting/index.html.twig', [
             'mettings' => $this->paginator->paginate(
