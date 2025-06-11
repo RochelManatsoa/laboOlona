@@ -19,7 +19,7 @@
                             <td>
                                 <div class="row">
                                     <div class="col">{{ metting.entreprise.nom }}</div>
-                                    <div class="col"><a href="{{ path('rendezvous_send_reminder', {'id':metting.id, 'to':'entreprise'})}}" class="btn btn-dark rounded-pill px-3 btn-sm">Envoyer un rappel</a></div>
+                                    {# Bouton de rappel supprimé #}
                                 </div>
                             </td>
                         </tr>
@@ -28,7 +28,7 @@
                             <td>
                                 <div class="row">
                                     <div class="col">{{ metting.candidat.candidat.nom }}</div>
-                                    <div class="col"><a href="{{ path('rendezvous_send_reminder', {'id':metting.id, 'to':'candidat'})}}" class="btn btn-dark rounded-pill px-3 btn-sm">Envoyer un rappel</a></div>
+                                    {# Bouton de rappel supprimé #}
                                 </div>
                             </td>
                         </tr>
