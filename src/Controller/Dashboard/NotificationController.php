@@ -8,7 +8,6 @@ use App\Manager\CandidatManager;
 use App\Service\User\UserService;
 use App\Manager\ModerateurManager;
 use App\Manager\NotificationManager;
-use App\Manager\RendezVousManager;
 use App\Repository\NotificationRepository;
 use App\Service\Mailer\MailerService;
 use Doctrine\ORM\EntityManagerInterface;

@@ -47,9 +47,7 @@
                     </td>
                     <td class="text-center">
                         {% if entreprise.mettings|length > 0 %}
-                        <a href="{{path('rendezvous_entreprise', { 'id': entreprise.id}) }}" class="btn btn-sm btn-warning">
-                            {{ entreprise.mettings|length }}
-                        </a>
+                        <span class="badge text-bg-warning">{{ entreprise.mettings|length }}</span>
                         {% else %}
                         -
                         {% endif %}

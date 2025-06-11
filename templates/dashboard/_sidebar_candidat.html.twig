@@ -64,13 +64,6 @@
           Simulateur salaire
         </a>
       </li>
-      <li>
-        <a href="{{ path('rendezvous_index')}}" 
-            class="nav-link {{ current_route == 'rendezvous_index' ? 'active' : 'text-white' }}">
-            <i class="mx-2 h5 bi bi-calendar3"></i>
-            {{ 'app_dashboard_entreprise.metting'|trans }} 
-        </a>
-      </li>
     {% endif %}
     {% if app.user.type is same as(constant('App\\Entity\\User::ACCOUNT_EMPLOYE')) or is_granted('ROLE_EMPLOYE') %}
       <li>
