@@ -361,6 +361,7 @@ app_login:
     register: "Inscrivez-vous dès maintenant"
     join: "et rejoignez la communauté Olona-talents."
     button: "Se connecter"
+    use_main_account: "Se connecter avec votre compte olona-talents.com"
 
 app_logout:
     menu: "Deconnexion"
