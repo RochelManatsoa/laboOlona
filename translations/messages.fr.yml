@@ -378,6 +378,7 @@ app_register:
     repeat_password: "Repeter le mot de passe"
     agree_terms: "<small class='ml-3 pt-sans'>En vous inscrivant, vous acceptez nos <a class=\"fw-bolder\" href=\"%terms_url%\">Conditions Générales d'Utilisation</a> et notre <a href=\"%privacy_url%\" class=\"fw-bolder\">Politique de Confidentialité</a>.</small>"
     continue: "Continuer avec "
+    create_olona_account: "Créer également un compte sur olona-talents.com"
 
 app_email_sending:
     title: "Email de confirmation envoyé"
