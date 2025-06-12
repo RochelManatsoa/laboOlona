@@ -57,6 +57,11 @@ class RegistrationFormType extends AbstractType
                     'label' => 'app_register.agree_terms',
                 ],
             ])
+            ->add('createOlonaAccount', CheckboxType::class, [
+                'label' => 'app_register.create_olona_account',
+                'mapped' => false,
+                'required' => false,
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',

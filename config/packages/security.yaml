@@ -9,10 +9,7 @@ security:
                 property: email
 
         client1_user_provider:
-            entity:
-                class: App\WhiteLabel\Entity\Client1\User
-                property: email
-                manager_name: client1
+            id: App\Security\Client1UserProvider
 
     firewalls:
         dev:

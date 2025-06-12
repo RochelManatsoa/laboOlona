@@ -55,14 +55,32 @@ class HomeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = $form->get('plainPassword')->getData();
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $plainPassword
                 )
             );
             $this->entityManager->persist($user);
             $this->entityManager->flush();
+
+            if ($form->get('createOlonaAccount')->getData()) {
+                $defaultEm = $this->managerRegistry->getManager();
+                $existing = $defaultEm->getRepository(\App\Entity\User::class)->findOneBy(['email' => $user->getEmail()]);
+                if (!$existing) {
+                    $mainUser = new \App\Entity\User();
+                    $mainUser->setEmail($user->getEmail());
+                    $mainUser->setNom($user->getNom());
+                    $mainUser->setPrenom($user->getPrenom());
+                    $mainUser->setDateInscription(new \DateTime());
+                    $mainUser->setPassword(
+                        $userPasswordHasher->hashPassword($mainUser, $plainPassword)
+                    );
+                    $defaultEm->persist($mainUser);
+                    $defaultEm->flush();
+                }
+            }
 
             return $this->redirectToRoute('app_white_label_home');
 

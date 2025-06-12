@@ -112,6 +112,12 @@
                                         })|raw }}
                                     </label>
                             </div>
+                            <div class="form-check form-check-inline my-2">
+                                {{ form_widget(registrationForm.createOlonaAccount) }}
+                                <label class="form-check-label" for="{{ registrationForm.createOlonaAccount.vars.id }}">
+                                    {{ 'app_register.create_olona_account'|trans }}
+                                </label>
+                            </div>
                             <div class="text-center my-3">
                                 <button class="btn btn-login" type="submit" id="register-submit">
                                     {{ 'app_register.menu'|trans }}                

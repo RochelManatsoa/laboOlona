@@ -2,7 +2,8 @@
 
 namespace App\Security;
 
-use App\WhiteLabel\Entity\Client1\User;
+use App\WhiteLabel\Entity\Client1\User as Client1User;
+use App\Entity\User as MainUser;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -17,13 +18,16 @@ class Client1UserProvider implements UserProviderInterface, PasswordUpgraderInte
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $user = $this->registry->getManager('client1')->getRepository(User::class)
-            ->findOneBy(['email' => $identifier]);
+        $emClient1 = $this->registry->getManager('client1');
+        $user = $emClient1->getRepository(Client1User::class)->findOneBy(['email' => $identifier]);
 
         if (!$user) {
-            throw new UserNotFoundException("User not found");
+            $emDefault = $this->registry->getManager();
+            $user = $emDefault->getRepository(MainUser::class)->findOneBy(['email' => $identifier]);
+            if (!$user) {
+                throw new UserNotFoundException(sprintf('User "%s" not found', $identifier));
+            }
         }
-        dd($user); 
 
         return $user;
     }
@@ -35,13 +39,13 @@ class Client1UserProvider implements UserProviderInterface, PasswordUpgraderInte
 
     public function supportsClass(string $class): bool
     {
-        return $class === User::class || is_subclass_of($class, User::class);
+        return in_array($class, [Client1User::class, MainUser::class], true) || is_subclass_of($class, Client1User::class) || is_subclass_of($class, MainUser::class);
     }
 
     #[\ReturnTypeWillChange]
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        $em = $this->registry->getManager('client1');
+        $em = $user instanceof Client1User ? $this->registry->getManager('client1') : $this->registry->getManager();
         $user->setPassword($newHashedPassword);
         $em->persist($user);
         $em->flush();
