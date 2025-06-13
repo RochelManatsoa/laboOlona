@@ -39,7 +39,7 @@ class SecurityController extends AbstractController
 
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
-        $wlRedirect = $request->query->get('wl');
+        $wlRedirect = $request->query->get('wl', 'client1');
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername, 

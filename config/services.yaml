@@ -7,6 +7,7 @@ parameters:
     cv_expert: /uploads/experts
     medias_prestation: /uploads/prestations
     logo_company: /uploads/compagnies
+    white_label.client1.host: 'client1.olona-talents.com'
     app.locales: [en, fr]
     cv_directory: '%kernel.project_dir%/public/uploads/cv'
     csv_directory: '%kernel.project_dir%/public/uploads/csv'
@@ -73,7 +74,7 @@ services:
 
     App\EventListener\RedirectToHomeListener:
         arguments:
-            $targetHost: 'client1.olona-talents.com'
+            $targetHost: '%white_label.client1.host%'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
@@ -107,6 +108,10 @@ services:
         public: true
         tags:
             - { name: security.request_matcher }
+
+    App\Security\AppAuthenticator:
+        arguments:
+            $client1Host: '%white_label.client1.host%'
 
     app.sitemap.blog_post_subscriber:
         class: App\EventListener\SitemapSubscriber
