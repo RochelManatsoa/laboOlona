@@ -90,6 +90,9 @@
                                     </label>
                                 </div>
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                {% if wl_redirect is defined and wl_redirect %}
+                                    <input type="hidden" name="wl_redirect" value="{{ wl_redirect }}">
+                                {% endif %}
                                 <div class="text-center my-3">
                                     <button type="submit" class="btn btn-login">Connexion</button>
                                 </div>

@@ -30,7 +30,7 @@ class SecurityController extends AbstractController
     ){}
 
     #[Route(path: '/login', name: 'app_login', options: ['sitemap' => true])]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
     {
         $this->requestStack->getSession()->set('fromPath', 'app_home');
         if ($this->getUser()) {
@@ -39,10 +39,12 @@ class SecurityController extends AbstractController
 
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
+        $wlRedirect = $request->query->get('wl');
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername, 
-            'error' => $error
+            'error' => $error,
+            'wl_redirect' => $wlRedirect,
         ]);
     }
 

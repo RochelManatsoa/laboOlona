@@ -64,6 +64,11 @@
                                 <div class="text-center my-3">
                                     <button type="submit" class="btn btn-login">Connexion</button>
                                 </div>
+                                <div class="text-center my-3">
+                                    <a href="{{ path('app_login', {'wl': 'client1'}) }}" class="btn btn-secondary">
+                                        {{ 'app_login.use_main_account'|trans }}
+                                    </a>
+                                </div>
                                 <div class="mb-4 text-center text-forgot">
                                 </div>
                             </form>
