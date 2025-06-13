@@ -29,11 +29,12 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     public const LOGIN_ROUTE = 'app_login';
 
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator, 
+        private UrlGeneratorInterface $urlGenerator,
         private UserPostAuthenticationService $userPostAuthenticationService,
         private ActivityLogger $activityLogger,
         private UserService $userService,
         private ManagerRegistry $registry,
+        private string $client1Host,
     ){}
 
     public function authenticate(Request $request): Passport
@@ -78,7 +79,9 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
                 $emClient1->flush();
             }
 
-            return new RedirectResponse($this->urlGenerator->generate('app_white_label_home'));
+            $url = $this->urlGenerator->generate('app_white_label_home', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $url = preg_replace('#://[^/]+#', '://'.$this->client1Host, $url);
+            return new RedirectResponse($url);
         }
         if ($routeName === 'coworking_login') {
             return new RedirectResponse($this->urlGenerator->generate('app_coworking_main'));
