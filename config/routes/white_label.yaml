@@ -3,3 +3,4 @@
 white_label_routes:
     resource: ../../src/WhiteLabel/Controller/
     type: annotation
+    condition: "request.getHost() matches '%white_label.client1.host_regex%'"

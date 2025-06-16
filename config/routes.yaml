@@ -3,9 +3,12 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+    condition: "request.getHost() matches '%app.host_regex%'"
     
 api_login_check:
     path: /api/login_check
+    condition: "request.getHost() matches '%app.host_regex%'"
 
 presta_sitemap:
     resource: "@PrestaSitemapBundle/config/routing.yml"
+    condition: "request.getHost() matches '%app.host_regex%'"

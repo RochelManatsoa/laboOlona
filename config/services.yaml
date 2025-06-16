@@ -7,7 +7,10 @@ parameters:
     cv_expert: /uploads/experts
     medias_prestation: /uploads/prestations
     logo_company: /uploads/compagnies
-    white_label.client1.host: 'client1.olona-talents.com'
+    white_label.client1.host: ['client1.olona-talents.local.com:8000', 'client1.olona-talents.com']
+    app.main.host: ['localhost:8000', '127.0.0.1:8000', 'dev.olona-talents.com', 'olona-talents.com']
+    white_label.client1.host_regex: '/^(client1\.olona-talents\.local\.com|client1\.olona-talents\.com)$/'
+    app.host_regex: '/^(localhost|127\.0\.0\.1|dev\.olona-talents\.com|olona-talents\.com)$/'
     app.locales: [en, fr]
     cv_directory: '%kernel.project_dir%/public/uploads/cv'
     csv_directory: '%kernel.project_dir%/public/uploads/csv'
@@ -74,7 +77,7 @@ services:
 
     App\EventListener\RedirectToHomeListener:
         arguments:
-            $targetHost: '%white_label.client1.host%'
+            $targetHosts: '%white_label.client1.host%'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
@@ -111,7 +114,7 @@ services:
 
     App\Security\AppAuthenticator:
         arguments:
-            $client1Host: '%white_label.client1.host%'
+            $client1Hosts: '%white_label.client1.host%'
 
     app.sitemap.blog_post_subscriber:
         class: App\EventListener\SitemapSubscriber

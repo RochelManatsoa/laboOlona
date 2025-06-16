@@ -34,7 +34,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         private ActivityLogger $activityLogger,
         private UserService $userService,
         private ManagerRegistry $registry,
-        private string $client1Host,
+        private array $client1Hosts,
     ){}
 
     public function authenticate(Request $request): Passport
@@ -80,7 +80,8 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             }
 
             $url = $this->urlGenerator->generate('app_white_label_home', [], UrlGeneratorInterface::ABSOLUTE_URL);
-            $url = preg_replace('#://[^/]+#', '://'.$this->client1Host, $url);
+            $host = in_array($request->getHost(), $this->client1Hosts, true) ? $request->getHost() : $this->client1Hosts[0];
+            $url = preg_replace('#://[^/]+#', '://'.$host, $url);
             return new RedirectResponse($url);
         }
         if ($routeName === 'coworking_login') {

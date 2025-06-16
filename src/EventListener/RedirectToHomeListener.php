@@ -8,12 +8,12 @@ use Symfony\Component\Routing\RouterInterface;
 
 class RedirectToHomeListener
 {
-    private string $targetHost;
+    private array $targetHosts;
     private RouterInterface $router;
 
-    public function __construct(string $targetHost, RouterInterface $router)
+    public function __construct(array $targetHosts, RouterInterface $router)
     {
-        $this->targetHost = $targetHost;
+        $this->targetHosts = $targetHosts;
         $this->router = $router;
     }
 
@@ -21,7 +21,7 @@ class RedirectToHomeListener
     {
         $request = $event->getRequest();
 
-        if ($request->getHost() === $this->targetHost && $request->getPathInfo() === '/') {
+        if (in_array($request->getHost(), $this->targetHosts, true) && $request->getPathInfo() === '/') {
             $url = $this->router->generate('app_white_label_home');
             $event->setResponse(new RedirectResponse($url));
         }
