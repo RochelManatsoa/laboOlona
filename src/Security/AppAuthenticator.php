@@ -85,7 +85,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             $url = $this->urlGenerator->generate('app_client1_consume_token', [
                 'token' => $tokenEntity->getToken(),
             ], UrlGeneratorInterface::ABSOLUTE_URL);
-            $host = in_array($request->getHost(), $this->client1Hosts, true) ? $request->getHost() : $this->client1Hosts[0];
+            $host = in_array($request->getHost(), $this->client1Hosts, true) ? $request->getHost() : $this->client1Hosts[1];
             $url = preg_replace('#://[^/]+#', '://'.$host, $url);
             return new RedirectResponse($url);
         }

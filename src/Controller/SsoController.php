@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SsoController extends AbstractController
 {
-    #[Route('/api/sso/verify-token', name: 'api_sso_verify_token', methods: ['GET'])]
+    #[Route('/sso/verify-token', name: 'api_sso_verify_token', methods: ['GET'])]
     public function verifyToken(Request $request, SsoTokenService $service): JsonResponse
     {
         $token = $request->query->get('token');

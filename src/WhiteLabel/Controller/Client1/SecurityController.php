@@ -52,7 +52,7 @@ class SecurityController extends AbstractController
         Client1Authenticator $authenticator,
     ): Response {
         $token = $request->query->get('token');
-        $url = "https://dev.olona-talents.com/api/sso/verify-token";
+        $url = "https://dev.olona-talents.com/sso/verify-token";
         if (!$token) {
             return $this->redirectToRoute('app_client1_login');
         }
