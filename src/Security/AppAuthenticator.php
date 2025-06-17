@@ -4,12 +4,13 @@ namespace App\Security;
 
 use App\Service\ActivityLogger;
 use App\Entity\Logs\ActivityLog;
+use App\Service\SsoTokenService;
 use App\Service\User\UserService;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
-use App\WhiteLabel\Entity\Client1\User as Client1User;
+use Symfony\Component\HttpFoundation\Request;
 use App\Service\UserPostAuthenticationService;
 use Symfony\Component\HttpFoundation\Response;
+use App\WhiteLabel\Entity\Client1\User as Client1User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -35,6 +36,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         private UserService $userService,
         private ManagerRegistry $registry,
         private array $client1Hosts,
+        private SsoTokenService $ssoTokenService,
     ){}
 
     public function authenticate(Request $request): Passport
@@ -79,7 +81,10 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
                 $emClient1->flush();
             }
 
-            $url = $this->urlGenerator->generate('app_white_label_home', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $tokenEntity = $this->ssoTokenService->createToken($mainUser);
+            $url = $this->urlGenerator->generate('app_client1_consume_token', [
+                'token' => $tokenEntity->getToken(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
             $host = in_array($request->getHost(), $this->client1Hosts, true) ? $request->getHost() : $this->client1Hosts[0];
             $url = preg_replace('#://[^/]+#', '://'.$host, $url);
             return new RedirectResponse($url);
