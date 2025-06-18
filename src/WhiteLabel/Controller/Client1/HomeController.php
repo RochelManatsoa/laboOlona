@@ -33,7 +33,8 @@ class HomeController extends AbstractController
         return match (true) {
             $security->isGranted('ROLE_ADMIN')     => $this->redirectToRoute('app_white_label_client1_admin'),
             $security->isGranted('ROLE_RECRUITER') => $this->redirectToRoute('app_white_label_client1_recruiter'),
-            $security->isGranted('ROLE_CANDIDAT') => $this->redirectToRoute('app_white_label_client1_user'),
+            $security->isGranted('ROLE_EMPLOYE')   => $this->redirectToRoute('app_white_label_client1_employe'),
+            $security->isGranted('ROLE_CANDIDAT')  => $this->redirectToRoute('app_white_label_client1_user'),
             default => $this->render('white_label/client1/home/home.html.twig', [
                 'job_offers' => $this->entityManager->getRepository(JobListing::class)->findBy(
                     ['status' => JobListing::STATUS_PUBLISHED],
