@@ -19,7 +19,18 @@
         </a>
       </li>
 
-    {% if is_granted('ROLE_CANDIDAT') %}
+    {% if is_granted('ROLE_EMPLOYE') %}
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_client1_employe') }}" class="nav-link {{ current_route == 'app_white_label_client1_employe' ? 'underline' : '' }}" aria-current="page">
+        <img src="{{ asset('v2/images/dashboard/dashboard.svg')}}" alt=""><span class="sidebar-text">Espace employé</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_client1_employe_profile')}}" class="nav-link {{ current_route == 'app_white_label_client1_employe_profile' ? 'underline' : '' }}" aria-current="page">
+        <img src="{{ asset('v2/images/dashboard/profil.svg')}}" alt=""><span class="sidebar-text">Mes infos</span>
+        </a>
+      </li>
+    {% elseif is_granted('ROLE_CANDIDAT') %}
       <li class="nav-item">
         <a href="{{ path('app_white_label_client1_user_missions')}}" class="nav-link {{ (current_route == 'app_white_label_client1_user_missions' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
         <img src="{{ asset('v2/images/dashboard/missions.svg')}}" alt=""><span class="sidebar-text">Trouver des missions</span>
