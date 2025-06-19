@@ -31,16 +31,4 @@ final class AdminSecurityController extends AbstractController
     {
         // Left empty intentionally because this will be handled by Symfony.
     }
-    
-    #[Route('/wl-admin/login', name: 'wl_admin_login')]
-    public function wlAdminLogin(): never
-    {
-        throw new \LogicException('Interception par authenticator.');
-    }
-
-    #[Route('/wl-admin/logout', name: 'wl_admin_logout')]
-    public function wlAdminLogout(): void
-    {
-        // Left empty intentionally because this will be handled by Symfony.
-    }
 }
