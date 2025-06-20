@@ -23,7 +23,23 @@ class EmployeController extends AbstractController
     #[Route('/', name: 'app_white_label_client1_employe')]
     public function index(): Response
     {
-        return $this->render('white_label/client1/employe/index.html.twig');
+        /** @var \App\WhiteLabel\Entity\Client1\User $user */
+        $user = $this->getUser();
+
+        $referrer = $user?->getReferrerProfile();
+        $employe = $user?->getEmploye();
+
+        $referralCount = $referrer ? $referrer->getReferrals()->count() : 0;
+        $totalRewards = $referrer ? $referrer->getTotalRewards() : 0;
+        $pendingRewards = $referrer ? $referrer->getPendingRewards() : 0;
+
+        return $this->render('white_label/client1/employe/index.html.twig', [
+            'referralCount' => $referralCount,
+            'totalRewards' => $totalRewards,
+            'pendingRewards' => $pendingRewards,
+            'employe' => $employe,
+            'referrer' => $referrer,
+        ]);
     }
 
     #[Route('/mes-infos', name: 'app_white_label_client1_employe_profile')]
