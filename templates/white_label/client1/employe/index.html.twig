@@ -3,7 +3,65 @@
 {% block title %}Espace employé{% endblock %}
 
 {% block body %}
-<div class="example-wrapper">
-    <h1>Hello {{ app.user.prenom }}!</h1>
-</div>
+    <section class="">
+        <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+            <h5 class="mb-0">Espace employé</h5>
+            <ol class="breadcrumb list-unstyled mt-0 mb-0 pl-0">
+                <li class="breadcrumb-item position-relative">
+                    <a href="{{ path('app_white_label_client1_employe') }}" class="d-inline-block position-relative">
+                        <i class="ri-home-8-line"></i> Tableau de bord
+                    </a>
+                </li>
+                <li class="breadcrumb-item position-relative">Espace employé</li>
+            </ol>
+        </div>
+    </section>
+
+    <section class="top-dashboard">
+        <div class="inner-block-dashboard d-md-flex justify-content-between align-items-center">
+            <div class="left-inner-block">
+                <h1 class="left-inner-block">Bonjour {{ app.user.prenom }} !</h1>
+            </div>
+        </div>
+    </section>
+
+    <div class="content-db_ p-4">
+        <div class="biographie-profil mb-4 p-4">
+            <span class="fs-5 fw-bold mb-3 lh-base st-title">Mes informations</span>
+            {% if employe %}
+                <div class="d-md-flex flex-box_">
+                    <span class="fs-6 lh-base">Matricule</span>
+                    <div class="d-md-flex fw-bold info-bx flex-box_">
+                        {{ employe.matricule ?? 'N/A' }}
+                    </div>
+                </div>
+                {% if employe.fonction %}
+                    <div class="d-md-flex flex-box_">
+                        <span class="fs-6 lh-base">Fonction</span>
+                        <div class="d-md-flex fw-bold info-bx flex-box_">
+                            {{ employe.fonction }}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if employe.dateEmbauche %}
+                    <div class="d-md-flex flex-box_">
+                        <span class="fs-6 lh-base">Date d'embauche</span>
+                        <div class="d-md-flex fw-bold info-bx flex-box_">
+                            {{ employe.dateEmbauche|date('d/m/Y') }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <p>Aucune information employé disponible.</p>
+            {% endif %}
+
+            {% if referrer %}
+                <ul class="list-unstyled mt-3">
+                    <li>Nombre de cooptés : {{ referralCount }}</li>
+                    <li>Récompenses totales : {{ totalRewards }} €</li>
+                    <li>Récompenses en attente : {{ pendingRewards }} €</li>
+                </ul>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
