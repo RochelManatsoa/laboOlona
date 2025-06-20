@@ -14,6 +14,8 @@ use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
 use App\WhiteLabel\Form\Client1\Profile\Candidat\Edit\EditCandidateProfile;
 use App\WhiteLabel\Form\Client1\EditEntrepriseType;
 use App\WhiteLabel\Form\Client1\Finance\EmployeType;
+use Symfony\UX\Chartjs\Model\Chart;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -35,14 +37,37 @@ class UserController extends AbstractController
     }
     
     #[Route('/', name: 'app_white_label_client1_user')]
-    public function index(): Response
+    public function index(ChartBuilderInterface $chartBuilder): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         $params = [];
 
         if ($user && $user->getType() === User::ACCOUNT_CANDIDAT) {
-            $params['candidat'] = $user->getCandidateProfile();
+            $candidate = $user->getCandidateProfile();
+            $completion = $candidate->getProfileCompletion();
+            $chart = $chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
+            $chart->setData([
+                'labels' => ['Complété', 'Restant'],
+                'datasets' => [[
+                    'data' => [$completion, 100 - $completion],
+                    'backgroundColor' => ['#F0B621', '#EDEDED'],
+                    'borderWidth' => 0,
+                ]],
+            ]);
+            $chart->setOptions([
+                'cutout' => '70%',
+                'rotation' => -90,
+                'circumference' => 180,
+                'plugins' => [
+                    'legend' => ['display' => false],
+                    'tooltip' => ['enabled' => false],
+                ],
+            ]);
+
+            $params['candidat'] = $candidate;
+            $params['completion'] = $completion;
+            $params['chart'] = $chart;
         } elseif ($user && $user->getType() === User::ACCOUNT_ENTREPRISE) {
             $params['entreprise'] = $user->getEntrepriseProfile();
         }
