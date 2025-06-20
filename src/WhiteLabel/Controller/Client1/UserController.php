@@ -8,6 +8,12 @@ use Knp\Component\Pager\PaginatorInterface;
 use App\Service\Mailer\MailerService;
 use App\WhiteLabel\Form\Client1\AssistanceType;
 use App\WhiteLabel\Entity\Client1\ContactForm;
+use App\WhiteLabel\Entity\Client1\User;
+use App\WhiteLabel\Entity\Client1\CandidateProfile;
+use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
+use App\WhiteLabel\Form\Client1\Profile\Candidat\Edit\EditCandidateProfile;
+use App\WhiteLabel\Form\Client1\EditEntrepriseType;
+use App\WhiteLabel\Form\Client1\Finance\EmployeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -37,11 +43,57 @@ class UserController extends AbstractController
     }
     
     #[Route('/mes-infos', name: 'app_white_label_client1_user_profile')]
-    public function profile(): Response
+    public function profile(Request $request): Response
     {
-        return $this->render('white_label/client1/user/profile.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
+        /** @var User $user */
+        $user = $this->getUser();
+        $params = [];
+
+        if ($user->getType() === User::ACCOUNT_CANDIDAT) {
+            $candidate = $user->getCandidateProfile();
+            if (!$candidate) {
+                $candidate = new CandidateProfile();
+                $candidate->setCandidat($user);
+                $this->entityManager->persist($candidate);
+            }
+            $form = $this->createForm(EditCandidateProfile::class, $candidate);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->entityManager->flush();
+                $this->addFlash('success', 'Informations enregistrées');
+            }
+            $params['form'] = $form->createView();
+            $params['type'] = 'candidat';
+        }
+
+        if ($user->getType() === User::ACCOUNT_ENTREPRISE) {
+            $entreprise = $user->getEntrepriseProfile();
+            if (!$entreprise) {
+                $entreprise = new EntrepriseProfile();
+                $entreprise->setEntreprise($user);
+                $this->entityManager->persist($entreprise);
+            }
+            $form = $this->createForm(EditEntrepriseType::class, $entreprise);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->entityManager->flush();
+                $this->addFlash('success', 'Informations enregistrées');
+            }
+            $params['form'] = $form->createView();
+            $params['type'] = 'entreprise';
+        }
+
+        if ($user->getEmploye()) {
+            $employeForm = $this->createForm(EmployeType::class, $user->getEmploye());
+            $employeForm->handleRequest($request);
+            if ($employeForm->isSubmitted() && $employeForm->isValid()) {
+                $this->entityManager->flush();
+                $this->addFlash('success', 'Informations enregistrées');
+            }
+            $params['employeForm'] = $employeForm->createView();
+        }
+
+        return $this->render('white_label/client1/user/profile.html.twig', $params);
     }
 
     #[Route('/recrutement', name: 'app_white_label_client1_user_missions')]
