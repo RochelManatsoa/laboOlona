@@ -84,7 +84,12 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
                 $clientUser->setPassword($mainUser->getPassword());
                 $clientUser->setNom($mainUser->getNom());
                 $clientUser->setPrenom($mainUser->getPrenom());
-                $clientUser->setDateInscription(new \DateTime());
+                $clientUser->setType($mainUser->getType());
+                $clientUser->setTelephone($mainUser->getTelephone());
+                $clientUser->setAdress($mainUser->getAdress());
+                $clientUser->setGravatar($mainUser->getGravatar());
+                $clientUser->setPostalCode($mainUser->getPostalCode());
+                $clientUser->setCity($mainUser->getCity());
                 $emClient1->persist($clientUser);
                 $emClient1->flush();
             }
@@ -207,6 +212,13 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             $clientProfile->setTarifCandidat($tarif);
             $em->persist($tarif);
         }
+        $clientUser->setType($mainUser->getType());
+        $clientUser->setTelephone($mainUser->getTelephone());
+        $clientUser->setAdress($mainUser->getAdress());
+        $clientUser->setGravatar($mainUser->getGravatar());
+        $clientUser->setPostalCode($mainUser->getPostalCode());
+        $clientUser->setCity($mainUser->getCity());
+        $em->persist($clientUser);
 
         $em->persist($clientProfile);
         $em->flush();

@@ -28,6 +28,7 @@ class UserType extends AbstractType
                 'Annonceur' => 'ROLE_ANNOUNCER',
                 'Candidat' => 'ROLE_CANDIDAT',
                 'Recruteur' => 'ROLE_RECRUITER',
+                'Employé' => 'ROLE_EMPLOYE',
             ],
             'autocomplete' => true,
             'multiple' => true,

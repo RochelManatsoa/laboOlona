@@ -98,11 +98,12 @@ class CandidatProfileController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_white_label_candidat_profile_delete', methods: ['POST'])]
-    public function delete(Request $request, EntrepriseProfile $entrepriseProfile, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, CandidateProfile $candidateProfile): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$entrepriseProfile->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($entrepriseProfile);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete'.$candidateProfile->getId(), $request->request->get('_token'))) {
+            $this->entityManager->remove($candidateProfile);
+            $this->addFlash('success', 'Candidat bupprimé');
+            $this->entityManager->flush();
         }
 
         return $this->redirectToRoute('app_white_label_candidat_profile_index', [], Response::HTTP_SEE_OTHER);

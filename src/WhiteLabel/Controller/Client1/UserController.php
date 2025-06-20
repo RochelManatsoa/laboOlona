@@ -39,7 +39,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/trouver-une-mission', name: 'app_white_label_client1_user_missions')]
+    #[Route('/recrutement', name: 'app_white_label_client1_user_missions')]
     public function missions(Request $request, PaginatorInterface $paginatorInterface): Response
     {
         $page = $request->query->getInt('page', 1);

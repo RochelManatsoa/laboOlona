@@ -57,7 +57,7 @@ class CandidateProfile
     #[Groups(['identity', 'open_ai'])]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'candidateProfile', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'candidateProfile', cascade: ['persist'])]
     private ?User $candidat = null;
     
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

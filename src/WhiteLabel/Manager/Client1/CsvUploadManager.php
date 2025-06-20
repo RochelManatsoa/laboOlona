@@ -82,7 +82,7 @@ class CsvUploadManager
             $user->setCity($data['ville']);
             $user->setPostalCode($data['code_postale']);
             $user->setType(User::ACCOUNT_CANDIDAT);
-            $user->setRoles(['ROLE_CANDIDAT']);
+            $user->setRoles(['ROLE_EMPLOYE']);
             $user->setIsVerified(false);
             $user->setDateInscription(new \DateTime());
 
