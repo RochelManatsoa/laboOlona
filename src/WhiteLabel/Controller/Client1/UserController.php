@@ -37,9 +37,17 @@ class UserController extends AbstractController
     #[Route('/', name: 'app_white_label_client1_user')]
     public function index(): Response
     {
-        return $this->render('white_label/client1/user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
+        /** @var User $user */
+        $user = $this->getUser();
+        $params = [];
+
+        if ($user && $user->getType() === User::ACCOUNT_CANDIDAT) {
+            $params['candidat'] = $user->getCandidateProfile();
+        } elseif ($user && $user->getType() === User::ACCOUNT_ENTREPRISE) {
+            $params['entreprise'] = $user->getEntrepriseProfile();
+        }
+
+        return $this->render('white_label/client1/user/index.html.twig', $params);
     }
     
     #[Route('/mes-infos', name: 'app_white_label_client1_user_profile')]

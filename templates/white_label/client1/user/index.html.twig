@@ -1,14 +1,47 @@
 {% extends 'white_label/client1/base.html.twig' %}
 
-{% block title %}Trouver une mission{% endblock %}
+{% block title %}Mon compte{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ app.user.prenom }}! 🙂</h1>
+<div class="container my-4">
+    {% if candidat is defined %}
+        <h1 class="mb-4">Bonjour {{ app.user.prenom }} !</h1>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="h5">Profil candidat</h2>
+                <p><strong>Nom complet:</strong> {{ app.user.nom }} {{ app.user.prenom }}</p>
+                {% if candidat.titre %}
+                    <p><strong>Titre:</strong> {{ candidat.titre }}</p>
+                {% endif %}
+                {% if candidat.resume %}
+                    <p>{{ candidat.resume|raw }}</p>
+                {% endif %}
+                <ul class="list-unstyled mt-3">
+                    <li>Complétion du profil : {{ candidat.getProfileCompletion() }}%</li>
+                    <li>Candidatures : {{ candidat.getCountApplications() }}</li>
+                    <li>Vues du profil : {{ candidat.getCountViews() }}</li>
+                </ul>
+            </div>
+        </div>
+    {% elseif entreprise is defined %}
+        <h1 class="mb-4">Bonjour {{ app.user.prenom }} !</h1>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="h5">Profil entreprise</h2>
+                <p><strong>Nom :</strong> {{ entreprise.nom }}</p>
+                {% if entreprise.description %}
+                    <p>{{ entreprise.description|raw }}</p>
+                {% endif %}
+                <ul class="list-unstyled mt-3">
+                    <li>Site web : {{ entreprise.siteWeb }}</li>
+                    <li>Annonces publiées : {{ entreprise.jobListings|length }}</li>
+                    <li>Favoris : {{ entreprise.favoris|length }}</li>
+                </ul>
+            </div>
+        </div>
+    {% else %}
+        <h1 class="mb-4">Bonjour {{ app.user.prenom }} !</h1>
+        <p>Votre type de compte n'est pas encore configuré.</p>
+    {% endif %}
 </div>
 {% endblock %}
