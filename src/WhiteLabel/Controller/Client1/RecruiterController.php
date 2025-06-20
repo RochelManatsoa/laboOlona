@@ -30,14 +30,6 @@ class RecruiterController extends AbstractController
         ]);
     }
 
-    #[Route('/modifier-mot-de-passe', name: 'app_white_label_client1_recruiter_password')]
-    public function password(): Response
-    {
-        return $this->render('white_label/client1/recruiter/password.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
-    }
-
     #[Route('/candidatures', name: 'app_white_label_client1_recruiter_candidatures')]
     public function candidatures(): Response
     {
@@ -87,14 +79,6 @@ class RecruiterController extends AbstractController
     public function jobOffers(): Response
     {
         return $this->render('white_label/client1/recruiter/annonces.html.twig', [
-            'controller_name' => 'AdminController',
-        ]);
-    }
-
-    #[Route('/configuration', name: 'app_white_label_client1_recruiter_configuration')]
-    public function configuration(): Response
-    {
-        return $this->render('white_label/client1/recruiter/configuration.html.twig', [
             'controller_name' => 'AdminController',
         ]);
     }

@@ -35,7 +35,7 @@
         <ul class="sub-nav-pills">
           <li class="sub-nav-item">
             <a href="{{ path('app_white_label_client1_user_profile')}}" class="sub-nav-link {{ current_route == 'app_white_label_client1_user_profile' ? 'underline' : '' }}" aria-current="page">
-            Mon profil
+            Profil
             </a>
           </li>
           <li class="sub-nav-item">
@@ -62,7 +62,7 @@
         <ul class="sub-nav-pills">
           <li class="sub-nav-item">
             <a href="{{ path('app_white_label_client1_user_profile')}}" class="sub-nav-link {{ current_route == 'app_white_label_client1_user_profile' ? 'underline' : '' }}" aria-current="page">
-            Mon profil
+            Profil
             </a>
           </li>
           <li class="sub-nav-item">
@@ -104,17 +104,17 @@
       </li>
       <li class="nav-item click-sub">
         <span class="sep-menu"></span> 
-        <span class="nav-link sous-menu_ {{ (current_route == 'app_white_label_client1_recruiter_configuration' or current_route == 'app_white_label_client1_recruiter_password' or current_route == 'app_white_label_client1_recruiter_assistance') ? 'underline' : '' }}">
+        <span class="nav-link sous-menu_ {{ (current_route == 'app_white_label_client1_user_profile' or current_route == 'app_white_label_client1_user_password' or current_route == 'app_white_label_client1_recruiter_assistance') ? 'underline' : '' }}">
           <img src="{{ asset('v2/images/dashboard/setting.svg') }}" alt=""><span class="sidebar-text">Paramètres</span>
         </span>
         <ul class="sub-nav-pills">
           <li class="sub-nav-item">
-            <a href="{{ path('app_white_label_client1_recruiter_configuration') }}" class="sub-nav-link {{ current_route == 'app_white_label_client1_recruiter_configuration' ? 'underline' : '' }}">
-              Configuration
+            <a href="{{ path('app_white_label_client1_user_profile') }}" class="sub-nav-link {{ current_route == 'app_white_label_client1_user_profile' ? 'underline' : '' }}">
+              Profil
             </a>
           </li>
           <li class="sub-nav-item">
-            <a href="{{ path('app_white_label_client1_recruiter_password') }}" class="sub-nav-link {{ current_route == 'app_white_label_client1_recruiter_password' ? 'underline' : '' }}">
+            <a href="{{ path('app_white_label_client1_user_password') }}" class="sub-nav-link {{ current_route == 'app_white_label_client1_user_password' ? 'underline' : '' }}">
               Modifier mon mot de passe
             </a>
           </li>
