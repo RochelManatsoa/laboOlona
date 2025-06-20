@@ -5,6 +5,9 @@ namespace App\WhiteLabel\Controller\Client1;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Service\Mailer\MailerService;
+use App\WhiteLabel\Form\Client1\AssistanceType;
+use App\WhiteLabel\Entity\Client1\ContactForm;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -80,10 +83,31 @@ class UserController extends AbstractController
     }
 
     #[Route('/assistance', name: 'app_white_label_client1_user_assistance')]
-    public function assistance(): Response
+    public function assistance(Request $request, MailerService $mailerService): Response
     {
+        $contactForm = new ContactForm();
+        $contactForm->setCreatedAt(new \DateTime());
+        $form = $this->createForm(AssistanceType::class, $contactForm);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contactForm = $form->getData();
+            $this->entityManager->persist($contactForm);
+            $this->entityManager->flush();
+
+            $mailerService->sendMultiple(
+                ["contact@olona-talents.com", "support@olona-talents.com", "olonaprod@gmail.com"],
+                "Nouvelle entrée sur le formulaire de contact",
+                "contact.html.twig",
+                [
+                    'user' => $contactForm,
+                ]
+            );
+            $this->addFlash('success', 'Votre message a été bien envoyé. Nous vous repondrons dans le plus bref delais');
+        }
+
         return $this->render('white_label/client1/user/assistance.html.twig', [
-            'controller_name' => 'AdminController',
+            'form' => $form->createView(),
         ]);
     }
 }
