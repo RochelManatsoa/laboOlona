@@ -7,6 +7,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Form\ChangePasswordFormType;
 use Symfony\Component\Routing\Annotation\Route;
 use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -50,10 +52,22 @@ class UserController extends AbstractController
     }
 
     #[Route('/modifier-mot-de-passe', name: 'app_white_label_client1_user_password')]
-    public function password(): Response
+    public function password(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
+        $user = $this->getUser();
+        $form = $this->createForm(ChangePasswordFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $hashed = $passwordHasher->hashPassword($user, $form->get('plainPassword')->getData());
+            $user->setPassword($hashed);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_white_label_client1_user_profile');
+        }
+
         return $this->render('white_label/client1/user/password.html.twig', [
-            'controller_name' => 'UserController',
+            'form' => $form->createView(),
         ]);
     }
 
