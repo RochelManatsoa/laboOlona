@@ -48,6 +48,11 @@
             Modifier mon mot de passe
             </a>
           </li>
+          <li class="sub-nav-item">
+            <a href="{{ path('app_white_label_client1_user_assistance') }}" class="sub-nav-link {{ current_route == 'app_white_label_client1_user_assistance' ? 'underline' : '' }}">
+              Besoin d’assistance ?
+            </a>
+          </li>
         </ul>
       </li>
     {% elseif is_granted('ROLE_CANDIDAT') or (app.user.candidateProfile is defined and app.user.candidateProfile is not null)%}
@@ -73,6 +78,11 @@
           <li class="sub-nav-item">
             <a href="{{ path('app_white_label_client1_user_password')}}" class="sub-nav-link {{ (current_route == 'app_white_label_client1_user_password' or current_route == 'app_v2_create_prestation' or current_route == 'app_v2_edit_prestation') ? 'underline' : '' }}" aria-current="page">
             Modifier mon mot de passe
+            </a>
+          </li>
+          <li class="sub-nav-item">
+            <a href="{{ path('app_white_label_client1_user_assistance') }}" class="sub-nav-link {{ current_route == 'app_white_label_client1_user_assistance' ? 'underline' : '' }}">
+              Besoin d’assistance ?
             </a>
           </li>
         </ul>
@@ -104,7 +114,7 @@
       </li>
       <li class="nav-item click-sub">
         <span class="sep-menu"></span> 
-        <span class="nav-link sous-menu_ {{ (current_route == 'app_white_label_client1_user_profile' or current_route == 'app_white_label_client1_user_password' or current_route == 'app_white_label_client1_recruiter_assistance') ? 'underline' : '' }}">
+        <span class="nav-link sous-menu_ {{ (current_route == 'app_white_label_client1_user_profile' or current_route == 'app_white_label_client1_user_password' or current_route == 'app_white_label_client1_user_assistance') ? 'underline' : '' }}">
           <img src="{{ asset('v2/images/dashboard/setting.svg') }}" alt=""><span class="sidebar-text">Paramètres</span>
         </span>
         <ul class="sub-nav-pills">
@@ -119,7 +129,7 @@
             </a>
           </li>
           <li class="sub-nav-item">
-            <a href="{{ path('app_white_label_client1_recruiter_assistance') }}" class="sub-nav-link {{ current_route == 'app_white_label_client1_recruiter_assistance' ? 'underline' : '' }}">
+            <a href="{{ path('app_white_label_client1_user_assistance') }}" class="sub-nav-link {{ current_route == 'app_white_label_client1_user_assistance' ? 'underline' : '' }}">
               Besoin d’assistance ?
             </a>
           </li>

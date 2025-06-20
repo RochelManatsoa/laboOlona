@@ -78,4 +78,12 @@ class UserController extends AbstractController
             'controller_name' => 'UserController',
         ]);
     }
+
+    #[Route('/assistance', name: 'app_white_label_client1_user_assistance')]
+    public function assistance(): Response
+    {
+        return $this->render('white_label/client1/user/assistance.html.twig', [
+            'controller_name' => 'AdminController',
+        ]);
+    }
 }
