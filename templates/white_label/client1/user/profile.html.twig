@@ -5,7 +5,7 @@
 
 {% block body %}
         {% if form is defined %}
-            {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+            {{ form_start(form, {'attr': {'data-turbo': 'false', 'class': 'white-label-form'}}) }}
             {{ form_widget(form) }}
             <button class="btn btn-primary mt-3">Sauvegarder</button>
             {{ form_end(form) }}
@@ -14,7 +14,7 @@
         {% if employeForm is defined %}
             <hr/>
             <h2>Employé</h2>
-            {{ form_start(employeForm, {'attr': {'data-turbo': 'false'}}) }}
+            {{ form_start(employeForm, {'attr': {'data-turbo': 'false', 'class': 'white-label-form'}}) }}
             {{ form_widget(employeForm) }}
             <button class="btn btn-primary mt-3">Sauvegarder</button>
             {{ form_end(employeForm) }}
