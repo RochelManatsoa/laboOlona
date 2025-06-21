@@ -12,7 +12,7 @@
     {% set filter_experience_years = app.request.query.get('filter-experience-years', '') %}
     {% set isPrem = '' %}
     <section class="recruteur-container">
-        <div class="recruteur-block d-block p-5 mb-4">
+        <div class="recruteur-block d-block p-4 mb-4">
             <div class="recruteur-top-item recruteur-filter">
                 <h1>CVthéque</h1>
                 <form id="filter-form" action="{{ path('app_white_label_client1_recruiter_cvtheque')}}" class="form-search filter-listing-form-wrapper" method="GET">
@@ -76,7 +76,7 @@
                 </form>
             </div>
         </div>
-        <div class="recruteur-block list-profil d-block p-5 mb-4">
+        <div class="recruteur-block list-profil d-block p-4 mb-4">
             <div class="layout-profil-container">
                 <div class="d-flex ordering-wrapper mb-4 justify-content-between">
                     <div class="results-count">Affichage de 1 - {{ searchResults|length }} sur {{ totalResults }} résultats</div>								
