@@ -3,7 +3,71 @@
 {% block title %}Toutes les annonces{% endblock %}
 {% block page_title %}Toutes les annonces{% endblock %}
 
-
 {% block body %}
+    <section class="recruteur-container">
+        <div class="recruteur-block d-block p-4 mb-4">
+            <div class="offre-emploi-item">
+                <h1>Liste des offres d'emploi ({{ entreprise.joblistings|length }} offre{{ entreprise.joblistings|length > 1 ? 's' : '' }})</h1>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p>Vous avez {{ offres|length }} offre{{ offres|length > 1 ? 's' : '' }} d'emploi {{ labels[selectedStatus]|raw }}</p>
+                    </div>
+                    <div class="row w-50">
+                        <div class="col">
+                            <form action="{{ path('app_white_label_client1_recruiter_toutes_les_annonces') }}" method="get">
+                                <select class="form-select" name="status" onchange="this.form.submit()" aria-label="Default select example">
+                                    {% for label, status in statuses %}
+                                        <option value="{{ status }}" {% if selectedStatus == status %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ path('app_white_label_client1_recruiter_creer_une_annonce') }}" class="btn btn-primary mb-3">Créer une annonce</a>
+            {% if offres|length > 0 %}
+                {% for item in offres %}
+                    {% set offre = item[0] %}
+                    <article class="article-item_">
+                        <div class="offre-emploi-list">
+                            <div class="row">
+                                <div class="col-xl-8">
+                                    <div class="detail_annonce_">
+                                        <h2><a href="{{ path('app_white_label_annonce_view', {'jobId': offre.jobId })}}" class="btn-primary">{{ offre.titre }}</a></h2>
+                                        <h3><a href="#" class="btn-primary">{{ entreprise.nom }}</a></h3>
+                                        <div class="type_contact_">{{ offre.typeContrat }}</div>
+                                        <div class="description_courte_">
+                                            {{ offre.description|raw }}
+                                        </div>
+                                        <div class="info_publication_">
+                                            <span class="small fw-light">
+                                                <span class="badge rounded-pill px-2 text-bg-danger">{{ getStatuses(offre.status)}}</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <span class="">Publié {{ offre.dateCreation|time_ago }}</span>
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="bi bi-eye"></i> {{ offre.annonceVues|length }} vues
+                                                <span class="small text-center mx-2">|</span>
+                                                <i class="mx-2 bi bi-person-workspace"></i> DISTANCE
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 mt-4">
+                                    <p><a class="btn btn-light" href="#">{{ offre.applications|length }} candidat{{ offre.applications|length > 1 ? 's' : '' }} ont posté leur candidature</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+                {{ knp_pagination_render(offres) }}
 
+            {% else %}
+                <div class="text-center col-lg-6 col-sm-12 mx-auto">
+                    <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+                    <p class="text-center">Vous n'avez pas encore d'annonce {{ labels[selectedStatus]|raw }}.</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
 {% endblock %}

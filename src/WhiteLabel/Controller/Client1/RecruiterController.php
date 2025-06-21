@@ -8,6 +8,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\WhiteLabel\Manager\Client1\CVThequeManager;
+use App\WhiteLabel\Manager\Client1\JobListingManager;
+use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
+use App\WhiteLabel\Repository\Client1\Entreprise\JobListingRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -95,10 +99,38 @@ class RecruiterController extends AbstractController
     }
 
     #[Route('/annonces', name: 'app_white_label_client1_recruiter_toutes_les_annonces')]
-    public function jobOffers(): Response
-    {
+    public function jobOffers(
+        Request $request,
+        JobListingRepository $jobListingRepository,
+        JobListingManager $jobListingManager,
+        PaginatorInterface $paginatorInterface
+    ): Response {
+        /** @var \App\WhiteLabel\Entity\Client1\User $user */
+        $user = $this->getUser();
+        $entreprise = $user?->getEntrepriseProfile();
+
+        if (!$entreprise) {
+            return $this->redirectToRoute('app_white_label_client1_user_profile');
+        }
+
+        $page = $request->query->getInt('page', 1);
+        $status = $request->query->get('status', JobListing::STATUS_PUBLISHED);
+
+        $offres = $jobListingRepository->paginateJobListingsEntrepriseProfiles(
+            $entreprise,
+            $page,
+            $status,
+            $paginatorInterface
+        );
+
         return $this->render('white_label/client1/recruiter/annonces.html.twig', [
-            'controller_name' => 'AdminController',
+            'entreprise' => $entreprise,
+            'offres' => $offres,
+            'count' => $jobListingRepository->countAllByEntreprise($entreprise),
+            'countStatus' => $jobListingRepository->countStatusByEntreprise($entreprise, $status),
+            'statuses' => $jobListingManager->getStatuses(),
+            'labels' => JobListing::getLabels(),
+            'selectedStatus' => $status,
         ]);
     }
 }
