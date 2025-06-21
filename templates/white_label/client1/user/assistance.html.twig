@@ -7,7 +7,7 @@
 {% block body %}
 <div class="biographie-profil mb-4 p-4 besoin_assitacne">
     <h2> Besoin d'assistance ? <br/> Dites-nous en plus sur vos besoins ! </h2>
-    {{ form_start(form) }}
+    {{ form_start(form, {'attr': {'class': 'white-label-form'}}) }}
     {{ form_row(form.titre) }}
     {{ form_row(form.message) }}
     <div style="display:none;">
