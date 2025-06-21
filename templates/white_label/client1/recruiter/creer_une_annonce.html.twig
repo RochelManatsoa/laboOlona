@@ -1,23 +1,9 @@
 {% extends 'white_label/client1/base.html.twig' %}
 
 {% block title %}Créer une annonce{% endblock %}
+{% block page_title %}Publier une annonce{% endblock %}
 
 {% block body %}
-<div class="loader-container" id="loader-container" style="display:none;">
-    <span class="loader"></span>
-</div>
-
-<section class="">
-    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center">
-            <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
-                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-            <h5 class="mb-0"> Publier une annonce </h5>
-        </div>
-    </div>
-</section>
-<section class="recruteur-container">
-    <div class="recruteur-block d-block p-5 mb-4">
         <div class="offre-emploi-item">
             <div>
                 <h1>Publiez votre offre et recrutez les meilleurs talents</h1>
@@ -69,7 +55,4 @@
                 </div>
             </div>
             {{ form_end(form) }}
-        </div>
-    </div>
-</section>
 {% endblock %}

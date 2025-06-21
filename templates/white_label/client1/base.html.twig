@@ -69,10 +69,24 @@
 					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>
 			{% endfor %}
-			{% block body %}{% endblock %}
-			{% block preview %}
-        	<a href="javascript:history.back()" class="d-none d-sm-block d-md-none btn btn-info fw-semibold text-uppercase px-4 my-5 me-3"><i class="mx-2 bi bi-arrow-left"></i>Retour</a>
-			{% endblock %}
+                        <div class="loader-container" id="loader-container" style="display:none;">
+                            <span class="loader"></span>
+                        </div>
+
+                        <section class="">
+                            <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                                        <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+                                    <h5 class="mb-0"> {% block page_title %}{% endblock %} </h5>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="recruteur-container">
+                            <div class="recruteur-block d-block p-5 mb-4">
+                        {% block body %}{% endblock %}
+                            </div>
+                        </section>
 		</div>
 		<script>
 
