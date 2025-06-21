@@ -68,10 +68,29 @@ class RecruiterController extends AbstractController
     }
 
     #[Route('/creer-une-annonce', name: 'app_white_label_client1_recruiter_creer_une_annonce')]
-    public function newJobOffer(): Response
+    public function newJobOffer(Request $request, \App\WhiteLabel\Manager\Client1\JobListingManager $jobListingManager): Response
     {
+        /** @var \App\WhiteLabel\Entity\Client1\User $user */
+        $user = $this->getUser();
+        $entreprise = $user?->getEntrepriseProfile();
+
+        if (!$entreprise) {
+            return $this->redirectToRoute('app_white_label_client1_user_profile');
+        }
+
+        $jobListing = $jobListingManager->init($entreprise);
+        $form = $this->createForm(\App\WhiteLabel\Form\Client1\JobListing1Type::class, $jobListing);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $jobListingManager->save($jobListing);
+            $this->addFlash('success', 'Annonce créée avec succès');
+
+            return $this->redirectToRoute('app_white_label_client1_recruiter_toutes_les_annonces');
+        }
+
         return $this->render('white_label/client1/recruiter/creer_une_annonce.html.twig', [
-            'controller_name' => 'AdminController',
+            'form' => $form->createView(),
         ]);
     }
 

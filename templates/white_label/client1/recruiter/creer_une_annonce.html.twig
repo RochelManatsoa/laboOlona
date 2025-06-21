@@ -3,5 +3,106 @@
 {% block title %}Créer une annonce{% endblock %}
 
 {% block body %}
+<div class="loader-container" id="loader-container" style="display:none;">
+    <span class="loader"></span>
+</div>
 
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+            <h5 class="mb-0"> Publier une annonce </h5>
+        </div>
+    </div>
+</section>
+<section class="recruteur-container">
+    <div class="recruteur-block d-block p-5 mb-4">
+        <div class="offre-emploi-item">
+            <div>
+                <h1>Publiez votre offre et recrutez les meilleurs talents</h1>
+                <p>Décrivez votre poste, les compétences recherchées, le type de contrat et le lieu.</p>
+            </div>
+        </div>
+        <div id="jobListingForm">
+            {{ form_start(form, {'attr': {'id': 'createJob'}}) }}
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        {{ form_row(form.titre) }}
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                {{ form_row(form.typeContrat) }}
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                {{ form_row(form.secteur) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                {{ form_row(form.lieu) }}
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                {{ form_row(form.nombrePoste) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                {{ form_row(form.competences) }}
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                {{ form_row(form.dateExpiration) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                {{ form_label(form.budgetAnnonce, null, {
+                    'label_attr': {
+                        'class': 'fw-bold fs-6'
+                    }
+                }) }}
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="mb-3">
+                        <label class="fw-bold small" for="prestation_tarifPrestation_typeTarif">Tarif</label>
+                        {{ form_widget(form.budgetAnnonce.typeBudget) }}
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="mb-3">
+                        <label class="fw-bold small" for="prestation_tarifPrestation_montant">Montant</label>
+                        {{ form_widget(form.budgetAnnonce.montant) }}
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="mb-3">
+                        <label class="fw-bold small" for="prestation_tarifPrestation_currency">Devise</label>
+                        {{ form_widget(form.budgetAnnonce.currency) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                {{ form_help(form.budgetAnnonce) }}
+            </div>
+            <div class="row">
+                {{ form_row(form.description) }}
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div style="display:none;">
+                        {{ form_widget(form) }}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg my-3 my-sm-4 fs-6 px-4 px-sm-5 fw-semibold text-uppercase">
+                        <i class="bi bi-save"></i>
+                        Publier
+                    </button>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</section>
 {% endblock %}
