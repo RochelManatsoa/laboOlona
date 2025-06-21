@@ -3,21 +3,36 @@
 {% block title %}Mes infos{% endblock %}
 
 {% block body %}
-<div class="container my-4">
-    {% if form is defined %}
-        {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
-        {{ form_widget(form) }}
-        <button class="btn btn-primary mt-3">Sauvegarder</button>
-        {{ form_end(form) }}
-    {% endif %}
-
-    {% if employeForm is defined %}
-        <hr/>
-        <h2>Employé</h2>
-        {{ form_start(employeForm, {'attr': {'data-turbo': 'false'}}) }}
-        {{ form_widget(employeForm) }}
-        <button class="btn btn-primary mt-3">Sauvegarder</button>
-        {{ form_end(employeForm) }}
-    {% endif %}
+<div class="loader-container" id="loader-container" style="display:none;">
+    <span class="loader"></span>
 </div>
+
+<section class="">
+    <div class="breadcrumb-card mb-25 d-md-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <a href="javascript:history.back()" class="d-block btn btn-info fw-semibold text-uppercase me-3 btn_retour">
+                <i class="mx-2 bi bi-arrow-left"></i>Retour</a>
+            <h5 class="mb-0"> Mon profil </h5>
+        </div>
+    </div>
+</section>
+<section class="recruteur-container">
+    <div class="recruteur-block d-block p-5 mb-4">
+        {% if form is defined %}
+            {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+            {{ form_widget(form) }}
+            <button class="btn btn-primary mt-3">Sauvegarder</button>
+            {{ form_end(form) }}
+        {% endif %}
+
+        {% if employeForm is defined %}
+            <hr/>
+            <h2>Employé</h2>
+            {{ form_start(employeForm, {'attr': {'data-turbo': 'false'}}) }}
+            {{ form_widget(employeForm) }}
+            <button class="btn btn-primary mt-3">Sauvegarder</button>
+            {{ form_end(employeForm) }}
+        {% endif %}
+    </div>
+</section>
 {% endblock %}

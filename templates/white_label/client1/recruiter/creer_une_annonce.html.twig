@@ -31,10 +31,7 @@
                     <div class="mb-3">
                         {{ form_row(form.titre) }}
                         <div class="row">
-                            <div class="col-lg-6 col-sm-12">
-                                {{ form_row(form.typeContrat) }}
-                            </div>
-                            <div class="col-lg-6 col-sm-12">
+                            <div class="col">
                                 {{ form_row(form.secteur) }}
                             </div>
                         </div>
@@ -56,36 +53,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12">
-                {{ form_label(form.budgetAnnonce, null, {
-                    'label_attr': {
-                        'class': 'fw-bold fs-6'
-                    }
-                }) }}
-            </div>
-            <div class="row">
-                <div class="col-4">
-                    <div class="mb-3">
-                        <label class="fw-bold small" for="prestation_tarifPrestation_typeTarif">Tarif</label>
-                        {{ form_widget(form.budgetAnnonce.typeBudget) }}
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="mb-3">
-                        <label class="fw-bold small" for="prestation_tarifPrestation_montant">Montant</label>
-                        {{ form_widget(form.budgetAnnonce.montant) }}
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="mb-3">
-                        <label class="fw-bold small" for="prestation_tarifPrestation_currency">Devise</label>
-                        {{ form_widget(form.budgetAnnonce.currency) }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                {{ form_help(form.budgetAnnonce) }}
             </div>
             <div class="row">
                 {{ form_row(form.description) }}
