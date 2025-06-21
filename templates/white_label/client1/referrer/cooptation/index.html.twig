@@ -1,6 +1,7 @@
 {% extends 'white_label/client1/base.html.twig' %}
 
 {% block title %}Cooptations{% endblock %}
+{% block page_title %}Recommander un ami{% endblock %}
 
 {% block body %}
     <div class="container mt-4">
@@ -12,8 +13,4 @@
             {{ form_end(form) }}
         </div>
     </div>
-<script src="{{ asset('assets/ckeditor5/ckeditor.js')}}"></script>
-<script>
-    ClassicEditor.create( document.querySelector( '#referral_description' ) )
-</script>
 {% endblock %}
