@@ -1,3 +1,19 @@
+{% use "bootstrap_5_layout.html.twig" %}
+
+{#
+   Ajout d'une classe sur les labels pour harmoniser le style
+   des formulaires de la marque blanche.
+#}
+{% block form_label %}
+    {% if label is not same as(false) %}
+        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' fw-bold')|trim}) %}
+    {% endif %}
+    {{ parent() }}
+{% endblock %}
+
+{#
+   Affichage de l'aide avec une police plus légère
+#}
 {% block form_help %}
     {% if help is not empty %}
         <small class="fw-lighter">{{ help|raw }}</small>
