@@ -15,7 +15,7 @@ use App\WhiteLabel\Entity\Client1\Candidate\Applications;
 use App\WhiteLabel\Form\Client1\Profile\Candidat\Edit\EditCandidateProfile;
 use App\WhiteLabel\Form\Client1\EditEntrepriseType;
 use App\WhiteLabel\Form\Client1\Finance\EmployeType;
-use App\Service\FileUploader;
+use App\WhiteLabel\Service\Client1\FileUploader;
 use App\WhiteLabel\Manager\Client1\ProfileManager;
 use Symfony\UX\Chartjs\Model\Chart;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
