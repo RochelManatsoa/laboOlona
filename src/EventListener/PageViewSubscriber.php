@@ -1,6 +1,7 @@
 <?php
 namespace App\EventListener;
 
+use App\Entity\User;
 use App\Service\ActivityLogger;
 use App\Service\User\UserService;
 use Symfony\Component\Routing\RouterInterface;
@@ -39,7 +40,9 @@ class PageViewSubscriber implements EventSubscriberInterface
                             return;
                         }
                     }
-                    $this->activityLogger->logPageViewActivity($user, $request->getUri());
+                    if ($user instanceof User) {
+                        $this->activityLogger->logPageViewActivity($user, $request->getUri());
+                    }
                 }
             } catch (ResourceNotFoundException | MethodNotAllowedException $e) {
                 // Ne rien faire

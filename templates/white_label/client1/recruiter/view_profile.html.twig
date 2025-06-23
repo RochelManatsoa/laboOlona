@@ -9,7 +9,7 @@
     </div>
 
     <div class="profil-banner mb-4">
-            <div class="couverture-banner-bg" style="background-image: url({{ asset('images/dashboard/banner_couverture.webp')}})"></div>
+            <div class="couverture-banner-bg" style=""></div>
             <div class="left-infos-profils d-md-flex justify-content-between">
                 <div class="infos-profils d-md-flex justify-content-between">
                     <div class="img-profils">
@@ -29,13 +29,21 @@
                             {{ candidat.titre }}
                              <span class="certificated">Certifié</span><span class="vue_profil"><i class="bi bi-eye mr-1"></i>Ce profil a été vue {{ candidat.vues|length }} fois</span>
                         </div>
+                        {% if candidat.cv %}
+                            <div class="biographie-profil mb-4 p-4">
+                                <h4 class="fs-5 text-uppercase">CV</h4>
+                                <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target=_blank class="btn btn-outline-primary text-upercase fw-semibold">
+                                    <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="row row-reverse">
-            <div class="col-lg-8">
+            <div class="col">
                 <div class="biographie-profil mb-4 p-4">
                     <span class="fs-5 mb-3 fw-bold lh-base st-title">A propos de moi</span>
                     {{ candidat.resume|raw }}
@@ -60,6 +68,29 @@
                             {{ candidat.candidat.telephone }}
                         </div>
                     </div>
+                </div>
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 fw-bold mb-3 lh-base st-title">Informations professionnelles</span>
+                    <div class="d-md-flex flex-box_">
+                        <span class="fs-6 lh-base">Titre</span>
+                        <div class="d-md-flex fw-bold info-bx flex-box_">
+                            {{ candidat.titre }}
+                        </div>
+                    </div>	
+                    <div class="d-md-flex flex-box_">
+                        <span class="fs-6 lh-base">Secteur(s) d'activité</span>
+                        <div class="d-md-flex fw-bold info-bx flex-box_">
+                            {% for secteur in candidat.secteurs %}
+                            <span class="badge bg-secteur">{{ secteur.nom }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>	
+                    <div class="d-md-flex flex-box_">
+                        <span class="fs-6 lh-base">Prétention salariale</span>
+                        <div class="d-md-flex fw-bold info-bx flex-box_">
+                            {{ candidat.tarifCandidat }}
+                        </div>
+                    </div>				
                 </div>
                 <div class="biographie-profil mb-4 p-4">
                     <span class="fs-5 mb-3 fw-bold lh-base st-title">Experiences</span>
@@ -150,16 +181,6 @@
                 <div class="biographie-profil mb-4 p-4">
                     <span class="fs-5 mb-3 fw-bold lh-base st-title">Résumé Olona Talents</span>
                     <div>{{ candidat.resultFree|raw }}</div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="biographie-profil mb-4 p-4">
-                    {% if candidat.cv %}
-                        <h4 class="fs-5 text-uppercase">CV</h4>
-                        <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target=_blank class="btn btn-outline-primary text-upercase fw-semibold">
-                            <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
-                        </a>
-                    {% endif %}
                 </div>
             </div>
         </div>
