@@ -11,6 +11,7 @@ use App\WhiteLabel\Entity\Client1\ContactForm;
 use App\WhiteLabel\Entity\Client1\User;
 use App\WhiteLabel\Entity\Client1\CandidateProfile;
 use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
+use App\WhiteLabel\Entity\Client1\Candidate\Applications;
 use App\WhiteLabel\Form\Client1\Profile\Candidat\Edit\EditCandidateProfile;
 use App\WhiteLabel\Form\Client1\EditEntrepriseType;
 use App\WhiteLabel\Form\Client1\Finance\EmployeType;
@@ -160,11 +161,46 @@ class UserController extends AbstractController
     }
 
     #[Route('/candidatures', name: 'app_white_label_client1_user_candidatures')]
-    public function candidatures(): Response
+    public function candidatures(Request $request, PaginatorInterface $paginator): Response
     {
-        return $this->render('white_label/client1/user/candidatures.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $params = [];
+
+        if ($user->getType() === User::ACCOUNT_CANDIDAT && $user->getCandidateProfile()) {
+            $candidate = $user->getCandidateProfile();
+            $repo = $this->entityManager->getRepository(Applications::class);
+            $page = $request->query->getInt('page', 1);
+
+            $params['pendings'] = $paginator->paginate(
+                $repo->findBy(['candidat' => $candidate, 'status' => Applications::STATUS_PENDING], ['id' => 'DESC']),
+                $page,
+                10
+            );
+            $params['rendezvous'] = $paginator->paginate(
+                $repo->findBy(['candidat' => $candidate, 'status' => Applications::STATUS_METTING], ['id' => 'DESC']),
+                $page,
+                10
+            );
+            $params['accepteds'] = $paginator->paginate(
+                $repo->findBy(['candidat' => $candidate, 'status' => Applications::STATUS_ACCEPTED], ['id' => 'DESC']),
+                $page,
+                10
+            );
+            $params['refuseds'] = $paginator->paginate(
+                $repo->findBy(['candidat' => $candidate, 'status' => Applications::STATUS_REJECTED], ['id' => 'DESC']),
+                $page,
+                10
+            );
+            $params['archiveds'] = $paginator->paginate(
+                $repo->findBy(['candidat' => $candidate, 'status' => Applications::STATUS_ARCHIVED], ['id' => 'DESC']),
+                $page,
+                10
+            );
+        }
+
+        return $this->render('white_label/client1/user/candidatures.html.twig', $params);
     }
 
     #[Route('/assistance', name: 'app_white_label_client1_user_assistance')]

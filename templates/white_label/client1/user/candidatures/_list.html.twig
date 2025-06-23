@@ -1,0 +1,29 @@
+{% if applications|default([])|length > 0 %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Annonce</th>
+                    <th>Status</th>
+                    <th>Déposé le</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for app in applications %}
+                <tr>
+                    <td>{{ app.annonce.titre }}</td>
+                    <td>{{ app.status|candidature_status_Label }}</td>
+                    <td>{{ app.dateCandidature|date('d/m/Y') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="navigation">
+        {{ knp_pagination_render(applications, 'parts/_pagination.html.twig') }}
+    </div>
+{% else %}
+    <div class="text-center py-4">
+        <p>Aucune candidature.</p>
+    </div>
+{% endif %}
