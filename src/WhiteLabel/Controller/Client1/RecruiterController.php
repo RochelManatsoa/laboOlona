@@ -11,6 +11,7 @@ use App\WhiteLabel\Manager\Client1\CVThequeManager;
 use App\WhiteLabel\Manager\Client1\JobListingManager;
 use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use App\WhiteLabel\Repository\Client1\Entreprise\JobListingRepository;
+use App\WhiteLabel\Repository\Client1\Candidate\ApplicationsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,10 +36,22 @@ class RecruiterController extends AbstractController
     }
 
     #[Route('/candidatures', name: 'app_white_label_client1_recruiter_candidatures')]
-    public function candidatures(): Response
+    public function candidatures(Request $request, ApplicationsRepository $applicationsRepository): Response
     {
+        /** @var \App\WhiteLabel\Entity\Client1\User $user */
+        $user = $this->getUser();
+        $entreprise = $user?->getEntrepriseProfile();
+
+        if (!$entreprise) {
+            return $this->redirectToRoute('app_white_label_client1_user_profile');
+        }
+
+        $page = $request->query->getInt('page', 1);
+        $applications = $applicationsRepository->findByEntrepriseProfile($page, $entreprise->getId());
+
         return $this->render('white_label/client1/recruiter/candidatures.html.twig', [
-            'controller_name' => 'UserController',
+            'applications' => $applications,
+            'entreprise' => $entreprise,
         ]);
     }
 
