@@ -1,0 +1,166 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Profil {{ candidat.candidat.prenom }} {{ candidat.candidat.nom }}{% endblock %}
+{% block page_title %}Détail profil{% endblock %}
+
+{% block body %}
+    <div class="loader-container" id="loader-container" style="display:none;">
+        <span class="loader"></span>
+    </div>
+
+    <div class="profil-banner mb-4">
+            <div class="couverture-banner-bg" style="background-image: url({{ asset('images/dashboard/banner_couverture.webp')}})"></div>
+            <div class="left-infos-profils d-md-flex justify-content-between">
+                <div class="infos-profils d-md-flex justify-content-between">
+                    <div class="img-profils">
+                        <div class="rounded-circle profile-img bg-image-candidat-account" style="background-image: url({{ candidat.fileName ? asset('uploads/experts/' ~ candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }});" alt="Avatar"></div>
+                    </div>
+                    <div class="detail-profils">
+                        <div class="nomBlock d-md-flex align-items-center">
+                            <div class="Noms__">
+                                {{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}
+                            </div>
+                            <div class="Tarif-indicatif">
+                                <span>Tarif indicatif : </span>
+                                    {{ candidat.tarifCandidat }}
+                            </div>
+                        </div>
+                        <div class="TitreBlock">
+                            {{ candidat.titre }}
+                             <span class="certificated">Certifié</span><span class="vue_profil"><i class="bi bi-eye mr-1"></i>Ce profil a été vue {{ candidat.vues|length }} fois</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-reverse">
+            <div class="col-lg-8">
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 mb-3 fw-bold lh-base st-title">A propos de moi</span>
+                    {{ candidat.resume|raw }}
+                </div>
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 mb-3 fw-bold lh-base st-title">Informations personnelles</span>
+                    <div class="d-md-flex flex-box_">
+                        <span class="fs-6 lh-base">Nom complet</span>
+                        <div class="d-md-flex fw-bold info-bx flex-box_">
+                            {{ candidat.candidat.nom }} {{ candidat.candidat.prenom }}
+                        </div>
+                    </div>
+                    <div class="d-md-flex flex-box_">
+                        <span class="fs-6 lh-base">Adresse email</span>
+                        <div class="d-md-flex fw-bold info-bx flex-box_">
+                            {{ candidat.candidat.email }}
+                        </div>
+                    </div>
+                    <div class="d-md-flex flex-box_">
+                        <span class="fs-6 lh-base">Numéro de téléphone</span>
+                        <div class="d-md-flex fw-bold info-bx flex-box_">
+                            {{ candidat.candidat.telephone }}
+                        </div>
+                    </div>
+                </div>
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 mb-3 fw-bold lh-base st-title">Experiences</span>
+                    <div class="exp-block">
+                        {% if experiences|length > 0 %}
+                            {% for experience in experiences %}
+                                <div class="experience" data-experience-id="{{ experience.id }}">
+                                    <span class="justify-content-between align-items-center">
+                                        {% if experience.enPoste %}
+                                            Depuis {{ experience.dateDebut|date('M Y') }}
+                                        {% else %}
+                                            {{ experience.dateDebut|date('M Y') }} - {{ experience.dateFin|date('M Y') }}
+                                        {% endif %}
+                                    </span>
+                                    <p class="small d-flex justify-content-between align-items-center">
+                                        <span>
+                                            <strong>{{ experience.nom }}</strong> chez <strong>{{ experience.entreprise }}</strong>
+                                            {% if date_difference(experience.dateFin, experience.dateDebut) != "" %}
+                                                ({{ date_difference(experience.dateFin, experience.dateDebut) }})
+                                            {% endif %}
+
+                                        </span>
+                                    </p>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert fw-lighter" role="alert">
+                                <i class="bi bi-info-circle"></i>
+                                Aucune expérience renseignée.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 fw-bold mb-3 lh-base st-title">Compétences</span>
+                    <div class="compt-block">
+                        {% if competences|length > 0 %}
+                            {% for competence in competences %}
+                                <div class="competence" data-competence-id="{{ competence.id }}">
+                                    <p class="small">
+                                        {{ competence.nom }}
+                                        <span class="">
+                                            {% for i in 1..5 %}
+                                                {% if i <= competence.note %}
+                                                    <i class="small bi bi-star-fill text-warning"></i>
+                                                {% else %}
+                                                    <i class="small bi bi-star "></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                    </p>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert fw-lighter" role="alert">
+                                <i class="bi bi-info-circle"></i>
+                                Aucune expérience renseignée.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 mb-3 fw-bold lh-base st-title">Langue</span>
+                    {% if langages|length > 0 %}
+                        <div class="row">
+                            {% for langue in langages %}
+                                <div class="langue" data-langue-id="{{ langue.id }}">
+                                    <p class="">
+                                        {{ isoToEmoji(langue.langue.code) }} {{ langue.langue.nom }}
+                                        {% for i in 1..5 %}
+                                            {% if i <= langue.niveau %}
+                                                <i class="small bi bi-star-fill text-warning"></i>
+                                            {% else %}
+                                                <i class="small bi bi-star "></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert fw-lighter" role="alert">
+                            <i class="bi bi-info-circle"></i>
+                            Aucune expérience renseignée.
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="biographie-profil mb-4 p-4">
+                    <span class="fs-5 mb-3 fw-bold lh-base st-title">Résumé Olona Talents</span>
+                    <div>{{ candidat.resultFree|raw }}</div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="biographie-profil mb-4 p-4">
+                    {% if candidat.cv %}
+                        <h4 class="fs-5 text-uppercase">CV</h4>
+                        <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target=_blank class="btn btn-outline-primary text-upercase fw-semibold">
+                            <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+{% endblock %}

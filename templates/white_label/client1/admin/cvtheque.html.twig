@@ -106,7 +106,7 @@
                                     <div class="candidate-card-item">
                                         <div class="d-flex align-items-center mb-2">
                                             <div class="candidate-photo">
-                                                <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.id })}}"><img src="{{ item.fileName ? asset('uploads/experts/' ~ item.fileName) : asset('v2/images/dashboard/.svg')}}" alt="Avatar"></a>
+                                                <a href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': item.id })}}"><img src="{{ item.fileName ? asset('uploads/experts/' ~ item.fileName) : asset('v2/images/dashboard/.svg')}}" alt="Avatar"></a>
                                             </div>
                                             <div class="candidate-info-content">
                                                 <h2>
@@ -136,7 +136,7 @@
                                             {% endif %}
                                         </div>
                                         <div class="infos-footer d-flex align-items-center">
-                                            <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.id })}}">Voir son profil</a>
+                                            <a class="btn btn-outline" href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': item.id })}}">Voir son profil</a>
                                             <div id="row_favorite_{{ item.id }}">
                                                 {% if isLikedByRecruiter(entreprise, item.id) %}
                                                     <button type="button" class="btn btn-info remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':item.id}) }}"><i class="bi bi-star-fill me-2"></i>Effacer de mes favoris</button>
@@ -154,7 +154,7 @@
                                     <div class="candidate-card-item">
                                         <div class="d-flex align-items-center mb-2">
                                             <div class="candidate-photo">
-                                                <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.id })}}"><img src="{{ item.fileName ? asset('uploads/experts/' ~ item.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></a>
+                                                <a href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': item.id })}}"><img src="{{ item.fileName ? asset('uploads/experts/' ~ item.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></a>
                                             </div>
                                             <div class="candidate-info-content">
                                                 <h2>
@@ -179,7 +179,7 @@
                                             {% endif %}
                                         </div>
                                         <div class="infos-footer d-flex align-items-center">
-                                            <a class="btn btn-outline" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': item.id })}}">Voir son profil</a>
+                                            <a class="btn btn-outline" href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': item.id })}}">Voir son profil</a>
                                             <div id="row_favorite_{{ item.id }}">
                                                 {% if isLikedByRecruiter(entreprise, item.id) %}
                                                     <button type="button" class="btn btn-info remove-from-favorites" data-href="{{ path('app_v2_recruiter_favorite_delete_candidate', {'id':item.id}) }}"><i class="bi bi-star-fill me-2"></i>Effacer de mes favoris</button>
