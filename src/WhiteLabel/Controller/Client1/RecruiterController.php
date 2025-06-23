@@ -12,6 +12,7 @@ use App\WhiteLabel\Manager\Client1\JobListingManager;
 use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use App\WhiteLabel\Repository\Client1\Entreprise\JobListingRepository;
 use App\WhiteLabel\Repository\Client1\Candidate\ApplicationsRepository;
+use App\WhiteLabel\Entity\Client1\CandidateProfile;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -144,6 +145,32 @@ class RecruiterController extends AbstractController
             'statuses' => $jobListingManager->getStatuses(),
             'labels' => JobListing::getLabels(),
             'selectedStatus' => $status,
+        ]);
+    }
+
+    #[Route('/profil-candidat/{id}', name: 'app_white_label_client1_recruiter_view_profile')]
+    public function viewProfile(int $id): Response
+    {
+        $candidate = $this->entityManager->getRepository(CandidateProfile::class)->find($id);
+
+        if (!$candidate || $candidate->getStatus() === CandidateProfile::STATUS_BANNISHED || $candidate->getStatus() === CandidateProfile::STATUS_PENDING) {
+            throw $this->createNotFoundException("Nous sommes désolés, mais le candidat demandé n'existe pas.");
+        }
+
+        $experiences = $candidate->getExperiences()->toArray();
+        usort($experiences, fn($a, $b) => ($b->getDateDebut() <=> $a->getDateDebut()));
+
+        $competences = $candidate->getCompetences()->toArray();
+        usort($competences, fn($a, $b) => ($b->getNote() <=> $a->getNote()));
+
+        $langages = $candidate->getLangages()->toArray();
+        usort($langages, fn($a, $b) => ($b->getNiveau() <=> $a->getNiveau()));
+
+        return $this->render('white_label/client1/recruiter/view_profile.html.twig', [
+            'candidat' => $candidate,
+            'experiences' => $experiences,
+            'competences' => $competences,
+            'langages' => $langages,
         ]);
     }
 }

@@ -22,13 +22,13 @@
                     <td>{{ application.dateCandidature ? application.dateCandidature|date('d/m/Y') : '' }}</td>
                     <td>{{ application.annonce.titre }}</td>
                     <td>
-                        <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': application.candidat.id}) }}">
+                        <a href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': application.candidat.id}) }}">
                             {{ application.candidat.candidat }} | 
                             <span class="ms-1 text-muted">{{ application.candidat.titre }}</span>
                         </a>
                     </td>
                     <td>
-                        <a class="btn btn-outline-primary btn-sm" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': application.candidat.id}) }}">Voir le profil</a>
+                        <a class="btn btn-outline-primary btn-sm" href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': application.candidat.id}) }}">Voir le profil</a>
                     </td>
                 </tr>
             {% else %}
