@@ -173,4 +173,26 @@ class RecruiterController extends AbstractController
             'langages' => $langages,
         ]);
     }
+
+    #[Route('/candidature/{id}', name: 'app_white_label_client1_recruiter_candidature_view')]
+    public function viewCandidature(int $id, ApplicationsRepository $applicationsRepository): Response
+    {
+        /** @var \App\WhiteLabel\Entity\Client1\User $user */
+        $user = $this->getUser();
+        $entreprise = $user?->getEntrepriseProfile();
+
+        if (!$entreprise) {
+            return $this->redirectToRoute('app_white_label_client1_user_profile');
+        }
+
+        $application = $applicationsRepository->find($id);
+
+        if (!$application || $application->getAnnonce()?->getEntreprise()?->getId() !== $entreprise->getId()) {
+            throw $this->createNotFoundException("Candidature introuvable.");
+        }
+
+        return $this->render('white_label/client1/recruiter/candidature_view.html.twig', [
+            'application' => $application,
+        ]);
+    }
 }
