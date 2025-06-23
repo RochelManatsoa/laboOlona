@@ -3,8 +3,10 @@
 namespace App\WhiteLabel\Controller\Client1;
 
 use App\WhiteLabel\Manager\Client1\JobListingManager;
+use App\WhiteLabel\Manager\Client1\ApplicationManager;
 use App\WhiteLabel\Entity\Client1\User;
 use App\WhiteLabel\Form\Client1\RegistrationFormType;
+use App\WhiteLabel\Form\Client1\Candidat\ApplicationsType as WLApplicationsType;
 use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -104,13 +106,31 @@ class HomeController extends AbstractController
     }
 
     #[Route('/job/{jobId}', name: 'app_white_label_annonce_view')]
-    public function viewJobOffer(Request $request, JobListing $annonce, JobListingManager $jobListingManager): Response
+    public function viewJobOffer(Request $request, JobListing $annonce, JobListingManager $jobListingManager, ApplicationManager $applicationManager): Response
     {
         if ($annonce === null || $annonce->getStatus() === JobListing::STATUS_DELETED || $annonce->getStatus() === JobListing::STATUS_PENDING) {
             throw $this->createNotFoundException('Nous sommes désolés, mais le annonce demandé n\'existe pas.');
         }
+        $jobListingManager->incrementView($annonce, $request->getClientIp());
         $currentUser = $this->getUser();
         if($currentUser){
+            $candidat = $currentUser->getCandidateProfile();
+            if($candidat){
+                [$applied, $application] = $jobListingManager->isAppliedByCandidate($annonce, $candidat);
+                $form = $this->createForm(WLApplicationsType::class, $application);
+                $form->handleRequest($request);
+                if($form->isSubmitted() && $form->isValid()){
+                    $applicationManager->saveForm($form);
+                    $this->addFlash('success', 'Candidature envoyée');
+                    return $this->redirectToRoute('app_white_label_annonce_view', ['jobId' => $annonce->getJobId()]);
+                }
+                return $this->render("white_label/client1/user/annonce.html.twig", [
+                    'jobOffer' => $annonce,
+                    'candidat' => $candidat,
+                    'applied' => $applied,
+                    'form' => $form->createView(),
+                ]);
+            }
             return $this->render("white_label/client1/user/annonce.html.twig", [
                 'jobOffer' => $annonce,
             ]);
@@ -123,7 +143,6 @@ class HomeController extends AbstractController
         //         return $this->redirectToRoute('app_tableau_de_bord_entreprise_view_job_offer', ['id' => $id]);
         //     }
         // }
-        $jobListingManager->incrementView($annonce, $request->getClientIp());
 
         return $this->render("white_label/client1/home/annonce.html.twig", [
             'jobOffer' => $annonce,

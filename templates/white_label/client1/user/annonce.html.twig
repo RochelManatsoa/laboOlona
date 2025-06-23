@@ -65,15 +65,40 @@
                             <p>Aucune compétence spécifique requise.</p>
                         {% endif %}
                         <div class="btn-signUp">
-                            <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}" class="btn btn-primary">Postuler</a>
+                            {% if candidat is defined %}
+                                {% if candidat.status is same as(constant('App\\WhiteLabel\\Entity\\Client1\\CandidateProfile::STATUS_VALID')) or candidat.status is same as(constant('App\\WhiteLabel\\Entity\\Client1\\CandidateProfile::STATUS_FEATURED')) %}
+                                    {% if not applied %}
+                                    <div id="alert-application" class="my-4">
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#submitBtn" class="btn btn-primary">Postuler</button>
+                                    </div>
+                                    {% else %}
+                                    <div class="alert alert-light-primary d-flex align-items-center" role="alert">
+                                        <i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
+                                        <div>
+                                            Vous avez déjà postulé à cette offre
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="alert alert-info d-flex align-items-center" role="alert">
+                                        <i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
+                                        <div>
+                                            Votre profil doit être validé par un moderateur avant de pouvoir postuler à cette annonce.<br>
+                                            Veuillez vérifier régulièrement votre mail
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}" class="btn btn-primary">Postuler</a>
+                            {% endif %}
                             {% if app.user and app.user.referrerProfile is not null %}
                             <a href="{{ path('app_referrer_cooptation', {'jobId': jobOffer.jobId}) }}" class="btn btn-primary mx-3 px-3 px-sm-5">Recommander un ami</a>
                             {% endif %}
                         </div>
                     </div>
                 </div>
-			</div>
-			<div class="col-lg-4 col-md-12 rightSidebar">
+                        </div>
+                        <div class="col-lg-4 col-md-12 rightSidebar">
 				<div class="theiaStickySidebar">
 					<div class="side-bar">
 						<div class="sidebar-elements search-bx">
@@ -114,7 +139,34 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
+        </div>
+        </div>
 </div>
+{% include "/tableau_de_bord/layout/_credit_modal_candidat.html.twig" %}
+{% if candidat is defined %}
+    <div class="modal fade" id="submitBtn" tabindex="-1" aria-labelledby="submitBtnLabel" >
+        <div class="modal-dialog  modal-dialog-centered modal-lg">
+            <div class="modal-content">
+            {{ form_start(form, {'attr': {'id':'applyJob', 'action': path('app_white_label_annonce_view',  {'jobId': jobOffer.jobId })}}) }}
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-center fw-bold" id="submitBtnLabel">Rédigez votre lettre de motivation</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Prenez un moment pour nous parler de vous et de ce qui vous rend unique. Utilisez cet espace pour mettre en avant vos compétences, votre expérience et votre enthousiasme pour le poste auquel vous postulez.</p>
+                <div class="col-11 mx-auto">
+                    <div class="row">
+                    {{ form_widget(form)}}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-semibold text-uppercase" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-primary fw-semibold text-uppercase">Envoyer</button>
+            </div>
+            {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endif %}
 {% endblock %}
