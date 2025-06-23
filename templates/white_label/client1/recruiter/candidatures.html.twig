@@ -5,5 +5,44 @@
 
 
 {% block body %}
-
+    <h1>Liste des candidatures</h1>
+    {% if applications|length > 0 %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{ knp_pagination_sortable(applications, 'Date', 'a.dateCandidature') }}</th>
+                    <th>{{ knp_pagination_sortable(applications, 'Annonce', 'j.titre') }}</th>
+                    <th>{{ knp_pagination_sortable(applications, 'Candidat', 'c.titre') }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for application in applications %}
+                <tr>
+                    <td>{{ application.dateCandidature ? application.dateCandidature|date('d/m/Y') : '' }}</td>
+                    <td>{{ application.annonce.titre }}</td>
+                    <td>
+                        <a href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': application.candidat.id}) }}">
+                            {{ generatePseudo(application.candidat) }}
+                            <span class="ms-1 text-muted">{{ application.candidat.titre }}</span>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-primary btn-sm" href="{{ path('app_tableau_de_bord_entreprise_profil_candidat', {'id': application.candidat.id}) }}">Voir le profil</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucune candidature trouvée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {{ knp_pagination_render(applications) }}
+    {% else %}
+        <div class="text-center col-lg-6 col-sm-12 mx-auto">
+            <img src="{{ asset('images/empty.png')}}" class="img-fluid">
+            <p class="text-center">Vous n'avez pas encore de candidature.</p>
+        </div>
+    {% endif %}
 {% endblock %}
