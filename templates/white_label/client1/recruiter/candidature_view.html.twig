@@ -12,27 +12,27 @@
         <div class="card-body">
             <h5 class="card-title">Candidature pour le poste : {{ application.annonce.titre }}</h5>
             <p>
-                Candidat :
+                <span class="fw-bold">Candidat :</span> 
                 <a href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': application.candidat.id}) }}">
                     {{ application.candidat.candidat.nom }} {{ application.candidat.candidat.prenom }}
                 </a>
             </p>
-            <p><strong>Email:</strong> {{ application.candidat.candidat.email }}</p>
-            <p><strong>Biographie:</strong> {{ application.candidat.resume|raw }}</p>
-            <p><strong>Compétences:</strong>
+            <p><span class="fw-bold">Email:</span> {{ application.candidat.candidat.email }}</p>
+            <p><span class="fw-bold">Biographie:</span> {{ application.candidat.resume|raw }}</p>
+            <p><span class="fw-bold">Compétences:</span>
                 {% for skill in application.candidat.competences %}
                     <span class="badge bg-dark">{{ skill.nom }}</span>
                 {% endfor %}
             </p>
-            <p><strong>Lettre de motivation :</strong></p>
-            <p>{{ application.lettreMotivation }}</p>
+            <p><span class="fw-bold">Lettre de motivation :</span></p>
+            <p>{{ application.lettreMotivation|raw }}</p>
             {% if application.candidat.cv %}
-                <p><strong>Lien vers le CV :</strong> <a href="{{ asset('uploads/cv/' ~ application.candidat.cv) }}" class="btn btn-outline-primary rounded-pill btn-sm" target="_blank">Voir le CV</a></p>
+                <p><span class="fw-bold">Lien vers le CV :</span> <a href="{{ asset('uploads/cv/' ~ application.candidat.cv) }}" class="btn btn-outline-primary rounded-pill btn-sm" target="_blank">Voir le CV</a></p>
             {% endif %}
-            <p><strong>Date de candidature :</strong> {{ application.dateCandidature|date('d/m/Y') }}</p>
-            <p><strong>Status :</strong> {{ application.status }}</p>
+            <p><span class="fw-bold">Date de candidature :</span> {{ application.dateCandidature|date('d/m/Y') }}</p>
+            <p><span class="fw-bold">Status :</span> {{ application.status }}</p>
             {% if application.pretentionSalariale %}
-                <p><strong>Prétention salariale :</strong> {{ application.pretentionSalariale }}</p>
+                <p><span class="fw-bold">Prétention salariale :</span> {{ application.pretentionSalariale }}</p>
             {% endif %}
         </div>
     </div>
@@ -44,15 +44,12 @@
             </div>
             <div class="card-body">
                 <h4 class="card-title">Titre du poste : {{ application.annonce.titre }}</h4>
-                <h5>Description :</h5>
-                <p>{{ application.annonce.description|raw }}</p>
-                <p><strong>Date de création</strong> : {{ application.annonce.dateCreation|date('d/m/Y') }}</p>
-                <p><strong>Date d'expiration</strong> : {{ application.annonce.dateExpiration|date('d/m/Y') }}</p>
-                <p><strong>Status</strong> : {{ application.annonce.status }}</p>
-                <p><strong>Salaire</strong> : {{ application.annonce.salaire }}</p>
-                <p><strong>Lieu</strong> : {{ application.annonce.lieu }}</p>
-                <p><strong>Type de contrat</strong> : {{ application.annonce.typeContrat }}</p>
-                <p><strong>Nombre de postes</strong> : {{ application.annonce.nombrePoste }}</p>
+                <p><span class="fw-bold">Date de création</span> : {{ application.annonce.dateCreation|date('d/m/Y') }}</p>
+                <p><span class="fw-bold">Date d'expiration</span> : {{ application.annonce.dateExpiration|date('d/m/Y') }}</p>
+                <p><span class="fw-bold">Status</span> : {{ application.annonce.status }}</p>
+                <p><span class="fw-bold">Salaire</span> : {{ application.annonce.salaire }}</p>
+                <p><span class="fw-bold">Lieu</span> : {{ application.annonce.lieu }}</p>
+                <p><span class="fw-bold">Nombre de postes</span> : {{ application.annonce.nombrePoste }}</p>
             </div>
         </div>
     {% endif %}
