@@ -2,20 +2,21 @@
 
 namespace App\WhiteLabel\Form\Client1;
 
-use App\WhiteLabel\Entity\Client1\Secteur;
-use App\WhiteLabel\Entity\Client1\CandidateProfile;
-use App\WhiteLabel\Entity\Client1\Candidate\Competences;
-// use App\Form\Candidat\TarifCandidatType;
 use Symfony\Component\Form\AbstractType;
+use App\WhiteLabel\Entity\Client1\Secteur;
+use Symfony\Component\Form\FormBuilderInterface;
+// use App\Form\Candidat\TarifCandidatType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 // use App\Form\Candidat\AvailabilityEditType;
 // use App\Form\Profile\Candidat\Edit\SocialType;
 // use App\Form\Profile\Candidat\Edit\InfoUserType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
+use App\WhiteLabel\Entity\Client1\CandidateProfile;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\WhiteLabel\Entity\Client1\Candidate\Competences;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -87,6 +88,13 @@ class CandidatType extends AbstractType
                 'autocomplete' => true,
                 'multiple' => true,
                 'required' => true,
+            ])
+            ->add('status', ChoiceType::class, [
+                'choices' => CandidateProfile::getStatuses(),
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Statut du profil.',
             ])
             // ->add('social', SocialType::class, ['label' => false])
             // ->add('isPremium', CheckboxType::class, [
