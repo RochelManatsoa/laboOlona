@@ -15,6 +15,8 @@ use App\WhiteLabel\Entity\Client1\Candidate\Applications;
 use App\WhiteLabel\Form\Client1\Profile\Candidat\Edit\EditCandidateProfile;
 use App\WhiteLabel\Form\Client1\EditEntrepriseType;
 use App\WhiteLabel\Form\Client1\Finance\EmployeType;
+use App\Service\FileUploader;
+use App\WhiteLabel\Manager\Client1\ProfileManager;
 use Symfony\UX\Chartjs\Model\Chart;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +34,9 @@ class UserController extends AbstractController
 {
     public function __construct(
         private ManagerRegistry $managerRegistry,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private FileUploader $fileUploader,
+        private ProfileManager $profileManager,
     ){
         $this->entityManager = $managerRegistry->getManager('client1');
     }
@@ -93,6 +97,12 @@ class UserController extends AbstractController
             $form = $this->createForm(EditCandidateProfile::class, $candidate);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
+                $cvFile = $form->get('cv')->getData();
+                if ($cvFile) {
+                    $fileName = $this->fileUploader->upload($cvFile, $candidate);
+                    $candidate->setCv($fileName[0]);
+                    $this->profileManager->saveCV($fileName, $candidate);
+                }
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Informations enregistrées');
             }
