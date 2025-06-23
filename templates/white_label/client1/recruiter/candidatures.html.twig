@@ -29,6 +29,7 @@
                     </td>
                     <td>
                         <a class="btn btn-outline-primary btn-sm" href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': application.candidat.id}) }}">Voir le profil</a>
+                        <a class="btn btn-outline-secondary btn-sm" href="{{ path('app_white_label_client1_recruiter_candidature_view', {'id': application.id}) }}">Voir la candidature</a>
                     </td>
                 </tr>
             {% else %}
