@@ -12,6 +12,14 @@
 
             <table class="table">
                 <tbody>
+                    {% if candidat.fileName is not null %}
+                    <tr>
+                        <th class="col-3">Photo de profil</th>
+                        <td>
+                            <img src="{{ asset('uploads/experts/' ~ candidat.fileName) }}" alt="Avatar" style="max-width: 150px;">
+                        </td>
+                    </tr>
+                    {% endif %}
                     <tr>
                         <th class="col-3">Inscrit le</th>
                         <td>{{ candidat.createdAt ? candidat.createdAt|date('d/m/Y') : '' }}</td>
@@ -48,6 +56,52 @@
                         <th class="col-3">Localisation</th>
                         <td><i class="bi bi-geo-alt-fill"></i>{{ candidat.province }} {{ candidat.region }} {{ show_country(candidat.localisation) }}</td>
                     </tr>
+                    {% if candidat.gender is not null %}
+                    <tr>
+                        <th class="col-3">Genre</th>
+                        <td>{{ candidat.gender }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if candidat.status is not null %}
+                    <tr>
+                        <th class="col-3">Status</th>
+                        <td>{{ candidat.status }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if candidat.tarifCandidat is not null %}
+                    <tr>
+                        <th class="col-3">Tarif indicatif</th>
+                        <td>{{ candidat.tarifCandidat }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if candidat.metaDescription is not null %}
+                    <tr>
+                        <th class="col-3">Meta description</th>
+                        <td>{{ candidat.metaDescription }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if candidat.getCountCompetences() > 0 %}
+                    <tr>
+                        <th class="col-3">Nombre de compétences</th>
+                        <td>{{ candidat.getCountCompetences() }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if candidat.getCountExperiences() > 0 %}
+                    <tr>
+                        <th class="col-3">Nombre d'expériences</th>
+                        <td>{{ candidat.getCountExperiences() }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if candidat.langages|length > 0 %}
+                    <tr>
+                        <th class="col-3">Langues</th>
+                        <td>
+                            {% for langue in candidat.langages %}
+                                {{ isoToEmoji(langue.langue.code) }} {{ langue.langue.nom }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endif %}
                     <tr>
                         <th class="col-3">Description</th>
                         <td>{{ candidat.resume|raw }}</td>
