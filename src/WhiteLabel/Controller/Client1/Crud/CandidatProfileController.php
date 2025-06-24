@@ -12,7 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\WhiteLabel\Entity\Client1\CandidateProfile;
-use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
+use App\WhiteLabel\Service\Client1\FileUploader;
+use App\WhiteLabel\Manager\Client1\ProfileManager;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -23,7 +24,9 @@ class CandidatProfileController extends AbstractController
     public function __construct(
         private ManagerRegistry $managerRegistry,
         private EntityManagerInterface $entityManager,
-        private PaginatorInterface $paginatorInterface
+        private PaginatorInterface $paginatorInterface,
+        private FileUploader $fileUploader,
+        private ProfileManager $profileManager,
     ){
         $this->entityManager = $managerRegistry->getManager('client1');
     }
@@ -86,6 +89,12 @@ class CandidatProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $cvFile = $form->get('cv')->getData();
+            if ($cvFile) {
+                $fileName = $this->fileUploader->upload($cvFile, $candidat);
+                $candidat->setCv($fileName[0]);
+                $this->profileManager->saveCV($fileName, $candidat);
+            }
             $this->entityManager->flush();
 
             return $this->redirectToRoute('app_white_label_candidat_profile_show', ['id' => $candidat->getId()], Response::HTTP_SEE_OTHER);
