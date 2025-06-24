@@ -4,11 +4,11 @@ namespace App\WhiteLabel\Controller\Client1\OpenAi;
 
 use App\WhiteLabel\Entity\Client1\Candidate\Competences;
 use Exception;
-use App\Service\PdfProcessor;
-use App\Manager\OpenaiManager;
+use App\WhiteLabel\Service\Client1\PdfProcessor;
+use App\WhiteLabel\Manager\Client1\OpenaiManager;
 use App\WhiteLabel\Entity\Client1\CandidateProfile;
-use App\Manager\CandidatManager;
-use App\Service\OpenAITranslator;
+use App\WhiteLabel\Manager\Client1\CandidatManager;
+use App\WhiteLabel\Service\Client1\OpenAITranslator;
 use App\WhiteLabel\Service\Client1\UserService;
 use App\WhiteLabel\Entity\Client1\Candidate\Experiences;
 use App\WhiteLabel\Repository\Client1\Candidate\CompetencesRepository;

@@ -2,12 +2,12 @@
 
 namespace App\WhiteLabel\Controller\Client1\OpenAi;
 
-use App\Manager\OpenaiManager;
+use App\WhiteLabel\Manager\Client1\OpenaiManager;
 use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use App\Entity\Prestation;
-use App\Manager\CandidatManager;
-use App\Service\OpenAITranslator;
-use App\Service\PdfProcessor;
+use App\WhiteLabel\Manager\Client1\CandidatManager;
+use App\WhiteLabel\Service\Client1\OpenAITranslator;
+use App\WhiteLabel\Service\Client1\PdfProcessor;
 use App\WhiteLabel\Service\Client1\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;

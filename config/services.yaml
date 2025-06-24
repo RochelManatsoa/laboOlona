@@ -51,6 +51,10 @@ services:
         arguments:
             $apiKey: '%env(OPENAI_API_KEY)%' # Assurez-vous que cette variable d'environnement est définie
 
+    App\WhiteLabel\Service\Client1\OpenAITranslator:
+        arguments:
+            $apiKey: '%env(OPENAI_API_KEY)%'
+
     App\Controller\YouTubeOAuthController:
         public: true
         arguments:
