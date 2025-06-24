@@ -3,7 +3,6 @@
 namespace App\WhiteLabel\Controller\Client1\OpenAi;
 
 use App\WhiteLabel\Entity\Client1\Candidate\Competences;
-use DateTime;
 use Exception;
 use App\Service\PdfProcessor;
 use App\Manager\OpenaiManager;
@@ -37,7 +36,7 @@ class CandidatController extends AbstractController
         $this->entityManager = $managerRegistry->getManager('client1');
     }
     
-    #[Route('/api/openai/candidat/{id}', name: 'app_white_label_client1_open_ai_candidat')]
+    #[Route('/assistant/openai/candidat/{id}', name: 'app_white_label_client1_open_ai_candidat')]
     public function index(CandidateProfile $candidat): Response
     {     
         return $this->json([
@@ -45,14 +44,14 @@ class CandidatController extends AbstractController
         ], 200, [], ['groups' => 'open_ai']);
     }
     
-    #[Route('/api/ocr/{id}', name: 'app_white_label_client1_ocr_candidat')]
+    #[Route('/assistant/ocr/{id}', name: 'app_white_label_client1_ocr_candidat')]
     public function ocrPdf(CandidateProfile $candidat)
     {
         $pdfText = $this->pdfProcessor->processPdf($candidat->getId());
         return $this->json(['text' => $pdfText], 200);
     }
     
-    #[Route('/api/openai/generate/{id}', name: 'app_white_label_client1_open_ai_generate_candidat')]
+    #[Route('/assistant/openai/generate/{id}', name: 'app_white_label_client1_open_ai_generate_candidat')]
     public function resume(Request $request, CandidateProfile $candidat)
     {
         // Fermer la connexion à la base de données avant d'exécuter les scripts Node.js
@@ -109,7 +108,7 @@ class CandidatController extends AbstractController
         }
     }
     
-    #[Route('/api/openai/analyse/{id}', name: 'app_white_label_client1_open_ai_analyse_candidat')]
+    #[Route('/assistant/openai/analyse/{id}', name: 'app_white_label_client1_open_ai_analyse_candidat')]
     public function analyse(Request $request, CandidateProfile $candidat)
     {
         $this->entityManager->getConnection()->close();
@@ -290,7 +289,7 @@ class CandidatController extends AbstractController
         }
     
         if (strtolower($dateStr) === 'present') {
-            return new DateTime(); 
+            return new \DateTime(); 
         }
     
         if (strpos($dateStr, '-') !== false) {

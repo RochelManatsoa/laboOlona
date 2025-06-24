@@ -28,10 +28,7 @@
         </div>
     </div>
 </section>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $("#generate-wl-resume").on('click', function() {
             var candidateId = $(this).data('candidat-id');
@@ -61,7 +58,7 @@
 
             // Make the AJAX request
             $.ajax({
-                url: '/api/openai/analyse/' + candidateId,
+                url: '/assistant/openai/analyse/' + candidateId,
                 method: 'GET',
                 success: function(response) {
                     console.log(response);
