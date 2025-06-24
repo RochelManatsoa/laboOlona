@@ -17,10 +17,6 @@
                         <td>{{ candidat.createdAt ? candidat.createdAt|date('d/m/Y') : '' }}</td>
                     </tr>
                     <tr>
-                        <th class="col-3">Localisation</th>
-                        <td><i class="bi bi-geo-alt-fill"></i>{{ candidat.province }} {{ candidat.region }} {{ show_country(candidat.localisation) }}</td>
-                    </tr>
-                    <tr>
                         <th class="col-3">Titre professsionnel</th>
                         <td>{{ candidat.titre }}</td>
                     </tr>
@@ -31,6 +27,34 @@
                     <tr>
                         <th class="col-3">Téléphone</th>
                         <td> {{ candidat.candidat.telephone }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">CV</th>
+                        <td> 
+                        {% if candidat.cv %}
+                            <a href="{{ asset('wl/client1/' ~ candidat.cv) }}" target=_blank class="btn btn-sm btn-outline-primary text-upercase fw-semibold">
+                                <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+                            </a>
+                        {% else %}
+                        <span class=""><i class="bi bi-info-circle"></i> CV manquant</span>
+                        {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Adresse</th>
+                        <td>{{ candidat.candidat.adress }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Région</th>
+                        <td>{{ candidat.region }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Province</th>
+                        <td>{{ candidat.province }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Localisation</th>
+                        <td><i class="bi bi-geo-alt-fill"></i>{{ candidat.province }} {{ candidat.region }} {{ show_country(candidat.localisation) }}</td>
                     </tr>
                     <tr>
                         <th class="col-3">Description</th>

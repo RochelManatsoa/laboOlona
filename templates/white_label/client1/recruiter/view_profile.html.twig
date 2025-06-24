@@ -29,14 +29,6 @@
                             {{ candidat.titre }}
                              <span class="certificated">Certifié</span><span class="vue_profil"><i class="bi bi-eye mr-1"></i>Ce profil a été vue {{ candidat.vues|length }} fois</span>
                         </div>
-                        {% if candidat.cv %}
-                            <div class="biographie-profil mb-4 p-4">
-                                <h4 class="fs-5 text-uppercase">CV</h4>
-                                <a href="{{ asset('uploads/cv/' ~ candidat.cv) }}" target=_blank class="btn btn-outline-primary text-upercase fw-semibold">
-                                    <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
-                                </a>
-                            </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -90,7 +82,14 @@
                         <div class="d-md-flex fw-bold info-bx flex-box_">
                             {{ candidat.tarifCandidat }}
                         </div>
-                    </div>				
+                    </div>	
+                        {% if candidat.cv %}
+                            <div class="biographie-profil">
+                                <a href="{{ asset('wl/client1/' ~ candidat.cv) }}" target=_blank class="btn btn-outline-primary text-upercase fw-semibold">
+                                    <i class="bi bi-file-earmark-pdf-fill"></i> Voir son CV
+                                </a>
+                            </div>
+                        {% endif %}			
                 </div>
                 <div class="biographie-profil mb-4 p-4">
                     <span class="fs-5 mb-3 fw-bold lh-base st-title">Experiences</span>

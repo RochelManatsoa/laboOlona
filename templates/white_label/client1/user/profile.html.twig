@@ -17,7 +17,7 @@
                     <div class="col-lg-6 col-sm-12 d-flex justify-content-center align-items-center">
                         <div class="cv-pdf text-center">
                             {% if form.vars.data.cv is defined and form.vars.data.cv is not null %}
-                                <a href="{{ asset('uploads/cv/' ~ form.vars.data.cv) }}" title="Ouvrir" target="_blank">
+                                <a href="{{ asset('wl/client1/' ~ form.vars.data.cv) }}" title="Ouvrir" target="_blank">
                                     <i class="bi bi-filetype-pdf" style="font-size: 2rem;"></i>
                                     <span class="small fw-light">{{ form.vars.data.cv }}</span>
                                 </a>

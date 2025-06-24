@@ -24,7 +24,7 @@ class FileUploader
     public function upload(UploadedFile $file, CandidateProfile $candidat): array
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = $this->appExtension->generatePseudo($candidat);
+        $safeFilename = $this->generatePseudo($candidat);
         $fileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
 
         try {
@@ -35,6 +35,14 @@ class FileUploader
         }
 
         return [$fileName, $originalFilename];
+    }
+    
+    public function generatePseudo(CandidateProfile $candidat)    
+    {        
+        $letters = 'BOA';        
+        $paddedId = sprintf('%04d', $candidat->getId());  
+
+        return $letters . $paddedId;
     }
 
     public function getTargetDirectory(): string
