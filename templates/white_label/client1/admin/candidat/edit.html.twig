@@ -12,10 +12,81 @@
 
             {{ include('white_label/client1/admin/candidat/_form.html.twig', {'button_label': 'Update'}) }}
 
+            {# Show the AI resume generation button only if a CV exists #}
+            {% if candidat.cv %}
+                <div class="container text-center mt-5">
+                    <button class="btn btn-dark rounded-pill px-5 my-3 mx-auto" id="generate-wl-resume" data-candidat-id="{{ candidat.id }}">Générer un résumé avec IA</button>
+                    <div id="progress-container" class="progress my-3" style="display: none;">
+                        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+                </div>
+            {% endif %}
+
             <div class="d-flex justify-content-end w-100">
                 {{ include('white_label/client1/admin/candidat/_delete_form.html.twig') }}
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $("#generate-wl-resume").on('click', function() {
+            var candidateId = $(this).data('candidat-id');
+
+            // Hide the button and show the progress bar
+            $(this).hide();
+            $('#progress-container').show();
+
+            // Initialize the progress bar
+            updateProgressBar(0);
+
+            // Function to update the progress bar
+            function updateProgressBar(percentage) {
+                $('#progress-bar').css('width', percentage + '%').attr('aria-valuenow', percentage).text(percentage + '%');
+            }
+
+            // Simulate progress update (this is just for demonstration)
+            let progress = 0;
+            let interval = setInterval(function() {
+                if (progress < 90) {
+                    progress += 5;
+                    updateProgressBar(progress);
+                } else {
+                    clearInterval(interval);
+                }
+            }, 3600);
+
+            // Make the AJAX request
+            $.ajax({
+                url: '/api/openai/analyse/' + candidateId,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    // Complete the progress bar
+                    updateProgressBar(100);
+
+                    setTimeout(function() {
+                        // Hide the progress bar and show a success message
+                        $('#progress-container').hide();
+                        if (response.status === 'success') {
+                            alert(response.message);
+                        } else {
+                            alert('Une erreur est survenue');
+                        }
+                        location.reload();
+                    }, 500); // Add a small delay to show the 100% state
+                },
+                error: function(xhr, status, error) {
+                    // Hide the progress bar and show an error message
+                    $('#progress-container').hide();
+                    let errorMessage = 'Une erreur est survenue: ' + (xhr.responseJSON ? xhr.responseJSON.message : error);
+                    alert(errorMessage);
+                    $('#generate-wl-resume').show();
+                }
+            });
+        });
+    </script>
 {% endblock %}
