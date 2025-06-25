@@ -12,10 +12,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'app:index-joblistings',
+    name: 'app:client1:index-joblistings',
     description: 'Index all joblistings to Elasticsearch',
     hidden: false,
-    aliases: ['app:index-joblistings']
+    aliases: ['app:client1:index-joblistings']
 )]
 class IndexJobListingsCommand extends Command
 {

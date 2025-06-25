@@ -10,10 +10,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'app:create-elasticsearch-index',
+    name: 'app:client1:create-elasticsearch-index',
     description: 'Create Elasticsearch indices',
     hidden: false,
-    aliases: ['app:create-elasticsearch-index']
+    aliases: ['app:client1:create-elasticsearch-index']
 )]
 class CreateElasticsearchIndexCommand extends Command
 {
