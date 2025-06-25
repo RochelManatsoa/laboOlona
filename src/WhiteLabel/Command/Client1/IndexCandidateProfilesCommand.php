@@ -106,6 +106,12 @@ class IndexCandidateProfilesCommand extends Command
                 'body'  => $body,
             ]);
 
+            $this->elasticsearch->index([
+                'index' => 'candidate_white_label_index',
+                'id'    => $profile->getId(),
+                'body'  => $body,
+            ]);
+
             $output->writeln('Indexed Candidate Profile ID: ' . $profile->getId());
         }
 
@@ -156,12 +162,12 @@ class IndexCandidateProfilesCommand extends Command
             }
 
             $this->elasticsearch->index([
-                'index' => 'candidate_premium_index',
+                'index' => 'candidate_white_label_index',
                 'id'    => $profile->getId(),
                 'body'  => $body,
             ]);
 
-            $output->writeln('Indexed Premium Candidate Profile ID: ' . $profile->getId());
+            $output->writeln('Indexed Candidate Profile ID: ' . $profile->getId());
         }
 
         return Command::SUCCESS;

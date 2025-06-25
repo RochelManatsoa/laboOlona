@@ -89,6 +89,12 @@ class IndexJobListingsCommand extends Command
                 'body'  => $body,
             ]);
 
+            $this->elasticsearch->index([
+                'index' => 'joblisting_white_label_index',
+                'id'    => $annonce->getId(),
+                'body'  => $body,
+            ]);
+
             $output->writeln('Indexed Joblisting ID: ' . $annonce->getId());
         }
 
@@ -136,12 +142,12 @@ class IndexJobListingsCommand extends Command
             }
 
             $this->elasticsearch->index([
-                'index' => 'joblisting_premium_index',
+                'index' => 'joblisting_white_label_index',
                 'id'    => $annonce->getId(),
                 'body'  => $body,
             ]);
 
-            $output->writeln('Indexed Premium Joblisting ID: ' . $annonce->getId());
+            $output->writeln('Indexed Joblisting ID: ' . $annonce->getId());
         }
 
         return Command::SUCCESS;

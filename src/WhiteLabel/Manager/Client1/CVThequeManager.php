@@ -150,7 +150,7 @@ class CVThequeManager
         }
 
         return [
-            'index' => 'candidate_profile_index',
+            'index' => 'candidate_white_label_index',
             'body'  => array_merge([
                 'from' => $from,
                 'size' => $size,
@@ -160,29 +160,14 @@ class CVThequeManager
     
     public function getParamsPremiumCandidates(int $from, int $size, ?string $query): array
     {
-        return [
-            'index' => 'candidate_premium_index',
-            'body'  => [
-                'from' => $from,
-                'size' => $size,
-                'query' => [
-                    'multi_match' => [
-                        'query'  => $query,
-                        'fields' => [
-                            'titre', 'resume', 'localisation', 'technologies', 'tools', 'badKeywords', 'resultFree', 'metaDescription', 'traductionEn', 
-                            'competences.nom', 'experiences.titre', 'experiences.description','secteurs.nom', 'langages.nom'
-                        ],
-                        'fuzziness' => 'AUTO',
-                    ],
-                ],
-            ],
-        ];
+        // White label uses the same index for boosted candidates
+        return $this->getParamsCandidates($from, $size, $query);
     }
 
     public function getParamsJoblisting(int $from, int $size, ?string $query): array
     {
         return [
-            'index' => 'joblisting_index',
+            'index' => 'joblisting_white_label_index',
             'body'  => [
                 'from' => $from,
                 'size' => $size,
@@ -226,22 +211,7 @@ class CVThequeManager
     
     public function getParamsPremiumJoblisting(int $from, int $size, ?string $query): array
     {
-        return [
-            'index' => 'joblisting_premium_index',
-            'body'  => [
-                'from' => $from,
-                'size' => $size,
-                'query' => [
-                    'multi_match' => [
-                        'query'  => $query,
-                        'fields' => [
-                            'titre', 'description', 'lieu', 'shortDescription', 'typeContrat', 'budgetAnnonce', 
-                            'competences.nom', 'secteur.nom', 'langues.nom'
-                        ],
-                        'fuzziness' => 'AUTO',
-                    ],
-                ],
-            ],
-        ];
+        // White label uses the same index for boosted job listings
+        return $this->getParamsJoblisting($from, $size, $query);
     }
 }

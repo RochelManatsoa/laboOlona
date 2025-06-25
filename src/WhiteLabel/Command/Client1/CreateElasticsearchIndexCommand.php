@@ -171,11 +171,14 @@ class CreateElasticsearchIndexCommand extends Command
         }
 
         try {
-            $this->elasticsearch->createIndex('candidate_premium_index', $settings, $mappingsCandidate);
-            $io->success('Index "candidate_premium_index" created successfully.');
+            $this->elasticsearch->createIndex('candidate_white_label_index', $settings, $mappingsCandidate);
+            $io->success('Index "candidate_white_label_index" created successfully.');
         } catch (\Exception $e) {
             $io->error('Error creating index: ' . $e->getMessage());
         }
+
+
+        // White label has no premium candidate index
 
         try {
             $this->elasticsearch->createIndex('joblisting_index', $settings, $mappingsJoblisting);
@@ -184,9 +187,10 @@ class CreateElasticsearchIndexCommand extends Command
             $io->error('Error creating index: ' . $e->getMessage());
         }
 
+        // White label specific job listing index
         try {
-            $this->elasticsearch->createIndex('joblisting_premium_index', $settings, $mappingsJoblisting);
-            $io->success('Index "joblisting_premium_index" created successfully.');
+            $this->elasticsearch->createIndex('joblisting_white_label_index', $settings, $mappingsJoblisting);
+            $io->success('Index "joblisting_white_label_index" created successfully.');
         } catch (\Exception $e) {
             $io->error('Error creating index: ' . $e->getMessage());
         }

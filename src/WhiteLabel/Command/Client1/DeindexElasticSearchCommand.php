@@ -46,7 +46,7 @@ class DeindexElasticSearchCommand extends Command
         foreach ($validProfiles as $profile) {
             if ($profile->isGeneretated() != true) {
                 $params = [
-                    'index' => 'candidate_index',
+                    'index' => 'candidate_white_label_index',
                     'id'    => $profile->getId(),
                 ];
     
@@ -71,7 +71,7 @@ class DeindexElasticSearchCommand extends Command
         foreach ($validJobListings as $job) {
             if ($job->isGeneretated() != true) {
                 $params = [
-                    'index' => 'joblisting_index',
+                    'index' => 'joblisting_white_label_index',
                     'id'    => $job->getId(),
                 ];
     
@@ -96,7 +96,7 @@ class DeindexElasticSearchCommand extends Command
         foreach ($validPrestations as $prestation) {
             if ($prestation->isGeneretated() != true) {
                 $params = [
-                    'index' => 'joblisting_index',
+                    'index' => 'joblisting_white_label_index',
                     'id'    => $prestation->getId(),
                 ];
     
