@@ -116,59 +116,6 @@ class CreateElasticsearchIndexCommand extends Command
             ],
         ];    
 
-        $mappingsPrestation = [
-            'properties' => [
-                'description' => ['type' => 'text'],
-                'competencesRequises' => [
-                    'type' => 'nested',
-                    'properties' => [
-                        'nom' => ['type' => 'text'],
-                    ],
-                ],
-                'tarifsProposes' => [
-                    'type' => 'nested',
-                    'properties' => [
-                        'par_heure' => ['type' => 'double'],
-                        'par_projet' => ['type' => 'double'],
-                    ],
-                ],
-                'modalitesPrestation' => ['type' => 'text'],
-                'specialisations' => [
-                    'type' => 'nested',
-                    'properties' => [
-                        'nom' => ['type' => 'text'],
-                    ],
-                ],
-                'medias' => [
-                    'type' => 'nested',
-                    'properties' => [
-                        'images' => ['type' => 'text'],
-                        'video' => ['type' => 'text'],
-                    ],
-                ],
-                'evaluations' => [
-                    'type' => 'nested',
-                    'properties' => [
-                        'client' => ['type' => 'text'],
-                        'commentaire' => ['type' => 'text'],
-                        'note' => ['type' => 'text'],
-                    ],
-                ],
-                'disponibilites' => [
-                    'type' => 'nested',
-                    'properties' => [
-                        'nom' => ['type' => 'text'],
-                    ],
-                ],
-            ],
-        ];
-
-        try {
-            $this->elasticsearch->createIndex('candidate_profile_index', $settings, $mappingsCandidate);
-            $io->success('Index "candidate_profile_index" created successfully.');
-        } catch (\Exception $e) {
-            $io->error('Error creating index: ' . $e->getMessage());
-        }
 
         try {
             $this->elasticsearch->createIndex('candidate_white_label_index', $settings, $mappingsCandidate);
@@ -191,20 +138,6 @@ class CreateElasticsearchIndexCommand extends Command
         try {
             $this->elasticsearch->createIndex('joblisting_white_label_index', $settings, $mappingsJoblisting);
             $io->success('Index "joblisting_white_label_index" created successfully.');
-        } catch (\Exception $e) {
-            $io->error('Error creating index: ' . $e->getMessage());
-        }
-
-        try {
-            $this->elasticsearch->createIndex('prestation_index', $settings, $mappingsPrestation);
-            $io->success('Index "prestation_index" created successfully.');
-        } catch (\Exception $e) {
-            $io->error('Error creating index: ' . $e->getMessage());
-        }
-
-        try {
-            $this->elasticsearch->createIndex('prestation_premium_index', $settings, $mappingsPrestation);
-            $io->success('Index "prestation_premium_index" created successfully.');
         } catch (\Exception $e) {
             $io->error('Error creating index: ' . $e->getMessage());
         }

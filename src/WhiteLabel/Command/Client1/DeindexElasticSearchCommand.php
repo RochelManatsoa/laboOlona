@@ -4,7 +4,6 @@ namespace App\WhiteLabel\Command\Client1;
 
 use App\Entity\CandidateProfile;
 use App\Entity\Entreprise\JobListing;
-use App\Entity\Prestation;
 use App\Service\ElasticsearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -41,7 +40,6 @@ class DeindexElasticSearchCommand extends Command
 
         $validProfiles = $this->em->getRepository(CandidateProfile::class)->findValidProfiles();
         $validJobListings = $this->em->getRepository(JobListing::class)->findValidJobListings();
-        $validPrestations = $this->em->getRepository(Prestation::class)->findValidPrestations();
 
         foreach ($validProfiles as $profile) {
             if ($profile->isGeneretated() != true) {
@@ -92,28 +90,6 @@ class DeindexElasticSearchCommand extends Command
                 }
             }
         }
-
-        foreach ($validPrestations as $prestation) {
-            if ($prestation->isGeneretated() != true) {
-                $params = [
-                    'index' => 'joblisting_white_label_index',
-                    'id'    => $prestation->getId(),
-                ];
-    
-                if ($this->elasticsearchService->exists($params)) {
-    
-                    if ($this->elasticsearchService->exists($params)) {
-                        try {
-                            $this->elasticsearchService->delete($params);
-                            $io->note(sprintf('Deleted prestation ID: %s', $prestation->getId()));
-                        } catch (\Exception $e) {
-                            $output->writeln('Failed to delete prestation ID: ' . $prestation->getId() . ' with error: ' . $e->getMessage());
-                        }
-                    } else {
-                        $io->note(sprintf('No document found to delete for prestation ID: %s', $prestation->getId()));
-                    }
-                } else {
-                    $io->note(sprintf('No document found to delete for prestation ID: %s', $prestation->getId()));
                 }
             }
         }
