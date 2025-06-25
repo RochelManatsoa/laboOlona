@@ -3,7 +3,8 @@
 namespace App\WhiteLabel\Command\Client1;
 
 use App\Twig\ProfileExtension;
-use App\Entity\Entreprise\JobListing;
+use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Service\ElasticsearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -20,12 +21,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 class IndexJobListingsCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $em, 
+        private ManagerRegistry $managerRegistry,
+        private EntityManagerInterface $entityManager, 
         private ElasticsearchService $elasticsearch,
         private ProfileExtension $extension
     )
     {
         parent::__construct();
+        $this->entityManager = $managerRegistry->getManager('client1');
     }
 
     protected function configure(): void
@@ -37,8 +40,8 @@ class IndexJobListingsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $annonces = $this->em->getRepository(JobListing::class)->findPublishedJobListing();
-        $premiums = $this->em->getRepository(JobListing::class)->findPremiumJobListing();
+        $annonces = $this->entityManager->getRepository(JobListing::class)->findPublishedJobListing();
+        $premiums = $this->entityManager->getRepository(JobListing::class)->findPremiumJobListing();
 
         foreach ($annonces as $annonce) {
             $body = [

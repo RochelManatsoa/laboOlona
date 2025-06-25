@@ -2,8 +2,9 @@
 
 namespace App\WhiteLabel\Command\Client1;
 
-use App\Entity\CandidateProfile;
-use App\Entity\Entreprise\JobListing;
+use App\WhiteLabel\Entity\Client1\CandidateProfile;
+use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Service\ElasticsearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -21,25 +22,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DeindexElasticSearchCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $em, 
+        private ManagerRegistry $managerRegistry,
+        private EntityManagerInterface $entityManager, 
         private ElasticsearchService $elasticsearchService
-    )
-    {
+    ) {
         parent::__construct();
+        $this->entityManager = $managerRegistry->getManager('client1');
     }
 
     protected function configure(): void
     {
-        $this
-            ->setDescription('De-index from Elasticsearch');
+        $this->setDescription('De-index from Elasticsearch');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $validProfiles = $this->em->getRepository(CandidateProfile::class)->findValidProfiles();
-        $validJobListings = $this->em->getRepository(JobListing::class)->findValidJobListings();
+        $validProfiles = $this->entityManager->getRepository(CandidateProfile::class)->findValidProfiles();
+        $validJobListings = $this->entityManager->getRepository(JobListing::class)->findValidJobListings();
 
         foreach ($validProfiles as $profile) {
             if ($profile->isGeneretated() != true) {
@@ -47,18 +48,13 @@ class DeindexElasticSearchCommand extends Command
                     'index' => 'candidate_white_label_index',
                     'id'    => $profile->getId(),
                 ];
-    
+
                 if ($this->elasticsearchService->exists($params)) {
-    
-                    if ($this->elasticsearchService->exists($params)) {
-                        try {
-                            $this->elasticsearchService->delete($params);
-                            $io->note(sprintf('Deleted candidateProfile ID: %s', $profile->getId()));
-                        } catch (\Exception $e) {
-                            $output->writeln('Failed to delete candidateProfile ID: ' . $profile->getId() . ' with error: ' . $e->getMessage());
-                        }
-                    } else {
-                        $io->note(sprintf('No document found to delete for candidateProfile ID: %s', $profile->getId()));
+                    try {
+                        $this->elasticsearchService->delete($params);
+                        $io->note(sprintf('Deleted candidateProfile ID: %s', $profile->getId()));
+                    } catch (\Exception $e) {
+                        $output->writeln('Failed to delete candidateProfile ID: ' . $profile->getId() . ' with error: ' . $e->getMessage());
                     }
                 } else {
                     $io->note(sprintf('No document found to delete for candidateProfile ID: %s', $profile->getId()));
@@ -72,24 +68,16 @@ class DeindexElasticSearchCommand extends Command
                     'index' => 'joblisting_white_label_index',
                     'id'    => $job->getId(),
                 ];
-    
+
                 if ($this->elasticsearchService->exists($params)) {
-    
-                    if ($this->elasticsearchService->exists($params)) {
-                        try {
-                            $this->elasticsearchService->delete($params);
-                            $io->note(sprintf('Deleted jobListing ID: %s', $job->getId()));
-                        } catch (\Exception $e) {
-                            $output->writeln('Failed to delete jobListing ID: ' . $job->getId() . ' with error: ' . $e->getMessage());
-                        }
-                    } else {
-                        $io->note(sprintf('No document found to delete for jobListing ID: %s', $job->getId()));
+                    try {
+                        $this->elasticsearchService->delete($params);
+                        $io->note(sprintf('Deleted jobListing ID: %s', $job->getId()));
+                    } catch (\Exception $e) {
+                        $output->writeln('Failed to delete jobListing ID: ' . $job->getId() . ' with error: ' . $e->getMessage());
                     }
                 } else {
                     $io->note(sprintf('No document found to delete for jobListing ID: %s', $job->getId()));
-                }
-            }
-        }
                 }
             }
         }

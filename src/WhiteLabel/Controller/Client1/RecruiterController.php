@@ -60,6 +60,9 @@ class RecruiterController extends AbstractController
     public function cvtheque(Request $request, CVThequeManager $cVThequeManager): Response
     {
         $params = [];
+        /** @var \App\WhiteLabel\Entity\Client1\User $user */
+        $user = $this->getUser();
+        $entreprise = $user?->getEntrepriseProfile();
         $size = $request->query->get('size', 10);
         $page = $request->query->get('page', 1);
         $from = ($page - 1) * $size;
@@ -81,6 +84,7 @@ class RecruiterController extends AbstractController
         $params['currentPage'] = $page;
         $params['size'] = $size;
         $params['filterTitle'] = $title;
+        $params['entreprise'] = $entreprise;
 
         return $this->render('white_label/client1/recruiter/cvtheque.html.twig', $params);
     }
@@ -153,9 +157,9 @@ class RecruiterController extends AbstractController
     {
         $candidate = $this->entityManager->getRepository(CandidateProfile::class)->find($id);
 
-        if (!$candidate || $candidate->getStatus() === CandidateProfile::STATUS_BANNISHED || $candidate->getStatus() === CandidateProfile::STATUS_PENDING) {
-            throw $this->createNotFoundException("Nous sommes désolés, mais le candidat demandé n'existe pas.");
-        }
+        // if (!$candidate || $candidate->getStatus() === CandidateProfile::STATUS_BANNISHED || $candidate->getStatus() === CandidateProfile::STATUS_PENDING) {
+        //     throw $this->createNotFoundException("Nous sommes désolés, mais le candidat demandé n'existe pas.");
+        // }
 
         $experiences = $candidate->getExperiences()->toArray();
         usort($experiences, fn($a, $b) => ($b->getDateDebut() <=> $a->getDateDebut()));

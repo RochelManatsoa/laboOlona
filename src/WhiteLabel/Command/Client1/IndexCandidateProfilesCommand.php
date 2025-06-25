@@ -2,14 +2,16 @@
 
 namespace App\WhiteLabel\Command\Client1;
 
-use App\Twig\ProfileExtension;
-use App\Entity\CandidateProfile;
 use App\Service\ElasticsearchService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
+use App\WhiteLabel\Entity\Client1\Availability;
 use Symfony\Component\Console\Attribute\AsCommand;
+use App\WhiteLabel\Entity\Client1\CandidateProfile;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use App\WhiteLabel\Entity\Client1\Candidate\TarifCandidat;
 
 #[AsCommand(
     name: 'app:client1:index-candidate-profiles',
@@ -20,12 +22,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class IndexCandidateProfilesCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $em, 
+        private ManagerRegistry $managerRegistry,
+        private EntityManagerInterface $entityManager, 
         private ElasticsearchService $elasticsearch,
-        private ProfileExtension $extension
     )
     {
         parent::__construct();
+        $this->entityManager = $managerRegistry->getManager('client1');
     }
 
     protected function configure(): void
@@ -37,7 +40,7 @@ class IndexCandidateProfilesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $profiles = $this->em->getRepository(CandidateProfile::class)->findStatusValid();
+        $profiles = $this->entityManager->getRepository(CandidateProfile::class)->findStatusValid();
 
         foreach ($profiles as $profile) {
             $body = [
@@ -51,8 +54,8 @@ class IndexCandidateProfilesCommand extends Command
                 'resultFree'        => $profile->getResultFree(),
                 'metaDescription'   => $profile->getMetaDescription(),
                 'traductionEn'      => $profile->getTraductionEn(),
-                'availability'      => $this->extension->getAvailabilityStr($profile),
-                'tarifCandidat'     => $this->extension->getDefaultTarifCandidat($profile),
+                'availability'      => $this->getAvailabilityStr($profile),
+                'tarifCandidat'     => $this->getDefaultTarifCandidat($profile),
                 'competences'   => [],
                 'experiences'   => [],
                 'secteurs'      => [],
@@ -116,5 +119,51 @@ class IndexCandidateProfilesCommand extends Command
         }
 
         return Command::SUCCESS;
+    }
+    
+    public function getDefaultTarifCandidat(CandidateProfile $profile): string
+    {
+        $tarif = '';
+        $tarifCandidat = $profile->getTarifCandidat();
+        if($tarifCandidat instanceof TarifCandidat){
+            
+        }
+
+        return $tarif;
+    }
+
+    private function getAvailabilityStr(CandidateProfile $candidateProfile): string
+    {
+        $status = 'Disponible';
+        $availability = $candidateProfile->getAvailability();
+        if($availability instanceof Availability){
+            switch ($availability->getNom()) {
+                case 'immediate':
+                    $status = 'Disponible';
+                    break;
+
+                case 'from-date':
+                    $status = 'A partir du '. $availability->getDateFin()->format('d/m/Y');
+                    break;
+
+                case 'full-time':
+                    $status = 'Temps plein';
+                    break;
+
+                case 'part-time':
+                    $status = 'Temps partiel';
+                    break;
+
+                case 'not-available':
+                    $status = 'Non disponible';
+                    break;
+                
+                default:
+                    $status = 'Non renseigné';
+                    break;
+            }
+        }
+
+        return $status;
     }
 }

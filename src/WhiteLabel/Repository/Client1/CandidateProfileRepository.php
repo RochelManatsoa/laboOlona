@@ -142,10 +142,10 @@ class CandidateProfileRepository extends ServiceEntityRepository
     public function findStatusValid()
     {
         $query = $this->createQueryBuilder('c')
-            ->andWhere('c.isGeneretated = :isGenerated')
-            ->andWhere('c.status = :statusValid')
-            ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
-            ->setParameter('isGenerated', true)
+            // ->andWhere('c.isGeneretated = :isGenerated')
+            // ->andWhere('c.status = :statusValid')
+            // ->setParameter('statusValid', CandidateProfile::STATUS_VALID)
+            // ->setParameter('isGenerated', true)
             ->orderBy('c.id', 'DESC')
             ->getQuery();
             
