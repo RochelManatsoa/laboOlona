@@ -106,8 +106,13 @@ class IndexCandidateProfilesCommand extends Command
                 'body'  => $body,
             ]);
 
-            $output->writeln('Indexed Candidate Profile ID: ' . $profile->getId());
+            $this->elasticsearch->index([
+                'index' => 'candidate_white_label_index',
+                'id'    => $profile->getId(),
+                'body'  => $body,
+            ]);
 
+            $output->writeln('Indexed Candidate Profile ID: ' . $profile->getId());
         }
 
         return Command::SUCCESS;

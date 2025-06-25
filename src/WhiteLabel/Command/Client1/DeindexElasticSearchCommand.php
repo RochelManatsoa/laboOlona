@@ -90,7 +90,6 @@ class DeindexElasticSearchCommand extends Command
                 }
             }
         }
-
                 }
             }
         }
