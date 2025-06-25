@@ -17,10 +17,10 @@ use App\Service\ErrorLogger;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsCommand(
-    name: 'app:generate-report',
+    name: 'app:client1:generate-report',
     description: 'Generate openai report.',
     hidden: false,
-    aliases: ['app:generate-report']
+    aliases: ['app:client1:generate-report']
 )]
 class ReportProfileCommand extends Command
 {
@@ -127,7 +127,7 @@ class ReportProfileCommand extends Command
         $cronLog = new CronLog();
         $cronLog->setStartTime($startTime)
             ->setEndTime($endTime)
-            ->setCommandName('app:generate-report')
+            ->setCommandName('app:client1:generate-report')
             ->setEmailsSent($emailsSent);
 
         $this->em->persist($cronLog);

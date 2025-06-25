@@ -13,10 +13,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'app:deindex-elastic-search',
+    name: 'app:client1:deindex-elastic-search',
     description: 'De-index from Elasticsearch',
     hidden: false,
-    aliases: ['app:deindex-elastic-search']
+    aliases: ['app:client1:deindex-elastic-search']
 )]
 class DeindexElasticSearchCommand extends Command
 {

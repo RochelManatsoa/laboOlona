@@ -12,10 +12,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'app:delete-elasticsearch-index',
+    name: 'app:client1:delete-elasticsearch-index',
     description: 'Delete an Elasticsearch index',
     hidden: false,
-    aliases: ['app:delete-elasticsearch-index']
+    aliases: ['app:client1:delete-elasticsearch-index']
 )]
 class DeleteElasticsearchIndexCommand extends Command
 {
