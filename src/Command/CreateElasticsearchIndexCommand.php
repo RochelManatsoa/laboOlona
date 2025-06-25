@@ -8,7 +8,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
 
 #[AsCommand(
     name: 'app:create-elasticsearch-index',
@@ -27,15 +26,12 @@ class CreateElasticsearchIndexCommand extends Command
     {
         $this
             ->setDescription('Create Elasticsearch indices')
-            ->addOption('brand', null, InputOption::VALUE_OPTIONAL, 'Brand prefix for index names', 'default')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $brand = $input->getOption('brand');
-        $prefix = $brand ? $brand . '_' : '';
 
         $settings = [
             'number_of_shards' => 1,
@@ -168,43 +164,43 @@ class CreateElasticsearchIndexCommand extends Command
         ];
 
         try {
-            $this->elasticsearch->createIndex($prefix . 'candidate_profile_index', $settings, $mappingsCandidate);
-            $io->success(sprintf('Index "%scandidate_profile_index" created successfully.', $prefix));
+            $this->elasticsearch->createIndex('candidate_profile_index', $settings, $mappingsCandidate);
+            $io->success('Index "candidate_profile_index" created successfully.');
         } catch (\Exception $e) {
             $io->error('Error creating index: ' . $e->getMessage());
         }
 
         try {
-            $this->elasticsearch->createIndex($prefix . 'candidate_premium_index', $settings, $mappingsCandidate);
-            $io->success(sprintf('Index "%scandidate_premium_index" created successfully.', $prefix));
+            $this->elasticsearch->createIndex('candidate_premium_index', $settings, $mappingsCandidate);
+            $io->success('Index "candidate_premium_index" created successfully.');
         } catch (\Exception $e) {
             $io->error('Error creating index: ' . $e->getMessage());
         }
 
         try {
-            $this->elasticsearch->createIndex($prefix . 'joblisting_index', $settings, $mappingsJoblisting);
-            $io->success(sprintf('Index "%sjoblisting_index" created successfully.', $prefix));
+            $this->elasticsearch->createIndex('joblisting_index', $settings, $mappingsJoblisting);
+            $io->success('Index "joblisting_index" created successfully.');
         } catch (\Exception $e) {
             $io->error('Error creating index: ' . $e->getMessage());
         }
 
         try {
-            $this->elasticsearch->createIndex($prefix . 'joblisting_premium_index', $settings, $mappingsJoblisting);
-            $io->success(sprintf('Index "%sjoblisting_premium_index" created successfully.', $prefix));
+            $this->elasticsearch->createIndex('joblisting_premium_index', $settings, $mappingsJoblisting);
+            $io->success('Index "joblisting_premium_index" created successfully.');
         } catch (\Exception $e) {
             $io->error('Error creating index: ' . $e->getMessage());
         }
 
         try {
-            $this->elasticsearch->createIndex($prefix . 'prestation_index', $settings, $mappingsPrestation);
-            $io->success(sprintf('Index "%sprestation_index" created successfully.', $prefix));
+            $this->elasticsearch->createIndex('prestation_index', $settings, $mappingsPrestation);
+            $io->success('Index "prestation_index" created successfully.');
         } catch (\Exception $e) {
             $io->error('Error creating index: ' . $e->getMessage());
         }
 
         try {
-            $this->elasticsearch->createIndex($prefix . 'prestation_premium_index', $settings, $mappingsPrestation);
-            $io->success(sprintf('Index "%sprestation_premium_index" created successfully.', $prefix));
+            $this->elasticsearch->createIndex('prestation_premium_index', $settings, $mappingsPrestation);
+            $io->success('Index "prestation_premium_index" created successfully.');
         } catch (\Exception $e) {
             $io->error('Error creating index: ' . $e->getMessage());
         }
