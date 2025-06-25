@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use App\EventSubscriber\ProvinceRegionSubscriber;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
@@ -57,6 +58,20 @@ class CandidatType extends AbstractType
                 'required' => true,
                 'label' => 'Pays *',
             ])
+            ->add('province', ChoiceType::class, [
+                'choices' => [
+                    'Antananarivo' => 'Antananarivo',
+                    'Fianarantsoa' => 'Fianarantsoa',
+                    'Toamasina' => 'Toamasina',
+                    'Mahajanga' => 'Mahajanga',
+                    'Toliara' => 'Toliara',
+                    'Antsiranana' => 'Antsiranana',
+                ],
+                'required' => false,
+                'placeholder' => 'Sélectionnez une province',
+                'help' => 'Choisissez d\’abord une province pour voir les régions disponibles.',
+            ])
+            ->addEventSubscriber(new ProvinceRegionSubscriber())
             ->add('cv', FileType::class, [
                 'label' => 'app_identity_expert.cv',
                 'mapped' => false,
@@ -95,6 +110,16 @@ class CandidatType extends AbstractType
                     'class' => 'fw-bold fs-6' 
                 ],
                 'help' => 'Statut du profil.',
+            ])
+            ->add('metaDescription', TextareaType::class, [
+                'required' => false,
+                'label' => 'Meta description',
+                'attr' => ['rows' => 6]
+            ])
+            ->add('resumeCandidat', TextareaType::class, [
+                'required' => false,
+                'label' => 'Résumé IA',
+                'attr' => ['rows' => 6]
             ])
             // ->add('social', SocialType::class, ['label' => false])
             // ->add('isPremium', CheckboxType::class, [

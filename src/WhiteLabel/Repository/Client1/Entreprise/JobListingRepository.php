@@ -169,10 +169,10 @@ class JobListingRepository extends ServiceEntityRepository
     public function findPublishedJobListing()
     {
         $query = $this->createQueryBuilder('j')
-            ->andWhere('j.isGenerated = :isGenerated')
-            ->andWhere('j.status = :statusValid')
-            ->setParameter('statusValid', JobListing::STATUS_PUBLISHED)
-            ->setParameter('isGenerated', true)
+            // ->andWhere('j.isGenerated = :isGenerated')
+            // ->andWhere('j.status = :statusValid')
+            // ->setParameter('statusValid', JobListing::STATUS_PUBLISHED)
+            // ->setParameter('isGenerated', true)
             ->orderBy('j.id', 'DESC')
             ->getQuery();
             
