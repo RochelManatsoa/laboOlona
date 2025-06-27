@@ -35,7 +35,7 @@ class Competences
     private Collection $profil;
 
     #[ORM\Column(nullable: true)]
-    private ?int $note = null;
+    private ?int $note = 2;
 
     #[ORM\ManyToMany(targetEntity: JobListing::class, mappedBy: 'competences')]
     private Collection $jobListings;
@@ -48,6 +48,7 @@ class Competences
         $this->profil = new ArrayCollection();
         $this->jobListings = new ArrayCollection();
         $this->prestations = new ArrayCollection();
+        $this->note = 2;
     }
 
     public function __toString()
