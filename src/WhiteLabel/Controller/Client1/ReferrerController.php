@@ -71,7 +71,21 @@ class ReferrerController extends AbstractController
     public function cooptation(Request $request, JobListing $annonce): Response
     {
         $referrer = $this->userService->getReferrer();
-        $referral = (new Referral())->setReferredBy($referrer)->setStep(1)->setAnnonce($annonce)->setRewards(10);
+        $rewards = 10;
+        if ($annonce->getPrimeAnnonce()) {
+            $rewards = $annonce->getPrimeAnnonce()->getMontant();
+        } elseif ($annonce->getPrime() !== null) {
+            $rewards = $annonce->getPrime();
+        }
+        $referral = (new Referral())
+            ->setReferredBy($referrer)
+            ->setStep(1)
+            ->setAnnonce($annonce)
+            ->setRewards($rewards);
+        if ($referrer) {
+            $referrer->setPendingRewards($referrer->getPendingRewards() + $rewards);
+            $this->entityManager->persist($referrer);
+        }
         $form = $this->createForm(ReferralType::class, $referral);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){

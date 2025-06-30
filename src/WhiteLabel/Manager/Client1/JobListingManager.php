@@ -8,6 +8,9 @@ use App\WhiteLabel\Entity\Client1\Logs\ActivityLog;
 use App\WhiteLabel\Entity\Client1\Vues\AnnonceVues;
 use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
 use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
+use App\WhiteLabel\Entity\Client1\Entreprise\BudgetAnnonce;
+use App\WhiteLabel\Entity\Client1\Entreprise\PrimeAnnonce;
+use App\WhiteLabel\Entity\Client1\Finance\Devise;
 use App\WhiteLabel\Entity\Client1\Candidate\Applications;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Form\Form;
@@ -25,14 +28,40 @@ class JobListingManager
 
     public function init(EntrepriseProfile $recruiter): JobListing
     {
+        $defaultDevise = $this->entityManager->getRepository(Devise::class)->findOneBy(['slug' => 'ariary']);
+        $devise = $recruiter->getDevise() instanceof Devise ? $recruiter->getDevise() : $defaultDevise;
+        $budget = $this->initBudgetAnnonce($devise);
+        $primeAnnonce = $this->initPrimeAnnonce($devise);
+
         $jobListing = new JobListing();
         $jobListing->setDateCreation(new \DateTime());
         $jobListing->setStatus(JobListing::STATUS_PENDING);
         $jobListing->setIsGenerated(false);
         $jobListing->setJobId(new Uuid(Uuid::v1()));
         $jobListing->setEntreprise($recruiter);
+        $jobListing->setBudgetAnnonce($budget);
+        $jobListing->setPrimeAnnonce($primeAnnonce);
 
         return $jobListing;
+    }
+
+    public function initPrimeAnnonce(Devise $devise): PrimeAnnonce
+    {
+        $primeAnnonce = new PrimeAnnonce();
+        $primeAnnonce->setCreatedAt(new \DateTime());
+        $primeAnnonce->setDevise($devise);
+        $primeAnnonce->setSymbole($devise->getSymbole());
+        $primeAnnonce->setTaux($devise->getTaux());
+
+        return $primeAnnonce;
+    }
+
+    public function initBudgetAnnonce(Devise $devise): BudgetAnnonce
+    {
+        $budget = new BudgetAnnonce();
+        $budget->setCurrency($devise);
+
+        return $budget;
     }
 
     public function save(JobListing $jobListing)
