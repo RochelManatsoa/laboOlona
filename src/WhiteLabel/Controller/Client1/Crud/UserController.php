@@ -75,7 +75,7 @@ class UserController extends AbstractController
                 $user->setType(User::ACCOUNT_ENTREPRISE);
                 $company = $this->profileManager->createCompany($user);
                 $this->entityManager->persist($company);
-                $redirectRoute = 'app_white_label_employe_edit';
+                $redirectRoute = 'app_white_label_entreprise_profile_edit';
                 $redirectParams = ['id' => $company->getId()];
             } 
 
@@ -83,7 +83,7 @@ class UserController extends AbstractController
                 $user->setType(User::ACCOUNT_ENTREPRISE);
                 $company = $this->profileManager->createCompany($user);
                 $this->entityManager->persist($company);
-                $redirectRoute = 'app_white_label_employe_edit';
+                $redirectRoute = 'app_white_label_entreprise_profile_edit';
                 $redirectParams = ['id' => $company->getId()];
             } 
             
@@ -140,6 +140,7 @@ class UserController extends AbstractController
             if (in_array('ROLE_CANDIDAT', $roles, true)) {
                 if (!$user->getCandidateProfile()) {
                     $candidate = $this->profileManager->createCandidat($user);
+                    $candidate->setTitre('Candidat #'. $user->getId());
                     $this->entityManager->persist($candidate);
                 } else {
                     $candidate = $user->getCandidateProfile();
@@ -152,24 +153,26 @@ class UserController extends AbstractController
             if (in_array('ROLE_ANNOUNCER', $roles, true)) {
                 if (!$user->getEntrepriseProfile()) {
                     $company = $this->profileManager->createCompany($user);
+                    $company->setNom('Annonceur #'. $user->getId());
                     $this->entityManager->persist($company);
                 } else {
                     $company = $user->getEntrepriseProfile();
                 }
                 $user->setType(User::ACCOUNT_ENTREPRISE);
-                $redirectRoute = 'app_white_label_employe_edit';
+                $redirectRoute = 'app_white_label_entreprise_profile_edit';
                 $redirectParams = ['id' => $company->getId()];
             } 
             
             if (in_array('ROLE_RECRUITER', $roles, true)) {
                 if (!$user->getEntrepriseProfile()) {
                     $company = $this->profileManager->createCompany($user);
+                    $company->setNom('Recruteur #'. $user->getId());
                     $this->entityManager->persist($company);
                 } else {
                     $company = $user->getEntrepriseProfile();
                 }
                 $user->setType(User::ACCOUNT_ENTREPRISE);
-                $redirectRoute = 'app_white_label_employe_edit';
+                $redirectRoute = 'app_white_label_entreprise_profile_edit';
                 $redirectParams = ['id' => $company->getId()];
             } 
             
