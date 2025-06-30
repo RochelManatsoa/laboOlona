@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
+use App\WhiteLabel\Entity\Client1\CandidateProfile;
+use App\WhiteLabel\Entity\Client1\Finance\Employe;
+use App\WhiteLabel\Manager\Client1\ProfileManager;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -22,7 +25,8 @@ class UserController extends AbstractController
     public function __construct(
         private ManagerRegistry $managerRegistry,
         private EntityManagerInterface $entityManager,
-        private PaginatorInterface $paginatorInterface
+        private PaginatorInterface $paginatorInterface,
+        private ProfileManager $profileManager
     ){
         $this->entityManager = $managerRegistry->getManager('client1');
     }
@@ -55,8 +59,37 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $roles = $user->getRoles();
+            $redirectRoute = null;
+            $redirectParams = [];
+
+            if (in_array('ROLE_CANDIDAT', $roles, true)) {
+                $user->setType(User::ACCOUNT_CANDIDAT);
+                $candidate = $this->profileManager->createCandidat($user);
+                $this->entityManager->persist($candidate);
+                $redirectRoute = 'app_white_label_candidat_profile_edit';
+                $redirectParams = ['id' => $candidate->getId()];
+            } elseif (in_array('ROLE_ANNOUNCER', $roles, true)) {
+                $user->setType(User::ACCOUNT_ENTREPRISE);
+                $company = $this->profileManager->createCompany($user);
+                $this->entityManager->persist($company);
+                $redirectRoute = 'app_white_label_entreprise_profile_edit';
+                $redirectParams = ['id' => $company->getId()];
+            } elseif (in_array('ROLE_RECRUITER', $roles, true)) {
+                $user->setType(User::ACCOUNT_EMPLOYE);
+                $employe = new Employe();
+                $employe->setUser($user);
+                $this->entityManager->persist($employe);
+                $redirectRoute = 'app_white_label_employe_profile_edit';
+                $redirectParams = ['id' => $employe->getId()];
+            }
+
             $this->entityManager->persist($user);
             $this->entityManager->flush();
+
+            if ($redirectRoute) {
+                return $this->redirectToRoute($redirectRoute, $redirectParams, Response::HTTP_SEE_OTHER);
+            }
 
             return $this->redirectToRoute('app_white_label_user_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -85,7 +118,48 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $roles = $user->getRoles();
+            $redirectRoute = null;
+            $redirectParams = [];
+
+            if (in_array('ROLE_CANDIDAT', $roles, true)) {
+                if (!$user->getCandidateProfile()) {
+                    $candidate = $this->profileManager->createCandidat($user);
+                    $this->entityManager->persist($candidate);
+                } else {
+                    $candidate = $user->getCandidateProfile();
+                }
+                $user->setType(User::ACCOUNT_CANDIDAT);
+                $redirectRoute = 'app_white_label_candidat_profile_edit';
+                $redirectParams = ['id' => $candidate->getId()];
+            } elseif (in_array('ROLE_ANNOUNCER', $roles, true)) {
+                if (!$user->getEntrepriseProfile()) {
+                    $company = $this->profileManager->createCompany($user);
+                    $this->entityManager->persist($company);
+                } else {
+                    $company = $user->getEntrepriseProfile();
+                }
+                $user->setType(User::ACCOUNT_ENTREPRISE);
+                $redirectRoute = 'app_white_label_entreprise_profile_edit';
+                $redirectParams = ['id' => $company->getId()];
+            } elseif (in_array('ROLE_RECRUITER', $roles, true)) {
+                if (!$user->getEmploye()) {
+                    $employe = new Employe();
+                    $employe->setUser($user);
+                    $this->entityManager->persist($employe);
+                } else {
+                    $employe = $user->getEmploye();
+                }
+                $user->setType(User::ACCOUNT_EMPLOYE);
+                $redirectRoute = 'app_white_label_employe_profile_edit';
+                $redirectParams = ['id' => $employe->getId()];
+            }
+
             $this->entityManager->flush();
+
+            if ($redirectRoute) {
+                return $this->redirectToRoute($redirectRoute, $redirectParams, Response::HTTP_SEE_OTHER);
+            }
 
             return $this->redirectToRoute('app_white_label_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
