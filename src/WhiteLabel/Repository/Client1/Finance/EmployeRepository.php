@@ -112,6 +112,30 @@ class EmployeRepository extends ServiceEntityRepository
         );
     }
 
+    public function paginateRecipes(int $page, PaginatorInterface $paginator, ?int $userId): PaginationInterface
+    {
+        $queryBuilder = $this
+            ->createQueryBuilder('e')
+            ->select('e, u.nom AS nom, COUNT(s.id) AS simCount')
+            ->leftJoin('e.user', 'u')
+            ->leftJoin('e.simulateurs', 's')
+            ->groupBy('e.id')
+            ->addOrderBy('e.id', 'DESC');
+
+        if ($userId) {
+            $queryBuilder
+                ->andWhere('u.id = :uid')
+                ->setParameter('uid', $userId);
+        }
+
+        return $paginator->paginate(
+            $queryBuilder,
+            $page,
+            20,
+            []
+        );
+    }
+
 //    /**
 //     * @return Employe[] Returns an array of Employe objects
 //     */

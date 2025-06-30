@@ -39,6 +39,11 @@
         </a>
       </li>
       <li class="nav-item">
+        <a href="{{ path('app_white_label_employe_index')}}" class="nav-link {{ current_route == 'app_white_label_employe_index' ? 'underline' : '' }}" aria-current="page">
+        <i class="mx-2 h5 bi bi-briefcase"></i><span class="sidebar-text">Employés</span>
+        </a>
+      </li>
+      <li class="nav-item">
         <a href="{{ path('app_white_label_job_listing_index')}}" class="nav-link {{ (current_route == 'app_white_label_job_listing_index' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
         <i class="mx-2 h5 bi bi-megaphone"></i><span class="sidebar-text">Annonces</span>
         </a>
