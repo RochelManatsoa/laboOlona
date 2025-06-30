@@ -66,7 +66,7 @@ class UserController extends AbstractController
             if (in_array('ROLE_CANDIDAT', $roles, true)) {
                 $user->setType(User::ACCOUNT_CANDIDAT);
                 $candidate = $this->profileManager->createCandidat($user);
-                $this->entityManager->persist($candidate);
+                $this->profileManager->saveCandidate($candidate);
                 $redirectRoute = 'app_white_label_candidat_profile_edit';
                 $redirectParams = ['id' => $candidate->getId()];
             } 
@@ -74,7 +74,7 @@ class UserController extends AbstractController
             if (in_array('ROLE_ANNOUNCER', $roles, true)) {
                 $user->setType(User::ACCOUNT_ENTREPRISE);
                 $company = $this->profileManager->createCompany($user);
-                $this->entityManager->persist($company);
+                $this->profileManager->saveCompany($company);
                 $redirectRoute = 'app_white_label_entreprise_profile_edit';
                 $redirectParams = ['id' => $company->getId()];
             } 
@@ -82,7 +82,7 @@ class UserController extends AbstractController
             if (in_array('ROLE_RECRUITER', $roles, true)) {
                 $user->setType(User::ACCOUNT_ENTREPRISE);
                 $company = $this->profileManager->createCompany($user);
-                $this->entityManager->persist($company);
+                $this->profileManager->saveCompany($company);
                 $redirectRoute = 'app_white_label_entreprise_profile_edit';
                 $redirectParams = ['id' => $company->getId()];
             } 
@@ -93,8 +93,8 @@ class UserController extends AbstractController
                 $referrer = $this->profileManager->createReferrer($user);
                 $employe->setUser($user);
                 $referrer->setReferrer($user);
-                $this->entityManager->persist($employe);
-                $this->entityManager->persist($referrer);
+                $this->profileManager->saveEmploye($employe);
+                $this->profileManager->saveReferrer($referrer);
                 $redirectRoute = 'app_white_label_employe_edit';
                 $redirectParams = ['id' => $employe->getId()];
             }
@@ -141,7 +141,7 @@ class UserController extends AbstractController
                 if (!$user->getCandidateProfile()) {
                     $candidate = $this->profileManager->createCandidat($user);
                     $candidate->setTitre('Candidat #'. $user->getId());
-                    $this->entityManager->persist($candidate);
+                    $this->profileManager->saveCandidate($candidate);
                 } else {
                     $candidate = $user->getCandidateProfile();
                 }
@@ -154,7 +154,7 @@ class UserController extends AbstractController
                 if (!$user->getEntrepriseProfile()) {
                     $company = $this->profileManager->createCompany($user);
                     $company->setNom('Annonceur #'. $user->getId());
-                    $this->entityManager->persist($company);
+                    $this->profileManager->saveCompany($company);
                 } else {
                     $company = $user->getEntrepriseProfile();
                 }
@@ -167,7 +167,7 @@ class UserController extends AbstractController
                 if (!$user->getEntrepriseProfile()) {
                     $company = $this->profileManager->createCompany($user);
                     $company->setNom('Recruteur #'. $user->getId());
-                    $this->entityManager->persist($company);
+                    $this->profileManager->saveCompany($company);
                 } else {
                     $company = $user->getEntrepriseProfile();
                 }
@@ -182,7 +182,8 @@ class UserController extends AbstractController
                     $referrer = $this->profileManager->createReferrer($user);
                     $employe->setUser($user);
                     $referrer->setReferrer($user);
-                    $this->entityManager->persist($employe);
+                    $this->profileManager->saveEmploye($employe);
+                    $this->profileManager->saveReferrer($referrer);
                 } else {
                     $employe = $user->getEmploye();
                 }

@@ -74,6 +74,18 @@ class ProfileManager
         $this->entityManager->flush();
     }
 
+    public function saveEmploye(Employe $employe): void
+    {
+        $this->entityManager->persist($employe);
+        $this->entityManager->flush();
+    }
+
+    public function saveReferrer(ReferrerProfile $referrer): void
+    {
+        $this->entityManager->persist($referrer);
+        $this->entityManager->flush();
+    }
+
     public function saveForm(Form $form)
     {
         $profile = $form->getData();
