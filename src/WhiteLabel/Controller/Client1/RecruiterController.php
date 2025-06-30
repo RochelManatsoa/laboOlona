@@ -101,7 +101,9 @@ class RecruiterController extends AbstractController
         }
 
         $jobListing = $jobListingManager->init($entreprise);
-        $form = $this->createForm(\App\WhiteLabel\Form\Client1\JobListing1Type::class, $jobListing);
+        $defaultDevise = $this->entityManager->getRepository(\App\WhiteLabel\Entity\Client1\Finance\Devise::class)->findOneBy(['slug' => 'ariary']);
+        $devise = $entreprise->getDevise() instanceof \App\WhiteLabel\Entity\Client1\Finance\Devise ? $entreprise->getDevise() : $defaultDevise;
+        $form = $this->createForm(\App\WhiteLabel\Form\Client1\JobListing1Type::class, $jobListing, ['default_devise' => $devise]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

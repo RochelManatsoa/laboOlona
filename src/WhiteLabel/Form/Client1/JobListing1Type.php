@@ -10,7 +10,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\WhiteLabel\Entity\Client1\Secteur;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-// use App\Form\Entreprise\BudgetAnnonceType;
+use App\WhiteLabel\Form\Client1\PrimeAnnonceType;
+use App\WhiteLabel\Form\Client1\BudgetAnnonceType;
 use Symfony\Component\Validator\Constraints\Length;
 use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -164,17 +165,14 @@ class JobListing1Type extends AbstractType
                 'no_results_found_text' => 'Aucun résultat' ,
                 'no_more_results_text' => 'Plus de résultats' ,
             ])
-            // ->add('budgetAnnonce', BudgetAnnonceType::class, [
-            //     'label' => 'Budget prévu pour la mission',
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'fw-bold fs-6' 
-            //     ],
-            //     'constraints' => new Sequentially([
-            //         new NotBlank(message:'Champ obligatoire.'),
-            //     ]),
-            //     'help' => 'Définissez le budget alloué pour cette annonce ou mission.'
-            // ])
+            ->add('primeAnnonce', \App\WhiteLabel\Form\Client1\PrimeAnnonceType::class, [
+                'label' => false,
+                'default_devise' => $options['default_devise'] ?? null
+            ])
+            ->add('budgetAnnonce', \App\WhiteLabel\Form\Client1\BudgetAnnonceType::class, [
+                'label' => false,
+                'default_devise' => $options['default_devise'] ?? null
+            ])
             // ->add('boost', EntityType::class, [
             //     'class' => Boost::class,
             //     'choice_label' => 'id',
@@ -232,6 +230,7 @@ class JobListing1Type extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => JobListing::class,
+            'default_devise' => null,
         ]);
     }
 
