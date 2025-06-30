@@ -1,0 +1,48 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Tous les employés{% endblock %}
+{% block page_title %}Tous les employés{% endblock %}
+
+
+{% block body %}
+
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Tous les employés</h1>
+    <div>
+        <a class="btn btn-primary my-3 px-5 rounded-pill" href="{{ path('app_white_label_employe_new') }}"><i class="bi me-2 bi-plus-lg"></i>Ajouter</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(employes, 'ID', 'e.id') }}</th>
+                <th>Nom et prénom(s)</th>
+                <th class="text-center">{{ knp_pagination_sortable(employes, 'Simulations', 'simCount') }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for employe in employes %}
+            <tr>
+                <td>{{ employe.id }}</td>
+                <td>{{ employe.user.fullName }}</td>
+                <td class="text-center">{{ employe.simCount|default(employe.simulateurs|length) }}</td>
+                <td>
+                    <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_white_label_employe_show', {'id': employe.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_white_label_employe_edit', {'id': employe.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">Aucun employé trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ knp_pagination_render(employes) }}
+</div>
+
+{% endblock %}
