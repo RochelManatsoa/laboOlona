@@ -25,8 +25,20 @@
                         <td>{{ employe.dateEmbauche ? employe.dateEmbauche|date('d/m/Y') : '' }}</td>
                     </tr>
                     <tr>
+                        <th class="col-3">Date de naissance</th>
+                        <td>{{ employe.dateNaissance ? employe.dateNaissance|date('d/m/Y') : '' }}</td>
+                    </tr>
+                    {# <tr>
                         <th class="col-3">Simulations</th>
                         <td>{{ employe.getSimulateurCount() }}</td>
+                    </tr> #}
+                    <tr>
+                        <th class="col-3">Fonction</th>
+                        <td>{{ employe.fonction }}</td>
+                    </tr>
+                    <tr>
+                        <th class="col-3">Catégorie</th>
+                        <td>{{ employe.categorie }}</td>
                     </tr>
                 </tbody>
             </table>

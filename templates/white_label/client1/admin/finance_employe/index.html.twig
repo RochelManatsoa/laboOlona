@@ -20,16 +20,17 @@
             <tr>
                 <th>{{ knp_pagination_sortable(employes, 'ID', 'e.id') }}</th>
                 <th>Nom et prénom(s)</th>
-                <th class="text-center">{{ knp_pagination_sortable(employes, 'Simulations', 'simCount') }}</th>
+                <th class="text-center">{{ knp_pagination_sortable(employes, 'Date embauche', 'e.dateEmbauche') }}</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-        {% for employe in employes %}
+        {% for item in employes %}
+            {% set employe = item[0] %}
             <tr>
                 <td>{{ employe.id }}</td>
                 <td>{{ employe.user.fullName }}</td>
-                <td class="text-center">{{ employe.simCount|default(employe.simulateurs|length) }}</td>
+                <td class="text-center">{{ employe.dateEmbauche|date('d/m/Y') }}</td>
                 <td>
                     <a class="btn btn-sm rounded-cirle btn-info" href="{{ path('app_white_label_employe_show', {'id': employe.id}) }}"><i class="bi bi-eye"></i></a>
                     <a class="btn btn-sm rounded-cirle btn-danger" href="{{ path('app_white_label_employe_edit', {'id': employe.id}) }}"><i class="bi bi-pencil"></i></a>

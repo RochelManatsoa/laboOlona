@@ -3,14 +3,16 @@
 namespace App\WhiteLabel\Manager\Client1;
 
 use DateTime;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Form\Form;
+use App\WhiteLabel\Entity\Client1\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Uid\Uuid;
-use App\WhiteLabel\Entity\Client1\User;
+use App\WhiteLabel\Entity\Client1\Candidate\CV;
+use App\WhiteLabel\Entity\Client1\Finance\Employe;
+use App\WhiteLabel\Entity\Client1\ReferrerProfile;
 use App\WhiteLabel\Entity\Client1\CandidateProfile;
 use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
-use App\WhiteLabel\Entity\Client1\Candidate\CV;
 
 class ProfileManager
 {
@@ -39,6 +41,25 @@ class ProfileManager
         $company->setStatus(EntrepriseProfile::STATUS_PENDING);
 
         return $company;
+    }
+
+    public function createEmploye(User $user): Employe
+    {
+        $employe = new Employe();
+        $employe->setUser($user);
+        $employe->setNombreEnfants(0);
+        $employe->setSalaireBase(500000);
+
+        return $employe;
+    }
+
+    public function createReferrer(User $user): ReferrerProfile
+    {
+        $referrer = new ReferrerProfile();
+        $referrer->setReferrer($user);
+        $referrer->setStatus(ReferrerProfile::STATUS_PENDING);
+
+        return $referrer;
     }
 
     public function saveCandidate(CandidateProfile $candidate): void

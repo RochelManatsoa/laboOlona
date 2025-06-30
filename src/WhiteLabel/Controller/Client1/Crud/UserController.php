@@ -69,18 +69,33 @@ class UserController extends AbstractController
                 $this->entityManager->persist($candidate);
                 $redirectRoute = 'app_white_label_candidat_profile_edit';
                 $redirectParams = ['id' => $candidate->getId()];
-            } elseif (in_array('ROLE_ANNOUNCER', $roles, true)) {
+            } 
+
+            if (in_array('ROLE_ANNOUNCER', $roles, true)) {
                 $user->setType(User::ACCOUNT_ENTREPRISE);
                 $company = $this->profileManager->createCompany($user);
                 $this->entityManager->persist($company);
-                $redirectRoute = 'app_white_label_entreprise_profile_edit';
+                $redirectRoute = 'app_white_label_employe_edit';
                 $redirectParams = ['id' => $company->getId()];
-            } elseif (in_array('ROLE_RECRUITER', $roles, true)) {
-                $user->setType(User::ACCOUNT_EMPLOYE);
-                $employe = new Employe();
+            } 
+
+            if (in_array('ROLE_RECRUITER', $roles, true)) {
+                $user->setType(User::ACCOUNT_ENTREPRISE);
+                $company = $this->profileManager->createCompany($user);
+                $this->entityManager->persist($company);
+                $redirectRoute = 'app_white_label_employe_edit';
+                $redirectParams = ['id' => $company->getId()];
+            } 
+            
+            if (in_array('ROLE_EMPLOYE', $roles, true)) {
+                $user->setType(User::ACCOUNT_REFERRER);
+                $employe = $this->profileManager->createEmploye($user);
+                $referrer = $this->profileManager->createReferrer($user);
                 $employe->setUser($user);
+                $referrer->setReferrer($user);
                 $this->entityManager->persist($employe);
-                $redirectRoute = 'app_white_label_employe_profile_edit';
+                $this->entityManager->persist($referrer);
+                $redirectRoute = 'app_white_label_employe_edit';
                 $redirectParams = ['id' => $employe->getId()];
             }
 
@@ -132,7 +147,9 @@ class UserController extends AbstractController
                 $user->setType(User::ACCOUNT_CANDIDAT);
                 $redirectRoute = 'app_white_label_candidat_profile_edit';
                 $redirectParams = ['id' => $candidate->getId()];
-            } elseif (in_array('ROLE_ANNOUNCER', $roles, true)) {
+            } 
+            
+            if (in_array('ROLE_ANNOUNCER', $roles, true)) {
                 if (!$user->getEntrepriseProfile()) {
                     $company = $this->profileManager->createCompany($user);
                     $this->entityManager->persist($company);
@@ -140,18 +157,34 @@ class UserController extends AbstractController
                     $company = $user->getEntrepriseProfile();
                 }
                 $user->setType(User::ACCOUNT_ENTREPRISE);
-                $redirectRoute = 'app_white_label_entreprise_profile_edit';
+                $redirectRoute = 'app_white_label_employe_edit';
                 $redirectParams = ['id' => $company->getId()];
-            } elseif (in_array('ROLE_RECRUITER', $roles, true)) {
+            } 
+            
+            if (in_array('ROLE_RECRUITER', $roles, true)) {
+                if (!$user->getEntrepriseProfile()) {
+                    $company = $this->profileManager->createCompany($user);
+                    $this->entityManager->persist($company);
+                } else {
+                    $company = $user->getEntrepriseProfile();
+                }
+                $user->setType(User::ACCOUNT_ENTREPRISE);
+                $redirectRoute = 'app_white_label_employe_edit';
+                $redirectParams = ['id' => $company->getId()];
+            } 
+            
+            if (in_array('ROLE_EMPLOYE', $roles, true)) {
                 if (!$user->getEmploye()) {
-                    $employe = new Employe();
+                    $employe = $this->profileManager->createEmploye($user);
+                    $referrer = $this->profileManager->createReferrer($user);
                     $employe->setUser($user);
+                    $referrer->setReferrer($user);
                     $this->entityManager->persist($employe);
                 } else {
                     $employe = $user->getEmploye();
                 }
                 $user->setType(User::ACCOUNT_EMPLOYE);
-                $redirectRoute = 'app_white_label_employe_profile_edit';
+                $redirectRoute = 'app_white_label_employe_edit';
                 $redirectParams = ['id' => $employe->getId()];
             }
 

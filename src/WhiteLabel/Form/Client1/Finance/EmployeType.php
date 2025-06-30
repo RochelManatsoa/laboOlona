@@ -2,22 +2,27 @@
 
 namespace App\WhiteLabel\Form\Client1\Finance;
 
-use App\WhiteLabel\Entity\Client1\User;
-use App\WhiteLabel\Entity\Client1\Finance\Employe;
 use Symfony\Component\Form\AbstractType;
-use App\WhiteLabel\Form\Client1\Profile\Candidat\Edit\InfoUserType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use App\WhiteLabel\Entity\Client1\Finance\Employe;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use App\WhiteLabel\Form\Client1\Autocomplete\UserAutocompleteField;
+use App\WhiteLabel\Form\Client1\Profile\Candidat\Edit\InfoUserType;
 
 class EmployeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('user', InfoUserType::class, ['label' => false])
+            ->add('user', UserAutocompleteField::class, [
+                'label_attr' => [
+                    'class' => 'fw-bold fs-6' 
+                ],
+                'help' => 'Selectionner l\'utilisateur',
+            ])
             ->add('dateEmbauche', DateType::class, [
                 'widget' => 'single_text',  
             ])
@@ -38,9 +43,9 @@ class EmployeType extends AbstractType
             ->add('fonction')
             ->add('salaireBase')
             ->add('congePris')
-            ->add('avantage', AvantageType::class, [
-                'label' => false,
-            ])
+            // ->add('avantage', AvantageType::class, [
+            //     'label' => false,
+            // ])
         ;
     }
 
