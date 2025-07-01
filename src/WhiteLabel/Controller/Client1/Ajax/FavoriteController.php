@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\UX\Turbo\TurboBundle;
 
 #[Route('/ajax')]
 class FavoriteController extends AbstractController
@@ -67,7 +68,18 @@ class FavoriteController extends AbstractController
         $this->entityManager->persist($favori);
         $this->entityManager->flush();
 
-        return $this->json(['message' => 'Candidat ajouté aux favoris avec succès'], Response::HTTP_CREATED);
+        $message = 'Candidat ajouté aux favoris avec succès';
+
+        if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+            return $this->render('white_label/client1/recruiter/favorite/update.html.twig', [
+                'favoriteId' => $candidat->getId(),
+                'message' => $message,
+            ]);
+        }
+
+        return $this->json(['message' => $message], Response::HTTP_CREATED);
     }
 
     #[Route('/favorite/delete/candidate/{id}', name: 'app_white_label_client1_favorite_delete_candidate', methods: ['POST'])]
@@ -96,8 +108,21 @@ class FavoriteController extends AbstractController
         $favori = $favorisRepository->findOneBy($criteria);
 
         if ($favori) {
+            $favoriteId = $favori->getId();
             $this->entityManager->remove($favori);
             $this->entityManager->flush();
+
+            $message = 'Candidat retiré des favoris avec succès';
+
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+                return $this->render('white_label/client1/recruiter/favorite/delete.html.twig', [
+                    'favoriteId' => $favoriteId,
+                    'candidateId' => $candidat->getId(),
+                    'message' => $message,
+                ]);
+            }
         }
 
         return $this->json(['message' => 'Candidat retiré des favoris avec succès'], Response::HTTP_OK);
