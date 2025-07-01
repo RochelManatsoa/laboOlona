@@ -112,8 +112,13 @@
           <img src="{{ asset('v2/images/dashboard/search-people.svg') }}" alt="" width="23" height="23"><span class="sidebar-text">Candidatures</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a href="{{ path('app_white_label_client1_recruiter_favoris') }}" class="nav-link {{ current_route == 'app_white_label_client1_recruiter_favoris' ? 'underline' : '' }}">
+          <img src="{{ asset('v2/images/dashboard/favoris.svg') }}" alt="" width="23" height="23"><span class="sidebar-text">Mes favoris</span>
+        </a>
+      </li>
       <li class="nav-item click-sub">
-        <span class="sep-menu"></span> 
+        <span class="sep-menu"></span>
         <span class="nav-link sous-menu_ {{ (current_route == 'app_white_label_client1_user_profile' or current_route == 'app_white_label_client1_user_password' or current_route == 'app_white_label_client1_user_assistance') ? 'underline' : '' }}">
           <img src="{{ asset('v2/images/dashboard/setting.svg') }}" alt=""><span class="sidebar-text">Paramètres</span>
         </span>

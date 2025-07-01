@@ -1,0 +1,34 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Mes favoris{% endblock %}
+{% block page_title %}Mes favoris{% endblock %}
+
+{% block body %}
+<section class="recruteur-container">
+    <div class="recruteur-block d-block p-4 mb-4">
+        <h1>Liste des favoris</h1>
+        {% if favoris|length > 0 %}
+            <div class="biographie-profil-list">
+                {% for item in favoris %}
+                    {% set favori = item[0] %}
+                    <div class="profil-list-item d-md-flex align-items-center justify-content-between mb-3">
+                        <div class="profil-list-name d-flex align-items-center">
+                            <span class="profil-photo_"><img src="{{ favori.candidat.fileName ? asset('uploads/experts/' ~ favori.candidat.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></span>
+                            <div class="profil-info_">
+                                {{ generatePseudo(favori.candidat) }}
+                                <span class="profil-titire_">{{ favori.candidat.titre }}</span>
+                            </div>
+                        </div>
+                        <div class="profil-list-link d-flex align-items-center">
+                            <a class="btn btn-outline text-primary" href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': favori.candidat.id}) }}">Voir son profil</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {{ knp_pagination_render(favoris) }}
+        {% else %}
+            <p>Aucun favori.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

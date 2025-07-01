@@ -201,4 +201,24 @@ class RecruiterController extends AbstractController
             'application' => $application,
         ]);
     }
+
+    #[Route('/favoris', name: 'app_white_label_client1_recruiter_favoris')]
+    public function favoris(Request $request, \App\WhiteLabel\Repository\Client1\Entreprise\FavorisRepository $favorisRepository, PaginatorInterface $paginatorInterface): Response
+    {
+        /** @var \App\WhiteLabel\Entity\Client1\User $user */
+        $user = $this->getUser();
+        $entreprise = $user?->getEntrepriseProfile();
+
+        if (!$entreprise) {
+            return $this->redirectToRoute('app_white_label_client1_user_profile');
+        }
+
+        $page = $request->query->getInt('page', 1);
+        $favoris = $favorisRepository->paginateFavoris($entreprise, $page);
+
+        return $this->render('white_label/client1/recruiter/favoris.html.twig', [
+            'favoris' => $favoris,
+            'entreprise' => $entreprise,
+        ]);
+    }
 }

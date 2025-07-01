@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\Candidate\CompetencesRepository;
 use App\Repository\Entreprise\FavorisRepository;
+use App\Entity\Entreprise\JobListing;
 use App\Service\User\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -106,6 +107,12 @@ class EntrepriseController extends AbstractController
         $favori = new Favoris();
         $favori->setEntreprise($entreprise);
         $favori->setCandidat($candidat);
+        if ($request->query->get('annonce')) {
+            $annonce = $this->em->getRepository(JobListing::class)->find($request->query->get('annonce'));
+            if ($annonce) {
+                $favori->setAnnonce($annonce);
+            }
+        }
     
         // Persiste le nouveau favori dans la base de données
         $this->em->persist($favori);
@@ -127,10 +134,14 @@ class EntrepriseController extends AbstractController
             return $this->json(['error' => 'Profil entreprise non trouvé'], Response::HTTP_FORBIDDEN);
         }
 
-        $favori = $this->favorisRepository->findOneBy([
+        $criteria = [
             'entreprise' => $entreprise,
-            'candidat' => $candidat
-        ]);
+            'candidat' => $candidat,
+        ];
+        if ($request->query->get('annonce')) {
+            $criteria['annonce'] = $request->query->get('annonce');
+        }
+        $favori = $this->favorisRepository->findOneBy($criteria);
 
         $em->remove($favori);
         $em->flush();
