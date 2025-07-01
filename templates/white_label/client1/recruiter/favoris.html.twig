@@ -7,24 +7,53 @@
 <section class="recruteur-container">
     <div class="recruteur-block d-block p-4 mb-4">
         <h1>Liste des favoris</h1>
+        {% set tableClass = 'table' %}
+        {% if app.request.cookies.get('theme') == 'bootstrap-dark' %}
+            {% set tableClass = tableClass ~ ' table-dark' %}
+        {% endif %}
         {% if favoris|length > 0 %}
-            <div class="biographie-profil-list">
-                {% for item in favoris %}
-                    {% set favori = item[0] %}
-                    <div class="profil-list-item d-md-flex align-items-center justify-content-between mb-3">
-                        <div class="profil-list-name d-flex align-items-center">
-                            <span class="profil-photo_"><img src="{{ favori.candidat.fileName ? asset('uploads/experts/' ~ favori.candidat.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></span>
-                            <div class="profil-info_">
-                                <span class="profil-titire_">{{ favori.candidat.titre }}</span>
-                            </div>
-                        </div>
-                        <div class="profil-list-link d-flex align-items-center">
-                            <a class="btn btn-outline text-primary" href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': favori.candidat.id}) }}">Voir son profil</a>
-                        </div>
-                    </div>
-                {% endfor %}
+            <div class="table-responsive mt-4">
+                <table class="{{ tableClass }}">
+                    <thead>
+                        <tr>
+                            <th>Matricule</th>
+                            <th class="text-center">Tarif</th>
+                            <th class="text-center">Disponibilité</th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in favoris %}
+                            {% set favori = item[0] %}
+                            <tr id="row_favorite_recruiter_{{ favori.id }}">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2 rounded-circle" style="width:40px;height:40px;background-image:url('{{ favori.candidat.fileName ? asset('uploads/experts/' ~ favori.candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');background-size:cover;background-position:center"></span>
+                                        <div>
+                                            {{ generatePseudo(favori.candidat) }}<br>
+                                            <span class="fw-light">{{ favori.candidat.titre }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="small fw-bold">{{ getDefaultTarifCandidat(favori.candidat) }}</span><br>
+                                    <span class="fw-lighter small">Ajouté le {{ favori.createdAt|date('d/m/Y') }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="fw-lighter small">{{ getAvailabilityStr(favori.candidat) }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-sm btn-secondary" href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': favori.candidat.id}) }}"><i class="bi bi-eye"></i></a>
+                                    <form action="{{ path('app_white_label_client1_favorite_delete_candidate', {'id': favori.candidat.id}) }}" method="post" id="delete-favorite" class="d-inline-block">
+                                        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {{ knp_pagination_render(favoris) }}
             </div>
-            {{ knp_pagination_render(favoris) }}
         {% else %}
             <p>Aucun favori.</p>
         {% endif %}
