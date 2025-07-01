@@ -4,6 +4,7 @@ namespace App\WhiteLabel\Entity\Client1\Entreprise;
 
 use App\WhiteLabel\Entity\Client1\CandidateProfile;
 use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
+use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use App\WhiteLabel\Repository\Client1\Entreprise\FavorisRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,6 +22,9 @@ class Favoris
 
     #[ORM\ManyToOne(inversedBy: 'favoris')]
     private ?CandidateProfile $candidat = null;
+
+    #[ORM\ManyToOne]
+    private ?JobListing $annonce = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
@@ -50,6 +54,18 @@ class Favoris
     public function setCandidat(?CandidateProfile $candidat): static
     {
         $this->candidat = $candidat;
+
+        return $this;
+    }
+
+    public function getAnnonce(): ?JobListing
+    {
+        return $this->annonce;
+    }
+
+    public function setAnnonce(?JobListing $annonce): static
+    {
+        $this->annonce = $annonce;
 
         return $this;
     }
