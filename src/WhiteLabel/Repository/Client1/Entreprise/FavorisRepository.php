@@ -3,7 +3,7 @@
 namespace App\WhiteLabel\Repository\Client1\Entreprise;
 
 use App\WhiteLabel\Entity\Client1\Entreprise\Favoris;
-use App\WhiteLabel\Entity\EntrepriseProfile;
+use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;

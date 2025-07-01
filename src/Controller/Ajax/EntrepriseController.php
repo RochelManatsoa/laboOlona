@@ -107,12 +107,6 @@ class EntrepriseController extends AbstractController
         $favori = new Favoris();
         $favori->setEntreprise($entreprise);
         $favori->setCandidat($candidat);
-        if ($request->query->get('annonce')) {
-            $annonce = $this->em->getRepository(JobListing::class)->find($request->query->get('annonce'));
-            if ($annonce) {
-                $favori->setAnnonce($annonce);
-            }
-        }
     
         // Persiste le nouveau favori dans la base de données
         $this->em->persist($favori);
@@ -133,15 +127,10 @@ class EntrepriseController extends AbstractController
         if (!$entreprise instanceof EntrepriseProfile) {
             return $this->json(['error' => 'Profil entreprise non trouvé'], Response::HTTP_FORBIDDEN);
         }
-
-        $criteria = [
+        $favori = $this->favorisRepository->findOneBy([
             'entreprise' => $entreprise,
             'candidat' => $candidat,
-        ];
-        if ($request->query->get('annonce')) {
-            $criteria['annonce'] = $request->query->get('annonce');
-        }
-        $favori = $this->favorisRepository->findOneBy($criteria);
+        ]);
 
         $em->remove($favori);
         $em->flush();

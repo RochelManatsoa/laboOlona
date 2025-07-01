@@ -15,7 +15,6 @@
                         <div class="profil-list-name d-flex align-items-center">
                             <span class="profil-photo_"><img src="{{ favori.candidat.fileName ? asset('uploads/experts/' ~ favori.candidat.fileName) : asset('v2/images/dashboard/.svg')}}" alt=""></span>
                             <div class="profil-info_">
-                                {{ generatePseudo(favori.candidat) }}
                                 <span class="profil-titire_">{{ favori.candidat.titre }}</span>
                             </div>
                         </div>
