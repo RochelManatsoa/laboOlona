@@ -16,9 +16,8 @@
                 <table class="{{ tableClass }}">
                     <thead>
                         <tr>
-                            <th>Matricule</th>
-                            <th class="text-center">Tarif</th>
-                            <th class="text-center">Disponibilité</th>
+                            <th>Nom</th>
+                            <th class="text-center">Secteur</th>
                             <th class="text-center"></th>
                         </tr>
                     </thead>
@@ -30,17 +29,17 @@
                                     <div class="d-flex align-items-center">
                                         <span class="me-2 rounded-circle" style="width:40px;height:40px;background-image:url('{{ favori.candidat.fileName ? asset('uploads/experts/' ~ favori.candidat.fileName) : asset('uploads/experts/avatar-default.jpg') }}');background-size:cover;background-position:center"></span>
                                         <div>
-                                            {{ generatePseudo(favori.candidat) }}<br>
+                                            <span class="small fw-bold p-2">{{ favori.candidat.candidat }}</span><br>
                                             <span class="fw-light">{{ favori.candidat.titre }}</span>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <span class="small fw-bold">{{ getDefaultTarifCandidat(favori.candidat) }}</span><br>
+                                    {% for secteur in favori.candidat.secteurs %}
+                                    <span class="small fw-bold p-2">{{ secteur.nom }}</span>
+                                    {% endfor %}
+                                    <br>
                                     <span class="fw-lighter small">Ajouté le {{ favori.createdAt|date('d/m/Y') }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="fw-lighter small">{{ getAvailabilityStr(favori.candidat) }}</span>
                                 </td>
                                 <td class="text-center">
                                     <a class="btn btn-sm btn-secondary" href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': favori.candidat.id}) }}"><i class="bi bi-eye"></i></a>
