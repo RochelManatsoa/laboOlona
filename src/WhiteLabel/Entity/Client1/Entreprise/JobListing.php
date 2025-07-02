@@ -152,7 +152,7 @@ class JobListing
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageName = null;
 
-    #[Vich\UploadableField(mapping: 'job_listing_image', fileNameProperty: 'imageName')]
+    #[Vich\UploadableField(mapping: 'job_listing_client1_image', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
 
     #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Referral::class)]
