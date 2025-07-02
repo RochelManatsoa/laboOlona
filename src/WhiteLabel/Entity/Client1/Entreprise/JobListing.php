@@ -16,8 +16,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: JobListingRepository::class)]
+#[Vich\Uploadable]
 class JobListing
 {
     const STATUS_DRAFT = 'DRAFT';
@@ -145,6 +148,12 @@ class JobListing
     #[ORM\Column(nullable: true)]
     #[Groups(['annonce'])]
     private ?int $nombrePoste = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageName = null;
+
+    #[Vich\UploadableField(mapping: 'job_listing_image', fileNameProperty: 'imageName')]
+    private ?File $imageFile = null;
 
     #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Referral::class)]
     private Collection $referrals;
@@ -431,6 +440,32 @@ class JobListing
     public function setNombrePoste(?int $nombrePoste): static
     {
         $this->nombrePoste = $nombrePoste;
+
+        return $this;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            $this->updatedAt = new \DateTime();
+        }
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName(?string $imageName): static
+    {
+        $this->imageName = $imageName;
 
         return $this;
     }
