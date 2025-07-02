@@ -66,7 +66,7 @@
                         {% endif %}
                         <div class="btn-signUp">
                             {% if app.user and app.user.entrepriseProfile is not null and app.user.entrepriseProfile.id == jobOffer.entreprise.id %}
-                                <a href="{{ path('app_white_label_job_listing_edit', {'id': jobOffer.id}) }}" class="btn btn-primary">Modifier</a>
+                                <a href="{{ path('app_white_label_client1_recruiter_modifier_une_annonce', {'jobListing': jobOffer.id}) }}" class="btn btn-primary">Modifier</a>
                             {% else %}
                                 {% if candidat is defined %}
                                     {% if candidat.status is same as(constant('App\\WhiteLabel\\Entity\\Client1\\CandidateProfile::STATUS_VALID')) or candidat.status is same as(constant('App\\WhiteLabel\\Entity\\Client1\\CandidateProfile::STATUS_FEATURED')) %}
