@@ -137,7 +137,11 @@
                             <p>Aucune compétence spécifique requise.</p>
                         {% endif %}
                         <div class="btn-signUp">
-                            <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}" class="btn btn-primary">Postuler</a>
+                            {% if app.user and app.user.entrepriseProfile is not null and app.user.entrepriseProfile.id == jobOffer.entreprise.id %}
+                                <a href="{{ path('app_white_label_job_listing_edit', {'id': jobOffer.id}) }}" class="btn btn-primary">Modifier</a>
+                            {% else %}
+                                <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}" class="btn btn-primary">Postuler</a>
+                            {% endif %}
                             {% if app.user and app.user.referrerProfile is not null %}
                             <a href="{{ path('app_dashboard_referrer_cooptation', {'jobId':annonce.jobId}) }}" class="btn btn-primary rounded-pill mx-3 px-3 px-sm-5">Recommander un ami</a>
                             {% else %}

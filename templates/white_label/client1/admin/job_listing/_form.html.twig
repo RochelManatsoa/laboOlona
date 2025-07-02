@@ -1,6 +1,12 @@
 {{ form_start(form, {'attr': {'class': 'white-label-form'}}) }}
 {{ form_row(form.titre)}}
 {{ form_row(form.description)}}
+{% if job_listing is defined and job_listing.imageName %}
+    <div class="mb-3">
+        <img src="{{ vich_uploader_asset(job_listing, 'imageFile') }}" alt="Image" class="img-fluid" style="max-width: 200px;"/>
+    </div>
+{% endif %}
+{{ form_row(form.imageFile)}}
 <div class="row">
     <div class="col">
     {{ form_row(form.dateExpiration)}}
