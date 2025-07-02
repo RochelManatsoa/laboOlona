@@ -65,31 +65,35 @@
                             <p>Aucune compétence spécifique requise.</p>
                         {% endif %}
                         <div class="btn-signUp">
-                            {% if candidat is defined %}
-                                {% if candidat.status is same as(constant('App\\WhiteLabel\\Entity\\Client1\\CandidateProfile::STATUS_VALID')) or candidat.status is same as(constant('App\\WhiteLabel\\Entity\\Client1\\CandidateProfile::STATUS_FEATURED')) %}
-                                    {% if not applied %}
-                                    <div id="alert-application" class="my-4">
-                                        <button type="button" data-bs-toggle="modal" data-bs-target="#submitBtn" class="btn btn-primary">Postuler</button>
-                                    </div>
-                                    {% else %}
-                                    <div class="alert alert-light-primary d-flex align-items-center" role="alert">
-                                        <i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
-                                        <div>
-                                            Vous avez déjà postulé à cette offre
+                            {% if app.user and app.user.entrepriseProfile is not null and app.user.entrepriseProfile.id == jobOffer.entreprise.id %}
+                                <a href="{{ path('app_white_label_job_listing_edit', {'id': jobOffer.id}) }}" class="btn btn-primary">Modifier</a>
+                            {% else %}
+                                {% if candidat is defined %}
+                                    {% if candidat.status is same as(constant('App\\WhiteLabel\\Entity\\Client1\\CandidateProfile::STATUS_VALID')) or candidat.status is same as(constant('App\\WhiteLabel\\Entity\\Client1\\CandidateProfile::STATUS_FEATURED')) %}
+                                        {% if not applied %}
+                                        <div id="alert-application" class="my-4">
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#submitBtn" class="btn btn-primary">Postuler</button>
                                         </div>
-                                    </div>
+                                        {% else %}
+                                        <div class="alert alert-light-primary d-flex align-items-center" role="alert">
+                                            <i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
+                                            <div>
+                                                Vous avez déjà postulé à cette offre
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="alert alert-info d-flex align-items-center" role="alert">
+                                            <i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
+                                            <div>
+                                                Votre profil doit être validé par un moderateur avant de pouvoir postuler à cette annonce.<br>
+                                                Veuillez vérifier régulièrement votre mail
+                                            </div>
+                                        </div>
                                     {% endif %}
                                 {% else %}
-                                    <div class="alert alert-info d-flex align-items-center" role="alert">
-                                        <i class="bi bi-info-circle-fill me-1 me-sm-3"></i>
-                                        <div>
-                                            Votre profil doit être validé par un moderateur avant de pouvoir postuler à cette annonce.<br>
-                                            Veuillez vérifier régulièrement votre mail
-                                        </div>
-                                    </div>
+                                    <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}" class="btn btn-primary">Postuler</a>
                                 {% endif %}
-                            {% else %}
-                                <a data-bs-toggle="modal" data-bs-target="#connectingModal" data-bs-href="{{ path('app_register', {'typology':'Candidat'}) }}" class="btn btn-primary">Postuler</a>
                             {% endif %}
                             {% if app.user and app.user.referrerProfile is not null %}
                             <a href="{{ path('app_referrer_cooptation', {'jobId': jobOffer.jobId}) }}" class="btn btn-primary mx-3 px-3 px-sm-5">Recommander un ami</a>

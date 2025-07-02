@@ -38,6 +38,16 @@
                 <td>{{ job_listing.jobId }}</td>
             </tr>
             <tr>
+                <th>Image</th>
+                <td>
+                    {% if job_listing.imageName %}
+                        <img src="{{ vich_uploader_asset(job_listing, 'imageFile') }}" alt="Image" class="img-fluid" style="max-width: 200px;"/>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <th>NombrePoste</th>
                 <td>{{ job_listing.nombrePoste }}</td>
             </tr>
