@@ -92,7 +92,7 @@
                         <div class="view-job-info">
                             <div class="view-job-top">
                                 <div class="view_media-bg">
-                                    <img src="{{ asset('v2/images/dashboard/fond_annonce_entreprise.webp')}}" class="img-fluid" alt="Societe">
+                                    <img src="{{ jobOffer.imageName ? vich_uploader_asset(jobOffer, 'imageFile') : asset('v2/images/dashboard/fond_annonce_entreprise.webp') }}" class="img-fluid" alt="Societe">
                                     <div class="view_jobs-category green"><span class="view_bg-green">Annonce</span></div>
                                 </div>
                                 <div class="view_mid-content">

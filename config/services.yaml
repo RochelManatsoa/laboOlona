@@ -7,6 +7,7 @@ parameters:
     cv_expert: /uploads/experts
     medias_prestation: /uploads/prestations
     logo_company: /uploads/compagnies
+    job_listing_image: /uploads/annonces
     white_label.client1.host: ['client1.olona-talents.local.com:8000', 'client1.olona-talents.com']
     app.main.host: ['localhost:8000', '127.0.0.1:8000', 'dev.olona-talents.com', 'olona-talents.com']
     white_label.client1.host_regex: '/^(client1\.olona-talents\.local\.com|client1\.olona-talents\.com)$/'

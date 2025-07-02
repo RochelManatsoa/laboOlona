@@ -24,6 +24,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Sequentially;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
 use App\WhiteLabel\Form\Client1\DataTransformer\CompetencesTransformer;
 
 class JobListing1Type extends AbstractType
@@ -75,6 +77,21 @@ class JobListing1Type extends AbstractType
                     'rows' => 6,
                     'class' => 'ckeditor-textarea'
                 ]
+            ])
+            ->add('imageFile', FileType::class, [
+                'required' => false,
+                'label' => 'Image',
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/jpg',
+                            'image/bmp',
+                        ],
+                    ])
+                ],
             ])
             ->add('dateExpiration', DateType::class, [
                 'label' => 'Date d\'expiration',
