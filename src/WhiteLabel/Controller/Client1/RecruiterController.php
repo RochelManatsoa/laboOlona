@@ -13,6 +13,7 @@ use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use App\WhiteLabel\Repository\Client1\Entreprise\JobListingRepository;
 use App\WhiteLabel\Repository\Client1\Candidate\ApplicationsRepository;
 use App\WhiteLabel\Entity\Client1\CandidateProfile;
+use App\WhiteLabel\Security\Client1\Voter\JobListingVoter;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -115,6 +116,36 @@ class RecruiterController extends AbstractController
 
         return $this->render('white_label/client1/recruiter/creer_une_annonce.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/modifier-une-annonce/{jobListing}', name: 'app_white_label_client1_recruiter_modifier_une_annonce')]
+    #[IsGranted(JobListingVoter::EDIT, subject: 'jobListing')]
+    public function editJobOffer(Request $request, JobListing $jobListing, JobListingManager $jobListingManager): Response
+    {
+        /** @var \App\WhiteLabel\Entity\Client1\User $user */
+        $user = $this->getUser();
+        $entreprise = $user?->getEntrepriseProfile();
+
+        if (!$entreprise) {
+            return $this->redirectToRoute('app_white_label_client1_user_profile');
+        }
+
+        $defaultDevise = $this->entityManager->getRepository(\App\WhiteLabel\Entity\Client1\Finance\Devise::class)->findOneBy(['slug' => 'ariary']);
+        $devise = $entreprise->getDevise() instanceof \App\WhiteLabel\Entity\Client1\Finance\Devise ? $entreprise->getDevise() : $defaultDevise;
+        $form = $this->createForm(\App\WhiteLabel\Form\Client1\JobListing1Type::class, $jobListing, ['default_devise' => $devise]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $jobListingManager->save($jobListing);
+            $this->addFlash('success', 'Annonce modifiée avec succès');
+
+            return $this->redirectToRoute('app_white_label_client1_recruiter_toutes_les_annonces');
+        }
+
+        return $this->render('white_label/client1/recruiter/modifier_une_annonce.html.twig', [
+            'form' => $form->createView(),
+            'jobListing' => $jobListing,
         ]);
     }
 
