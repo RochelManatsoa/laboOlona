@@ -22,6 +22,7 @@ use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Sequentially;
+use App\EventSubscriber\RegionAgenceSubscriber;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -109,23 +110,44 @@ class JobListing1Type extends AbstractType
                 ],
                 'choices' => JobListing::getStatuses(),
             ])
-            ->add('lieu', ChoiceType::class, [
+            ->add('region', ChoiceType::class, [
                 'choices' => [
-                    'Remote' => 'Remote',
-                    'Local' => 'Local',
-                    'Télétravail' => 'Télétravail',
-                    'Coworking Olona Talents' => 'Coworking Olona Talents',
+                    'DIANA' => 'DIANA',
+                    'SAVA' => 'SAVA',
+                    'Itasy' => 'Itasy',
+                    'Analamanga' => 'Analamanga',
+                    'Vakinankaratra' => 'Vakinankaratra',
+                    'Bongolava' => 'Bongolava',
+                    'Sofia' => 'Sofia',
+                    'Boeny' => 'Boeny',
+                    'Betsiboka' => 'Betsiboka',
+                    'Melaky' => 'Melaky',
+                    'Alaotra-Mangoro' => 'Alaotra-Mangoro',
+                    'Atsinanana' => 'Atsinanana',
+                    'Analanjirofo' => 'Analanjirofo',
+                    "Amoron'i Mania" => "Amoron'i Mania",
+                    'Haute Matsiatra' => 'Haute Matsiatra',
+                    'Vatovavy-Fitovinany' => 'Vatovavy-Fitovinany',
+                    'Atsimo-Atsinanana' => 'Atsimo-Atsinanana',
+                    'Ihorombe' => 'Ihorombe',
+                    'Menabe' => 'Menabe',
+                    'Atsimo-Andrefana' => 'Atsimo-Andrefana',
+                    'Androy' => 'Androy',
+                    'Anosy' => 'Anosy',
                 ],
                 'required' => false,
-                'label' => 'Lieu',
+                'mapped' => false,
+                'label' => 'Région',
+                'placeholder' => 'Sélectionnez une région',
                 'label_attr' => [
-                    'class' => 'fw-bold fs-6' 
+                    'class' => 'fw-bold fs-6'
                 ],
                 'constraints' => new Sequentially([
                     new NotBlank(message:'Ce champ est obligatoires.'),
                 ]),
-                'help' => 'Indiquez le lieu de travail principal pour ce poste.'
+                'help' => 'Choisissez une région pour voir les agences disponibles.'
             ])
+            ->addEventSubscriber(new RegionAgenceSubscriber())
             ->add('nombrePoste', null, [
                 'label' => 'Nombre de personne à chercher',
                 'label_attr' => [
