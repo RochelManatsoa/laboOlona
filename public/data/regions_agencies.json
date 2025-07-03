@@ -1,0 +1,186 @@
+[
+  {
+    "region": "Diana",
+    "agences": [
+      "Antsiranana",
+      "Nosy-Be",
+      "Ambanja",
+      "Ambilobe",
+      "Tanambao"
+    ]
+  },
+  {
+    "region": "Sava",
+    "agences": [
+      "Sambava",
+      "Antalaha",
+      "Vohémar",
+      "Andapa"
+    ]
+  },
+  {
+    "region": "Itasy",
+    "agences": [
+      "Miarinarivo",
+      "Arivonimamo"
+    ]
+  },
+  {
+    "region": "Analamanga",
+    "agences": [
+      "Antsahavola",
+      "Ambohibao",
+      "Ankadimbahoaka",
+      "Ankorondrano",
+      "Ambatobe",
+      "Andraharo",
+      "Behoririka",
+      "Ampasampito",
+      "Analamahitsy",
+      "Itaosy",
+      "Tsimbazaza",
+      "Ivandry",
+      "Andavamamba",
+      "Mahitsy",
+      "Andravoahangy",
+      "Mahazo",
+      "Ivato",
+      "Anosizato",
+      "Sabotsy Namehana"
+    ]
+  },
+  {
+    "region": "Vakinankaratra",
+    "agences": [
+      "Antsirabe",
+      "Ambatolampy",
+      "Betafo",
+      "Ambohimiandrisoa"
+    ]
+  },
+  {
+    "region": "Bongolava",
+    "agences": [
+      "Tsiroanomandidy",
+      "Analavory"
+    ]
+  },
+  {
+    "region": "Sofia",
+    "agences": [
+      "Antsohihy",
+      "Port Bergé",
+      "Mampikony"
+    ]
+  },
+  {
+    "region": "Boeny",
+    "agences": [
+      "Mahajanga",
+      "Tsaramandroso",
+      "Marovoay",
+      "Maevatanàna",
+      "Port Bergé"
+    ]
+  },
+  {
+    "region": "Betsiboka",
+    "agences": [
+      "Maevatanana"
+    ]
+  },
+  {
+    "region": "Melaky",
+    "agences": [
+      "Maintirano"
+    ]
+  },
+  {
+    "region": "Alaotra-Mangoro",
+    "agences": [
+      "Ambatondrazaka",
+      "Moramanga",
+      "Amparafaravola",
+      "Tanambe"
+    ]
+  },
+  {
+    "region": "Atsinanana",
+    "agences": [
+      "Toamasina",
+      "Fénérive-Est",
+      "Mahanoro",
+      "Brickaville"
+    ]
+  },
+  {
+    "region": "Analanjirofo",
+    "agences": [
+      "Fénérive-Est",
+      "Maroantsetra"
+    ]
+  },
+  {
+    "region": "Amoron\\'i Mania",
+    "agences": [
+      "Ambositra"
+    ]
+  },
+  {
+    "region": "Haute Matsiatra",
+    "agences": [
+      "Fianarantsoa",
+      "Ambalavao",
+      "Ambohimahasoa"
+    ]
+  },
+  {
+    "region": "Vatovavy-Fitovinany",
+    "agences": [
+      "Manakara",
+      "Mananjary"
+    ]
+  },
+  {
+    "region": "Atsimo-Atsinanana",
+    "agences": [
+      "Farafangana",
+      "Vangaindrano"
+    ]
+  },
+  {
+    "region": "Ihorombe",
+    "agences": [
+      "Ihosy"
+    ]
+  },
+  {
+    "region": "Menabe",
+    "agences": [
+      "Morondava",
+      "Miandrivazo"
+    ]
+  },
+  {
+    "region": "Atsimo-Andrefana",
+    "agences": [
+      "Toliara",
+      "Ilakaka",
+      "Tanambao II",
+      "Morombe",
+      "Sakaraha"
+    ]
+  },
+  {
+    "region": "Androy",
+    "agences": [
+      "Ambovombe"
+    ]
+  },
+  {
+    "region": "Anosy",
+    "agences": [
+      "Tolagnaro"
+    ]
+  }
+]
