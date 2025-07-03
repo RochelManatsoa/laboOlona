@@ -110,10 +110,10 @@ class JobListing1Type extends AbstractType
                 ],
                 'choices' => JobListing::getStatuses(),
             ])
-            ->add('region', ChoiceType::class, [
+            ->add('salaire', ChoiceType::class, [
                 'choices' => [
-                    'DIANA' => 'DIANA',
-                    'SAVA' => 'SAVA',
+                    'Diana' => 'Diana',
+                    'Sava' => 'Sava',
                     'Itasy' => 'Itasy',
                     'Analamanga' => 'Analamanga',
                     'Vakinankaratra' => 'Vakinankaratra',

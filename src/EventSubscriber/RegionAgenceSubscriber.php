@@ -9,14 +9,14 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class RegionAgenceSubscriber implements EventSubscriberInterface
 {
     private const AGENCIES_BY_REGION = [
-        'DIANA' => [
+        'Diana' => [
             'Antsiranana',
             'Nosy-Be',
             'Ambanja',
             'Ambilobe',
             'Tanambao',
         ],
-        'SAVA' => [
+        'Sava' => [
             'Sambava',
             'Antalaha',
             'Vohémar',
