@@ -183,11 +183,11 @@ class JobListing1Type extends AbstractType
                 'no_more_results_text' => 'Plus de résultats' ,
             ])
             ->add('primeAnnonce', \App\WhiteLabel\Form\Client1\PrimeAnnonceType::class, [
-                'label' => false,
+                'label' => 'Prime de cooptation',
                 'default_devise' => $options['default_devise'] ?? null
             ])
             ->add('budgetAnnonce', \App\WhiteLabel\Form\Client1\BudgetAnnonceType::class, [
-                'label' => false,
+                'label' => 'Salaire',
                 'default_devise' => $options['default_devise'] ?? null
             ])
             // ->add('boost', EntityType::class, [
