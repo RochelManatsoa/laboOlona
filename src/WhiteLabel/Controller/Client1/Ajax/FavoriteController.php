@@ -41,31 +41,40 @@ class FavoriteController extends AbstractController
             return $this->json(['error' => 'Candidat introuvable'], Response::HTTP_BAD_REQUEST);
         }
 
-        $criteria = [
-            'entreprise' => $entreprise,
-            'candidat' => $candidat,
-        ];
-        if ($request->query->get('annonce')) {
-            $criteria['annonce'] = $request->query->get('annonce');
+        $annonceIds = $request->request->all('annonces');
+        if (empty($annonceIds)) {
+            $singleAnnonce = $request->query->get('annonce');
+            $annonceIds = $singleAnnonce ? [$singleAnnonce] : [null];
         }
 
-        if ($favorisRepository->findOneBy($criteria)) {
-            return $this->json(['message' => 'Ce candidat est déjà dans vos favoris'], Response::HTTP_OK);
-        }
-
-        $favori = new Favoris();
-        $favori->setEntreprise($entreprise);
-        $favori->setCandidat($candidat);
-        $favori->setCreatedAt(new \DateTime());
-
-        if ($request->query->get('annonce')) {
-            $annonce = $this->entityManager->getRepository(JobListing::class)->find($request->query->get('annonce'));
-            if ($annonce) {
-                $favori->setAnnonce($annonce);
+        foreach ($annonceIds as $annonceId) {
+            $criteria = [
+                'entreprise' => $entreprise,
+                'candidat' => $candidat,
+            ];
+            if ($annonceId) {
+                $criteria['annonce'] = $annonceId;
             }
+
+            if ($favorisRepository->findOneBy($criteria)) {
+                continue;
+            }
+
+            $favori = new Favoris();
+            $favori->setEntreprise($entreprise);
+            $favori->setCandidat($candidat);
+            $favori->setCreatedAt(new \DateTime());
+
+            if ($annonceId) {
+                $annonce = $this->entityManager->getRepository(JobListing::class)->find($annonceId);
+                if ($annonce) {
+                    $favori->setAnnonce($annonce);
+                }
+            }
+
+            $this->entityManager->persist($favori);
         }
 
-        $this->entityManager->persist($favori);
         $this->entityManager->flush();
 
         $message = 'Candidat ajouté aux favoris avec succès';

@@ -141,7 +141,7 @@
                                                 {% if isLikedByBOARecruiter(entreprise, item.id) %}
                                                     <button type="button" class="btn btn-info remove-from-favorites" data-href="{{ path('app_white_label_client1_favorite_delete_candidate', {'id':item.id}) }}"><i class="bi bi-star-fill me-2"></i>Effacer de mes favoris</button>
                                                 {% else %}
-                                                    <button type="button" class="btn btn-primary text-primary add-to-favorites" data-href="{{ path('app_white_label_client1_favorite_add_candidate', {'id':item.id}) }}"><i class="bi bi-star me-2"></i>Ajouter à mes favoris</button>
+                                                    <button type="button" class="btn btn-primary text-primary add-to-favorites" data-href="{{ path('app_white_label_client1_favorite_add_candidate', {'id':item.id}) }}" data-candidate="{{ item.id }}"><i class="bi bi-star me-2"></i>Ajouter à mes favoris</button>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -183,7 +183,7 @@
                                                 {% if isLikedByBOARecruiter(entreprise, item.id) %}
                                                     <button type="button" class="btn btn-info remove-from-favorites" data-href="{{ path('app_white_label_client1_favorite_delete_candidate', {'id':item.id}) }}"><i class="bi bi-star-fill me-2"></i>Effacer de mes favoris</button>
                                                 {% else %}
-                                                    <button type="button" class="btn btn-primary text-primary add-to-favorites" data-href="{{ path('app_white_label_client1_favorite_add_candidate', {'id':item.id}) }}"><i class="bi bi-star me-2"></i>Ajouter à mes favoris</button>
+                                                    <button type="button" class="btn btn-primary text-primary add-to-favorites" data-href="{{ path('app_white_label_client1_favorite_add_candidate', {'id':item.id}) }}" data-candidate="{{ item.id }}"><i class="bi bi-star me-2"></i>Ajouter à mes favoris</button>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -251,6 +251,33 @@
                 </li>
             </ul>
         </nav>
+        {% endif %}
+
+        {% if entreprise.jobListings|length > 0 %}
+        <div class="modal fade" id="favoriteModal" tabindex="-1" aria-hidden="true" data-count="{{ entreprise.jobListings|length }}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Sélectionner les annonces</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="favoriteForm">
+                            {% for annonce in entreprise.jobListings %}
+                                <div class="form-check">
+                                    <input class="form-check-input joblisting-checkbox" type="checkbox" value="{{ annonce.id }}" id="jobListing{{ annonce.id }}">
+                                    <label class="form-check-label" for="jobListing{{ annonce.id }}">{{ annonce.titre }}</label>
+                                </div>
+                            {% endfor %}
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="favoriteSaveBtn">Valider</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% endif %}
 
     </section>

@@ -251,12 +251,40 @@ $(function() {
         $(document).on('click', '.add-to-favorites', function(e) {
             e.preventDefault();
             var url = $(this).data('href');
+            var candidateId = $(this).data('candidate');
+            var modal = $('#favoriteModal');
+            var count = modal.data('count');
+
+            if (modal.length && count > 1) {
+                modal.data('url', url);
+                modal.data('candidate', candidateId);
+                modal.modal('show');
+            } else {
+                var annonces = [];
+                if (modal.length && count === 1) {
+                    annonces.push(modal.find('.joblisting-checkbox').first().val());
+                }
+                sendFavoriteRequest(url, annonces);
+            }
+        });
+
+        $('#favoriteSaveBtn').on('click', function() {
+            var modal = $('#favoriteModal');
+            var url = modal.data('url');
+            var annonces = [];
+            modal.find('.joblisting-checkbox:checked').each(function() {
+                annonces.push($(this).val());
+            });
+            modal.modal('hide');
+            sendFavoriteRequest(url, annonces);
+        });
+
+        function sendFavoriteRequest(url, annonces) {
             $.ajax({
                 url: url,
                 type: 'POST',
-                contentType: false,
-                processData: false,
-                dataType: 'html', 
+                data: { annonces: annonces },
+                dataType: 'html',
                 headers: {
                     'Accept': 'text/vnd.turbo-stream.html'
                 },
@@ -266,7 +294,7 @@ $(function() {
                         $('#successToast').find('.toast-body').text(data.message);
                         var successToast = new Toast($('#successToast')[0]);
                         successToast.show();
-                    } 
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.error('Erreur:', textStatus, errorThrown);
@@ -275,7 +303,7 @@ $(function() {
                     errorToast.show();
                 }
             });
-        });
+        }
         
         $(document).on('click', '.remove-from-favorites', function(e) {
             e.preventDefault();
