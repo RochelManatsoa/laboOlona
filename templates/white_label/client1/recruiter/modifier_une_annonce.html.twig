@@ -23,7 +23,7 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-6 col-sm-12">
-                                {{ form_row(form.salaire) }}
+                                {{ form_row(form.region) }}
                             </div>
                             <div class="col-lg-6 col-sm-12">
                                 {{ form_row(form.lieu) }}
@@ -33,13 +33,13 @@
                             <div class="col-lg-6 col-sm-12">
                                 {{ form_row(form.nombrePoste) }}
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-12">
-                                {{ form_row(form.competences) }}
-                            </div>
                             <div class="col-lg-6 col-sm-12">
                                 {{ form_row(form.dateExpiration) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {{ form_row(form.competences) }}
                             </div>
                         </div>
                     </div>
@@ -110,47 +110,47 @@
                 </div>
             </div>
             {{ form_end(form) }}
-            <script>
-                document.getElementById('{{ form.imageFile.vars.id }}').addEventListener('change', function(event) {
-                    if (event.target.files && event.target.files[0]) {
-                        var reader = new FileReader();
-                        reader.onload = function(e) {
-                            document.getElementById('imagePreview').style.backgroundImage = 'url(' + e.target.result + ')';
-                        };
-                        reader.readAsDataURL(event.target.files[0]);
-                    }
+    <script>
+        document.getElementById('{{ form.imageFile.vars.id }}').addEventListener('change', function(event) {
+            if (event.target.files && event.target.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').style.backgroundImage = 'url(' + e.target.result + ')';
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        });
+        function initRegionAgence() {
+            const regionSelect = document.querySelector('select[id$="_region"]');
+            const agencySelect = document.querySelector('select[id$="_lieu"]');
+            if (!regionSelect || regionSelect.dataset.initialized === 'true') return;
+
+            regionSelect.dataset.initialized = 'true';
+
+            fetch('/data/regions_agencies.json')
+                .then(response => response.json())
+                .then(data => {
+                    const updateAgencies = () => {
+                        const selectedRegion = regionSelect.value;
+                        agencySelect.innerHTML = '<option value="">Sélectionnez une agence</option>';
+                        const region = data.find(r => r.region === selectedRegion);
+                        if (region) {
+                            region.agences.forEach(agence => {
+                                const option = document.createElement('option');
+                                option.value = agence;
+                                option.textContent = agence;
+                                agencySelect.appendChild(option);
+                            });
+                        }
+                    };
+                    regionSelect.addEventListener('change', updateAgencies);
+                    updateAgencies();
                 });
-                function initRegionAgence() {
-                    const regionSelect = document.querySelector('select[id$="_salaire"]');
-                    const agencySelect = document.querySelector('select[id$="_lieu"]');
-                    if (!regionSelect || regionSelect.dataset.initialized === 'true') return;
+        }
 
-                    regionSelect.dataset.initialized = 'true';
+        document.addEventListener('turbo:load', initRegionAgence);
 
-                    fetch('/data/regions_agencies.json')
-                        .then(response => response.json())
-                        .then(data => {
-                            const updateAgencies = () => {
-                                const selectedRegion = regionSelect.value;
-                                agencySelect.innerHTML = '<option value="">Sélectionnez une agence</option>';
-                                const region = data.find(r => r.region === selectedRegion);
-                                if (region) {
-                                    region.agences.forEach(agence => {
-                                        const option = document.createElement('option');
-                                        option.value = agence;
-                                        option.textContent = agence;
-                                        agencySelect.appendChild(option);
-                                    });
-                                }
-                            };
-                            regionSelect.addEventListener('change', updateAgencies);
-                            updateAgencies();
-                        });
-                }
-
-                document.addEventListener('DOMContentLoaded', initRegionAgence);
-
-                const observer = new MutationObserver(() => initRegionAgence());
-                observer.observe(document.body, { childList: true, subtree: true });
-            </script>
+        const observer = new MutationObserver(() => initRegionAgence());
+        observer.observe(document.body, { childList: true, subtree: true });
+    </script>
 {% endblock %}

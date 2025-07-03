@@ -37,26 +37,16 @@ class JobListing
     public static function getCompanyStatuses() {
         return [
             'En attente' => self::STATUS_PENDING ,
-            'Bruillon' => self::STATUS_DRAFT ,
             'Publiée' => self::STATUS_PUBLISHED ,
             'Rejetée' => self::STATUS_REJECTED ,
-            'Archivée' => self::STATUS_ARCHIVED ,
-            'Mis en avant' => self::STATUS_FEATURED ,
         ];
     }
 
     public static function getStatuses() {
         return [
-            'Bruillon' => self::STATUS_DRAFT ,
             'Publiée' => self::STATUS_PUBLISHED ,
             'En attente' => self::STATUS_PENDING ,
             'Rejetée' => self::STATUS_REJECTED ,
-            'Expirée' => self::STATUS_EXPIRED ,
-            'Archivée' => self::STATUS_ARCHIVED ,
-            'Non publiée' => self::STATUS_UNPUBLISHED ,
-            'Effacée' => self::STATUS_DELETED ,
-            'Mis en avant' => self::STATUS_FEATURED ,
-            'Réservée' => self::STATUS_RESERVED ,
         ];
     }
 
@@ -125,6 +115,10 @@ class JobListing
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['annonce'])]
     private ?string $lieu = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['annonce'])]
+    private ?string $region = null;
 
     #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Applications::class, cascade: ['remove'])]
     private Collection $applications;
@@ -197,6 +191,7 @@ class JobListing
         $this->annonceVues = new ArrayCollection();
         $this->langues = new ArrayCollection();
         $this->referrals = new ArrayCollection();
+        $this->status = self::STATUS_PUBLISHED;
     }
 
     public function getId(): ?int
@@ -296,6 +291,18 @@ class JobListing
     public function setLieu(?string $lieu): static
     {
         $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    public function getRegion(): ?string
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?string $region): static
+    {
+        $this->region = $region;
 
         return $this;
     }

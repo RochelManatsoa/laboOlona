@@ -11,6 +11,7 @@ use App\WhiteLabel\Entity\Client1\Secteur;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\WhiteLabel\Form\Client1\PrimeAnnonceType;
+use App\EventSubscriber\RegionAgenceSubscriber;
 use App\WhiteLabel\Form\Client1\BudgetAnnonceType;
 use Symfony\Component\Validator\Constraints\Length;
 use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
@@ -109,7 +110,7 @@ class JobListing1Type extends AbstractType
                 ],
                 'choices' => JobListing::getStatuses(),
             ])
-            ->add('salaire', ChoiceType::class, [
+            ->add('region', ChoiceType::class, [
                 'choices' => [
                     'Diana' => 'Diana',
                     'Sava' => 'Sava',
@@ -146,6 +147,7 @@ class JobListing1Type extends AbstractType
                 ]),
                 'help' => 'Choisissez une région pour voir les agences disponibles.'
             ])
+            ->addEventSubscriber(new RegionAgenceSubscriber())
             ->add('nombrePoste', null, [
                 'label' => 'Nombre de personne à chercher',
                 'label_attr' => [
