@@ -261,6 +261,63 @@ function initFormStep(form, title, bodyTag, transitionEffect, connected) {
       })
 }
 
+$(document).on('click', '.add-to-favorites', function(e) {
+  e.preventDefault();
+  var url = $(this).data('href');
+  var candidateId = $(this).data('candidate');
+  var modal = $('#favoriteModal');
+  var count = modal.data('count');
+
+  if (modal.length && count > 1) {
+    modal.data('url', url);
+    modal.data('candidate', candidateId);
+    modal.modal('show');
+  } else {
+    var annonces = [];
+    if (modal.length && count === 1) {
+      annonces.push(modal.find('.joblisting-checkbox').first().val());
+    }
+    sendFavoriteRequest(url, annonces);
+  }
+});
+
+$('#favoriteSaveBtn').on('click', function() {
+  var modal = $('#favoriteModal');
+  var url = modal.data('url');
+  var annonces = [];
+  modal.find('.joblisting-checkbox:checked').each(function() {
+    annonces.push($(this).val());
+  });
+  modal.modal('hide');
+  sendFavoriteRequest(url, annonces);
+});
+
+function sendFavoriteRequest(url, annonces) {
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: { annonces: annonces },
+    dataType: 'html',
+    headers: {
+      'Accept': 'text/vnd.turbo-stream.html'
+    },
+    success: function(data) {
+      Turbo.renderStreamMessage(data);
+      if (data.status === 'success') {
+        $('#successToast').find('.toast-body').text(data.message);
+        var successToast = new Toast($('#successToast')[0]);
+        successToast.show();
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error('Erreur:', textStatus, errorThrown);
+      $('#errorToast').find('.toast-body').text("Une erreur est survenue lors de l'ajout du candidat dans vos favoris.");
+      var errorToast = new Toast($('#errorToast')[0]);
+      errorToast.show();
+    }
+  });
+}
+
 function initEntrepriseFormStep(form, title, bodyTag, transitionEffect, connected) {
   console.log(connected)
   var form = form.show()
