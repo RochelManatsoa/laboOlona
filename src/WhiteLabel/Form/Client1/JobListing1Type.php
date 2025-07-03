@@ -22,7 +22,6 @@ use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Sequentially;
-use App\EventSubscriber\RegionAgenceSubscriber;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -147,11 +146,10 @@ class JobListing1Type extends AbstractType
                 ]),
                 'help' => 'Choisissez une région pour voir les agences disponibles.'
             ])
-            ->addEventSubscriber(new RegionAgenceSubscriber())
             ->add('nombrePoste', null, [
                 'label' => 'Nombre de personne à chercher',
                 'label_attr' => [
-                    'class' => 'fw-bold fs-6' 
+                    'class' => 'fw-bold fs-6'
                 ],
                 'required' => false,
                 'constraints' => new Sequentially([

@@ -120,5 +120,37 @@
                         reader.readAsDataURL(event.target.files[0]);
                     }
                 });
+                function initRegionAgence() {
+                    const regionSelect = document.querySelector('select[id$="_salaire"]');
+                    const agencySelect = document.querySelector('select[id$="_lieu"]');
+                    if (!regionSelect || regionSelect.dataset.initialized === 'true') return;
+
+                    regionSelect.dataset.initialized = 'true';
+
+                    fetch('/data/regions_agencies.json')
+                        .then(response => response.json())
+                        .then(data => {
+                            const updateAgencies = () => {
+                                const selectedRegion = regionSelect.value;
+                                agencySelect.innerHTML = '<option value="">Sélectionnez une agence</option>';
+                                const region = data.find(r => r.region === selectedRegion);
+                                if (region) {
+                                    region.agences.forEach(agence => {
+                                        const option = document.createElement('option');
+                                        option.value = agence;
+                                        option.textContent = agence;
+                                        agencySelect.appendChild(option);
+                                    });
+                                }
+                            };
+                            regionSelect.addEventListener('change', updateAgencies);
+                            updateAgencies();
+                        });
+                }
+
+                document.addEventListener('DOMContentLoaded', initRegionAgence);
+
+                const observer = new MutationObserver(() => initRegionAgence());
+                observer.observe(document.body, { childList: true, subtree: true });
             </script>
 {% endblock %}
