@@ -119,9 +119,7 @@
             {{ form_widget(form) }}
             <button class="btn btn-primary mt-3">Sauvegarder</button>
             {{ form_end(form) }}
-        {% endif %}
-
-        {% if employeForm is defined %}
+        {% elseif employeForm is defined %}
             <hr/>
             <h2>Employé</h2>
             {{ form_start(employeForm, {'attr': {'data-turbo': 'false', 'class': 'white-label-form'}}) }}
