@@ -121,6 +121,7 @@ class JobListingManager
     public function getStatuses(): array
     {
         return [
+            'Toutes' => 'ALL',
             'Publiée' => JobListing::STATUS_PUBLISHED ,
             'En attente' => JobListing::STATUS_PENDING ,
             'Expirée' => JobListing::STATUS_EXPIRED ,
