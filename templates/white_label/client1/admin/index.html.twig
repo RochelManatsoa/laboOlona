@@ -13,28 +13,72 @@
 
 <div class="example-wrapper">
     <h1>Hello Admin! ✅</h1>
-    <a href="{{ path('app_white_label_client1_admin_csv_upload') }}" class="btn btn-secondary my-3">Importer un CV</a>
-    <a href="{{ path('connect_google_drive') }}" class="btn btn-primary">Connecter Google Drive</a>
-    <section class="visibility_p d-md-flex bp_">
+    <section class="visibility_p d-md-flex bp_ mb-4">
         <div class="biographie-profil mb-4 p-4 apparition_">
             <strong>Total utilisateurs</strong>
             <div class="d-flex align-items-center">
             {{ users }}
             </div>
         </div>
-        <div class="biographie-profil mb-4 p-4 vu_">
-            <strong>Nombre de CV</strong>
-            <div class="d-flex align-items-center">
-            0
-            </div>
-        </div>
-        <div class="biographie-profil mb-4 p-4 mission_">
-            <strong>Total annonces</strong>
-            <div class="d-flex align-items-center">
-            0
-            </div>
-        </div>
     </section>
+
+    <div class="accordion" id="dashboardSummary">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingCandidates">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCandidates" aria-expanded="true" aria-controls="collapseCandidates">
+                    Candidats
+                </button>
+            </h2>
+            <div id="collapseCandidates" class="accordion-collapse collapse show" aria-labelledby="headingCandidates" data-bs-parent="#dashboardSummary">
+                <div class="accordion-body">
+                    <ul>
+                        <li>Total : {{ totalCandidates }}</li>
+                        <li>Avec CV : {{ candidatesWithCv }}</li>
+                        <li>Sans CV : {{ candidatesWithoutCv }}</li>
+                        <li>Vues de profils : {{ candidateViews }}</li>
+                        <li>Candidatures : {{ candidateApplications }}</li>
+                        <li>Favoris : {{ candidateFavoris }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingRecruiter">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRecruiter" aria-expanded="false" aria-controls="collapseRecruiter">
+                    Recruteurs
+                </button>
+            </h2>
+            <div id="collapseRecruiter" class="accordion-collapse collapse" aria-labelledby="headingRecruiter" data-bs-parent="#dashboardSummary">
+                <div class="accordion-body">
+                    <ul>
+                        <li>Total : {{ totalRecruiters }}</li>
+                        <li>Annonces : {{ totalJobOffers }}</li>
+                        <li>Vues d'annonces : {{ jobViews }}</li>
+                        <li>Candidatures : {{ jobApplications }}</li>
+                        <li>Favoris : {{ recruiterFavoris }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingEmployees">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEmployees" aria-expanded="false" aria-controls="collapseEmployees">
+                    Employés
+                </button>
+            </h2>
+            <div id="collapseEmployees" class="accordion-collapse collapse" aria-labelledby="headingEmployees" data-bs-parent="#dashboardSummary">
+                <div class="accordion-body">
+                    <ul>
+                        <li>Total : {{ totalEmployees }}</li>
+                        <li>Cooptations : {{ totalCooptations }}</li>
+                        <li>Étapes de cooptation : {{ cooptationSteps }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
