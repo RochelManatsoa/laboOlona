@@ -26,10 +26,9 @@
             </tr>
         </thead>
         <tbody>
-        {% for item in applications %}
-        {% set application = item[0] %}
-        {% set joblisting = item[1] %}
-        {% set entreprise = item[2] %}
+        {% for application in applications %}
+        {% set joblisting = application.annonce %}
+        {% set entreprise = application.annonce.entreprise %}
             <tr>
                 <td>{{ application.id }}</td>
                 <td>{{ joblisting.titre }}</td>
