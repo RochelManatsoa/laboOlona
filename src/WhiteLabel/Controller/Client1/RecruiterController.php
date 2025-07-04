@@ -174,9 +174,20 @@ class RecruiterController extends AbstractController
             $paginatorInterface
         );
 
+        $annonceIds = [];
+        foreach ($offres as $item) {
+            $job = $item[0];
+            if ($job instanceof JobListing) {
+                $annonceIds[] = $job->getId();
+            }
+        }
+        $favorisCounts = $this->entityManager->getRepository(\App\WhiteLabel\Entity\Client1\Entreprise\Favoris::class)
+            ->countByAnnonces($annonceIds);
+
         return $this->render('white_label/client1/recruiter/annonces.html.twig', [
             'entreprise' => $entreprise,
             'offres' => $offres,
+            'favorisCounts' => $favorisCounts,
             'count' => $jobListingRepository->countAllByEntreprise($entreprise),
             'countStatus' => $jobListingRepository->countStatusByEntreprise($entreprise, $status),
             'statuses' => $jobListingManager->getStatuses(),
