@@ -136,7 +136,6 @@ class JobListing1Type extends AbstractType
                     'Anosy' => 'Anosy',
                 ],
                 'required' => false,
-                'mapped' => false,
                 'label' => 'Région',
                 'placeholder' => 'Sélectionnez une région',
                 'label_attr' => [

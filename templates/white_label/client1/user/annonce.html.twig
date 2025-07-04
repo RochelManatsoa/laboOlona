@@ -120,22 +120,26 @@
                                         </li>
                                         <li>
                                             <i class="bi bi-bookmark-check"></i>
-                                            <span class="view_title">{{ jobOffer.applications|length }} offres</span>
+                                            <span class="view_title">{{ jobOffer.applications|length }} candidature</span>
                                         </li>
                                     </ul>
-                                    <h4 class="section-head-small mb-4">Entreprise</h4>
-                                    <a href="#">{{ jobOffer.entreprise.nom }}</a>
+                                    <h4 class="section-head-small mb-4">Département</h4>
+                                    {{ jobOffer.entreprise.nom }}
+                                    {% if jobOffer.lieu is not null %}
+                                    <h4 class="section-head-small my-4">Agence</h4>
+                                    {{ jobOffer.lieu }} <span class="fw-lighter">{{ jobOffer.region }}</span>
+                                    {% endif %}
                                     {% if jobOffer.shortDescription is not null %}
                                         <h4 class="section-head-small my-4">Résumé Olona Talents</h4>
                                         {{ jobOffer.shortDescription|raw }}
                                     {% endif %}
                                     {% if favorisList is defined and favorisList|length > 0 %}
                                         <h4 class="section-head-small my-4">Favoris</h4>
-                                        <ul class="list-unstyled">
+                                        <ul class="list">
                                             {% for fav in favorisList %}
                                                 <li>
                                                     <a href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': fav.candidat.id}) }}">
-                                                        {{ fav.candidat.candidat.nom }} {{ fav.candidat.candidat.prenom }} - {{ fav.candidat.titre }}
+                                                        {{ fav.candidat.candidat.nom }} {{ fav.candidat.candidat.prenom }} <br> <span class="fw-lighter small">{{ fav.candidat.titre }}</span>
                                                     </a>
                                                 </li>
                                             {% endfor %}
