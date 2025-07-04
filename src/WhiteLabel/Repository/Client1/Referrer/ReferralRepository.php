@@ -101,5 +101,31 @@ class ReferralRepository extends ServiceEntityRepository
         return $referralsByReferrer;
     }
 
+    /**
+     * @param int[] $annonceIds
+     * @return array<int,int> id => count
+     */
+    public function countByAnnonces(array $annonceIds): array
+    {
+        if (empty($annonceIds)) {
+            return [];
+        }
+
+        $results = $this->createQueryBuilder('r')
+            ->select('IDENTITY(r.annonce) AS annonceId, COUNT(r.id) AS referralCount')
+            ->andWhere('r.annonce IN (:annonces)')
+            ->setParameter('annonces', $annonceIds)
+            ->groupBy('r.annonce')
+            ->getQuery()
+            ->getResult();
+
+        $counts = [];
+        foreach ($results as $row) {
+            $counts[$row['annonceId']] = (int) $row['referralCount'];
+        }
+
+        return $counts;
+    }
+
 
 }

@@ -67,6 +67,7 @@ class JobListing
 
     public static function getLabels() {
         return [
+            'ALL' =>        '<span class="badge bg-secondary">Toutes</span>' ,
              self::STATUS_DRAFT =>        '<span class="badge bg-info">Brouillon</span>' ,
              self::STATUS_PUBLISHED =>        '<span class="badge bg-success">Publiée</span>' ,
              self::STATUS_PENDING =>        '<span class="badge bg-warning">En attente</span>' ,

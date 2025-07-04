@@ -165,7 +165,7 @@ class RecruiterController extends AbstractController
         }
 
         $page = $request->query->getInt('page', 1);
-        $status = $request->query->get('status', JobListing::STATUS_PUBLISHED);
+        $status = $request->query->get('status', 'ALL');
 
         $offres = $jobListingRepository->paginateJobListingsEntrepriseProfiles(
             $entreprise,
@@ -183,11 +183,14 @@ class RecruiterController extends AbstractController
         }
         $favorisCounts = $this->entityManager->getRepository(\App\WhiteLabel\Entity\Client1\Entreprise\Favoris::class)
             ->countByAnnonces($annonceIds);
+        $cooptationCounts = $this->entityManager->getRepository(\App\WhiteLabel\Entity\Client1\Referrer\Referral::class)
+            ->countByAnnonces($annonceIds);
 
         return $this->render('white_label/client1/recruiter/annonces.html.twig', [
             'entreprise' => $entreprise,
             'offres' => $offres,
             'favorisCounts' => $favorisCounts,
+            'cooptationCounts' => $cooptationCounts,
             'count' => $jobListingRepository->countAllByEntreprise($entreprise),
             'countStatus' => $jobListingRepository->countStatusByEntreprise($entreprise, $status),
             'statuses' => $jobListingManager->getStatuses(),
