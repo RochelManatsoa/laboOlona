@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\WhiteLabel\Entity\Client1\Finance\Employe;
 use App\WhiteLabel\Form\Client1\Finance\EmployeType;
+use App\WhiteLabel\Manager\Client1\ProfileManager;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -22,7 +23,8 @@ class EmployeController extends AbstractController
     public function __construct(
         private ManagerRegistry $managerRegistry,
         private EntityManagerInterface $entityManager,
-        private PaginatorInterface $paginatorInterface
+        private PaginatorInterface $paginatorInterface,
+        private ProfileManager $profileManager
     ){
         $this->entityManager = $managerRegistry->getManager('client1');
     }
@@ -56,6 +58,11 @@ class EmployeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($employe);
+            $user = $employe->getUser();
+            if ($user && !$user->getReferrerProfile()) {
+                $referrer = $this->profileManager->createReferrer($user);
+                $this->profileManager->saveReferrer($referrer);
+            }
             $this->entityManager->flush();
 
             return $this->redirectToRoute('app_white_label_employe_index', [], Response::HTTP_SEE_OTHER);

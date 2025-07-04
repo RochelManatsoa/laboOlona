@@ -57,6 +57,8 @@ class ProfileManager
     {
         $referrer = new ReferrerProfile();
         $referrer->setReferrer($user);
+        $referrer->setEmailPro($user->getEmail());
+        $referrer->setTelephonePro($user->getTelephone());
         $referrer->setStatus(ReferrerProfile::STATUS_PENDING);
 
         return $referrer;
