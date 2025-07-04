@@ -5,12 +5,8 @@
 
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5;}
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 {% set defaultRewards = annonce.salaire / 10 %}
-<div class="example-wrapper">
+<div class="container mt-4">
             <h1 class="card-title h2 text-info">{{ annonce.titre }}</h1>
             <p class="text-muted small">
                 <i class="bi bi-circle-fill small mx-2 text-danger"></i> {{ getStatuses(annonce.status) }}  
