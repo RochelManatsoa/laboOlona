@@ -12,7 +12,7 @@
 	</button>
 	</div>
   <div id="sidebarT" class="scroll-container">
-    <ul class="nav nav-pills flex-column mb-auto mt-5 pt-3">
+    <ul class="nav nav-pills flex-column mb-auto mt-5 pt-3 admin-menu">
       <li class="nav-item">
         <a href="{{ path('app_white_label_client1_admin')}}" class="nav-link {{ current_route == 'app_white_label_client1_admin' ? 'underline' : '' }}" aria-current="page">
         <i class="mx-2 h5 bi bi-house-door"></i><span class="sidebar-text">Tableau de bord </span> 
@@ -31,11 +31,6 @@
       <li class="nav-item">
         <a href="{{ path('app_white_label_entreprise_profile_index')}}" class="nav-link {{ (current_route == 'app_white_label_entreprise_profile_index' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
         <i class="mx-2 h5 bi bi-person-gear"></i><span class="sidebar-text">Recruteur</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="{{ path('app_white_label_employe_profile_index')}}" class="nav-link {{ (current_route == 'app_white_label_employe_profile_index' or current_route == 'app_tableau_de_bord_candidat_view_job_offer' or current_route == 'app_olona_talents_prestations') ? 'underline' : '' }}" aria-current="page">
-        <i class="mx-2 h5 bi bi-person-badge"></i><span class="sidebar-text">Coopteurs</span>
         </a>
       </li>
       <li class="nav-item">
