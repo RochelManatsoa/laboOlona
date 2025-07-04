@@ -1,0 +1,12 @@
+{% extends 'white_label/client1/base.html.twig' %}
+
+{% block title %}Configuration{% endblock %}
+{% block page_title %}Configuration{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Configuration</h1>
+    <a href="{{ path('app_white_label_client1_admin_csv_upload') }}" class="btn btn-secondary my-3">Importer un CV</a>
+    <a href="{{ path('connect_google_drive') }}" class="btn btn-primary">Connecter Google Drive</a>
+</div>
+{% endblock %}

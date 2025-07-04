@@ -3,6 +3,15 @@
 namespace App\WhiteLabel\Controller\Client1;
 
 use App\WhiteLabel\Entity\Client1\User;
+use App\WhiteLabel\Entity\Client1\CandidateProfile;
+use App\WhiteLabel\Entity\Client1\EntrepriseProfile;
+use App\WhiteLabel\Entity\Client1\Finance\Employe;
+use App\WhiteLabel\Entity\Client1\Referrer\Referral;
+use App\WhiteLabel\Entity\Client1\Entreprise\JobListing;
+use App\WhiteLabel\Entity\Client1\Entreprise\Favoris;
+use App\WhiteLabel\Entity\Client1\Candidate\Applications;
+use App\WhiteLabel\Entity\Client1\Vues\CandidatVues;
+use App\WhiteLabel\Entity\Client1\Vues\AnnonceVues;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,9 +38,63 @@ class AdminController extends AbstractController
     #[Route('/', name: 'app_white_label_client1_admin')]
     public function index(): Response
     {
-        $users = $this->entityManager->getRepository(User::class)->countAllUsers();
+        $userRepo = $this->entityManager->getRepository(User::class);
+        $candidateRepo = $this->entityManager->getRepository(CandidateProfile::class);
+        $jobRepo = $this->entityManager->getRepository(JobListing::class);
+        $entrepriseRepo = $this->entityManager->getRepository(EntrepriseProfile::class);
+        $applicationRepo = $this->entityManager->getRepository(Applications::class);
+
+        $users = $userRepo->countAllUsers();
+
+        $totalCandidates = $candidateRepo->countAll();
+        $candidatesWithCv = (int) $this->entityManager->createQuery(
+            'SELECT COUNT(DISTINCT cp.id) FROM '.CandidateProfile::class.' cp JOIN cp.cvs cv'
+        )->getSingleScalarResult();
+        $candidatesWithoutCv = $totalCandidates - $candidatesWithCv;
+        $candidateViews = (int) $this->entityManager->createQuery(
+            'SELECT COUNT(v.id) FROM '.CandidatVues::class.' v'
+        )->getSingleScalarResult();
+        $candidateApplications = $applicationRepo->countAll();
+        $candidateFavoris = (int) $this->entityManager->createQuery(
+            'SELECT COUNT(f.id) FROM '.Favoris::class.' f WHERE f.candidat IS NOT NULL'
+        )->getSingleScalarResult();
+
+        $totalRecruiters = $entrepriseRepo->countAll();
+        $totalJobOffers = $jobRepo->countAll();
+        $jobViews = (int) $this->entityManager->createQuery(
+            'SELECT COUNT(v.id) FROM '.AnnonceVues::class.' v'
+        )->getSingleScalarResult();
+        $jobApplications = $applicationRepo->countAll();
+        $recruiterFavoris = (int) $this->entityManager->createQuery(
+            'SELECT COUNT(f.id) FROM '.Favoris::class.' f WHERE f.entreprise IS NOT NULL'
+        )->getSingleScalarResult();
+
+        $totalEmployees = (int) $this->entityManager->createQuery(
+            'SELECT COUNT(e.id) FROM '.Employe::class.' e'
+        )->getSingleScalarResult();
+        $totalCooptations = (int) $this->entityManager->createQuery(
+            'SELECT COUNT(r.id) FROM '.Referral::class.' r'
+        )->getSingleScalarResult();
+        $cooptationSteps = (int) $this->entityManager->createQuery(
+            'SELECT COALESCE(SUM(r.step),0) FROM '.Referral::class.' r'
+        )->getSingleScalarResult();
+
         return $this->render('white_label/client1/admin/index.html.twig', [
             'users' => $users,
+            'totalCandidates' => $totalCandidates,
+            'candidatesWithCv' => $candidatesWithCv,
+            'candidatesWithoutCv' => $candidatesWithoutCv,
+            'candidateViews' => $candidateViews,
+            'candidateApplications' => $candidateApplications,
+            'candidateFavoris' => $candidateFavoris,
+            'totalRecruiters' => $totalRecruiters,
+            'totalJobOffers' => $totalJobOffers,
+            'jobViews' => $jobViews,
+            'jobApplications' => $jobApplications,
+            'recruiterFavoris' => $recruiterFavoris,
+            'totalEmployees' => $totalEmployees,
+            'totalCooptations' => $totalCooptations,
+            'cooptationSteps' => $cooptationSteps,
         ]);
     }
 
