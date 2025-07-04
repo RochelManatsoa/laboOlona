@@ -78,7 +78,7 @@ class JobListingController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_white_label_job_listing_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, JobListing $jobListing, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, JobListing $jobListing): Response
     {
         $form = $this->createForm(JobListing1Type::class, $jobListing);
         $form->handleRequest($request);
@@ -98,7 +98,7 @@ class JobListingController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_white_label_job_listing_delete', methods: ['POST'])]
-    public function delete(Request $request, JobListing $jobListing, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, JobListing $jobListing): Response
     {
         if ($this->isCsrfTokenValid('delete'.$jobListing->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($jobListing);

@@ -103,6 +103,7 @@ class BudgetAnnonce
 
     public function __construct()
     {
+        $this->createdAt = new \DateTime();
         $this->annonce = new ArrayCollection();
     }
 

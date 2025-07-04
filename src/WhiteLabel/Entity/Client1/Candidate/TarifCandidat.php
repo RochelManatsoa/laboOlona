@@ -84,6 +84,11 @@ class TarifCandidat
     #[ORM\ManyToOne(inversedBy: 'tarifCandidats')]
     private ?Simulateur $simulation = null;
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
     public function __toString(): string
     {
         $tarif = $this->getMontant();
