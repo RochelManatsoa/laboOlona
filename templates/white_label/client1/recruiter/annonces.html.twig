@@ -47,7 +47,7 @@
                                                 <span class="small text-center mx-2">|</span>
                                                 <i class="bi bi-eye"></i> {{ offre.annonceVues|length }} vues
                                                 <span class="small text-center mx-2">|</span>
-                                                <i class="mx-2 bi bi-person-workspace"></i> DISTANCE
+                                                <i class="mx-2 bi bi-geo-alt-fill"></i> {{ offre.lieu}}
                                             </span>
                                         </div>
                                     </div>
@@ -55,7 +55,7 @@
                                 <div class="col-lg-4 mt-4">
                                     <div class="d-grid gap-2">
                                         <a class="btn btn-light" href="{{ offre.applications|length > 0 ? path('app_white_label_client1_recruiter_candidatures') : '#' }}">
-                                            {{ offre.applications|length }} candidat{{ offre.applications|length > 1 ? 's' : '' }} ont posté leur candidature
+                                            {{ offre.applications|length }} candidature{{ offre.applications|length > 1 ? 's' : '' }}
                                         </a>
                                         <a class="btn btn-light" href="{{ favorisCounts[offre.id]|default(0) > 0 ? path('app_white_label_client1_recruiter_favoris') : '#' }}">
                                             Favoris : {{ favorisCounts[offre.id]|default(0) }}
