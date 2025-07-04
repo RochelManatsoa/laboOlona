@@ -53,7 +53,10 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-4 mt-4">
-                                    <p><a class="btn btn-light" href="#">{{ offre.applications|length }} candidat{{ offre.applications|length > 1 ? 's' : '' }} ont posté leur candidature</a></p>
+                                    <p>
+                                        <a class="btn btn-light" href="#">{{ offre.applications|length }} candidat{{ offre.applications|length > 1 ? 's' : '' }} ont posté leur candidature</a>
+                                    </p>
+                                    <p class="small text-muted">Favoris : {{ favorisCounts[offre.id]|default(0) }}</p>
                                 </div>
                             </div>
                         </div>

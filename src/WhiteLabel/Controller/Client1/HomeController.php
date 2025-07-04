@@ -131,8 +131,16 @@ class HomeController extends AbstractController
                     'form' => $form->createView(),
                 ]);
             }
+            $entreprise = $currentUser->getEntrepriseProfile();
+            $favorisList = [];
+            if ($entreprise && $annonce->getEntreprise()?->getId() === $entreprise->getId()) {
+                $favorisList = $this->entityManager->getRepository(\App\WhiteLabel\Entity\Client1\Entreprise\Favoris::class)
+                    ->findByAnnonce($annonce);
+            }
+
             return $this->render("white_label/client1/user/annonce.html.twig", [
                 'jobOffer' => $annonce,
+                'favorisList' => $favorisList,
             ]);
         }
         // if ($currentUser && $profile) {

@@ -129,10 +129,22 @@
                                         <h4 class="section-head-small my-4">Résumé Olona Talents</h4>
                                         {{ jobOffer.shortDescription|raw }}
                                     {% endif %}
+                                    {% if favorisList is defined and favorisList|length > 0 %}
+                                        <h4 class="section-head-small my-4">Favoris</h4>
+                                        <ul class="list-unstyled">
+                                            {% for fav in favorisList %}
+                                                <li>
+                                                    <a href="{{ path('app_white_label_client1_recruiter_view_profile', {'id': fav.candidat.id}) }}">
+                                                        {{ fav.candidat.candidat.nom }} {{ fav.candidat.candidat.prenom }} - {{ fav.candidat.titre }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
                                 </div>
                             </div>
-						</div>
-					</div>
+                                                </div>
+                                        </div>
 					<div class="advertisment" style="background-image:url({{ asset('v2/images/coworking-olona-talents.webp')}});">
 						<h4 class="title">Rejoignez BANK OF AFRICA</h4>
                         <p>VOUS VOULEZ UNE VIE PROFESSIONNELLE PASSIONNANTE<br>
